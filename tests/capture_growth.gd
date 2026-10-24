@@ -1,17 +1,24 @@
 extends SceneTree
 var world
-var motion_frame: int=0
-func motion(directory: String) -> void:
+var motion_frames: Dictionary={}
+func tap(button: Control) -> void:
+	var position: Vector2=button.get_global_transform_with_canvas()*(button.size/2)
+	for pressed: bool in [true,false]:
+		var event:=InputEventScreenTouch.new()
+		event.index=96; event.position=position; event.pressed=pressed
+		root.push_input(event,true)
+func motion(directory: String, section: String) -> void:
 	if OS.get_environment("GROWTH_CAPTURE_MOTION")!="1":
 		await create_timer(1.4).timeout
 		return
-	DirAccess.make_dir_recursive_absolute(directory+"/frames")
+	DirAccess.make_dir_recursive_absolute(directory+"/"+section)
 	for i: int in range(45):
-		await create_timer(1.0/30).timeout
+		await process_frame
 		await RenderingServer.frame_post_draw
-		var error: Error=root.get_texture().get_image().save_png(directory+"/frames/%04d.png" % motion_frame)
+		var index: int=int(motion_frames.get(section,0))
+		var error: Error=root.get_texture().get_image().save_png(directory+"/%s/%04d.png" % [section,index])
 		if error!=OK: quit(1); return
-		motion_frame+=1
+		motion_frames[section]=index+1
 func _initialize() -> void: call_deferred("_run")
 func _run() -> void:
 	world=load("res://Main.tscn").instantiate()
@@ -47,30 +54,37 @@ func _run() -> void:
 		emblem_view._prepare("enhance","eva",1)
 		emblem_view._confirm()
 		emblem_view.scroll.scroll_vertical=0
-		await motion(directory)
-		var activation: Dictionary = world.growth.execute("activate","joe_2",1,int(world.growth.state.revision))
+		await motion(directory,"emblem-frames")
+		if emblem_view.card_faces.size()!=0: quit(1); return
+		var activation: Dictionary=world.growth.execute("activate","joe_2",1,int(world.growth.state.revision))
 		print("CAPTURE_ACTIVATE ",activation)
 		if not activation.ok: quit(1); return
 		world.hud.open_growth("guardians")
 		for i: int in range(8): await process_frame
-		await RenderingServer.frame_post_draw
-		var card_error: Error = root.get_texture().get_image().save_png(directory+"/guardian-cards-854x480.png")
-		if card_error != OK: quit(1); return
 		var view: Control=world.hud.workspace.find_child("GrowthView",true,false)
-		view._prepare("choose","",int(world.growth.state.searches.joe_2.winner))
-		for i: int in range(5): await process_frame
-		view.scroll.scroll_vertical=0
-		await process_frame
-		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png(directory+"/guardian-card-selected-854x480.png")
+		var revision: int=int(world.growth.state.revision)
+		await motion(directory,"guardian-frames")
+		if int(world.growth.state.revision)!=revision or world.growth.state.pending.is_empty(): quit(1); return
+		root.get_texture().get_image().save_png(directory+"/guardian-cards-waiting.png")
+		var loser: int=(int(world.growth.state.searches.joe_2.winner)+1)%3
+		tap(view.find_child("GuardianCard_"+str(loser),true,false))
+		await motion(directory,"guardian-frames")
+		root.get_texture().get_image().save_png(directory+"/guardian-card-failed.png")
+		if not world.growth.state.searches.joe_2.failed.has(loser): quit(1); return
+		# A new paid attempt resumes remaining choices after a full reload.
+		view._prepare("activate","joe_2",1)
 		view._confirm()
+		world._load_game(true)
+		world.hud.open_growth("guardians")
+		for i: int in range(8): await process_frame
+		view=world.hud.workspace.find_child("GrowthView",true,false)
 		view.scroll.scroll_vertical=0
-		await motion(directory)
-		for i: int in range(5): await process_frame
-		view.scroll.scroll_vertical=0
-		await process_frame
-		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png(directory+"/guardian-card-success-854x480.png")
+		await motion(directory,"guardian-frames")
+		root.get_texture().get_image().save_png(directory+"/guardian-cards-restored.png")
+		var winner: int=int(world.growth.state.searches.joe_2.winner)
+		tap(view.find_child("GuardianCard_"+str(winner),true,false))
+		await motion(directory,"guardian-frames")
+		root.get_texture().get_image().save_png(directory+"/guardian-card-success.png")
 		if not world.growth.state.nodes.has("joe_2"): quit(1); return
 	world.queue_free()
 	await process_frame

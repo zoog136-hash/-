@@ -87,6 +87,7 @@ func _refresh() -> void:
 	var tabs := GridContainer.new()
 	tabs.columns = 7 if mode == "emblems" else 6
 	body.add_child(tabs)
+	tabs.visible=mode=="emblems" or (runtime.state.pending.is_empty() and last_reveal.is_empty())
 	var rows: Array = runtime.config.get(mode,[])
 	for row: Dictionary in rows:
 		var id: String = str(row.id)
@@ -99,11 +100,12 @@ func _refresh() -> void:
 	confirmation = VBoxContainer.new()
 	confirmation.name = "GrowthConfirmation"
 	body.add_child(confirmation)
-	_button("축복 포인트 상점 · 열쇠 1개",func() -> void: _prepare("buy_key","",1))
-	_button("축복의 성수(중) 사용",func() -> void: _prepare("holy_water","",1)).name = "GrowthHolyWater"
-	_button("수호석 제작 · 일반 주문서",func() -> void: _prepare("craft_stone","",1))
-	_button("수호석 제작 · 각인 주문서",func() -> void: _prepare("craft_stone_engraved","",1))
-	_label("출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n전체 노드 복원·특화 옵션·미확인 전투 효과는 미완료입니다.")
+	if mode!="guardians" or (runtime.state.pending.is_empty() and last_reveal.is_empty()):
+		_button("축복 포인트 상점 · 열쇠 1개",func() -> void: _prepare("buy_key","",1))
+		_button("축복의 성수(중) 사용",func() -> void: _prepare("holy_water","",1)).name = "GrowthHolyWater"
+		_button("수호석 제작 · 일반 주문서",func() -> void: _prepare("craft_stone","",1))
+		_button("수호석 제작 · 각인 주문서",func() -> void: _prepare("craft_stone_engraved","",1))
+		_label("출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n전체 노드 복원·특화 옵션·미확인 전투 효과는 미완료입니다.")
 
 func _select(id: String) -> void:
 	if mode=="emblems" and selected!=id: runtime.rerolls.clear()
@@ -177,38 +179,10 @@ func _effect_text(effects: Dictionary) -> String:
 	return "없음" if parts.is_empty() else " · ".join(parts)
 
 func _guardian() -> void:
-	if not last_reveal.is_empty():
-		var reveal := CardFace.new()
-		reveal.name="GuardianReveal"
-		reveal.custom_minimum_size=Vector2(128,180)
-		body.add_child(reveal)
-		reveal.call_deferred("reveal",bool(last_reveal.won))
-		_label("카드 %d · %s" % [int(last_reveal.index)+1,"개방 성공" if last_reveal.won else "실패 · 다음 시도에서 제외"])
+	if not runtime.state.pending.is_empty() or not last_reveal.is_empty():
+		_card_selection()
+		return
 	_label("대표: "+str(runtime.node(runtime.state.representative).get("name","미설정")))
-	if not runtime.state.pending.is_empty():
-		_label("수호성 찾기 · 카드 선택 대기\n닫아도 이미 지불한 도전과 결과는 저장됩니다.")
-		var cards := GridContainer.new()
-		cards.columns = 3
-		body.add_child(cards)
-		for index: int in range(int(runtime.state.pending.cards)):
-			var b := _button("✦\n카드 %d" % (index+1),func() -> void: _prepare("choose","",index),cards)
-			b.name = "GuardianCard_"+str(index)
-			b.text = ""
-			b.custom_minimum_size=Vector2(110,150)
-			b.add_theme_stylebox_override("normal",UI.box(Color(0,0,0,.12),Color("675875"),3))
-			var texture:=CardFace.new()
-			card_faces[index]=texture
-			b.add_child(texture)
-			texture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			texture.offset_bottom=-23
-			var caption:=UI.label("카드 %d" % (index+1),14,UI.GOLD)
-			caption.position=Vector2(8,128)
-			b.add_child(caption)
-			b.disabled = runtime.state.searches[runtime.state.pending.node].failed.has(index)
-			if b.disabled:
-				caption.text = "실패 · 제외"
-				texture.failed=true
-				texture.queue_redraw()
 	_label("노드 선택 → 활성화 → 카드 → 대표 설정 · 원본 배치는 미확인")
 	for group: Dictionary in runtime.config.guardians:
 		if group.id != selected: continue
@@ -218,7 +192,60 @@ func _guardian() -> void:
 		if runtime.development: _label("개발용 연결도 · 1회 수호석 1개 / 카드 3장 / 노드당 HP 5 · 원작값 아님")
 		if not selected_node.is_empty(): _node_detail(runtime.node(selected_node))
 
+func _card_selection() -> void:
+	var pending: bool=not runtime.state.pending.is_empty()
+	var node_id: String=str(runtime.state.pending.node if pending else last_reveal.node)
+	var search: Dictionary=runtime.state.searches[node_id]
+	var count: int=int(search.cards)
+	_label("수호성 찾기 · "+str(runtime.node(node_id).name))
+	_label("카드를 선택해주세요 · 남은 선택지 %d / %d" % [count-search.failed.size(),count] if pending else "선택 결과 · %s" % ("슬롯 개방 성공" if last_reveal.won else "실패 · 선택한 카드는 다음 도전에서 제외"))
+	_label("이번 도전 비용은 이미 차감됐습니다. 선택 전 닫아도 대기 상태가 저장됩니다." if pending else "결과와 실패 카드 이력이 저장됐습니다.")
+	var centered:=HBoxContainer.new()
+	body.add_child(centered)
+	for side: int in range(2):
+		var spacer:=Control.new()
+		spacer.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		centered.add_child(spacer)
+		if side==1: break
+		var cards:=GridContainer.new()
+		cards.name="GuardianCards"
+		cards.columns=mini(3,count)
+		cards.add_theme_constant_override("h_separation",12)
+		centered.add_child(cards)
+		for index: int in range(count):
+			var b:=_button("",func() -> void: _choose_card(index),cards)
+			b.name="GuardianCard_"+str(index)
+			b.custom_minimum_size=Vector2(120,172)
+			b.add_theme_stylebox_override("normal",UI.box(Color(0,0,0,.1),Color("493d52"),3))
+			var face:=CardFace.new()
+			card_faces[index]=face
+			face.failed=search.failed.has(index)
+			face.selected=not pending and int(last_reveal.index)==index
+			face.success=face.selected and bool(last_reveal.won)
+			b.add_child(face)
+			face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			face.offset_bottom=-24
+			b.disabled=not pending or face.failed
+			var caption:=UI.label("실패 · 제외" if face.failed else "개방 성공" if face.success else "카드 %d" % (index+1),14,UI.GOLD)
+			caption.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			b.add_child(caption)
+			caption.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+			caption.offset_top=-23
+			caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	if not pending:
+		if not last_reveal.won:
+			_button("다시 도전 · 비용 확인",func() -> void: _prepare("activate",node_id,1)).name="GuardianRetry"
+		_button("수호성 목록",func() -> void: last_reveal={}; _refresh()).name="GuardianReturn"
+
+func _choose_card(index: int) -> void:
+	if submitting: return
+	var offer: Dictionary=runtime.quote("choose","",index)
+	if not offer.ok: return
+	request={"action":"choose","id":"","count":index,"revision":int(offer.revision)}
+	_confirm()
+
 func _show_node(id: String) -> void:
+	last_reveal={}
 	selected_node = id
 	_refresh()
 
@@ -266,14 +293,15 @@ func _confirm() -> void:
 	var pending_node: String = str(runtime.state.pending.get("node",""))
 	var response: Dictionary = runtime.execute(current.action,current.id,int(current.count),int(current.revision))
 	if response.ok and current.action=="choose":
-		last_reveal={"index":int(current.count),"won":runtime.state.nodes.has(pending_node)}
+		last_reveal={"node":pending_node,"index":int(current.count),"won":runtime.state.nodes.has(pending_node)}
+	elif response.ok and current.action=="activate": last_reveal={}
 	_refresh()
-	result.visible = true
+	result.visible = current.action!="choose"
 	result.text = str(response.message)
 	if response.ok and current.action in ["enhance","absolute"] and is_instance_valid(diagram): diagram.reveal(previous_stage)
 	if response.ok and current.action in ["choose","representative"] and is_instance_valid(chart): chart.reveal()
 	# A second release in this frame cannot create another transaction.
-	if response.ok and current.action in ["enhance","absolute","choose"]:
+	if response.ok and current.action in ["enhance","absolute"]:
 		# Only presentation waits. Close/back always remains available.
 		var timer:=get_tree().create_timer(1.3)
 		timer.timeout.connect(_release_submit)

@@ -13,20 +13,13 @@ func _run() -> void:
 	check(seal.animating and seal.displayed_stage==15,"enhancement begins at previous stage")
 	var face=preload("res://scripts/growth/growth_card_face.gd").new()
 	root.add_child(face)
-	face.reveal(true)
-	check(face.playing and face.progress==0 and face.front,"success begins with card back")
+	check(not face.selected and not face.failed and not face.success,"waiting card has no automatic outcome")
 	await create_timer(.28).timeout
 	check(seal.displayed_stage>15 and seal.displayed_stage<18,"slots reveal over time")
-	check(face.progress>0 and face.progress<.5,"back half of flip")
-	await create_timer(.22).timeout
-	check(face.progress>.5 and face.progress<1,"front half of flip")
+	check(not face.selected and not face.success,"time passing cannot select a card")
 	await create_timer(.95).timeout
 	check(not seal.animating and is_equal_approx(seal.displayed_stage,18),"seal settles at actual stage")
-	check(not face.playing and face.progress==1 and face.shine==0,"success settles and releases presentation")
-	face.reveal(false)
-	check(face.failed and not face.front,"failure does not show success art")
-	await create_timer(1.4).timeout
-	check(not face.playing and face.failed,"failure settles")
+
 	face.queue_free(); seal.queue_free()
 	await process_frame
 	print("GROWTH_PRESENTATION_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))

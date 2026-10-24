@@ -170,6 +170,7 @@ func _run() -> void:
 	view._prepare("enhance","eva",1)
 	view._confirm()
 	check(view.submitting,"enhancement blocks actions during presentation")
+	check(view.card_faces.is_empty() and view.find_child("GuardianCards",true,false)==null,"emblem enhancement never mounts guardian cards")
 	view._confirm()
 	check(int(rt.state.revision)==previous_revision+1,"duplicate during animation cannot spend twice")
 	world.hud._close_workspace()
@@ -195,6 +196,38 @@ func _run() -> void:
 	world.hud.open_growth("guardians")
 	await process_frame
 	check(world.hud.workspace.find_child("GuardianNode_joe_0",true,false)!=null,"guardian nodes reachable")
+	var selection_node: Dictionary=rt.config.guardians[0].nodes[2]
+	selection_node.prerequisites=[]; selection_node.cost=1; selection_node.cards=3
+	selection_node.card_rule="single_winner_without_replacement"; selection_node.effects={"max_hp:flat":9}
+	world.inventory["수호석"]=5
+	check(act("activate",selection_node.id).ok,"UI card attempt starts with paid cost")
+	world.hud.open_growth("guardians")
+	for i: int in range(4): await process_frame
+	view=world.hud.workspace.find_child("GrowthView",true,false)
+	var waiting_revision: int=int(rt.state.revision)
+	await create_timer(.2).timeout
+	check(view.card_faces.size()==3 and not rt.state.pending.is_empty(),"multiple cards wait for user input")
+	check(int(rt.state.revision)==waiting_revision and world.inventory["수호석"]==4,"waiting cannot auto select or charge again")
+	var losing_card: int=(int(rt.state.searches[selection_node.id].winner)+1)%3
+	tap(view.find_child("GuardianCard_"+str(losing_card),true,false))
+	for i: int in range(4): await process_frame
+	check(rt.state.searches[selection_node.id].failed.has(losing_card),"native card tap resolves selected card")
+	check(view.card_faces.size()==3 and view.card_faces[losing_card].failed,"failed result retains multiple-card context")
+	check(world.inventory["수호석"]==4,"card selection does not charge twice")
+	world._load_game(true)
+	check(rt.state.searches[selection_node.id].failed.has(losing_card),"UI-selected failed card survives reload")
+	check(act("activate",selection_node.id).ok,"retry pays once for remaining options")
+	world.hud.open_growth("guardians")
+	for i: int in range(4): await process_frame
+	view=world.hud.workspace.find_child("GrowthView",true,false)
+	check(view.find_child("GuardianCard_"+str(losing_card),true,false).disabled,"failed card disabled after retry/reload")
+	var winning_card: int=int(rt.state.searches[selection_node.id].winner)
+	tap(view.find_child("GuardianCard_"+str(winning_card),true,false))
+	for i: int in range(4): await process_frame
+	check(rt.state.nodes.has(selection_node.id) and view.card_faces[winning_card].success,"native chosen winner opens node with result in context")
+	var successful_revision: int=int(rt.state.revision)
+	tap(view.find_child("GuardianCard_"+str(winning_card),true,false))
+	check(int(rt.state.revision)==successful_revision and world.inventory["수호석"]==3,"result grid cannot select or spend again")
 	var durable: String = FileAccess.get_file_as_string(world.save_path())
 	var damaged: Dictionary = JSON.parse_string(durable)
 	damaged.growth.schema=999
