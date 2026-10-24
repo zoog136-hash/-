@@ -1,28 +1,370 @@
 {
+  "schema": "pr-ci-fix-validation-v1",
   "pr": 122,
-  "phase": "VALIDATION_IN_PROGRESS_CHECKPOINT",
+  "status": "TARGETED_LOCAL_VALIDATION_PASS_REMOTE_CI_PENDING",
   "source_head": "014ca492bad63265c646e101b227d9e899b12dcb",
+  "checkpoint_head": "ed4b37b8685d341f92bfc2a767ebfd31cba1cab8",
   "base_main": "e0a14f07da7764598822be669d05b3c2985d13eb",
-  "all_original_art_and_production_profiles_unchanged": true,
-  "completed_local_checks": {
-    "resource_integrity_atlases": 723,
-    "resource_integrity_frames": 41442,
-    "clean_godot_import_seconds": 395.7,
-    "python_runner_cases": 52,
-    "original_importer_cases": 54,
-    "tomb_guard_cases": 5,
-    "android_export_scope_cases": 6,
-    "movement_death_regressions": [
-      "full_visual_manifest_test",
-      "monster_motion_test",
-      "animation_presentation_test"
-    ]
-  },
-  "in_progress": [
-    "final catalog/palette/expansion replay evidence",
-    "complete native QA actor scopes with isolated processes",
-    "fresh head GitHub Actions and APK/Tomb workflows"
+  "scope": "CI fixtures, validation contracts, safe review tooling and export metadata; production art, profiles, approvals and gameplay unchanged",
+  "fixes": [
+    "Use physically valid native ground-pickup test positions; retain all existing pickup and persistence assertions",
+    "Install ripgrep explicitly and allow 300 seconds for the exhaustive five-map PNG runtime check",
+    "Match movement, authored death, catalog and palette assertions to existing approved native resource contracts",
+    "Bind test result markers to the selected actor scope and reject skipped, malformed, partial or zero-work results",
+    "Run default multi-actor native checks in isolated child processes with complete failure and timeout accounting",
+    "Settle the resource playback fixture for three stopped process frames before sampling; preserve 80 measured frames, six phases, loop state, terminal frame and animation identity",
+    "Preserve exact source SHA on Windows for six ledger-pinned SpriteFrames paths with targeted -text attributes",
+    "Allow 900 seconds for the observed long import while retaining import error checks",
+    "Isolate Tomb269 review staging and guard canonical paths, ancestor symlinks, exact source identity and production overwrite protections",
+    "Exclude only archived transform draft001 review resources from Android export and audit the complete production resource closure"
   ],
-  "remote_ci_policy": "Intermediate checkpoint uses skip ci; final validation commit will start CI. This file is not an all-tests-passed claim.",
-  "created_at_utc": "2026-10-24T08:43:05.808543+00:00"
+  "godot_version": "Godot 4.7.2.stable.official.ed1daf0bf001b61586d9930840f2f1394092c079",
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "categories": {
+      "transform": 413,
+      "doll": 166,
+      "relic": 144
+    },
+    "sha256_match": true
+  },
+  "clean_godot_import_seconds": 395.7,
+  "python_checks": {
+    "runner": 52,
+    "independent_runner_review": 52,
+    "selection_plan": 29,
+    "original_motion_importer": 54,
+    "tomb_stage_guards": 5,
+    "android_export_scope_guards": 6,
+    "all_passed": true
+  },
+  "android_export_audit": {
+    "archived_review_resources": 525,
+    "runtime_closure_files": 9438,
+    "production_resources_excluded": 0
+  },
+  "windows_exact_source_sha": {
+    "resources": 6,
+    "before_preserved": 0,
+    "after_preserved": 6,
+    "asset_bytes_changed": false
+  },
+  "movement_death_regressions": [
+    {
+      "test": "full_visual_manifest_test",
+      "exit_code": 0,
+      "seconds": 15.256,
+      "errors": 0
+    },
+    {
+      "test": "monster_motion_test",
+      "exit_code": 0,
+      "seconds": 11.649,
+      "errors": 0
+    },
+    {
+      "test": "animation_presentation_test",
+      "exit_code": 0,
+      "seconds": 34.068,
+      "errors": 0
+    }
+  ],
+  "targeted_runtime_suites": [
+    {
+      "name": "animation_catalog_test",
+      "status": "PASS",
+      "result": [
+        "ANIMATION_CATALOG_OK transforms=413 registered_directional=78 native_eight_way=182 shared_attack=413"
+      ]
+    },
+    {
+      "name": "native_animation_expansion_test",
+      "status": "PASS",
+      "result": [
+        "NATIVE_EXPANSION_RESULT {\"assertions\":35706,\"bindings\":{\"class\":3,\"monster\":166,\"transform\":150},\"distinct_rgba_frames_global\":7692,\"failures\":[],\"lookup_cache_bytes\":72761344,\"profile_overrides\":{\"transform:393\":{\"preserved\":\"res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres\",\"production\":\"res://assets/actors/eight_direction/native_production/halpas_393/r001/SpriteFrames.tres\"}},\"shared_outfits\":33}"
+      ]
+    },
+    {
+      "name": "pr122_palette_motion_test",
+      "status": "PASS",
+      "result": [
+        "PR122_PALETTE_MOTION_OK checks=15753 profiles=54 native_approvals_added=0 failures=0"
+      ]
+    },
+    {
+      "name": "pr122_native_default_main_connection_test",
+      "status": "PASS",
+      "result": [
+        "PR122_NATIVE_DEFAULT_MAIN_PASS key=transform:393 tracks=48 poses=288 candidate_injection=0"
+      ]
+    },
+    {
+      "name": "pr122_girtas_native_default_main_connection_test",
+      "status": "PASS",
+      "result": [
+        "PR122_NATIVE_DEFAULT_MAIN_PASS key=transform:267 tracks=48 poses=288 candidate_injection=0"
+      ]
+    },
+    {
+      "name": "pr122_native_reaction_test",
+      "status": "PASS",
+      "result": [
+        "PR122_NATIVE_REACTION_PASS actors=2 hit_cases=48 fps=30,60,120 headings=E,N catalog_candidate_without_profile_metadata=true moving_and_stationary=true all_six_phases=true hit_clock_combat_marker_collision_class_preserved=true turn_idle_death=true engine=4.7.2-stable (official) approvals_added=0"
+      ]
+    },
+    {
+      "name": "pr122_monster_run_only_scope_test",
+      "status": "PASS",
+      "result": [
+        "PR122_MONSTER_RUN_ONLY_SCOPE_PASS monsters=318 run_cases=33 existing_walk=preserved transform_unknown=7 approvals_added=0"
+      ]
+    },
+    {
+      "name": "pr122_transform_run_only_scope_test",
+      "status": "PASS",
+      "result": [
+        "PR122_TRANSFORM_RUN_ONLY_SCOPE_PASS cases=7 slow,fast,stationary unique,boss,class,unknown_preserved approvals_added=0"
+      ]
+    },
+    {
+      "name": "pr122_s_only_death_main_test",
+      "status": "PASS",
+      "result": [
+        "PR122_S_ONLY_DEATH_MAIN_RESULT directions=8 poses=6 actual_staged=false art_approvals=0 failures=0"
+      ]
+    },
+    {
+      "name": "boot",
+      "status": "PASS",
+      "result": []
+    },
+    {
+      "name": "ground_drop_smoke_test",
+      "status": "PASS",
+      "result": [
+        "GROUND_DROP_SMOKE_OK: manual/auto/loot/snapshot pickup validated"
+      ]
+    },
+    {
+      "name": "pr122_native_action_test",
+      "status": "PASS",
+      "actors": [
+        "transform:130",
+        "transform:133",
+        "transform:135",
+        "transform:137",
+        "transform:139",
+        "transform:141",
+        "transform:174",
+        "transform:189",
+        "transform:212",
+        "transform:242",
+        "transform:267",
+        "transform:346",
+        "transform:367",
+        "transform:393",
+        "transform:411",
+        "transform:412",
+        "transform:413"
+      ],
+      "actor_cases_passed": 17,
+      "actor_cases_requested": 17,
+      "counts": {
+        "clips": 279
+      },
+      "seconds": 64.698,
+      "failures": []
+    },
+    {
+      "name": "pr122_native_batch_candidate_test",
+      "status": "PASS",
+      "actors": [
+        "transform:130",
+        "transform:133",
+        "transform:135",
+        "transform:137",
+        "transform:139",
+        "transform:141",
+        "transform:174",
+        "transform:189",
+        "transform:212",
+        "transform:242",
+        "transform:346",
+        "transform:367",
+        "transform:399",
+        "transform:411",
+        "transform:412"
+      ],
+      "actor_cases_passed": 15,
+      "actor_cases_requested": 15,
+      "counts": {
+        "actors": 15,
+        "clips": 268,
+        "death_directions": 72,
+        "unsized_frame_fixtures": 1
+      },
+      "seconds": 130.966,
+      "failures": []
+    },
+    {
+      "name": "pr122_native_locomotion_resource_test",
+      "status": "PASS",
+      "actors": [
+        "transform:130",
+        "transform:133",
+        "transform:135",
+        "transform:137",
+        "transform:139",
+        "transform:141",
+        "transform:174",
+        "transform:189",
+        "transform:212",
+        "transform:242",
+        "transform:346",
+        "transform:367",
+        "transform:399",
+        "transform:411",
+        "transform:412",
+        "transform:413"
+      ],
+      "actor_cases_passed": 16,
+      "actor_cases_requested": 16,
+      "counts": {
+        "tracks": 313,
+        "poses": 1878
+      },
+      "seconds": 446.894,
+      "failures": []
+    },
+    {
+      "name": "pr122_native_main_connection_test",
+      "status": "PASS",
+      "actors": [
+        "transform:393"
+      ],
+      "result": [
+        "PR122_NATIVE_MAIN_PASS key=transform:393 native_clips=48 directional_cases=40 plus_death=true authoritative_clock_inventory_collision_preserved=true catalog_replacements=0 approvals_added=0"
+      ]
+    },
+    {
+      "name": "pr122_native_player_connection_test",
+      "status": "PASS",
+      "actors": [
+        "transform:130",
+        "transform:133",
+        "transform:135",
+        "transform:137",
+        "transform:139",
+        "transform:141",
+        "transform:174",
+        "transform:189",
+        "transform:212",
+        "transform:242",
+        "transform:267",
+        "transform:346",
+        "transform:367",
+        "transform:393",
+        "transform:411",
+        "transform:412",
+        "transform:413"
+      ],
+      "actor_cases_passed": 17,
+      "actor_cases_requested": 17,
+      "counts": {
+        "actors": 17,
+        "clips": 122,
+        "native_phases": 732
+      },
+      "seconds": 55.735,
+      "failures": []
+    }
+  ],
+  "native_coverage": {
+    "targeted_suites_passed": 16,
+    "isolated_actor_cases_passed": 65,
+    "registered_actors_covered": [
+      "transform:130",
+      "transform:133",
+      "transform:135",
+      "transform:137",
+      "transform:139",
+      "transform:141",
+      "transform:174",
+      "transform:189",
+      "transform:212",
+      "transform:242",
+      "transform:267",
+      "transform:346",
+      "transform:367",
+      "transform:393",
+      "transform:399",
+      "transform:411",
+      "transform:412",
+      "transform:413"
+    ],
+    "skipped": [],
+    "not_run": [],
+    "coverage_note": "Compatible validators cover all 18 registry actors; injected Main is representative393 only. Independent default Main covers approved393 and267. Frame-only399 is validated by the real Main batch fixture. This does not grant art approval or claim full gameplay coverage for every partial actor.",
+    "full_repository_suite_executed_locally": false
+  },
+  "validation_prerequisites": "Sparse-checkout evidence and source PNG paths were restored byte-for-byte from the baseline commit; no images were generated, edited or previewed",
+  "initial_failures": {
+    "shared_ground_fixture": {
+      "original_failures": 7,
+      "original_blob": "c5eae154e3f455b670678a08f810518a734f94a0",
+      "reproduced_in_pr156_checkout": true
+    },
+    "movement_contracts": {
+      "full_visual_manifest_test": 1848,
+      "monster_motion_test": 163,
+      "animation_presentation_test": 318
+    },
+    "catalog_and_native": {
+      "catalog_baseline": "pr122-catalog-baseline:46 stale catalog assertions;305 raw/effective expansion assertions",
+      "palette_baseline": "pr122-palette-baseline:missing shared_visual_source property followed by bounded timeout",
+      "first_corrected_catalog": "pr122-catalog-fixed:typed conditional array initialization error, corrected before successful replay",
+      "sparse_girtas_certificates": "pr122-markers-runtime:missing pinned certificate prerequisite;not product drift",
+      "sparse_girtas_source_paths": "pr122-native-runtime:missing original source PNG paths;not changed source bytes",
+      "resource_startup_delta": "pr122-native-runtime:actor130 source/geometry passed but first HIT sampled[0,4,5] after0.142554s decode delta;the incomplete sweep was stopped and rerun fully"
+    },
+    "note": "Initial diagnostic failures and interrupted/incomplete runs remain separate from the accepted successful runs"
+  },
+  "independent_review": "Runner scope/result handling, native catalog bindings, playback timing, movement/death contracts, stage path guards and export scope independently reviewed",
+  "static_checks": [
+    "git diff --check PASS",
+    "changed workflows actionlint 1.7.12 PASS"
+  ],
+  "pending_remote_validation": [
+    "Complete GitHub Actions on the final published HEAD",
+    "Full restored 112-pose Tomb269 actual-Main workflow",
+    "Android APK build, signature and device execution"
+  ],
+  "validated_source_sha256": {
+    ".gitattributes": "dde0c9f872cf539755173f3227b6e45ab8a6f68cd617d5810e3e9df55cbb013c",
+    ".github/workflows/consumable-validate.yml": "67af9e20171c9d102110cdfcad1eb8090a30d92aa4b7bb6d11f221bcef01ddf4",
+    ".github/workflows/pr122-tomb269-actual-main.yml": "8e13b33b0ff16d039f65558bdddac674fd5f1f97af791d20cd948ca927d7922c",
+    ".github/workflows/tower-png-normal-runtime.yml": "af520f1c83cbd7b0243f9ba195ed518f6a246f3b2da9b3aa4c29dc71e94c2a14",
+    ".github/workflows/twilight-android-playtest-apk.yml": "38aa5913c887d20c25e457e1d8054b47442c60ac1e5df693aaeaee0a7a67e0eb",
+    "export_presets.cfg": "aa7248704bb9bf59a29b272c3b3abfd7b2f4932347e9d56ba74410f743b74698",
+    "tests/android_animation_export_scope_test.py": "cd152917406177d31b8823eff7ea03d2e96a9425a6348bcbb6504ae953934d88",
+    "tests/animation_catalog_test.gd": "ac756a24e001b3c755afbf539c674a7fd3eac76455943f01b783c9ce0e2762b1",
+    "tests/animation_presentation_test.gd": "a8b09bf60b2158ab36b85705a194d52622117f6320a5a21225f821e4b75791da",
+    "tests/full_visual_manifest_test.gd": "2dccdcffd062b31c5b8ff40c998d33ff783336c03b02eda1ce8a4cb5c3f06ca2",
+    "tests/ground_drop_smoke_test.gd": "d05717921ca73a956739f5568fe06e4b9088c9b8c2c9876fbfc8e2c3f1b2ef99",
+    "tests/monster_motion_test.gd": "9fc0993e0aa1ade691b42175b78d350cfacf65b9d8782565819958cc7a795b3c",
+    "tests/native_animation_expansion_test.gd": "21e88e680d2a588f3638f2896c6f720dbfb1896ff6a56552779889bffba1c2f8",
+    "tests/pr122_native_locomotion_resource_test.gd": "613e82fcc84feee4781c099be54dda60346dfbb87c91f0d35f299eb472953be8",
+    "tests/pr122_palette_motion_test.gd": "a31401f985a63b41dda7c8a409794b927328ad06dcc4482a89b089ac126ca151",
+    "tests/pr122_tomb269_stage_guard_test.py": "05080c7b4446fa8b9ffcd189522efbc3d8239cecc8bd1e36dd5d8b981df5c3bc",
+    "tools/android_animation_export_scope.py": "dbbe8b7cd727e5bcba77b87b70b232ae137023eaf0fe27bc095ba220097fcaa3",
+    "tools/import_original_based_motion.py": "00713657de0d869cf4a9c902842182fabd4e758b5bd111a41c1f28857e429039",
+    "tools/stage_pr122_tomb269_review.py": "f0feefadabff2a17432896b2d9783989cfda4b6aaabfe7ebe48a7b18a984ad2e",
+    "tools/test_project.py": "dfde55256aeda66a69c7519d4c39affc7cb67e97c07c4b1bfefe9bd00365561e",
+    "tools/test_project_runner_test.py": "c65b852394318f99db7898a9f631b59ee5a5348585f88431026ce5d46a1be43f",
+    "tools/test_project_support.py": "2ae2f6883211121485ac2064d8da0453e276e47cd0307a69d970c0301d18bec6",
+    "tools/verify_android_animation_export.py": "8fe789fdf5732a2d8ae834954733203cdecf487acd0ae1164b0ea5beb738c8e8"
+  },
+  "created_at_utc": "2026-10-24T09:06:18.071237+00:00"
 }

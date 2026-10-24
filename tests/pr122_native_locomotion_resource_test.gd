@@ -28,6 +28,13 @@ func _run() -> void:
 		var sprite := AnimatedSprite2D.new()
 		root.add_child(sprite)
 		sprite.sprite_frames = frames
+		# Synchronous PNG decoding lands in a following process delta, and
+		# process_frame resumes before AnimatedSprite2D's internal update.
+		# Keep it stopped through that update before the short first HIT starts.
+		# Two signal waits still consumed its first four phases in the load delta;
+		# the third starts the unchanged 80-frame observation on a fresh delta.
+		for settle_frame: int in range(3):
+			await process_frame
 		var track_index: int = 0
 		for track: Dictionary in actor.tracks:
 			var animation := StringName(track.animation)
@@ -64,9 +71,11 @@ func _run() -> void:
 			for tick: int in range(80):
 				await process_frame
 				seen[sprite.frame] = true
-			assert(seen.size() == 6 and sprite.is_playing() == looping)
-			if not looping: assert(sprite.frame == 5)
-			assert(sprite.animation == animation)
+			if not (seen.size() == 6 and sprite.is_playing() == looping
+				and (looping or sprite.frame == 5) and sprite.animation == animation):
+				push_error("PR122_NATIVE_RESOURCE_PLAYBACK_FAILED key=%s track=%s phases=%s playing=%s expected_loop=%s frame=%d actual_track=%s" % [key, animation, seen.keys(), sprite.is_playing(), looping, sprite.frame, sprite.animation])
+				quit(1)
+				return
 			checked_tracks += 1
 			track_index += 1
 		for missing: String in actor.missing_locomotion:
