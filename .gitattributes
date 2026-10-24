@@ -19,3 +19,8 @@ data/aden_world_visuals/routes/*.json -text
 # Preserve its LF bytes when a Windows checkout enables core.autocrlf.
 data/maps/native_png_*.json -text
 data/maps/aden_faith_png_*.json -text
+# Shared navigation corrections authenticate this plan before loading any PNG map.
+data/maps/domination_png_plan.json -text
+
+# Mobile art receipt authenticates exact manifest bytes across Windows checkouts.
+assets/maps/aden_world_mobile/manifest.json -text

@@ -4005,7 +4005,7 @@ func _load_game(quiet: bool) -> void:
 			and saved_map_id in migration.map_ids
 			and int(data.get("map_layout_revision",-1))==int(migration.from_revision)
 			and (int(native_saved_field.data.layout_revision)==int(migration.to_revision)
-				or (saved_map_id=="aden_world" and int(migration.to_revision)==2026102002 and int(native_saved_field.data.layout_revision)==preload("res://scripts/maps/png_world_scale.gd").ADEN_REVISION))
+				or (saved_map_id in ["aden_world","faith_01","faith_02","faith_03","faith_04"] and int(migration.to_revision)==2026102002 and int(native_saved_field.data.layout_revision)==(preload("res://scripts/maps/png_world_scale.gd").ADEN_REVISION if saved_map_id=="aden_world" else preload("res://scripts/maps/png_world_scale.gd").FAITH_REVISION)))
 			and str(data.get("native_png_review_sha256",""))==saved_plan)
 		if native_saved_field==null or (plan_changed and not known_native_upgrade):
 			source_save_blocked=true
@@ -4022,17 +4022,17 @@ func _load_game(quiet: bool) -> void:
 				return
 			data=data.duplicate(true)
 			data["position"]=[];data["map_layout_revision"]=-1
-		elif has_native_position and saved_map_id=="aden_world" and not plan_changed and int(data.get("map_layout_revision",-1))!=int(native_saved_field.data.layout_revision):
+		elif has_native_position and saved_map_id in ["aden_world","faith_01","faith_02","faith_03","faith_04"] and not plan_changed and int(data.get("map_layout_revision",-1))!=int(native_saved_field.data.layout_revision):
 			# Same authenticated PNG/plan, explicit old world units. Never guess
 			# a ratio from arbitrary saved pixels or overwrite the original save.
-			var old_scales: Dictionary={2026102002:1.0,2026102003:2.0}
+			var old_scales: Dictionary={2026102002:1.0,2026102003:2.0} if saved_map_id=="aden_world" else {2026102002:1.0}
 			var old_revision: int=int(data.get("map_layout_revision",-1))
 			if not old_scales.has(old_revision):
-				source_save_blocked=true;hud.show_message("아덴 저장 좌표 버전을 확인할 수 없습니다");return
+				source_save_blocked=true;hud.show_message("지도 저장 좌표 버전을 확인할 수 없습니다");return
 			var original_hash: String=FileAccess.get_sha256(save_path())
 			var backup_path: String=save_path()+".pre-aden-scale-"+original_hash
 			if (not FileAccess.file_exists(backup_path) and DirAccess.copy_absolute(save_path(),backup_path)!=OK) or FileAccess.get_sha256(backup_path)!=original_hash:
-				source_save_blocked=true;hud.show_message("아덴 좌표 이전 백업 실패: 저장 파일을 보존합니다");return
+				source_save_blocked=true;hud.show_message("지도 좌표 이전 백업 실패: 저장 파일을 보존합니다");return
 			data=data.duplicate(true)
 			var raw: Variant=data.get("position",[])
 			var position: Vector2=Vector2.INF

@@ -1,0 +1,3 @@
+# Live bounded plaza
+
+Generated source: aden_modular_pilot, same exact fountain foot as production collision. Floor is cropped from newly generated paving, not the old Aden PNG. Inward edge alpha leaves the original exterior intact. `.l1jpng` files contain ordinary PNG bytes and are included by the existing export filter. SHA256 values and coordinates are in manifest.json. The normal NativePngRenderer streams these in its shared budget; no navigation data is changed. This small patch is not the complete first district. Exterior old/new quality difference remains visible; see docs/aden-city-region-20261024/README.md.

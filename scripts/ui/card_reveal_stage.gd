@@ -76,12 +76,13 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 	playing = true
 	sound_played.clear()
 	for card: Control in cards:
-		card.queue_free()
+		card.hide();card.queue_free()
 	cards.clear()
 	for i: int in range(results.size()):
 		var card: Control = CARD.new()
+		card.extra_lightning_seconds=0.0 if fusion else CARD.DRAW_EXTRA_LIGHTNING_SECONDS
 		card.reduced_motion = reduced_motion
-		card.detail_scale = detail_scale
+		card.detail_scale = minf(detail_scale,.6) if not fusion and (OS.has_feature("mobile") or results.size()>5) else detail_scale
 		card.intensity_scale = intensity_scale
 		card.show_grade_heading = showcase
 		var grade: String = str(results[i].get("grade","일반"))
@@ -91,7 +92,7 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		board.add_child(card)
 		card.configure(results[i],candidate_textures,category)
 		cards.append(card)
-	duration = (6.8 if fusion else 8.0)+CARD.CONFIRM_DELAY_SECONDS-CARD.LIGHTNING_EARLY_SECONDS
+	duration = (6.8 if fusion else 8.0+CARD.DRAW_EXTRA_LIGHTNING_SECONDS)+CARD.CONFIRM_DELAY_SECONDS-CARD.LIGHTNING_EARLY_SECONDS
 	title_label.text = "5개 등급 연출 비교" if showcase else category+(" 합성 결과" if fusion else " 뽑기 결과")
 	_fit()
 	seek(0.0)
@@ -209,7 +210,7 @@ func _draw() -> void:
 	if not reduced_motion:
 		for card: Control in cards:
 			var elapsed: float = clock-card.lightning_at()
-			var power: float = PROFILES.pulse(card.grade,elapsed)
+			var power: float = PROFILES.pulse(card.grade,elapsed,card.extra_lightning_seconds)
 			if fusion and upgrade:
 				power += PROFILES.pulse(card.grade,clock-card.promotion_at())
 			if power > 0.03:
@@ -229,6 +230,7 @@ func close_reveal() -> void:
 	if closing:
 		return
 	closing = true
+	hide()
 	playing = false
 	sound_player.stop()
 	if not emitted:

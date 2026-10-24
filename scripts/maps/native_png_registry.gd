@@ -11,6 +11,7 @@ const DOMINATION_PLAN_PATH := "res://data/maps/domination_png_plan.json"
 const DOMINATION_RECEIPT_PATH := "res://data/maps/domination_png_pack.json"
 const DOMINATION_ROOT := "res://external_map_packs/domination_png_v1"
 const REVIEW_PATH := "res://data/maps/native_png_review.json"
+const NAVIGATION_CORRECTIONS := "res://data/maps/native_png_navigation_corrections.json"
 const FIELD = preload("res://scripts/maps/native_png_field.gd")
 const BUNDLED_ROOT := "res://external_map_packs/native_png_v5"
 const LEGACY_ROOT := "user://native_png_maps"
@@ -44,17 +45,53 @@ static func plan() -> Dictionary:
 		if not valid_polygon(cut.get("polygon_image"),extra.sources["Aden.png"].size) or not valid_point(cut.get("foot_image"),extra.sources["Aden.png"].size):return {}
 	extra.maps.aden_world["runtime_foreground"]=display_review.get("foreground",[])
 	for replacement: Dictionary in display_review.get("collision_replace",[]):
-		if replacement.get("shape")!="circle" or not valid_point(replacement.get("center"),extra.sources["Aden.png"].size) or float(replacement.get("radius",0))<=0:return {}
+		if not valid_review_collision(replacement,extra.sources["Aden.png"].size):return {}
 		var found: bool=false
 		for i: int in range(extra.maps.aden_world.collision.size()):
 			if extra.maps.aden_world.collision[i].id==replacement.id:extra.maps.aden_world.collision[i]=replacement;found=true;break
 		if not found:return {}
+	for addition: Dictionary in display_review.get("collision_add",[]):
+		if not valid_review_collision(addition,extra.sources["Aden.png"].size):return {}
+		if extra.maps.aden_world.collision.any(func(shape: Dictionary) -> bool:return shape.id==addition.id):return {}
+		extra.maps.aden_world.collision.append(addition)
 	value.sources.merge(extra.get("sources",{}))
 	value.maps.merge(extra.get("maps",{}))
 	var domination: Dictionary=read_json(DOMINATION_PLAN_PATH)
 	value.sources.merge(domination.get("sources",{}))
 	value.maps.merge(domination.get("maps",{}))
+	if not apply_navigation_corrections(value):return {}
 	return value
+
+static func apply_navigation_corrections(value: Dictionary) -> bool:
+	var corrections: Dictionary=read_json(NAVIGATION_CORRECTIONS)
+	if corrections.get("schema")!=1 or corrections.get("save_layout_compatible")!=true:return false
+	if corrections.get("base_plan_sha256")!=FileAccess.get_sha256(PLAN_PATH):return false
+	if corrections.get("domination_plan_sha256")!=FileAccess.get_sha256(DOMINATION_PLAN_PATH):return false
+	if not corrections.get("maps") is Dictionary:return false
+	for mid: String in corrections.maps:
+		if not value.maps.has(mid):return false
+		var spec: Dictionary=value.maps[mid]
+		var patch: Dictionary=corrections.maps[mid]
+		var source: Dictionary=value.sources[spec.file]
+		if patch.get("source_sha256")!=source.sha256:return false
+		for polygon: Array in patch.get("walk_polygons_add",[]):
+			if not valid_polygon(polygon,source.size):return false
+			spec.walk_polygons.append(polygon)
+		for replacement: Dictionary in patch.get("route_checks_replace",[]):
+			if not valid_point(replacement.get("from"),source.size) or not valid_point(replacement.get("to"),source.size):return false
+			var index: int=spec.route_checks.find(replacement.from)
+			if index<0:return false
+			spec.route_checks[index]=replacement.to
+	# These corrections do not move a solid cell or a gameplay entity. Keep
+	# the immutable pack plan hashes, save-layout revisions and review identity.
+	return true
+
+static func valid_review_collision(shape: Dictionary, size: Array) -> bool:
+	if str(shape.get("id","")).is_empty():return false
+	if shape.get("shape")=="circle":
+		return valid_point(shape.get("center"),size) and is_finite(float(shape.get("radius",0))) and float(shape.get("radius",0))>0
+	if shape.get("shape")=="polygon":return valid_polygon(shape.get("points"),size)
+	return false
 
 static func valid_point(value: Variant, size: Array) -> bool:
 	return value is Array and value.size()==2 and (value[0] is float or value[0] is int) and (value[1] is float or value[1] is int) and is_finite(float(value[0])) and is_finite(float(value[1])) and value[0]>=0 and value[1]>=0 and value[0]<size[0] and value[1]<size[1]
@@ -243,6 +280,7 @@ static func load_field(mid: String) -> PlayableField:
 	var rows: Variant = manifest.get("chunks")
 	if not rows is Array or rows.is_empty(): return null
 	var positions: Dictionary = {}
+	var generated_aden: bool=mid=="aden_world" and not preload("res://scripts/maps/aden_mobile_pack.gd").pack().is_empty()
 	for chunk: Dictionary in rows+manifest.get("foreground",[]):
 		var filename: String = str(chunk.get("file",""))
 		if filename.get_file() != filename or not filename.ends_with(".png"): return null
@@ -254,6 +292,8 @@ static func load_field(mid: String) -> PlayableField:
 		if positions.has(key): return null
 		positions[key] = true
 		var path: String = local_root+"/"+mid+"/"+filename
+		# Generated deployment retains original metadata/navigation, not original art bytes.
+		if generated_aden:continue
 		if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != chunk.get("sha256",""): return null
 		var handle := FileAccess.open(path,FileAccess.READ)
 		if handle == null: return null
