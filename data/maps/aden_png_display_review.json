@@ -229,6 +229,93 @@
       ],
       "evidence": "MANUAL_LOCAL_PNG_WALL_BASE_REVIEW_20261024",
       "scope": "ONE_HUT_ONLY_NOT_FULL_CAMP_OR_FOREGROUND_VERIFICATION"
+    },
+    {
+      "id": "desert_rock_a",
+      "shape": "circle",
+      "center": [
+        7500,
+        5310
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_rock_b",
+      "shape": "polygon",
+      "points": [
+        [
+          7654,
+          5346
+        ],
+        [
+          7678,
+          5345
+        ],
+        [
+          7685,
+          5354
+        ],
+        [
+          7679,
+          5360
+        ],
+        [
+          7655,
+          5354
+        ]
+      ],
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_rock_c",
+      "shape": "circle",
+      "center": [
+        7643,
+        5464
+      ],
+      "radius": 7,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_crystal_a",
+      "shape": "circle",
+      "center": [
+        7613,
+        5300
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_crystal_b",
+      "shape": "circle",
+      "center": [
+        7711,
+        5355
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "snow_tree_2",
+      "shape": "circle",
+      "center": [
+        7819,
+        1151
+      ],
+      "radius": 3,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "worm_rock",
+      "shape": "circle",
+      "center": [
+        7866,
+        5544
+      ],
+      "radius": 5,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
     }
   ],
   "local_collision_review_20261024": {
@@ -254,5 +341,123 @@
       "other camp trees and huts",
       "remaining 17 Aden zones full collision"
     ]
-  }
+  },
+  "collision_add": [
+    {
+      "id": "desert_crystal_nw",
+      "shape": "circle",
+      "center": [
+        7521,
+        5241
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_crystal_ne",
+      "shape": "circle",
+      "center": [
+        7738,
+        5234
+      ],
+      "radius": 5,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_crystal_center",
+      "shape": "circle",
+      "center": [
+        7734,
+        5288
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_crystal_west",
+      "shape": "circle",
+      "center": [
+        7587,
+        5357
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "desert_crystal_se",
+      "shape": "circle",
+      "center": [
+        7801,
+        5440
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "worm_crystal_north",
+      "shape": "circle",
+      "center": [
+        7881,
+        5521
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "worm_crystal_east",
+      "shape": "circle",
+      "center": [
+        7997,
+        5581
+      ],
+      "radius": 8,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "worm_crystal_center",
+      "shape": "circle",
+      "center": [
+        7932,
+        5608
+      ],
+      "radius": 9,
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    },
+    {
+      "id": "death_knight_approach_wall",
+      "shape": "polygon",
+      "points": [
+        [
+          8188,
+          3376
+        ],
+        [
+          8201,
+          3379
+        ],
+        [
+          8230,
+          3379
+        ],
+        [
+          8242,
+          3377
+        ],
+        [
+          8243,
+          3383
+        ],
+        [
+          8200,
+          3386
+        ],
+        [
+          8187,
+          3382
+        ]
+      ],
+      "evidence": "MANUAL_SOURCE_PNG_BATCH_REVIEW_20261024"
+    }
+  ],
+  "batch_review_scope": "18/18 existing walk pockets visually triaged; targeted local collision corrections only, not full terrain or foreground verified"
 }

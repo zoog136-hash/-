@@ -44,22 +44,28 @@ static func plan() -> Dictionary:
 		if not valid_polygon(cut.get("polygon_image"),extra.sources["Aden.png"].size) or not valid_point(cut.get("foot_image"),extra.sources["Aden.png"].size):return {}
 	extra.maps.aden_world["runtime_foreground"]=display_review.get("foreground",[])
 	for replacement: Dictionary in display_review.get("collision_replace",[]):
-		var source_size: Array=extra.sources["Aden.png"].size
-		if replacement.get("shape")=="circle":
-			if not valid_point(replacement.get("center"),source_size) or float(replacement.get("radius",0))<=0:return {}
-		elif replacement.get("shape")=="polygon":
-			if not valid_polygon(replacement.get("points"),source_size):return {}
-		else:return {}
+		if not valid_review_collision(replacement,extra.sources["Aden.png"].size):return {}
 		var found: bool=false
 		for i: int in range(extra.maps.aden_world.collision.size()):
 			if extra.maps.aden_world.collision[i].id==replacement.id:extra.maps.aden_world.collision[i]=replacement;found=true;break
 		if not found:return {}
+	for addition: Dictionary in display_review.get("collision_add",[]):
+		if not valid_review_collision(addition,extra.sources["Aden.png"].size):return {}
+		if extra.maps.aden_world.collision.any(func(shape: Dictionary) -> bool:return shape.id==addition.id):return {}
+		extra.maps.aden_world.collision.append(addition)
 	value.sources.merge(extra.get("sources",{}))
 	value.maps.merge(extra.get("maps",{}))
 	var domination: Dictionary=read_json(DOMINATION_PLAN_PATH)
 	value.sources.merge(domination.get("sources",{}))
 	value.maps.merge(domination.get("maps",{}))
 	return value
+
+static func valid_review_collision(shape: Dictionary, size: Array) -> bool:
+	if str(shape.get("id","")).is_empty():return false
+	if shape.get("shape")=="circle":
+		return valid_point(shape.get("center"),size) and is_finite(float(shape.get("radius",0))) and float(shape.get("radius",0))>0
+	if shape.get("shape")=="polygon":return valid_polygon(shape.get("points"),size)
+	return false
 
 static func valid_point(value: Variant, size: Array) -> bool:
 	return value is Array and value.size()==2 and (value[0] is float or value[0] is int) and (value[1] is float or value[1] is int) and is_finite(float(value[0])) and is_finite(float(value[1])) and value[0]>=0 and value[1]>=0 and value[0]<size[0] and value[1]<size[1]
