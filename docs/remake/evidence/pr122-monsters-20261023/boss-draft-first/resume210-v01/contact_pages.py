@@ -27,20 +27,41 @@ def main():
     pages=[]
     for (slug,role),rows in grouped.items():
         rows.sort(key=lambda r:ORDER.index(r['direction']))
-        tilew,tileh=768,550
+        tilew,tileh=768,710
         image=Image.new('RGB',(tilew*2,tileh*((len(rows)+1)//2)+48),(58,62,65))
         draw=ImageDraw.Draw(image)
         draw.text((16,12),f'{slug}  {role.upper()}  | all six original phases per source; fixed camera',fill='white')
         sources=[]
         for index,row in enumerate(rows):
             source=ROOT/row['source'];assert sha(source)==row['source_sha256']
-            original=Image.open(source).convert('RGBA')
+            shown=source;status=row['status']
+            proof=review/'owned-parts-repair'/slug/(row['clip']+'.json')
+            if proof.exists():
+                repaired=json.loads(proof.read_text())
+                if repaired['status']=='LOSSLESS_OWNED_PARTS_PASS':
+                    assert repaired['source_sha256']==row['source_sha256']
+                    shown=ROOT/repaired['texture'];assert sha(shown)==repaired['texture_sha256']
+                    status='LOSSLESS_OWNED_PARTS_FIXED'
+            original=Image.open(shown).convert('RGBA')
             background=Image.new('RGBA',original.size,(66,70,73,255));background.alpha_composite(original)
-            background.thumbnail((tilew-16,tileh-42),Image.Resampling.LANCZOS)
+            background.thumbnail((tilew-16,502),Image.Resampling.LANCZOS)
             x=tilew*(index%2)+(tilew-background.width)//2;y=48+tileh*(index//2)
             image.paste(background.convert('RGB'),(x,y+26))
-            draw.text((tilew*(index%2)+12,y+5),row['direction']+'  '+row['clip']+'  '+row['status'],fill='white')
-            sources.append(dict(source=row['source'],sha256=row['source_sha256'],clip=row['clip'],direction=row['direction']))
+            draw.text((tilew*(index%2)+12,y+5),row['direction']+'  '+row['clip']+'  '+status,fill='white')
+            native=[]
+            pattern=f'{role}-{row["direction"]}-action-*.png'
+            for capture in (HERE/'minimum-batches').glob('*/runtime/*/captures/'+pattern):
+                if capture.parent.parent.name not in (slug,slug+'_'+role):continue
+                native.append(capture)
+            native.sort(key=lambda p:int(p.stem.rsplit('-',1)[-1]))
+            # Existing normal-speed viewport captures are reused, not replayed.
+            # Include the visible game floor and root marker beneath every pose.
+            for phase,capture in enumerate(native[:6]):
+                scene=Image.open(capture).convert('RGB').crop((320,160,640,480))
+                scene.thumbnail((128,128),Image.Resampling.LANCZOS)
+                image.paste(scene,(tilew*(index%2)+128*phase,y+560))
+            draw.text((tilew*(index%2)+12,y+539),f'Godot normal speed: {len(native[:6])}/6 existing frame captures' if native else 'Native playback pending grouped source-geometry repair',fill=(210,220,225))
+            sources.append(dict(source=row['source'],sha256=row['source_sha256'],clip=row['clip'],direction=row['direction'],display_texture=shown.relative_to(ROOT).as_posix(),display_texture_sha256=sha(shown),status=status,native_previews=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p)) for p in native[:6]]))
         path=out/(slug+'-'+role+'.jpg');assert not path.exists();image.save(path,quality=94)
         pages.append(dict(slug=slug,role=role,path=path.relative_to(ROOT).as_posix(),sha256=sha(path),sources=sources))
     manifest=dict(source_sheets=sum(len(p['sources']) for p in pages),source_poses=6*sum(len(p['sources']) for p in pages),whole_visual_review='AWAITING_INSPECTION',pages=pages)

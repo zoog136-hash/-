@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run one frozen post-draft structural review and common ownership repair.
+"""Prepare one frozen post-draft review before any grouped corrections.
 
 Visual judgments stay with the reviewer. A service failure stops this worker
 instead of treating missing artwork as completed or retrying generation.
@@ -22,7 +22,7 @@ def main():
         if time.monotonic()-started>4*3600:
             print(json.dumps(dict(status='BOUNDED_WAIT_EXPIRED_FULL_REVIEW_NOT_STARTED')),flush=True);return
         time.sleep(15)
-    commands=[['python3',str(PRODUCTION/'full_source_review.py'),'--resume210'],['python3',str(PRODUCTION/'repair_owned_parts.py'),'--review-root',str(HERE/'whole-review-v01')],['python3',str(HERE/'verify_owned_roundtrip.py')],['python3',str(HERE/'contact_pages.py')]]
+    commands=[['python3',str(PRODUCTION/'full_source_review.py'),'--resume210'],['python3',str(HERE/'contact_pages.py')]]
     print(json.dumps(dict(status='ALL_210_SAVED_SINGLE_FULL_REVIEW_STARTED')),flush=True)
     for command in commands:
         result=subprocess.run(command,cwd=ROOT,text=True,capture_output=True,timeout=900)
@@ -30,5 +30,5 @@ def main():
         print(json.dumps(dict(step=Path(command[1]).name,returncode=result.returncode,summary=result.stdout[-1800:]),ensure_ascii=False),flush=True)
         if result.returncode:
             print(json.dumps(dict(status='POST_DRAFT_HOLD',step=Path(command[1]).name,reason=result.stderr[-1800:],automatic_retry=False)),flush=True);return
-    print(json.dumps(dict(status='SINGLE_STRUCTURE_REVIEW_AND_LOSSLESS_REPAIR_DONE_VISUAL_INSPECTION_PENDING')),flush=True)
+    print(json.dumps(dict(status='SINGLE_STRUCTURE_REVIEW_DONE_VISUAL_INSPECTION_AND_ERROR_FREEZE_REQUIRED_BEFORE_GROUPED_REPAIRS')),flush=True)
 if __name__=='__main__':main()
