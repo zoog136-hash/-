@@ -1,0 +1,75 @@
+{
+  "label": "bossfix-min005",
+  "checked_new_sheets": 6,
+  "safe_played_clips": 0,
+  "held": [
+    {
+      "slug": "grim_reaper",
+      "clip": "W-idle-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "iris",
+      "clip": "E-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "iris",
+      "clip": "NW-idle-v02",
+      "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-idle-v02",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-run-v02",
+      "reason": "A visible pose touches the image boundary"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [],
+  "runtime": null,
+  "source_pins": [
+    {
+      "slug": "grim_reaper",
+      "clip": "W-idle-v02",
+      "sha256": "6f0b23fba543918847a2fbe2b6963401f460603f2fc72ec2fd1bb087348664cb"
+    },
+    {
+      "slug": "iris",
+      "clip": "E-attack-v02",
+      "sha256": "8b505cd4b52dfdc37ac97f7f214d8ed8a735a1b0afafc5feec6cb54d266cf483"
+    },
+    {
+      "slug": "iris",
+      "clip": "NW-idle-v02",
+      "sha256": "98183af2642dee497ec00aff16b5463ff243eee7d6914568a5ac8de0de89c8ca"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-hit-v02",
+      "sha256": "771f394f48b60777fe6a6224a80ade20f5264d56c702a59db85fe14fe59460db"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-idle-v02",
+      "sha256": "bdc2d816e7605afb6bab45fa5cb536b10fb150a8b93ef6d19fe4a0ab4f446181"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-run-v02",
+      "sha256": "f0f6199981f7c62d9c0ee534cf853fe3d1f05fc5df8b8311d0ca81c70bff817f"
+    }
+  ]
+}

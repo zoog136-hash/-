@@ -34,8 +34,11 @@ def category(reason):
     return 'other_source_geometry'
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--resume210',action='store_true');args=parser.parse_args()
-    if args.resume210:
+    parser=argparse.ArgumentParser();parser.add_argument('--resume210',action='store_true');parser.add_argument('--queue',type=Path);parser.add_argument('--output',type=Path);args=parser.parse_args()
+    if args.queue:
+        jobs=json.loads(args.queue.read_text())['jobs']
+        assert args.output,'Changed-source inventory needs a new explicit output'
+    elif args.resume210:
         jobs=json.loads((HERE/'resume210-v01/queue.json').read_text())['jobs']
         assert all((HERE/j['slug']/(j['clip']+'-receipt.json')).exists() for j in jobs),'Finish all 210 first drafts before the single full review'
     else:
@@ -49,9 +52,10 @@ def main():
     pending=[]
     for j in jobs:
         f=HERE/j['slug']
-        if not (f/(j['clip']+'-receipt.json')).exists() and not (f/(j['clip']+'-generation-hold.json')).exists() and (j['slug'],j['clip']) not in service_slots:pending.append(dict(actor=j['actor'],clip=j['clip']))
+        attempt=args.queue.parent/'attempts'/(j['slug']+'__'+j['clip']+'.json') if args.queue else None
+        if not (f/(j['clip']+'-receipt.json')).exists() and not (f/(j['clip']+'-generation-hold.json')).exists() and (j['slug'],j['clip']) not in service_slots and not (attempt and attempt.exists()):pending.append(dict(actor=j['actor'],clip=j['clip']))
     assert not pending,'Unresolved first-pass queue: '+str(len(pending))+' clips; no source or explicit service HOLD'
-    out=(HERE/'resume210-v01/whole-review-v01') if args.resume210 else HERE/'whole-review-v01'
+    out=args.output.resolve() if args.output else (HERE/'resume210-v01/whole-review-v01') if args.resume210 else HERE/'whole-review-v01'
     assert not (out/'summary.json').exists(),'Frozen inventory already complete; verify only changed/affected clips'
     out.mkdir(exist_ok=True)
     importer_sha=sha(ROOT/'tools/import_original_based_motion.py')
@@ -66,10 +70,13 @@ def main():
             rows.append(previous);continue
         row=dict(actor=j['actor'],slug=j['slug'],clip=j['clip'],role=j['role'],direction=j['direction'])
         row['importer_sha256']=importer_sha
+        request=folder/'requests'/(j['clip']+'.json')
+        row['layout']=json.loads(request.read_text())['layout'] if request.exists() else 'phase_grid3'
         saved.parent.mkdir(parents=True,exist_ok=True)
         if not receipt.exists():
             hold=folder/(j['clip']+'-generation-hold.json')
             if hold.exists():row.update(status='HOLD',cause='generation_output_missing',evidence=json.loads(hold.read_text()))
+            elif args.queue:row.update(status='HOLD',cause='targeted_generation_hold',evidence=json.loads((args.queue.parent/'attempts'/(j['slug']+'__'+j['clip']+'.json')).read_text()))
             else:row.update(status='HOLD',cause='generation_service_usage_limit',evidence=service_slots[(j['slug'],j['clip'])])
             rows.append(row)
             saved.write_text(json.dumps(row,ensure_ascii=False,indent=2)+'\n');continue
@@ -83,12 +90,13 @@ def main():
             weak_areas=np.bincount(weak_labels.ravel())[1:]
             row['component_inventory']=dict(strong_alpha100_bodies_ge200=int(np.count_nonzero(strong_areas>=200)),foreground_alpha16_parts_ge200=int(np.count_nonzero(weak_areas>=200)),strong_component_areas=sorted((int(v) for v in strong_areas if v>=200),reverse=True))
             cache=folder/'structural-checks'/(j['clip']+'.json')
-            checked=json.loads(cache.read_text()) if cache.exists() else None
+            try:checked=json.loads(cache.read_text()) if cache.exists() else None
+            except json.JSONDecodeError:checked=None  # A final minimum batch may still be closing its cache.
             if checked and checked['source_sha256']==rec['sha256'] and checked['importer_sha256']==importer_sha:
                 if checked['status']=='SOURCE_HOLD':raise ValueError(checked['reason'])
                 g=checked['geometry'];row['reused_pinned_minimum_check']=True
             else:
-                g=core.analyze(source,6,[0,3],directions_axis='phase_grid3',canvas_size=2048,directions=[j['direction']])
+                g=core.analyze(source,6,[0,3],directions_axis=row['layout'],canvas_size=2048,directions=[j['direction']])
                 core.require_complete_pose_regions(source,g)
                 canvas=max(64,round(g['neutral_height']*256/96/8)*8)
                 for f in g['frames']:core._rebase_mixed_frame_canvas(f,canvas)

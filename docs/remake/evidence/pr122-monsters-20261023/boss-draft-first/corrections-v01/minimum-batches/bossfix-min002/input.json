@@ -1,0 +1,171 @@
+{
+  "jobs": [
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-idle-v02",
+      "direction": "NE",
+      "role": "idle",
+      "corrects": "NE-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/NE-idle-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SE-attack-v02",
+      "direction": "SE",
+      "role": "attack",
+      "corrects": "SE-attack-v01",
+      "causes": [
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/SE-attack-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "NW-idle-v02",
+      "direction": "NW",
+      "role": "idle",
+      "corrects": "NW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/NW-idle-v02.json"
+    }
+  ],
+  "source_pins": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/NE-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-4de01486-8b5e-43ce-a948-beae21506c7a.png",
+      "sha256": "350de1dafdbb40b0b59d8a893850e20c82ecfb88d74f88dcb91a4f8c020c726d",
+      "bytes": 2620402,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 828526,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/SE-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-38b93bba-a840-4eab-a660-b616dee19653.png",
+      "sha256": "685782f5cad1b2fd5e08dcd240237228277154a429e5f11e8c51c46c32d1856b",
+      "bytes": 2508747,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 914212,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/SW-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-ed22bdea-eac3-40a0-b937-fa4635b9017b.png",
+      "sha256": "53c223fe6e23f276ec928cc741ca6e29493a19f0e7e516f5b9faf8acea8eee19",
+      "bytes": 2506589,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 944857,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/SW-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-c6975370-a9df-4553-8628-42410cb0082c.png",
+      "sha256": "4c063daf6349c304f823a58cbe086158a4839b09aa7a0516e4cd1cb0e81bed56",
+      "bytes": 2157047,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1099656,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/W-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-5290d3c4-e31e-47e4-bde0-2a4eb262c309.png",
+      "sha256": "c72af1e1ec131e52ddba71c8f827cdc72bec0df740f22c3f84d2795d82150593",
+      "bytes": 2549680,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 910116,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/NW-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-316ed5e3-99fa-40b7-b74a-4004effbfa82.png",
+      "sha256": "27934d04dd8505c6edc6f65eae1907fe65c6b359ace9b7eb3df4c32f56e047d1",
+      "bytes": 2524476,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 927360,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    }
+  ],
+  "normal_art_changes": 0,
+  "whole_quality_review": "TARGETED_CORRECTIONS_ONLY"
+}

@@ -1,0 +1,1009 @@
+{
+  "schema": "pr122-confirmed-targeted-corrections-v1",
+  "planned": 83,
+  "attempts_per_clip": 1,
+  "good_clips_regenerated": 0,
+  "jobs": [
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "NE-run-v02",
+      "direction": "NE",
+      "role": "run",
+      "corrects": "NE-run-v01",
+      "causes": [
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/NE-run-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-hit-v02",
+      "direction": "W",
+      "role": "hit",
+      "corrects": "W-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-hit-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-idle-v02",
+      "direction": "W",
+      "role": "idle",
+      "corrects": "W-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-idle-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-run-v02",
+      "direction": "W",
+      "role": "run",
+      "corrects": "W-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-run-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-attack-v02",
+      "direction": "NE",
+      "role": "attack",
+      "corrects": "NE-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/NE-attack-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-idle-v02",
+      "direction": "NE",
+      "role": "idle",
+      "corrects": "NE-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/NE-idle-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SE-attack-v02",
+      "direction": "SE",
+      "role": "attack",
+      "corrects": "SE-attack-v01",
+      "causes": [
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/SE-attack-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "NW-idle-v02",
+      "direction": "NW",
+      "role": "idle",
+      "corrects": "NW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/NW-idle-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "SE-attack-v02",
+      "direction": "SE",
+      "role": "attack",
+      "corrects": "SE-attack-v01",
+      "causes": [
+        "physical_component_count"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/SE-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "W-run-v02",
+      "direction": "W",
+      "role": "run",
+      "corrects": "W-run-v01",
+      "causes": [
+        "physical_component_count"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/W-run-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "E-idle-v02",
+      "direction": "E",
+      "role": "idle",
+      "corrects": "E-idle-v01",
+      "causes": [
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/E-idle-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "SW-run-v02",
+      "direction": "SW",
+      "role": "run",
+      "corrects": "SW-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/SW-run-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "W-idle-v02",
+      "direction": "W",
+      "role": "idle",
+      "corrects": "W-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/W-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "E-attack-v02",
+      "direction": "E",
+      "role": "attack",
+      "corrects": "E-attack-v01",
+      "causes": [
+        "physical_component_count"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/E-attack-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "E-idle-v02",
+      "direction": "E",
+      "role": "idle",
+      "corrects": "E-idle-v01",
+      "causes": [
+        "foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/E-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "NW-idle-v02",
+      "direction": "NW",
+      "role": "idle",
+      "corrects": "NW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/NW-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "S-run-v02",
+      "direction": "S",
+      "role": "run",
+      "corrects": "S-run-v01",
+      "causes": [
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/S-run-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-run-v02",
+      "direction": "SW",
+      "role": "run",
+      "corrects": "SW-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/SW-run-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-hit-v02",
+      "direction": "W",
+      "role": "hit",
+      "corrects": "W-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/W-hit-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-idle-v02",
+      "direction": "W",
+      "role": "idle",
+      "corrects": "W-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/W-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "W-run-v02",
+      "direction": "W",
+      "role": "run",
+      "corrects": "W-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/W-run-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "N-run-v02",
+      "direction": "N",
+      "role": "run",
+      "corrects": "N-run-v01",
+      "causes": [
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/N-run-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "NE-hit-v02",
+      "direction": "NE",
+      "role": "hit",
+      "corrects": "NE-hit-v01",
+      "causes": [
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/NE-hit-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "NE-idle-v02",
+      "direction": "NE",
+      "role": "idle",
+      "corrects": "NE-idle-v01",
+      "causes": [
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/NE-idle-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "NW-idle-v02",
+      "direction": "NW",
+      "role": "idle",
+      "corrects": "NW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/NW-idle-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "clip": "W-hit-v02",
+      "direction": "W",
+      "role": "hit",
+      "corrects": "W-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/isabelle/W-hit-v02.json"
+    },
+    {
+      "actor": "monster:욥니르",
+      "slug": "jopnir",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/jopnir/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:욥니르",
+      "slug": "jopnir",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/jopnir/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:욥니르",
+      "slug": "jopnir",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/jopnir/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:욥니르",
+      "slug": "jopnir",
+      "clip": "SW-run-v02",
+      "direction": "SW",
+      "role": "run",
+      "corrects": "SW-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/jopnir/SW-run-v02.json"
+    },
+    {
+      "actor": "monster:교만의 왕자 데우스",
+      "slug": "prince_deus",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/prince_deus/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:교만의 왕자 데우스",
+      "slug": "prince_deus",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/prince_deus/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:교만의 왕자 데우스",
+      "slug": "prince_deus",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/prince_deus/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:교만의 왕자 데우스",
+      "slug": "prince_deus",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/prince_deus/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_anubis/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_anubis/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_anubis/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "clip": "SW-run-v02",
+      "direction": "SW",
+      "role": "run",
+      "corrects": "SW-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_anubis/SW-run-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-hit-v02",
+      "direction": "W",
+      "role": "hit",
+      "corrects": "W-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/W-hit-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-idle-v02",
+      "direction": "W",
+      "role": "idle",
+      "corrects": "W-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/W-idle-v02.json"
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_osiris/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_osiris/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_osiris/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "NE-idle-v02",
+      "direction": "NE",
+      "role": "idle",
+      "corrects": "NE-idle-v01",
+      "causes": [
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/NE-idle-v02.json"
+    },
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "physical_component_count"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zeros/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zeros/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zeros/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zeros/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "W-hit-v02",
+      "direction": "W",
+      "role": "hit",
+      "corrects": "W-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zeros/W-hit-v02.json"
+    },
+    {
+      "actor": "monster:제로스",
+      "slug": "zeros",
+      "clip": "W-idle-v02",
+      "direction": "W",
+      "role": "idle",
+      "corrects": "W-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zeros/W-idle-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-run-v02",
+      "direction": "NE",
+      "role": "run",
+      "corrects": "NE-run-v01",
+      "causes": [
+        "affected_same_camera_error"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/NE-run-v02.json"
+    },
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "N-run-v02",
+      "direction": "N",
+      "role": "run",
+      "corrects": "N-run-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/N-run-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "E-attack-v02",
+      "direction": "E",
+      "role": "attack",
+      "corrects": "E-attack-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/E-attack-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "S-death-v02",
+      "direction": "S",
+      "role": "death",
+      "corrects": "S-death-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/S-death-v02.json"
+    }
+  ]
+}

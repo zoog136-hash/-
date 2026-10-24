@@ -1,0 +1,271 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:질투의 공주 이자벨": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "attack",
+          "direction": "W",
+          "animation": "attack_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/W-attack-v02.png",
+          "source_sha256": "e2d6d527362dafadce8a22096bd51077446b047b693082c937ac7702f01b670d",
+          "texture": "assets/actors/eight_direction/boss_draft_first/isabelle/sources/W-attack-v02.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  119,
+                  2,
+                  610,
+                  358
+                ],
+                "margin": [
+                  159,
+                  176,
+                  238,
+                  490
+                ],
+                "source_anchor": [
+                  384,
+                  356
+                ],
+                "rgba_sha256": "b5824040bed63dc00907d119a300d2a0ccdcf01718f9af82537c6d9828177545",
+                "canvas_size": [
+                  848,
+                  848
+                ],
+                "foot": [
+                  424,
+                  530
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  969,
+                  5,
+                  495,
+                  350
+                ],
+                "margin": [
+                  241,
+                  184,
+                  353,
+                  498
+                ],
+                "source_anchor": [
+                  1152,
+                  351
+                ],
+                "rgba_sha256": "d9002cd5d75804cb9f11b0c868131dd2ac5d5b20c7a3ad9d6ffac4590791a1c6",
+                "canvas_size": [
+                  848,
+                  848
+                ],
+                "foot": [
+                  424,
+                  530
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  11,
+                  373,
+                  780,
+                  302
+                ],
+                "margin": [
+                  51,
+                  232,
+                  68,
+                  546
+                ],
+                "source_anchor": [
+                  384,
+                  671
+                ],
+                "rgba_sha256": "fe64cc7d4e779d77e1524ea4ecfc55588e9c4da293c54cff1f1daa8c387ba373",
+                "canvas_size": [
+                  848,
+                  848
+                ],
+                "foot": [
+                  424,
+                  530
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  801,
+                  384,
+                  726,
+                  288
+                ],
+                "margin": [
+                  73,
+                  246,
+                  122,
+                  560
+                ],
+                "source_anchor": [
+                  1152,
+                  668
+                ],
+                "rgba_sha256": "7d6e6960a5fb25c7e6927ccc003a8d529578f2e2a4123873021e96d82f515f52",
+                "canvas_size": [
+                  848,
+                  848
+                ],
+                "foot": [
+                  424,
+                  530
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  188,
+                  686,
+                  583,
+                  331
+                ],
+                "margin": [
+                  228,
+                  203,
+                  265,
+                  517
+                ],
+                "source_anchor": [
+                  384,
+                  1013
+                ],
+                "rgba_sha256": "2b5738407b871eaa7edb3e15be6c1c9ca4d465389e7c3d4fbded94be3bc7326b",
+                "canvas_size": [
+                  848,
+                  848
+                ],
+                "foot": [
+                  424,
+                  530
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  816,
+                  677,
+                  684,
+                  342
+                ],
+                "margin": [
+                  88,
+                  192,
+                  164,
+                  506
+                ],
+                "source_anchor": [
+                  1152,
+                  1015
+                ],
+                "rgba_sha256": "a8dabc74867e9b1edc8ba9e7d3bbeed44d743c31553a13cbe2923c9d65d23308",
+                "canvas_size": [
+                  848,
+                  848
+                ],
+                "foot": [
+                  424,
+                  530
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 317.0,
+            "canvas_size": [
+              848,
+              848
+            ],
+            "foot": [
+              424,
+              530
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/bossfix-min008/SpriteFrames.tres",
+      "frames_sha256": "ba6819a8acda2581dbd09ea020a5ab09c6a91d4d60c3939af963f23cb4797c34",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/bossfix-min008/NativeMotionProfile.tres",
+      "native_profile_sha256": "9851bb40cf52770c640ed14994a2529794678ee710e04bec01f33e5f48fe4449",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "death_2",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [
+    {
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "W-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "source_drafts_saved": 3,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

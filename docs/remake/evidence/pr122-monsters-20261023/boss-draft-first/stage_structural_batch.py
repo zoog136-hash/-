@@ -30,11 +30,13 @@ def main():
     p.add_argument('--only-resume',action='store_true',help='Minimum playback checks only for the previously absent 210 sheets')
     p.add_argument('--inventory-root',type=Path,help='Explicit frozen review directory for changed clips')
     p.add_argument('--receipt-list',type=Path,help='Check only the pinned clip names in this batch')
+    p.add_argument('--frame-adjustments',type=Path,help='Pinned reviewed frame selection and canvas calibration only')
     a=p.parse_args()
     actor=next(v for v in json.loads((HERE/'plan.json').read_text())['actors'] if v['slug']==a.slug)
     folder=HERE/a.slug
     importer_sha=sha(ROOT/'tools/import_original_based_motion.py')
     tracks,holds=[],[]
+    adjustments=json.loads(a.frame_adjustments.read_text()) if a.frame_adjustments else {}
     review=a.inventory_root.resolve() if a.inventory_root else HERE/'whole-review-v01'
     inventory={r['clip']:r for r in json.loads((review/'structural-inventory.json').read_text())['clips'] if r['slug']==a.slug} if a.reviewed_inventory else {}
     receipts=sorted(v for v in folder.glob('*-receipt.json') if v.name!='canonical-v01-receipt.json')
@@ -52,7 +54,7 @@ def main():
         check=folder/'structural-checks'/f'{clip}.json'
         if a.reviewed_inventory:
             row=inventory[clip];assert row['source_sha256']==record['sha256']
-            repair=review/'owned-parts-repair'/a.slug/(clip+'.json')
+            repair=ROOT/row['ownership_proof'] if row.get('ownership_proof') else review/'owned-parts-repair'/a.slug/(clip+'.json')
             if row['status']=='STRUCTURAL_PASS':result=dict(status='STRICT_WHOLE_POSE_PASS',geometry=row['geometry'])
             elif repair.exists() and (fixed:=json.loads(repair.read_text()))['status']=='LOSSLESS_OWNED_PARTS_PASS':
                 assert fixed['source_sha256']==record['sha256'] and sha(ROOT/fixed['texture'])==fixed['texture_sha256']
@@ -61,9 +63,9 @@ def main():
         elif check.exists():
             result=json.loads(check.read_text());assert result['source_sha256']==record['sha256'] and result['importer_sha256']==importer_sha
         else:
-            result=dict(source=record['source'],source_sha256=record['sha256'],importer_sha256=importer_sha,layout='phase_grid3',visual_review='DEFERRED_UNTIL_ALL_DRAFTS')
+            result=dict(source=record['source'],source_sha256=record['sha256'],importer_sha256=importer_sha,layout=job['layout'],visual_review='DEFERRED_UNTIL_ALL_DRAFTS')
             try:
-                geometry=core.analyze(source,6,[0,3],directions_axis='phase_grid3',canvas_size=2048,directions=[job['direction']])
+                geometry=core.analyze(source,6,[0,3],directions_axis=job['layout'],canvas_size=2048,directions=[job['direction']])
                 core.require_complete_pose_regions(source,geometry)
                 canvas=max(64,round(geometry['neutral_height']*256/96/8)*8)
                 for f in geometry['frames']:core._rebase_mixed_frame_canvas(f,canvas)
@@ -82,10 +84,31 @@ def main():
         track=dict(role=job['role'],direction=job['direction'],animation=f'{job["role"]}_{COMPASS.index(job["direction"])}',source=record['source'],source_sha256=record['sha256'],texture=texture.relative_to(ROOT).as_posix(),geometry=deepcopy(result['geometry']),quality_review='FIRST_DRAFT_ONLY; full review deferred',production_connected=False)
         tracks.append(track)
         if 'ownership_proof' in result:track['lossless_source_ownership_proof']=result['ownership_proof']
+        adjustment=adjustments.get(a.slug,{}).get(clip)
+        if adjustment:
+            assert adjustment['source_sha256']==record['sha256']
+            g=track['geometry']
+            track['reviewed_frame_adjustment']=adjustment
+            if 'canvas_size' in adjustment:
+                canvas=adjustment['canvas_size'];old=g['canvas_size'][0]
+                for f in g['frames']:
+                    f['margin'][0]+=canvas//2-old//2
+                    f['margin'][1]+=canvas*5//8-old*5//8
+                    f['margin'][2]=canvas-f['region'][2]
+                    f['margin'][3]=canvas-f['region'][3]
+                    assert min(f['margin'])>=0
+                g.update(canvas_size=[canvas,canvas],foot=[canvas//2,canvas*5//8],neutral_height=adjustment['neutral_height'])
+                core.require_complete_pose_regions(texture,g)
+            if 'selected_phases' in adjustment:
+                selected=adjustment['selected_phases'];assert job['role']=='attack' and len(selected)>=5
+                assert selected==sorted(set(selected)) and selected[0]==0 and selected[-1]==5
+                track['unselected_source_geometry']=deepcopy(g)
+                g['frames']=[g['frames'][i] for i in selected]
+                g['distinct_pixel_frames']=len({f['rgba_sha256'] for f in g['frames']})
     assert tracks,'No safely separated six-pose clips for playback; keep raw sources and continue other bosses'
     assets=ROOT/'assets/actors/eight_direction/boss_draft_first'/a.slug/a.revision
     paths={t['texture']:str(i+1) for i,t in enumerate(tracks)}
-    lines=[f'[gd_resource type="SpriteFrames" load_steps={len(tracks)*7+1} format=3]']
+    lines=[f'[gd_resource type="SpriteFrames" load_steps={len(paths)+sum(len(t["geometry"]["frames"]) for t in tracks)+1} format=3]']
     for texture,key in paths.items():lines+=['',f'[ext_resource type="Texture2D" path="res://{texture}" id="{key}"]']
     animations=[]
     for i,t in enumerate(tracks):
@@ -94,7 +117,7 @@ def main():
             key=f'draft_{i}_{phase}'
             lines+=['',f'[sub_resource type="AtlasTexture" id="{key}"]',f'atlas = ExtResource("{paths[t["texture"]]}")','region = Rect2(%s)'%', '.join(map(str,f['region'])),'margin = Rect2(%s)'%', '.join(map(str,f['margin'])),'filter_clip = true']
             poses.append('{"duration": 1.0, "texture": SubResource("%s")}'%key)
-        animations.append('{"frames": [%s], "loop": %s, "name": &"%s", "speed": %.9f}'%(',\n'.join(poses),str(t['role'] in ('idle','run')).lower(),t['animation'],6/SECONDS[t['role']]))
+        animations.append('{"frames": [%s], "loop": %s, "name": &"%s", "speed": %.9f}'%(',\n'.join(poses),str(t['role'] in ('idle','run')).lower(),t['animation'],len(poses)/SECONDS[t['role']]))
     lines+=['','[resource]','animations = [\n'+',\n'.join(animations)+'\n]','metadata/twilight_canvas_size = Vector2(256, 256)','metadata/twilight_production_connected = false','metadata/twilight_detailed_completed = false','']
     frames=assets/'SpriteFrames.tres';put(frames,'\n'.join(lines).encode())
     native=assets/'NativeMotionProfile.tres'
@@ -104,7 +127,7 @@ def main():
     profile='\n'.join(['[gd_resource type="Resource" script_class="TwilightAnimationProfile" load_steps=2 format=3]','','[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1"]','','[resource]','script = ExtResource("1")','profile_id = '+json.dumps(actor['id'],ensure_ascii=False),'frames_path = "res://'+frames.relative_to(ROOT).as_posix()+'"','layout = "directional8"','motion_style = '+json.dumps(record.get('animation_profile',{}).get('motion_style','slash')),'movement_fps = 12.5','reference_speed = 210.0',f'pixel_scale = {scale:.12f}',f'sprite_offset = Vector2(0, {-32*scale:.12f})','authored_motion_weight = 0.0','hit_recoil = 0.0','embedded_shadow = false','floating = '+str(record.get('animation_profile',{}).get('floating',False)).lower(),'attack_hit_frame = 2','action_hit_frames = {"attack": 2}','death_duration = 0.8','metadata/twilight_production_connected = false','metadata/twilight_detailed_completed = false',''])
     put(native,profile.encode())
     missing=sorted(({f'{role}_{d}' for role in ('idle','run','attack','hit') for d in range(8)}|{'death_2'})-{t['animation'] for t in tracks})
-    staged=dict(kind='boss',quality_tier='mythic_transform',tracks=tracks,frames='res://'+frames.relative_to(ROOT).as_posix(),frames_sha256=sha(frames),native_profile='res://'+native.relative_to(ROOT).as_posix(),native_profile_sha256=sha(native),native_track_count=len(tracks),native_pose_count=len(tracks)*6,distinct_source_pose_count=len({f['rgba_sha256'] for t in tracks for f in t['geometry']['frames']}),missing_required_tracks=missing,production_connected=False,detailed_completed=False,quality_review='DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending')
+    staged=dict(kind='boss',quality_tier='mythic_transform',tracks=tracks,frames='res://'+frames.relative_to(ROOT).as_posix(),frames_sha256=sha(frames),native_profile='res://'+native.relative_to(ROOT).as_posix(),native_profile_sha256=sha(native),native_track_count=len(tracks),native_pose_count=sum(len(t['geometry']['frames']) for t in tracks),distinct_source_pose_count=len({f['rgba_sha256'] for t in tracks for f in t['geometry']['frames']}),missing_required_tracks=missing,production_connected=False,detailed_completed=False,quality_review='DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending')
     out=folder/a.revision
     put(out/'candidate.json',(json.dumps(dict(schema='pr122-boss-repair-staging-v1',actors={actor['id']:staged},source_holds=holds,source_drafts_saved=len(receipts),new_approvals=0,default_catalog_switches=0),ensure_ascii=False,indent=2)+'\n').encode())
     print(json.dumps(dict(slug=a.slug,source_drafts=len(receipts),safe_clips=len(tracks),held_clips=len(holds),candidate=(out/'candidate.json').relative_to(ROOT).as_posix())))
