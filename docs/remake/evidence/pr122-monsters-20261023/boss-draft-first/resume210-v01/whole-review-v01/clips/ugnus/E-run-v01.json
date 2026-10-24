@@ -1,0 +1,25 @@
+{
+  "actor": "monster:오만한 우그누스",
+  "slug": "ugnus",
+  "clip": "E-run-v01",
+  "role": "run",
+  "direction": "E",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/E-run-v01.png",
+  "source_sha256": "95bde9ed1ae7d17adad5e97366af7756de3c30c122742d31950fc3fe346c3d6c",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      101267,
+      98198,
+      97476,
+      96252,
+      94925,
+      92661
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

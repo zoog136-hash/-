@@ -1,0 +1,247 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/raw/W-attack-v01.png",
+  "source_sha256": "fc82d5fa96f760203e4da69a5002e1bf6ac2abb233759c4df8d75d1c3a418c7d",
+  "texture": "assets/actors/eight_direction/boss_draft_first/jopnir/owned_parts_v01/W-attack-v01.png",
+  "texture_sha256": "07b6c73577be7b47c32a82096507c21e166d8b2b46f1c14c8663ea6f606a8e66",
+  "geometry": {
+    "image_size": [
+      1944,
+      1296
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "W",
+        "region": [
+          3,
+          3,
+          552,
+          558
+        ],
+        "margin": [
+          456,
+          387,
+          872,
+          866
+        ],
+        "source_anchor": [
+          259,
+          506
+        ],
+        "rgba_sha256": "c734702869d68e93f2733b2aa410e30524d9674d27d29d054af8ef5ac3b75816",
+        "original_source_region": [
+          0,
+          0,
+          552,
+          558
+        ],
+        "original_source_anchor": [
+          256,
+          503
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "W",
+        "region": [
+          651,
+          3,
+          575,
+          568
+        ],
+        "margin": [
+          449,
+          390,
+          849,
+          856
+        ],
+        "source_anchor": [
+          914,
+          503
+        ],
+        "rgba_sha256": "dad083aadc3f1fc50d6007614712530bb4c909dfd644f84e59e42524dd1d4cbd",
+        "original_source_region": [
+          505,
+          0,
+          575,
+          568
+        ],
+        "original_source_anchor": [
+          768,
+          500
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "W",
+        "region": [
+          1299,
+          3,
+          639,
+          559
+        ],
+        "margin": [
+          329,
+          418,
+          785,
+          865
+        ],
+        "source_anchor": [
+          1682,
+          475
+        ],
+        "rgba_sha256": "dd13853852e133637db5475d82c294327b598b8c23d70a7960cc93561e2e3ab5",
+        "original_source_region": [
+          897,
+          21,
+          639,
+          559
+        ],
+        "original_source_anchor": [
+          1280,
+          493
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "W",
+        "region": [
+          3,
+          651,
+          641,
+          511
+        ],
+        "margin": [
+          471,
+          444,
+          783,
+          913
+        ],
+        "source_anchor": [
+          244,
+          1097
+        ],
+        "rgba_sha256": "125ac0f156cbb7e3cb25ef9a240190ef37de1fad5b436a301e0f365175aa86fd",
+        "original_source_region": [
+          15,
+          513,
+          641,
+          511
+        ],
+        "original_source_anchor": [
+          256,
+          959
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "W",
+        "region": [
+          651,
+          651,
+          489,
+          465
+        ],
+        "margin": [
+          545,
+          461,
+          935,
+          959
+        ],
+        "source_anchor": [
+          818,
+          1080
+        ],
+        "rgba_sha256": "32d31a0e37d5f94043b1ad700055b0ebef7d59a7731923b1b070b1e608056e38",
+        "original_source_region": [
+          601,
+          529,
+          489,
+          465
+        ],
+        "original_source_anchor": [
+          768,
+          958
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "W",
+        "region": [
+          1299,
+          651,
+          481,
+          511
+        ],
+        "margin": [
+          475,
+          407,
+          943,
+          913
+        ],
+        "source_anchor": [
+          1536,
+          1134
+        ],
+        "rgba_sha256": "1202a08dc06309dc4138c812bf3ef6732702729a92410b69aa7b6b9a0a2271f0",
+        "original_source_region": [
+          1043,
+          499,
+          481,
+          511
+        ],
+        "original_source_anchor": [
+          1280,
+          982
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 534.5,
+    "canvas_size": [
+      1424,
+      1424
+    ],
+    "foot": [
+      712,
+      890
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 653185,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "edf3ce386286e7560bcc5848b1544a58b4bdcb858f6ad6cd1aa7a243dae16dfd",
+    "foreground_owner_sha256": "15a3a7a6eff4529ec11e7de24a7e425a83bc434249c19e9811f73fd55509ff5a",
+    "detached_pixels": 1,
+    "detached_fragments": [
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          758,
+          695,
+          759,
+          696
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 210.76052761368766,
+        "owner_margin_min": 207.93210048894147
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 116368,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:욥니르",
+  "slug": "jopnir",
+  "clip": "W-attack-v01",
+  "role": "attack",
+  "direction": "W",
+  "original_cause": "foreign_body_rectangle"
+}
