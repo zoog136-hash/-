@@ -1,6 +1,10 @@
 extends SceneTree
 const QA=preload("res://tests/qa_class_selection.gd")
-func _initialize() -> void:call_deferred("run")
+func _initialize() -> void:
+	var comparison_pack: String=OS.get_environment("ADEN_COMPARISON_PACK")
+	if not comparison_pack.is_empty():
+		if not ProjectSettings.load_resource_pack(comparison_pack,true):printerr("Comparison pack missing");quit(1);return
+	call_deferred("run")
 func run() -> void:
 	if DisplayServer.get_name()=="headless":printerr("Rendered test required");quit(1);return
 	var out: String=OS.get_environment("ADEN_MOBILE_OUTPUT");var failures: Array=[];var views: Array=[]
