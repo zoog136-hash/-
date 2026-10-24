@@ -1,0 +1,132 @@
+{
+  "base_main": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "scope": "Focused local verification; full GitHub CI still required for the final remote commit",
+  "focused_tests": [
+    {
+      "case": "aden_faith_png_monster_spawns_test",
+      "returncode": 0,
+      "seconds": 170.226,
+      "changed_during_test": [],
+      "summary": {
+        "total": 1,
+        "passed": 1,
+        "failed": [],
+        "skipped": [],
+        "not_run": []
+      },
+      "assertions": 1261,
+      "source_sha256": {
+        "tests/aden_faith_png_monster_spawns_test.gd": "ad9196445431694a392e60d311b9feef358f51b9fba9b39eac5167df413d6ac8",
+        "tests/native_png_route_checks.gd": "30d5c3668d0bebbdbab05cd9938c5763ef0963dd930ef735726d99e03f30ed9b",
+        "scripts/maps/native_png_field.gd": "8522fa7e3113c1f9b9b3f6358bd14864f0a19a6788ba38fa17b817f8a8a1fd41",
+        "scripts/maps/native_png_route_graph.gd": "bedbfa5e4b651756615ba8d55398a3b402109a0216065432433a3638f34de3aa",
+        "scripts/maps/native_png_registry.gd": "77361f5554420cacfc3076ad32dbc704eddf7a9725ee58e57c45900bf9915b38",
+        "scripts/maps/remake_renderer.gd": "f840f82ca33b4ed384dda19eb8def91329d547880d6abec118caf0198087e807",
+        "scripts/maps/playable_field.gd": "ac4098897dcc94942393189420e0d4c4447217eca4e75cea47c3c222f5ebcb6e",
+        "scripts/maps/png_world_scale.gd": "ec6b11443b37cdd60204a95cc30154c02969105929da8d504060251b2e580b5c",
+        "scripts/maps/field_population.gd": "09d3c9b97bb03c68d47b9d6cd225322c601ef672f63db9b88a1a4510120e8dea",
+        "scripts/monsters/boss_director.gd": "f0f7fbabe371540a4de83e9f212d2322086952e465c8ca1a880c7b88125899ea",
+        "scripts/world.gd": "32bc50365a4d3d5a836c2d9fefc5e7d280976885210ef02541225aece8eda63a",
+        "scripts/player.gd": "3034e27c102a569a5008c357e6a53a79c6f945c9bf1f973505082f90367460f2",
+        "data/maps/native_png_navigation_corrections.json": "f1ff0867bc4e3e3bc6bfdf6d6d919fd90399d30d3911c9071d024c554caffe50",
+        "data/maps/native_png_plan.json": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+        "data/maps/domination_png_plan.json": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+        "data/maps/aden_faith_png_plan.json": "6ec5ef89bed215ea4a7f7ea8c03c5fe889f59c29d12284db704a607f6e287180",
+        "tools/test_project.py": "72790837e20c7aff003d53a338f7bc6f5389d747c9b7da3ff6b8e61f33b6e626",
+        "tools/test_project_support.py": "64c81542e3f2f9e331f2a478c5280507d9803a61aea86e3844647b43d051a7a7",
+        "project.godot": "46b7da583149e4b887b3c94f3d23dcb31c163e3af7879348faaddb896b2ac616"
+      }
+    },
+    {
+      "case": "aden_faith_png_save_migration_test",
+      "returncode": 0,
+      "seconds": 34.548,
+      "changed_during_test": [],
+      "summary": {
+        "total": 1,
+        "passed": 1,
+        "failed": [],
+        "skipped": [],
+        "not_run": []
+      },
+      "assertions": 168,
+      "source_sha256": {
+        "tests/aden_faith_png_save_migration_test.gd": "5f3bbef8e1b6817fe2c567bb68c89fd7e7479955bf4c417a738a405b5cbacd1f",
+        "tests/native_png_route_checks.gd": "30d5c3668d0bebbdbab05cd9938c5763ef0963dd930ef735726d99e03f30ed9b",
+        "scripts/maps/native_png_field.gd": "8522fa7e3113c1f9b9b3f6358bd14864f0a19a6788ba38fa17b817f8a8a1fd41",
+        "scripts/maps/native_png_route_graph.gd": "bedbfa5e4b651756615ba8d55398a3b402109a0216065432433a3638f34de3aa",
+        "scripts/maps/native_png_registry.gd": "77361f5554420cacfc3076ad32dbc704eddf7a9725ee58e57c45900bf9915b38",
+        "scripts/maps/remake_renderer.gd": "f840f82ca33b4ed384dda19eb8def91329d547880d6abec118caf0198087e807",
+        "scripts/maps/playable_field.gd": "ac4098897dcc94942393189420e0d4c4447217eca4e75cea47c3c222f5ebcb6e",
+        "scripts/maps/png_world_scale.gd": "ec6b11443b37cdd60204a95cc30154c02969105929da8d504060251b2e580b5c",
+        "scripts/maps/field_population.gd": "09d3c9b97bb03c68d47b9d6cd225322c601ef672f63db9b88a1a4510120e8dea",
+        "scripts/monsters/boss_director.gd": "f0f7fbabe371540a4de83e9f212d2322086952e465c8ca1a880c7b88125899ea",
+        "scripts/world.gd": "32bc50365a4d3d5a836c2d9fefc5e7d280976885210ef02541225aece8eda63a",
+        "scripts/player.gd": "3034e27c102a569a5008c357e6a53a79c6f945c9bf1f973505082f90367460f2",
+        "data/maps/native_png_navigation_corrections.json": "f1ff0867bc4e3e3bc6bfdf6d6d919fd90399d30d3911c9071d024c554caffe50",
+        "data/maps/native_png_plan.json": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+        "data/maps/domination_png_plan.json": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+        "data/maps/aden_faith_png_plan.json": "6ec5ef89bed215ea4a7f7ea8c03c5fe889f59c29d12284db704a607f6e287180",
+        "tools/test_project.py": "72790837e20c7aff003d53a338f7bc6f5389d747c9b7da3ff6b8e61f33b6e626",
+        "tools/test_project_support.py": "64c81542e3f2f9e331f2a478c5280507d9803a61aea86e3844647b43d051a7a7",
+        "project.godot": "46b7da583149e4b887b3c94f3d23dcb31c163e3af7879348faaddb896b2ac616"
+      }
+    },
+    {
+      "case": "native_png_catalog_test",
+      "returncode": 0,
+      "seconds": 0.39,
+      "changed_during_test": [],
+      "summary": {
+        "total": 1,
+        "passed": 1,
+        "failed": [],
+        "skipped": [],
+        "not_run": []
+      },
+      "assertions": 53,
+      "source_sha256": {
+        "tests/native_png_catalog_test.gd": "856f00fa6c8cd0bdc8b240a755b139479a64fa8a29e3636cb918da4535b13bf4",
+        "tests/native_png_route_checks.gd": "30d5c3668d0bebbdbab05cd9938c5763ef0963dd930ef735726d99e03f30ed9b",
+        "scripts/maps/native_png_field.gd": "8522fa7e3113c1f9b9b3f6358bd14864f0a19a6788ba38fa17b817f8a8a1fd41",
+        "scripts/maps/native_png_route_graph.gd": "bedbfa5e4b651756615ba8d55398a3b402109a0216065432433a3638f34de3aa",
+        "scripts/maps/native_png_registry.gd": "77361f5554420cacfc3076ad32dbc704eddf7a9725ee58e57c45900bf9915b38",
+        "scripts/maps/remake_renderer.gd": "f840f82ca33b4ed384dda19eb8def91329d547880d6abec118caf0198087e807",
+        "scripts/maps/playable_field.gd": "ac4098897dcc94942393189420e0d4c4447217eca4e75cea47c3c222f5ebcb6e",
+        "scripts/maps/png_world_scale.gd": "ec6b11443b37cdd60204a95cc30154c02969105929da8d504060251b2e580b5c",
+        "scripts/maps/field_population.gd": "09d3c9b97bb03c68d47b9d6cd225322c601ef672f63db9b88a1a4510120e8dea",
+        "scripts/monsters/boss_director.gd": "f0f7fbabe371540a4de83e9f212d2322086952e465c8ca1a880c7b88125899ea",
+        "scripts/world.gd": "32bc50365a4d3d5a836c2d9fefc5e7d280976885210ef02541225aece8eda63a",
+        "scripts/player.gd": "3034e27c102a569a5008c357e6a53a79c6f945c9bf1f973505082f90367460f2",
+        "data/maps/native_png_navigation_corrections.json": "f1ff0867bc4e3e3bc6bfdf6d6d919fd90399d30d3911c9071d024c554caffe50",
+        "data/maps/native_png_plan.json": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+        "data/maps/domination_png_plan.json": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+        "data/maps/aden_faith_png_plan.json": "6ec5ef89bed215ea4a7f7ea8c03c5fe889f59c29d12284db704a607f6e287180",
+        "tools/test_project.py": "72790837e20c7aff003d53a338f7bc6f5389d747c9b7da3ff6b8e61f33b6e626",
+        "tools/test_project_support.py": "64c81542e3f2f9e331f2a478c5280507d9803a61aea86e3844647b43d051a7a7",
+        "project.godot": "46b7da583149e4b887b3c94f3d23dcb31c163e3af7879348faaddb896b2ac616"
+      }
+    }
+  ],
+  "map_evidence": "map-path-recovery.json",
+  "workflow_files": 74,
+  "actionlint": "1.7.12; shellcheck/pyflakes disabled; no diagnostics",
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026
+  },
+  "python_tests": {
+    "runner_contracts": 56,
+    "native_png": 12,
+    "renewed_spawn": 10
+  },
+  "post_runtime_runner_budget": {
+    "path": "tools/test_project_support.py",
+    "change": "Only hunting_paths_test receives max(requested, 300); game/test source unchanged",
+    "sha256": "4ce14e1ed26c2707a66ed64b2598b81105de3f7cd3cdd8c21b79ded5ae8d1bd6",
+    "reverified_contract_tests": 56,
+    "engine_tests_reexecuted": false
+  }
+}

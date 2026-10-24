@@ -15,6 +15,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ordinary-game:
     runs-on: ubuntu-latest
@@ -24,7 +29,8 @@ jobs:
       - name: Official Godot 4.7.2 and software display
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri python3-numpy python3-pil
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri python3-numpy python3-pil ripgrep
+          command -v rg >/dev/null
           base=https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable
           curl -fL --retry 3 "$base/Godot_v4.7.2-stable_linux.x86_64.zip" -o /tmp/godot.zip
           curl -fL --retry 3 "$base/SHA512-SUMS.txt" -o /tmp/sums.txt

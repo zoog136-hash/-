@@ -5,7 +5,31 @@ class_name NativePngField
 const NATIVE_SPAWNS = preload("res://scripts/monsters/native_png_spawns.gd")
 const PNG_SCALE = preload("res://scripts/maps/png_world_scale.gd")
 const DOMINATION_GAMEPLAY=preload("res://scripts/maps/domination_png_gameplay.gd")
+const PRECISE_ROUTE_GRAPH=preload("res://scripts/maps/native_png_route_graph.gd")
 var artwork_scale: float=1.0
+var precise_routes: AStar2D
+
+func path(from: Vector2, to: Vector2) -> PackedVector2Array:
+	if walkable(from) and walkable(to):
+		var start: Vector2i=world_to_cell(from)
+		var finish: Vector2i=world_to_cell(to)
+		if reachable[start.y*width+start.x]!=0 and reachable[finish.y*width+finish.x]!=0 and line_clear(from,to):
+			return PackedVector2Array([to])
+	if precise_routes!=null:return precise_routes.route(from,to)
+	var route: PackedVector2Array=super.path(from,to)
+	if route.is_empty():return route
+	var previous: Vector2=from
+	var valid: bool=true
+	for point: Vector2 in route:
+		if not line_clear(previous,point):valid=false;break
+		previous=point
+	if valid:return route
+	# Cell centers alone cannot prove the intervening segment clears a wall
+	# or narrow floor corner. Build exact edge checks only when one is needed.
+	precise_routes=PRECISE_ROUTE_GRAPH.new()
+	precise_routes.configure(self)
+	return precise_routes.route(from,to)
+
 const FLOOR_BUCKET: int=512
 var floor_buckets: Dictionary={}
 var floor_polygons_empty: bool=true
@@ -49,6 +73,7 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	png_root = local_root
 	landing_candidates.clear()
 	landing_candidates_ready = false
+	precise_routes=null
 	var spec: Dictionary = plan.maps[mid]
 	artwork_scale=PNG_SCALE.ADEN_SCALE if mid=="aden_world" else 1.0
 	var spawn: Array = spec.spawn.duplicate(true)

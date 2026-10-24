@@ -9,6 +9,11 @@ on:
       - main
   workflow_dispatch:
 
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   combat-formula:
     runs-on: ubuntu-latest
@@ -24,10 +29,13 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
-      - name: Full project boot and exact formula regressions
+      - name: Project boot and exact formula regressions
+        # Integration keeps the full suite on these PR bases; other events remain full.
+        env:
+          TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'integration/twilight-complete-20261009') && 'import,bake_navigation,boot,combat_resolution_equivalence_test,weapon_rules_smoke_test,weapon_size_damage_test,critical_damage_bonus_test,item_options_runtime_smoke_test,passive_skill_smoke_test,skill_element_integration_smoke_test,equipment_collection_stats_test,combat_timing_test,combat_timeline_lifecycle_test,original_skill_target_state_test,original_skill_status_coexistence_test' || '' }}
         run: |
           set -o pipefail
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results 2>&1 | tee combat-formula-tests.log
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --only "$TWILIGHT_CI_TESTS" 2>&1 | tee combat-formula-tests.log
           grep -q COMBAT_RESOLUTION_OK test-results/combat_resolution_equivalence_test.log
       - name: Preserve evidence
         if: always()
