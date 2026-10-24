@@ -99,3 +99,12 @@ python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64
 ```
 
 렌더 검사는 Linux에서 Xvfb/Mesa 또는 실제 화면이 필요하다. 로컬 Linux 소프트웨어 OpenGL 결과가 Android·Windows 실기기 성능을 보장하지는 않는다. 실제 실행 결과와 정확한 커밋 SHA는 [PR #152](https://github.com/zoog136-hash/-/pull/152)와 [검증 증거 인덱스](option-awakening-20261023/README.md)에 남긴다.
+
+
+## 2026-10-24 CI 회귀 재검증
+
+- 실제 GitHub CI가 지적한 `aden-png-source-validate`의 누락된 `rg` 명령을 동일한 실패 탐지 정규식의 `grep -E`로 교체했습니다.
+- 실제 PNG/몬스터 전체 검사에만 300초 실행 예산을 적용하며, 체크·상태 판정·실패 조건을 유지합니다.
+- 복수 지도에서 재현된 경로/보스 개체 식별 불일치는 실패를 유지하고 좌표·식별자 진단을 추가했습니다.
+- PR #152의 문 경계 표시 수정을 PR #153에도 포함했습니다. 지도 탐색·보스 원인 수정은 CI 확인 전 완료로 간주하지 않습니다.
+- 이 업데이트된 소스 HEAD의 PR CI 결과로만 승인/병합 여부를 판정합니다.
