@@ -119,10 +119,7 @@ func configure(definition: Dictionary) -> void:
 	for raw: Array in data.get("navigable_polygons",[]):
 		navigable_polygons.append(REGION_GEOMETRY.polygon({"polygon":raw}))
 	if not navigation_cache_hit and not navigable_polygons.is_empty():
-		for y: int in range(height):
-			for x: int in range(width):
-				var cell := Vector2i(x,y)
-				if not inside_navigable_area(cell_to_world(cell)): astar.set_point_solid(cell)
+		_rasterize_navigable_floor()
 	blockers.clear()
 	blocker_buckets.clear()
 	for raw: Dictionary in data["collision"]:
@@ -180,7 +177,15 @@ func configure(definition: Dictionary) -> void:
 				if reachable[y * width + x] != 0 and not is_safe(point) and spawn_contains(region,point):
 					cells.append(cell)
 		spawn_cells[str(region["id"])] = _spaced_dense_cells(region, cells)
-	_remember_navigation(signature,navigation_snapshot())
+	if bool(data.navigation.get("use_baked_cache",true)):
+		_remember_navigation(signature,navigation_snapshot())
+
+
+func _rasterize_navigable_floor() -> void:
+	for y: int in range(height):
+		for x: int in range(width):
+			var cell:=Vector2i(x,y)
+			if not inside_navigable_area(cell_to_world(cell)):astar.set_point_solid(cell)
 
 func _spaced_dense_cells(region: Dictionary, cells: Array[Vector2i]) -> Array[Vector2i]:
 	if str(region.get("mode", "normal")) != "dense": return cells

@@ -55,3 +55,7 @@
 열린 PR는 #122/#152/#153/#154였다. **PR152는 같은 native_png_field.gd 알파 마스크 직후에 발 반경/대각선 통행 보정을 추가 중이라 이후 통합 시 그 부분의 수동 조정과 재검사가 필요하다.** 이번에는 PR152를 병합하거나 해당 보정을 가져오지 않았다. PR154의 성장 변경도 가져오지 않았다. 본 PR을 main에 병합하지 않는다.
 
 원본 대응 감사 재현: `python3 tools/map_restore/audit_aden_source_chunks.py --source /workspace/map-originals/Aden.png`. 로컬 복원본은 `/workspace/map-originals`, 전 실행 로그는 `/workspace/map-repair-evidence`에 유지했다. 원격에 보존하는 것은 저장소의 기존 원본과 이번 선택 증거이며, 모든 임시 파일을 업로드했다고 주장하지 않는다.
+
+## 입장 지연 후속 개선
+
+위 최초 약 5초 측정 이후 CPU 경로를 추가 개선했다. 별도 동일 PC 입장 검사에서 아덴 1.67→0.95초, 에스카로스 5.06→2.67초. 원본 및 남은 자료 요구, 정확성 검증은 [후속 보고서](ENTRY_AND_SOURCE_FOLLOWUP.md)에 기록한다. 아덴 전체 재구성은 여전히 미완료다.

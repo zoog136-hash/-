@@ -40,6 +40,20 @@ func index_walk_polygons(raw: Array) -> void:
 				if not floor_buckets.has(key): floor_buckets[key]=[]
 				floor_buckets[key].append(polygon)
 
+func _rasterize_navigable_floor() -> void:
+	# PNG canvases are mostly void. Set void once in the engine, then evaluate
+	# only indexed polygon buckets using the unchanged exact membership test.
+	astar.fill_solid_region(Rect2i(0,0,width,height),true)
+	for key: Vector2i in floor_buckets:
+		var area:=Rect2(Vector2(key)*FLOOR_BUCKET,Vector2.ONE*FLOOR_BUCKET).intersection(bounds)
+		if not area.has_area():continue
+		var low: Vector2i=world_to_cell(area.position)
+		var high: Vector2i=world_to_cell(area.end)
+		for y: int in range(maxi(0,low.y),mini(height-1,high.y)+1):
+			for x: int in range(maxi(0,low.x),mini(width-1,high.x)+1):
+				var cell:=Vector2i(x,y)
+				if inside_navigable_area(cell_to_world(cell)):astar.set_point_solid(cell,false)
+
 func inside_navigable_area(point: Vector2) -> bool:
 	if floor_polygons_empty: return true
 	# Exact polygon tests remain unchanged. Broad phase avoids scanning all
