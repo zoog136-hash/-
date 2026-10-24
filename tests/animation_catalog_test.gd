@@ -66,6 +66,12 @@ func _run() -> void:
 		"transform:349":"monster:알비노 악어거북"
 	}
 	var profile_db: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/combat_animation_profiles.json"))["profiles"]
+	var connection_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_monster_boss_runtime_connections.json"))
+	var native_connections: Dictionary = {}
+	for connection: Dictionary in connection_data.connections:
+		check(not native_connections.has(connection.id), "unique reviewed native connection " + str(connection.id))
+		native_connections[connection.id] = connection
+	check(native_connections.size() == 6, "six recorded native boss connections")
 	# Pin the six pre-merge approved bodies and their complete immutable packs.
 	# They remain FRAME_INSUFFICIENT; unapproved name/palette aliases cannot
 	# replace their prior approval or count as new production completions.
@@ -137,6 +143,7 @@ func _run() -> void:
 					check(not target_data.is_empty() and not donor_data.is_empty(), "PR122 pair profiles: " + target)
 					var replacement: Dictionary = entry.get("superseded_by_native_pack", {})
 					var prior_replacement: Dictionary = entry.get("prior_approved_native", {})
+					var published_replacement: bool = target in ["monster:테베 아누비스", "monster:알비노 데몬"]
 					if not prior_replacement.is_empty():
 						check(target == "transform:176" and prior_records.has(target), "explicit prior captain preservation")
 						check(native_path == str(prior_replacement.get("frames_path", ""))
@@ -144,9 +151,30 @@ func _run() -> void:
 						check(str(prior_replacement.get("status", "")) == "FRAME_INSUFFICIENT"
 							and int(prior_replacement.get("newly_approved", -1)) == 0, "captain shortage retained, no approval")
 					elif replacement.is_empty():
-						check(native_path == str(donor_data.get("frames_path","")), "PR122 same original source: " + target)
-						check(str(target_data.get("shared_visual_source","")) == donor, "PR122 explicit donor: " + target)
-						check(str(target_data.get("color_tint","")) == str(entry.get("color_tint","")), "PR122 exact tint: " + target)
+						if published_replacement:
+							# The reviewed connection supersedes only these two proxies.
+							# Keep the complete former source identity/tint for auditing;
+							# a published pack does not grant a new formal art approval.
+							var connection: Dictionary = native_connections.get(target, {})
+							var proxy: Dictionary = target_data.get("preserved_proxy_profile", {})
+							check(str(connection.get("status", "")) == "CONNECTED_REVIEWED" and bool(connection.get("formal_approval_history_unchanged", false)), "PR122 reviewed connection, approval history preserved: " + target)
+							check(native_path == str(connection.get("frames", "")) and native_path != str(entry.get("frames_path", "")), "PR122 exact published resource: " + target)
+							check(FileAccess.get_sha256(native_path) == str(connection.get("frames_sha256", "")), "PR122 published source bytes: " + target)
+							check(str(proxy.get("frames_path", "")) == str(entry.get("frames_path", "")) and str(proxy.get("shared_visual_source", "")) == donor, "PR122 preserved proxy source: " + target)
+							check(str(proxy.get("color_tint", "")) == str(entry.get("color_tint", "")), "PR122 preserved proxy tint: " + target)
+							check(str(target_data.get("shared_visual_source", "")).is_empty() and str(target_data.get("color_tint", "")) == "ffffff", "PR122 dedicated source has its own palette: " + target)
+						else:
+							# A donor can acquire its own new pack after this ledger was
+							# written. Aliases keep the exact recorded original source.
+							var original_path: String = str(entry.get("frames_path", ""))
+							var preserved_donor: Dictionary = donor_data.get("preserved_proxy_profile", {})
+							check(native_path == original_path and (original_path == str(donor_data.get("frames_path", "")) or original_path == str(preserved_donor.get("frames_path", ""))), "PR122 same recorded original source: " + target)
+							if original_path != str(donor_data.get("frames_path", "")):
+								var donor_connection: Dictionary = native_connections.get(donor, {})
+								check(str(donor_connection.get("status", "")) == "CONNECTED_REVIEWED" and bool(donor_connection.get("formal_approval_history_unchanged", false)), "PR122 donor upgrade has recorded review: " + target)
+								check(str(donor_data.get("frames_path", "")) == str(donor_connection.get("frames", "")) and FileAccess.get_sha256(str(donor_data.get("frames_path", ""))) == str(donor_connection.get("frames_sha256", "")), "PR122 exact recorded donor upgrade: " + target)
+							check(str(target_data.get("shared_visual_source","")) == donor, "PR122 explicit donor: " + target)
+							check(str(target_data.get("color_tint","")) == str(entry.get("color_tint","")), "PR122 exact tint: " + target)
 					else:
 						# Concurrent batch16 native completions supersede four unreviewed
 						# palette proxies; preserve their real resources and approval evidence.
@@ -158,13 +186,24 @@ func _run() -> void:
 							var decision: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(decision_path))
 							check(str(decision.get("status", "")) == "APPROVED", "PR122 native decision approved: " + target)
 					check(bool(entry.get("identity_verified",true)) == false, "PR122 cannot promote proxy identity " + target)
+					check(ResourceLoader.exists(str(entry.get("frames_path", ""))), "PR122 original palette source retained: " + target)
 					if native_path.is_empty() or not ResourceLoader.exists(native_path):
 						check(false, "PR122 resource exists: " + target)
 						continue
 					var frames_shared: SpriteFrames = CATALOG.frames(native_path, "directional8")
+					var roles: Array[String] = ["idle", "walk", "attack", "hit", "death"]
+					if published_replacement: roles[1] = "run"
+					if published_replacement:
+						var connection: Dictionary = native_connections.get(target, {})
+						var poses: int = 0
+						for animation: StringName in frames_shared.get_animation_names(): poses += frames_shared.get_frame_count(animation)
+						check(int(connection.get("required_clips", 0)) == 33 and frames_shared.get_animation_names().size() == 33 and poses == int(connection.get("source_poses", 0)), "PR122 all published clips and poses: " + target)
+						check(bool(frames_shared.get_meta("twilight_native_locomotion_staging", false)) and bool(frames_shared.get_meta("twilight_production_connected", false)) and not bool(frames_shared.get_meta("twilight_detailed_completed", true)), "PR122 published native metadata without new approval: " + target)
 					for direction: int in range(8):
-						for role: String in ["idle","walk","attack","hit","death"]:
-							var anim: String = role + "_" + str(direction)
+						if published_replacement:
+							check(not frames_shared.has_animation("walk_" + str(direction)) and frames_shared.get_frame_count("run_" + str(direction)) == 6, "PR122 authored RUN-only source: " + target)
+						for role: String in roles:
+							var anim: String = role + "_" + str(2 if published_replacement and role == "death" else direction)
 							check(frames_shared.has_animation(anim) and frames_shared.get_frame_count(anim) >= 2, "PR122 shared 8-way animation: " + target + ":" + anim)
 					var parts: PackedStringArray = target.split(":", false, 1)
 					check(parts.size() == 2, "PR122 explicit ID " + target)

@@ -60,6 +60,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$REVIEW_ROOT"
+          python3 tests/pr122_tomb269_stage_guard_test.py
           python3 tools/check_resource_integrity.py --root .
           python3 tools/audit_pr122_recovery.py --root . --output "$REVIEW_ROOT/392-reconciliation.json"
           python3 tools/restore_pr122_batch03.py docs/remake/evidence/pr122-remaining106/batch03/lossless-evidence "$REVIEW_ROOT/batch03"

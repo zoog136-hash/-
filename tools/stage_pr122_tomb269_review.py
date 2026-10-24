@@ -22,12 +22,57 @@ GROUND02 = {
 }
 
 
-def stage(project, bundle, source_roots, trial, receipt):
+def _require_isolated_main(project):
+    project = project.resolve()
     repository = Path(__file__).resolve().parents[1]
     if project == repository or (project / '.git').exists():
         raise ValueError('Only a separate, non-Git Main copy may receive an unapproved trial')
     if not (project / 'Main.tscn').is_file() or not (project / 'project.godot').is_file():
         raise ValueError('An actual complete Main project is required')
+
+
+def _require_contained_path(project, path):
+    """A disposable project cannot redirect trial writes through an ancestor."""
+    project = project.resolve()
+    try:
+        path.relative_to(project)
+        path.resolve().relative_to(project)
+    except ValueError as error:
+        raise ValueError('Trial path must stay inside the isolated Main project: ' + str(path)) from error
+    for ancestor in (path, *path.parents):
+        if ancestor == project:
+            break
+        if ancestor.is_symlink():
+            raise ValueError('Trial path must not contain symlink ancestors: ' + str(path))
+
+
+def _review_profile(project, target, destination, reference_height):
+    """Prepare the one explicitly requested trial in its disposable Main copy.
+
+    Production imports still use _pose_file_profiles and its unchanged authored
+    profile overwrite guard. This review never authorizes production replacement.
+    """
+    project = project.resolve()
+    _require_isolated_main(project)
+    profile_path = project / 'data/combat_animation_profiles.json'
+    _require_contained_path(project, profile_path)
+    _require_contained_path(project, destination)
+    prior_sha = core.sha(profile_path)
+    document = core.expansion.read(profile_path)
+    if not isinstance(document, dict) or not isinstance(document.get('profiles'), dict):
+        raise ValueError('Runtime animation profiles must contain a profiles object')
+    previous = document['profiles'].get('transform:269', {})
+    if not isinstance(previous, dict):
+        raise ValueError('Runtime animation profile must be an object: transform:269')
+    frames_path = 'res://' + (destination / 'SpriteFrames.tres').relative_to(project).as_posix()
+    document['profiles']['transform:269'] = core._pose_file_profile(
+        previous, target, target, frames_path, reference_height, 4, {})
+    return profile_path, document, prior_sha
+
+
+def stage(project, bundle, source_roots, trial, receipt):
+    repository = Path(__file__).resolve().parents[1]
+    _require_isolated_main(project)
     if receipt.exists():
         raise ValueError('Use a fresh receipt path')
     name = 'tomb_guardian269_source_trial01' if trial == 'source01' else 'tomb_guardian269_ground_trial02'
@@ -130,8 +175,8 @@ def stage(project, bundle, source_roots, trial, receipt):
     targets = {t['key']: t for t in json.loads((project / 'data/animation_authoring_sources.json').read_text())['targets']}
     target = targets['transform:269']
     assert core.sha(project / target['reference']['path'].removeprefix('res://')) == target['reference']['sha256']
-    profile_path, document, _, prior_sha = core._pose_file_profiles(
-        project, targets, ['transform:269'], target, destination, proof['display_reference_height'], 4, {})
+    profile_path, document, prior_sha = _review_profile(
+        project, target, destination, proof['display_reference_height'])
     before = json.loads(profile_path.read_text())
     assert [k for k in document['profiles'] if document['profiles'][k] != before['profiles'].get(k)] == ['transform:269']
     destination.mkdir()

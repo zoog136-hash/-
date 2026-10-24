@@ -36,6 +36,15 @@ assets/actors/eight_direction/original_based/spear_guard_red/provenance.json -te
 assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres -text
 assets/actors/eight_direction/original_based/spear_guard/provenance.json -text
 
+# These six connected native boss packs are authenticated by their source SHA.
+# Preserve the exact recorded bytes when Windows checkout uses core.autocrlf.
+assets/actors/eight_direction/monster_boss_repair/ice_queen/published-v01/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/albino_demon/published-v01/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/albino_unicorn/published-v02/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/thebes_anubis/published-v02/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/kurtz/published-v02/SpriteFrames.tres -text
+
 # The native PNG plan is authenticated as exact bytes by private pack records.
 # Preserve its LF bytes when a Windows checkout enables core.autocrlf.
 data/maps/native_png_*.json -text

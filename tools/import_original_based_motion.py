@@ -603,6 +603,23 @@ def _pose_file_source(root, value):
     return path
 
 
+def _pose_file_profile(previous, target, first, frames_path, reference_height, walk_count, aliases):
+    """Build a profile value without authorizing or writing a catalog change."""
+    profile = previous.copy()
+    if "prior_visual_profile" not in profile:
+        profile["prior_visual_profile"] = profile.copy() or None
+    scale = round(float(first["presentation_to_preserve"].get("visual_height", 100)) / reference_height, 6)
+    profile.update({"name": target["name"], "frames_path": frames_path,
+                    "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff",
+                    "sprite_offset": [0, round(-32 * scale, 6)], "embedded_shadow": False,
+                    "authored_motion_weight": 0, "hit_recoil": 0,
+                    "action_hit_frames": {"attack": 1, **{alias: 1 for alias in aliases}},
+                    "attack_hit_frame": 1, "death_duration": SECONDS["death"],
+                    "movement_fps": walk_count / SECONDS["walk"],
+                    "authoring_reference": target["reference"]["path"]})
+    return profile
+
+
 def _pose_file_profiles(root, targets, keys, first, folder, reference_height, walk_count, aliases):
     """Prepare, but never write, the same production profile convention."""
     path = root / "data/combat_animation_profiles.json"
@@ -616,19 +633,10 @@ def _pose_file_profiles(root, targets, keys, first, folder, reference_height, wa
         previous = document["profiles"].get(key, {})
         if not isinstance(previous, dict):
             raise ValueError("Runtime animation profile must be an object: " + key)
-        profile = previous.copy()
-        if "prior_visual_profile" not in profile:
-            profile["prior_visual_profile"] = profile.copy() or None
-        scale = round(float(first["presentation_to_preserve"].get("visual_height", 100)) / reference_height, 6)
-        profile.update({"name": targets[key]["name"],
-                        "frames_path": "res://" + str((folder / "SpriteFrames.tres").relative_to(root)),
-                        "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff",
-                        "sprite_offset": [0, round(-32 * scale, 6)], "embedded_shadow": False,
-                        "authored_motion_weight": 0, "hit_recoil": 0,
-                        "action_hit_frames": {"attack": 1, **{alias: 1 for alias in aliases}},
-                        "attack_hit_frame": 1, "death_duration": SECONDS["death"],
-                        "movement_fps": walk_count / SECONDS["walk"],
-                        "authoring_reference": targets[key]["reference"]["path"]})
+        profile = _pose_file_profile(
+            previous, targets[key], first,
+            "res://" + str((folder / "SpriteFrames.tres").relative_to(root)),
+            reference_height, walk_count, aliases)
         previous_frames = str(previous.get("frames_path", ""))
         native = (previous_frames.startswith("res://assets/actors/eight_direction/")
                   and previous_frames.endswith("/SpriteFrames.tres")

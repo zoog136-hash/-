@@ -1,0 +1,28 @@
+{
+  "pr": 122,
+  "phase": "VALIDATION_IN_PROGRESS_CHECKPOINT",
+  "source_head": "014ca492bad63265c646e101b227d9e899b12dcb",
+  "base_main": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "all_original_art_and_production_profiles_unchanged": true,
+  "completed_local_checks": {
+    "resource_integrity_atlases": 723,
+    "resource_integrity_frames": 41442,
+    "clean_godot_import_seconds": 395.7,
+    "python_runner_cases": 52,
+    "original_importer_cases": 54,
+    "tomb_guard_cases": 5,
+    "android_export_scope_cases": 6,
+    "movement_death_regressions": [
+      "full_visual_manifest_test",
+      "monster_motion_test",
+      "animation_presentation_test"
+    ]
+  },
+  "in_progress": [
+    "final catalog/palette/expansion replay evidence",
+    "complete native QA actor scopes with isolated processes",
+    "fresh head GitHub Actions and APK/Tomb workflows"
+  ],
+  "remote_ci_policy": "Intermediate checkpoint uses skip ci; final validation commit will start CI. This file is not an all-tests-passed claim.",
+  "created_at_utc": "2026-10-24T08:43:05.808543+00:00"
+}
