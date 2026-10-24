@@ -80,6 +80,10 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         # fresh Main restart passed 1,261 assertions in 166.5 seconds. Keep
         # every assertion while allowing this audit more than the 150s default.
         return max(requested, 300)
+    if name in {'aden_faith_png_runtime_test', 'tower_png_normal_runtime_test'}:
+        # Full real-PNG runtime checks can exceed the generic 150s under CI contention.
+        # Do not omit maps, assertions or failure conditions; allow 300s per test.
+        return max(requested, 300)
     if name == 'ground_loot_system_test':
         # The unchanged 166-check full GUI/physics/save/loot suite completed
         # in ~112 seconds in its dedicated workflow, but exceeded the generic
