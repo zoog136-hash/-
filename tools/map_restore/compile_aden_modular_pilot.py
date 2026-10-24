@@ -28,23 +28,25 @@ def tile(material, size):
     return result
 
 
-def compile_pilot():
+def compile_pilot(base=BASE):
+    BASE = base
     layout = json.loads((BASE/'layout.json').read_text())
     x0,y0,width,height = layout['world_bounds']
     origin = layout['source_origin']
     def point(p): return [round((p[0]-origin[0])*6), round((p[1]-origin[1])*6)]
-    materials = Image.open(BASE/'source/materials.png').convert('RGBA')
+    source_root = ROOT / layout.get('source_root', str(BASE.relative_to(ROOT) / 'source'))
+    materials = Image.open(source_root/'materials.png').convert('RGBA')
     hw,hh = materials.width//2,materials.height//2
     tiles = {}
     for name,(x,y) in dict(stone=(0,0),grass=(1,0),water=(0,1),dirt=(1,1)).items():
         tiles[name] = materials.crop((x*hw,y*hh,(x+1)*hw,(y+1)*hh)).resize((256,256),Image.Resampling.LANCZOS)
-    tiles['stone'] = Image.open(BASE/'source/paving.png').convert('RGBA').resize((512,512),Image.Resampling.LANCZOS)
+    tiles['stone'] = Image.open(source_root/'paving.png').convert('RGBA').resize((512,512),Image.Resampling.LANCZOS)
     ground = tile(tiles['stone'],(width,height))
     for row in layout['terrain']:
         mask = Image.new('L',ground.size)
         ImageDraw.Draw(mask).polygon([tuple(point(p)) for p in row['polygon']],fill=255)
         ground.paste(tile(tiles[row['material']],ground.size),(0,0),mask)
-    atlas=Image.open(BASE/'source/objects.png').convert('RGBA')
+    atlas=Image.open(source_root/'objects.png').convert('RGBA')
     # Actual generated atlas cells were visually inspected; objects are not
     # assumed to obey the requested 512px grid.
     boxes={'fountain':(0,0,550,460),'hedge':(550,0,1008,460),'bed':(1008,0,1536,460),
@@ -57,9 +59,15 @@ def compile_pilot():
         visible=sprite.getchannel('A').point(lambda a:255 if a>=16 else 0).getbbox()
         if visible is None:raise ValueError('Empty generated sprite '+name)
         sprites[name]=sprite.crop(visible)
-    palace=Image.open(BASE/'source/palace.png').convert('RGBA')
+    palace=Image.open(source_root/'palace.png').convert('RGBA')
     sprites['palace']=palace.crop(palace.getchannel('A').point(lambda a:255 if a>=16 else 0).getbbox())
     sprites['wall_reverse']=ImageOps.mirror(sprites['wall'])
+    for name, spec in layout.get('additional_sprites', {}).items():
+        sheet = Image.open(ROOT/spec['file']).convert('RGBA')
+        sprite = sheet.crop(tuple(spec['crop']))
+        bounds = sprite.getchannel('A').point(lambda a:255 if a>=16 else 0).getbbox()
+        assert bounds, name
+        sprites[name] = sprite.crop(bounds)
     out=BASE/'compiled';out.mkdir(exist_ok=True)
     chunks=compile_chunks(ground,[0,0,width,height],out/'ground',512)
     composite=ground.copy();records=[];cache={}
@@ -75,7 +83,10 @@ def compile_pilot():
         position=[foot[0]-pivot[0],foot[1]-pivot[1]]
         composite.alpha_composite(sprite,tuple(position))
         records.append(dict(id=row['id'],file=name,position=position,foot=foot,size=list(sprite.size),sha256=digest(out/name)))
-    composite.save(out/'palace_gardens_3072x2048.png')
+    full_name=layout.get('full_png','palace_gardens_3072x2048.png')
+    composite.save(out/full_name)
+    for panel in layout.get('panels',[]):
+        composite.crop(tuple(panel['rect'])).save(out/panel['file'])
     # Reconstruct all written ground chunks before accepting the compilation.
     restored=Image.new('RGBA',ground.size)
     for row in chunks:restored.paste(Image.open(out/'ground'/row['file']),tuple(row['position']))
@@ -84,12 +95,18 @@ def compile_pilot():
     assert restored.tobytes()==composite.tobytes(), 'Ground/foreground reconstruction mismatch'
     report=dict(schema=1,world_bounds=layout['world_bounds'],source_origin=origin,source_scale=6,
                 image_pixels_per_world_unit=1,ground_chunks=chunks,foreground=records,
-                full_png='palace_gardens_3072x2048.png',full_png_sha256=digest(out/'palace_gardens_3072x2048.png'),
-                layout_sha256=digest(BASE/'layout.json'),source_assets={p.name:digest(p) for p in sorted((BASE/'source').glob('*.png'))},
+                full_png=full_name,full_png_sha256=digest(out/full_name),
+                layout_sha256=digest(BASE/'layout.json'),source_assets={p.name:digest(p) for p in sorted(source_root.glob('*.png'))},
+                additional_source_assets={spec['file']:digest(ROOT/spec['file']) for spec in layout.get('additional_sprites',{}).values()},
+                panels=layout.get('panels',[]),
                 ground_rgba_bytes=width*height*4,unique_foreground_rgba_bytes=sum(s.width*s.height*4 for s,n in cache.values()),
                 ground_chunk_roundtrip=True,composite_roundtrip=True,navigation_modified=False,
                 placement_count=len(records),source_art_upscaled=False)
     write(out/'manifest.json',report)
     print(json.dumps({k:v for k,v in report.items() if k not in ['ground_chunks','foreground']}))
 
-if __name__=='__main__':compile_pilot()
+if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--base',type=Path,default=BASE)
+    compile_pilot(parser.parse_args().base.resolve())
