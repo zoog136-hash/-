@@ -1,0 +1,89 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v06LEFTcontact0",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 0,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png",
+    "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v06/E-LEFT-contact0-existing-stance-only-heel-toe-roll-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v06/E-LEFT-contact0-existing-stance-only-heel-toe-roll-guide.png": "3d6faa08d8c62e2ed20289c433fea0999649c8c620486479a884fa0a10d7b20e"
+  },
+  "reference_provenance": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+    "source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+    "region": [
+      46,
+      4,
+      427,
+      495
+    ],
+    "reference": "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png",
+    "reference_sha256": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "operation": "exactRGBAcrop_no_rescale_recolor_mask",
+    "frame": 0,
+    "currentframes": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/SpriteFrames.tres"
+  },
+  "guide_joint_authority": {
+    "reference_canvas": [
+      427,
+      495
+    ],
+    "preserve_existing_stance_and_thighs": true,
+    "near_RIGHT_rear_toe_ground": [
+      [
+        286,
+        288
+      ],
+      [
+        260,
+        380
+      ],
+      [
+        211,
+        472
+      ],
+      [
+        242,
+        490
+      ]
+    ],
+    "far_LEFT_front_heel_ground": [
+      [
+        322,
+        286
+      ],
+      [
+        345,
+        374
+      ],
+      [
+        344,
+        467
+      ],
+      [
+        390,
+        452
+      ]
+    ],
+    "near_ground_y": 490,
+    "far_ground_y": 467
+  },
+  "transparent_background": true,
+  "corrective_reason": "Materially NEW targeted minimal existing-stance footroll method after wide-stride0 returned actualnearRIGHTlead3candidate. PrimarycurrentEidle already has farLEFTfrontUpper/nearRIGHTrearLower; preservelegpositions and change only frontHEEL/rearTOE roll, no failedwalking source reference or identicalwide-stride retry. Require actual correct depth/ownership.",
+  "user_authorization": "Private production imagegen+boundedJPEG only; no images/mainchat/binary; rootonlyGit/data/integration.",
+  "prompt": "Make ONE precise EARLY WALK LEFT-HEEL CONTACT0 by editing the SAME Girtas in PRIMARY image1. Image2 is ONLY a minimal foot-roll guide. IMPORTANT: image1 ALREADY has FAR LEFT foot at screenRIGHT/FRONT on UPPER ground and NEAR RIGHT foot at screenLEFT/BACK on LOWER ground. KEEP those existing hip/thigh/knee/shin positions and same moderate stance almost exactly. DO NOT invent a big new stride and do NOT bring nearRIGHT leg to front. This is a precise two-ankle/foot-roll change of original standing stance into a genuine double-support contact step.\n\nFAR LEFT = imageRIGHT FRONT boot in image1: keep it in same front/right position and behind near leg in depth, same FAR shin. Put its HEEL down on original UPPER/FAR ground and LIFT ITS TOES a little facingRIGHT (ankle dorsiflexion). Heel is lower than toes within THAT boot. The FAR/leading heel remains clearly ABOVE the other near/rear toe in picture due ground depth. Do not convert leading boot into foreground/nearRIGHT leg.\n\nNEAR RIGHT = imageLEFT BACK boot in image1, same side as RIGHT blade hand: keep same rear/left thigh/knee/shin positions. TOE stays touching original LOWER/NEAR ground, LIFT ITS HEEL a little for rear push-off (ankle plantarflexion). Rear heel above rear toe. Two separate connected legs/boots only. BOTH feet have groundcontact, one farfront heel+one nearrear toe, NO airborne/floating wholefoot, no run or knee-up. Hips shift only slightly toward existing front FAR foot for modest walkcontact, no lunge, no stance/sideswap. Long robe may overlap thighs naturally, but visible same shin/boot sides and ground lanes must remain original. Preserve original LONGrobe/goldtrim, no newslits/shortskirt/pants.\n\nSame E/right-facing camera, pale face and long palehair, goldcrown, blackgoldarmor, THIN HARD STRAIGHT GOLD radialbackrays, originalrobe/boots. Same model proportions and full gear. Original nearRIGHT arm continuously grips SAME long sinuous yellowgold blade LOW/backward as image1, EMPTY farLEFT hand staysfree low; exactly2arms. No Halpaswings/purpleblade/redmask/broadstraight sword or camera turn. Add only small head/shoulder walking readiness and gentle hair/robe lag beyond footroll, no wholeimage translation or activeattack.\n\nONE complete centered transparent1024x1024cutout with full horns/rays/hair/robe/boots/blade tips and clear100px transparent margins. Opaque detailedRPG cutout, thin edgeAA, alpha0 background/gaps. No guide marks, text, coloredlines, floor/shadow, glow, bloom, particles, trails or extraobjects.",
+  "requested_at": "2026-10-19T14:16:04.207052+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

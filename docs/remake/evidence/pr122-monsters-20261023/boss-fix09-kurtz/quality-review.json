@@ -1,0 +1,173 @@
+{
+  "schema": "pr122-kurtz-r003-quality-review-v1",
+  "date": "2026-10-23",
+  "new_approvals": 0,
+  "full_mythic_approvals": 0,
+  "production_connected": false,
+  "detailed_completed": false,
+  "source_generation_calls": 4,
+  "generated_source_PNGs": 4,
+  "selected_source_PNGs": 3,
+  "held_source_PNGs": 1,
+  "new_native_clips": 6,
+  "new_native_poses": 12,
+  "reused_native_clips": 11,
+  "reused_native_poses": 46,
+  "selected_native_clips": 17,
+  "selected_native_poses": 58,
+  "excluded_prior_clips": [
+    {
+      "animation": "run_3",
+      "direction": "SW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/raw/run-front4-v02.png",
+      "source_sha256": "00a72871c581991522d2dfa73a440ebac9ad298a8d40ac1642938381c467c59f",
+      "reason": "Independent source review finds sword in anatomical LEFT hand; camera/hand not corrected by metadata."
+    },
+    {
+      "animation": "run_4",
+      "direction": "W",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/raw/run-back4-v01.png",
+      "source_sha256": "d24402081912b7a01bc2dabde82e230d66b066d0eeddcbcb629f2c2cb3eeae13",
+      "reason": "Baked source W camera flips toward E in phases3-5."
+    },
+    {
+      "animation": "run_5",
+      "direction": "NW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/raw/run-back4-v01.png",
+      "source_sha256": "d24402081912b7a01bc2dabde82e230d66b066d0eeddcbcb629f2c2cb3eeae13",
+      "reason": "Baked source NW camera flips toward opposite view in phases3-5."
+    },
+    {
+      "animation": "idle_4",
+      "direction": "W",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is E rather than requested W."
+    },
+    {
+      "animation": "hit_4",
+      "direction": "W",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is E rather than requested W."
+    },
+    {
+      "animation": "idle_5",
+      "direction": "NW",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is NE rather than requested NW."
+    },
+    {
+      "animation": "hit_5",
+      "direction": "NW",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is NE rather than requested NW."
+    },
+    {
+      "animation": "attack_2",
+      "direction": "S",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/attack-S4-v03.png",
+      "source_sha256": "e6e962d5b58318a890f9856a93e7642a4327feb532712e63f3522eb68dbb5c61",
+      "reason": "S overhead sword-hand identity is inconsistent and target contact extends laterally; requires new source."
+    }
+  ],
+  "scope": "Actual private full sources plus independent source examination. Headless and actual OpenGL/llvmpipe engine playback. Timed combat/physical support/full Main are not approved.",
+  "source_first_pass": {
+    "S_idle_hit": "PASS: front camera / right sword hand / heavy armor and scarlet cape identity",
+    "SE_idle_hit": "PASS_AS_ACTUAL_SE_ONLY: failed pure E request retained only in actual SE assignment",
+    "E_idle_hit": "PASS: second request actually corrected lateral camera and near right-hand greatsword",
+    "SW_requested_idle_hit": "HOLD_WRONG_CAMERA: S-to-SE instead of SW; no source pose selected"
+  },
+  "minimal_validation": {
+    "real_RGBA_PNGs": "PASS",
+    "full_source_connected_pose_and_foreign_body_guards": "PASS_ALL_FOUR_SHEETS",
+    "whole_source_no_omitted_visible_pieces": "PASS",
+    "selected_12_crops_unique_sha_and_exact_once": "INDEPENDENT_PASS",
+    "source_texture_bytes": "INDEPENDENT_PASS_ALL17_TRACKS",
+    "SpriteFrames_NativeProfile_load": "PASS_GODOT_4_7_2",
+    "ActorMotion": "PASS_58_SOURCE_POSES_24_CASES_86_CASE_PHASE_VISITS",
+    "AnimatedSprite2D_play_1x_engine_progress": "PASS",
+    "DEATH_S_requested_all8headings": "PASS",
+    "missing16_no_fallback": "PASS",
+    "real_OpenGL_renderer": "Mesa_llvmpipe_Compatibility",
+    "real_engine_new_source_captures": 12,
+    "private_live_capture_spotcheck": [
+      "idle_0-0.png",
+      "idle_2-0.png",
+      "hit_2-1.png",
+      "hit_1-1.png"
+    ],
+    "private_live_capture_result": "At 1x common profile scale, heavy boss silhouette remains legible; E side is visibly distinct from S/SE; no obvious frame edge cuts or severe body collapse in these four inspected screenshots. This does not certify every contact point or full motion quality."
+  },
+  "scale_ground_basis": {
+    "reference_body_height": 96,
+    "display_body_height": 112,
+    "pixel_scale": 1.1666666666666667,
+    "offset_y": -37.333333333333336,
+    "RGBA_resampled": false,
+    "manual_source_sole_anchor_estimated_uncertainty_px": 8,
+    "physical_ground_contact_approved": false
+  },
+  "missing_required_tracks": [
+    "attack_0",
+    "attack_1",
+    "attack_2",
+    "attack_4",
+    "attack_5",
+    "attack_6",
+    "attack_7",
+    "hit_3",
+    "hit_4",
+    "hit_5",
+    "idle_3",
+    "idle_4",
+    "idle_5",
+    "run_3",
+    "run_4",
+    "run_5"
+  ],
+  "remaining_HOLD": [
+    "SW/W/NW IDLE and HIT absent after camera-quarantine/new SW camera failure",
+    "SW RUN sword held in anatomical left hand; W/NW RUN camera reversals quarantined",
+    "S ATTACK sword hand and target-contact faults quarantined; six other ATTACK views also missing",
+    "Remaining RUN gait cadence and rear-view support under cape need visual QA",
+    "SW ATTACK right-hand continuity static review passed; actual target contact/release timing is unsigned",
+    "Native partial optional library only: no default catalog switch or mythic boss completion"
+  ],
+  "failed_validation_attempts_preserved": [
+    {
+      "log": "playback-run01.txt",
+      "script": "playback-failed01.gd",
+      "reason": "The first test counted a retained sprite after a missing idle transition as an active clip. Test now counts only matching resolved native keys; assets unaffected."
+    },
+    {
+      "log": "render-playback-run01.txt",
+      "reason": "xvfb-run executable not installed; switched to existing project runner."
+    },
+    {
+      "log": "xvfb-log.txt.gz",
+      "receipt": "xvfb-log.failure.json",
+      "reason": "UNIX display socket blocked in restricted execution. Exact repetitive log losslessly compressed; switched to authorized local TCP display."
+    },
+    {
+      "log": "render-playback-run03.txt",
+      "script": "render-playback-failed01.gd",
+      "reason": "New diagnostic script indentation error; corrected before successful rendered run04."
+    }
+  ],
+  "successful_validation_logs": [
+    "playback-run02.txt",
+    "render-playback-run04.txt"
+  ],
+  "prior_assets": "Frozen r001/r002 manifest62 files validated both before and after build; no prior bytes changed."
+}

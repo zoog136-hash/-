@@ -1,0 +1,44 @@
+{
+  "status": "LOCALIZED_SERVICE_INPUT_ONLY_NOT_ART",
+  "master": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+  "master_sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+  "editable_mask": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-run-contact0-localized-union-editable-mask-v04.png",
+  "editable_mask_sha256": "d8115f8b78640bfd1a4497891dd91daae923cf2ee809726e783a381badf5e012",
+  "masked_input": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-run-contact0-localized-hole-input-v04.png",
+  "masked_input_sha256": "75d352083dcbcd3adcb02864ad2b81fba227a0218c8fef875468b8f0ab25123a",
+  "mask_rectangles_xyxy_inclusive": [
+    [
+      360,
+      330,
+      725,
+      735
+    ],
+    [
+      380,
+      650,
+      825,
+      1235
+    ]
+  ],
+  "raw_canvas": [
+    1254,
+    1254
+  ],
+  "crop_origin": [
+    0,
+    0
+  ],
+  "placement_offset": [
+    0,
+    0
+  ],
+  "inverse_map": "identity fullnativecanvas, no crop/noresize",
+  "native_C": 2560,
+  "unitfactor": 2.5,
+  "purpose": "remove oldwrongLEFTarm/legpose pull; service generates actualnewlimbs+occlusion, allnoneditableactualmasterpixels preservedexact in composite",
+  "composition_rule": "candidate=master outside mask; actualserviceRGBA inside mask, no synthesizedpose/rigidoldlimbpaste",
+  "right_staff_outside_mask": true,
+  "head_outside_mask": true,
+  "right_recovery_occlusion": "maskcoversoldnearLleg andsomefarlegoverlap; service regenerates true foldedRIGHTrecovery/occlusion to guide, no newhandedness",
+  "source_approval": false
+}

@@ -1,0 +1,24 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v01.png": "90f3918feaef084f63e3eeffa3301245069ff662bb5a3ca901d3f849f4fc5345",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v01.png": "bf6b450bfadfc06928b2abf20befd59c7f122287344a22f3cd13a052c1be6477"
+  },
+  "transparent_background": true,
+  "user_authorization": "Production image tools authorized; no images or image links in main chat. One private repair attempt.",
+  "corrective_reason": "Previous NW attack phase4 reverses right, phase5 left. New NW sixphase attack must retain same upper-left heading including recovery.",
+  "prompt": "Produce ONE finished production game-animation sprite sheet of the SAME unique boss Halpas shown by the THREE supplied reference images. Original portrait is identity authority. Second and third images are the established NW walk and NW idle: reproduce their exact helmet and anatomical weapon hand, gold-and-black segmented armor, burgundy ragged cape, purple crystalline solid wings, single short broad purple crystalline sword, body proportions and rendering. Do not invent new equipment or change anatomy. This commission corrects a previous attack direction reversal; do not copy or refer to any other attack image.\n\nEXACT FACING: ALL SIX complete bodies stay NORTHWEST, screen UPPER-LEFT, the established rear-left three-quarter NW view. The helmet/nose axis, torso, hips, knees, toes and sword perspective ALL aim diagonally UP AND LEFT, away from camera, matching the supplied correct NW model. Show more of back/rear shoulder than a frontal chest. Cape trails toward screen LOWER-RIGHT. No figure may point RIGHT, DOWN-RIGHT or toward camera. Every phase retains SAME camera, facing, handedness and side of character. Never mirror, flip, turn around, or rotate to show a convenient attack. Every offensive extension goes diagonally UP-LEFT, not horizontally right.\n\nMake SIX truly distinct articulated ATTACK poses, read LEFT-TO-RIGHT then TOP-TO-BOTTOM: phase0 poised NW guard with sword arm drawn in and balanced bent knees; phase1 genuine anticipation with weapon drawn backward along its own UP-LEFT attack axis and torso/hips wound without changing NW facing, wings prepare; phase2 forward launch into NW reach with elbow opening and coordinated wing/leg counterbalance; phase3 exact CONTACT, strongest full arm and blade extension stabbing/slashing diagonally UP-LEFT away from camera, torso lunges in SAME NW direction, full weapon remains visible; phase4 follow-through decelerates the blade on the SAME upper-left side, pelvis and shoulders still face NW, NEVER turn right or toward camera; phase5 controlled recovery retracts sword to NW guard, cape/wings settle, SAME original NW heading. Six different full-body silhouettes and limb configurations, anatomically coherent two arms/two legs/existing wings and only one established weapon in same hand. Phase4 especially must NOT reverse the facing or swing to the right. No copied/translated identical poses.\n\nATLAS: 1024x1536 pixels, EXACT TWO COLUMNS by THREE ROWS, six complete figures only, each inside its own512x512 cell. Keep EVERY visible pixel of helmet, wings, cape, toes and entire sword within a central320x320 region of that cell, leaving96px transparent margin at every cell edge. Bodies at consistent scale across all phases. Keep extra space in the upper-left attack direction by centering each WHOLE silhouette, not just torso. Broad empty alpha gutters, no touching/overlap between cells, no cropped tips. Detailed crisp opaque game-sprite cutouts, elevated orthographic isometric perspective identical to references, gold filigree and hard purple crystal detail readable.\n\nPNG with entirely TRANSPARENT alpha0 background and transparent gaps between limbs. Only character pixels, shading inside body. No shadows of any kind, no floor or ground, no glow outside the solid crystals, bloom, haze, halo, aura, trails, motion blur, particles, floating fragments, grid, labels, text, cell borders or panel backgrounds. A small1-2px antialias fringe only. Preserve exact original boss identity, established equipment, and coherent UP-LEFT NW orientation in ALL SIX poses.",
+  "requested_at": "2026-10-19T10:17:54.853451+00:00"
+}

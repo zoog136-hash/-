@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "NE",
+  "role": "idle",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png",
+    "/workspace/scratch/girtas-N-idle-repair/girtas-N-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802",
+    "/workspace/scratch/girtas-N-idle-repair/girtas-N-idle-v02.png": "eb46f0123a45c58e2988c572ad561cd427df8e63e0850d0fe163c6f0947203f6"
+  },
+  "prompt": "Create one faithful six-phase NE IDLE native animation sheet of the original UNIQUE boss Girtas. Reference1 exact original tiny portrait is the absolute identity authority, reference2 is its faithful enlargement draft for the same original visible face/material/equipment. Image3 is the already faithful BACK/N idle source, supplied only for conservative rear equipment/hair construction; rotate to the requested new heading, do not copy its heading. No other character design or prior generic animation art is allowed.\n\nFIXED ABSOLUTE HEADING FOR ALL6: NORTHEAST: stable BACK-RIGHT three-quarter view facing UP-RIGHT/away from viewer. Back surface and pale hair down back dominate, shoulders/pelvis/boots aim UP-RIGHT, head looks UP-RIGHT and away. Not side-facing EAST, not front-right SE. Do not show the front chest emblem or front-facing human face. AnatomicalRIGHT arm is on right/lower side of projected body; its same curved weapon stays in RIGHT hand, not mirrored into left arm. Keep this exact heading for head, shoulders/torso, pelvis and boots throughout every phase. A breathing pose must not turn into another direction.\n\nOutput transparent1024x1536, exactly TWO COLUMNS x THREE ROWS of512x512 cells, one complete full-body figure per cell, phases0..5 row-major. Same physical model, anatomical ratios, camera and pixel scale in all6. CROWN/HELMET-to-BOOT CORE BODY height about300-330px: top helmet localy105, soles near localy435. Do NOT enlarge characters to fill all512px; leave generous visible transparent margins. Entire combined equipment/body/spines/long weapon must fit within localx45..467,y45..467 and never overlap neighboring cells or clip. Preserve correct core-body/equipment ratios, not a resized body with huge new gear.\n\nORIGINAL IDENTITY: pale VISIBLE human face only if actual heading permits seeing face; long pale white/silver hair, original tall black/gold head ornaments; narrow LONG HARD GOLD RADIAL SPINES physically attached behind original back/shoulder structure; original long DARK skirt/coat-like lower armor with GOLD EDGE TRIM, original dark boots and black/gold armor. Original LONG THIN SINUOUS orange/gold weapon with repeated flowing curves and pointed tip stays the SAME length/curve identity and SAME ANATOMICALRIGHT hand in every frame. Conservatively rotate existing structures to requested heading without inventing back badges, machinery, new spikes, extra ornaments or extra weapons. NO closed redV mask, NO broad orange flame-feather fan, NO generic muscular demon, NO short broad sword, NO fitted segmented-leg armor replacing long dark skirt. Rigid gold spines are actual material, not wings, floating rays or animated flames.\n\nA true restrained planted-foot IDLE: both boot soles, pelvis anchor and ground stance IDENTICAL throughout6.0 relaxed neutral baseline;1 local inhale starts, slight ribcage expansion and connected shoulder/elbow response;2 inhale peak chest/back lifts subtly through joints;3 exhale begins shoulders relax;4 exhale completes with small hair/robe/wrist settling lag;5 returns near baseline0 for clean loop. Six actual distinct connected local chest/back/shoulder/forearm/hair/cloth articulations, not six identical copies, global translation/rotation/resizing or tint cycling. No walk, no lifted knee/heel, no attack or weapon swing. Existing pale hair and dark goldtrim robe respond gently; rigid gold spine geometry remains attached. Weapon only follows tiny breathing wrist response, never morphs/changes hand.\n\nAll head/boots/robe and every thin spine plus ENTIRE long curved blade/tip fully visible each cell. Fine opaque dark/gold armor, alpha0 outside physical silhouette and between connected thin spikes. No floor, cast shadow, backdrop, diffuse glow cloud, fog, detached sparkles, text, grid, labels, borders or extra figures. Accurate game animation source, not poster art. Heading and original anatomicalRIGHT weapon hand are non-negotiable.",
+  "transparent_background": true,
+  "expected_poses": 6,
+  "phase_contract": [
+    "neutral_baseline",
+    "inhale_begin",
+    "inhale_peak",
+    "exhale_begin",
+    "exhale_settle",
+    "return_to_baseline"
+  ],
+  "corrective_reason": "Replace unapproved generic redesigned NE idle with original-faithful pale-face/hair/thin-gold-radial-spines/long-dark-goldtrim-skirt/long-sinuous-right-hand-weapon, exactNE compass and genuine locally articulated planted-foot breathing.",
+  "user_authorization": "Actual remaining unique production queue, exactlyone generation per new direction, private bounded previews only, no repo/index changes or approval inflation.",
+  "canonical_uncertainty": "Original108x132 clipped tips/fine unseen details conservatively inferred; no invented major gear and no stopping only for uncertain fine pixels.",
+  "repo_mutations": false,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All6 show stable NE/back-right view: back/hair dominates, right shoulder/arm and right-facing-away boot perspective visible, no pale front face/cheststar and no SE/front turn.",
+      "Original anatomicalRIGHT hand remains the projected right/lower near-side hand with same long thin sinuous orange/gold weapon; free farLEFT hand stays empty.",
+      "Original tall head ornaments, pale back hair, thin rigid gold radial spines, long dark goldtrim skirt and opaque dark/gold armor stay faithful; no redmask/flamefeather redesign.",
+      "Both boots remain planted; small local back/shoulder/elbow pose and clear hair/robe lag vary through breathing/settling rather than a step, attack or global tint/translation.",
+      "Body scale and equipment attachment remain coherent across6, full physical spikes/boots/weapon tip visible."
+    ],
+    "visual_limitations": [
+      "NE rotates conservative rear construction from alreadyPASS N source plus original/canonical; exact unseen engraving remains inferred.",
+      "Source-art review only; actual runtime breathing readability, exact foot lock,5->0 seam and final Main integration remain separate checks.",
+      "Tiny108x132 original clips some equipment endpoints and does not establish all hidden-side engraving; these are documented conservative inferences, not final character approval.",
+      "Generated source uses more of512cell height than requested300-330px target; internally coherent anatomy/equipment must be normalized by stable body landmarks at runtime, never by spike/weapon bbox.",
+      "No actor completion, approval count change or replacement of original approved assets is claimed."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+    "raw_bytes": 2425715,
+    "request_sha256": "44808c74bc692f81ba915dff491d7ed9bbbd920f2362f6011e410b82203571f9",
+    "review_sha256": "80f842a28ab280cbcb2037a57d15ae76d8f56b29c979675617e8595f774b2c07"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v02.png",
+  "output_sha256": "5502d2d6d8dfaf8b63d89f124a11093f4b49995c195559f39adc3de03e73340e",
+  "output_bytes": 2425715,
+  "original_generated_file": "/workspace/scratch/girtas-NE-idle-repair/girtas-NE-idle-v02.png"
+}

@@ -1,0 +1,48 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png": "2e080bad8ba69456c89e0ac55b9293d1d622f128eb6b2828667039e64a1444ad"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Independent final r062 48clip QC confirms original NW-hit starts/retains FRONT SW/SE instead of correct REAR NW. Reauthor six meaningful hit poses from ONLY current correct NW idle; maintain rear heading, complete 2arm/2leg model, farRIGHT weapon and emptyLEFT. No metadata-only camera fix possible.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v01.png",
+  "user_authorization": "Production imagegen/private agent preview allowed; no mainchat images/binary or preview links. Each role only one initial full6 edit; no identical retries.",
+  "prompt": "Edit the supplied CORRECT REAR IDLE model into a production SIX-POSE HIT sequence.\n\nCOPY THE REFERENCE NORTHWEST REAR-UP-LEFT CAMERA EXACTLY: head/helmet profile, torso and pelvis aim screen UPPER-LEFT away from viewer. Show original segmented dorsal/back armor, not front breastplate/skull or front pink chest gem. Near anatomical LEFT shoulder and empty left arm are screen LOWER-LEFT; far anatomical RIGHT shoulder, forearm and sword are screen UPPER-RIGHT/RIGHT. Keep this ownership relation for the ENTIRE motion. The burgundy cape hangs behind near-left side and both crystal fans attach separately at the two back shoulder roots. Initial boots point UPPER-LEFT from their lower-right heel/ankle as in this exact reference. No SouthWest front-facing down-left body; no NorthEast/right-facing body. No camera rotation. During recoil/collapse feet can articulate at their real joints, but never flip a boot180degrees or twist pelvis to a different facing.\n\nSIX MEANINGFUL HIT-REACTION poses in NONLOOPING order, starting from the reference rear NW neutral guard and ending in the same guard:0 hit-start: shoulders tense and slight forward guard compression, boots stay on their NW supports, farRIGHT weapon low and emptyLEFT arm visible;1 impact reaches upper back/side, torso contracts, neck lowers, shoulders pull forward, knees absorb;2 peak recoil: strong but physically possible backward/down-right rock AWAY from facing, folded torso and deeper knees, farRIGHT weapon arm remains continuous and low, emptyLEFT forearm draws across same near-side body without extra limbs;3 recoil release: weight returns toward support, wingroots and outer feathers fold/lag with cape following down-right;4 recovery: spine and knees straighten toward correct NW guard, weapon hand returns gradually;5 almost neutral NW rear-up-left recovery matching reference0 camera, original equipment and support stance, distinguishable slight residual cape/wing response. At every pose keep head/hips oriented UP-LEFT with visible back model, both arm chains exactly2. Express actual jointed recoil, NOT six standing duplicates or globally translated images. Wing fans physically respond with controlled joint folding, no giant flying stroke. Keep gold helmet, shoulderpads, exact original sword proportions.\n\nProduction game sprite animation of THIS EXACT Halpas boss. Retain this exact black armor with narrow gold rims, closed horned gold/black helmet, segmented dark dorsal armor/spine with center gold chain, the TWO original feather-shaped purple crystal wing fans rooted at gold upper-back joints, long torn burgundy-red cape behind anatomical LEFT side, armored two legs and gold pointed boots, one compact broad purple crystal sword in anatomical RIGHT hand, and an EMPTY LEFT hand. Exactly TWO complete arm chains: shoulder→upperarm→elbow→forearm→wrist→hand; weapon must join the RIGHT palm continuously. No third arm, no extra hand, detached forearm, weapon swap, mirrored gear, new cape or wing model. Maintain recognizable rigid head/shoulder/pelvis dimensions in all six poses while joints articulate. Preserve same elevated orthographic RPG camera. No character redesign or new view inferred from role name.\n\nATLAS: one transparent PNG1024x1536, TWO columns by THREE rows, six independently drawn full poses left-to-right then top-to-bottom. Each512x512cell contains ONE complete figure. Generous pure alpha0 transparent gutters: entire horns/wings/cape/sword/boots including the final horizontal corpse fit within a centered380x380box with at least60px clear margin on every side. Same physical actor pixel scale across poses; movement of limbs/torso and actual falling changes silhouette but never shrink the body to fit. All detached-looking feather tips stay part of original wings. Solid opaque armor/crystal/cloth; only1–2px antialias edges, NO external light haze. Purple/fire light inside solid feathers only. No glow, bloom, aura, ghost copies, trail, smoke, particles, ground shadow, floor, background, lettering, grid, frame, numbers or other props. Full continuous anatomy and complete uncropped equipment.\n",
+  "requested_at": "2026-10-19T12:55:13.211184+00:00",
+  "imagegen_attempt_limit": 1,
+  "private_jpeg_budget_limit": 8000000,
+  "private_source_review": {
+    "visual_findings": [
+      "All six retain the current genuine NW rear-up-left head/torso/pelvis camera, segmented dorsal armor and nearLEFT empty arm/farRIGHT sword ownership. No frontal pink chest, SW downleft or NE right-facing substitute.",
+      "Two complete continuous arm chains in every pose. NearLEFT shoulder→elbow→forearm→empty fist bends inward at1/2 and returns; farRIGHT shoulder→elbow→forearm→hand remains connected to the purple sword, no additional wrist or hand. Both leg chains and original two shoulder-root feather fans remain.",
+      "Six actual reaction phases: poised initial0, contracted shoulders and bent LEFT arm1, deepest bowed head/back and compressed knees2 with both fans folded, release3, straightening4 and near-neutral recovery5. Sword position, wing joint fold, torso curvature and cape lag change together without camera turn or duplicate stills.",
+      "Same black/gold armor, gold horned rear helmet, segmented dorsal plates, two original solid purple crystal fans and burgundy LEFT cape retained. Complete horns/wings/blade/boots are uncropped.",
+      "Unmodified geometry analyzer and complete-region guard PASS six distinct frames at virtual canvas1024. Raw PNG unchanged, no resampling/masking/recoloring or threshold relaxation; zero strong outer-edge clipping."
+    ],
+    "visual_limitations": [
+      "Source art and unchanged strict six-frame geometry PASS only; native SpriteFrames/game compilation, physical body scale/support anchors and actual Player temporal/transition QC remain for root.",
+      "No final actor approval, detailed count, default profile/catalog switch or prior approved-history change."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "f1087d35ee8aa77a72bf45d49bb1677fef0528262972a9d3ede3d1d86a1b70c4",
+    "raw_bytes": 2611557,
+    "request_sha256": "69afe99455461947e51f87327e2e270bcbff9b6ef6ba88415edb01512c6caa97",
+    "review_sha256": "ea54c122b53fda69be90dd27e7f2893737198c8cfebbd116b64023d981c5c3a6"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v02.png",
+  "output_sha256": "f1087d35ee8aa77a72bf45d49bb1677fef0528262972a9d3ede3d1d86a1b70c4",
+  "output_bytes": 2611557,
+  "original_generated_file": "/workspace/scratch/halpas-NW-hit-repair-v02/halpas-NW-hit-v02.png"
+}

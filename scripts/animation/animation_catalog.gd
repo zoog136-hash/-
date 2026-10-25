@@ -28,7 +28,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if record.get("animation_profile", {}) is Dictionary:
 		settings = settings.duplicate(true)
 		settings.merge(record.get("animation_profile", {}), true)
-	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
+	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "movement_cadence_width_ratio", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
 		if settings.has(property): result.set(property, settings[property])
 	result.use_profile_hit_ratio = settings.has("attack_hit_ratio")
 	for property: String in ["sprite_offset", "collision_offset", "projectile_origin", "hit_position", "shadow_size"]:
@@ -51,9 +51,14 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	PRESENTATION.configure(result, kind, record)
 	# Explicit sequential-art settings outrank the generic portrait rig. Native
 	# poses already contain limb motion; moving/rotating the root adds foot slip.
-	for property: String in ["pixel_scale", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration", "body_kind"]:
+	for property: String in ["pixel_scale", "native_width_ratio", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration", "body_kind"]:
 		if settings.has(property): result.set(property, settings[property])
-	if settings.has("color_tint"): result.color_tint = Color.from_string(str(settings.color_tint), Color.WHITE)
+	if settings.has("color_tint"):
+		var tint: Variant = settings.color_tint
+		if tint is Array and tint.size() == 4:
+			result.color_tint = Color(float(tint[0]),float(tint[1]),float(tint[2]),float(tint[3]))
+		else:
+			result.color_tint = Color.from_string(str(tint), Color.WHITE)
 	return result
 
 static func frames(path: String, layout: String) -> SpriteFrames:

@@ -1,0 +1,46 @@
+{
+  "key": "transform:393",
+  "direction": "SE",
+  "role": "hit",
+  "version": "v03lower4",
+  "status": "GENERATED_SINGLE_LOWER4_SOURCE_VISUAL_AND_GEOMETRY_PASS_FULLCLIP_HOLD",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "game_pose_map": [
+    4
+  ],
+  "request_path": "/workspace/scratch/halpas-SE-hit-lower4-key-v03/request.json",
+  "request_sha256": "0e9f00f5cd55cb8f33f2c58b7ad0790e0f524eaebe0729d400727a380f80c4db",
+  "original_generated_file": "/workspace/generated_images/exec-61fdcac0-38a6-4f22-b25c-6570d7fef2e5.png",
+  "raw_path": "/workspace/scratch/halpas-SE-hit-lower4-key-v03/halpas-SE-hit-lower4-v03.png",
+  "raw_png": "/workspace/scratch/halpas-SE-hit-lower4-key-v03/halpas-SE-hit-lower4-v03.png",
+  "raw_sha256": "4dba1aae8b7635f8f946a662e7829e3aa88020ddc7f3294186692f110327915a",
+  "raw_bytes": 1369538,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/halpas-SE-hit-lower4-key-v03/generated-private.jpg",
+  "private_preview_bytes": 133207,
+  "source_visual_status": "PASS",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T13:23:28.410870+00:00",
+  "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+  "outer_edge_alpha100_count": 0,
+  "valid_source_phases": [
+    4
+  ],
+  "visual_findings": [
+    "Correct SE front-right/down-right body/head/hip plane, same closed gold-horn helmet, front pink chest jewel, black/gold armor, two complete purple back fan wings, LEFT-back cape and original compact crystal blade.",
+    "Exactly two connected arms: original imageRIGHT shoulder-elbow-low grippinghand remains connected to blade at same hip; EMPTY imageLEFT arm alone lowers with elbow beside ribs and relaxed hand at waist. No remaining chest-high fist, extra downarm, third limb or detached weapon.",
+    "Distinct lower4 recovery from release3: empty LEFT forearm/wrist clearly drop from upper-chest level to waist, hand relaxes, shoulder/wing/cape tension eases, head/torso nearly neutral while hips retain coherent SE hovering stance. Still partly bent elbow differs from fully settled guard5.",
+    "Unchanged strict ONE-pose column geometry2048 and complete-region guard PASS; zero alpha>100 source outer-edge clipping. Raw generated PNG copied exactly, no resampling, masking, recolor or guide residue."
+  ],
+  "visual_limitations": [
+    "Only game4 key; sixclip requires exactassembly of oldgood0/1/5 plus new2/3/4, physicalsize/anchors and actual Player validation. No actorapproval/defaultenable."
+  ]
+}

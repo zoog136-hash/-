@@ -6,6 +6,8 @@ class_name TwilightExternalSPXActor
 const PREFIX := "res://assets/external_spx/actors/"
 const ACTOR_IDS := ["21624", "21653"]
 const ROLES := ["idle", "walk", "attack", "hit"]
+# Two explicitly unapproved visual comparison candidates. Never infer production identity.
+const TRANSFORM_REVIEW_CANDIDATES := {"transform:142":"21624", "transform:411":"21653"}
 static var _cache: Dictionary = {}
 
 static func actor_metadata(id: String) -> Dictionary:
@@ -18,6 +20,29 @@ static func actor_metadata(id: String) -> Dictionary:
 	if not actors is Dictionary: return {}
 	var value: Variant = actors.get(id, {})
 	return value as Dictionary if value is Dictionary else {}
+
+static func review_transform_source(profile_id: String) -> String:
+	return str(TRANSFORM_REVIEW_CANDIDATES.get(profile_id, ""))
+
+# Reject partial or synthetic four-role art. Only full local chain-sword poses.
+static func chain_review_available(id: String) -> bool:
+	if not ACTOR_IDS.has(id): return false
+	var metadata: Dictionary = actor_metadata(id)
+	var canvas: Variant = metadata.get("canvas", [])
+	var foot: Variant = metadata.get("foot_pixel", [])
+	if not (canvas is Array and (canvas as Array).size() == 2): return false
+	if not (foot is Array and (foot as Array).size() == 2): return false
+	if float(metadata.get("reference_body_height", 0.0)) <= 0.0: return false
+	var source: SpriteFrames = frames(id)
+	if source == null: return false
+	for role: String in ROLES:
+		for direction: int in range(8):
+			var animation: String = role + "_chain_" + str(direction)
+			if not source.has_animation(animation): return false
+			if source.get_frame_count(animation) < 2: return false
+			for frame: int in range(source.get_frame_count(animation)):
+				if source.get_frame_texture(animation, frame) == null: return false
+	return true
 
 static func available(id: String) -> bool:
 	return frames(id) != null
@@ -33,6 +58,10 @@ static func effects_frames(id: String) -> SpriteFrames:
 	if loaded == null or body == null: return null
 	for animation: String in body.get_animation_names():
 		if not loaded.has_animation(animation) or loaded.get_frame_count(animation) != body.get_frame_count(animation): return null
+		if not is_equal_approx(loaded.get_animation_speed(animation), body.get_animation_speed(animation)): return null
+		if loaded.get_animation_loop(animation) != body.get_animation_loop(animation): return null
+		for index in range(body.get_frame_count(animation)):
+			if not is_equal_approx(loaded.get_frame_duration(animation,index), body.get_frame_duration(animation,index)): return null
 	_cache[key] = loaded
 	return loaded
 

@@ -1,0 +1,2329 @@
+{
+  "status": "PASS_EXACT_FINAL_CHANGED_MATERIAL_FINITE_MODEL_AND_108_RGBA_BINDING",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/own-SE-DEATH-six-actual-native-source-contract-v08.json",
+    "sha256": "a5ca0a93aa964ad161e1432a32a79397cdeaf00e3a59f4daf1558fdba00d62a8",
+    "bytes": 181908
+  },
+  "final_physical_model": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/own-SE-DEATH-v08-whole-original108-source-raster-floor-and-float-parent-edge-binding-v01.json",
+    "sha256": "9369d904441a22c79773b10f1be294b0f36d5e38e85890caddea769595abeaef",
+    "bytes": 292813
+  },
+  "prior_independent108": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEdeath-v05-independent-exact108-native-source-and-raster-floor-companion-v01.json",
+    "sha256": "af5d5adc147ef91298badf30bfb2c5798c22fb54430ea6051781c7f93319714f",
+    "bytes": 90488
+  },
+  "independent_mathematical_functions": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/audit-own-SEdeath-v05-exact108-finite-source-raster-floor.py",
+    "sha256": "3923a8429c3310c495f94b29b644178fedc8f1ed63dcb2a7644b5ae5dd0ae740",
+    "bytes": 13904
+  },
+  "unchanged_prior_surfaces": [
+    {
+      "phase": 0,
+      "name": "R-calf",
+      "source_SHA": "ef37210455ca1ee0f57687372318aa2620b15c0399ad248d0747e71cebce9a77",
+      "raster_SHA": "1cad23f986007983449e793e837c91d0757713ca7330555e0740831b4ca72388"
+    },
+    {
+      "phase": 0,
+      "name": "R-kneestrip",
+      "source_SHA": "daf0dc2db495936cef25fb26faedc992158b83778c0e3f0352019b6fb7ac31a2",
+      "raster_SHA": "22326137d218c4fbb68ec00a82ef370c51470429894757138d856d3b2293486a"
+    },
+    {
+      "phase": 0,
+      "name": "R-anklestrip",
+      "source_SHA": "48e68d05a2109b2e66d6270a6a442d6224c0625bcf27a7d0ea67d59321677591",
+      "raster_SHA": "ee4e18651f0c959d7b69ad4a893c14057877967e86be437af9b3286c19b4efa5"
+    },
+    {
+      "phase": 0,
+      "name": "R-foot",
+      "source_SHA": "8ef98026e57f9d7098fbeba7c077c4910079f14582f850ffe23d6d78bff50d63",
+      "raster_SHA": "266eacefdab89c47271ce614b77321cb083a87b57e12c70acb20da03cec8d874"
+    },
+    {
+      "phase": 0,
+      "name": "L-calf",
+      "source_SHA": "a22b2629484f58e9a4669a4526939bfc38b6e25308089828689723b384ce6eae",
+      "raster_SHA": "9c0c18773e5b69cc8b17a8ecf4374e6c0da8971dce5df64f48001784e0dfef81"
+    },
+    {
+      "phase": 0,
+      "name": "L-kneestrip",
+      "source_SHA": "f790b90fa32c20bfba906d815530858237f83c9e7453b8e30877c3a053720078",
+      "raster_SHA": "54fe846c545d4956ac8870c2c2091c1da843b72f516f167325a8f6935ad6ed48"
+    },
+    {
+      "phase": 0,
+      "name": "L-anklestrip",
+      "source_SHA": "c5359bfe872c3561713ea156a48860f054c0e928ac5a3a879b18daf03d7a1531",
+      "raster_SHA": "e22ce6e736aba678c1218aee774f4afb14eab4b4e72ca2ddadfe7b1a85474c2f"
+    },
+    {
+      "phase": 0,
+      "name": "L-foot",
+      "source_SHA": "79c6fcc49cb0b7a97bc8a576e3b9bb26ad41e0d3464103b101584f1b0653eec1",
+      "raster_SHA": "f2752f578459735617ee2e86758c7783f6bb68cfcb3aa9c0b1cd7a3ab6417a12"
+    },
+    {
+      "phase": 0,
+      "name": "torso-original-blue-gold-bodice",
+      "source_SHA": "ef9e47dfe460c3ad6518cd458d479f3cff4e4d9cd20070ae7bb2a74a32b745b4",
+      "raster_SHA": "88632bf37454cb1871164d05290638a7d329a0cb1e987bf37e59f20a2de8532d"
+    },
+    {
+      "phase": 0,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "source_SHA": "839f50f21bc0bc9053169b88e78ade9b22da5025f560e41f93b87206ce82de03",
+      "raster_SHA": "42800b500258026019d93585d4e032a428d5e4a9bc4079c7561d2e7b9358aeb3"
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-near-upper-arm",
+      "source_SHA": "8c2dbbab1e63315fa0b16af1f8670533d3fce586b925a6fd8d82bc5b82abb2ae",
+      "raster_SHA": "48795140cf09555927a2a894213c2cc82f01cd7e2cdc31b8f505158594ef1380"
+    },
+    {
+      "phase": 0,
+      "name": "LEFT-far-upper-arm",
+      "source_SHA": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "raster_SHA": "8adb0670e52a862a79ece5dc9e3b47118f3f8fbebb4d5e0101716d45826a0e4b"
+    },
+    {
+      "phase": 0,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "source_SHA": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "raster_SHA": "291e5761ecc0d3cd244db0ed85bc05d410fb78cddc30a3ec42d4338c99e2ce44"
+    },
+    {
+      "phase": 0,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "source_SHA": "6b98ec6cebbe3f4dd8b9ced1d458a720bbcd730f1e6f7fbde0c98106c3a3e1a2",
+      "raster_SHA": "77181a12fa650e3e3a9c2f21b3a41934403b69f2a3d966e8c6083d48fee04c2b"
+    },
+    {
+      "phase": 1,
+      "name": "R-calf",
+      "source_SHA": "ef37210455ca1ee0f57687372318aa2620b15c0399ad248d0747e71cebce9a77",
+      "raster_SHA": "5fb6cd5a897305d52975a7f295526cd78e7cf60ad3239266ee25bca6bbf987a4"
+    },
+    {
+      "phase": 1,
+      "name": "R-kneestrip",
+      "source_SHA": "daf0dc2db495936cef25fb26faedc992158b83778c0e3f0352019b6fb7ac31a2",
+      "raster_SHA": "79c762266a78e9a2f3e228a71de6d5c27250113e1b30e97f00b74c9eadd130c3"
+    },
+    {
+      "phase": 1,
+      "name": "R-anklestrip",
+      "source_SHA": "48e68d05a2109b2e66d6270a6a442d6224c0625bcf27a7d0ea67d59321677591",
+      "raster_SHA": "e74ee0d305da07b34e5cbe3d980e00146b82fbabc4c3a55e5852fb8dc05761af"
+    },
+    {
+      "phase": 1,
+      "name": "R-foot",
+      "source_SHA": "8ef98026e57f9d7098fbeba7c077c4910079f14582f850ffe23d6d78bff50d63",
+      "raster_SHA": "95da60c5e9a867c8a16a785a0b923814ce1223158e7427c918b4311418bbd9a6"
+    },
+    {
+      "phase": 1,
+      "name": "L-calf",
+      "source_SHA": "a22b2629484f58e9a4669a4526939bfc38b6e25308089828689723b384ce6eae",
+      "raster_SHA": "d57bf14373eed0be78c0126dabf16224026d29227ead8ba47125c1bb82d02c66"
+    },
+    {
+      "phase": 1,
+      "name": "L-kneestrip",
+      "source_SHA": "f790b90fa32c20bfba906d815530858237f83c9e7453b8e30877c3a053720078",
+      "raster_SHA": "140f2768be5e8cc0bcf2a5e9a325bdf0dc7fb1384c6f0b33c2122a460a00c1dd"
+    },
+    {
+      "phase": 1,
+      "name": "L-anklestrip",
+      "source_SHA": "c5359bfe872c3561713ea156a48860f054c0e928ac5a3a879b18daf03d7a1531",
+      "raster_SHA": "d3d2ebd7f2042cb0e7bd70d2ff5b624ab35d3aa28c75468a28175c56fa215ed0"
+    },
+    {
+      "phase": 1,
+      "name": "L-foot",
+      "source_SHA": "79c6fcc49cb0b7a97bc8a576e3b9bb26ad41e0d3464103b101584f1b0653eec1",
+      "raster_SHA": "c536c61b6d42aef9a3156f1bb7922c7866514bbe538da9f9d62b4bbf5b3df9b8"
+    },
+    {
+      "phase": 1,
+      "name": "torso-original-blue-gold-bodice",
+      "source_SHA": "ef9e47dfe460c3ad6518cd458d479f3cff4e4d9cd20070ae7bb2a74a32b745b4",
+      "raster_SHA": "7ace18cfa699fc13643d3db269ba093b31cd0c3803e8b5c48e8944fe4d88ffd6"
+    },
+    {
+      "phase": 1,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "source_SHA": "839f50f21bc0bc9053169b88e78ade9b22da5025f560e41f93b87206ce82de03",
+      "raster_SHA": "3033494488fabc0378ced0974d5d2092974c47ad6cab64aecd6070c8386573ca"
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-near-upper-arm",
+      "source_SHA": "8c2dbbab1e63315fa0b16af1f8670533d3fce586b925a6fd8d82bc5b82abb2ae",
+      "raster_SHA": "d1a44a37d38c5d041efddb8c593339195be5b9106635ddd588e0e8d8103704fd"
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-far-upper-arm",
+      "source_SHA": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "raster_SHA": "968db32ed2afd65874ff960db8171b0826f40f5b4e117a51f5b371e0936398d1"
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "source_SHA": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "raster_SHA": "eca80ab4d43b19b5055717bd1cf8a63b550066f2cb3830a9af46846312c2b84b"
+    },
+    {
+      "phase": 1,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "source_SHA": "6b98ec6cebbe3f4dd8b9ced1d458a720bbcd730f1e6f7fbde0c98106c3a3e1a2",
+      "raster_SHA": "65eb818fa27c7b08102dfac1a3b992e49b1e3a169acb73a43fd37407ad5c4d85"
+    },
+    {
+      "phase": 2,
+      "name": "R-calf",
+      "source_SHA": "ef37210455ca1ee0f57687372318aa2620b15c0399ad248d0747e71cebce9a77",
+      "raster_SHA": "26497697f7ce375c5a30ea1af8e440841fd23cf4c5a310e81addc9612c09842a"
+    },
+    {
+      "phase": 2,
+      "name": "R-kneestrip",
+      "source_SHA": "daf0dc2db495936cef25fb26faedc992158b83778c0e3f0352019b6fb7ac31a2",
+      "raster_SHA": "976a704812b75ceb07233c4ce1a65f110d7dd8de55805edf66a46d0b6b66f616"
+    },
+    {
+      "phase": 2,
+      "name": "R-anklestrip",
+      "source_SHA": "48e68d05a2109b2e66d6270a6a442d6224c0625bcf27a7d0ea67d59321677591",
+      "raster_SHA": "e6c84e21f0a2116bd9593e422dc97cec2bac4678cbbb63087e5951f61c6a923c"
+    },
+    {
+      "phase": 2,
+      "name": "R-foot",
+      "source_SHA": "8ef98026e57f9d7098fbeba7c077c4910079f14582f850ffe23d6d78bff50d63",
+      "raster_SHA": "03ba962ac43df86ecd9b0c6cec888dd4673ebab162f1f4ce7a4e36343ed64b2d"
+    },
+    {
+      "phase": 2,
+      "name": "L-calf",
+      "source_SHA": "a22b2629484f58e9a4669a4526939bfc38b6e25308089828689723b384ce6eae",
+      "raster_SHA": "f4a2290079b7444645d686525cf91ab8f2b02483bb9f8f7d02030c1d78c06071"
+    },
+    {
+      "phase": 2,
+      "name": "L-kneestrip",
+      "source_SHA": "f790b90fa32c20bfba906d815530858237f83c9e7453b8e30877c3a053720078",
+      "raster_SHA": "26ce74d51e0082e82d2a3a84681609e397cffab918777e06e324f9e8f9c406bc"
+    },
+    {
+      "phase": 2,
+      "name": "L-anklestrip",
+      "source_SHA": "c5359bfe872c3561713ea156a48860f054c0e928ac5a3a879b18daf03d7a1531",
+      "raster_SHA": "a3377017eb91514ab521891132e99e7eea16cd9d36b38ec72c52507af7de58bb"
+    },
+    {
+      "phase": 2,
+      "name": "L-foot",
+      "source_SHA": "79c6fcc49cb0b7a97bc8a576e3b9bb26ad41e0d3464103b101584f1b0653eec1",
+      "raster_SHA": "f3d8a0d2468cb751d5605a67ad5e27b81326999a4ee5066ece9a8e1ac769d9c3"
+    },
+    {
+      "phase": 2,
+      "name": "torso-original-blue-gold-bodice",
+      "source_SHA": "ef9e47dfe460c3ad6518cd458d479f3cff4e4d9cd20070ae7bb2a74a32b745b4",
+      "raster_SHA": "f763307a8e917f093846a5ba8bfd9a5ff2766acc4d2879b86fe91a8ac4f64060"
+    },
+    {
+      "phase": 2,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "source_SHA": "839f50f21bc0bc9053169b88e78ade9b22da5025f560e41f93b87206ce82de03",
+      "raster_SHA": "868a64de08077ee58c4fff870cfe269fcceea5a9e4ed54d2b1448947ef382da4"
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-near-upper-arm",
+      "source_SHA": "8c2dbbab1e63315fa0b16af1f8670533d3fce586b925a6fd8d82bc5b82abb2ae",
+      "raster_SHA": "60f746d196a03be21ccd0829f03c74e7ae692a187aa65991456d6988747aa8e4"
+    },
+    {
+      "phase": 2,
+      "name": "LEFT-far-upper-arm",
+      "source_SHA": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "raster_SHA": "7557f23e9a778888a1cebe9517307853225ece3ba02b9624faa4a46a4e865954"
+    },
+    {
+      "phase": 2,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "source_SHA": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "raster_SHA": "c5143a96e3622457c91640b183206aecc8512663f7621b4c5d28da83ab2b05ad"
+    },
+    {
+      "phase": 2,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "source_SHA": "6b98ec6cebbe3f4dd8b9ced1d458a720bbcd730f1e6f7fbde0c98106c3a3e1a2",
+      "raster_SHA": "fc192f42d4a758413fd4bc9cf7afd9720b2deee3e3cfa47a16cc2e3eab1071ce"
+    },
+    {
+      "phase": 3,
+      "name": "R-calf",
+      "source_SHA": "ef37210455ca1ee0f57687372318aa2620b15c0399ad248d0747e71cebce9a77",
+      "raster_SHA": "06dd21fbdf7f8f224a613fc311889c90488025e4baeb8cc98bd0dcbc5f218599"
+    },
+    {
+      "phase": 3,
+      "name": "R-kneestrip",
+      "source_SHA": "daf0dc2db495936cef25fb26faedc992158b83778c0e3f0352019b6fb7ac31a2",
+      "raster_SHA": "e82bdfae454093e475b4d9d47947499fb4e2e5402138b33fdda94a191ec4c483"
+    },
+    {
+      "phase": 3,
+      "name": "R-anklestrip",
+      "source_SHA": "48e68d05a2109b2e66d6270a6a442d6224c0625bcf27a7d0ea67d59321677591",
+      "raster_SHA": "0b264eefe508fa57eebd38aee24303beeebdab391e4b6461f9fb94d99d5519ba"
+    },
+    {
+      "phase": 3,
+      "name": "R-foot",
+      "source_SHA": "8ef98026e57f9d7098fbeba7c077c4910079f14582f850ffe23d6d78bff50d63",
+      "raster_SHA": "22f1d76c2bea3acc880e0d4b8df6af79669a17f6308d9eeb8cc8be1d62357869"
+    },
+    {
+      "phase": 3,
+      "name": "L-calf",
+      "source_SHA": "a22b2629484f58e9a4669a4526939bfc38b6e25308089828689723b384ce6eae",
+      "raster_SHA": "52757d10219aad0b39416f195f538208464a8e0177daec4bf133ca50f3e7020d"
+    },
+    {
+      "phase": 3,
+      "name": "L-kneestrip",
+      "source_SHA": "f790b90fa32c20bfba906d815530858237f83c9e7453b8e30877c3a053720078",
+      "raster_SHA": "466b5191417250f30e21e68d588246cbe52f8e521c28ec237366f7b267bb8071"
+    },
+    {
+      "phase": 3,
+      "name": "L-anklestrip",
+      "source_SHA": "c5359bfe872c3561713ea156a48860f054c0e928ac5a3a879b18daf03d7a1531",
+      "raster_SHA": "084984b0f17e2e042c91642225cd6260111128d1f0a5191f5ae03b5651f5a2e6"
+    },
+    {
+      "phase": 3,
+      "name": "L-foot",
+      "source_SHA": "79c6fcc49cb0b7a97bc8a576e3b9bb26ad41e0d3464103b101584f1b0653eec1",
+      "raster_SHA": "8af87c450296febfebb7ead9149a3575a8749a1f2f2d7f1a487fb3aa285d1a6d"
+    },
+    {
+      "phase": 3,
+      "name": "torso-original-blue-gold-bodice",
+      "source_SHA": "ef9e47dfe460c3ad6518cd458d479f3cff4e4d9cd20070ae7bb2a74a32b745b4",
+      "raster_SHA": "b7030b9b2d9b107f6fc93e09e3452c0f20b599bab8297e4941c42f9ae0c39d55"
+    },
+    {
+      "phase": 3,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "source_SHA": "839f50f21bc0bc9053169b88e78ade9b22da5025f560e41f93b87206ce82de03",
+      "raster_SHA": "ad039ff4b04adbc35c6193073b26c1a3c1ad698c229a527edd58c7ad3ffc3d4a"
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-near-upper-arm",
+      "source_SHA": "8c2dbbab1e63315fa0b16af1f8670533d3fce586b925a6fd8d82bc5b82abb2ae",
+      "raster_SHA": "f30461f96b62f081f32288a5cc38ef58bce5f41adc28c5ae8b6d968b4d81c0ec"
+    },
+    {
+      "phase": 3,
+      "name": "LEFT-far-upper-arm",
+      "source_SHA": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "raster_SHA": "84c6df20cd46c84524a27219f967c4ac987f78b4ea58b58077fded4409fa20c6"
+    },
+    {
+      "phase": 3,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "source_SHA": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "raster_SHA": "b31f926312163142ccba48eb9987d0224ce1817a574509d4d4816ec153064a71"
+    },
+    {
+      "phase": 3,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "source_SHA": "6b98ec6cebbe3f4dd8b9ced1d458a720bbcd730f1e6f7fbde0c98106c3a3e1a2",
+      "raster_SHA": "4e2f05c6bcd6f8aff6fe338260075727fc69074f526e25ee3ff16c6f06877bbe"
+    },
+    {
+      "phase": 4,
+      "name": "R-calf",
+      "source_SHA": "ef37210455ca1ee0f57687372318aa2620b15c0399ad248d0747e71cebce9a77",
+      "raster_SHA": "eacac4731296aaab2d4da817472e2a3c7d1436b396900450234c7adf3fb96861"
+    },
+    {
+      "phase": 4,
+      "name": "R-kneestrip",
+      "source_SHA": "daf0dc2db495936cef25fb26faedc992158b83778c0e3f0352019b6fb7ac31a2",
+      "raster_SHA": "116a26e1e11c4cda9bb09092ce707d9d6e380f12bc82450aaa6cb167b90d5fc7"
+    },
+    {
+      "phase": 4,
+      "name": "R-anklestrip",
+      "source_SHA": "48e68d05a2109b2e66d6270a6a442d6224c0625bcf27a7d0ea67d59321677591",
+      "raster_SHA": "36a571c0bb1a0dc3da7e2185b0a26772ff35d80031af5f2cc06baf33de7cef92"
+    },
+    {
+      "phase": 4,
+      "name": "R-foot",
+      "source_SHA": "8ef98026e57f9d7098fbeba7c077c4910079f14582f850ffe23d6d78bff50d63",
+      "raster_SHA": "04e6b01b26a4fc68a415aca87c29638a27de22da25830c85b2584a1f756f75c2"
+    },
+    {
+      "phase": 4,
+      "name": "L-calf",
+      "source_SHA": "a22b2629484f58e9a4669a4526939bfc38b6e25308089828689723b384ce6eae",
+      "raster_SHA": "5892d8f865997bbad5719e2212d778b13d464f30063d279f39d828912efa193d"
+    },
+    {
+      "phase": 4,
+      "name": "L-kneestrip",
+      "source_SHA": "f790b90fa32c20bfba906d815530858237f83c9e7453b8e30877c3a053720078",
+      "raster_SHA": "4e73a6404178b356e2b65cbcb2972b8f366710fa7d780433a8a8d3ddb9880350"
+    },
+    {
+      "phase": 4,
+      "name": "L-anklestrip",
+      "source_SHA": "c5359bfe872c3561713ea156a48860f054c0e928ac5a3a879b18daf03d7a1531",
+      "raster_SHA": "7a244ae42726cb21f309ed7c25d9678541c213efeb9dc0f48de516ec5039771e"
+    },
+    {
+      "phase": 4,
+      "name": "L-foot",
+      "source_SHA": "79c6fcc49cb0b7a97bc8a576e3b9bb26ad41e0d3464103b101584f1b0653eec1",
+      "raster_SHA": "0aa1899bd3bdc17830dbe9b2b23dea5d191ab1a8d8c7ddb333745caa89f16c84"
+    },
+    {
+      "phase": 4,
+      "name": "torso-original-blue-gold-bodice",
+      "source_SHA": "ef9e47dfe460c3ad6518cd458d479f3cff4e4d9cd20070ae7bb2a74a32b745b4",
+      "raster_SHA": "2a6171bf07cc90632af76a63e024ff8e2ffebb8e74bd3911cdd432b4cd1a786c"
+    },
+    {
+      "phase": 4,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "source_SHA": "839f50f21bc0bc9053169b88e78ade9b22da5025f560e41f93b87206ce82de03",
+      "raster_SHA": "cf12787da501d83b359b16cfb5298a05028e06f3bd7497fe4ced72c09c7b907f"
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-near-upper-arm",
+      "source_SHA": "8c2dbbab1e63315fa0b16af1f8670533d3fce586b925a6fd8d82bc5b82abb2ae",
+      "raster_SHA": "55360dda204ae4c13a2b4e3d2f9e39924d498c46a77e636efe277117dc5c7962"
+    },
+    {
+      "phase": 4,
+      "name": "LEFT-far-upper-arm",
+      "source_SHA": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "raster_SHA": "8175fee4819cff895c0684a04c21f3eab7e6a00606a37139c0302cbecaffcb55"
+    },
+    {
+      "phase": 4,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "source_SHA": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "raster_SHA": "2799d615dabf011e5823285dee2e6e06204d7751a7915d7faaa206db1afb0774"
+    },
+    {
+      "phase": 4,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "source_SHA": "6b98ec6cebbe3f4dd8b9ced1d458a720bbcd730f1e6f7fbde0c98106c3a3e1a2",
+      "raster_SHA": "ff286cc4d41bff146d79e316c8ce48d8e21dfd14e9281d0966034c28217d7d35"
+    },
+    {
+      "phase": 5,
+      "name": "R-calf",
+      "source_SHA": "ef37210455ca1ee0f57687372318aa2620b15c0399ad248d0747e71cebce9a77",
+      "raster_SHA": "dae150df377ac9447f61b9253d7c0352036fdb02d10319cfd69713f9b60b3174"
+    },
+    {
+      "phase": 5,
+      "name": "R-kneestrip",
+      "source_SHA": "daf0dc2db495936cef25fb26faedc992158b83778c0e3f0352019b6fb7ac31a2",
+      "raster_SHA": "92bd6b08941d2de88a3bf717471757250485c69a1bae6e9a4f9b96caacdee459"
+    },
+    {
+      "phase": 5,
+      "name": "R-anklestrip",
+      "source_SHA": "48e68d05a2109b2e66d6270a6a442d6224c0625bcf27a7d0ea67d59321677591",
+      "raster_SHA": "a81ef524772a665c6137a9ed38de836b066070f6991e95fcf22adbc0dca5f402"
+    },
+    {
+      "phase": 5,
+      "name": "R-foot",
+      "source_SHA": "8ef98026e57f9d7098fbeba7c077c4910079f14582f850ffe23d6d78bff50d63",
+      "raster_SHA": "40b4834273bc95052cc6af4c6fe4f6c7bd43b0e6859a5de437ce08eebf08830a"
+    },
+    {
+      "phase": 5,
+      "name": "L-calf",
+      "source_SHA": "a22b2629484f58e9a4669a4526939bfc38b6e25308089828689723b384ce6eae",
+      "raster_SHA": "7102c7a95757306047ec3ab1c11b5d15c607414834d48b3fbf9398ad924a7f1b"
+    },
+    {
+      "phase": 5,
+      "name": "L-kneestrip",
+      "source_SHA": "f790b90fa32c20bfba906d815530858237f83c9e7453b8e30877c3a053720078",
+      "raster_SHA": "eb65ea1bff25963a9294502f90cae76c5838b01d54d00c969e36d5bd7a818555"
+    },
+    {
+      "phase": 5,
+      "name": "L-anklestrip",
+      "source_SHA": "c5359bfe872c3561713ea156a48860f054c0e928ac5a3a879b18daf03d7a1531",
+      "raster_SHA": "71fa37bdb794ab5f0f0da2dcd441e9f81e5d55c1cc15d16adf7f124a04784f7f"
+    },
+    {
+      "phase": 5,
+      "name": "L-foot",
+      "source_SHA": "79c6fcc49cb0b7a97bc8a576e3b9bb26ad41e0d3464103b101584f1b0653eec1",
+      "raster_SHA": "c0a747d52aa85cdde957299dd0d9a662d256ec55751c70e2bb9d5da3babde8c7"
+    },
+    {
+      "phase": 5,
+      "name": "torso-original-blue-gold-bodice",
+      "source_SHA": "ef9e47dfe460c3ad6518cd458d479f3cff4e4d9cd20070ae7bb2a74a32b745b4",
+      "raster_SHA": "713615417d750ac872bed8ee058948f927538fc06847c696e4f2d36191c1da42"
+    },
+    {
+      "phase": 5,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "source_SHA": "839f50f21bc0bc9053169b88e78ade9b22da5025f560e41f93b87206ce82de03",
+      "raster_SHA": "e5248cabd366a5b6369272883ae6c71d240d66967edd719b4204f6cd6ee234e1"
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-near-upper-arm",
+      "source_SHA": "8c2dbbab1e63315fa0b16af1f8670533d3fce586b925a6fd8d82bc5b82abb2ae",
+      "raster_SHA": "01ac36c05ee9c15d86a4db13c83b642820af84bc80a55132aca8a991dad5346e"
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-far-upper-arm",
+      "source_SHA": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "raster_SHA": "d262f8f49886cf6ff17022ae54364690d3637a5d26c1fb32cfe1889a7f8b5e0c"
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "source_SHA": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "raster_SHA": "dcf50407d20e7d221c96b54932309bfcb9f1dd93bb3ace64b88c3260604d861c"
+    },
+    {
+      "phase": 5,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "source_SHA": "6b98ec6cebbe3f4dd8b9ced1d458a720bbcd730f1e6f7fbde0c98106c3a3e1a2",
+      "raster_SHA": "f704a839cbc9e5104bbeda8e019581fe8038ac77c7d21ccd43457543c2ed0879"
+    }
+  ],
+  "new_independently_recomputed_surfaces": [
+    {
+      "phase": 0,
+      "name": "R-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase0-R-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "2fa66908305c9d8a4d721bab19866ca337c74e282e60d5816235c30826d10948",
+        "bytes": 75149
+      }
+    },
+    {
+      "phase": 0,
+      "name": "L-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase0-L-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "8ef6cd347df6266b20b5c502ef74b18e91ad938ed83ede1c338af9ce83559741",
+        "bytes": 84362
+      }
+    },
+    {
+      "phase": 0,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v08/actual-own-SE-original-pelvis-and-native-skin-six-row-root-overlap-v08.png",
+        "sha256": "1ea43b728910b840f8d9ef845166f6095666aed92ad9293684917c38cd43af15",
+        "bytes": 82098
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/exact-six-parent-skin-float-bicubic-rasters/phase0-actual-pelvis-same-source-alpha-UV-float-bicubic-edge-v08.png",
+        "sha256": "eab5a183a26fa2178333e40b37a5cc24367e00a2453aaadda7f062432ae85690",
+        "bytes": 100307
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v07/RIGHT-actual-complete-forearm-grip-and-entire-original-pole-v08-edge-owners.png",
+        "sha256": "2d47d199d8fef1704f9ad1cba67f5df768590f59b6c94ee21d6fa8f23e6ad4e2",
+        "bytes": 183417
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/exact108-native-editable-parts/phase0-RIGHT-complete-rigid-foregrip-pole-original-shaft-edge-owners-v06.png",
+        "sha256": "ea964747c8e873586471aa3b3e34f4302512faba2826e110bec20eb55b644abd",
+        "bytes": 206332
+      }
+    },
+    {
+      "phase": 1,
+      "name": "R-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase1-R-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "a9036a82bfe0d3e2962634e14e06b49edf346ee6195011c2392a688d34db9122",
+        "bytes": 76642
+      }
+    },
+    {
+      "phase": 1,
+      "name": "L-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase1-L-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "0fc78ed1bb1768a926997ea7582f28d5808a73fa2a462a2ac4345a33ae1b295a",
+        "bytes": 92032
+      }
+    },
+    {
+      "phase": 1,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v08/actual-own-SE-original-pelvis-and-native-skin-six-row-root-overlap-v08.png",
+        "sha256": "1ea43b728910b840f8d9ef845166f6095666aed92ad9293684917c38cd43af15",
+        "bytes": 82098
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/exact-six-parent-skin-float-bicubic-rasters/phase1-actual-pelvis-same-source-alpha-UV-float-bicubic-edge-v08.png",
+        "sha256": "a9de5de6bb1ddb7a4925abe90a36b53c05585500131859ace4b4811fa0171567",
+        "bytes": 107118
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v07/RIGHT-actual-complete-forearm-grip-and-entire-original-pole-v08-edge-owners.png",
+        "sha256": "2d47d199d8fef1704f9ad1cba67f5df768590f59b6c94ee21d6fa8f23e6ad4e2",
+        "bytes": 183417
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/exact108-native-editable-parts/phase1-RIGHT-complete-rigid-foregrip-pole-original-shaft-edge-owners-v06.png",
+        "sha256": "554856390bf3470af7e581be5e656c8153e1ef2f453c886d9b1e3459a0dc9829",
+        "bytes": 266941
+      }
+    },
+    {
+      "phase": 2,
+      "name": "R-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase2-R-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "230dfee7827f92cac5cd659fcdd1e55726f518ce6cbfe6c228816ebb635529c8",
+        "bytes": 97126
+      }
+    },
+    {
+      "phase": 2,
+      "name": "L-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase2-L-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "18a3d4e46fd216f0f9a564ea065873ab23d973f373ed734a5bf0f9bab39999b6",
+        "bytes": 85008
+      }
+    },
+    {
+      "phase": 2,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v08/actual-own-SE-original-pelvis-and-native-skin-six-row-root-overlap-v08.png",
+        "sha256": "1ea43b728910b840f8d9ef845166f6095666aed92ad9293684917c38cd43af15",
+        "bytes": 82098
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/exact-six-parent-skin-float-bicubic-rasters/phase2-actual-pelvis-same-source-alpha-UV-float-bicubic-edge-v08.png",
+        "sha256": "9e2a18e3458d917d4f021f1fcc37ce85cba55d73da20768d72e64ffc15166d1c",
+        "bytes": 123892
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v07/RIGHT-actual-complete-forearm-grip-and-entire-original-pole-v08-edge-owners.png",
+        "sha256": "2d47d199d8fef1704f9ad1cba67f5df768590f59b6c94ee21d6fa8f23e6ad4e2",
+        "bytes": 183417
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/exact108-native-editable-parts/phase2-RIGHT-complete-rigid-foregrip-pole-original-shaft-edge-owners-v06.png",
+        "sha256": "dba03de9ff2f591070d4139c8b6b6628675bc3a0c370684b8280a7085e5ef250",
+        "bytes": 253226
+      }
+    },
+    {
+      "phase": 3,
+      "name": "R-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase3-R-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "f11717186936034a47297c746329492b889c18700b94629152a049b53ae739c4",
+        "bytes": 94312
+      }
+    },
+    {
+      "phase": 3,
+      "name": "L-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase3-L-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "7620797f0b7d8e98739c3b5d8c4e12b647caa8ec066d3fbecdbdf551b8e1b4dd",
+        "bytes": 84734
+      }
+    },
+    {
+      "phase": 3,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v08/actual-own-SE-original-pelvis-and-native-skin-six-row-root-overlap-v08.png",
+        "sha256": "1ea43b728910b840f8d9ef845166f6095666aed92ad9293684917c38cd43af15",
+        "bytes": 82098
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/exact-six-parent-skin-float-bicubic-rasters/phase3-actual-pelvis-same-source-alpha-UV-float-bicubic-edge-v08.png",
+        "sha256": "1c9f346e96da934010ba6d3cb9953d5ad170c68f634ece24fa9e66ea0a9a9be9",
+        "bytes": 131876
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v07/RIGHT-actual-complete-forearm-grip-and-entire-original-pole-v08-edge-owners.png",
+        "sha256": "2d47d199d8fef1704f9ad1cba67f5df768590f59b6c94ee21d6fa8f23e6ad4e2",
+        "bytes": 183417
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/exact108-native-editable-parts/phase3-RIGHT-complete-rigid-foregrip-pole-original-shaft-edge-owners-v06.png",
+        "sha256": "635e41f0dde16edfc6de9e5dca0a6472de242803237548dea2418dc1c99a1303",
+        "bytes": 203860
+      }
+    },
+    {
+      "phase": 4,
+      "name": "R-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase4-R-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "9e3ad4bde9aaf40baa91448ea2fc3beed032e8baa955a92807e7fd4c4b5e3b78",
+        "bytes": 68206
+      }
+    },
+    {
+      "phase": 4,
+      "name": "L-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase4-L-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "242ed6aa9047e9f177991548dbf6c8e7a64b4c5b30d2ed9dde1136e435a64356",
+        "bytes": 74949
+      }
+    },
+    {
+      "phase": 4,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v08/actual-own-SE-original-pelvis-and-native-skin-six-row-root-overlap-v08.png",
+        "sha256": "1ea43b728910b840f8d9ef845166f6095666aed92ad9293684917c38cd43af15",
+        "bytes": 82098
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/exact-six-parent-skin-float-bicubic-rasters/phase4-actual-pelvis-same-source-alpha-UV-float-bicubic-edge-v08.png",
+        "sha256": "641c37e8a60fe3c8f448aab5e0e0f0c3e030a47abda9294b83fa2a4f060a5faa",
+        "bytes": 110984
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v07/RIGHT-actual-complete-forearm-grip-and-entire-original-pole-v08-edge-owners.png",
+        "sha256": "2d47d199d8fef1704f9ad1cba67f5df768590f59b6c94ee21d6fa8f23e6ad4e2",
+        "bytes": 183417
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/exact108-native-editable-parts/phase4-RIGHT-complete-rigid-foregrip-pole-original-shaft-edge-owners-v06.png",
+        "sha256": "b244e4195e5b0392d1dddd9c79c30ff87ab9310abda06461b991f7679294097c",
+        "bytes": 205972
+      }
+    },
+    {
+      "phase": 5,
+      "name": "R-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase5-R-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "ee305c085464781fa6d707eda08edce74bb44f903ba7a43f09c3847467ebe9e9",
+        "bytes": 68395
+      }
+    },
+    {
+      "phase": 5,
+      "name": "L-thigh",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v07/exact108-native-editable-parts/phase5-L-thigh-correct-original-premultiplied-RGBA-v07.png",
+        "sha256": "56f38f06d78674ebcd1fa963dca6e156e9f511c746783a29ffe716aed4137697",
+        "bytes": 75251
+      }
+    },
+    {
+      "phase": 5,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v08/actual-own-SE-original-pelvis-and-native-skin-six-row-root-overlap-v08.png",
+        "sha256": "1ea43b728910b840f8d9ef845166f6095666aed92ad9293684917c38cd43af15",
+        "bytes": 82098
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/exact-six-parent-skin-float-bicubic-rasters/phase5-actual-pelvis-same-source-alpha-UV-float-bicubic-edge-v08.png",
+        "sha256": "9fabb549926af714f347f60d20a64d4425e0b53ba5c2ab0e54a8484e16bffcee",
+        "bytes": 108149
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-native-parts-v07/RIGHT-actual-complete-forearm-grip-and-entire-original-pole-v08-edge-owners.png",
+        "sha256": "2d47d199d8fef1704f9ad1cba67f5df768590f59b6c94ee21d6fa8f23e6ad4e2",
+        "bytes": 183417
+      },
+      "raster": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/exact108-native-editable-parts/phase5-RIGHT-complete-rigid-foregrip-pole-original-shaft-edge-owners-v06.png",
+        "sha256": "145a2ae648aa094636b11c6be4f10804a4a0e73a8881c6d08acf3b4017ba4924",
+        "bytes": 206047
+      }
+    }
+  ],
+  "records": [
+    {
+      "phase": 0,
+      "name": "R-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 352.79007814701765,
+      "actual_raster_min_Z": 352.23977983786574,
+      "detail": {
+        "source_alpha": 12899,
+        "raster_alpha": 21649,
+        "continuous_quartic_min": 355.79007814701765,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 0,
+      "name": "R-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 261.7316548396719,
+      "actual_raster_min_Z": 261.231206528992,
+      "detail": {
+        "source_alpha": 10465,
+        "raster_alpha": 19450
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "R-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 336.5563932628083,
+      "actual_raster_min_Z": 345.8383848100356,
+      "detail": {
+        "source_alpha": 3233,
+        "raster_alpha": 3652,
+        "continuous_quartic_min": 339.5563932628083,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "R-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 225.1299183370453,
+      "actual_raster_min_Z": 225.12991833704532,
+      "detail": {
+        "source_alpha": 1976,
+        "raster_alpha": 2668,
+        "continuous_quartic_min": 228.1299183370453,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "R-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 1.0000000000000013,
+      "actual_raster_min_Z": 0.99999999999998,
+      "detail": {
+        "source_alpha": 11062,
+        "raster_alpha": 11062
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "L-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 394.36494195756455,
+      "actual_raster_min_Z": 393.67170715250614,
+      "detail": {
+        "source_alpha": 13912,
+        "raster_alpha": 25914,
+        "continuous_quartic_min": 397.36494195756455,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 0,
+      "name": "L-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 260.84367356518874,
+      "actual_raster_min_Z": 260.1409057033445,
+      "detail": {
+        "source_alpha": 10724,
+        "raster_alpha": 18876
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "L-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 375.3161131911621,
+      "actual_raster_min_Z": 374.7264030734252,
+      "detail": {
+        "source_alpha": 2910,
+        "raster_alpha": 3880,
+        "continuous_quartic_min": 378.3161131911621,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "L-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 223.36842105263156,
+      "actual_raster_min_Z": 223.8736842105263,
+      "detail": {
+        "source_alpha": 2156,
+        "raster_alpha": 2761,
+        "continuous_quartic_min": 226.36842105263156,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "L-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 1.0000000000000004,
+      "actual_raster_min_Z": 1.0000000000000253,
+      "detail": {
+        "source_alpha": 11658,
+        "raster_alpha": 11658
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 568.125,
+      "actual_raster_min_Z": 566.0309835644468,
+      "detail": {
+        "source_alpha": 30786,
+        "raster_alpha": 31117
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 0,
+      "name": "torso-original-blue-gold-bodice",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 680.860688189381,
+      "actual_raster_min_Z": 680.4350111894535,
+      "detail": {
+        "source_alpha": 41427,
+        "raster_alpha": 43045
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 730.3425224781387,
+      "actual_raster_min_Z": 729.7925243287448,
+      "detail": {
+        "source_alpha": 59739,
+        "raster_alpha": 59162
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-near-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 765.5676734635097,
+      "actual_raster_min_Z": 765.7985728851729,
+      "detail": {
+        "source_alpha": 10541,
+        "raster_alpha": 10985
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 91.04306645168617,
+      "actual_raster_min_Z": 91.62423030522143,
+      "detail": {
+        "source_alpha": 58362,
+        "raster_alpha": 58094
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 0,
+      "name": "LEFT-far-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 807.3264417427533,
+      "actual_raster_min_Z": 806.9224202083197,
+      "detail": {
+        "source_alpha": 3423,
+        "raster_alpha": 3592
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 724.8086361525926,
+      "actual_raster_min_Z": 724.9414058947101,
+      "detail": {
+        "source_alpha": 11755,
+        "raster_alpha": 12289
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 0,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "kind": "ORIGINAL_COMPLETE_CLOTH_PELVIS_ROOT_CONTINUOUS_ARCLENGTH_FLOOR_SURFACE",
+      "source_min_Z": 7.0,
+      "actual_raster_min_Z": 92.0309835644469,
+      "detail": {
+        "source_alpha": 113629,
+        "raster_alpha": 115974,
+        "entire_continuous_source_min": 10.0,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "R-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 269.1969536472139,
+      "actual_raster_min_Z": 268.81931025541024,
+      "detail": {
+        "source_alpha": 12899,
+        "raster_alpha": 23037,
+        "continuous_quartic_min": 272.1969536472139,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 1,
+      "name": "R-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 272.3556832502041,
+      "actual_raster_min_Z": 272.07076197263956,
+      "detail": {
+        "source_alpha": 10465,
+        "raster_alpha": 18603
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "R-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 253.8912744919469,
+      "actual_raster_min_Z": 263.40884229948085,
+      "detail": {
+        "source_alpha": 3233,
+        "raster_alpha": 3475,
+        "continuous_quartic_min": 256.8912744919469,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "R-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 250.54623774105104,
+      "actual_raster_min_Z": 249.6851680884388,
+      "detail": {
+        "source_alpha": 1976,
+        "raster_alpha": 2571,
+        "continuous_quartic_min": 253.54623774105104,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "R-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 19.79218739473616,
+      "actual_raster_min_Z": 20.373877921805168,
+      "detail": {
+        "source_alpha": 11062,
+        "raster_alpha": 13040
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "L-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 286.6850401188731,
+      "actual_raster_min_Z": 286.3733894175661,
+      "detail": {
+        "source_alpha": 13912,
+        "raster_alpha": 28702,
+        "continuous_quartic_min": 289.6850401188731,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 1,
+      "name": "L-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 270.5623996035603,
+      "actual_raster_min_Z": 270.0479143839284,
+      "detail": {
+        "source_alpha": 10724,
+        "raster_alpha": 19318
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "L-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 276.4400019738815,
+      "actual_raster_min_Z": 276.0197956273912,
+      "detail": {
+        "source_alpha": 2910,
+        "raster_alpha": 3560,
+        "continuous_quartic_min": 279.4400019738815,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "L-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 254.91787567860843,
+      "actual_raster_min_Z": 254.71874978432317,
+      "detail": {
+        "source_alpha": 2156,
+        "raster_alpha": 2590,
+        "continuous_quartic_min": 257.9178756786084,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "L-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 20.491579271623827,
+      "actual_raster_min_Z": 19.11208243169993,
+      "detail": {
+        "source_alpha": 11658,
+        "raster_alpha": 14183
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 457.0238025132919,
+      "actual_raster_min_Z": 455.05760667889433,
+      "detail": {
+        "source_alpha": 30786,
+        "raster_alpha": 33927
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 1,
+      "name": "torso-original-blue-gold-bodice",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 576.9109906560368,
+      "actual_raster_min_Z": 576.2206981497892,
+      "detail": {
+        "source_alpha": 41427,
+        "raster_alpha": 49097
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 622.2740443489944,
+      "actual_raster_min_Z": 621.8320025755513,
+      "detail": {
+        "source_alpha": 59739,
+        "raster_alpha": 66514
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-near-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 655.4719176969505,
+      "actual_raster_min_Z": 655.5289286939918,
+      "detail": {
+        "source_alpha": 10541,
+        "raster_alpha": 12162
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 121.4181353536666,
+      "actual_raster_min_Z": 121.31446643630721,
+      "detail": {
+        "source_alpha": 58362,
+        "raster_alpha": 75507
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-far-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 674.3369137742525,
+      "actual_raster_min_Z": 672.5415469468758,
+      "detail": {
+        "source_alpha": 3423,
+        "raster_alpha": 3887
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 582.6454392506588,
+      "actual_raster_min_Z": 582.2510721603759,
+      "detail": {
+        "source_alpha": 11755,
+        "raster_alpha": 14436
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 1,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "kind": "ORIGINAL_COMPLETE_CLOTH_PELVIS_ROOT_CONTINUOUS_ARCLENGTH_FLOOR_SURFACE",
+      "source_min_Z": 7.0,
+      "actual_raster_min_Z": 16.550162541073103,
+      "detail": {
+        "source_alpha": 113629,
+        "raster_alpha": 130607,
+        "entire_continuous_source_min": 10.0,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "R-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 41.10879640057459,
+      "actual_raster_min_Z": 40.47436916639885,
+      "detail": {
+        "source_alpha": 12899,
+        "raster_alpha": 32091,
+        "continuous_quartic_min": 44.10879640057459,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 2,
+      "name": "R-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 57.774064113762094,
+      "actual_raster_min_Z": 56.17831426083943,
+      "detail": {
+        "source_alpha": 10465,
+        "raster_alpha": 22654
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "R-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 28.55636299928583,
+      "actual_raster_min_Z": 33.29290627621122,
+      "detail": {
+        "source_alpha": 3233,
+        "raster_alpha": 4350,
+        "continuous_quartic_min": 31.55636299928583,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "R-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 269.69024628421846,
+      "actual_raster_min_Z": 269.00834201582177,
+      "detail": {
+        "source_alpha": 1976,
+        "raster_alpha": 2764,
+        "continuous_quartic_min": 272.69024628421846,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "R-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 64.58709751361069,
+      "actual_raster_min_Z": 63.44518411865759,
+      "detail": {
+        "source_alpha": 11062,
+        "raster_alpha": 20069
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "L-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 48.294631346132405,
+      "actual_raster_min_Z": 47.79828848329937,
+      "detail": {
+        "source_alpha": 13912,
+        "raster_alpha": 31654,
+        "continuous_quartic_min": 51.294631346132405,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 2,
+      "name": "L-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 49.61831195059335,
+      "actual_raster_min_Z": 50.7899000312688,
+      "detail": {
+        "source_alpha": 10724,
+        "raster_alpha": 22993
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "L-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 36.67782300710512,
+      "actual_raster_min_Z": 36.92814031181111,
+      "detail": {
+        "source_alpha": 2910,
+        "raster_alpha": 3652,
+        "continuous_quartic_min": 39.67782300710512,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "L-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 264.8574901253315,
+      "actual_raster_min_Z": 265.12444495001387,
+      "detail": {
+        "source_alpha": 2156,
+        "raster_alpha": 3060,
+        "continuous_quartic_min": 267.8574901253315,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "L-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 44.62999959691181,
+      "actual_raster_min_Z": 43.348362603926994,
+      "detail": {
+        "source_alpha": 11658,
+        "raster_alpha": 23315
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 276.9707590251839,
+      "actual_raster_min_Z": 275.5108510894927,
+      "detail": {
+        "source_alpha": 30786,
+        "raster_alpha": 39588
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 2,
+      "name": "torso-original-blue-gold-bodice",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 382.5909780426786,
+      "actual_raster_min_Z": 381.6963796497359,
+      "detail": {
+        "source_alpha": 41427,
+        "raster_alpha": 55663
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 440.7857622624659,
+      "actual_raster_min_Z": 440.2799073473738,
+      "detail": {
+        "source_alpha": 59739,
+        "raster_alpha": 80431
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-near-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 439.1529939144525,
+      "actual_raster_min_Z": 438.7837042107444,
+      "detail": {
+        "source_alpha": 10541,
+        "raster_alpha": 13814
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 268.58404122107754,
+      "actual_raster_min_Z": 268.53275651614393,
+      "detail": {
+        "source_alpha": 58362,
+        "raster_alpha": 72255
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 2,
+      "name": "LEFT-far-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 433.0279896289576,
+      "actual_raster_min_Z": 431.6588452494702,
+      "detail": {
+        "source_alpha": 3423,
+        "raster_alpha": 4476
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 334.76148393713464,
+      "actual_raster_min_Z": 334.2722936276728,
+      "detail": {
+        "source_alpha": 11755,
+        "raster_alpha": 15233
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 2,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "kind": "ORIGINAL_COMPLETE_CLOTH_PELVIS_ROOT_CONTINUOUS_ARCLENGTH_FLOOR_SURFACE",
+      "source_min_Z": 7.0,
+      "actual_raster_min_Z": 7.0,
+      "detail": {
+        "source_alpha": 113629,
+        "raster_alpha": 144128,
+        "entire_continuous_source_min": 10.0,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "R-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 42.61308079452766,
+      "actual_raster_min_Z": 42.220055729303255,
+      "detail": {
+        "source_alpha": 12899,
+        "raster_alpha": 31876,
+        "continuous_quartic_min": 45.61308079452766,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 3,
+      "name": "R-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 56.85643871313015,
+      "actual_raster_min_Z": 55.97043441791362,
+      "detail": {
+        "source_alpha": 10465,
+        "raster_alpha": 23314
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "R-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 36.17898525206911,
+      "actual_raster_min_Z": 38.191811435475636,
+      "detail": {
+        "source_alpha": 3233,
+        "raster_alpha": 4870,
+        "continuous_quartic_min": 39.17898525206911,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "R-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 214.08606062533732,
+      "actual_raster_min_Z": 213.77650556884944,
+      "detail": {
+        "source_alpha": 1976,
+        "raster_alpha": 3030,
+        "continuous_quartic_min": 217.08606062533732,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "R-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 91.34928344313548,
+      "actual_raster_min_Z": 90.45027205277223,
+      "detail": {
+        "source_alpha": 11062,
+        "raster_alpha": 24325
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "L-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 44.37662063156168,
+      "actual_raster_min_Z": 48.607763274920345,
+      "detail": {
+        "source_alpha": 13912,
+        "raster_alpha": 25063,
+        "continuous_quartic_min": 47.37662063156168,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 3,
+      "name": "L-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 50.469387022295244,
+      "actual_raster_min_Z": 51.16395237118174,
+      "detail": {
+        "source_alpha": 10724,
+        "raster_alpha": 24737
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "L-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 36.579195661613106,
+      "actual_raster_min_Z": 36.761764330573314,
+      "detail": {
+        "source_alpha": 2910,
+        "raster_alpha": 4192,
+        "continuous_quartic_min": 39.579195661613106,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "L-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 208.22608381635047,
+      "actual_raster_min_Z": 208.4330290846973,
+      "detail": {
+        "source_alpha": 2156,
+        "raster_alpha": 3868,
+        "continuous_quartic_min": 211.22608381635047,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "L-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 68.0855437783212,
+      "actual_raster_min_Z": 67.15261691781161,
+      "detail": {
+        "source_alpha": 11658,
+        "raster_alpha": 28410
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 150.09569934283442,
+      "actual_raster_min_Z": 148.96863568996855,
+      "detail": {
+        "source_alpha": 30786,
+        "raster_alpha": 40960
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 3,
+      "name": "torso-original-blue-gold-bodice",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 213.76404443789596,
+      "actual_raster_min_Z": 213.51647407058093,
+      "detail": {
+        "source_alpha": 41427,
+        "raster_alpha": 52214
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 278.39984293552396,
+      "actual_raster_min_Z": 278.2147522112562,
+      "detail": {
+        "source_alpha": 59739,
+        "raster_alpha": 71704
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-near-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 231.30740252798174,
+      "actual_raster_min_Z": 231.2026403257495,
+      "detail": {
+        "source_alpha": 10541,
+        "raster_alpha": 13737
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 249.02721158205122,
+      "actual_raster_min_Z": 249.02721158205122,
+      "detail": {
+        "source_alpha": 58362,
+        "raster_alpha": 60332
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 3,
+      "name": "LEFT-far-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 231.11214468621526,
+      "actual_raster_min_Z": 230.1733354703034,
+      "detail": {
+        "source_alpha": 3423,
+        "raster_alpha": 4436
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 167.8516725926503,
+      "actual_raster_min_Z": 167.59652051675678,
+      "detail": {
+        "source_alpha": 11755,
+        "raster_alpha": 14676
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 3,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "kind": "ORIGINAL_COMPLETE_CLOTH_PELVIS_ROOT_CONTINUOUS_ARCLENGTH_FLOOR_SURFACE",
+      "source_min_Z": 7.0,
+      "actual_raster_min_Z": 7.0,
+      "detail": {
+        "source_alpha": 113629,
+        "raster_alpha": 151226,
+        "entire_continuous_source_min": 10.0,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "R-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 9.36558894294631,
+      "actual_raster_min_Z": 33.72613353361581,
+      "detail": {
+        "source_alpha": 12899,
+        "raster_alpha": 23157,
+        "continuous_quartic_min": 12.36558894294631,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 4,
+      "name": "R-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 30.959429473008342,
+      "actual_raster_min_Z": 30.49912572852525,
+      "detail": {
+        "source_alpha": 10465,
+        "raster_alpha": 16452
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "R-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 28.96998256034543,
+      "actual_raster_min_Z": 29.634624138599264,
+      "detail": {
+        "source_alpha": 3233,
+        "raster_alpha": 5140,
+        "continuous_quartic_min": 31.96998256034543,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "R-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 53.957629286880945,
+      "actual_raster_min_Z": 59.94942469112818,
+      "detail": {
+        "source_alpha": 1976,
+        "raster_alpha": 3376,
+        "continuous_quartic_min": 56.957629286880945,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "R-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 43.7522018077435,
+      "actual_raster_min_Z": 43.65563541744615,
+      "detail": {
+        "source_alpha": 11062,
+        "raster_alpha": 20867
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "L-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 23.920635057355334,
+      "actual_raster_min_Z": 23.621646906687584,
+      "detail": {
+        "source_alpha": 13912,
+        "raster_alpha": 26014,
+        "continuous_quartic_min": 26.920635057355334,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 4,
+      "name": "L-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 28.85636877091257,
+      "actual_raster_min_Z": 28.822356273586774,
+      "detail": {
+        "source_alpha": 10724,
+        "raster_alpha": 18098
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "L-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 18.718599998025894,
+      "actual_raster_min_Z": 23.995034636960572,
+      "detail": {
+        "source_alpha": 2910,
+        "raster_alpha": 3130,
+        "continuous_quartic_min": 21.718599998025894,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "L-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 46.65884393749284,
+      "actual_raster_min_Z": 46.751942302759176,
+      "detail": {
+        "source_alpha": 2156,
+        "raster_alpha": 2874,
+        "continuous_quartic_min": 49.65884393749284,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "L-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 37.194456888006926,
+      "actual_raster_min_Z": 37.0657920441195,
+      "detail": {
+        "source_alpha": 11658,
+        "raster_alpha": 23185
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 69.3295373656467,
+      "actual_raster_min_Z": 69.25355731567171,
+      "detail": {
+        "source_alpha": 30786,
+        "raster_alpha": 33330
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 4,
+      "name": "torso-original-blue-gold-bodice",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 76.48219688399007,
+      "actual_raster_min_Z": 76.48219688399007,
+      "detail": {
+        "source_alpha": 41427,
+        "raster_alpha": 43615
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 69.75647389265639,
+      "actual_raster_min_Z": 69.7497553416028,
+      "detail": {
+        "source_alpha": 59739,
+        "raster_alpha": 60951
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-near-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 43.443590113845744,
+      "actual_raster_min_Z": 43.301815726838704,
+      "detail": {
+        "source_alpha": 10541,
+        "raster_alpha": 12054
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 47.18445593969361,
+      "actual_raster_min_Z": 47.18445593969361,
+      "detail": {
+        "source_alpha": 58362,
+        "raster_alpha": 60386
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 4,
+      "name": "LEFT-far-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 72.51618298052793,
+      "actual_raster_min_Z": 72.23068951831054,
+      "detail": {
+        "source_alpha": 3423,
+        "raster_alpha": 3841
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 48.31710775034076,
+      "actual_raster_min_Z": 48.095304383442986,
+      "detail": {
+        "source_alpha": 11755,
+        "raster_alpha": 12897
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 4,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "kind": "ORIGINAL_COMPLETE_CLOTH_PELVIS_ROOT_CONTINUOUS_ARCLENGTH_FLOOR_SURFACE",
+      "source_min_Z": 7.0,
+      "actual_raster_min_Z": 6.870767120597346,
+      "detail": {
+        "source_alpha": 113629,
+        "raster_alpha": 135362,
+        "entire_continuous_source_min": 10.0,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "R-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 7.115017155281777,
+      "actual_raster_min_Z": 32.30590714732121,
+      "detail": {
+        "source_alpha": 12899,
+        "raster_alpha": 23091,
+        "continuous_quartic_min": 10.115017155281777,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 5,
+      "name": "R-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 20.927185692080286,
+      "actual_raster_min_Z": 20.886611886320114,
+      "detail": {
+        "source_alpha": 10465,
+        "raster_alpha": 17997
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "R-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 27.353264368550605,
+      "actual_raster_min_Z": 27.124753014688064,
+      "detail": {
+        "source_alpha": 3233,
+        "raster_alpha": 5978,
+        "continuous_quartic_min": 30.353264368550605,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "R-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 17.16091371253627,
+      "actual_raster_min_Z": 20.433772055189113,
+      "detail": {
+        "source_alpha": 1976,
+        "raster_alpha": 3789,
+        "continuous_quartic_min": 20.16091371253627,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "R-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 22.999999999999904,
+      "actual_raster_min_Z": 22.999999999999904,
+      "detail": {
+        "source_alpha": 11062,
+        "raster_alpha": 19692
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "L-thigh",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 20.55134388785332,
+      "actual_raster_min_Z": 23.16505670841184,
+      "detail": {
+        "source_alpha": 13912,
+        "raster_alpha": 25948,
+        "continuous_quartic_min": 23.55134388785332,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 5,
+      "name": "L-calf",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 15.346114881153959,
+      "actual_raster_min_Z": 15.44023044853671,
+      "detail": {
+        "source_alpha": 10724,
+        "raster_alpha": 19206
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "L-kneestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 18.367572877949307,
+      "actual_raster_min_Z": 23.386555247312046,
+      "detail": {
+        "source_alpha": 2910,
+        "raster_alpha": 3516,
+        "continuous_quartic_min": 21.367572877949307,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "L-anklestrip",
+      "kind": "ORIGINAL_COMPLETE_DIRECTIONAL_NATIVE_JOINT_CONTINUOUS_UV",
+      "source_min_Z": 13.88313693304394,
+      "actual_raster_min_Z": 14.620977325316534,
+      "detail": {
+        "source_alpha": 2156,
+        "raster_alpha": 3107,
+        "continuous_quartic_min": 16.88313693304394,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "L-foot",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 22.99999999999997,
+      "actual_raster_min_Z": 22.99999999999997,
+      "detail": {
+        "source_alpha": 11658,
+        "raster_alpha": 21562
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "pelvis-white-pleated-miniskirt-original-waist-and-thigh-roots",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 57.99999999999996,
+      "actual_raster_min_Z": 57.99999999999996,
+      "detail": {
+        "source_alpha": 30786,
+        "raster_alpha": 32312
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 5,
+      "name": "torso-original-blue-gold-bodice",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 57.99999999999972,
+      "actual_raster_min_Z": 57.99999999999972,
+      "detail": {
+        "source_alpha": 41427,
+        "raster_alpha": 43601
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "head-face-bun-hair-complete-blue-ribbons",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 57.99999999999978,
+      "actual_raster_min_Z": 57.99999999999978,
+      "detail": {
+        "source_alpha": 59739,
+        "raster_alpha": 61936
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-near-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 24.961393229855393,
+      "actual_raster_min_Z": 24.771367522167115,
+      "detail": {
+        "source_alpha": 10541,
+        "raster_alpha": 12048
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-actual-complete-forearm-grip-and-entire-pole-both-ends",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 28.702259055703266,
+      "actual_raster_min_Z": 28.702259055703266,
+      "detail": {
+        "source_alpha": 58362,
+        "raster_alpha": 60362
+      },
+      "independent_prior_surface_transferred_unchanged": false
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-far-upper-arm",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 54.52709103255995,
+      "actual_raster_min_Z": 54.27959366766067,
+      "detail": {
+        "source_alpha": 3423,
+        "raster_alpha": 3829
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-far-complete-curved-cuff-forearm-free-hand",
+      "kind": "EXACT_PINNED_ACTUAL_NATIVE_AFFINE_MATERIAL_SURFACE",
+      "source_min_Z": 26.195346964325363,
+      "actual_raster_min_Z": 25.929097671113418,
+      "detail": {
+        "source_alpha": 11755,
+        "raster_alpha": 12972
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    },
+    {
+      "phase": 5,
+      "name": "complete-original-blue-gold-cape-and-both-coattails",
+      "kind": "ORIGINAL_COMPLETE_CLOTH_PELVIS_ROOT_CONTINUOUS_ARCLENGTH_FLOOR_SURFACE",
+      "source_min_Z": 7.0,
+      "actual_raster_min_Z": 6.975116863711214,
+      "detail": {
+        "source_alpha": 113629,
+        "raster_alpha": 132876,
+        "entire_continuous_source_min": 10.0,
+        "actual_selected_triangle_alpha_mismatch": 0
+      },
+      "independent_prior_surface_transferred_unchanged": true
+    }
+  ],
+  "actual_final_six": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase0-actual-native-v08.png",
+        "sha256": "bc008838b0fdcdf4a184bd4c7f037649acc3da09d800a2dd5874d07c8e611a0a",
+        "bytes": 1062647
+      },
+      "RGBA_recomposition_mismatch": 0,
+      "strong_bodies": 1,
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase1-actual-native-v08.png",
+        "sha256": "f5b8e3991787dbc934f6133b1f45dd0e8d43da4d3cfb07a1f3c7259d432f3298",
+        "bytes": 1120886
+      },
+      "RGBA_recomposition_mismatch": 0,
+      "strong_bodies": 1,
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase2-actual-native-v08.png",
+        "sha256": "16ae684d5e36e740ba50ed04f8105e11c0f50807919900ad7311061bcde97589",
+        "bytes": 1200546
+      },
+      "RGBA_recomposition_mismatch": 0,
+      "strong_bodies": 1,
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase3-actual-native-v08.png",
+        "sha256": "eeadaebd37dbec5af495a96990a671f65e3125f5e6b76fcc25ea06d7a7dff918",
+        "bytes": 1153282
+      },
+      "RGBA_recomposition_mismatch": 0,
+      "strong_bodies": 1,
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase4-actual-native-v08.png",
+        "sha256": "769899defcaa433b574b7c5d76c3af9aa1da9900b9c7007acb33441b707b44ea",
+        "bytes": 1071405
+      },
+      "RGBA_recomposition_mismatch": 0,
+      "strong_bodies": 1,
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase5-actual-native-v08.png",
+        "sha256": "985701647822ea6be4c671fc71b7a54b927d5dd0bdcd4cabd7e3a610d946b1e1",
+        "bytes": 1097260
+      },
+      "RGBA_recomposition_mismatch": 0,
+      "strong_bodies": 1,
+      "storage_edge_contact": false
+    }
+  ],
+  "minimum_guarded_Z": 0.99999999999998,
+  "same_fixed318725_bones_SO3_RIGHTrigidpole_Gram_bodyunit_root_and_terminal_model": true,
+  "limits": [
+    "One explicit compatible material/depth/support witness, not unique recovered anatomy or actual source/cycle/game approval.",
+    "Only changed proximal skin/pelvis and latest original shaft-edge material are independently recomputed; all other source/raster geometry and RGBA are cryptographically identical to the prior independently checked surfaces.",
+    "Every final108-part depth-ordered composition is compared against the final actual sixRGBA sources. Whole-source visual QA is retained from first6 and any final small skin review, with no repeated whole6 view."
+  ],
+  "images_viewed": 0,
+  "source_images_written": 0,
+  "repo_writes": 0,
+  "tests_run": 0,
+  "actor_approvals_added": 0
+}

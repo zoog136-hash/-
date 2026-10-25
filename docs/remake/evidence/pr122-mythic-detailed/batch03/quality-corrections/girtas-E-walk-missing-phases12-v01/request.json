@@ -1,0 +1,47 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "missing-phases12-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 2,
+  "requested_poses": 2,
+  "requested_game_phases": [
+    1,
+    2
+  ],
+  "newly_authored_poses": 2,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-padded.png",
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/girtas-E-walk-opposite-contact-v01.png",
+    "/workspace/scratch/girtas-E-walk-missing-phases12-v01/opposite-support-guide-NOT-PRODUCTION.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-padded.png": "ca12906450ef3eb855196608903f99d031cf7472a4953d2b06ed7d20432bb346",
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/girtas-E-walk-opposite-contact-v01.png": "abf51a674064173ca307e65c124239b99e4a0316b1de857cd8063e86e23c4c57",
+    "/workspace/scratch/girtas-E-walk-missing-phases12-v01/opposite-support-guide-NOT-PRODUCTION.png": "44f0e94e67110da1babe8282348c81937d8c6b1fffc7e56034ecf429e19b43b6"
+  },
+  "preserved_existing_four_pose_source": "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/girtas-E-walk-missing-halfcycles-v01.png",
+  "preserved_existing_four_pose_sha256": "df0b0ac88c2013cf9daee8b4de8ae0d36ecd9198b333a18ac93014e1a871f00e",
+  "preserved_usable_existing_rows": [
+    2,
+    3
+  ],
+  "guide_source_crop": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-lossless.png",
+  "guide_source_crop_sha256": "32753e75778c6b195e0f79fecf1ec92ef758ce383b1789fd5f9bdb51119e52bb",
+  "guide_kind": "Nonproduction drawn projected support/flight guide only; not final source or completed pose",
+  "corrective_reason": "Only missing opposite-support phases1/2. Move large foreground support boot under/behind hip and smaller far boot forward in air; preserve all saved contact and phase4/5 sources.",
+  "source_nominal_canvas_for_later_analysis": 2048,
+  "transparent_background": true,
+  "private_before_preview": "/workspace/scratch/girtas-E-walk-missing-phases12-v01/private-footpath-guide.jpg",
+  "prompt": "Edit the SAME GIRTAS to create exactly TWO NEW missing EAST WALK poses, in one horizontal row of two complete separate full-body figures on transparent alpha-zero background. This is ONLY missing game phases1 and2; do NOT make a whole six-pose cycle, a four-pose sheet, or redraw saved game4/5. Broad transparent gutters and uncropped full equipment. NO text, labels, guide colors, arrows, floor or duplicate figures in final art.\n\nImage1 and image2 are the saved contact-key identity references. Image3 is a NONPRODUCTION PHYSICAL FOOTPATH GUIDE: top pictures are already-saved WRONG-for-this-task game4/5 with the large foreground boot advancing. DO NOT COPY THOSE POSES AGAIN. The bottom cyan/magenta schematic shows the two NEW necessary support positions. Cyan means LARGE FOREGROUND anatomicalRIGHT support leg, magenta means SMALLER BACKGROUND anatomicalLEFT leg swinging FORWARD IN AIR. Guide colors/lines/text are not final costume. Preserve original black/gold armor and long dark skirt from the contact images.\n\nThe earlier four-pose edit failed because ALL four repeated the LARGE FOREGROUND GOLD GREAVE reaching forward. You MUST materially pull that SAME LARGE FOREGROUND LEG BACK: vertical UNDER THE HIP in LEFT pose1, then BEHIND THE HIP toward screenLEFT with rear toe supporting in RIGHT pose2. The SMALLER FAR BOOT must now move FORWARD in air to screenRIGHT. Do NOT draw the same large leading foreground greave stretched out in front again. Actual pixel support geometry, not anatomical labels alone, must visibly change.\n\nLEFT FIGURE = GAME PHASE1. Strict EAST camera. Large nearRIGHT support shin is almost VERTICAL beneath pelvis; near boot is FLAT directly UNDER HIP, visibly weight bearing. Its toe points RIGHT but does NOT reach out in front. FarLEFT smaller boot swings forward to the RIGHT IN THE AIR, with clear transparent air below it. Far calf crosses BEHIND the near vertical shin; show the near shin in front at overlap. The long original skirt still covers proximal thighs naturally, but cannot hide both shins/boots. This is midstance/passing, opposite to the saved foreground-leg-forward passing pose.\n\nRIGHT FIGURE = GAME PHASE2. Same camera and model. Large nearRIGHT support leg slopes backward toward screenLEFT BEHIND THE HIP; its heel is HIGH and only the rear toe touches the implied support plane. Its large foreground greave/boot must remain behind the hip, never forward. Smaller farLEFT leg extends FORWARD toward screenRIGHT IN AIR with heel/toe lifted for the upcoming saved opposite contact3. Maintain clear air gap under that advancing far boot. This is rear near-leg toe-push plus far-leg forward swing, not another foreground-leg advance. Show continuous plausible knees/ankles/boots, exactly two legs.\n\nKeep exact pale masculine face, long pale hair, gold horn crown, thin rigid radial GOLD spines, black/gold armor and LONG DARK BLACK gold-edged skirt from both contact keys. No pants substitution, shortened hem, invented visible thighs or extra joints. Same proportions in head, chest, hips and boots; no giant hands, skinny torso or shrunken character. ALL face/chest/pelvis/boots face RIGHT/EAST at the same elevated side angle, never frontal. The long thin luminous SINUOUS weapon remains in anatomicalRIGHT NEAR hand, unchanged physical design and ownership; free far hand remains separate. Natural small skirt/hair/arm follow-through, no obscuring the required foreground-under/back support and smaller-far-forward air-foot configurations. Keep full weapon/hair/spines visible with transparent margins and no interfigure glow bridges. One high quality two-pose edit only.",
+  "imagegen_attempt_limit": 1,
+  "on_failure": "HOLD and stop this E chain; no further retry authorized in this task",
+  "user_authorization": "Production image tools allowed, no main-chat images; exactly one two-pose missing-motion edit attempt.",
+  "created_at": "2026-10-19T11:49:57.739604+00:00",
+  "repository_mutated": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

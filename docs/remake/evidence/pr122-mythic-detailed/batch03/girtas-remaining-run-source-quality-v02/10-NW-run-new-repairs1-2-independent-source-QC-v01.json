@@ -1,0 +1,80 @@
+{
+  "schema": "PR122_NW_RUN_REPAIRED1_2_INDEPENDENT_SOURCE_QC_V1",
+  "utc": "2026-10-19T16:02:06.966898+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "SOURCE_REPAIRED1_2_PASS",
+  "scope": "Only actual new1a02ca... farRIGHT recovery visibility and actual new225fe... opposite farRIGHT-leading AIR. New3 smallhilt independentPASS inherited; prior0/4/5 statuses untouched.",
+  "actor_approval_increment": 0,
+  "source_pins": [
+    {
+      "phase": 1,
+      "raw_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+      "raw_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+      "raw_bytes": 1130855,
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/request.json",
+      "request_sha256": "0230b4a086a6990c1fb85652b1cfe8af5b9049f430d2124826499e7d7668b374",
+      "result_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/result.json",
+      "result_sha256": "8bb3b117aa824e1234f324918999765438df82e25babc394b00d147511c0623f",
+      "geometry_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/geometry-base2048.json",
+      "geometry_sha256": "e017986342e114821d382541582903431c0f7d7bf9103591def14a2025d5e28e",
+      "reference_pins": {
+        "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-nearLEFT-load1-lossless-pose-only.png": "f314a147a62108f696212a68f2897745a6066cc988b69db4f60cde63a0ab9533",
+        "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/same-nearLEFT-load-pose-natural-farRIGHT-hem-opening-guide.png": "2930bfed4f27d1aef07185cc7e1fba602de17d893ed5d086b643ce3e7141b40f",
+        "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-source0-farRIGHT-folded-recovery-boot-detail.png": "4f5db73df7e36345ace8796e466a443009b9c932c5247daed0c01bf3bea9281e"
+      },
+      "boundary_gt100_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    },
+    {
+      "phase": 2,
+      "raw_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+      "raw_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+      "raw_bytes": 1076816,
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/request.json",
+      "request_sha256": "54d684ebb32203d442fecefb83366ef4708a093feff726c54bf32fdde2bca5e2",
+      "result_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/result.json",
+      "result_sha256": "57f9cbbe3d778901cbaa717b7c2e3450d3332c6b39e2633478d979a9acce27b5",
+      "geometry_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/geometry-base2048.json",
+      "geometry_sha256": "b1c663312d71e3568f60a17e5719df3c306b4dc868c7655d35271c0f60e0dac2",
+      "reference_pins": {
+        "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+        "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/proved-farRIGHT-leading-leg-ankle-flex-guide-only.png": "fe2eafb49b09f231fd181a9aadd2f90e536a67a266c980205282746cce27a7bc"
+      },
+      "boundary_gt100_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    }
+  ],
+  "findings": {
+    "phase1": "Actual nearLEFT leads image-left into deeply flexed support knee and full flat boot. Separate farRIGHT shin emerges naturally under far long-robe hem, bends back, and ends in a complete raised recovery boot. This resolves the old fully hidden recovery-foot uncertainty without a third limb, bare thigh/pants or truncated robe.",
+    "phase2": "Proved farRIGHT leading chain from passed3 is retained and visibly lifted/flexed at knee/ankle into a toe-up separate forward boot. NearLEFT stays folded backward with its separate dark sole facing viewer. Ownership genuinely reverses the old nearLEFT-leading phase2 defect. Source suspended pose is suitable for authored two-sole AIR; no worldfloor inferred from transparent PNG.",
+    "identity_and_gear": "Both retain proper NW rear-left camera, pale long hair, hard gold crown/rays/pauldrons, dark long gold-trim robe and permanent farRIGHT sinuous blade with faithful smallcollar hilt. Full body/gear endpoints visible; no new material bodyratio/limb continuity defect."
+  },
+  "new3_source_proof_pin": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-phase3-small-hilt-independent-source-QC-v01.json",
+    "sha256": "2482f21b253e02f0d82d85bba47996e9b9b80ea6adbb829cd39cfd0005f13443"
+  },
+  "remaining_HOLD": [
+    "Whole6 source cycle with exact new1/new2/new3 + preserved0/4/5 still needs final paired source consistency/alternation review; old whole6HOLD history is preserved.",
+    "Physical C/scale/root/floor/AIR arc and actual compiledTRES/Godot remain unapproved.",
+    "Actor267 approval0/defaultcatalogOFF; no completion count increment."
+  ],
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "69f81ece35aec5080d16202d50d57ead4e9dcdcdce87218a100f469b440766e0",
+  "repository_mutations": false
+}

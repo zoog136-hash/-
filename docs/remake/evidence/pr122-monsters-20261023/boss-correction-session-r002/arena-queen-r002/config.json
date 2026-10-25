@@ -1,0 +1,33 @@
+{
+  "cases": [
+    {
+      "key": "monster:얼음 여왕",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres",
+      "slug": "queen",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "roles": [
+        "idle",
+        "run",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "move_speed": 66.0,
+      "attack_seconds": 1.56,
+      "attack_range": 280.0,
+      "run_seconds": 1.8,
+      "idle_seconds": 1.4
+    }
+  ],
+  "output": "/workspace/runtime/boss-correction-r002-queen",
+  "capture": true
+}

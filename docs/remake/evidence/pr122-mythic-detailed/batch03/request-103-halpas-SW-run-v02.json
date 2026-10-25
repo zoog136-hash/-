@@ -1,0 +1,29 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "SW",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png": "5d8a262b38675dde9de72b4422753a2389c833083f1e925b7303d2aec44e33b9"
+  },
+  "transparent_background": true,
+  "user_authorization": "Production image tools authorized; no images or image links in main chat. One private repair attempt.",
+  "corrective_reason": "SW/run/v01 all six poses incorrectly face screen-right. Author genuine SOUTHWEST lower-left fast-flight poses from correct SW walk/idle; never reference wrong SW/run.",
+  "prompt": "Create ONE production game-animation sprite sheet: six independently articulated FAST AIRBORNE RUN / FLIGHT poses of the SAME unique boss 해방된 할파스 (Halpas). This is a direction-correction commission. The attached second and third images show the CORRECT SOUTHWEST orientation and exact established character model; the first portrait is the original identity authority. Use ONLY these references. Preserve the helmet, face, gold-and-black armor, burgundy cape, crystalline purple wings, exact weapon and anatomical weapon hand from these correct references.\n\nDIRECTION IS THE MOST IMPORTANT REQUIREMENT. EVERY ONE of the SIX complete figures faces SOUTHWEST: screen LOWER-LEFT, front-left three-quarter view. The nose/helmet face points LEFT and slightly DOWN. Chest, pelvis, knees, toes and the weapon perspective face LEFT and slightly DOWN, matching the correct second-reference SW WALK model. The blade projects to the LEFT of the body. Cape trails to the RIGHT. Show the SAME correct side of the character in every phase. No figure may face screen-right. No reversal, back view, changing viewpoint, rotating-in-place or mirrored weapon hand. Render new poses from this correct SW model; do not use any unprovided old run sprite.\n\nAnimate a distinctive FAST airborne movement cycle, rather than tracing the slow walk reference: stronger forward lean, coordinated shoulder/hip articulation, visibly exchanged leg extensions and tucks, wing propulsion and delayed cape response. Six phase order is left-to-right then top-to-bottom: (0) leading forward leg extension with rear leg bent, wings raised in powerful upstroke; (1) forward surge with legs tucking through and wings driving down; (2) far-side leg extends forward while near leg recoils, wings low and cape catches up; (3) opposite leg lead, new upstroke, same heading and same complete anatomy; (4) second strong downstroke with opposing arm/leg counter-response; (5) recoil/recovery flowing back toward phase0. This is one coherent flying armored humanoid with the exact same two legs, two arms, two existing crystalline wings, single established weapon and cape in all frames. Make all six silhouettes and joint poses clearly different. Do not add limbs, weapons, energy trails, ornaments or detached parts.\n\nTechnical atlas: 1024x1536 PNG, EXACTLY TWO COLUMNS and THREE ROWS, SIX figures only, each on its own512x512 cell. Keep each complete silhouette within the central320x320 area of its cell, including the full wing tips, helmet horns, boot tips and entire weapon. Keep at least96px of empty transparent margin on every cell edge. Sparse layout with large empty gutters is essential; do not enlarge a figure to fill the page. Same elevated orthographic isometric camera, body proportions, material rendering and pixel scale across all six. Fully visible uncropped figures, no overlap of body bounding rectangles between cells.\n\nDetailed crisp game-sprite cutouts with readable gold trim and opaque black armor. Shading stays inside the character. Background entirely transparent alpha0, including gaps between limbs and wings. Only1-2px anti-aliasing on silhouette edges. No floor, cast shadow, contact shadow, bloom, haze, fog, halo, aura, drop shadow, motion blur, diffuse glow, background panel, text, captions, grid, cell outlines or labels. Purple light must stay inside the existing solid crystal-wing and blade shapes. Preserve exact identity and correct LOWER-LEFT facing in ALL SIX poses.",
+  "requested_at": "2026-10-19T10:10:31.011884+00:00",
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02.png",
+  "output_sha256": "0083e2bf23ee49248c42ff3cb1627c8a2ce4a930febaf019a39a0c272e0f9ea7",
+  "output_bytes": 2356719,
+  "original_generated_file": "/workspace/scratch/halpas-SW-run-repair/halpas-SW-run-v02.png",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png"
+}

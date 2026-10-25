@@ -1,0 +1,44 @@
+{
+  "observed_utc": "2026-10-18T02:18:19.838584+00:00",
+  "scope": "Fresh workspace, Library/shared/scratch and current function stores inspected; remote PR122 records retain historical SHA only",
+  "recorded_completed_missing_from_Git": [],
+  "unrecovered": [
+    {
+      "kind": "uncommitted_image",
+      "name": "reaper E contact A/B pair pilot01",
+      "historical_bytes": 1118065,
+      "historical_dimensions": [
+        1983,
+        793
+      ],
+      "historical_sha256": "096b725a69177eb609535520181560649d7f9593ed6b45f09083294bc09411ee",
+      "prior_store": "reaperEContactPilot20261018",
+      "status": "UNRECOVERED_NOT_DELIVERED",
+      "source_quality": "HOLD: same foreground lead on both cells",
+      "current_store_available": false
+    },
+    {
+      "kind": "uncommitted_image",
+      "name": "reaper E single B pilot02",
+      "historical_bytes": 1180305,
+      "historical_dimensions": [
+        1402,
+        1122
+      ],
+      "historical_sha256": "c280d26b285ca23c01c6d47d51074fe4eb97737f29b2a264aa937fdc933a3170",
+      "prior_store": "reaperEBContactPilot02_20261018",
+      "status": "UNRECOVERED_NOT_DELIVERED",
+      "source_quality": "HOLD: same foreground lead despite text joint coordinates",
+      "current_store_available": false
+    },
+    {
+      "kind": "QA_draft",
+      "name": "Tomb269 completed-Iron-Golem comparison draft",
+      "historical_sha256": null,
+      "status": "UNRECOVERED_REIMPLEMENTED_SEPARATELY",
+      "new_file": "tests/pr122_tomb269_baseline_visual_review.gd",
+      "note": "The committed small-native SW probe already existed and was reused; the new comparison script is not represented as recovered old bytes."
+    }
+  ],
+  "completed_added": 0
+}

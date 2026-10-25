@@ -1,0 +1,33 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02-3D-RIGHT-contact301",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "newly_authored_poses": 1,
+  "game_phases": [
+    3
+  ],
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-3D-v01/3D-W-RUN-RIGHT-contact3-authority.png",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-head-rigid-torso-rays-NO-OLD-ARMS-OR-LEGS.png",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-3D-v01/3D-W-RUN-RIGHT-contact3-authority.png": "a06cd6a41a4356076f97c725827c68994445ca89a3f94f0aaefc06a40f7fa4f2",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-head-rigid-torso-rays-NO-OLD-ARMS-OR-LEGS.png": "fb8e5354e393d3f4f2eee1c3d79a9c0e4622e688028353202d8d904e67744926",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png": "a18e7741173cd3d8705d6c2329534a5681089ad7d9809659a148880ed7e57035",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+  },
+  "prompt": "Create ONE NEW finished WEST/LEFT-facing GIRTAS RUN RIGHT-contact3 pose, transparent RGBA PNG1254x1254, one complete fullbody figure, min35px transparent padding and no clipping of hair/helmet/hardgoldrays/bothboots/entireblade. No text, panels, guide, floor or shadow. This is a MATERIAL correction of opposite-leg ownership and counter-swing, not a layout variation.\nPRIMARY FIRST reference: EXACT 3D pose/camera/joints/depth. Dress THIS mannequin. FAR anatomical RIGHT orange leg goes FORWARD screenLEFT into initial HEEL contact, toe slightly up, its thigh emerges from the FAR/right hip BEHIND the near hip/robe. NEAR anatomical LEFT blue leg goes BACK screenRIGHT with bent recovery knee and entire boot lifted AIR. Show the nearLEFT hip clearly routing BACKWARDS into that recovered thigh/knee and lifted rear boot; it must NOT route forward to front shin. The farRIGHT front thigh/knee/shin is partly occluded correctly by the near side torso/slit edge, while recovered nearLEFT thigh remains foreground. Trace TWO correct hip-to-knee-to-boot chains, not just different boot outlines. Keep original longrobe but allow its original side slit and a moving rear panel to reveal enough upper thigh/knee ownership. Never hide both leg roots in a single robe curtain. No pants redesign, no bare flesh.\nALSO FOLLOW THE MANNEQUIN ARMS: anatomical LEFT NEAR arm is EMPTY and bends FORWARD screenLEFT/up in a clear running counter-swing; its empty hand is near chest height, NOT a trailing low hand behind torso. Anatomical RIGHT FAR arm carries the single original sinuous fiery blade compactly LOW, with ONE far wrist/hand gripping it. Two arms exactly; no extra detached hand or extra weapon. The prior failed RIGHT candidate repeated a LEFT front stance and leftarmbehind: do not restore that. This image must materially show the swapped hip/knee/leg occlusion plus actual emptyLEFTarmFORWARD.\nSECOND reference: Original face/helmet, rigid torso/pauldron ornament and hardgoldspines APPEARANCE ONLY. Both old arms AND old legs were deliberately removed; NEVER derive limb stance from it or fill them in by copying an old generic leftfootforward walk. Preserve this original pale male face, long flowing silver-white hair, black/gold rigid ornate armor, gold chest jewel, thin HARD gold radial spikes, original proportions. Finish cut/missing reference ornaments continuously; these are cropped design pieces, not damaged armor. No softfeather wings or new face. THIRD reference is the COMPLETE ORIGINAL RIGHT-hand sinuous gold/orange flame blade material/outline only, one long multibend wave, never straight sword; use its exact identity with the farRIGHT running grip from primary3D. FOURTH reference is original LONG dark robe gold trim and long hanging panels: preserve this original robe and tail language with lively running cloth lag.\nMaintain true W leftside camera, original model/anatomy and running forwardlean. Leading farRIGHT heel supports while trailing nearLEFT recoveryboot is fully AIR. This must be a disciplined fast RUN key, not shared static walk or both-feet-ground lunge. Preserve all equipment and transparent isolated silhouette. Render ONLY the faithful finished source art, never mannequin blue/orange colors or referencefloor. The model may physically rotate slightly with the running counter-swing, but head/hips/knees/feet consistently face LEFT.",
+  "user_authorization": "Continue PR122 actual remaining animation production; PRIVATE production image tools permitted; main chat images/binary forbidden. No actor approval from source.",
+  "requested_at": "2026-10-19T15:36:19.373522+00:00",
+  "material_change": "Remove OLD ARMS and LEGS from identity authority; primary3D owns actual farRIGHTfront/nearLEFTrear occlusion and nearLEFTforward EMPTYarm, separate completeoriginalblade reference. Preserve old failedraw/request.",
+  "replaces_candidate_raw_sha256": "adaf9189d4d984e3acd0ceaaeb7de1e26b6b0cb4b7ab486969e7a2a43e208902",
+  "actor_approval": false
+}

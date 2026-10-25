@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 167, in <module>
+    main()
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 48, in main
+    actual = motion.analyze(source, rows_count=6, reference_rows=spec['reference_rows'],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight-recovery/tools/import_original_based_motion.py", line 242, in analyze
+    raise ValueError("Reviewed source anchor must lie inside its pose")
+ValueError: Reviewed source anchor must lie inside its pose

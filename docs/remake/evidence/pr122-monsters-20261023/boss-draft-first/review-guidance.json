@@ -1,0 +1,12 @@
+{
+  "whole_review_scope": 60,
+  "normal_scope": "Frame omissions only; no normal repainting",
+  "confirmed_errors_only": true,
+  "guidance": [
+    "Inspect RGBA-aware Godot renders before diagnosing background defects; raw PNG previews may expose invisible RGB. Current three actual E RUN captures show clean transparency.",
+    "Review the full six-pose cycle in playback. Matching support at source0/3 alone is not a failure if usable opposite-support stages exist elsewhere. Prefer an explicitly reviewed playback permutation over regenerating good poses.",
+    "Use the original source/layout agreement and topology-owned whole-pose extraction that repaired mythic frames. Preserve original PNGs and every valid clip.",
+    "Automated ownership/geometry flags feed the one coordinated review; do not turn unreviewed details into new approval gates.",
+    "After confirmed common-cause fixes, verify changed/affected parts and run final integrated actual Main once."
+  ]
+}

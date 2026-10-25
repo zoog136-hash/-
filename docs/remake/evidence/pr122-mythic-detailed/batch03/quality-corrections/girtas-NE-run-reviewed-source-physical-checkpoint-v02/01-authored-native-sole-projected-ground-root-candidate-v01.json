@@ -1,0 +1,2134 @@
+{
+  "schema": "PR122_NE_RUN_SOURCE_NATIVE_PHYSICAL_ROOT_AUTHOR_CANDIDATE_V1",
+  "status": "AUTHOR_CANDIDATE_PENDING_INDEPENDENT_ACTUAL_PHYSICAL_QC",
+  "author": "/root/girtas_se_walk_author adapting original fresh author fixed camera/projection and ROOT-approved actual new sole roots; independent reviewer separate",
+  "source_atlas_path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/girtas-NE-run-reviewed-composite-v02.png",
+  "source_atlas_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "assembly_path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/girtas-NE-run-reviewed-composite-v02.assembly.json",
+  "assembly_sha256": "310ed2280dec17cd52f7de7c1df8d23fcfb58df98bb36aa3589118b049b7f671",
+  "source6_individual_art_transfer_bridge_path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/selected-six-source-only-exact-transfer-bridge-v01.json",
+  "source6_individual_art_transfer_bridge_sha256": "1af72cc7cc09a79ca73c8a55612027e2858a9f3700bc0ebd87155cf297a051bd",
+  "current_whole_six_cycle_review_status": "HOLD_PENDING_FRESH_INDEPENDENT_REVIEW",
+  "accepted_C_stage_path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-rigid-Cstage-independent-PASS.json",
+  "accepted_C_stage_sha256": "98d5a94893dc0cc343c12a14db0f413213d5d31dc204f541fab75f0588719edc",
+  "poseCs": [
+    1936,
+    2240,
+    1936,
+    1776,
+    2048,
+    1936
+  ],
+  "poses": [
+    {
+      "phase": 0,
+      "C": 1936,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+      "source_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+      "source_actual_size": [
+        1254,
+        1254
+      ],
+      "source_to_atlas_translation": [
+        116,
+        214
+      ],
+      "source_native_ground_root": [
+        730,
+        1049
+      ],
+      "atlas_ground_root": [
+        846,
+        1263
+      ],
+      "visible_posterior_cuirass_to_robe_junction_native": [
+        715,
+        555
+      ],
+      "waist_observation_uncertainty_native_xy": [
+        20,
+        24
+      ],
+      "hidden_pelvis_is_not_measured": true,
+      "native_root_X_relation_to_visible_waist": 15,
+      "waist_to_ground_canonical": 261.2892561983471,
+      "pale_hairroot_Y_canonical_relative_ground": -446.41322314049586,
+      "uppercore_Y_world_preview": -97.81137449340213,
+      "feet": [
+        {
+          "foot": "FAR_LEFT",
+          "role": "HEEL_LANDING_SUPPORT",
+          "roi": [
+            610,
+            900,
+            780,
+            1025
+          ],
+          "contact": [
+            637,
+            1021
+          ],
+          "sole_polyline": [
+            [
+              622,
+              1019
+            ],
+            [
+              630,
+              1020
+            ],
+            [
+              637,
+              1021
+            ],
+            [
+              645,
+              1021
+            ],
+            [
+              660,
+              1021
+            ],
+            [
+              680,
+              1019
+            ],
+            [
+              700,
+              1019
+            ],
+            [
+              720,
+              1016
+            ],
+            [
+              740,
+              1011
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                622,
+                1019
+              ],
+              "atlas": [
+                738,
+                1233
+              ],
+              "root_relative_canonical": [
+                -57.12396694214876,
+                -15.867768595041323
+              ],
+              "projected_ground_Y_canonical": -10.853245566006308,
+              "projected_ground_interval_Y_canonical": [
+                -17.984934612938424,
+                -3.7215565190741913
+              ],
+              "projected_vertical_clearance_canonical": 5.014523029035015,
+              "minimum_interval_clearance_canonical": -2.1171660178971017,
+              "minimum_interval_clearance_world": -0.46388168518938533
+            },
+            {
+              "source_native": [
+                630,
+                1020
+              ],
+              "atlas": [
+                746,
+                1234
+              ],
+              "root_relative_canonical": [
+                -52.892561983471076,
+                -15.338842975206612
+              ],
+              "projected_ground_Y_canonical": -13.351009342104042,
+              "projected_ground_interval_Y_canonical": [
+                -20.48269838903616,
+                -6.219320295171926
+              ],
+              "projected_vertical_clearance_canonical": 1.9878336331025697,
+              "minimum_interval_clearance_canonical": -5.143855413829547,
+              "minimum_interval_clearance_world": -1.1270445007934964
+            },
+            {
+              "source_native": [
+                637,
+                1021
+              ],
+              "atlas": [
+                753,
+                1235
+              ],
+              "root_relative_canonical": [
+                -49.1900826446281,
+                -14.809917355371901
+              ],
+              "projected_ground_Y_canonical": -15.53655264618956,
+              "projected_ground_interval_Y_canonical": [
+                -22.668241693121676,
+                -8.404863599257443
+              ],
+              "projected_vertical_clearance_canonical": -0.7266352908176579,
+              "minimum_interval_clearance_canonical": -7.8583243377497745,
+              "minimum_interval_clearance_world": -1.721798246214481
+            },
+            {
+              "source_native": [
+                645,
+                1021
+              ],
+              "atlas": [
+                761,
+                1235
+              ],
+              "root_relative_canonical": [
+                -44.95867768595041,
+                -14.809917355371901
+              ],
+              "projected_ground_Y_canonical": -18.034316422287294,
+              "projected_ground_interval_Y_canonical": [
+                -25.16600546921941,
+                -10.902627375355177
+              ],
+              "projected_vertical_clearance_canonical": -3.2243990669153924,
+              "minimum_interval_clearance_canonical": -10.356088113847509,
+              "minimum_interval_clearance_world": -2.2690708076794897
+            },
+            {
+              "source_native": [
+                660,
+                1021
+              ],
+              "atlas": [
+                776,
+                1235
+              ],
+              "root_relative_canonical": [
+                -37.02479338842976,
+                -14.809917355371901
+              ],
+              "projected_ground_Y_canonical": -22.717623502470545,
+              "projected_ground_interval_Y_canonical": [
+                -29.84931254940266,
+                -15.585934455538428
+              ],
+              "projected_vertical_clearance_canonical": -7.907706147098644,
+              "minimum_interval_clearance_canonical": -15.03939519403076,
+              "minimum_interval_clearance_world": -3.295206860426381
+            },
+            {
+              "source_native": [
+                680,
+                1019
+              ],
+              "atlas": [
+                796,
+                1233
+              ],
+              "root_relative_canonical": [
+                -26.446280991735538,
+                -15.867768595041323
+              ],
+              "projected_ground_Y_canonical": -28.962032942714885,
+              "projected_ground_interval_Y_canonical": [
+                -36.093721989647,
+                -21.830343895782768
+              ],
+              "projected_vertical_clearance_canonical": -13.094264347673562,
+              "minimum_interval_clearance_canonical": -20.22595339460568,
+              "minimum_interval_clearance_world": -4.4316077558107
+            },
+            {
+              "source_native": [
+                700,
+                1019
+              ],
+              "atlas": [
+                816,
+                1233
+              ],
+              "root_relative_canonical": [
+                -15.867768595041323,
+                -15.867768595041323
+              ],
+              "projected_ground_Y_canonical": -35.206442382959224,
+              "projected_ground_interval_Y_canonical": [
+                -42.338131429891334,
+                -28.074753336027104
+              ],
+              "projected_vertical_clearance_canonical": -19.3386737879179,
+              "minimum_interval_clearance_canonical": -26.47036283485001,
+              "minimum_interval_clearance_world": -5.799789159473222
+            },
+            {
+              "source_native": [
+                720,
+                1016
+              ],
+              "atlas": [
+                836,
+                1230
+              ],
+              "root_relative_canonical": [
+                -5.289256198347108,
+                -17.454545454545453
+              ],
+              "projected_ground_Y_canonical": -41.45085182320356,
+              "projected_ground_interval_Y_canonical": [
+                -48.582540870135674,
+                -34.31916277627144
+              ],
+              "projected_vertical_clearance_canonical": -23.996306368658104,
+              "minimum_interval_clearance_canonical": -31.12799541559022,
+              "minimum_interval_clearance_world": -6.8202998007184386
+            },
+            {
+              "source_native": [
+                740,
+                1011
+              ],
+              "atlas": [
+                856,
+                1225
+              ],
+              "root_relative_canonical": [
+                5.289256198347108,
+                -20.09917355371901
+              ],
+              "projected_ground_Y_canonical": -47.6952612634479,
+              "projected_ground_interval_Y_canonical": [
+                -54.82695031038001,
+                -40.56357221651578
+              ],
+              "projected_vertical_clearance_canonical": -27.596087709728888,
+              "minimum_interval_clearance_canonical": -34.727776756661,
+              "minimum_interval_clearance_world": -7.60902993368545
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            -58,
+            -42
+          ],
+          "lateral_nominal_X_canonical": -50,
+          "contact_projection": {
+            "root_relative_canonical": [
+              -49.1900826446281,
+              -14.809917355371901
+            ],
+            "forward_projected_X_canonical": 0.8099173553719012,
+            "ground_Y_prediction_canonical": -15.53655264618956,
+            "contact_residual_canonical": 0.7266352908176579,
+            "heel_roll_and_shoe_shape_not_flattened": true
+          },
+          "minimum_interval_clearance_canonical": -34.727776756661,
+          "source_pixel_alpha_threshold": 100
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "role": "HIGH_FOLDED_RECOVERY",
+          "roi": [
+            720,
+            700,
+            920,
+            1020
+          ],
+          "sole_polyline": [
+            [
+              782,
+              847
+            ],
+            [
+              779,
+              898
+            ],
+            [
+              773,
+              907
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                782,
+                847
+              ],
+              "atlas": [
+                898,
+                1061
+              ],
+              "root_relative_canonical": [
+                27.50413223140496,
+                -106.84297520661157
+              ],
+              "projected_ground_Y_canonical": 54.18996479381937,
+              "projected_ground_interval_Y_canonical": [
+                47.058275746887254,
+                61.321653840751495
+              ],
+              "projected_vertical_clearance_canonical": 161.03294000043093,
+              "minimum_interval_clearance_canonical": 153.90125095349882,
+              "minimum_interval_clearance_world": 33.72053539569579
+            },
+            {
+              "source_native": [
+                779,
+                898
+              ],
+              "atlas": [
+                895,
+                1112
+              ],
+              "root_relative_canonical": [
+                25.917355371900825,
+                -79.86776859504133
+              ],
+              "projected_ground_Y_canonical": 55.12662620985603,
+              "projected_ground_interval_Y_canonical": [
+                47.994937162923904,
+                62.25831525678815
+              ],
+              "projected_vertical_clearance_canonical": 134.99439480489735,
+              "minimum_interval_clearance_canonical": 127.86270575796523,
+              "minimum_interval_clearance_world": 28.01535964515097
+            },
+            {
+              "source_native": [
+                773,
+                907
+              ],
+              "atlas": [
+                889,
+                1121
+              ],
+              "root_relative_canonical": [
+                22.743801652892564,
+                -75.10743801652893
+              ],
+              "projected_ground_Y_canonical": 56.99994904192933,
+              "projected_ground_interval_Y_canonical": [
+                49.8682599949972,
+                64.13163808886145
+              ],
+              "projected_vertical_clearance_canonical": 132.10738705845824,
+              "minimum_interval_clearance_canonical": 124.97569801152613,
+              "minimum_interval_clearance_world": 27.382801778997806
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            71,
+            87
+          ],
+          "lateral_nominal_X_canonical": 79,
+          "minimum_interval_clearance_canonical": 124.97569801152613,
+          "source_pixel_alpha_threshold": 100
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "C": 2240,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/girtas-NE-run-LEFT-compression1-complete-endpoint-v03.png",
+      "source_sha256": "aeee4ab97376b2520e07f6ce140434930cf9400f2fe928d1fb63afa8d58d87c6",
+      "source_actual_size": [
+        1382,
+        1382
+      ],
+      "source_to_atlas_translation": [
+        1585,
+        64
+      ],
+      "source_native_ground_root": [
+        779,
+        1215
+      ],
+      "atlas_ground_root": [
+        2364,
+        1279
+      ],
+      "visible_posterior_cuirass_to_robe_junction_native": [
+        814,
+        664
+      ],
+      "waist_observation_uncertainty_native_xy": [
+        20,
+        24
+      ],
+      "hidden_pelvis_is_not_measured": true,
+      "native_root_X_relation_to_visible_waist": -35,
+      "waist_to_ground_canonical": 251.88571428571427,
+      "pale_hairroot_Y_canonical_relative_ground": -401.8285714285714,
+      "uppercore_Y_world_preview": -88.04265385700539,
+      "feet": [
+        {
+          "foot": "FAR_LEFT",
+          "role": "FLEXED_LOAD_SUPPORT",
+          "roi": [
+            464,
+            1064,
+            734,
+            1294
+          ],
+          "contact": [
+            597,
+            1238
+          ],
+          "sole_polyline": [
+            [
+              527,
+              1212
+            ],
+            [
+              562,
+              1235
+            ],
+            [
+              597,
+              1238
+            ],
+            [
+              645,
+              1217
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                527,
+                1212
+              ],
+              "atlas": [
+                2112,
+                1276
+              ],
+              "root_relative_canonical": [
+                -115.2,
+                -1.3714285714285714
+              ],
+              "projected_ground_Y_canonical": 23.428562260935102,
+              "projected_ground_interval_Y_canonical": [
+                16.296873214002986,
+                30.56025130786722
+              ],
+              "projected_vertical_clearance_canonical": 24.799990832363672,
+              "minimum_interval_clearance_canonical": 17.668301785431556,
+              "minimum_interval_clearance_world": 3.8712134699769005
+            },
+            {
+              "source_native": [
+                562,
+                1235
+              ],
+              "atlas": [
+                2147,
+                1299
+              ],
+              "root_relative_canonical": [
+                -99.2,
+                9.142857142857142
+              ],
+              "projected_ground_Y_canonical": 13.983892982565543,
+              "projected_ground_interval_Y_canonical": [
+                6.852203935633426,
+                21.11558202949766
+              ],
+              "projected_vertical_clearance_canonical": 4.8410358397084,
+              "minimum_interval_clearance_canonical": -2.2906532072237162,
+              "minimum_interval_clearance_world": -0.5018935978420997
+            },
+            {
+              "source_native": [
+                597,
+                1238
+              ],
+              "atlas": [
+                2182,
+                1302
+              ],
+              "root_relative_canonical": [
+                -83.2,
+                10.514285714285714
+              ],
+              "projected_ground_Y_canonical": 4.539223704195983,
+              "projected_ground_interval_Y_canonical": [
+                -2.5924653427361335,
+                11.6709127511281
+              ],
+              "projected_vertical_clearance_canonical": -5.975062010089731,
+              "minimum_interval_clearance_canonical": -13.106751057021848,
+              "minimum_interval_clearance_world": -2.8717548441137652
+            },
+            {
+              "source_native": [
+                645,
+                1217
+              ],
+              "atlas": [
+                2230,
+                1281
+              ],
+              "root_relative_canonical": [
+                -61.25714285714285,
+                0.9142857142857143
+              ],
+              "projected_ground_Y_canonical": -8.4134655918537,
+              "projected_ground_interval_Y_canonical": [
+                -15.545154638785817,
+                -1.281776544921584
+              ],
+              "projected_vertical_clearance_canonical": -9.327751306139415,
+              "minimum_interval_clearance_canonical": -16.459440353071532,
+              "minimum_interval_clearance_world": -3.60634587165761
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            -58,
+            -42
+          ],
+          "lateral_nominal_X_canonical": -50,
+          "contact_projection": {
+            "root_relative_canonical": [
+              -83.2,
+              10.514285714285714
+            ],
+            "forward_projected_X_canonical": -33.2,
+            "ground_Y_prediction_canonical": 4.539223704195983,
+            "contact_residual_canonical": 5.975062010089731,
+            "heel_roll_and_shoe_shape_not_flattened": true
+          },
+          "minimum_interval_clearance_canonical": -16.459440353071532,
+          "source_pixel_alpha_threshold": 100
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "role": "HIGH_FOLDED_RECOVERY",
+          "roi": [
+            714,
+            744,
+            964,
+            1024
+          ],
+          "sole_polyline": [
+            [
+              780,
+              921
+            ],
+            [
+              785,
+              977
+            ],
+            [
+              799,
+              995
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                780,
+                921
+              ],
+              "atlas": [
+                2365,
+                985
+              ],
+              "root_relative_canonical": [
+                0.45714285714285713,
+                -134.4
+              ],
+              "projected_ground_Y_canonical": 70.15558164478695,
+              "projected_ground_interval_Y_canonical": [
+                63.02389259785483,
+                77.28727069171907
+              ],
+              "projected_vertical_clearance_canonical": 204.55558164478697,
+              "minimum_interval_clearance_canonical": 197.42389259785483,
+              "minimum_interval_clearance_world": 43.256564303778724
+            },
+            {
+              "source_native": [
+                785,
+                977
+              ],
+              "atlas": [
+                2370,
+                1041
+              ],
+              "root_relative_canonical": [
+                2.742857142857143,
+                -108.8
+              ],
+              "projected_ground_Y_canonical": 68.80634317644844,
+              "projected_ground_interval_Y_canonical": [
+                61.67465412951632,
+                75.93803222338056
+              ],
+              "projected_vertical_clearance_canonical": 177.60634317644843,
+              "minimum_interval_clearance_canonical": 170.47465412951632,
+              "minimum_interval_clearance_world": 37.351851093011966
+            },
+            {
+              "source_native": [
+                799,
+                995
+              ],
+              "atlas": [
+                2384,
+                1059
+              ],
+              "root_relative_canonical": [
+                9.142857142857142,
+                -100.57142857142857
+              ],
+              "projected_ground_Y_canonical": 65.02847546510061,
+              "projected_ground_interval_Y_canonical": [
+                57.896786418168496,
+                72.16016451203274
+              ],
+              "projected_vertical_clearance_canonical": 165.59990403652918,
+              "minimum_interval_clearance_canonical": 158.46821498959707,
+              "minimum_interval_clearance_world": 34.72118010440354
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            71,
+            87
+          ],
+          "lateral_nominal_X_canonical": 79,
+          "minimum_interval_clearance_canonical": 158.46821498959707,
+          "source_pixel_alpha_threshold": 100
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "C": 1936,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/girtas-NE-run-RIGHT-flight2-from-run3-v01.png",
+      "source_sha256": "2e4dd041fc58fc0faa25eb91008875e9525d3c93b842a70e00cd6f7793367177",
+      "source_actual_size": [
+        1254,
+        1254
+      ],
+      "source_to_atlas_translation": [
+        121,
+        1699
+      ],
+      "source_native_ground_root": [
+        720,
+        1254
+      ],
+      "atlas_ground_root": [
+        841,
+        2953
+      ],
+      "visible_posterior_cuirass_to_robe_junction_native": [
+        750,
+        525
+      ],
+      "waist_observation_uncertainty_native_xy": [
+        20,
+        24
+      ],
+      "hidden_pelvis_is_not_measured": true,
+      "native_root_X_relation_to_visible_waist": -30,
+      "waist_to_ground_canonical": 385.58677685950414,
+      "pale_hairroot_Y_canonical_relative_ground": -554.8429752066116,
+      "uppercore_Y_world_preview": -121.56887659191807,
+      "feet": [
+        {
+          "foot": "NEAR_RIGHT",
+          "role": "LEADING_AIR",
+          "roi": [
+            720,
+            780,
+            900,
+            1080
+          ],
+          "sole_polyline": [
+            [
+              747,
+              913
+            ],
+            [
+              751,
+              953
+            ],
+            [
+              793,
+              1022
+            ],
+            [
+              837,
+              1032
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                747,
+                913
+              ],
+              "atlas": [
+                868,
+                2612
+              ],
+              "root_relative_canonical": [
+                14.28099173553719,
+                -180.36363636363637
+              ],
+              "projected_ground_Y_canonical": 61.995476594124796,
+              "projected_ground_interval_Y_canonical": [
+                49.5150207619936,
+                69.12716564105692
+              ],
+              "projected_vertical_clearance_canonical": 242.35911295776117,
+              "minimum_interval_clearance_canonical": 229.87865712562996,
+              "minimum_interval_clearance_world": 50.36756586638775
+            },
+            {
+              "source_native": [
+                751,
+                953
+              ],
+              "atlas": [
+                872,
+                2652
+              ],
+              "root_relative_canonical": [
+                16.396694214876035,
+                -159.20661157024793
+              ],
+              "projected_ground_Y_canonical": 60.746594706075925,
+              "projected_ground_interval_Y_canonical": [
+                48.266138873944726,
+                67.87828375300805
+              ],
+              "projected_vertical_clearance_canonical": 219.95320627632384,
+              "minimum_interval_clearance_canonical": 207.47275044419266,
+              "minimum_interval_clearance_world": 45.45831942009116
+            },
+            {
+              "source_native": [
+                793,
+                1022
+              ],
+              "atlas": [
+                914,
+                2721
+              ],
+              "root_relative_canonical": [
+                38.611570247933884,
+                -122.7107438016529
+              ],
+              "projected_ground_Y_canonical": 47.63333488156282,
+              "projected_ground_interval_Y_canonical": [
+                35.15287904943162,
+                54.76502392849494
+              ],
+              "projected_vertical_clearance_canonical": 170.3440786832157,
+              "minimum_interval_clearance_canonical": 157.86362285108453,
+              "minimum_interval_clearance_world": 34.588710936801824
+            },
+            {
+              "source_native": [
+                837,
+                1032
+              ],
+              "atlas": [
+                958,
+                2731
+              ],
+              "root_relative_canonical": [
+                61.88429752066116,
+                -117.42148760330579
+              ],
+              "projected_ground_Y_canonical": 33.89563411302528,
+              "projected_ground_interval_Y_canonical": [
+                21.415178280894082,
+                41.027323159957405
+              ],
+              "projected_vertical_clearance_canonical": 151.3171217163311,
+              "minimum_interval_clearance_canonical": 138.83666588419987,
+              "minimum_interval_clearance_world": 30.419809307353255
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            65,
+            87
+          ],
+          "lateral_nominal_X_canonical": 79,
+          "minimum_interval_clearance_canonical": 138.83666588419987,
+          "source_pixel_alpha_threshold": 100,
+          "whole_assigned_boot_ROI_alpha100_conservative_clearance": {
+            "ROI_xyxy": [
+              720,
+              780,
+              900,
+              1080
+            ],
+            "all_strong_pixels": 24081,
+            "minimum_native_pixel": [
+              835,
+              1037
+            ],
+            "minimum_canonical": 136.81647872905074,
+            "minimum_world": 29.977176177023996,
+            "after_4native_XY_uncertainty_world": 29.23997887973508,
+            "not_a_measured_absolute_floor": true
+          }
+        },
+        {
+          "foot": "FAR_LEFT",
+          "role": "TRAILING_AIR",
+          "roi": [
+            220,
+            900,
+            440,
+            1180
+          ],
+          "sole_polyline": [
+            [
+              267,
+              982
+            ],
+            [
+              269,
+              1050
+            ],
+            [
+              318,
+              1127
+            ],
+            [
+              312,
+              1145
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                267,
+                982
+              ],
+              "atlas": [
+                388,
+                2681
+              ],
+              "root_relative_canonical": [
+                -239.60330578512398,
+                -143.86776859504133
+              ],
+              "projected_ground_Y_canonical": 96.86281727820852,
+              "projected_ground_interval_Y_canonical": [
+                93.29697275474246,
+                102.2115840634076
+              ],
+              "projected_vertical_clearance_canonical": 240.73058587324985,
+              "minimum_interval_clearance_canonical": 237.16474134978378,
+              "minimum_interval_clearance_world": 51.96398343579941
+            },
+            {
+              "source_native": [
+                269,
+                1050
+              ],
+              "atlas": [
+                390,
+                2749
+              ],
+              "root_relative_canonical": [
+                -238.54545454545456,
+                -107.900826446281
+              ],
+              "projected_ground_Y_canonical": 96.2383763341841,
+              "projected_ground_interval_Y_canonical": [
+                92.67253181071803,
+                101.58714311938317
+              ],
+              "projected_vertical_clearance_canonical": 204.1392027804651,
+              "minimum_interval_clearance_canonical": 200.57335825699903,
+              "minimum_interval_clearance_world": 43.94662801397423
+            },
+            {
+              "source_native": [
+                318,
+                1127
+              ],
+              "atlas": [
+                439,
+                2826
+              ],
+              "root_relative_canonical": [
+                -212.62809917355372,
+                -67.17355371900827
+              ],
+              "projected_ground_Y_canonical": 80.93957320558545,
+              "projected_ground_interval_Y_canonical": [
+                77.37372868211939,
+                86.28833999078454
+              ],
+              "projected_vertical_clearance_canonical": 148.1131269245937,
+              "minimum_interval_clearance_canonical": 144.54728240112766,
+              "minimum_interval_clearance_world": 31.671034006290185
+            },
+            {
+              "source_native": [
+                312,
+                1145
+              ],
+              "atlas": [
+                433,
+                2844
+              ],
+              "root_relative_canonical": [
+                -215.801652892562,
+                -57.65289256198347
+              ],
+              "projected_ground_Y_canonical": 82.81289603765876,
+              "projected_ground_interval_Y_canonical": [
+                79.24705151419269,
+                88.16166282285783
+              ],
+              "projected_vertical_clearance_canonical": 140.46578859964222,
+              "minimum_interval_clearance_canonical": 136.89994407617615,
+              "minimum_interval_clearance_world": 29.995463852885102
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            -54,
+            -44
+          ],
+          "lateral_nominal_X_canonical": -50,
+          "minimum_interval_clearance_canonical": 136.89994407617615,
+          "source_pixel_alpha_threshold": 100,
+          "whole_assigned_boot_ROI_alpha100_conservative_clearance": {
+            "ROI_xyxy": [
+              220,
+              900,
+              440,
+              1180
+            ],
+            "all_strong_pixels": 22290,
+            "minimum_native_pixel": [
+              306,
+              1155
+            ],
+            "minimum_canonical": 133.48401070990238,
+            "minimum_world": 29.247015732592846,
+            "after_4native_XY_uncertainty_world": 28.50981843530393,
+            "not_a_measured_absolute_floor": true
+          }
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "C": 1776,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-v04.png",
+      "source_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+      "source_actual_size": [
+        1254,
+        1254
+      ],
+      "source_to_atlas_translation": [
+        1661,
+        1761
+      ],
+      "source_native_ground_root": [
+        717,
+        1023
+      ],
+      "atlas_ground_root": [
+        2378,
+        2784
+      ],
+      "visible_posterior_cuirass_to_robe_junction_native": [
+        745,
+        485
+      ],
+      "waist_observation_uncertainty_native_xy": [
+        20,
+        24
+      ],
+      "hidden_pelvis_is_not_measured": true,
+      "native_root_X_relation_to_visible_waist": -28,
+      "waist_to_ground_canonical": 310.1981981981982,
+      "pale_hairroot_Y_canonical_relative_ground": -494.7027027027027,
+      "uppercore_Y_world_preview": -108.39184147939908,
+      "feet": [
+        {
+          "foot": "NEAR_RIGHT",
+          "role": "HEEL_LANDING_SUPPORT",
+          "roi": [
+            890,
+            875,
+            1100,
+            1025
+          ],
+          "contact": [
+            934,
+            1018
+          ],
+          "sole_polyline": [
+            [
+              922,
+              1012
+            ],
+            [
+              934,
+              1018
+            ],
+            [
+              950,
+              1016
+            ],
+            [
+              980,
+              1007
+            ],
+            [
+              1000,
+              987
+            ],
+            [
+              1020,
+              981
+            ],
+            [
+              1040,
+              974
+            ],
+            [
+              1060,
+              957
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                922,
+                1012
+              ],
+              "atlas": [
+                2583,
+                2773
+              ],
+              "root_relative_canonical": [
+                118.1981981981982,
+                -6.342342342342342
+              ],
+              "projected_ground_Y_canonical": 0.6539986333822299,
+              "projected_ground_interval_Y_canonical": [
+                -6.477690413549887,
+                7.7856876803143535
+              ],
+              "projected_vertical_clearance_canonical": 6.996340975724572,
+              "minimum_interval_clearance_canonical": -0.13534807120754433,
+              "minimum_interval_clearance_world": -0.029655440729797356
+            },
+            {
+              "source_native": [
+                934,
+                1018
+              ],
+              "atlas": [
+                2595,
+                2779
+              ],
+              "root_relative_canonical": [
+                125.11711711711712,
+                -2.8828828828828827
+              ],
+              "projected_ground_Y_canonical": -3.4301826761829943,
+              "projected_ground_interval_Y_canonical": [
+                -10.561871723115111,
+                3.7015063707491294
+              ],
+              "projected_vertical_clearance_canonical": -0.5472997933001116,
+              "minimum_interval_clearance_canonical": -7.678988840232228,
+              "minimum_interval_clearance_world": -1.6825049399269816
+            },
+            {
+              "source_native": [
+                950,
+                1016
+              ],
+              "atlas": [
+                2611,
+                2777
+              ],
+              "root_relative_canonical": [
+                134.34234234234233,
+                -4.036036036036036
+              ],
+              "projected_ground_Y_canonical": -8.875757755603274,
+              "projected_ground_interval_Y_canonical": [
+                -16.00744680253539,
+                -1.7440687086711506
+              ],
+              "projected_vertical_clearance_canonical": -4.839721719567239,
+              "minimum_interval_clearance_canonical": -11.971410766499355,
+              "minimum_interval_clearance_world": -2.6229960964393175
+            },
+            {
+              "source_native": [
+                980,
+                1007
+              ],
+              "atlas": [
+                2641,
+                2768
+              ],
+              "root_relative_canonical": [
+                151.63963963963963,
+                -9.225225225225225
+              ],
+              "projected_ground_Y_canonical": -19.086211029516306,
+              "projected_ground_interval_Y_canonical": [
+                -26.217900076448423,
+                -11.954521982584183
+              ],
+              "projected_vertical_clearance_canonical": -9.860985804291081,
+              "minimum_interval_clearance_canonical": -16.9926748512232,
+              "minimum_interval_clearance_world": -3.723180222630899
+            },
+            {
+              "source_native": [
+                1000,
+                987
+              ],
+              "atlas": [
+                2661,
+                2748
+              ],
+              "root_relative_canonical": [
+                163.17117117117118,
+                -20.756756756756758
+              ],
+              "projected_ground_Y_canonical": -25.89317987879167,
+              "projected_ground_interval_Y_canonical": [
+                -33.02486892572379,
+                -18.761490831859547
+              ],
+              "projected_vertical_clearance_canonical": -5.136423122034913,
+              "minimum_interval_clearance_canonical": -12.26811216896703,
+              "minimum_interval_clearance_world": -2.688004860707821
+            },
+            {
+              "source_native": [
+                1020,
+                981
+              ],
+              "atlas": [
+                2681,
+                2742
+              ],
+              "root_relative_canonical": [
+                174.7027027027027,
+                -24.216216216216218
+              ],
+              "projected_ground_Y_canonical": -32.700148728067035,
+              "projected_ground_interval_Y_canonical": [
+                -39.83183777499915,
+                -25.56845968113491
+              ],
+              "projected_vertical_clearance_canonical": -8.483932511850817,
+              "minimum_interval_clearance_canonical": -15.615621558782934,
+              "minimum_interval_clearance_world": -3.421460944835544
+            },
+            {
+              "source_native": [
+                1040,
+                974
+              ],
+              "atlas": [
+                2701,
+                2735
+              ],
+              "root_relative_canonical": [
+                186.23423423423424,
+                -28.25225225225225
+              ],
+              "projected_ground_Y_canonical": -39.507117577342385,
+              "projected_ground_interval_Y_canonical": [
+                -46.6388066242745,
+                -32.37542853041026
+              ],
+              "projected_vertical_clearance_canonical": -11.254865325090133,
+              "minimum_interval_clearance_canonical": -18.38655437202225,
+              "minimum_interval_clearance_world": -4.028586211388207
+            },
+            {
+              "source_native": [
+                1060,
+                957
+              ],
+              "atlas": [
+                2721,
+                2718
+              ],
+              "root_relative_canonical": [
+                197.76576576576576,
+                -38.054054054054056
+              ],
+              "projected_ground_Y_canonical": -46.31408642661775,
+              "projected_ground_interval_Y_canonical": [
+                -53.445775473549865,
+                -39.182397379685625
+              ],
+              "projected_vertical_clearance_canonical": -8.260032372563693,
+              "minimum_interval_clearance_canonical": -15.39172141949581,
+              "minimum_interval_clearance_world": -3.3724033021903006
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            71,
+            87
+          ],
+          "lateral_nominal_X_canonical": 79,
+          "contact_projection": {
+            "root_relative_canonical": [
+              125.11711711711712,
+              -2.8828828828828827
+            ],
+            "forward_projected_X_canonical": 46.11711711711712,
+            "ground_Y_prediction_canonical": -3.4301826761829943,
+            "contact_residual_canonical": 0.5472997933001116,
+            "heel_roll_and_shoe_shape_not_flattened": true
+          },
+          "minimum_interval_clearance_canonical": -18.38655437202225,
+          "source_pixel_alpha_threshold": 100
+        },
+        {
+          "foot": "FAR_LEFT",
+          "role": "HIGH_FOLDED_RECOVERY",
+          "roi": [
+            280,
+            760,
+            580,
+            1050
+          ],
+          "sole_polyline": [
+            [
+              289,
+              865
+            ],
+            [
+              337,
+              944
+            ],
+            [
+              327,
+              963
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                289,
+                865
+              ],
+              "atlas": [
+                1950,
+                2626
+              ],
+              "root_relative_canonical": [
+                -246.77477477477478,
+                -91.09909909909909
+              ],
+              "projected_ground_Y_canonical": 101.09607683116695,
+              "projected_ground_interval_Y_canonical": [
+                93.96438778423483,
+                108.22776587809906
+              ],
+              "projected_vertical_clearance_canonical": 192.19517593026603,
+              "minimum_interval_clearance_canonical": 185.06348688333392,
+              "minimum_interval_clearance_world": 40.54833746468956
+            },
+            {
+              "source_native": [
+                337,
+                944
+              ],
+              "atlas": [
+                1998,
+                2705
+              ],
+              "root_relative_canonical": [
+                -219.0990990990991,
+                -45.549549549549546
+              ],
+              "projected_ground_Y_canonical": 84.75935159290609,
+              "projected_ground_interval_Y_canonical": [
+                77.62766254597396,
+                91.8910406398382
+              ],
+              "projected_vertical_clearance_canonical": 130.30890114245562,
+              "minimum_interval_clearance_canonical": 123.17721209552352,
+              "minimum_interval_clearance_world": 26.988744501272684
+            },
+            {
+              "source_native": [
+                327,
+                963
+              ],
+              "atlas": [
+                1988,
+                2724
+              ],
+              "root_relative_canonical": [
+                -224.86486486486487,
+                -34.5945945945946
+              ],
+              "projected_ground_Y_canonical": 88.16283601754378,
+              "projected_ground_interval_Y_canonical": [
+                81.03114697061166,
+                95.29452506447589
+              ],
+              "projected_vertical_clearance_canonical": 122.75743061213838,
+              "minimum_interval_clearance_canonical": 115.62574156520625,
+              "minimum_interval_clearance_world": 25.334179462135634
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            -58,
+            -42
+          ],
+          "lateral_nominal_X_canonical": -50,
+          "minimum_interval_clearance_canonical": 115.62574156520625,
+          "source_pixel_alpha_threshold": 100
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "C": 2048,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02.png",
+      "source_sha256": "c86670e35fbfb1f2a1af607130f119878b3bf089e7be5e610f55f24f5e5b2279",
+      "source_actual_size": [
+        1254,
+        1254
+      ],
+      "source_to_atlas_translation": [
+        131,
+        3214
+      ],
+      "source_native_ground_root": [
+        758,
+        1128
+      ],
+      "atlas_ground_root": [
+        889,
+        4342
+      ],
+      "visible_posterior_cuirass_to_robe_junction_native": [
+        790,
+        585
+      ],
+      "waist_observation_uncertainty_native_xy": [
+        20,
+        24
+      ],
+      "hidden_pelvis_is_not_measured": true,
+      "native_root_X_relation_to_visible_waist": -32,
+      "waist_to_ground_canonical": 271.5,
+      "pale_hairroot_Y_canonical_relative_ground": -460.5,
+      "uppercore_Y_world_preview": -100.89785790246619,
+      "feet": [
+        {
+          "foot": "NEAR_RIGHT",
+          "role": "FLEXED_LOAD_SUPPORT",
+          "roi": [
+            850,
+            1050,
+            1080,
+            1254
+          ],
+          "contact": [
+            906,
+            1191
+          ],
+          "sole_polyline": [
+            [
+              866,
+              1202
+            ],
+            [
+              906,
+              1191
+            ],
+            [
+              965,
+              1187
+            ],
+            [
+              1005,
+              1170
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                866,
+                1202
+              ],
+              "atlas": [
+                997,
+                4416
+              ],
+              "root_relative_canonical": [
+                54.0,
+                37.0
+              ],
+              "projected_ground_Y_canonical": 38.54967052395739,
+              "projected_ground_interval_Y_canonical": [
+                31.41798147702527,
+                45.68135957088951
+              ],
+              "projected_vertical_clearance_canonical": 1.5496705239573885,
+              "minimum_interval_clearance_canonical": -5.582018522974732,
+              "minimum_interval_clearance_world": -1.2230482339631676
+            },
+            {
+              "source_native": [
+                906,
+                1191
+              ],
+              "atlas": [
+                1037,
+                4405
+              ],
+              "root_relative_canonical": [
+                74.0,
+                31.5
+              ],
+              "projected_ground_Y_canonical": 26.743833925995432,
+              "projected_ground_interval_Y_canonical": [
+                19.612144879063315,
+                33.875522972927556
+              ],
+              "projected_vertical_clearance_canonical": -4.756166074004568,
+              "minimum_interval_clearance_canonical": -11.887855120936685,
+              "minimum_interval_clearance_world": -2.604688635738056
+            },
+            {
+              "source_native": [
+                965,
+                1187
+              ],
+              "atlas": [
+                1096,
+                4401
+              ],
+              "root_relative_canonical": [
+                103.5,
+                29.5
+              ],
+              "projected_ground_Y_canonical": 9.330224944001557,
+              "projected_ground_interval_Y_canonical": [
+                2.1985358970694406,
+                16.46191399093368
+              ],
+              "projected_vertical_clearance_canonical": -20.169775055998443,
+              "minimum_interval_clearance_canonical": -27.30146410293056,
+              "minimum_interval_clearance_world": -5.981887612566274
+            },
+            {
+              "source_native": [
+                1005,
+                1170
+              ],
+              "atlas": [
+                1136,
+                4384
+              ],
+              "root_relative_canonical": [
+                123.5,
+                21.0
+              ],
+              "projected_ground_Y_canonical": -2.475611653960385,
+              "projected_ground_interval_Y_canonical": [
+                -9.607300700892502,
+                4.6560773929717385
+              ],
+              "projected_vertical_clearance_canonical": -23.475611653960385,
+              "minimum_interval_clearance_canonical": -30.6073007008925,
+              "minimum_interval_clearance_world": -6.70621297914594
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            71,
+            87
+          ],
+          "lateral_nominal_X_canonical": 79,
+          "contact_projection": {
+            "root_relative_canonical": [
+              74.0,
+              31.5
+            ],
+            "forward_projected_X_canonical": -5.0,
+            "ground_Y_prediction_canonical": 26.743833925995432,
+            "contact_residual_canonical": 4.756166074004568,
+            "heel_roll_and_shoe_shape_not_flattened": true
+          },
+          "minimum_interval_clearance_canonical": -30.6073007008925,
+          "source_pixel_alpha_threshold": 100
+        },
+        {
+          "foot": "FAR_LEFT",
+          "role": "HIGH_FOLDED_RECOVERY",
+          "roi": [
+            270,
+            760,
+            560,
+            1080
+          ],
+          "sole_polyline": [
+            [
+              271,
+              926
+            ],
+            [
+              317,
+              1015
+            ],
+            [
+              309,
+              1029
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                271,
+                926
+              ],
+              "atlas": [
+                402,
+                4140
+              ],
+              "root_relative_canonical": [
+                -243.5,
+                -101.0
+              ],
+              "projected_ground_Y_canonical": 99.16300403686103,
+              "projected_ground_interval_Y_canonical": [
+                92.0313149899289,
+                106.29469308379313
+              ],
+              "projected_vertical_clearance_canonical": 200.16300403686103,
+              "minimum_interval_clearance_canonical": 193.0313149899289,
+              "minimum_interval_clearance_world": 42.29412853546153
+            },
+            {
+              "source_native": [
+                317,
+                1015
+              ],
+              "atlas": [
+                448,
+                4229
+              ],
+              "root_relative_canonical": [
+                -220.5,
+                -56.5
+              ],
+              "projected_ground_Y_canonical": 85.58629194920476,
+              "projected_ground_interval_Y_canonical": [
+                78.45460290227264,
+                92.71798099613687
+              ],
+              "projected_vertical_clearance_canonical": 142.08629194920476,
+              "minimum_interval_clearance_canonical": 134.95460290227265,
+              "minimum_interval_clearance_world": 29.569229852154738
+            },
+            {
+              "source_native": [
+                309,
+                1029
+              ],
+              "atlas": [
+                440,
+                4243
+              ],
+              "root_relative_canonical": [
+                -224.5,
+                -49.5
+              ],
+              "projected_ground_Y_canonical": 87.94745926879716,
+              "projected_ground_interval_Y_canonical": [
+                80.81577022186504,
+                95.07914831572927
+              ],
+              "projected_vertical_clearance_canonical": 137.44745926879716,
+              "minimum_interval_clearance_canonical": 130.31577022186502,
+              "minimum_interval_clearance_world": 28.552838363292448
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            -58,
+            -42
+          ],
+          "lateral_nominal_X_canonical": -50,
+          "minimum_interval_clearance_canonical": 130.31577022186502,
+          "source_pixel_alpha_threshold": 100
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "C": 1936,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/girtas-NE-run-LEFT-flight5-from-run0-v01.png",
+      "source_sha256": "7b07b03dd9a17c1efbe56da03d9e2d18330adac5b7aec0f524f9d3e976187c31",
+      "source_actual_size": [
+        1254,
+        1254
+      ],
+      "source_to_atlas_translation": [
+        1663,
+        3241
+      ],
+      "source_native_ground_root": [
+        805,
+        1259
+      ],
+      "atlas_ground_root": [
+        2468,
+        4500
+      ],
+      "visible_posterior_cuirass_to_robe_junction_native": [
+        735,
+        535
+      ],
+      "waist_observation_uncertainty_native_xy": [
+        20,
+        24
+      ],
+      "hidden_pelvis_is_not_measured": true,
+      "native_root_X_relation_to_visible_waist": 70,
+      "waist_to_ground_canonical": 382.9421487603306,
+      "pale_hairroot_Y_canonical_relative_ground": -553.2561983471074,
+      "uppercore_Y_world_preview": -121.22120582950075,
+      "feet": [
+        {
+          "foot": "FAR_LEFT",
+          "role": "LEADING_AIR",
+          "roi": [
+            610,
+            930,
+            840,
+            1170
+          ],
+          "sole_polyline": [
+            [
+              674,
+              1078
+            ],
+            [
+              722,
+              1105
+            ],
+            [
+              764,
+              1139
+            ],
+            [
+              828,
+              1136
+            ],
+            [
+              832,
+              1129
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                674,
+                1078
+              ],
+              "atlas": [
+                2337,
+                4319
+              ],
+              "root_relative_canonical": [
+                -69.2892561983471,
+                -95.73553719008265
+              ],
+              "projected_ground_Y_canonical": -3.6721747097253186,
+              "projected_ground_interval_Y_canonical": [
+                -7.23801923319138,
+                1.6765920754737635
+              ],
+              "projected_vertical_clearance_canonical": 92.06336248035734,
+              "minimum_interval_clearance_canonical": 88.49751795689127,
+              "minimum_interval_clearance_world": 19.39024971017452
+            },
+            {
+              "source_native": [
+                722,
+                1105
+              ],
+              "atlas": [
+                2385,
+                4346
+              ],
+              "root_relative_canonical": [
+                -43.900826446280995,
+                -81.45454545454545
+              ],
+              "projected_ground_Y_canonical": -18.658757366311725,
+              "projected_ground_interval_Y_canonical": [
+                -22.224601889777787,
+                -13.309990581112643
+              ],
+              "projected_vertical_clearance_canonical": 62.79578808823373,
+              "minimum_interval_clearance_canonical": 59.229943564767666,
+              "minimum_interval_clearance_world": 12.977577479628707
+            },
+            {
+              "source_native": [
+                764,
+                1139
+              ],
+              "atlas": [
+                2427,
+                4380
+              ],
+              "root_relative_canonical": [
+                -21.68595041322314,
+                -63.47107438016529
+              ],
+              "projected_ground_Y_canonical": -31.772017190824837,
+              "projected_ground_interval_Y_canonical": [
+                -35.337861714290895,
+                -26.423250405625755
+              ],
+              "projected_vertical_clearance_canonical": 31.699057189340454,
+              "minimum_interval_clearance_canonical": 28.133212665874396,
+              "minimum_interval_clearance_world": 6.164127891207941
+            },
+            {
+              "source_native": [
+                828,
+                1136
+              ],
+              "atlas": [
+                2491,
+                4377
+              ],
+              "root_relative_canonical": [
+                12.165289256198347,
+                -65.05785123966942
+              ],
+              "projected_ground_Y_canonical": -51.754127399606716,
+              "projected_ground_interval_Y_canonical": [
+                -55.31997192307278,
+                -46.405360614407634
+              ],
+              "projected_vertical_clearance_canonical": 13.303723840062702,
+              "minimum_interval_clearance_canonical": 9.73787931659664,
+              "minimum_interval_clearance_world": 2.1336181619051735
+            },
+            {
+              "source_native": [
+                832,
+                1129
+              ],
+              "atlas": [
+                2495,
+                4370
+              ],
+              "root_relative_canonical": [
+                14.28099173553719,
+                -68.7603305785124
+              ],
+              "projected_ground_Y_canonical": -53.00300928765558,
+              "projected_ground_interval_Y_canonical": [
+                -56.56885381112164,
+                -47.6542425024565
+              ],
+              "projected_vertical_clearance_canonical": 15.757321290856815,
+              "minimum_interval_clearance_canonical": 12.191476767390753,
+              "minimum_interval_clearance_world": 2.6712136601463845
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            -54,
+            -44
+          ],
+          "lateral_nominal_X_canonical": -50,
+          "minimum_interval_clearance_canonical": 9.73787931659664,
+          "source_pixel_alpha_threshold": 100,
+          "whole_assigned_boot_ROI_alpha100_conservative_clearance": {
+            "ROI_xyxy": [
+              610,
+              930,
+              840,
+              1170
+            ],
+            "all_strong_pixels": 20753,
+            "minimum_native_pixel": [
+              828,
+              1136
+            ],
+            "minimum_canonical": 9.73787931659664,
+            "minimum_world": 2.1336181619051735,
+            "after_4native_XY_uncertainty_world": 1.3964208646162608,
+            "not_a_measured_absolute_floor": true
+          }
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "role": "TRAILING_AIR",
+          "roi": [
+            690,
+            690,
+            870,
+            900
+          ],
+          "sole_polyline": [
+            [
+              718,
+              792
+            ],
+            [
+              736,
+              843
+            ],
+            [
+              752,
+              855
+            ]
+          ],
+          "samples": [
+            {
+              "source_native": [
+                718,
+                792
+              ],
+              "atlas": [
+                2381,
+                4033
+              ],
+              "root_relative_canonical": [
+                -46.01652892561984,
+                -247.00826446280993
+              ],
+              "projected_ground_Y_canonical": 97.58861040351752,
+              "projected_ground_interval_Y_canonical": [
+                85.10815457138632,
+                104.72029945044964
+              ],
+              "projected_vertical_clearance_canonical": 344.5968748663274,
+              "minimum_interval_clearance_canonical": 332.11641903419627,
+              "minimum_interval_clearance_world": 72.768371888791
+            },
+            {
+              "source_native": [
+                736,
+                843
+              ],
+              "atlas": [
+                2399,
+                4084
+              ],
+              "root_relative_canonical": [
+                -36.49586776859504,
+                -220.03305785123968
+              ],
+              "projected_ground_Y_canonical": 91.96864190729761,
+              "projected_ground_interval_Y_canonical": [
+                79.48818607516641,
+                99.10033095422973
+              ],
+              "projected_vertical_clearance_canonical": 312.00169975853726,
+              "minimum_interval_clearance_canonical": 299.5212439264061,
+              "minimum_interval_clearance_world": 65.62660566440051
+            },
+            {
+              "source_native": [
+                752,
+                855
+              ],
+              "atlas": [
+                2415,
+                4096
+              ],
+              "root_relative_canonical": [
+                -28.03305785123967,
+                -213.68595041322314
+              ],
+              "projected_ground_Y_canonical": 86.97311435510214,
+              "projected_ground_interval_Y_canonical": [
+                74.49265852297094,
+                94.10480340203426
+              ],
+              "projected_vertical_clearance_canonical": 300.65906476832527,
+              "minimum_interval_clearance_canonical": 288.1786089361941,
+              "minimum_interval_clearance_world": 63.14137749180127
+            }
+          ],
+          "lateral_projected_X_canonical_interval": [
+            65,
+            87
+          ],
+          "lateral_nominal_X_canonical": 79,
+          "minimum_interval_clearance_canonical": 288.1786089361941,
+          "source_pixel_alpha_threshold": 100,
+          "whole_assigned_boot_ROI_alpha100_conservative_clearance": {
+            "ROI_xyxy": [
+              690,
+              690,
+              870,
+              900
+            ],
+            "all_strong_pixels": 16996,
+            "minimum_native_pixel": [
+              778,
+              866
+            ],
+            "minimum_canonical": 274.24269484569464,
+            "minimum_world": 60.087948871509866,
+            "after_4native_XY_uncertainty_world": 59.35075157422096,
+            "not_a_measured_absolute_floor": true
+          }
+        }
+      ]
+    }
+  ],
+  "projection": {
+    "camera": [
+      5,
+      -7,
+      5
+    ],
+    "target": [
+      0,
+      0,
+      1
+    ],
+    "anatomical_forward": "+Y UPRIGHT",
+    "anatomical_near_RIGHT": "+X",
+    "far_LEFT": "-X; imageLEFT is not ownership",
+    "method": "At each foot, project groundY=m*root_relative_screenX+K*lateral_screenX. Ground has separate lateral slices; groundY is not one flat imageY and forward stride changes groundY. Actual painted sole points are observed; world floor, lateral coordinate and root are authored with explicit intervals.",
+    "m_forward_ground_Y_per_screenX": -0.5902918298980975,
+    "K_lateral_coefficient": 0.8914611308665146,
+    "ground_lateral_intervals": "far support -50 +/-8 canonical; near support +79 +/-8. AIR far[-54,-44], near[65,87]. More compact far/near stride placement than neutral resting shoe spread is allowed.",
+    "projection_camera_pitch_uncertainty": "Camera targetZ in [0,1] would change slopes. This candidate uses the existing guide targetZ1 consistently; guide generic .57 bones never establish source anatomy.",
+    "sole_sample_uncertainty_native": 4,
+    "foot_orientation": "heel/toe rolls and shoe thickness retained; load support samples need not have identical groundY"
+  },
+  "root_authorship": {
+    "method": "Ground contact0/1 FAR_LEFT and3/4 NEAR_RIGHT pinned from actual selected sole. RootX authored using visible waist and actual thigh-chain intervals, with finite fore/aft and lateral stance; contact rootY follows projected ground equation. AIR2/5 use transparent virtualground and true positive per-foot sole clearances. Horizontal torso motion is retained, including phase5 root anterior of visible waist; hidden hip is an interval, not a clothV point.",
+    "source_native_roots": [
+      [
+        730,
+        1049
+      ],
+      [
+        779,
+        1215
+      ],
+      [
+        720,
+        1254
+      ],
+      [
+        717,
+        1023
+      ],
+      [
+        758,
+        1128
+      ],
+      [
+        805,
+        1259
+      ]
+    ],
+    "atlas_roots": [
+      [
+        846,
+        1263
+      ],
+      [
+        2364,
+        1279
+      ],
+      [
+        841,
+        2953
+      ],
+      [
+        2378,
+        2784
+      ],
+      [
+        889,
+        4342
+      ],
+      [
+        2468,
+        4500
+      ]
+    ],
+    "no_neutral_footdepth_invariant": true,
+    "no_flat_two_feet_Y": true,
+    "no_PNGbbox_floor": true,
+    "no_hidden_hip_exact_measurement": true,
+    "no_C_search_or_reauthoring": true
+  },
+  "reference_idle": {
+    "source_path": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png",
+    "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+    "C": 832,
+    "root": [
+      337,
+      407
+    ],
+    "visible_waist": [
+      350,
+      225
+    ],
+    "waist_height_canonical": 224,
+    "pale_hairroot_Y_world_preview": -88.99034322642972
+  },
+  "cycle_observations": {
+    "waist_heights_canonical": [
+      261.2892561983471,
+      251.88571428571427,
+      385.58677685950414,
+      310.1981981981982,
+      271.5,
+      382.9421487603306
+    ],
+    "load1_below_contact0_canonical": 9.403541912632846,
+    "load4_below_contact3_canonical": 38.69819819819821,
+    "AIR2_minimum_nominal_interval_clearance_canonical": 136.89994407617615,
+    "AIR5_minimum_nominal_interval_clearance_canonical": 9.73787931659664,
+    "five_to_zero_uppercore_world_Y_delta": 23.40983133609862,
+    "idle_to_contact0_uppercore_world_Y_delta": -8.821031266972412,
+    "warning_for_independent_decision": "New bounded contacts replace the old stretched legs; unchanged AIR5-to0 has a large uppercore drop that still requires actual cycle judgment. The candidate exposes this rather than resizing accepted C or flattening soles. Independent actual-body/entry/cycle judgment must decide plausibility; author does not grant PASS."
+  },
+  "region_operation": "Only outward disjoint metadata room, no PNG edits; original alpha16 ownership and strict guards remain unchanged.",
+  "source_pixels_unchanged": true,
+  "actor_approval": false,
+  "pixel_scale_preview": 0.21910501173173982,
+  "runtime_status": "NOT_COMPILED_BY_THIS_AUTHOR",
+  "repository_mutations": false,
+  "current_timing": {
+    "fps": 12.5,
+    "frame_duration": 1,
+    "seconds_per_frame": 0.08,
+    "six_cycle_seconds": 0.48,
+    "basis": "Fresh independent reviewer provided current actual r099 run_7; future compiled target requires ROOT validation."
+  },
+  "new_contacts_actual_edge_audit": {
+    "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/new-bounded-source0-source3-actual-edge-audit-and-clearance-correction-v01.json",
+    "sha256": "1fb54d6b695cba7e13360f2454837d4bfe9a786165dc0e68389685ae5ab9ef8b",
+    "m_K_exact_transferred": true,
+    "native_roots_are_frozen_integer_authored_values": true
+  },
+  "source_rgba_unchanged_in_this_operation": true
+}

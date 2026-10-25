@@ -1,0 +1,157 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "walk",
+  "version": "NwalkSixActualRig02",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+    "base_geometry_sha256": "316129350f9a95fba8ab08f0b7a64285d11efe95469e68970fda1ecd0af9dc86",
+    "direction": "N",
+    "regions": [
+      [
+        0,
+        0,
+        1536,
+        1536
+      ],
+      [
+        1536,
+        0,
+        1536,
+        1536
+      ],
+      [
+        0,
+        1536,
+        1536,
+        1536
+      ],
+      [
+        1536,
+        1536,
+        1536,
+        1536
+      ],
+      [
+        0,
+        3072,
+        1536,
+        1536
+      ],
+      [
+        1536,
+        3072,
+        1536,
+        1536
+      ]
+    ],
+    "nearest_owner_sha256": "0317c2f0eca43852d1785196a279b01a59721c3d7b9a3982555f46d044881d0b",
+    "review_basis": "Full disjoint authored tiles retain exact RGBA and empty ground; immutable packing proof 10b9b45d4ed518df211801d9ee1e8d0885ec052f7d142f81abbbcfb4d4447d02"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+    "direction": "N",
+    "role": "walk",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        663,
+        918
+      ],
+      [
+        2199,
+        918
+      ],
+      [
+        663,
+        2454
+      ],
+      [
+        2199,
+        2454
+      ],
+      [
+        663,
+        3990
+      ],
+      [
+        2199,
+        3990
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      1920,
+      1920,
+      1920,
+      1920,
+      1920,
+      1920
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "10b9b45d4ed518df211801d9ee1e8d0885ec052f7d142f81abbbcfb4d4447d02",
+  "authored_common_root_float": [
+    662.8125,
+    917.6920531878804
+  ],
+  "common_root_integer": [
+    663,
+    918
+  ],
+  "common_root_rounding_delta": [
+    0.1875,
+    0.3079468121195532
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "All six final actual native sources retain pure N rear identity, original anatomical RIGHT double-ended turquoise/gold staff grip, bun/ribbon, goldblue coat, pleated skirt and complete black/gold high boots.",
+      "Dedicated actor limb articulation creates visible LEFT contact/load/terminal then RIGHT contact/load/terminal with raised opposite passing feet, coherent knee/calf silhouettes and natural body weight transfer. The original body parts are not merely translated to substitute for gait.",
+      "Final six include real attached moving goldbracer/whitecuff and complete hands. The stale original RIGHT calf remnants are removed from2/3/4/5 while actual new limb layers and genuine blue/gold coat remain intact. All six pass one strong alpha100/4-connected body without changing thresholds.",
+      "Free LEFT arm progresses against the supporting leg and coat tips lag; torso sway/bob is smooth across both halfcycles and5to0. The weapon remains held in the same anatomical hand with both ends complete.",
+      "Visible support heel0to1 and3to4 uses the same actual stiletto material +133nativeY, matching the retained Player clock to about0.0161world residual. The terminal foot mesh/declared occluded toe pivot preserves the authored plant delta; no visible contradictory foot slide or pose pop was found in the seven-phase common-world review.",
+      "Actual lossless3072x4608 atlas contains every1254x1254 source RGBA exactly. C1920 and one common floating root are retained; the same integer rounding on all six adds no relative drift or perpose size adjustment."
+    ],
+    "visual_limitations": [
+      "This PASS covers this N walk source/cycle and the exact request/raw above. Actual r011 SpriteFrames/profile/Player binding and scoped game checks remain for root; this is not an actor48-action approval or an increase to2/31.",
+      "N toe contacts are occluded authored rig pivots, not claimed visible bitmap toe measurements. Their declared transform and timing are checked with actual visible heels/gait; hidden 3D depth and sole surfaces are not uniquely recovered from the sprites.",
+      "Review used private bounded JPEGs plus original RGBA/metadata computation. No image or binary data was forwarded to main chat, and no old PR100 work was resumed."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+    "raw_bytes": 2701707,
+    "request_sha256": "83758626665f095dcf6d91e05331d27704309afb12e96ebb35020274854d89d1",
+    "review_sha256": "a01a52b13c27f642cf235d3f48a8a627eb1177d68fc37f83c7f764cf8bf6d47b"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-N-walk-actual-packed-r002-20261020/thunder_female-N-walk-six-actual-poses-r002.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-4h90c6wm/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-N-walk-actual-packed-r002-20261020/request-NwalkSixActualRig02.json": "83758626665f095dcf6d91e05331d27704309afb12e96ebb35020274854d89d1",
+      "/workspace/scratch/mythic413-N-walk-actual-packed-r002-20261020/thunder_female-N-walk-six-actual-poses-r002.png": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NwalkSixActualRig02-837586-independent-final-source-cycle-PASS-v02.json": "a01a52b13c27f642cf235d3f48a8a627eb1177d68fc37f83c7f764cf8bf6d47b",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png",
+  "output_sha256": "868b0a184c0c0c18e5084b1b35a40b3cdf67f7ec779443e71bd3eac712d5d08c",
+  "output_bytes": 2701707,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-4h90c6wm/reviewed-source.png"
+}

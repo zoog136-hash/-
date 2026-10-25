@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "SOURCE_SINGLE_AIR_LEG_ART_PASS_NOT_COMPLETE_CLIP",
+  "source_visual_status": "PASS",
+  "raw_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/girtas-SE-run-right-leading-flight-key-v01.png",
+  "raw_sha256": "6cac533eae8c9a7d456ecd621132804013b8d6a2a5a4fe3257e5bd1354773299",
+  "raw_bytes": 1369910,
+  "request_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/request-girtas-SE-run-right-leading-flight-key-v01.json",
+  "request_sha256": "67e5ab122b8ff79cae10f3041730d0b145f5165e7fb011388e27e93d20850723",
+  "corrective_reason": "Existing SE run uses unfaithful old model/generic motion. Author a genuinely new faithful dedicated run key with constant-bone solid3D joint/depth guide; current SEidle upperbody/material references contain no old complete leg chain. No completed game pose is redone.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "canvas_size": 2048,
+    "distinct": null,
+    "canvas_semantics": "2048 is virtual importer canvas, actual source header1254square separately pinned."
+  },
+  "intended_game_phase": 2,
+  "intended_anatomical_support": null,
+  "intended_air_lead": "RIGHT",
+  "visual_findings": [
+    "Independent detailed hip/leg trace accepts genuine nearRIGHT leading/farLEFT trailing distinct two flexed leg chains and complete boots, faithful SE camera/model/permanent RIGHT weapon hand.",
+    "Complete original gear/endpoints; strict singleton geometry and all-alpha coverage PASS. Raw1254square originalRGBA unchanged."
+  ],
+  "visual_limitations": [
+    "This is AIR leg-art source acceptance only. Authored ground/root metadata must establish actual both-sole flight space in final six physical composition.",
+    "Full-six C/roots/rigid/head-body arc/5to0 and actual compiled Player/action/actor approval remain HOLD."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "newly_authored_pose_candidate_count": 1,
+  "approved_actors_delta": 0,
+  "preview_for_fresh_reviewer": {
+    "path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/private-independent-source-review.jpg",
+    "bytes": 85625,
+    "sha256": "94e9432f9c3238fea2ddd9eab54ff1a4d25a027934a04e2ad0661e089dfe4fd7"
+  },
+  "actual_source_image_size": [
+    1254,
+    1254
+  ],
+  "independent_source_review": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-opposite-AIR2-5-independent-source-QC-v01.json",
+    "sha256": "c69973988d31615eec7dbd62112fb8c607d495688c3757ae7496990c2324943b",
+    "status": "SOURCE_OPPOSITE_AIR_PAIR_PASS",
+    "inline_proof": {
+      "schema": "PR122_SE_RUN_OPPOSITE_AIR2_5_INDEPENDENT_SOURCE_QC_V1",
+      "utc": "2026-10-19T15:54:17.418461+00:00",
+      "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+      "status": "SOURCE_OPPOSITE_AIR_PAIR_PASS",
+      "scope": "Only actual new AIR2 nearRIGHT-leading and AIR5 farLEFT-leading source art, enlarged hip-to-knee/shin/boot trace and consistency with passed0/1/3/4. ExactRGBA assembly may proceed; no fixedC/root/worldfloor/runtime/actor approval.",
+      "actor_approval_increment": 0,
+      "source_pins": [
+        {
+          "phase": 2,
+          "raw_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/girtas-SE-run-right-leading-flight-key-v01.png",
+          "raw_sha256": "6cac533eae8c9a7d456ecd621132804013b8d6a2a5a4fe3257e5bd1354773299",
+          "raw_bytes": 1369910,
+          "actual_image_size": [
+            1254,
+            1254
+          ],
+          "request_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/request-girtas-SE-run-right-leading-flight-key-v01.json",
+          "request_sha256": "67e5ab122b8ff79cae10f3041730d0b145f5165e7fb011388e27e93d20850723",
+          "receipt_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/generation-receipt.json",
+          "receipt_sha256": "2c81a70deb5e9e08871e6c6cec6db39b28208c36f0d126e78abc03ef1cf87118",
+          "guide_recipe_path": "/workspace/scratch/girtas-SE-run-production-v01/six-solid-guide-recipe.json",
+          "guide_recipe_sha256": "6c067d9f06e71a19a1ba7eaa9392dea2d249e51d69df657e143b09e19ac81b8e",
+          "reference_pins": {
+            "/workspace/scratch/girtas-SE-run-production-v01/guides/3D-SE-run-phase2-RIGHTlead-AIR.png": "9429e84983d2368ae60722a2318a04adaebf6ba2d51af5b97159c39e2881c84a",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-upperbody-NO-OLD-LEGS.png": "fdaff6bb3da344ea1b01be8a2913572449047f850c937d6ff5f3483de6676a95",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-robe-MATERIAL-ONLY.png": "6c2f35a4215e77c06f4c984d695bd0825e0c2a675b8f9ac9a3ad3ee9426d4ad3",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-sinuous-blade-MATERIAL-ONLY.png": "90ef447bd46ba91eedc1d345ce72bceb09a1d7b993d629d0c0ee8cf9fb62746e"
+          },
+          "boundary_gt16_counts": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "phase": 5,
+          "raw_path": "/workspace/scratch/girtas-SE-run-left-leading-flight-key-v01/girtas-SE-run-left-leading-flight-key-v01.png",
+          "raw_sha256": "ba0c87e37c3c689705ee578e444305eb9040bcf5d59f5605fd3a7372ab59f5e2",
+          "raw_bytes": 1429065,
+          "actual_image_size": [
+            1254,
+            1254
+          ],
+          "request_path": "/workspace/scratch/girtas-SE-run-left-leading-flight-key-v01/request-girtas-SE-run-left-leading-flight-key-v01.json",
+          "request_sha256": "d576735497fc9be0fe13a3b11eeb81607d8a53740c09bc51392cf00a867effe5",
+          "receipt_path": "/workspace/scratch/girtas-SE-run-left-leading-flight-key-v01/generation-receipt.json",
+          "receipt_sha256": "9a5b331b8c2eb4dd152618a58308acc2fd4531e53614d177d781848f6fde67bf",
+          "guide_recipe_path": "/workspace/scratch/girtas-SE-run-production-v01/six-solid-guide-recipe.json",
+          "guide_recipe_sha256": "6c067d9f06e71a19a1ba7eaa9392dea2d249e51d69df657e143b09e19ac81b8e",
+          "reference_pins": {
+            "/workspace/scratch/girtas-SE-run-production-v01/guides/3D-SE-run-phase5-LEFTlead-AIR.png": "9dd25508eb204b860219b1a089bb2616d82d3a15900b30c558951ea6259ddb8b",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-upperbody-NO-OLD-LEGS.png": "fdaff6bb3da344ea1b01be8a2913572449047f850c937d6ff5f3483de6676a95",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-robe-MATERIAL-ONLY.png": "6c2f35a4215e77c06f4c984d695bd0825e0c2a675b8f9ac9a3ad3ee9426d4ad3",
+            "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-sinuous-blade-MATERIAL-ONLY.png": "90ef447bd46ba91eedc1d345ce72bceb09a1d7b993d629d0c0ee8cf9fb62746e"
+          },
+          "boundary_gt16_counts": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        }
+      ],
+      "findings": {
+        "AIR2": "NearRIGHT thigh leaves the near/front hip on image-left of the apron and crosses forward/down-right into its exposed leading knee/shin/boot. FarLEFT thigh folds behind robe and ends in a separate small trailing boot behind/up-left of the waist; this is actual RIGHT-leading flight.",
+        "AIR5": "FarLEFT thigh emerges around the far/image-right edge of the apron into the leading extended knee/shin/boot. NearRIGHT thigh folds rear/up-left under swept robe to its separate trailing boot. Hip ownership is genuinely opposite AIR2 despite both lead toes projecting down-right along the same SE travel axis.",
+        "run_semantics": "Both are genuine two-chain suspended run drawings with flexed hip/knee action and complete distinct boots, not walk-footroll or contact-source translations. Transparent PNG contains no embedded certified floor; two-sole positive clearance must be authored and independently checked later.",
+        "identity_and_model": "Correct SE front/down-right pale human face/hair, hard gold rays/crown/pauldrons, long dark gold-trim robe and sinuous permanentRIGHT blade retained. No new material rigid-head/pauldron/waist-to-leg error or endpoint defect observed. Pose pitch and foreshortening remain allowable."
+      },
+      "source_cycle_status": "All6 have individual scoped source PASS; actual six-phase physical candidate remains HOLD until fitted scale/C/roots/AIR and loop transition checked.",
+      "prior_source_proof_pins": [
+        {
+          "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-contact-pair-independent-source-QC-v02.json",
+          "sha256": "bab8afd4dd6ce288ba3c7296d0f4786dd9d985c7d77b0b6c16934e6004505390"
+        },
+        {
+          "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-compression1-4-independent-source-QC-v01.json",
+          "sha256": "3a8a75dfe8e1e46a3519ae5fa8bf4545ad5877edc090056c58939bf6ed731eac"
+        }
+      ],
+      "remaining_HOLD": [
+        "Common rigid-body fit with faithful selectedidle, exact source-native landmarks and perposeC calibration pending.",
+        "Actual ground roots/support sole nonpenetration and positive two-sole AIR arc pending. No forced flatY or fictional AIR/root offset to hide penetration.",
+        "Actual compiledSpriteFrames/Player/Godot and independent finalactor quality pending; actor267 remains0/catalogOFF."
+      ],
+      "private_review_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+      "private_review_ledger_sha256": "b791de27d4b98b5d9c5bfab9810b89326a92df58ac7ba9c23eefebe770c15ba3",
+      "repository_mutations": false
+    }
+  },
+  "newly_authored_pose_count": 1
+}

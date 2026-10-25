@@ -1,0 +1,86 @@
+{
+  "schema": "independent-private-actual-NW-run-load1-v03-gate-v2",
+  "status": "HOLD_ACTUAL_PART_MATTES_AND_ANATOMICAL_JOINT_FINISH",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v03/thunder_female-NW-run-load1-actual-rig-v03.png",
+    "sha256": "65ac35903cba712b7ad8369c68a714ab4562bd6081850c0120993c7777caa295",
+    "bytes": 805970
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "raw_canvas": [
+    1536,
+    1536
+  ],
+  "actual_motion_improved": "RIGHT passing/recovery foot is visibly raised compared with v02, closing the hanging-leg placement issue in static intent.",
+  "remaining_visible_artifacts": [
+    {
+      "area": "LEFT support shoe/tarsal",
+      "finding": "Straight horizontal material split and broad pale/gold wedge beyond heel edge; rigid shoe does not read as intact original design at the calf join."
+    },
+    {
+      "area": "RIGHT recovery shoe",
+      "finding": "True structural gold stiletto heel renders as a detached long bar beside a cut/cropped shoe outline. Preserve the heel design and restore its complete module connection; do not erase or shorten it."
+    },
+    {
+      "area": "Upperhip/farleg underhem",
+      "finding": "Pointed dark remnant ends without coherent connection to the folded actual chain."
+    }
+  ],
+  "minimum_corrections": "Extract tight true-shoe mattes directly from untouched source0 RGBA, excluding coat/body material, then rigidly place unchanged geometry and retouch actual calf/tarsal joints. Tie source/body old-leg-removal matte and garment occlusion to corrected actual knee/leg silhouette; do not keep an old broad mask with the new rig. Preserve body/C/gear/clock.",
+  "method_policy": "Authorized actual-part rigging judged by final visible art, not rejected as a method.",
+  "scoped_plant_check": {
+    "status": "Continuous clock transform retained from v02; physical ground/source phase remains unapproved.",
+    "common_root_model": [
+      669,
+      1267.95
+    ],
+    "required_source_heel_delta": [
+      139.19289850280273,
+      125.27360865252246
+    ],
+    "actual_alpha16_support_bottom": {
+      "y": 1316,
+      "x_range": [
+        718,
+        728
+      ],
+      "center_x": 723.0
+    },
+    "absolute_body_ground_root_and_3D_bones": "Unverified author model; independent finite proof still required."
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-load1-v03-frozen.json",
+    "sha256": "3b636abb320580b8665a1cb635699ffdc882b0e246c2319d3bfbf75e0f83ce4f",
+    "bytes": 8176
+  },
+  "actual_source_phase_approved": false,
+  "physical_planting_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false,
+  "supersedes": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-load1-v03-independent-actual-HOLD-v01.json",
+    "sha256": "ea9d229ee065b05dec2e283ba38ef7a22307541861d3cb62a05ceddcea11a518",
+    "reason": "Clarifies real RIGHT structural stiletto heel versus detached appearance caused by module cropping; no visual gate relaxed."
+  },
+  "author_native_shoe_landmark_refinement": {
+    "scope": "Author inspected source0 shoe anatomy; used as current source-reference refinement, not physical3D approval.",
+    "L_tarsal_approx": [
+      564,
+      1075
+    ],
+    "R_tarsal_approx": [
+      750,
+      858
+    ],
+    "uncertainty_raw": [
+      8,
+      8
+    ],
+    "counter_crests": "Actual gold counters rise above tarsal; full semantic shoe silhouette must be retained, not horizontal1070 crop."
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "observed_utc": "2026-10-18T04:47:48.593127+00:00",
+  "baseline_PR122_HEAD": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
+  "isolated_branch": "feature/pr122-animation-20261018",
+  "source_authoring_resumed": true,
+  "new_authored_whole_PNGs": 18,
+  "source_bytes": 30601381,
+  "counts": {
+    "qualified_completed": 392,
+    "runtime_connected": 394,
+    "pending_full_CI_APK": 2,
+    "other_HOLD": 16,
+    "not_authored_or_not_connected": 88,
+    "completed_added": 0
+  },
+  "Guardian_W": "Opposite arm counter-swing corrected, palette/model remains HOLD, no W expansion",
+  "transform258_E_walk": {
+    "stage": "FIXED_CANDIDATE_PARTIAL_E_ONLY",
+    "new_selected_source_candidates": 6,
+    "OpenGL_Main_technical_checks": 4356,
+    "actual_input_native_frames": 6,
+    "speeds": [
+      0.75,
+      1,
+      1.5
+    ],
+    "total_cycle_seconds": [
+      0.64,
+      0.48,
+      0.32
+    ],
+    "all_other_original_tracks_textures_preserved": true,
+    "final_visual_quality": "HOLD: model/weapon proportion drift and full near/far chronology need final approval",
+    "other7walk": "BEFORE",
+    "run_all8": "BEFORE",
+    "production_applied": false
+  },
+  "transform288_E_walk": {
+    "source_sheet6_strict_geometry": "PASS",
+    "single_passing_pose": "PHYSICAL_PILOT_PASS",
+    "actual_Main": "NOT_RUN",
+    "full_gait_and_original_identity": "HOLD",
+    "production_applied": false
+  },
+  "actual_Main_evidence": {
+    "capture_bodies": 32,
+    "zip_parts": 2,
+    "CRC": "PASS",
+    "member_SHA256": "PASS"
+  },
+  "Android_real_device": "NOT_RUN",
+  "old_two_uncommitted_Reaper_PNG_and_QA_draft": "UNRECOVERED; these18newPNG are newly authored, never reported as recovered",
+  "remote_delivery": "PENDING_COMMIT_AND_VERIFIED_PUSH",
+  "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/evidence/pr122-remaining106/batch07/checkpoint.json"
+}

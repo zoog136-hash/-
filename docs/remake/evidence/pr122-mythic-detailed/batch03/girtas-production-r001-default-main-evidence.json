@@ -1,0 +1,73 @@
+{
+  "schema": "pr122-native-default-main-v1",
+  "key": "transform:267",
+  "status": "PASS",
+  "entrypoint": "ACTUAL_MAIN_DEFAULT_CATALOG",
+  "scene": "res://Main.tscn",
+  "candidate_injection": false,
+  "runtime_profile_override": false,
+  "engine_version": "4.7.2.stable.official.ed1daf0bf",
+  "pins": {
+    "default_catalog": {
+      "path": "data/catalog_v19.json",
+      "group": "변신",
+      "source_id": "267",
+      "record_sha256": "6c4a1b67a97710dea583483509967787cac3ff676ab1067e7f78fee8703371f6",
+      "inline_profile_sha256": "6f0318edc8b97467a22c7c845fb8c7fa39fe9c091093c4d707d884a418ef3f8f"
+    },
+    "profile_catalog": {
+      "path": "data/combat_animation_profiles.json",
+      "key": "transform:267",
+      "record_sha256": "c25c3a756c953b4c24b5a74d0118b2b25eddb4768c62cf13fd139199233587cb"
+    },
+    "effective_profile_sha256": "5fd4997e5e169da60ed2606088b222aaac3d673fd8b361dce0b8a05cbe1396e9",
+    "production_frames": {
+      "path": "res://assets/actors/eight_direction/native_production/girtas_267/r001/SpriteFrames.tres",
+      "sha256": "437f4f3e8657a0ea39d4f5ab2f7236bd2b64052580bca9d7baa234c0ee893291"
+    },
+    "production_profile": {
+      "path": "res://assets/actors/eight_direction/native_production/girtas_267/r001/NativeMotionProfile.tres",
+      "sha256": "573eb9ccb979c2a3c8d928433395f4a3cf9999095ee7783bec554ed7ea9aaa71"
+    },
+    "source_selection_sha256": "100da1c7cc76c4a1799068adb51730af39fd138ffef9b40755a23d4305b2616c",
+    "actor_record_sha256": "6176711a3894dc7e7cfa5e9c9fd8b7f8b5ec705b3b7dbe5a3aa3b1fa61a2b4a3"
+  },
+  "tested_input_snapshot": {
+    "register": {
+      "path": "data/pr122_native_locomotion_staging.json",
+      "sha256": "dc3cb8d172a9d52b112afbbdd83cdacf382864045b964d23021e9eabcbbaaeb5"
+    },
+    "catalog": {
+      "path": "data/catalog_v19.json",
+      "sha256": "92d520f4caa178927d3598844e6b275e987854f080e102913b676fb2c6663b00"
+    },
+    "profiles": {
+      "path": "data/combat_animation_profiles.json",
+      "sha256": "22550e0dfc48a07bfb0b69793560ae1c0a9f5719e5aa786fc16e2ea4d2867910"
+    },
+    "frames": {
+      "path": "res://assets/actors/eight_direction/native_production/girtas_267/r001/SpriteFrames.tres",
+      "sha256": "437f4f3e8657a0ea39d4f5ab2f7236bd2b64052580bca9d7baa234c0ee893291"
+    },
+    "native_profile": {
+      "path": "res://assets/actors/eight_direction/native_production/girtas_267/r001/NativeMotionProfile.tres",
+      "sha256": "573eb9ccb979c2a3c8d928433395f4a3cf9999095ee7783bec554ed7ea9aaa71"
+    }
+  },
+  "checks": {
+    "actual_Main_scene": "PASS",
+    "default_catalog_lookup": "PASS",
+    "all_48_tracks": "PASS",
+    "animation_playback": "PASS",
+    "catalog_record_unchanged": "PASS"
+  },
+  "log": {
+    "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-default-main.log",
+    "sha256": "e643dfa7bfe504346db08a3c99cb6cd7822052acda58666ed6a006dcc81172c3"
+  },
+  "test_script": {
+    "path": "tests/pr122_girtas_native_default_main_connection_test.gd",
+    "sha256": "63f7d6a995d09e00274955bcc746c6f738ac65f185b5addbd4bfe0a0241ac979"
+  },
+  "existing393_freeze": "Originalcertificate/actor/catalog/resource/evidence snapshot unchanged during actual267 test"
+}

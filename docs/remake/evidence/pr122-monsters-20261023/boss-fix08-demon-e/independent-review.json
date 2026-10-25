@@ -1,0 +1,200 @@
+{
+  "schema": "pr122-demon-E-run-independent-private-source-first-pass-v1",
+  "id": "monster:알비노 데몬",
+  "date": "2026-10-23",
+  "frozen": true,
+  "independence": "Reviewer created earlier Demon RUN candidates but did not create these boss-fix08 sources; this is separate review of the new selected E sources.",
+  "method": "Actual private view_image vision of all three complete source PNGs (eight authored poses) and the specified six-pose selection. Geometry/check pins read only. No new generation, source edits, Git changes or image forwarding.",
+  "source_first_pass": "PASS_WITHIN_EXAMINED_E_RUN_SOURCE_SCOPE",
+  "new_approvals": 0,
+  "full_mythic_approvals": 0,
+  "existing_demon_full_candidate_quality_unchanged": true,
+  "reference": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/28.png",
+    "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b",
+    "basis": "Exact current project crop: red muscular two-horned biped, spiked dark plate, skullbelt/chains, attached tail, RIGHT axe and LEFT empty hand, no wings."
+  },
+  "source_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/pair-a-landing-v01.png",
+      "bytes": 1130928,
+      "sha256": "25471d414d5e9f3dc06ebca8abb9958d2bb6718730f22c05cd446491408e8838",
+      "image_size": [
+        1246,
+        1263
+      ],
+      "visible_boundary_pixels": 0
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-right-half3-v01.png",
+      "bytes": 1818465,
+      "sha256": "92aa0cb57eb8e26c76e51308242fab21dd051bd99396920e1dc357995b416ec8",
+      "image_size": [
+        1024,
+        1536
+      ],
+      "visible_boundary_pixels": 0
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-left-half3-v01.png",
+      "bytes": 1712356,
+      "sha256": "ee01c07fe86dd9f38f1354918a5c542b8e1b79fc018de0fba37b531e09b0bef1",
+      "image_size": [
+        1024,
+        1536
+      ],
+      "visible_boundary_pixels": 0
+    }
+  ],
+  "geometry_check_pins": [
+    {
+      "pin": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/checks/pair-a-landing-v01.json",
+        "bytes": 1413,
+        "sha256": "895ce0c54819f0736f7d4e0d9ac1f119c6fe9dc11582ceec29477b2474f83e8e"
+      },
+      "record_keys": [
+        "path",
+        "sha256",
+        "rows",
+        "axis",
+        "directions",
+        "reference_rows",
+        "logical_phases",
+        "status",
+        "geometry"
+      ],
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "pin": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/checks/demon-E-right-half3-v01.json",
+        "bytes": 1858,
+        "sha256": "ac3c9c8d368f095f816f0edd9daeaa76c0f9590a03e746d93da5163e398b1f3c"
+      },
+      "record_keys": [
+        "name",
+        "path",
+        "sha256",
+        "rows",
+        "axis",
+        "directions",
+        "reference_rows",
+        "logical_phases",
+        "status",
+        "geometry"
+      ],
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "pin": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/checks/demon-E-left-half3-v01.json",
+        "bytes": 1855,
+        "sha256": "59f51f6169254f0209fed29ab5c6629aefc6806381046f26312e61e8acf6521d"
+      },
+      "record_keys": [
+        "name",
+        "path",
+        "sha256",
+        "rows",
+        "axis",
+        "directions",
+        "reference_rows",
+        "logical_phases",
+        "status",
+        "geometry"
+      ],
+      "status": "GEOMETRY_PASS_ONLY"
+    }
+  ],
+  "selected_track": "run_0",
+  "selected_direction": "E",
+  "examined_authored_poses": 8,
+  "selected_poses": 6,
+  "selection": [
+    {
+      "phase": 0,
+      "source": "pair-a-landing-v01",
+      "source_row": 0
+    },
+    {
+      "phase": 1,
+      "source": "demon-E-right-half3-v01",
+      "source_row": 1
+    },
+    {
+      "phase": 2,
+      "source": "demon-E-right-half3-v01",
+      "source_row": 2
+    },
+    {
+      "phase": 3,
+      "source": "pair-a-landing-v01",
+      "source_row": 1
+    },
+    {
+      "phase": 4,
+      "source": "demon-E-left-half3-v01",
+      "source_row": 1
+    },
+    {
+      "phase": 5,
+      "source": "demon-E-left-half3-v01",
+      "source_row": 2
+    }
+  ],
+  "findings": [
+    {
+      "criterion": "opposite_support_phase0_phase3",
+      "result": "PASS_WITHIN_STATIC_SOURCE_SCOPE",
+      "observations": [
+        {
+          "phase": 0,
+          "source": "pair-a-landing-v01",
+          "row": 0,
+          "observation": "The large near anatomical RIGHT lower leg extends forward/down and its foot/claws flatten at the low plant line. The smaller far LEFT leg folds behind with its foot clearly lifted."
+        },
+        {
+          "phase": 3,
+          "source": "pair-a-landing-v01",
+          "row": 1,
+          "observation": "The large near anatomical RIGHT thigh/knee is lifted high near waist level with near foot/claws tucked visibly above ground. The smaller far anatomical LEFT lower leg extends down/back to the low plant foot. This is an actual opposite-support pose, rather than reusing phase0 near-right support."
+        }
+      ],
+      "comparison_to_prior": "The earlier E-v02 six poses repeated near-leg support at0/3. The new pair actually changes which anatomical leg is low and supporting, while the axe hand stays fixed; the old same-foot defect is visibly improved."
+    },
+    {
+      "criterion": "remaining_selected_half_cycles",
+      "result": "PASS_FIRST_SOURCE_POSE_READABILITY",
+      "observation": "RIGHT-half rows1/2 keep near-right leg low/pushing back while far-left knee moves up/forward. LEFT-half rows1/2 keep near-right knee/foot high while far-left leg is low then extends back. Their selected sequence preserves the different support halves established by pair0/3. LEFT-half row0 instead repeats near-right plant and is correctly excluded. Static poses do not certify exact lift-off timing."
+    },
+    {
+      "criterion": "E_camera",
+      "result": "PASS_FIRST_SOURCE_DIRECTION_READABILITY",
+      "observation": "All selected figures point head, snout and legs to SCREEN RIGHT. One side of the face dominates; near shoulder/arm largely occludes the far shoulder; torso and belt ornament are foreshortened from the side. This is substantially more lateral/E than the prior broad front-chest SE-like E candidate. No S/front or NE/back camera substitution was observed among these selected E poses. Fine camera calibration beyond this first source screen is not asserted."
+    },
+    {
+      "criterion": "RIGHT_axe_and_empty_LEFT",
+      "result": "PASS_WITHIN_VISIBLE_SOURCE_SCOPE",
+      "observation": "The same near anatomical RIGHT arm/wrist visibly grips the axe shaft in the landing pair and both half-cycle sheets; the source is not mirrored to swap support. LEFT claw is empty where visible; its distal part is partly occluded by the raised leg/torso in some high-knee poses, with no extra weapon observed."
+    },
+    {
+      "criterion": "body_identity_and_no_wings",
+      "result": "PASS_FIRST_SOURCE_SCOPE",
+      "observation": "Muscular red body, black swept horns, heavy spiked dark pauldron/bracer/greave, skullbelt/chains, attached tail and large iron axe remain present. Exactly two legs are readable with different near/far scale, and no wings or replacement lava-fist anatomy are introduced."
+    },
+    {
+      "criterion": "obvious_clipping_or_collapse",
+      "result": "NO_OBVIOUS_DEFECT_OBSERVED",
+      "observation": "Full horns, axe blade, hands where exposed and both feet are present in the selected source images. No visible frame-edge truncation or severe limb/body collapse was observed. Source geometry checks are owned by the producer and pinned separately, not used alone as visual approval."
+    }
+  ],
+  "unseen_not_reviewed": [
+    "Exact timed loop cadence, transitions and continuity after native assembly",
+    "Actual moving-world contact and ground collision",
+    "Runtime target contact and default Main scene",
+    "Other directions/roles of the full boss candidate",
+    "Full mythic or release approval"
+  ],
+  "scope_note": "Unseen items are deferred scope, not newly imposed first-pass gates. The positive decision here is limited to the visibly improved E direction, stable axe identity and explicit opposite support in selected source poses."
+}

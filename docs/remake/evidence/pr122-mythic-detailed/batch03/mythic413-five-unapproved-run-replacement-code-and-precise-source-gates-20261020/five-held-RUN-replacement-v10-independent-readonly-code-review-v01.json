@@ -1,0 +1,387 @@
+{
+  "schema": "PR122-independent-five-held-RUN-replacement-helper-readonly-code-review-v1",
+  "status": "PASS_BOUNDED_STATIC_CODE_REVIEW_EXECUTION_AND_RUNTIME_ADOPTION_NOT_APPROVED",
+  "proposal_helper": {
+    "path": "/workspace/scratch/mythic413-five-held-run-replacement-proposal-20261020-v10/integrate_413_held_run_retaining_profile_v01.py",
+    "sha256": "6c94585b57f2d4681af81617f36e3c91b65e2f23c2a2985c85f7a1cfe54f93fe",
+    "bytes": 46866
+  },
+  "unchanged_new_clip_helper": {
+    "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/integrate_new_413_clip_retaining_profile_v07.py",
+    "sha256": "1de7ddb84a69582cd2e91434126b84ead57524d98ead53e259b288d9e418c60c",
+    "bytes": 43108
+  },
+  "exact_surgical_proposal": {
+    "path": "/workspace/scratch/mythic413-five-held-run-replacement-proposal-20261020-v10/held-five-run-helper-exact-surgical-change-proposal-v01.json",
+    "sha256": "9873a944cabfbea1d013d31172d2827665a959a9d57342f7de70b6e40e40d059",
+    "bytes": 6140
+  },
+  "canonical_pins": {
+    "path": "/workspace/scratch/mythic413-five-held-run-replacement-proposal-20261020-v10/canonical-input-pins.json",
+    "sha256": "b80d47c7d34e43df2718e2709d05e7dd6c5e5669b4dd6e5244f1aebe3ec78d08",
+    "bytes": 2710
+  },
+  "all_other_helper_bytes_identical": true,
+  "changed_block_count": 6,
+  "changed_blocks": [
+    {
+      "new_start_line": 191,
+      "old_block_sha256": "11b4f68ce951b2409cbadf2d5f22867929d47bd7ed4ecd8ce482a6aa2050a170",
+      "new_block_sha256": "f1d466f0f24861eb1141f1f54e3b4790671624a4b0aad58588b150e202bd9d57"
+    },
+    {
+      "new_start_line": 329,
+      "old_block_sha256": "83c6a3e2cae98330eb256695f7f6a87a77b033a1f688cf37b77977d7877b3da4",
+      "new_block_sha256": "54fd9cafc3f44dfe55336ede462ce13ef43675ebe91c96fba12e92dd3d791ade"
+    },
+    {
+      "new_start_line": 392,
+      "old_block_sha256": "2763639eea452d79f02338c04381c7006045d7308b08521563f0964f5aaa4066",
+      "new_block_sha256": "220e1ba7a13fb61665e089cbab8877c83daae8edeaecd0e6ad124f313bda835e"
+    },
+    {
+      "new_start_line": 394,
+      "old_block_sha256": "8ddac3410a1843b124ef5fcb8b44f2980a90b5ae74448910bea4d0a6e1b7df92",
+      "new_block_sha256": "b8693fc3b6099cac386e67e0df02e99f942cc67abd7d6dcdab6f0d68b58c2c76"
+    },
+    {
+      "new_start_line": 489,
+      "old_block_sha256": "49e08e172b5bcb9a3c61612a23aa0dd5acd4c9e6493b469c57a1011c34a7ccee",
+      "new_block_sha256": "9520f1939a279e44eeeb1f4b25cc3fd8c848739c3c3331632fd26ac07126938f"
+    },
+    {
+      "new_start_line": 625,
+      "old_block_sha256": "6282935131f97ed2a1f8b91a08acf07855102be8b03cf2d3da49bd6e851f1a5c",
+      "new_block_sha256": "2c83d548b5e1d6a1bb95d5bb035fc6811c0d5766cf27ebaa23f621be4acc6096"
+    }
+  ],
+  "AST_parse_pass": true,
+  "exact_dependencies_at_review": [
+    {
+      "path": "/workspace/twilight/tools/advance_pr122_native_locomotion.py",
+      "sha256": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e",
+      "bytes": 10690
+    },
+    {
+      "path": "/workspace/twilight/tools/stage_pr122_native_locomotion.py",
+      "sha256": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701",
+      "bytes": 12040
+    },
+    {
+      "path": "/workspace/twilight/tools/bind_pr122_native_locomotion_profiles.py",
+      "sha256": "ddc4643a78d01d5cbc0529ee31262e73095ff1e989ce71c6d70264c5eb448a62",
+      "bytes": 6787
+    },
+    {
+      "path": "/workspace/twilight/tools/checkpoint_pr122_native_clip.py",
+      "sha256": "23f0f7b75b90b7af4368214e11feea43fa8c5899a08cb1a2797fd2dc489559ca",
+      "bytes": 8886
+    },
+    {
+      "path": "/workspace/twilight/tools/integrate_pr122_corrective_clip.py",
+      "sha256": "5271739c9e02d0a743856d4a6338b67dbb1b1fb3630f747fde5dd8690723d9cd",
+      "bytes": 14462
+    },
+    {
+      "path": "/workspace/twilight/tools/pr122_native_production_approvals.py",
+      "sha256": "e10c66e9241969c11678f24f056350ed5f1daab2ce1e6136dd117d5b8f6e4234",
+      "bytes": 21580
+    },
+    {
+      "path": "/workspace/twilight/tools/pr122_reviewed_runtime_layout.py",
+      "sha256": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2",
+      "bytes": 14709
+    },
+    {
+      "path": "/workspace/twilight/tools/pr122_reviewed_source_regions.py",
+      "sha256": "8d2745e5cae9412438c282811323dc4d0e80496fe73c4cc69dfed38078db8857",
+      "bytes": 14565
+    },
+    {
+      "path": "/workspace/twilight/tools/pr122_transform_motion_scope.py",
+      "sha256": "06001b834a7ee0b10c95124a6a9ae6c263bb905026e0f14c497d989b0d58bb42",
+      "bytes": 1986
+    },
+    {
+      "path": "/workspace/twilight/data/pr122_transform_motion_scope.json",
+      "sha256": "770ae33ff628f37b71cef0f071914578d132e00439c1820f931c8e5eb12b2758",
+      "bytes": 430
+    },
+    {
+      "path": "/workspace/twilight/scripts/animation/actor_motion.gd",
+      "sha256": "e9403a24e93b9fadfa266ab8f56178f8e26a5f2cbdc2259635f6e44d43305d65",
+      "bytes": 25168
+    },
+    {
+      "path": "/workspace/twilight/scripts/animation/transformation_movement_scope.gd",
+      "sha256": "bde780fc18bab522c907337fb73a94d3a9f1ff5407ee6dd628241692bf854f56",
+      "bytes": 1413
+    },
+    {
+      "path": "/workspace/twilight/tests/pr122_native_player_connection_test.gd",
+      "sha256": "ff03a36d5046efc53ba74633109b04ecde1ae12adb4836b31e7db027c74f4b5c",
+      "bytes": 6138
+    },
+    {
+      "path": "/workspace/twilight/tests/pr122_native_motion_smoke.gd",
+      "sha256": "bf13e021e8a26737914994f8fc47cefc4ae4e655f4138bda47c24e05bfed8c6c",
+      "bytes": 3129
+    },
+    {
+      "path": "/workspace/twilight/tests/pr122_native_action_test.gd",
+      "sha256": "b879c2d382f0654749f957eff5e01940598f67d4ceccbb9da019ae74992df149",
+      "bytes": 4039
+    }
+  ],
+  "held_visual_source_audit": {
+    "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/mythic413-five-unapproved-run-quality-HOLD-v01-20261020/RUN-five-slot-read-only-audit-v01.json",
+    "sha256": "b3bec3966c234d87f37b838e10849d1f345d79f72648c72369e789aa4707cee4",
+    "bytes": 3951
+  },
+  "held_original_five_file_pins": [
+    {
+      "direction": "E",
+      "source": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-run-v01.png",
+        "sha256": "f7a5f2fe81945a314f8e17dff332c0f403f3a7387ad3a134bf973adc558d0b42",
+        "bytes": 1939153
+      },
+      "geometry": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-run-v01.geometry.json",
+        "sha256": "4990f529a170d022d3abe2f284e8c7794cd1683727a1870e3317c1d15212b23f",
+        "bytes": 2334
+      },
+      "original_request": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-002-thunder_female-E-run-v01.json",
+        "sha256": "9fb153df4054c30b782e3d951977ec318be09f5f9264cf6c35cbff1df1f3213d",
+        "materialized_at_review": false
+      }
+    },
+    {
+      "direction": "SE",
+      "source": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-run-v01.png",
+        "sha256": "e3ba5dbf91377ae79663b72e6e8f67c438ca645b7c5589056b1e799d2deb0139",
+        "bytes": 2080862
+      },
+      "geometry": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-run-v01.geometry.json",
+        "sha256": "8667ee6becdfa5aafe6ea2d788aeb312215db503fa84a076941d09b5e0132e67",
+        "bytes": 2338
+      },
+      "original_request": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-004-thunder_female-SE-run-v01.json",
+        "sha256": "12e56f1b399cb526772c40e7fbacffabb180ca6838105ac84f55d12a0142125c",
+        "materialized_at_review": false
+      }
+    },
+    {
+      "direction": "S",
+      "source": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-run-v01.png",
+        "sha256": "71a8379f56c20d85ce4d183d05226582a3cac885642e43ff41553f0e0f8b2b35",
+        "bytes": 2000958
+      },
+      "geometry": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-run-v01.geometry.json",
+        "sha256": "f053141d584eafdf56f4b4b210309f9d24390f6fe83f919bb70b8732cc439a3c",
+        "bytes": 2336
+      },
+      "original_request": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-006-thunder_female-S-run-v01.json",
+        "sha256": "832f072abad3dee23efca09e1fb98283289f2078cdcd13fdb42a0cdf4e0d0a5e",
+        "materialized_at_review": false
+      }
+    },
+    {
+      "direction": "SW",
+      "source": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-run-v01.png",
+        "sha256": "c367e529ead2fd717e8cc0682ad288aeec86ad9579e54cd9435c36dc3aa48870",
+        "bytes": 2050843
+      },
+      "geometry": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-run-v01.geometry.json",
+        "sha256": "d68c5197bd47c85c0efcd9a6587b821594c44b9abc862fa1db453a6e132b3f4a",
+        "bytes": 2339
+      },
+      "original_request": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-008-thunder_female-SW-run-v01.json",
+        "sha256": "3e79f4a803d25a170d115572d7b1cdd25df4cfb9850ddc20f2f85227a699d187",
+        "materialized_at_review": false
+      }
+    },
+    {
+      "direction": "W",
+      "source": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-run-v01.png",
+        "sha256": "e7aac97d3f9beeff04f95b8921ae39517561d4b173112616fa2293b92aa780e6",
+        "bytes": 2074898
+      },
+      "geometry": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-run-v01.geometry.json",
+        "sha256": "fc1c627ae3133a5b48d960b8d89ff2219a2e184cd49e44fe5eafc4b929fca7f7",
+        "bytes": 2332
+      },
+      "original_request": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-010-thunder_female-W-run-v01.json",
+        "sha256": "e64da8b28c0f0b09292d909bf32c2514ad3ed1a4665170a9bc6186668105096f",
+        "materialized_at_review": false
+      }
+    }
+  ],
+  "blocking_findings": [],
+  "findings": [
+    {
+      "area": "Narrow eligibility and one-use old-slot pin",
+      "lines": [
+        192,
+        199,
+        201,
+        203,
+        207,
+        208
+      ],
+      "conclusion": "Only transform413 run E/SE/S/SW/W and the exact audited unapproved v01 selected source are eligible. A later already-replaced selection fails. Original source, geometry, request and HOLD audit are hash-pinned; current old native track is hash-bound into both request.corrective_replacement and review.replacement_review."
+    },
+    {
+      "area": "Existing independent new actual source review remains mandatory",
+      "lines": [
+        221,
+        222,
+        224,
+        237,
+        247
+      ],
+      "conclusion": "The unchanged v09 path still requires caller-pinned independent PASS identity and exact snapshotted request/raw hash and length, all6 distinct pixels/regions, reviewed physical source layout and canonical descriptor guards. It rejects a raw SHA already present in historical sources. An old visual HOLD or this code review cannot satisfy a new actual SOURCE gate."
+    },
+    {
+      "area": "Single selected RUN replacement and immutable history",
+      "lines": [
+        213,
+        214,
+        215,
+        216,
+        330,
+        393,
+        395,
+        397,
+        400,
+        401,
+        490
+      ],
+      "conclusion": "The expected track set removes exactly the pinned run animation then adds one reviewed new run. At boundaries all other native tracks and SpriteFrames playback contracts match exactly; selected-table key sets and every other slot are preserved. Existing raw history remains an unchanged prefix. Final source selection and new track must match the exact reviewed new source. Current pinned advance code appends exactly one raw record and replaces only this selected identity."
+    },
+    {
+      "area": "Zero count increment and retained physical profile",
+      "lines": [
+        331,
+        333,
+        334,
+        490,
+        493,
+        494,
+        626
+      ],
+      "conclusion": "Both final track/pose counts equal their old values, report adds0 clips/poses and replaces1/reauthors6. New exclusive revision gets the exact new PNG and new SpriteFrames; NativeMotionProfile differs only in frames_path. Old source/geometry/request/compiled textures/frames/profile remain immutable."
+    },
+    {
+      "area": "Approved actors and completed rear tracks",
+      "lines": [
+        145,
+        146,
+        147,
+        386,
+        389,
+        390,
+        393,
+        617,
+        625
+      ],
+      "conclusion": "The existing approval state must retain exactly transform393/267. Actor413 is mutable only within this request; all other actors and all actor413 tracks other than the specified original five-direction run slot are frozen, including completed N/NW/NE. Existing catalog/combat/color and physical-profile pins are unchanged."
+    },
+    {
+      "area": "Transaction and scoped validation flow unchanged",
+      "conclusion": "All code outside six literal replacement blocks is byte-identical to the reviewed v09 new-clip helper: expected HEAD/clean index/exclusive outputs, snapshots and concurrency checks, exact staged/committed paths, original scoped Godot checks and checkpoint, no network/push command. This review does not run those paths."
+    },
+    {
+      "area": "Pinned official selection/stage behavior supports a replacement",
+      "conclusion": "Read-only source confirms advance appends a new source record, updates the one existing selected identity, and stage rebuilds current selected tracks while reusing old exact textures for every unchanged (source,SHA). The scoped helper preserves their geometry and playback, so no ROOT feature change is needed."
+    }
+  ],
+  "nonblocking_notes": [
+    "The inherited docstring and several preflight/error labels still say add a missing clip. Enforcement and final report are replacement-specific; updating human-facing wording in a separately repinned revision would improve clarity but is not a correctness blocker.",
+    "Raw history is preserved as an exact prefix by the new guard. The pinned unchanged advance implementation supplies the single append; the guard is not intended as an independently permissive arbitrary manifest editor.",
+    "This audit proves static guard logic and exact unchanged code regions. No helper main/preflight, canonical importer, source art view, Godot test, Git command, commit, apply or runtime adoption was performed. Actual new reviewed source/request-specific preflight and existing scoped checks remain required for each replacement."
+  ],
+  "helper_executed": false,
+  "proposal_or_ROOT_files_modified": false,
+  "source_PNGs_modified": false,
+  "new_image_views": 0,
+  "tests_run": 0,
+  "Git_commands_run": 0,
+  "runtime_adoption_approved": false,
+  "actor_approvals_added": 0,
+  "pinned_original_request_materialization_required_before_preflight": [
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-002-thunder_female-E-run-v01.json",
+      "sha256": "9fb153df4054c30b782e3d951977ec318be09f5f9264cf6c35cbff1df1f3213d",
+      "materialized_at_review": false
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-004-thunder_female-SE-run-v01.json",
+      "sha256": "12e56f1b399cb526772c40e7fbacffabb180ca6838105ac84f55d12a0142125c",
+      "materialized_at_review": false
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-006-thunder_female-S-run-v01.json",
+      "sha256": "832f072abad3dee23efca09e1fb98283289f2078cdcd13fdb42a0cdf4e0d0a5e",
+      "materialized_at_review": false
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-008-thunder_female-SW-run-v01.json",
+      "sha256": "3e79f4a803d25a170d115572d7b1cdd25df4cfb9850ddc20f2f85227a699d187",
+      "materialized_at_review": false
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-010-thunder_female-W-run-v01.json",
+      "sha256": "e64da8b28c0f0b09292d909bf32c2514ad3ed1a4665170a9bc6186668105096f",
+      "materialized_at_review": false
+    }
+  ],
+  "current_environment_preflight_ready": false,
+  "execution_readiness_findings": [
+    {
+      "status": "PREWRITE_EXPECTED_GUARD_HOLD",
+      "scope": "filesystem prerequisite, not relaxed code guard",
+      "detail": "Pinned original request files are absent from the current working tree. The actual_file/digest guard stops before writing. Materialize the exact immutable originals at these declared paths and verify the audit SHA before executing a request-specific preflight. This reviewer performed no Git or restoration.",
+      "files": [
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-002-thunder_female-E-run-v01.json",
+          "sha256": "9fb153df4054c30b782e3d951977ec318be09f5f9264cf6c35cbff1df1f3213d",
+          "materialized_at_review": false
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-004-thunder_female-SE-run-v01.json",
+          "sha256": "12e56f1b399cb526772c40e7fbacffabb180ca6838105ac84f55d12a0142125c",
+          "materialized_at_review": false
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-006-thunder_female-S-run-v01.json",
+          "sha256": "832f072abad3dee23efca09e1fb98283289f2078cdcd13fdb42a0cdf4e0d0a5e",
+          "materialized_at_review": false
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-008-thunder_female-SW-run-v01.json",
+          "sha256": "3e79f4a803d25a170d115572d7b1cdd25df4cfb9850ddc20f2f85227a699d187",
+          "materialized_at_review": false
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/request-010-thunder_female-W-run-v01.json",
+          "sha256": "e64da8b28c0f0b09292d909bf32c2514ad3ed1a4665170a9bc6186668105096f",
+          "materialized_at_review": false
+        }
+      ]
+    }
+  ]
+}

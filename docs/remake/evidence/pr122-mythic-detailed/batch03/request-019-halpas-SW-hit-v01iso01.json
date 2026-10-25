@@ -1,0 +1,116 @@
+{
+  "key": "transform:393",
+  "direction": "SW",
+  "role": "hit",
+  "name": "해방된 할파스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png": "be8487121e951bff94dfc0384ed2916e306c8cb67e4acc0fecd1137ca64acc00"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG HIT animation sprites of EXACTLY 해방된 할파스. The first original portrait is identity authority. The second saved SW native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for SW.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces SOUTHWEST / screen down-left, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: stable guard; 1: impact response; 2: maximum stagger / recoil; 3: counterbalance; 4: regaining control; 5: recovered guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nThis is a brief impact stagger followed by controlled recovery, not an attack or a death. No weapon swing toward a target. Original appendages react physically to the torso recoil.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "stable guard",
+    "impact response",
+    "maximum stagger / recoil",
+    "counterbalance",
+    "regaining control",
+    "recovered guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-018-halpas-SW-hit-v01.json",
+  "processing_proof": {
+    "source_sha256": "490088929b40b5ecbcfebd646e4db5ab73987585cebe151df6a10697225407fd",
+    "output_sha256": "241e2bc5b49a031f5538ed919380972b38a08c5eef5e3e1f67c6c0e0f816c3c5",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-hit-v01.png",
+    "output": "/workspace/scratch/halpas-SW-hit-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 69369,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 508411,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -15
+        ],
+        "pixels": 90062,
+        "foreground_pixels": 84779,
+        "rgba_sha256": "1a41ef218b8829bfb17034f6a897baade30619d53fdf3ae62ed831d2e7c786e9"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -27
+        ],
+        "pixels": 87605,
+        "foreground_pixels": 82396,
+        "rgba_sha256": "410a46b8b25ebf0d9f9ebddcc4ed4310c736117735affead1fc15ce559db1d56"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          16
+        ],
+        "pixels": 88004,
+        "foreground_pixels": 82707,
+        "rgba_sha256": "0c2bf86fa33e6ba2593dd0b2a0b756548fc64c6ec1c2c914d37548cd8f027010"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          -14
+        ],
+        "pixels": 89737,
+        "foreground_pixels": 84771,
+        "rgba_sha256": "5e2799a4ebd162bd8db4311a213980da80d5f391f3d342ccd2ee900812ead330"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          52
+        ],
+        "pixels": 91408,
+        "foreground_pixels": 86332,
+        "rgba_sha256": "e51ca16d1719bfee35e23084343468d69246b3c1a0828692b18f6f26d9c3bec5"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          39
+        ],
+        "pixels": 92590,
+        "foreground_pixels": 87426,
+        "rgba_sha256": "956435647b551c9e299e60778ca56146634edfd12c29c728298768dcd3c6eb54"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-hit-v01iso01.png",
+  "output_sha256": "241e2bc5b49a031f5538ed919380972b38a08c5eef5e3e1f67c6c0e0f816c3c5",
+  "output_bytes": 1512681,
+  "original_generated_file": "/workspace/scratch/halpas-SW-hit-v01iso01.png"
+}

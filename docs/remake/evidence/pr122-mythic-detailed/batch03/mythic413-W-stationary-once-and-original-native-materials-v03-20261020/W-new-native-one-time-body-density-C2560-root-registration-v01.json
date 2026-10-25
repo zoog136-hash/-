@@ -1,0 +1,113 @@
+{
+  "schema": "MYTHIC413_NEW_W_ONCE_BODY_DENSITY_ROOT_REGISTRATION_V01",
+  "status": "PROVISIONAL_ONCE_BODY_REGISTRATION_PENDING_INDEPENDENT_SOURCE_AND_BODY_GATE",
+  "source": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/W-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "bb5c7f586db032178e2a8bae0eb6923d2af1b39965e8ab39f0d3974e7b3a4f38",
+    "bytes": 790655
+  },
+  "raw_service_source_sha256": "fc440f258979b615d3375f4a288f767d69649de2b46495bc93be652998bb076e",
+  "native_size": [
+    1254,
+    1254
+  ],
+  "canonical_N": {
+    "source": {
+      "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+      "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+      "bytes": 452591
+    },
+    "C": 1920,
+    "bodyunit": 1.875,
+    "common_rig_root": [
+      662.8125,
+      917.6920531878804
+    ],
+    "markers": {
+      "gold_bun_crown": [
+        639,
+        239
+      ],
+      "nape_proxy": [
+        645,
+        390
+      ],
+      "upper_back_goldbar": [
+        650,
+        519
+      ],
+      "waist_diamond_same_back_ornament": [
+        649,
+        550
+      ],
+      "visible_central_hem_proxy": [
+        650.0,
+        638.0
+      ]
+    }
+  },
+  "reference_E_once_registration": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "393e66b3d965b2286fc2a1bea1ac561444f9463b2b30de140f3b06ee0f46d886",
+    "bytes": 3295
+  },
+  "once_density_ratio": 1.3333333333333333,
+  "common_rig_root_in_unpadded_frame": [
+    646.0833333333334,
+    991.9227375838406
+  ],
+  "production_storage_translation": [
+    128,
+    128
+  ],
+  "production_stored_common_root": [
+    774.0833333333334,
+    1119.9227375838404
+  ],
+  "body_markers": {
+    "gold_bun_crown": [
+      689,
+      105
+    ],
+    "lower_neck_center_left_profile_proxy": [
+      659,
+      301
+    ],
+    "gold_waist_belt_center_left_profile_proxy": [
+      632,
+      514
+    ],
+    "visible_central_hem_proxy": [
+      629.0,
+      619.0
+    ]
+  },
+  "marker_uncertainty_native": {
+    "lower_neck_profile_vs_back_nape_proxy": 10,
+    "waist_beltline_profile_vs_back_proxy": 10,
+    "hairstyle_view": 12,
+    "hem_proxy": 10
+  },
+  "density_method": "Native W left-profile lowerneck/collar proxy y301 to visible waistbelt center y514 gives213/N160, nativeC2556 rounded once to64multiple2560. All actual head/torso/costume pixels stay native; crown105 is localized goldbun top at x685..692, not whole alpha height. Profile/front/back anatomical proxy uncertainty is explicit. Independent actual source marker gate pending; no actual animation uses proposal before the gate.",
+  "density_checks": {
+    "N_nape_to_waist": 160,
+    "W_neck_to_waist": 213,
+    "N_span_scaled": 213.33333333333331,
+    "vertical_span_error_fraction": -0.0015624999999999112,
+    "full_2D_span_crosscheck_fraction": 0.006112738978734322,
+    "N_normalized_crown_height": 0.35348544436868773,
+    "W_normalized_crown_height": 0.34645419436868774,
+    "N_normalized_nape_height": 0.2748396110353544,
+    "W_normalized_neck_height": 0.2698916943686877
+  },
+  "root_method": "Whem+(Nroot-Nhem)*(W_C/N_C), one-time body coordinate registration, no unique hidden ground or perpose heel fit.",
+  "direction_and_stance_scope": "Actual left-facing W profile face and both complete boot toes. Visible front-chest exposure and farRIGHT staff/nearLEFT free arm must pass independent native source gate. Stationary stance only; no old/new walk or RUN direction approval.",
+  "source_pixel_resampling": false,
+  "source_whole_alpha_height_normalization": false,
+  "perpose_C_root_or_footfit": false,
+  "source_gate_and_game_pending": true,
+  "actor_approvals_added": 0,
+  "new_W_fixed_C": 2560.0,
+  "new_W_fixed_bodyunit": 2.5,
+  "old_W_atlas_or_approved_clips_changed": false
+}

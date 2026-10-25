@@ -1,0 +1,75 @@
+{
+  "schema": "PR122-independent-opposite-RUN-contact-load-constructive-numeric-v1",
+  "status": "PASS_DECLARED_CONSTRUCTION_ONLY_ACTUAL_SOURCE_PAIR_PENDING",
+  "author_contract": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/original915-matched-fixed-boot-contact3-load4-footroll-contract-v01.json",
+    "sha256": "ea696929dd6b18fc9609b98318f44b38504919234cb818a11747e9b49a7b62a6"
+  },
+  "independent_recomputation": {
+    "source_to_model_projection_max_error": 0.0,
+    "phase3_projection_max_error": 0.0,
+    "phase4_projection_max_error": 0.0,
+    "boot_triangle_lengths_canonical_source3_source4": [
+      [
+        47.64790131789647,
+        102.78133342197891,
+        89.92335625409007
+      ],
+      [
+        47.647901317896455,
+        102.7813334219789,
+        89.92335625409011
+      ],
+      [
+        47.647901317896455,
+        102.7813334219789,
+        89.92335625409011
+      ],
+      [
+        47.64790131789647,
+        102.78133342197893,
+        89.92335625409012
+      ]
+    ],
+    "boot_triangle_length_max_error": 5.684341886080802e-14,
+    "rotation_orthogonality_max_error": 1.653171169325285e-17,
+    "rotation_determinant": 1.0,
+    "same_heel_rotation_max_error": 0.0,
+    "actual_source_foot_affine_control_max_error": 2.2737367544323206e-13,
+    "affine_inverse_max_error": 2.842170943040401e-14,
+    "fixed_bones_phase3_phase4": [
+      [
+        249.99999999999994,
+        250.00000000000006
+      ],
+      [
+        249.99999999999997,
+        249.99999999999994
+      ]
+    ],
+    "fixed_bones_max_error": 5.684341886080802e-14,
+    "same_heel_delta_native": [
+      139.1928985028028,
+      125.2736086525224
+    ],
+    "same_heel_world_step_length": 16.8,
+    "forefoot_declared_Z3_Z4": [
+      14.0,
+      -4.218847493575595e-15
+    ],
+    "actual_derived_forefoot_delta_from_observed_prior": [
+      -0.3267634754173514,
+      -0.7716004917019745
+    ]
+  },
+  "claim_limits": [
+    "Declared one compatible 3D construction; hidden depths/absolute floor are not uniquely recovered measurements.",
+    "Three critical structural marker triangle lengths, rotation, heel clock, and fixed 250/250 bone arithmetic agree with canonical source0.",
+    "Actual CONTACT3 ankle/shoe/source and LOAD4 artwork, all-sole surface support, actual rendered all6/cycle/game remain separate gates."
+  ],
+  "actual_art_approved": false,
+  "physical_pair_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approvals_added": 0,
+  "image_bytes_used_for_this_math": 0
+}

@@ -1,0 +1,54 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "S",
+  "role": "walk",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "transparent_background": true,
+  "phase_contract": [
+    "right_contact",
+    "right_support_left_passing",
+    "left_arriving_right_push",
+    "left_contact",
+    "left_support_right_passing",
+    "right_arriving_left_push"
+  ],
+  "corrective_reason": "Replace identity-HOLD old S walk with original-faithful six-phase south walk whose anatomical right and left boots visibly exchange forward/trailing depth. Never count torso bob or same-leg-leading poses as walk completion.",
+  "user_authorization": "Production image tools allowed; no main-chat image attachments. One private production attempt.",
+  "requested_at": "2026-10-19T10:31:17.320953+00:00",
+  "prompt": "Draw ONE production SIX-PHASE WALK CYCLE sprite sheet for the EXACT UNIQUE boss Girtas in the supplied two references. First reference is the original identity authority; second is its faithful enlarged canonical guide. Preserve the EXPOSED PALE FACE, LONG PALE HAIR, crown, narrow hard GOLD RADIAL BACK SPINES, long DARK gold-edged SKIRT-LIKE armor and the one LONG THIN SINUOUS orange-gold weapon in the SAME ANATOMICAL RIGHT HAND (viewer LEFT when facing forward). Preserve original body proportions and armor material/colors. No red V mask, no broad orange flame feathers, no short broad sword, no segmented pants substituted for the long dark skirt, no new equipment. Original black/gold boots and lower legs are visible below/between the existing long skirt panels. The skirt is not a solid cone: its existing hanging panels swing naturally with the walking legs, retaining their original long lengths and gold edges. Do not shorten or delete the skirt to show legs, do not invent trousers or gaps in the original armor.\n\nDIRECTION: every one of the six figures walks SOUTH, straight TOWARD THE VIEWER / SCREEN DOWN. Fixed elevated isometric camera, front of the pale face, FRONT chest and waist visible all six phases, both hip sides and both lower legs shown. Do not rotate to east/west, do not turn the head sideways or away, do not mirror the whole model to get opposite steps. The SAME anatomical right leg remains on IMAGE LEFT in all poses; SAME anatomical left leg remains IMAGE RIGHT. The same right-hand long weapon stays IMAGE LEFT in all six; armor details, spine attachments and asymmetrical weapon hand never swap sides.\n\nCRUCIAL REQUIREMENT: show a real alternating-leg walk rather than six variations of the same right-leading stance. Across the cycle the two identifiable boots must VISIBLY EXCHANGE front/back DEPTH positions. When a foot steps forward toward the viewer it is LOWER on the screen and slightly larger/foreshortened; the trailing foot is HIGHER on screen. Make forward/trailing depth differences clear enough to verify at game scale. The original long skirt panels naturally swing apart over the moving boots to reveal the actual alternating knee/ankle arrangement. Use a moderate deliberate grounded walk, NO run or flight. Weight alternates supported hips and knees, passing foot lifts, trailing toe pushes off. Genuine distinct articulated leg positions, not rigidly translated or bobbed copies.\n\nExactly six phases in LEFT-TO-RIGHT, TOP-TO-BOTTOM order:\n0 RIGHT CONTACT: anatomical RIGHT leg at IMAGE LEFT reaches FORWARD toward viewer/screen bottom, clearly LOWER than the left boot. Right heel contacts; LEFT leg at IMAGE RIGHT trails BACK/higher on screen with toe pushing. Pelvis and weight lead on the right, torso subtly counterrotates, face stays front SOUTH.\n1 RIGHT SUPPORT / LEFT PASSING: right leg IMAGE LEFT bears weight nearly under right hip; LEFT knee/boot IMAGE RIGHT lifts and passes forward from the rear. Left boot temporarily higher and off ground, right foot clearly supports. Existing dark skirt panels swing with these actual two knees.\n2 LEFT ARRIVING / RIGHT PUSH: LEFT leg at IMAGE RIGHT reaches FORWARD toward the viewer and becomes LOWER than the right boot; RIGHT leg IMAGE LEFT is now behind/higher with toe pushing off. This MUST be the opposite depth order from phase0.\n3 LEFT CONTACT: anatomical LEFT leg at IMAGE RIGHT is clearly FORWARD/LOWER and supports its heel; RIGHT leg IMAGE LEFT is BACK/HIGHER with trailing toe. This is the true opposite-leg counterpart of phase0, with the SAME asymmetrical right-hand weapon and same frontal face, never a mirrored whole sprite.\n4 LEFT SUPPORT / RIGHT PASSING: left leg IMAGE RIGHT supports nearly under left hip; RIGHT knee/boot IMAGE LEFT lifts and passes forward from rear. Right boot temporarily higher/off ground, left clearly supports. Weight/body counterrotation differs from phase1 while equipment stays on correct side.\n5 RIGHT ARRIVING / LEFT PUSH: RIGHT leg at IMAGE LEFT reaches forward/LOWER again, LEFT leg IMAGE RIGHT is back/higher pushing from the toe, approaching phase0 smoothly. The six-phase loop should continue naturally into right contact.\n\nAnimate restrained opposite arm/shoulder response without swapping the original weapon hand, tiny body weight bob, and believable lag of the long pale hair and existing gold-trim dark skirt. Narrow hard golden back spines remain attached, consistent in count/construction, with very small torso-linked sway only. All six figures use exactly the same body proportions, camera, armor design and pixel scale. Head always FRONT/SOUTH. Keep both boots and the low skirt hem unobstructed by the long weapon; the weapon may hang to the viewer-left OUTSIDE the stride rather than crossing the feet.\n\nTechnical output: transparent1024x1536PNG, EXACTLY TWO512pxcolumns and THREE512pxrows, one complete small figure per cell, six figures only. The ENTIRE silhouette including every long golden spine, pale hair tip, lower boots, skirt and full long sinuous weapon must fit within the CENTRAL280x280 area of each512cell. Leave at least116px empty transparent gutter on ALL FOUR cell edges. First-row silhouettes entirely inside y116..396, second y628..908, third y1140..1420; column1 inside x116..396, column2 inside x628..908. Do not fill the sheet, let any body cross row boundaries, crop a blade/spike or overlap a neighbor. Same model pixel scale and centered feet baseline within all cells; do not shrink selected poses individually. Rich crisp dark metal and sharp gold trim, pale visible face/hair, opaque thin hard gold spines. Weapon light confined inside its physical sinuous contour. Background and all gaps alpha0, only1-2px silhouette edge antialiasing. NO floor, ground, cast shadows, outer glow, aura, bloom, particles, smoke, fog, blur, motion trails, labels, text, numbers, borders, panel backgrounds or visible grid. Highest priority is ORIGINAL-FAITHFUL SOUTH identity plus an unmistakable RIGHT-THEN-LEFT-THEN-RIGHT alternating grounded stride with both boots clearly readable.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Original-faithful pale face/hair, narrow gold radial spines, dark long gold-trim skirt and long thin sinuous weapon persist; same anatomical right weapon hand/image-left.",
+      "All six remain front/SOUTH, without heading flips or whole-model mirroring.",
+      "Genuine alternating gait:0-2 right support with left swing/knee flex;3-5 left support with right swing/knee flex. Both boots and altered lower-leg articulation are visible.",
+      "Whole pelvis/knee/boot inspection confirms plausible opposite contact exchanges2->3 and5->0. The initial phase-label-only HOLD has been preserved and explicitly superseded by motion-reassessment.json.",
+      "Six complete disjoint silhouettes, no opaque source outer-edge clipping."
+    ],
+    "visual_limitations": [
+      "Raw source violates requested central280px cell gutters and slightly crosses nominal row boundaries. Lossless repack plus unchanged strict geometry/import validation required before selection.",
+      "Exact requested phase2/5 already-forward labels differ from the actual valid support/swing cycle; observed phase sequence is documented in motion-reassessment.json.",
+      "Original portrait108x132 limits tiny facial/insignia confirmation. Runtime timing/anchoring/integration and final actor approval remain pending."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "01f7f906efd051ab4255a68df9873301dc0846a7ccb70dfd7d48c7fb8bde4d47",
+    "raw_bytes": 2398400,
+    "request_sha256": "18946f2a9b0fdb19286620f99fdecaa51bc37ab0fbf0e398208dddecc5d64126",
+    "review_sha256": "7141ee4b5b4c66a12d5476350ed8c05f0111df9d751170eaa4f3c724dfac9fd8"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
+  "output_sha256": "01f7f906efd051ab4255a68df9873301dc0846a7ccb70dfd7d48c7fb8bde4d47",
+  "output_bytes": 2398400,
+  "original_generated_file": "/workspace/scratch/girtas-S-walk-repair/girtas-S-walk-v02.png"
+}

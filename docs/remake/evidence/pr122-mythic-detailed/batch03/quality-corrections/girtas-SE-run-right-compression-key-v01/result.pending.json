@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "PENDING_INDEPENDENT_SOURCE_QC",
+  "source_visual_status": "HOLD",
+  "raw_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/girtas-SE-run-right-compression-key-v01.png",
+  "raw_sha256": "39264eda3975de9a760c8c0b8a87d9aeaa38f80628dfa99c030b2a14a7293dfa",
+  "raw_bytes": 1459325,
+  "request_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/request-girtas-SE-run-right-compression-key-v01.json",
+  "request_sha256": "ab9f41d3cde42a2ed166f6a669074157ed2aa7b2e9c8f95f062a0277bcaec091",
+  "corrective_reason": "Existing SE run uses unfaithful old model/generic motion. Author a genuinely new faithful dedicated run key with constant-bone solid3D joint/depth guide; current SEidle upperbody/material references contain no old complete leg chain. No completed game pose is redone.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "canvas_size": 2048,
+    "distinct": null
+  },
+  "intended_game_phase": 4,
+  "intended_anatomical_support": "RIGHT",
+  "intended_air_lead": null,
+  "visual_findings": [
+    "Author has exhausted private image ledger and has NOT viewed this new source. Correct source identity/absolute SE compass/actual articulated support must be independently reviewed."
+  ],
+  "visual_limitations": [
+    "No actual source stance/identity PASS claimed yet. Source composition, rigid physical scale, all-six authored roots/AIR clearance, compiled SpriteFrames/Player/action QC and actor approval pending."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "newly_authored_pose_candidate_count": 1,
+  "approved_actors_delta": 0,
+  "preview_for_fresh_reviewer": {
+    "path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/private-independent-source-review.jpg",
+    "bytes": 92493,
+    "sha256": "4b985bcd4283d84f1be4e7e3fe5bf2f734f9b81bd9f62697a969ea6fb3e1c0e0"
+  }
+}

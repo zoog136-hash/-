@@ -1,0 +1,25 @@
+{
+  "actor": "monster:공포의 뱀파이어",
+  "slug": "dread_vampire",
+  "clip": "SE-hit-v01",
+  "role": "hit",
+  "direction": "SE",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/SE-hit-v01.png",
+  "source_sha256": "7d090543cc57865f6384d08e85e84a7b0243614a9a942f3a4a7678e2607a82a3",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      90031,
+      88827,
+      84027,
+      83126,
+      82066,
+      78803
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

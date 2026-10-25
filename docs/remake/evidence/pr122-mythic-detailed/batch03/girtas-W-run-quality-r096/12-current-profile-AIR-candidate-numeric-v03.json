@@ -1,0 +1,59 @@
+{
+  "status": "AUTHOR_NUMERIC_AIR_CANDIDATE_PASS_INDEPENDENT_WHOLE_CLIP_AND_EQUIPMENT_PENDING",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "run",
+  "configuration": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/author-commonphysical-DRAFT-v03.json",
+  "configuration_sha256": "d1aefccc9d497acb5680bb6e62c2949b5a6254be515590caea3c1d36605394e8",
+  "atlas_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+  "current_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/NativeMotionProfile.tres",
+  "current_profile_sha256": "e5d796d2b07fc5b803c3fa2e2dc93f1208e690c5fdbaf3464569e97c027f8f7a",
+  "current_pixel_scale": 0.219105011732,
+  "baseline_near_far_ground_canonical": 24,
+  "scope": "Conservative AIR lower-bound numerical check only. Ground support projection and root arc require independent candidate review; source hilt fidelity independently pending. Future staged pixel_scale must be re-read.",
+  "AIR_rows": [
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-W-run-AIR2-3D-v01/girtas-W-run-AIR2-3D-v01.png",
+      "source_sha256": "5aae1a16e9036a15e90f9a8bb40dd575cfdc3c1b5fed096ff2c8811fc2b5b284",
+      "C": 2688,
+      "source_native_anchor": [
+        650,
+        1228
+      ],
+      "alpha_gt16_bbox_XYXY": [
+        14,
+        33,
+        1235,
+        1124
+      ],
+      "whole_foreground_last_y": 1123,
+      "whole_foreground_clearance_canonical": 40.0,
+      "conservative_gap_above_higher_24canonical_far_ground_world": 3.505680187712,
+      "both_boot_clearance_inference": "Every alpha>16 pixel, including both full boots, is inside this conservative whole-foreground bound; not an ROI/sampled sole-only measurement."
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-W-run-AIR5-3D-v01/girtas-W-run-AIR5-3D-v01.png",
+      "source_sha256": "235382f585aaa3440b653e8bf3bd607a7c2c97ff4e4a8425fdbad614c7fdc17e",
+      "C": 2688,
+      "source_native_anchor": [
+        650,
+        1208
+      ],
+      "alpha_gt16_bbox_XYXY": [
+        5,
+        17,
+        1243,
+        1075
+      ],
+      "whole_foreground_last_y": 1074,
+      "whole_foreground_clearance_canonical": 51.04761904761905,
+      "conservative_gap_above_higher_24canonical_far_ground_world": 5.926268888751239,
+      "both_boot_clearance_inference": "Every alpha>16 pixel, including both full boots, is inside this conservative whole-foreground bound; not an ROI/sampled sole-only measurement."
+    }
+  ],
+  "minimum_world_clearance": 3,
+  "source_pixels_changed": false,
+  "actor_approval": false
+}

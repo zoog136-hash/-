@@ -1,0 +1,436 @@
+{
+  "key": "monster:알비노 변이된 골렘",
+  "prompt": "Batch16: exact saved image-generation requests; newly drawn reference-based 64 walk,24 attack,24 death poses plus preserved16 idle/16 hit. Not SPX originals. No copied/reflected/generated motion by whole-image transforms.",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Raw sheet review of all eight views and five roles; strict complete-source bounds/ownership/uniqueness validated before staging. Actual Main and transition-scale review are still required before production approval."
+  },
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-0.png",
+      "rows": 2,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "canvas_size": 640,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-1.png",
+      "rows": 2,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ]
+      },
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "canvas_size": 640,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-2.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "E"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 824,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-3.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "SE"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 792,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-4.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "S"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 784,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-5.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "SW"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 808,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-6.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "W"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 784,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-7.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "NW"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 776,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-8.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "N"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 808,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-9.png",
+      "rows": 8,
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "directions": [
+        "NE"
+      ],
+      "directions_axis": "phase_grid4",
+      "canvas_size": 792,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-10.png",
+      "rows": 3,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 864,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-11.png",
+      "rows": 3,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 824,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-12.png",
+      "rows": 3,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 784,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-13.png",
+      "rows": 3,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 856,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-14.png",
+      "rows": 3,
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 832,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-15.png",
+      "rows": 3,
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 776,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-16.png",
+      "rows": 3,
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 704,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/poses-17.png",
+      "rows": 3,
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "rows",
+      "canvas_size": 744,
+      "reference_rows": [
+        0
+      ],
+      "scale_review_note": "One reviewed canvas for this whole source resolution; no per-pose scale or altered raster pixels."
+    }
+  ],
+  "prompt_record_kind": "batch_instructions_with_exact_image_requests_in_batch16_source_index"
+}

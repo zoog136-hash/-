@@ -1,0 +1,283 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:공포의 뱀파이어": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "attack",
+          "direction": "S",
+          "animation": "attack_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/S-attack-v01.png",
+          "source_sha256": "b5a47baceb07db130993918798cbb4867570b0fe9436d34700deac213f246dfd",
+          "texture": "assets/actors/eight_direction/boss_draft_first/dread_vampire/sources/S-attack-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  93,
+                  14,
+                  425,
+                  506
+                ],
+                "margin": [
+                  469,
+                  288,
+                  839,
+                  758
+                ],
+                "source_anchor": [
+                  256,
+                  516
+                ],
+                "rgba_sha256": "8339bfa74853ad63b8873738882acf80ac0fbd4cfbf8c476f86853ce920b70db",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  590,
+                  13,
+                  426,
+                  497
+                ],
+                "margin": [
+                  454,
+                  297,
+                  838,
+                  767
+                ],
+                "source_anchor": [
+                  768,
+                  506
+                ],
+                "rgba_sha256": "167b65ed249c3dc4a1551ebbe5f2d2c7f5b69b95b17b67160ef83e124bb1ab09",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1052,
+                  62,
+                  439,
+                  443
+                ],
+                "margin": [
+                  404,
+                  351,
+                  825,
+                  821
+                ],
+                "source_anchor": [
+                  1280,
+                  501
+                ],
+                "rgba_sha256": "3ccc5f8d89003cb86bc5774df1e4efc00a0c9217cc349d0e893ae649dbd3c50f",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  12,
+                  546,
+                  556,
+                  455
+                ],
+                "margin": [
+                  388,
+                  339,
+                  708,
+                  809
+                ],
+                "source_anchor": [
+                  256,
+                  997
+                ],
+                "rgba_sha256": "7afe147a2fc6532c96ba11ee9eb5d89b963563ffe24ab4fc71b865a88530ba7d",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  612,
+                  526,
+                  413,
+                  486
+                ],
+                "margin": [
+                  476,
+                  308,
+                  851,
+                  778
+                ],
+                "source_anchor": [
+                  768,
+                  1008
+                ],
+                "rgba_sha256": "0c27cf44ed9cb300baaa2d721f80ac55bb9e46a72ccb89f4906222e1c7658612",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1097,
+                  510,
+                  425,
+                  501
+                ],
+                "margin": [
+                  449,
+                  293,
+                  839,
+                  763
+                ],
+                "source_anchor": [
+                  1280,
+                  1007
+                ],
+                "rgba_sha256": "36cbb64ebaf02b52e98a8b8e47c7c1b4525ce961ed70f044a72a064ccb76c2d2",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 474.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/resume210-min006/SpriteFrames.tres",
+      "frames_sha256": "2566628c0fb7f3f2d36d9629dac361100ca31bfff349ff6f46bffd72e2d8dd8d",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/resume210-min006/NativeMotionProfile.tres",
+      "native_profile_sha256": "0e948fc86b6e2f21c6e822a093c2ea6c2c89fba7fd9ba9dfdea6bf1617a24df7",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "death_2",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [
+    {
+      "clip": "E-attack-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "NE-attack-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "SE-attack-v01",
+      "reason": "Expected exactly 6 separated poses, found 5; review/re-author, never invent slots"
+    },
+    {
+      "clip": "SW-attack-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "W-attack-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "source_drafts_saved": 6,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

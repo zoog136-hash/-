@@ -1,0 +1,19 @@
+{
+  "status": "HOLD_ABSOLUTE_NW_ORIENTATION",
+  "source_visual_status": "HOLD",
+  "actor_approved": false,
+  "reviewed_at": "2026-10-19T10:20:31.170298+00:00",
+  "findings": [
+    "HOLD: all six generated figures expose the front chest/skull breastplate and front-left helmet plane rather than a rear-left back view.",
+    "The same error already exists in supplied selected NW walk/idle references: both are front-left views. Matching these references did not establish absolute NW orientation.",
+    "Weapon contact in phase3 points upper-left and phase4 no longer reverses to the right, but arm direction does not correct the front-facing body orientation.",
+    "Gold-black armor, burgundy cape, purple crystalline wings and weapon remain recognizable; six articulated poses preserved unchanged."
+  ],
+  "limitations": [
+    "Do not integrate or approve this candidate as absolute NW. Proper NW requires visible back/rear armor, rear helmet, pelvis and feet facing upper-left away from camera.",
+    "Strict geometry and runtime checks not performed on this source. Figures also exceed logical cell margins.",
+    "No second image generation attempt executed; original request, raw source and first review are preserved."
+  ],
+  "raw_sha256": "50fbf83f5a73b900f7f541a04eb0b588b0b150fc37c110aec04e72468d2c3b9c",
+  "prior_reference_relative_review": "/workspace/scratch/halpas-NW-attack-repair/source-qc-initial-reference-relative.json"
+}

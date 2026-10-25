@@ -1,0 +1,25 @@
+{
+  "actor": "monster:테베 아누비스",
+  "slug": "thebes_anubis",
+  "clip": "E-hit-v01",
+  "role": "hit",
+  "direction": "E",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/E-hit-v01.png",
+  "source_sha256": "834ac3e30955f749d3120cb8fbba2a9da22a07de1fddab0643840cbfc99a587b",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      68904,
+      63212,
+      61924,
+      61205,
+      61031,
+      58346
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

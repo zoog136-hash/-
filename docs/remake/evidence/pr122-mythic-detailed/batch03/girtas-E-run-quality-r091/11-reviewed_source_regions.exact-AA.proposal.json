@@ -1,0 +1,46 @@
+{
+  "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+  "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+  "base_geometry_sha256": "06fb9ad1761e965eb0c49a0bdb3b21ba51fd6b4d31cbf5d5c10b94e9db2c7e3d",
+  "direction": "E",
+  "review_basis": "Exact six originalRGBA source crops verified independently against atlas. Automatic output regions omit two faint alpha17/19 LEFT terminal AA points; outward-only union with complete exact-copy rectangles retains every owned alpha>16 pixel. All strong cores uncut, source boundary guard unchanged, no pixel cleanup/resample. This is region metadata review, not a quality waiver; physical root/source-six review remains HOLD.",
+  "regions": [
+    [
+      193,
+      158,
+      1149,
+      1219
+    ],
+    [
+      1720,
+      203,
+      1167,
+      1129
+    ],
+    [
+      231,
+      1807,
+      1074,
+      994
+    ],
+    [
+      1688,
+      1706,
+      1232,
+      1196
+    ],
+    [
+      143,
+      3304,
+      1250,
+      1071
+    ],
+    [
+      1758,
+      3399,
+      1092,
+      881
+    ]
+  ],
+  "nearest_owner_sha256": "9dccac3235b97dfa1c252c5571175cccefa2f66261acdad46320f559e25f992f"
+}

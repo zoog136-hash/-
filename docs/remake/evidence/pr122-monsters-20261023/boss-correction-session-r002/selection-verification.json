@@ -1,0 +1,80 @@
+{
+  "schema": "pr122-boss-correction-selection-verification-v1",
+  "source_commit": "edf9b86be5cab9cafd60d382b767c2c42e2d1ae4",
+  "normal_scope_rows_exactly_preserved": 258,
+  "normal_runtime_missing_frames": 0,
+  "normal_frame_audit_carried_forward_by_exact_asset_and_profile_preservation": true,
+  "prior_delivered_files_preserved": 1551,
+  "approval_changes": 0,
+  "default_catalog_switches": 0,
+  "selected_unique_RGBA_poses": 389,
+  "actors": {
+    "monster:얼음 여왕": {
+      "clips": 33,
+      "poses": 108,
+      "missing": [],
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres",
+      "quality_review": "HOLD: complete technical33-track candidate; preserved source QA limits, full timed gait/contact/mythic acceptance not promoted by composition"
+    },
+    "monster:죽음의 좀비 로드": {
+      "clips": 33,
+      "poses": 116,
+      "missing": [],
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/NativeMotionProfile.tres",
+      "quality_review": "HOLD: mixed E selected nearRIGHT3/farLEFT3 fixes visible phase0/3 support repetition; incomplete swing arcs, source-plane pivot, cross-source continuity, weight/contact/Main still need review."
+    },
+    "monster:알비노 데몬": {
+      "clips": 33,
+      "poses": 107,
+      "missing": [],
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres",
+      "quality_review": "TARGETED E RUN batch QA PASS: side camera and opposite support repaired. Confirmed unchanged SE RUN phase0/3 same-support repetition and NW overhead contact pose remain specific motion followups. Unreviewed details are not additional batch approval gates; see review.json."
+    },
+    "monster:커츠": {
+      "clips": 17,
+      "poses": 58,
+      "missing": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "run_3",
+        "run_4",
+        "run_5"
+      ],
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r003/NativeMotionProfile.tres",
+      "quality_review": "HOLD: 17 native clips / 58 source poses only. Known bad W/NW cameras, SW RUN left sword hand and S attack hand/contact are excluded. New E/SE/S IDLE/HIT improve identity/camera/hand in static source review; 16 required slots, timed support/contact and full mythic QA remain incomplete."
+    }
+  },
+  "source_inputs": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/candidate.json",
+      "bytes": 215055,
+      "sha256": "7afbaa48d97eb626900e550c83056f0558b65fbbcc81317e0a3bf7461da52f06"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/candidate.json",
+      "bytes": 123378,
+      "sha256": "77c9d41d0b2e881e68f404f1356b3cb287c4a8f8bc15c78b6d26ee3e55ad0f88"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/candidate.json",
+      "bytes": 98920,
+      "sha256": "52c90583a5d40ae87040a3d82b25fd7fe27431286fe1bf6ca3272b94f96d8e0b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/candidate.json",
+      "bytes": 69257,
+      "sha256": "1b08547165e3e7faf1dcfcf163265e553fa679d75c3e28fdd054ed8b70fcf34c"
+    }
+  ]
+}

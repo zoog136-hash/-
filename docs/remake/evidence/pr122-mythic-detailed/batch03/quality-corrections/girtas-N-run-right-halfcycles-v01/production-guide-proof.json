@@ -1,0 +1,176 @@
+{
+  "status": "CONDITIONING_REFERENCE_ONLY",
+  "references": [
+    {
+      "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+      "sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+      "size": [
+        339,
+        392
+      ]
+    }
+  ],
+  "guide": {
+    "path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/right-support-two-pose-production-guide.png",
+    "sha256": "5240aebb14ee858d5841dafd0cd0e5a22d97371101e2177e3994a09dd9741dd7",
+    "size": [
+      1024,
+      512
+    ]
+  },
+  "cells": [
+    {
+      "input": {
+        "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+        "sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+        "size": [
+          339,
+          392
+        ]
+      },
+      "reference_factor": 0.75,
+      "reference_resize": [
+        254,
+        294
+      ],
+      "reference_translation": [
+        149,
+        154
+      ],
+      "hip_target": [
+        256,
+        290
+      ],
+      "ground_y": 400,
+      "intended_phase": 4,
+      "target_leg_points": {
+        "phase": 4,
+        "title": "4 RIGHT SUPPORT / LEFT KNEE DRIVE",
+        "hip_y": 290,
+        "left": [
+          [
+            246,
+            290
+          ],
+          [
+            235,
+            250
+          ],
+          [
+            233,
+            292
+          ],
+          [
+            231,
+            310
+          ]
+        ],
+        "right": [
+          [
+            266,
+            290
+          ],
+          [
+            277,
+            345
+          ],
+          [
+            275,
+            393
+          ],
+          [
+            275,
+            399
+          ]
+        ],
+        "support": "RIGHT",
+        "flight": false
+      },
+      "reference_only_mask_rectangle": [
+        202,
+        302,
+        309,
+        426
+      ]
+    },
+    {
+      "input": {
+        "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+        "sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+        "size": [
+          339,
+          392
+        ]
+      },
+      "reference_factor": 0.75,
+      "reference_resize": [
+        254,
+        294
+      ],
+      "reference_translation": [
+        149,
+        118
+      ],
+      "hip_target": [
+        256,
+        254
+      ],
+      "ground_y": 400,
+      "intended_phase": 5,
+      "target_leg_points": {
+        "phase": 5,
+        "title": "5 BOTH AIR / LEFT FORWARD, RIGHT TRAIL",
+        "hip_y": 254,
+        "left": [
+          [
+            246,
+            254
+          ],
+          [
+            235,
+            221
+          ],
+          [
+            232,
+            259
+          ],
+          [
+            230,
+            275
+          ]
+        ],
+        "right": [
+          [
+            266,
+            254
+          ],
+          [
+            281,
+            304
+          ],
+          [
+            291,
+            337
+          ],
+          [
+            292,
+            355
+          ]
+        ],
+        "support": null,
+        "flight": true
+      },
+      "reference_only_mask_rectangle": [
+        202,
+        266,
+        309,
+        426
+      ]
+    }
+  ],
+  "source_pixels_unchanged_in_originals": true,
+  "final_game_sprite_changes": false,
+  "reference_only_leg_masking": true,
+  "material_constraints": "Support sole touches common projected plane; AIR shows both separate boot soles clearly above it. Skeleton color is anatomy metadata only and must not appear in output.",
+  "relative_scale_evidence": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/contact-key-physical-scale-reference-proposal.json"
+}

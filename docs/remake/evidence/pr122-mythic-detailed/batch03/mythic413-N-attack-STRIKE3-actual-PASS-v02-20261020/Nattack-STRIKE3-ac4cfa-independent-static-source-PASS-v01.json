@@ -1,0 +1,69 @@
+{
+  "schema": "PR122-independent-actual-attack-strike-source-v1",
+  "status": "PASS_ACTUAL_STRIKE3_STATIC_SOURCE_AND_EQUIPMENT",
+  "source_visual_status": "PASS_STATIC_PHASE_ONLY",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "attack",
+  "phase": 3,
+  "actual_source": {
+    "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/thunder_female-N-attack-3-STRIKE3-registered-canonical-glove-v02.png",
+    "sha256": "ac4cfa58ee960842ac697f63b1419e8657a7c5ca91b3a06f622819badb4e27aa",
+    "bytes": 612791
+  },
+  "service_raw": {
+    "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/thunder_female-N-attack-STRIKE3-new-joints-v01-service.png",
+    "sha256": "3001a2e60360e19088d3e7cd18dcd762ea93628901f603a56a854c125c31b7ac",
+    "bytes": 662980
+  },
+  "physical_C_fixed": 1920,
+  "common_rig_root_in_unpadded_frame": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    0,
+    160
+  ],
+  "source_canvas": [
+    1254,
+    1414
+  ],
+  "one_time_raw_body_waist_registration": [
+    -46,
+    -115
+  ],
+  "stored_raw_translation": [
+    -46,
+    45
+  ],
+  "registered_raw_visible_RGBA_changes_outside_LEFTarm_ROI": 0,
+  "LEFTarm_finish_ROI": [
+    380,
+    550,
+    610,
+    810
+  ],
+  "v01_to_v02_RGBA_changed_pixels": 2297,
+  "strong_body_component_areas": [
+    199999
+  ],
+  "visual_findings": [
+    "Connected anatomical RIGHT overhead extension and complete grip/staff form a distinct attack pose with genuine back-torso twist.",
+    "The same full head/torso/RIGHT-arm/equipment/boots are retained from the newly authored source at one body registration; C is fixed and storage padding preserves the weapon tip.",
+    "Canonical complete LEFT forearm/glove is naturally joined; the old white/gold sleeve shell and detached dark finger fragment are now removed.",
+    "Both complete native boots retain a plausible staggered braced silhouette and may anchor a stationary attack cycle."
+  ],
+  "visual_limitations": [
+    "Only this actual strike phase is approved here; remaining attack phases, stationary foot continuity through all6, motion cycle and game binding remain pending.",
+    "Nape/waist density is consistent within marker and twist uncertainty; hidden3D joints/support planes are not uniquely reconstructed.",
+    "The braced foot positions are observed source placements, not a foot-fit or perpose C adjustment."
+  ],
+  "private_ledger_snapshot": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-Nattack-final-STRIKE3-view60-frozen.json",
+    "sha256": "d0bf4106588e89647bd36708681231359885a9ef5e291c6dad7ec06c429ff335",
+    "bytes": 28793
+  },
+  "actor_approvals_added": 0,
+  "images_forwarded": 0
+}

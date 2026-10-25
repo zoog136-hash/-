@@ -1,0 +1,56 @@
+{
+  "cases": [
+    {
+      "key": "monster:질투의 공주 이자벨",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "isabelle_attack",
+      "directions": [
+        "SW",
+        "W"
+      ],
+      "roles": [
+        "attack"
+      ],
+      "move_speed": 85.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:질투의 공주 이자벨",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "isabelle_hit",
+      "directions": [
+        "SW",
+        "W"
+      ],
+      "roles": [
+        "hit"
+      ],
+      "move_speed": 85.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:질투의 공주 이자벨",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "isabelle_idle",
+      "directions": [
+        "SW"
+      ],
+      "roles": [
+        "idle"
+      ],
+      "move_speed": 85.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    }
+  ],
+  "output": "/workspace/runtime/boss-final-integration-isabelle",
+  "capture": true
+}

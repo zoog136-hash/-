@@ -125,6 +125,13 @@ func _run() -> void:
 	root.add_child(arena)
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json"))
 	var records: Array = MONSTERS.expand(raw["몬스터"])
+	var connection_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_monster_boss_runtime_connections.json"))
+	var native_connections: Dictionary = {}
+	for connection: Dictionary in connection_data.connections:
+		check(not native_connections.has(connection.id), "unique native boss connection " + str(connection.id))
+		native_connections[connection.id] = connection
+	check(native_connections.size() == 6, "six recorded native boss connections")
+	var observed_connections: Dictionary = {}
 	for record: Dictionary in records:
 		var start_errors: int = failures.size()
 		var mob: TwilightMonster = load("res://scenes/Monster.tscn").instantiate()
@@ -132,6 +139,24 @@ func _run() -> void:
 		mob.setup(record, actor, arena, ART.texture_for(record))
 		mob.set_physics_process(false)
 		check(mob.sprite.texture != null, "monster resource " + record.name)
+		var monster_key: String = "monster:" + str(record.name)
+		if native_connections.has(monster_key):
+			var connection: Dictionary = native_connections[monster_key]
+			observed_connections[monster_key] = true
+			check(mob.motion.profile.frames_path == connection.frames, "recorded native boss resource selected " + record.name)
+			check(FileAccess.get_sha256(connection.frames) == connection.frames_sha256, "recorded native source phases preserved " + record.name)
+			var frames: SpriteFrames = mob.motion.frame_source
+			check(frames != null and bool(frames.get_meta("twilight_native_locomotion_staging", false)), "native boss cannot fall back to portrait " + record.name)
+			if frames != null:
+				check(frames.get_animation_names().size() == int(connection.required_clips), "all recorded native boss clips " + record.name)
+				var poses: int = 0
+				for animation: StringName in frames.get_animation_names():
+					poses += frames.get_frame_count(animation)
+				check(poses == int(connection.source_poses), "all recorded native boss phases " + record.name)
+				for direction: int in range(8):
+					var run_name := "run_" + str(direction)
+					check(not frames.has_animation("walk_" + str(direction)), "published native boss remains run-only " + record.name)
+					check(frames.has_animation(run_name) and frames.get_frame_count(run_name) == 6, "published native boss six RUN phases " + record.name)
 		var source: String = str(MANIFEST.monster_binding(record).get("path", ""))
 		var reviewed: Dictionary = preload("res://scripts/animation/presentation_catalog.gd").data.monster_sources.get(source, {})
 		var explicit: Dictionary = CATALOG.records.get("monster:"+str(record.name),{})
@@ -154,17 +179,42 @@ func _run() -> void:
 		check(count[0] == 8, "monster attack markers " + record.name)
 		check(mob.position == foot and mob.get_node("CollisionShape2D").transform == shape, "monster visual-only " + record.name)
 		mob.motion.die()
-		# A native death can still be opaque at its final pose; inspect the
-		# fade after the configured sequence, not a fixed legacy deadline.
+		# The current death contract holds an authored terminal pose until
+		# Monster's corpse lifecycle removes it. Only legacy art uses fading.
 		mob.motion.advance(maxf(.8, mob.motion.profile.death_duration + .1), Vector2.ZERO)
 		mob.motion.apply(mob.sprite, mob.animation_base_scale)
-		check(not mob.motion.active and mob.sprite.modulate.a < 1.0, "monster death " + record.name)
+		check(not mob.motion.active and mob.motion.state == "corpse", "monster death clock " + record.name)
+		var death_tracks: Array[StringName] = []
+		if mob.motion.frame_source != null:
+			for name_value: StringName in mob.motion.frame_source.get_animation_names():
+				if str(name_value).begins_with("death") and mob.motion.frame_source.get_frame_count(name_value) > 0:
+					death_tracks.append(name_value)
+		if not death_tracks.is_empty():
+			var frames: SpriteFrames = mob.motion.frame_source
+			var selected := StringName(mob.motion._resolved_key)
+			check(mob.motion._resolved_role == "death" and death_tracks.has(selected), "authored monster death selected " + record.name)
+			var requested := StringName("death_" + str(mob.motion.facing8))
+			if death_tracks.has(requested):
+				check(selected == requested, "existing directional death preserved " + record.name)
+			elif death_tracks.has(&"death_2"):
+				check(selected == &"death_2", "S-only authored death reused " + record.name)
+			if frames.has_animation(selected):
+				var phases: int = frames.get_frame_count(selected)
+				check(phases >= 2 and mob.sprite.texture == frames.get_frame_texture(selected, phases - 1), "authored terminal death pose " + record.name)
+				var terminal: Texture2D = mob.sprite.texture
+				mob.motion.advance(.2, Vector2.ZERO)
+				mob.motion.apply(mob.sprite, mob.animation_base_scale)
+				check(mob.sprite.texture == terminal and is_equal_approx(mob.sprite.modulate.a, 1.0), "authored death holds opaque final pose " + record.name)
+		else:
+			check(mob.sprite.modulate.a < 1.0, "legacy monster death fades " + record.name)
 		report.monsters.append({"name":record.name,"boss":mob.is_boss,"body":mob.motion.profile.body_kind,
 			"native_frames":mob.motion.frame_source != null,"atlas_cell":record.visual,
 			"texture":mob.sprite.texture.resource_path,"texture_atlas":mob.sprite.texture.atlas.resource_path if mob.sprite.texture is AtlasTexture else "",
 			"source_binding":MANIFEST.monster_binding(record),
 			"special":record.get("ai", {}).get("special", {}),"errors":failures.slice(start_errors)})
 		mob.free()
+	check(observed_connections.size() == native_connections.size(), "every recorded native boss exercised")
+	report.native_boss_connections_checked = observed_connections.size()
 	report.failures = failures
 	report.checks = checks
 	FileAccess.open("user://animation-presentation-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))

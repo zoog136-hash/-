@@ -1,0 +1,52 @@
+{
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v03",
+  "status": "HOLD_FUNCTIONAL_WALK_SUPPORT_EXCHANGE",
+  "generated_sha256": "baa853544e2f886fb05f5a9134eb1c131479956ceb511c276f3afad4626db388",
+  "source": "/workspace/scratch/girtas-E-walk-repair/girtas-E-walk-v03.png",
+  "generation_attempts": 1,
+  "private_images_shared_to_main": false,
+  "repo_mutations": false,
+  "pose_count": 6,
+  "identity_qc": "Substantially faithful major silhouette/material/equipment restoration relative to original and canonical: visible pale face, long pale hair, thin hard gold radial spikes, long dark goldtrim skirt, long sinuous glowing weapon in near-camera right hand. No redmask/thickflamefeather/broadshortblade redesign. Fine hidden-side details remain documented uncertainty.",
+  "heading_qc": "All6 poses consistently face E/screen-right; no visible direction flips.",
+  "scale_qc": "Body/head and equipment scale appears consistent across6 poses, with modest vertical changes. Full physical figure and long weapon visible.",
+  "blocking_functional_qc": [
+    {
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "finding": "Same near-camera/right leg remains leading screen-right and far leg remains behind. Changes mostly adjust that same leading knee/ankle, not alternating gait."
+    },
+    {
+      "phases": [
+        0,
+        3
+      ],
+      "finding": "Requested opposite-side heel-contact pair does not exchange anatomical leading leg; both show the same near boot ahead."
+    },
+    {
+      "phases": [
+        1,
+        4
+      ],
+      "finding": "Requested opposite-side support/passing pair does not exchange support; far boot remains behind instead of passing beneath/forward."
+    },
+    {
+      "phases": [
+        2,
+        5
+      ],
+      "finding": "Opposite swing phases and grounded support transfer cannot be established; cannot approve6 genuine walk phases."
+    }
+  ],
+  "decision": "Preserve raw and exact provenance, reject as finished walk source. Do not raise approvals or replace live assets. Useful faithful E-view identity/art source only; no further generation attempted in this task.",
+  "private_preview_bytes": 346926
+}

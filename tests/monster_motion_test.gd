@@ -1,5 +1,7 @@
 extends SceneTree
 
+const MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
+
 class Arena extends Node:
 	var field_map = null
 	var combat_flights = null
@@ -17,6 +19,14 @@ func check(ok: bool, label: String) -> void:
 		failures += 1
 		print("MONSTER MOTION FAIL: " + label)
 
+func _has_run_track(frames: SpriteFrames, profile: TwilightAnimationProfile, facing8: int, facing4: int) -> bool:
+	for name_value: String in [str(profile.animation_names.get("run:" + str(facing8), "")),
+		str(profile.animation_names.get("run", "")), "run_" + str(facing8),
+		"run" + ["_down", "_up", "_left", "_right"][facing4], "run"]:
+		if not name_value.is_empty() and frames.has_animation(name_value) and frames.get_frame_count(name_value) > 0:
+			return true
+	return false
+
 func _run() -> void:
 	var arena: Arena = Arena.new()
 	root.add_child(arena)
@@ -33,7 +43,23 @@ func _run() -> void:
 		mob.set_physics_process(false)
 		check(not mob.motion.profile.profile_id.is_empty(), "missing profile " + str(record.name))
 		mob.motion.advance(0.05, Vector2.RIGHT * mob.move_speed)
-		check(mob.motion.state == "walk" and mob.motion.direction.x > 0.0, "movement profile " + str(record.name))
+		var expected_role: String = "walk" if MOVEMENT_SCOPE.requires_walk(mob.motion.profile.profile_id) else "run"
+		check(mob.motion.state == expected_role and mob.motion.direction.x > 0.0, "movement profile " + str(record.name))
+		mob.motion.apply(mob.sprite, mob.animation_base_scale)
+		var frames: SpriteFrames = mob.motion.frame_source
+		if frames != null:
+			var expected_track: String = "run" if expected_role == "run" and _has_run_track(frames, mob.motion.profile, mob.motion.facing8, mob.motion.facing4) else "walk"
+			check(mob.motion._resolved_role == expected_track and frames.has_animation(mob.motion._resolved_key), "real movement track with RUN precedence " + str(record.name))
+			if frames.has_animation(mob.motion._resolved_key):
+				check(frames.get_frame_count(mob.motion._resolved_key) >= 2 and mob.sprite.texture != null, "movement phases and texture " + str(record.name))
+			if bool(frames.get_meta("twilight_native_locomotion_staging", false)):
+				# Published native monster clips have six real RUN poses/view;
+				# their intentionally absent WALK must not be silently invented.
+				for direction: int in range(8):
+					var run_name := "run_" + str(direction)
+					check(not frames.has_animation("walk_" + str(direction)), "native monster keeps run-only scope " + str(record.name))
+					check(frames.has_animation(run_name) and frames.get_frame_count(run_name) == 6, "native monster run phases " + str(record.name))
+				check(mob.motion._resolved_role == "run", "native monster presents RUN " + str(record.name))
 		mob.free()
 	var enemy: TwilightMonster = monster_scene.instantiate()
 	root.add_child(enemy)

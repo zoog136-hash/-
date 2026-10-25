@@ -1,0 +1,42 @@
+{
+  "key": "transform:393",
+  "direction": "NW",
+  "role": "walk",
+  "version": "v02",
+  "request_path": "/workspace/scratch/halpas-NW-walk-repair/request.json",
+  "request_sha256": "562b5edffeb46a764477c5491bc33aa00f7fdf61fb7ea16db8c26b009805998a",
+  "original_generated_file": "/workspace/generated_images/exec-8886c220-ef30-4540-9d78-89df6551eefc.png",
+  "raw_png": "/workspace/scratch/halpas-NW-walk-repair/halpas-NW-walk-v02.png",
+  "raw_sha256": "36082394ea5bcce8785871032c883b47c4450f26f9ddab25e540cbed107dd223",
+  "raw_bytes": 2401474,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "created_at": "2026-10-19T10:23:19.657528+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_NOT_APPROVED",
+  "reviewed_at": "2026-10-19T10:23:55.786576+00:00",
+  "private_preview": "/workspace/scratch/halpas-NW-walk-repair/generated-preview.jpg",
+  "private_preview_bytes": 204702,
+  "visual_findings": [
+    "Absolute NW body direction is repaired: all6 show back of helmet and gold-trimmed back/spine armor, front skull chestplate hidden, heading upper-left away from camera.",
+    "WALK cycle fails opposite-contact requirement: phase0 and phase3 retain the same raised screen-left leg and extended screen-right trailing leg; clear alternating weight support/contact is absent. Most changes are small ankle/knee/wing adjustments.",
+    "Weapon hand appears reversed: verified N rear source carries sword on screen-right/anatomical right, while new rear-left figures carry it on screen-left shoulder/arm side. Do not accept handedness continuity without correction.",
+    "Only one purple wing fan is clearly visible in every pose; the other established wing is not independently readable. Some occlusion is expected, but original two-wing anatomy is not demonstrated.",
+    "Six complete isolated body cutouts are preserved without source edits; no front/right reversal is observed."
+  ],
+  "visual_limitations": [
+    "Rear-left orientation alone is not sufficient: true alternating walk contacts and original equipment hand must be corrected before this source can be selected.",
+    "Do not integrate as approved NW walk. Strict geometry/SpriteFrames/runtime validation not performed.",
+    "One generation attempt only. All prior bad NW assets and original production request/raw SHA remain preserved."
+  ],
+  "all_actor_approvals": "HOLD_UNTIL_INTEGRATION_AND_FINAL_QUALITY",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "production_receipt": "/workspace/scratch/halpas-NW-walk-repair/production-receipt.json",
+  "production_receipt_sha256": "e4648bb2157666af90b31fe6b74c54e5aa6273bcd8307c3b39dc700b792c2063"
+}

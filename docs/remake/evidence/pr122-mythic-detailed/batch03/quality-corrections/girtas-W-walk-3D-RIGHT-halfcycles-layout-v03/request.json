@@ -1,0 +1,33 @@
+{
+  "schema": "pr122-native-source-authoring-request-v1",
+  "status": "REQUESTED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-3D-RIGHT-halfcycles-layout03",
+  "source_batch": "batch03",
+  "expected_poses": 2,
+  "game_phases": [
+    4,
+    5
+  ],
+  "newly_authored_poses": 0,
+  "revised_poses": 2,
+  "operation": "LAYOUT_ONLY_OF_SAME_TWO_COMPLETED_WALK_POSES",
+  "corrective_reason": "OriginalRIGHT4/5geometry includesforeignbodyrect; oneunchangedguard losslesspartial2repackHOLD boundedfaintfringe. Preserveoriginalraw/failedguard. Materiallayout-onlycleantransparency/wholefigureuniformspacing, doNOTtrim/weaken/crop/rescaleviaexport.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-v02/girtas-W-walk-3D-RIGHT-halfcycles-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-v02/girtas-W-walk-3D-RIGHT-halfcycles-v02.png": "cfa2e88637299dd45db9d4e0117dd30114c48b265cff323735873fee9f7b0b17"
+  },
+  "reference_roles": [
+    "ONLY primary authority exact two current painted walk4/5 poses, identity/equipment/legs/order"
+  ],
+  "prompt": "EDIT ONLY COMPOSITION/SPACING/TRANSPARENCY of the EXACT TWO existing finished GIRTAS W WALK POSES in the reference. Keep BOTH poses' exact current body/leg/joint/boot orientations, anatomical support ownership, original model, equipment, head, hands, longrobe, hardgoldspines, silverhair, full sinuousRIGHTblade and EMPTYLEFT. This is a layout revision of existing gameposes4 and5, NOT new moves or redesign.\n\nLeft figure is game4: farRIGHTplantedflatunderbody, nearLEFTknee/boot liftedpassing. Right figure is game5: farRIGHTrear TOE support/HEELup, nearLEFT frontreach HEELhover/toeup. Preserve those exact actions and their pose order. Never ground the lifted swing foot, swaplegs, createAIR/run, change torso direction or anatomy. Every full longweapon and hardbackspine must remain exact and complete.\n\nRequired material layout change: UNIFORMLY SHRINK EACH WHOLE COMPLETE FIGURE to ABOUT72 PERCENT of its current pixel size, same uniform factor in both. Shrink ENTIRE body+all fullgear as one unit; do not shortenblade/spines, narrowgear, amputatearm/boot, or squeeze body proportions. Place each smaller whole figure centered in its own spacious768x1024cell of a transparent1536x1024RGBA atlas, TWO columns/ONE row. Left center384,512, right center1152,512. Each COMPLETE figure should fit centrally inside a560x680rectangle with at least100px clear transparent horizontal/vertical gutter tocellboundaries. All spines/weapon/hair/robe/boots must fit inside its own cell with wide empty space, never overlap foreign figure bounds.\n\nMake background genuinely alphaZERO everywhere outside the two independent clean complete figures. Remove surrounding haze/faint stray fringes/glow bridges linking figures; keep the original local blade/glowinggold detail tightly bounded on its own weapon/body. No floor/shadow/particles/background/text. Keep original fine paintedblack-gold/silverhumanface quality, original same LONGrobe motif/nearLEFTemptyarm/farRIGHTwavyblade/hardstraightgoldrays. Do not change lighting/colors/camera/action/face/shape. Output ONLY the exact same two existing poses, uniformly smaller and widely separated on clean transparency.",
+  "transparent_background": true,
+  "attempt_policy": "One materiallychanged layout-onlyimageedit afterindependentsource motionPASS, then strictgeometry+unchangedmotion review. Noidenticalrepackretry.",
+  "actor_approval": false,
+  "image_chat_attachment": false
+}

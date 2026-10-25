@@ -1,0 +1,4506 @@
+{
+  "schema": "pr122-queen-combat-candidate-v1",
+  "key": "monster:얼음 여왕",
+  "quality_tier": "mythic_transform",
+  "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r001/NativeMotionProfile.tres",
+  "native_profile_sha256": "37a5712e22d9538dd10f77a32746cefb4071fd0fd8fd74304d9e45f003c7bdfa",
+  "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r001/SpriteFrames.tres",
+  "frames_sha256": "a70a0e6d2e27115db591e952676842a2a914f73a80828c055403bb678e07c67e",
+  "clips": 25,
+  "poses": 60,
+  "unique_selected_visible_poses": 60,
+  "required_RUN_not_present": 8,
+  "tracks": [
+    {
+      "role": "idle",
+      "direction": "E",
+      "animation": "idle_0",
+      "source": "queen-combat-E-v01",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        0,
+        1
+      ],
+      "normalized_canvas": 592,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "E",
+      "animation": "attack_0",
+      "source": "queen-combat-E-v01",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        2,
+        3,
+        4
+      ],
+      "normalized_canvas": 592,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "hit",
+      "direction": "E",
+      "animation": "hit_0",
+      "source": "queen-combat-E-v01",
+      "source_slots": [
+        5,
+        6
+      ],
+      "pose_ids": [
+        5,
+        6
+      ],
+      "normalized_canvas": 592,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "idle",
+      "direction": "SE",
+      "animation": "idle_1",
+      "source": "queen-combat-SE-v01",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        7,
+        8
+      ],
+      "normalized_canvas": 592,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "SE",
+      "animation": "attack_1",
+      "source": "queen-combat-SE-v01",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        9,
+        10,
+        11
+      ],
+      "normalized_canvas": 592,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "hit",
+      "direction": "SE",
+      "animation": "hit_1",
+      "source": "queen-combat-SE-v01",
+      "source_slots": [
+        5,
+        6
+      ],
+      "pose_ids": [
+        12,
+        13
+      ],
+      "normalized_canvas": 592,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "idle",
+      "direction": "S",
+      "animation": "idle_2",
+      "source": "queen-combat-S-v02",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        14,
+        15
+      ],
+      "normalized_canvas": 624,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "S",
+      "animation": "attack_2",
+      "source": "queen-combat-S-v02",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        16,
+        17,
+        18
+      ],
+      "normalized_canvas": 624,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "hit",
+      "direction": "S",
+      "animation": "hit_2",
+      "source": "queen-combat-S-v02",
+      "source_slots": [
+        5,
+        6
+      ],
+      "pose_ids": [
+        19,
+        20
+      ],
+      "normalized_canvas": 624,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "idle",
+      "direction": "SW",
+      "animation": "idle_3",
+      "source": "queen-combat-SW-v02",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        21,
+        22
+      ],
+      "normalized_canvas": 584,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "SW",
+      "animation": "attack_3",
+      "source": "queen-combat-SW-v02",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        23,
+        24,
+        25
+      ],
+      "normalized_canvas": 584,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "idle",
+      "direction": "W",
+      "animation": "idle_4",
+      "source": "queen-combat-W-v01",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        26,
+        27
+      ],
+      "normalized_canvas": 600,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "W",
+      "animation": "attack_4",
+      "source": "queen-combat-W-v01",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        28,
+        29,
+        30
+      ],
+      "normalized_canvas": 600,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "idle",
+      "direction": "NW",
+      "animation": "idle_5",
+      "source": "queen-combat-NW-v01",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        31,
+        32
+      ],
+      "normalized_canvas": 528,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "NW",
+      "animation": "attack_5",
+      "source": "queen-combat-NW-v01",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        33,
+        34,
+        35
+      ],
+      "normalized_canvas": 528,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "hit",
+      "direction": "NW",
+      "animation": "hit_5",
+      "source": "queen-combat-NW-v01",
+      "source_slots": [
+        5,
+        6
+      ],
+      "pose_ids": [
+        36,
+        37
+      ],
+      "normalized_canvas": 528,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "idle",
+      "direction": "N",
+      "animation": "idle_6",
+      "source": "queen-combat-N-v03",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        38,
+        39
+      ],
+      "normalized_canvas": 576,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "N",
+      "animation": "attack_6",
+      "source": "queen-combat-N-v03",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        40,
+        41,
+        42
+      ],
+      "normalized_canvas": 576,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "hit",
+      "direction": "N",
+      "animation": "hit_6",
+      "source": "queen-combat-N-v03",
+      "source_slots": [
+        5,
+        6
+      ],
+      "pose_ids": [
+        43,
+        44
+      ],
+      "normalized_canvas": 576,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "idle",
+      "direction": "NE",
+      "animation": "idle_7",
+      "source": "queen-combat-NE-v01",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        45,
+        46
+      ],
+      "normalized_canvas": 624,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "attack",
+      "direction": "NE",
+      "animation": "attack_7",
+      "source": "queen-combat-NE-v01",
+      "source_slots": [
+        2,
+        3,
+        4
+      ],
+      "pose_ids": [
+        47,
+        48,
+        49
+      ],
+      "normalized_canvas": 624,
+      "frame_count": 3,
+      "contact_index": 1
+    },
+    {
+      "role": "hit",
+      "direction": "NE",
+      "animation": "hit_7",
+      "source": "queen-combat-NE-v01",
+      "source_slots": [
+        5,
+        6
+      ],
+      "pose_ids": [
+        50,
+        51
+      ],
+      "normalized_canvas": 624,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "hit",
+      "direction": "W",
+      "animation": "hit_4",
+      "source": "queen-hit-W-v01",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        52,
+        53
+      ],
+      "normalized_canvas": 1208,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "hit",
+      "direction": "SW",
+      "animation": "hit_3",
+      "source": "queen-hit-SW-v01",
+      "source_slots": [
+        0,
+        1
+      ],
+      "pose_ids": [
+        54,
+        55
+      ],
+      "normalized_canvas": 1240,
+      "frame_count": 2,
+      "contact_index": null
+    },
+    {
+      "role": "death",
+      "direction": "S",
+      "animation": "death_2",
+      "source": "queen-death-S-v01",
+      "source_slots": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "pose_ids": [
+        56,
+        57,
+        58,
+        59
+      ],
+      "normalized_canvas": 960,
+      "frame_count": 4,
+      "contact_index": null
+    }
+  ],
+  "geometries": [
+    {
+      "source": "queen-combat-E-v01",
+      "source_sha256": "61a35945678c6041e5b803d795b69f6da6ac56eaaa2b42188381366d27bd3a27",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 592,
+      "desired_body_canvas": 592,
+      "minimum_complete_source_canvas": 544,
+      "preview_body_world_height": 85.8007722007722,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            70,
+            396
+          ],
+          [
+            77,
+            397
+          ]
+        ],
+        "standing_equivalent_height": 323
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              91,
+              64,
+              293,
+              338
+            ],
+            "margin": [
+              131,
+              36,
+              299,
+              254
+            ],
+            "source_anchor": [
+              256,
+              398
+            ],
+            "rgba_sha256": "a4f6e0b89a381354456b6b61e7f4d0293be9bbe5a133e22d58229fabbb22af1e"
+          },
+          {
+            "row": 1,
+            "direction": "E",
+            "region": [
+              578,
+              69,
+              293,
+              333
+            ],
+            "margin": [
+              106,
+              41,
+              299,
+              259
+            ],
+            "source_anchor": [
+              768,
+              398
+            ],
+            "rgba_sha256": "34cbb2b0009cc77b89006dfcf9d112ba80210158508aba1da06fd2b497cab71f"
+          },
+          {
+            "row": 2,
+            "direction": "E",
+            "region": [
+              94,
+              448,
+              356,
+              343
+            ],
+            "margin": [
+              134,
+              31,
+              236,
+              249
+            ],
+            "source_anchor": [
+              256,
+              787
+            ],
+            "rgba_sha256": "b54eb0f15ad99b836ce0add358f0a5c01577e3ac6fa44bcdfddce92cee61f8b9"
+          },
+          {
+            "row": 3,
+            "direction": "E",
+            "region": [
+              517,
+              488,
+              486,
+              299
+            ],
+            "margin": [
+              45,
+              75,
+              106,
+              293
+            ],
+            "source_anchor": [
+              768,
+              783
+            ],
+            "rgba_sha256": "05de87c63c6aa4bf579366dc9097353de518f1c9e207107a32af4943e7c07d81"
+          },
+          {
+            "row": 4,
+            "direction": "E",
+            "region": [
+              78,
+              817,
+              340,
+              323
+            ],
+            "margin": [
+              118,
+              51,
+              252,
+              269
+            ],
+            "source_anchor": [
+              256,
+              1136
+            ],
+            "rgba_sha256": "d6a147cc3457f0dac6fd1555c8635cc22e2db770cb896c01243f3c1de48d7d86"
+          },
+          {
+            "row": 5,
+            "direction": "E",
+            "region": [
+              570,
+              817,
+              339,
+              322
+            ],
+            "margin": [
+              98,
+              52,
+              253,
+              270
+            ],
+            "source_anchor": [
+              768,
+              1135
+            ],
+            "rgba_sha256": "ac1d0dea4669698a436a67beaf160d90a14fd22d08fde870a89dae6e7b32272d"
+          },
+          {
+            "row": 6,
+            "direction": "E",
+            "region": [
+              114,
+              1198,
+              380,
+              287
+            ],
+            "margin": [
+              154,
+              87,
+              212,
+              305
+            ],
+            "source_anchor": [
+              256,
+              1481
+            ],
+            "rgba_sha256": "3316bbadafd92e4b0491cfb9f3738d64aeb5ed21bb762965404f1cf6e0cb10f6"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 329.5,
+        "canvas_size": [
+          592,
+          592
+        ],
+        "foot": [
+          296,
+          370
+        ]
+      }
+    },
+    {
+      "source": "queen-combat-SE-v01",
+      "source_sha256": "057483152840b542a1c60c21d03bd3580f22a8fead172e8b94d4e13a1906b486",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 592,
+      "desired_body_canvas": 592,
+      "minimum_complete_source_canvas": 544,
+      "preview_body_world_height": 85.8007722007722,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            52,
+            377
+          ],
+          [
+            54,
+            375
+          ]
+        ],
+        "standing_equivalent_height": 323
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SE",
+            "region": [
+              102,
+              44,
+              317,
+              341
+            ],
+            "margin": [
+              142,
+              33,
+              275,
+              251
+            ],
+            "source_anchor": [
+              256,
+              381
+            ],
+            "rgba_sha256": "4d432d31bf8214747b4fdfe0b081cd69c3b8df82f85cfd1bcf2dd08dbab44675"
+          },
+          {
+            "row": 1,
+            "direction": "SE",
+            "region": [
+              572,
+              43,
+              329,
+              340
+            ],
+            "margin": [
+              100,
+              34,
+              263,
+              252
+            ],
+            "source_anchor": [
+              768,
+              379
+            ],
+            "rgba_sha256": "1c7a08249a8c92f187e37245dfe43231aeebdd1ef6dbc539f4823405c5e7d037"
+          },
+          {
+            "row": 2,
+            "direction": "SE",
+            "region": [
+              68,
+              425,
+              397,
+              329
+            ],
+            "margin": [
+              108,
+              45,
+              195,
+              263
+            ],
+            "source_anchor": [
+              256,
+              750
+            ],
+            "rgba_sha256": "780141fd287bdb407ac3adf0fbe99b029b4684594048df0215b9a9441e861f7b"
+          },
+          {
+            "row": 3,
+            "direction": "SE",
+            "region": [
+              556,
+              448,
+              433,
+              304
+            ],
+            "margin": [
+              84,
+              70,
+              159,
+              288
+            ],
+            "source_anchor": [
+              768,
+              748
+            ],
+            "rgba_sha256": "4d3907043499219ee7115ecdb338c6f93e890d01fb6dbd891cc92f14b0473aa2"
+          },
+          {
+            "row": 4,
+            "direction": "SE",
+            "region": [
+              94,
+              804,
+              359,
+              319
+            ],
+            "margin": [
+              134,
+              55,
+              233,
+              273
+            ],
+            "source_anchor": [
+              256,
+              1119
+            ],
+            "rgba_sha256": "29aad025b349c70cf999482192b74b16b4d76bedd2670f833aa1237e4c53fecc"
+          },
+          {
+            "row": 5,
+            "direction": "SE",
+            "region": [
+              556,
+              811,
+              356,
+              310
+            ],
+            "margin": [
+              84,
+              64,
+              236,
+              282
+            ],
+            "source_anchor": [
+              768,
+              1117
+            ],
+            "rgba_sha256": "6feffe34cee4b5267d0de82287536a1b72b6fb8af1404bd206a934833d9873c3"
+          },
+          {
+            "row": 6,
+            "direction": "SE",
+            "region": [
+              100,
+              1192,
+              390,
+              287
+            ],
+            "margin": [
+              140,
+              87,
+              202,
+              305
+            ],
+            "source_anchor": [
+              256,
+              1475
+            ],
+            "rgba_sha256": "b0af933f0df2e4c871838b38da8c78dee93fd23c3ee52636a867d5b796c68107"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 334.5,
+        "canvas_size": [
+          592,
+          592
+        ],
+        "foot": [
+          296,
+          370
+        ]
+      }
+    },
+    {
+      "source": "queen-combat-S-v02",
+      "source_sha256": "f7d98e93c73516e3ad55597b5719a824832159ce7134567681c0fbe0ee9fec42",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 624,
+      "desired_body_canvas": 624,
+      "minimum_complete_source_canvas": 592,
+      "preview_body_world_height": 86.06300366300367,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            58,
+            398
+          ],
+          [
+            57,
+            400
+          ]
+        ],
+        "standing_equivalent_height": 341.5
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "S",
+            "region": [
+              67,
+              38,
+              371,
+              367
+            ],
+            "margin": [
+              123,
+              27,
+              253,
+              257
+            ],
+            "source_anchor": [
+              256,
+              401
+            ],
+            "rgba_sha256": "d83843fc4b108c9499b7598fb592e455c597e1a72bcd50644b97d3f11e6f1882"
+          },
+          {
+            "row": 1,
+            "direction": "S",
+            "region": [
+              575,
+              44,
+              363,
+              363
+            ],
+            "margin": [
+              119,
+              31,
+              261,
+              261
+            ],
+            "source_anchor": [
+              768,
+              403
+            ],
+            "rgba_sha256": "092244816db90016fa16651506e408c7832e08ffa1977d4cb2d99fa23be4b424"
+          },
+          {
+            "row": 2,
+            "direction": "S",
+            "region": [
+              56,
+              416,
+              436,
+              370
+            ],
+            "margin": [
+              112,
+              24,
+              188,
+              254
+            ],
+            "source_anchor": [
+              256,
+              782
+            ],
+            "rgba_sha256": "3e1f01518e5a00f658bedf0c44111ace3e87be4268a7c497dea2a54a84cc8fa6"
+          },
+          {
+            "row": 3,
+            "direction": "S",
+            "region": [
+              574,
+              462,
+              383,
+              324
+            ],
+            "margin": [
+              118,
+              70,
+              241,
+              300
+            ],
+            "source_anchor": [
+              768,
+              782
+            ],
+            "rgba_sha256": "d7c39f6f90ff937552c4401b5946a5fedf3557fd4a434b1735ba7431fa96f6f3"
+          },
+          {
+            "row": 4,
+            "direction": "S",
+            "region": [
+              69,
+              804,
+              385,
+              344
+            ],
+            "margin": [
+              125,
+              50,
+              239,
+              280
+            ],
+            "source_anchor": [
+              256,
+              1144
+            ],
+            "rgba_sha256": "4c13096d332aac1ae04aeed2e51f558a5d732cd89ef721cd21413da4c2a571be"
+          },
+          {
+            "row": 5,
+            "direction": "S",
+            "region": [
+              594,
+              806,
+              346,
+              343
+            ],
+            "margin": [
+              138,
+              51,
+              278,
+              281
+            ],
+            "source_anchor": [
+              768,
+              1145
+            ],
+            "rgba_sha256": "e9199b8b68b9c727aefed325f0b6d67513f4ebe762e4790096c82ec7d4e00612"
+          },
+          {
+            "row": 6,
+            "direction": "S",
+            "region": [
+              72,
+              1197,
+              402,
+              299
+            ],
+            "margin": [
+              128,
+              95,
+              222,
+              325
+            ],
+            "source_anchor": [
+              256,
+              1492
+            ],
+            "rgba_sha256": "5aef9051e187f4217ede5e92fde0296c385990a9dc6ed0a3cf7c958d6aeeb849"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 359.0,
+        "canvas_size": [
+          624,
+          624
+        ],
+        "foot": [
+          312,
+          390
+        ]
+      }
+    },
+    {
+      "source": "queen-combat-SW-v02",
+      "source_sha256": "54fa3896713cdbe7e6eed5407d7a21434b524fa620db0a062bb9d2c081431cf6",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 584,
+      "desired_body_canvas": 584,
+      "minimum_complete_source_canvas": 544,
+      "preview_body_world_height": 85.62974559686889,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            61,
+            381
+          ],
+          [
+            64,
+            380
+          ]
+        ],
+        "standing_equivalent_height": 318
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SW",
+            "region": [
+              125,
+              52,
+              310,
+              341
+            ],
+            "margin": [
+              161,
+              28,
+              274,
+              243
+            ],
+            "source_anchor": [
+              256,
+              389
+            ],
+            "rgba_sha256": "815d1062ff3155a6b406cfd41e53438d93944fe2afc8c459271b41f9b44d8191"
+          },
+          {
+            "row": 1,
+            "direction": "SW",
+            "region": [
+              601,
+              55,
+              334,
+              338
+            ],
+            "margin": [
+              125,
+              31,
+              250,
+              246
+            ],
+            "source_anchor": [
+              768,
+              389
+            ],
+            "rgba_sha256": "f7b21375b61200db70b677ae1a8eb9abaea4533587213e33530c7212797a6f95"
+          },
+          {
+            "row": 2,
+            "direction": "SW",
+            "region": [
+              109,
+              411,
+              368,
+              337
+            ],
+            "margin": [
+              145,
+              32,
+              216,
+              247
+            ],
+            "source_anchor": [
+              256,
+              744
+            ],
+            "rgba_sha256": "78cd6f871f9f28ec4795caa7b904dfc0d94a88ab72954198c305a4bb395613c7"
+          },
+          {
+            "row": 3,
+            "direction": "SW",
+            "region": [
+              500,
+              454,
+              495,
+              301
+            ],
+            "margin": [
+              24,
+              68,
+              89,
+              283
+            ],
+            "source_anchor": [
+              768,
+              751
+            ],
+            "rgba_sha256": "f8cb4fe1ca28a07f67e3b7f9de79285b46011b1e152f88269bd44adcf0ae1099"
+          },
+          {
+            "row": 4,
+            "direction": "SW",
+            "region": [
+              112,
+              784,
+              363,
+              323
+            ],
+            "margin": [
+              148,
+              46,
+              221,
+              261
+            ],
+            "source_anchor": [
+              256,
+              1103
+            ],
+            "rgba_sha256": "b2fe7a3a221a4969eac8b45f5316a82513c38502e366d591e4dd7882d5ee4547"
+          },
+          {
+            "row": 5,
+            "direction": "SW",
+            "region": [
+              632,
+              800,
+              351,
+              322
+            ],
+            "margin": [
+              156,
+              47,
+              233,
+              262
+            ],
+            "source_anchor": [
+              768,
+              1118
+            ],
+            "rgba_sha256": "3c16133b33495b46a7a1616f4cfd335a1d1542493578c0894c54704ae1cb30f3"
+          },
+          {
+            "row": 6,
+            "direction": "SW",
+            "region": [
+              99,
+              1163,
+              368,
+              304
+            ],
+            "margin": [
+              135,
+              65,
+              216,
+              280
+            ],
+            "source_anchor": [
+              256,
+              1463
+            ],
+            "rgba_sha256": "4be71d1435876469afcf770ad4029e2364dfe2bccb7549cfbdf910922eeee473"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 333.5,
+        "canvas_size": [
+          584,
+          584
+        ],
+        "foot": [
+          292,
+          365
+        ]
+      }
+    },
+    {
+      "source": "queen-combat-W-v01",
+      "source_sha256": "efa759cc5f6cc45924fe8a8eebad72545f66744f8ae9b2b181c231b8e7e09a7a",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 600,
+      "desired_body_canvas": 600,
+      "minimum_complete_source_canvas": 552,
+      "preview_body_world_height": 85.44304761904762,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            66,
+            397
+          ],
+          [
+            75,
+            396
+          ]
+        ],
+        "standing_equivalent_height": 326
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "W",
+            "region": [
+              121,
+              58,
+              315,
+              347
+            ],
+            "margin": [
+              165,
+              32,
+              285,
+              253
+            ],
+            "source_anchor": [
+              256,
+              401
+            ],
+            "rgba_sha256": "28b655b29bfbb39866c6cba320b754505300158676981975649fd3b609723b28"
+          },
+          {
+            "row": 1,
+            "direction": "W",
+            "region": [
+              622,
+              70,
+              335,
+              332
+            ],
+            "margin": [
+              154,
+              47,
+              265,
+              268
+            ],
+            "source_anchor": [
+              768,
+              398
+            ],
+            "rgba_sha256": "e01168ee5e5a382aed7dab2ef431424e39954fb74cd0baa36b76f0983a9c58aa"
+          },
+          {
+            "row": 2,
+            "direction": "W",
+            "region": [
+              111,
+              457,
+              374,
+              326
+            ],
+            "margin": [
+              155,
+              53,
+              226,
+              274
+            ],
+            "source_anchor": [
+              256,
+              779
+            ],
+            "rgba_sha256": "e0db8b228f52f0f09900f7c38b0911e69c89dadf0781600e68314e86115ee8c4"
+          },
+          {
+            "row": 3,
+            "direction": "W",
+            "region": [
+              535,
+              486,
+              456,
+              296
+            ],
+            "margin": [
+              67,
+              83,
+              144,
+              304
+            ],
+            "source_anchor": [
+              768,
+              778
+            ],
+            "rgba_sha256": "8b3795437efed547984906fa5c32721ec000c010322e53faebcf90ec9aceb65d"
+          },
+          {
+            "row": 4,
+            "direction": "W",
+            "region": [
+              138,
+              816,
+              336,
+              325
+            ],
+            "margin": [
+              182,
+              54,
+              264,
+              275
+            ],
+            "source_anchor": [
+              256,
+              1137
+            ],
+            "rgba_sha256": "2a4a2885385aeb59624457d7ed300c328b346e16231b760406e575029a56103e"
+          },
+          {
+            "row": 5,
+            "direction": "W",
+            "region": [
+              640,
+              807,
+              348,
+              338
+            ],
+            "margin": [
+              172,
+              41,
+              252,
+              262
+            ],
+            "source_anchor": [
+              768,
+              1141
+            ],
+            "rgba_sha256": "92f2c90f404fd200a0d875d5fdb3fcc8d9736534859475fc3e3c88a275ef3b46"
+          },
+          {
+            "row": 6,
+            "direction": "W",
+            "region": [
+              83,
+              1190,
+              359,
+              290
+            ],
+            "margin": [
+              127,
+              89,
+              241,
+              310
+            ],
+            "source_anchor": [
+              256,
+              1476
+            ],
+            "rgba_sha256": "3512156e529ad36478c4ac355c865fce18075dc218eed739400f9f265f5e48f5"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 333.5,
+        "canvas_size": [
+          600,
+          600
+        ],
+        "foot": [
+          300,
+          375
+        ]
+      }
+    },
+    {
+      "source": "queen-combat-NW-v01",
+      "source_sha256": "5b4c52da21f6f6783f441c066f9e26fd6aa976f55a9a147b5c00e569d066e861",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 528,
+      "desired_body_canvas": 528,
+      "minimum_complete_source_canvas": 512,
+      "preview_body_world_height": 86.37229437229438,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            78,
+            368
+          ],
+          [
+            82,
+            372
+          ]
+        ],
+        "standing_equivalent_height": 290
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "NW",
+            "region": [
+              156,
+              68,
+              287,
+              311
+            ],
+            "margin": [
+              164,
+              23,
+              241,
+              217
+            ],
+            "source_anchor": [
+              256,
+              375
+            ],
+            "rgba_sha256": "35d99ecc6bb6ff8faadec72a0334e934314e135913816cb5bea70ad744bd7947"
+          },
+          {
+            "row": 1,
+            "direction": "NW",
+            "region": [
+              645,
+              74,
+              301,
+              309
+            ],
+            "margin": [
+              141,
+              25,
+              227,
+              219
+            ],
+            "source_anchor": [
+              768,
+              379
+            ],
+            "rgba_sha256": "d1266a33685a3e97bba3b5c3d4f58b38ee8bacd20a3cd9da7ceb3becc1c76fd2"
+          },
+          {
+            "row": 2,
+            "direction": "NW",
+            "region": [
+              110,
+              437,
+              369,
+              310
+            ],
+            "margin": [
+              118,
+              24,
+              159,
+              218
+            ],
+            "source_anchor": [
+              256,
+              743
+            ],
+            "rgba_sha256": "282737a082efde313671c270a58c171dd6071745f655468e704ea59e3248f98f"
+          },
+          {
+            "row": 3,
+            "direction": "NW",
+            "region": [
+              557,
+              453,
+              410,
+              296
+            ],
+            "margin": [
+              53,
+              38,
+              118,
+              232
+            ],
+            "source_anchor": [
+              768,
+              745
+            ],
+            "rgba_sha256": "cf5f4de99d5dc191f5c3fedd5c88a2b1a40db3e05a8dbe56f38441f49710389c"
+          },
+          {
+            "row": 4,
+            "direction": "NW",
+            "region": [
+              129,
+              778,
+              322,
+              324
+            ],
+            "margin": [
+              137,
+              10,
+              206,
+              204
+            ],
+            "source_anchor": [
+              256,
+              1098
+            ],
+            "rgba_sha256": "d354c168eb9d6c646a872205d5b63a90085d40d067b7c1e8869540eec610d5eb"
+          },
+          {
+            "row": 5,
+            "direction": "NW",
+            "region": [
+              636,
+              793,
+              318,
+              307
+            ],
+            "margin": [
+              132,
+              27,
+              210,
+              221
+            ],
+            "source_anchor": [
+              768,
+              1096
+            ],
+            "rgba_sha256": "31e1fa3948c938a97c97fba1a760e9e29e16dc113ab0c1dcaa7e1d0e0b446cb7"
+          },
+          {
+            "row": 6,
+            "direction": "NW",
+            "region": [
+              121,
+              1167,
+              329,
+              293
+            ],
+            "margin": [
+              129,
+              41,
+              199,
+              235
+            ],
+            "source_anchor": [
+              256,
+              1456
+            ],
+            "rgba_sha256": "ad82be5a353a4ed3454fca1f88eb0f0c56d494b75421e9064ecc108fe8de6417"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 304.0,
+        "canvas_size": [
+          528,
+          528
+        ],
+        "foot": [
+          264,
+          330
+        ]
+      }
+    },
+    {
+      "source": "queen-combat-N-v03",
+      "source_sha256": "776d4c2a743d2224fe74c941bbbb1230e98f4e6a889f76d693cb6a7c4cd13095",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 576,
+      "desired_body_canvas": 544,
+      "minimum_complete_source_canvas": 576,
+      "preview_body_world_height": 80.94920634920635,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            74,
+            373
+          ],
+          [
+            79,
+            373
+          ]
+        ],
+        "standing_equivalent_height": 296.5
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "N",
+            "region": [
+              123,
+              21,
+              291,
+              359
+            ],
+            "margin": [
+              155,
+              5,
+              285,
+              217
+            ],
+            "source_anchor": [
+              256,
+              376
+            ],
+            "rgba_sha256": "5a9cf478535247e388c7291487d6d0186eace558beaeea3f1a80f0368d0cf447"
+          },
+          {
+            "row": 1,
+            "direction": "N",
+            "region": [
+              602,
+              21,
+              311,
+              359
+            ],
+            "margin": [
+              122,
+              5,
+              265,
+              217
+            ],
+            "source_anchor": [
+              768,
+              376
+            ],
+            "rgba_sha256": "d2163210d55cf847c9ea7c8c669e1b818802a976551260c2ff96ae2eb520397d"
+          },
+          {
+            "row": 2,
+            "direction": "N",
+            "region": [
+              109,
+              411,
+              367,
+              364
+            ],
+            "margin": [
+              141,
+              0,
+              209,
+              212
+            ],
+            "source_anchor": [
+              256,
+              771
+            ],
+            "rgba_sha256": "269d601d4d7311c2b32ef95b82fbbdf3214c96d44cc463add2b9f37f797160af"
+          },
+          {
+            "row": 3,
+            "direction": "N",
+            "region": [
+              576,
+              428,
+              358,
+              345
+            ],
+            "margin": [
+              96,
+              19,
+              218,
+              231
+            ],
+            "source_anchor": [
+              768,
+              769
+            ],
+            "rgba_sha256": "d4a4358278c24262afc8b115e6944b8fd250041e66032de35ff367f3c01ff4f9"
+          },
+          {
+            "row": 4,
+            "direction": "N",
+            "region": [
+              134,
+              772,
+              317,
+              356
+            ],
+            "margin": [
+              166,
+              8,
+              259,
+              220
+            ],
+            "source_anchor": [
+              256,
+              1124
+            ],
+            "rgba_sha256": "6bef8d5ddd22a6aa618c5ce317f0e7d3fe106a6737b3b2a1c47e7d8e3446d0f8"
+          },
+          {
+            "row": 5,
+            "direction": "N",
+            "region": [
+              621,
+              793,
+              322,
+              330
+            ],
+            "margin": [
+              141,
+              34,
+              254,
+              246
+            ],
+            "source_anchor": [
+              768,
+              1119
+            ],
+            "rgba_sha256": "8cb36f9993e44806f4a232e39d7633f16ef3504365836ef954be2e7bba94e08f"
+          },
+          {
+            "row": 6,
+            "direction": "N",
+            "region": [
+              161,
+              1161,
+              287,
+              310
+            ],
+            "margin": [
+              193,
+              54,
+              289,
+              266
+            ],
+            "source_anchor": [
+              256,
+              1467
+            ],
+            "rgba_sha256": "79b5751aa3bcab8ccb24d04a4c0e2a712134b34db3605a20a732394aa6bae63b"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 353.0,
+        "canvas_size": [
+          576,
+          576
+        ],
+        "foot": [
+          288,
+          360
+        ]
+      }
+    },
+    {
+      "source": "queen-combat-NE-v01",
+      "source_sha256": "ed16dad069085ca8ced346a41fa0098a559e4d14802738552b518c055710d1b7",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 624,
+      "desired_body_canvas": 624,
+      "minimum_complete_source_canvas": 592,
+      "preview_body_world_height": 85.68498168498168,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            35,
+            373
+          ],
+          [
+            32,
+            374
+          ]
+        ],
+        "standing_equivalent_height": 340
+      },
+      "geometry": {
+        "image_size": [
+          1024,
+          1536
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "NE",
+            "region": [
+              87,
+              26,
+              349,
+              363
+            ],
+            "margin": [
+              143,
+              31,
+              275,
+              261
+            ],
+            "source_anchor": [
+              256,
+              385
+            ],
+            "rgba_sha256": "8339aaa91ebbbebef5fd6c545a34c2d361fbc75748d096e311fb96dea79b4a3c"
+          },
+          {
+            "row": 1,
+            "direction": "NE",
+            "region": [
+              573,
+              24,
+              349,
+              365
+            ],
+            "margin": [
+              117,
+              29,
+              275,
+              259
+            ],
+            "source_anchor": [
+              768,
+              385
+            ],
+            "rgba_sha256": "bd8c00b0effa0c08473aa393230511d66e1df39cdde7f505020a550612e5b5d6"
+          },
+          {
+            "row": 2,
+            "direction": "NE",
+            "region": [
+              40,
+              401,
+              405,
+              374
+            ],
+            "margin": [
+              96,
+              20,
+              219,
+              250
+            ],
+            "source_anchor": [
+              256,
+              771
+            ],
+            "rgba_sha256": "e2d6058cbbfaa6b2707b27df20515467934e0987deb28b9b7d50cfefef4ac481"
+          },
+          {
+            "row": 3,
+            "direction": "NE",
+            "region": [
+              526,
+              442,
+              486,
+              335
+            ],
+            "margin": [
+              70,
+              59,
+              138,
+              289
+            ],
+            "source_anchor": [
+              768,
+              773
+            ],
+            "rgba_sha256": "e429203e80f4aded3a1589cd7d76d70ddaf8fcbf3e9ef5dd1d3b28aaee9f70de"
+          },
+          {
+            "row": 4,
+            "direction": "NE",
+            "region": [
+              70,
+              783,
+              376,
+              364
+            ],
+            "margin": [
+              126,
+              30,
+              248,
+              260
+            ],
+            "source_anchor": [
+              256,
+              1143
+            ],
+            "rgba_sha256": "cce16bb05519e10eef70a1ebf3ee61f55bd29bc5271b4d2cbc2e0e6ee4f55e1f"
+          },
+          {
+            "row": 5,
+            "direction": "NE",
+            "region": [
+              585,
+              780,
+              328,
+              371
+            ],
+            "margin": [
+              129,
+              23,
+              296,
+              253
+            ],
+            "source_anchor": [
+              768,
+              1147
+            ],
+            "rgba_sha256": "d3e3759f1a820f165143e4e688f6b93a950f3e85db524298789b234809ffd8ef"
+          },
+          {
+            "row": 6,
+            "direction": "NE",
+            "region": [
+              57,
+              1189,
+              412,
+              312
+            ],
+            "margin": [
+              113,
+              82,
+              212,
+              312
+            ],
+            "source_anchor": [
+              256,
+              1497
+            ],
+            "rgba_sha256": "1152c3f6b5beddf70657ea768ff5c62f68faec306ef5ad872b3ac88a861a2fa0"
+          }
+        ],
+        "distinct_pixel_frames": 7,
+        "neutral_height": 358.0,
+        "canvas_size": [
+          624,
+          624
+        ],
+        "foot": [
+          312,
+          390
+        ]
+      }
+    },
+    {
+      "source": "queen-hit-W-v01",
+      "source_sha256": "367d22859d00709d9c8e2f0c79647651b3505d32a5cd8c4d87a45e8ebf50bf09",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 1208,
+      "desired_body_canvas": 1208,
+      "minimum_complete_source_canvas": 1064,
+      "preview_body_world_height": 85.918637653737,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            80,
+            670
+          ]
+        ],
+        "standing_equivalent_height": 660,
+        "basis": "Recoil knees/torso are compressed; provisional standing equivalent from visible articulated body, not staff/wing bounds."
+      },
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "W",
+            "region": [
+              278,
+              6,
+              690,
+              667
+            ],
+            "margin": [
+              339,
+              92,
+              518,
+              541
+            ],
+            "source_anchor": [
+              543,
+              669
+            ],
+            "rgba_sha256": "7ce4a0e8c029d30eee95219192ab947854b78f25b1a25eb46384dcb5aa6196a3"
+          },
+          {
+            "row": 1,
+            "direction": "W",
+            "region": [
+              1319,
+              38,
+              712,
+              648
+            ],
+            "margin": [
+              294,
+              111,
+              496,
+              560
+            ],
+            "source_anchor": [
+              1629,
+              682
+            ],
+            "rgba_sha256": "ab1a5fcd919f6016cfde3a6b7bc1ea91bec46f1f6b73f967a9d006fc2b489b69"
+          }
+        ],
+        "distinct_pixel_frames": 2,
+        "neutral_height": 651.5,
+        "canvas_size": [
+          1208,
+          1208
+        ],
+        "foot": [
+          604,
+          755
+        ]
+      }
+    },
+    {
+      "source": "queen-hit-SW-v01",
+      "source_sha256": "ca032391d92d3ec2559fb0953539b230d9d96962b8f6968ea41b0dc40ca1b138",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 1240,
+      "desired_body_canvas": 1240,
+      "minimum_complete_source_canvas": 1160,
+      "preview_body_world_height": 86.23778801843318,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            128,
+            735
+          ]
+        ],
+        "standing_equivalent_height": 680,
+        "basis": "Recoil knees/torso are compressed; provisional standing equivalent from visible articulated body, not staff/wing bounds."
+      },
+      "geometry": {
+        "image_size": [
+          1983,
+          793
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SW",
+            "region": [
+              179,
+              31,
+              825,
+              712
+            ],
+            "margin": [
+              303,
+              67,
+              415,
+              528
+            ],
+            "source_anchor": [
+              496,
+              739
+            ],
+            "rgba_sha256": "365f83483d3b800e8ac030f752b73eb05dd8bc71f8a667f20d04cd84e0e9c853"
+          },
+          {
+            "row": 1,
+            "direction": "SW",
+            "region": [
+              1119,
+              21,
+              717,
+              727
+            ],
+            "margin": [
+              252,
+              52,
+              523,
+              513
+            ],
+            "source_anchor": [
+              1487,
+              744
+            ],
+            "rgba_sha256": "950c7930021545bea4ec5422b6b1a01e1adedfc1b61717a1097ca1653f28a489"
+          }
+        ],
+        "distinct_pixel_frames": 2,
+        "neutral_height": 713.5,
+        "canvas_size": [
+          1240,
+          1240
+        ],
+        "foot": [
+          620,
+          775
+        ]
+      }
+    },
+    {
+      "source": "queen-death-S-v01",
+      "source_sha256": "cc52b011b9fef0bb444399e287e7adbb64bb08c16bb8d289412504db23bf5360",
+      "strict_original_canvas": 2048,
+      "normalized_canvas": 960,
+      "desired_body_canvas": 960,
+      "minimum_complete_source_canvas": 848,
+      "preview_body_world_height": 86.0,
+      "body_measurement": {
+        "crown_sole_y": [
+          [
+            94,
+            531
+          ]
+        ],
+        "standing_equivalent_height": 525,
+        "basis": "Kneeling first death is not a standing neutral. Provisional same-head-scale transfer from S combat; final source-plane support review required."
+      },
+      "geometry": {
+        "image_size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "S",
+            "region": [
+              149,
+              7,
+              569,
+              531
+            ],
+            "margin": [
+              245,
+              73,
+              391,
+              429
+            ],
+            "source_anchor": [
+              384,
+              534
+            ],
+            "rgba_sha256": "7bc9621d227f4ac98860c116c26c6ffdd70b4b870b9947a470ec6d8dbc85ebd0"
+          },
+          {
+            "row": 1,
+            "direction": "S",
+            "region": [
+              819,
+              44,
+              578,
+              495
+            ],
+            "margin": [
+              147,
+              109,
+              382,
+              465
+            ],
+            "source_anchor": [
+              1152,
+              535
+            ],
+            "rgba_sha256": "6ae9c66e5261fd068c1b60afc0e73c6590d7b3c1d920dc6dbfae1582420d4f2d"
+          },
+          {
+            "row": 2,
+            "direction": "S",
+            "region": [
+              145,
+              549,
+              606,
+              423
+            ],
+            "margin": [
+              241,
+              181,
+              354,
+              537
+            ],
+            "source_anchor": [
+              384,
+              968
+            ],
+            "rgba_sha256": "186ded39112d0a7dfb94a974426149299b7e8cc584cbb1c57b4896fe4b184645"
+          },
+          {
+            "row": 3,
+            "direction": "S",
+            "region": [
+              765,
+              716,
+              734,
+              242
+            ],
+            "margin": [
+              93,
+              362,
+              226,
+              718
+            ],
+            "source_anchor": [
+              1152,
+              954
+            ],
+            "rgba_sha256": "3488310494fd831fa277b41d88ac1843bebf8d3193f74377e107c14968e89cf0"
+          }
+        ],
+        "distinct_pixel_frames": 4,
+        "neutral_height": 525.0,
+        "canvas_size": [
+          960,
+          960
+        ],
+        "foot": [
+          480,
+          600
+        ]
+      }
+    }
+  ],
+  "source_count": 11,
+  "pixel_scale": 0.6142857142857143,
+  "reference_height": 140,
+  "source_pixels_unchanged": true,
+  "production_connected": false,
+  "new_approvals": 0,
+  "status": "TECHNICALLY_STAGED_QUALITY_HOLD",
+  "quality_HOLD": [
+    "N staff continuity improved in v03 but pale slit/covered leg identity still swaps between poses.",
+    "NE exact rear heading and SE/SW attack vector require gameplay-size visual review.",
+    "All source-plane anchors default to preserved geometry conventions; actual boots/cloth/staff ground contacts are unapproved.",
+    "Hit/death standing-equivalent scale estimates require visual confirmation; no mythic-quality approval inferred."
+  ],
+  "default_catalog_switches": 0,
+  "actors": {
+    "monster:얼음 여왕": {
+      "schema": "pr122-queen-combat-candidate-v1",
+      "key": "monster:얼음 여왕",
+      "quality_tier": "mythic_transform",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r001/NativeMotionProfile.tres",
+      "native_profile_sha256": "37a5712e22d9538dd10f77a32746cefb4071fd0fd8fd74304d9e45f003c7bdfa",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r001/SpriteFrames.tres",
+      "frames_sha256": "a70a0e6d2e27115db591e952676842a2a914f73a80828c055403bb678e07c67e",
+      "clips": 25,
+      "poses": 60,
+      "unique_selected_visible_poses": 60,
+      "required_RUN_not_present": 8,
+      "tracks": [
+        {
+          "role": "idle",
+          "direction": "E",
+          "animation": "idle_0",
+          "source": "queen-combat-E-v01",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            0,
+            1
+          ],
+          "normalized_canvas": 592,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "E",
+          "animation": "attack_0",
+          "source": "queen-combat-E-v01",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            2,
+            3,
+            4
+          ],
+          "normalized_canvas": 592,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "hit",
+          "direction": "E",
+          "animation": "hit_0",
+          "source": "queen-combat-E-v01",
+          "source_slots": [
+            5,
+            6
+          ],
+          "pose_ids": [
+            5,
+            6
+          ],
+          "normalized_canvas": 592,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "idle",
+          "direction": "SE",
+          "animation": "idle_1",
+          "source": "queen-combat-SE-v01",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            7,
+            8
+          ],
+          "normalized_canvas": 592,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "SE",
+          "animation": "attack_1",
+          "source": "queen-combat-SE-v01",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            9,
+            10,
+            11
+          ],
+          "normalized_canvas": 592,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "hit",
+          "direction": "SE",
+          "animation": "hit_1",
+          "source": "queen-combat-SE-v01",
+          "source_slots": [
+            5,
+            6
+          ],
+          "pose_ids": [
+            12,
+            13
+          ],
+          "normalized_canvas": 592,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "idle",
+          "direction": "S",
+          "animation": "idle_2",
+          "source": "queen-combat-S-v02",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            14,
+            15
+          ],
+          "normalized_canvas": 624,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "S",
+          "animation": "attack_2",
+          "source": "queen-combat-S-v02",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            16,
+            17,
+            18
+          ],
+          "normalized_canvas": 624,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "hit",
+          "direction": "S",
+          "animation": "hit_2",
+          "source": "queen-combat-S-v02",
+          "source_slots": [
+            5,
+            6
+          ],
+          "pose_ids": [
+            19,
+            20
+          ],
+          "normalized_canvas": 624,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "idle",
+          "direction": "SW",
+          "animation": "idle_3",
+          "source": "queen-combat-SW-v02",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            21,
+            22
+          ],
+          "normalized_canvas": 584,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "SW",
+          "animation": "attack_3",
+          "source": "queen-combat-SW-v02",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            23,
+            24,
+            25
+          ],
+          "normalized_canvas": 584,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "idle",
+          "direction": "W",
+          "animation": "idle_4",
+          "source": "queen-combat-W-v01",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            26,
+            27
+          ],
+          "normalized_canvas": 600,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "W",
+          "animation": "attack_4",
+          "source": "queen-combat-W-v01",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            28,
+            29,
+            30
+          ],
+          "normalized_canvas": 600,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "idle",
+          "direction": "NW",
+          "animation": "idle_5",
+          "source": "queen-combat-NW-v01",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            31,
+            32
+          ],
+          "normalized_canvas": 528,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "NW",
+          "animation": "attack_5",
+          "source": "queen-combat-NW-v01",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            33,
+            34,
+            35
+          ],
+          "normalized_canvas": 528,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "hit",
+          "direction": "NW",
+          "animation": "hit_5",
+          "source": "queen-combat-NW-v01",
+          "source_slots": [
+            5,
+            6
+          ],
+          "pose_ids": [
+            36,
+            37
+          ],
+          "normalized_canvas": 528,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "idle",
+          "direction": "N",
+          "animation": "idle_6",
+          "source": "queen-combat-N-v03",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            38,
+            39
+          ],
+          "normalized_canvas": 576,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "N",
+          "animation": "attack_6",
+          "source": "queen-combat-N-v03",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            40,
+            41,
+            42
+          ],
+          "normalized_canvas": 576,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "hit",
+          "direction": "N",
+          "animation": "hit_6",
+          "source": "queen-combat-N-v03",
+          "source_slots": [
+            5,
+            6
+          ],
+          "pose_ids": [
+            43,
+            44
+          ],
+          "normalized_canvas": 576,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "idle",
+          "direction": "NE",
+          "animation": "idle_7",
+          "source": "queen-combat-NE-v01",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            45,
+            46
+          ],
+          "normalized_canvas": 624,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "attack",
+          "direction": "NE",
+          "animation": "attack_7",
+          "source": "queen-combat-NE-v01",
+          "source_slots": [
+            2,
+            3,
+            4
+          ],
+          "pose_ids": [
+            47,
+            48,
+            49
+          ],
+          "normalized_canvas": 624,
+          "frame_count": 3,
+          "contact_index": 1
+        },
+        {
+          "role": "hit",
+          "direction": "NE",
+          "animation": "hit_7",
+          "source": "queen-combat-NE-v01",
+          "source_slots": [
+            5,
+            6
+          ],
+          "pose_ids": [
+            50,
+            51
+          ],
+          "normalized_canvas": 624,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "hit",
+          "direction": "W",
+          "animation": "hit_4",
+          "source": "queen-hit-W-v01",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            52,
+            53
+          ],
+          "normalized_canvas": 1208,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "hit",
+          "direction": "SW",
+          "animation": "hit_3",
+          "source": "queen-hit-SW-v01",
+          "source_slots": [
+            0,
+            1
+          ],
+          "pose_ids": [
+            54,
+            55
+          ],
+          "normalized_canvas": 1240,
+          "frame_count": 2,
+          "contact_index": null
+        },
+        {
+          "role": "death",
+          "direction": "S",
+          "animation": "death_2",
+          "source": "queen-death-S-v01",
+          "source_slots": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "pose_ids": [
+            56,
+            57,
+            58,
+            59
+          ],
+          "normalized_canvas": 960,
+          "frame_count": 4,
+          "contact_index": null
+        }
+      ],
+      "geometries": [
+        {
+          "source": "queen-combat-E-v01",
+          "source_sha256": "61a35945678c6041e5b803d795b69f6da6ac56eaaa2b42188381366d27bd3a27",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 592,
+          "desired_body_canvas": 592,
+          "minimum_complete_source_canvas": 544,
+          "preview_body_world_height": 85.8007722007722,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                70,
+                396
+              ],
+              [
+                77,
+                397
+              ]
+            ],
+            "standing_equivalent_height": 323
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  91,
+                  64,
+                  293,
+                  338
+                ],
+                "margin": [
+                  131,
+                  36,
+                  299,
+                  254
+                ],
+                "source_anchor": [
+                  256,
+                  398
+                ],
+                "rgba_sha256": "a4f6e0b89a381354456b6b61e7f4d0293be9bbe5a133e22d58229fabbb22af1e"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  578,
+                  69,
+                  293,
+                  333
+                ],
+                "margin": [
+                  106,
+                  41,
+                  299,
+                  259
+                ],
+                "source_anchor": [
+                  768,
+                  398
+                ],
+                "rgba_sha256": "34cbb2b0009cc77b89006dfcf9d112ba80210158508aba1da06fd2b497cab71f"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  94,
+                  448,
+                  356,
+                  343
+                ],
+                "margin": [
+                  134,
+                  31,
+                  236,
+                  249
+                ],
+                "source_anchor": [
+                  256,
+                  787
+                ],
+                "rgba_sha256": "b54eb0f15ad99b836ce0add358f0a5c01577e3ac6fa44bcdfddce92cee61f8b9"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  517,
+                  488,
+                  486,
+                  299
+                ],
+                "margin": [
+                  45,
+                  75,
+                  106,
+                  293
+                ],
+                "source_anchor": [
+                  768,
+                  783
+                ],
+                "rgba_sha256": "05de87c63c6aa4bf579366dc9097353de518f1c9e207107a32af4943e7c07d81"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  78,
+                  817,
+                  340,
+                  323
+                ],
+                "margin": [
+                  118,
+                  51,
+                  252,
+                  269
+                ],
+                "source_anchor": [
+                  256,
+                  1136
+                ],
+                "rgba_sha256": "d6a147cc3457f0dac6fd1555c8635cc22e2db770cb896c01243f3c1de48d7d86"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  570,
+                  817,
+                  339,
+                  322
+                ],
+                "margin": [
+                  98,
+                  52,
+                  253,
+                  270
+                ],
+                "source_anchor": [
+                  768,
+                  1135
+                ],
+                "rgba_sha256": "ac1d0dea4669698a436a67beaf160d90a14fd22d08fde870a89dae6e7b32272d"
+              },
+              {
+                "row": 6,
+                "direction": "E",
+                "region": [
+                  114,
+                  1198,
+                  380,
+                  287
+                ],
+                "margin": [
+                  154,
+                  87,
+                  212,
+                  305
+                ],
+                "source_anchor": [
+                  256,
+                  1481
+                ],
+                "rgba_sha256": "3316bbadafd92e4b0491cfb9f3738d64aeb5ed21bb762965404f1cf6e0cb10f6"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 329.5,
+            "canvas_size": [
+              592,
+              592
+            ],
+            "foot": [
+              296,
+              370
+            ]
+          }
+        },
+        {
+          "source": "queen-combat-SE-v01",
+          "source_sha256": "057483152840b542a1c60c21d03bd3580f22a8fead172e8b94d4e13a1906b486",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 592,
+          "desired_body_canvas": 592,
+          "minimum_complete_source_canvas": 544,
+          "preview_body_world_height": 85.8007722007722,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                52,
+                377
+              ],
+              [
+                54,
+                375
+              ]
+            ],
+            "standing_equivalent_height": 323
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  102,
+                  44,
+                  317,
+                  341
+                ],
+                "margin": [
+                  142,
+                  33,
+                  275,
+                  251
+                ],
+                "source_anchor": [
+                  256,
+                  381
+                ],
+                "rgba_sha256": "4d432d31bf8214747b4fdfe0b081cd69c3b8df82f85cfd1bcf2dd08dbab44675"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  572,
+                  43,
+                  329,
+                  340
+                ],
+                "margin": [
+                  100,
+                  34,
+                  263,
+                  252
+                ],
+                "source_anchor": [
+                  768,
+                  379
+                ],
+                "rgba_sha256": "1c7a08249a8c92f187e37245dfe43231aeebdd1ef6dbc539f4823405c5e7d037"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  68,
+                  425,
+                  397,
+                  329
+                ],
+                "margin": [
+                  108,
+                  45,
+                  195,
+                  263
+                ],
+                "source_anchor": [
+                  256,
+                  750
+                ],
+                "rgba_sha256": "780141fd287bdb407ac3adf0fbe99b029b4684594048df0215b9a9441e861f7b"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  556,
+                  448,
+                  433,
+                  304
+                ],
+                "margin": [
+                  84,
+                  70,
+                  159,
+                  288
+                ],
+                "source_anchor": [
+                  768,
+                  748
+                ],
+                "rgba_sha256": "4d3907043499219ee7115ecdb338c6f93e890d01fb6dbd891cc92f14b0473aa2"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  94,
+                  804,
+                  359,
+                  319
+                ],
+                "margin": [
+                  134,
+                  55,
+                  233,
+                  273
+                ],
+                "source_anchor": [
+                  256,
+                  1119
+                ],
+                "rgba_sha256": "29aad025b349c70cf999482192b74b16b4d76bedd2670f833aa1237e4c53fecc"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  556,
+                  811,
+                  356,
+                  310
+                ],
+                "margin": [
+                  84,
+                  64,
+                  236,
+                  282
+                ],
+                "source_anchor": [
+                  768,
+                  1117
+                ],
+                "rgba_sha256": "6feffe34cee4b5267d0de82287536a1b72b6fb8af1404bd206a934833d9873c3"
+              },
+              {
+                "row": 6,
+                "direction": "SE",
+                "region": [
+                  100,
+                  1192,
+                  390,
+                  287
+                ],
+                "margin": [
+                  140,
+                  87,
+                  202,
+                  305
+                ],
+                "source_anchor": [
+                  256,
+                  1475
+                ],
+                "rgba_sha256": "b0af933f0df2e4c871838b38da8c78dee93fd23c3ee52636a867d5b796c68107"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 334.5,
+            "canvas_size": [
+              592,
+              592
+            ],
+            "foot": [
+              296,
+              370
+            ]
+          }
+        },
+        {
+          "source": "queen-combat-S-v02",
+          "source_sha256": "f7d98e93c73516e3ad55597b5719a824832159ce7134567681c0fbe0ee9fec42",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 624,
+          "desired_body_canvas": 624,
+          "minimum_complete_source_canvas": 592,
+          "preview_body_world_height": 86.06300366300367,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                58,
+                398
+              ],
+              [
+                57,
+                400
+              ]
+            ],
+            "standing_equivalent_height": 341.5
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  67,
+                  38,
+                  371,
+                  367
+                ],
+                "margin": [
+                  123,
+                  27,
+                  253,
+                  257
+                ],
+                "source_anchor": [
+                  256,
+                  401
+                ],
+                "rgba_sha256": "d83843fc4b108c9499b7598fb592e455c597e1a72bcd50644b97d3f11e6f1882"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  575,
+                  44,
+                  363,
+                  363
+                ],
+                "margin": [
+                  119,
+                  31,
+                  261,
+                  261
+                ],
+                "source_anchor": [
+                  768,
+                  403
+                ],
+                "rgba_sha256": "092244816db90016fa16651506e408c7832e08ffa1977d4cb2d99fa23be4b424"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  56,
+                  416,
+                  436,
+                  370
+                ],
+                "margin": [
+                  112,
+                  24,
+                  188,
+                  254
+                ],
+                "source_anchor": [
+                  256,
+                  782
+                ],
+                "rgba_sha256": "3e1f01518e5a00f658bedf0c44111ace3e87be4268a7c497dea2a54a84cc8fa6"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  574,
+                  462,
+                  383,
+                  324
+                ],
+                "margin": [
+                  118,
+                  70,
+                  241,
+                  300
+                ],
+                "source_anchor": [
+                  768,
+                  782
+                ],
+                "rgba_sha256": "d7c39f6f90ff937552c4401b5946a5fedf3557fd4a434b1735ba7431fa96f6f3"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  69,
+                  804,
+                  385,
+                  344
+                ],
+                "margin": [
+                  125,
+                  50,
+                  239,
+                  280
+                ],
+                "source_anchor": [
+                  256,
+                  1144
+                ],
+                "rgba_sha256": "4c13096d332aac1ae04aeed2e51f558a5d732cd89ef721cd21413da4c2a571be"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  594,
+                  806,
+                  346,
+                  343
+                ],
+                "margin": [
+                  138,
+                  51,
+                  278,
+                  281
+                ],
+                "source_anchor": [
+                  768,
+                  1145
+                ],
+                "rgba_sha256": "e9199b8b68b9c727aefed325f0b6d67513f4ebe762e4790096c82ec7d4e00612"
+              },
+              {
+                "row": 6,
+                "direction": "S",
+                "region": [
+                  72,
+                  1197,
+                  402,
+                  299
+                ],
+                "margin": [
+                  128,
+                  95,
+                  222,
+                  325
+                ],
+                "source_anchor": [
+                  256,
+                  1492
+                ],
+                "rgba_sha256": "5aef9051e187f4217ede5e92fde0296c385990a9dc6ed0a3cf7c958d6aeeb849"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 359.0,
+            "canvas_size": [
+              624,
+              624
+            ],
+            "foot": [
+              312,
+              390
+            ]
+          }
+        },
+        {
+          "source": "queen-combat-SW-v02",
+          "source_sha256": "54fa3896713cdbe7e6eed5407d7a21434b524fa620db0a062bb9d2c081431cf6",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 584,
+          "desired_body_canvas": 584,
+          "minimum_complete_source_canvas": 544,
+          "preview_body_world_height": 85.62974559686889,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                61,
+                381
+              ],
+              [
+                64,
+                380
+              ]
+            ],
+            "standing_equivalent_height": 318
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  125,
+                  52,
+                  310,
+                  341
+                ],
+                "margin": [
+                  161,
+                  28,
+                  274,
+                  243
+                ],
+                "source_anchor": [
+                  256,
+                  389
+                ],
+                "rgba_sha256": "815d1062ff3155a6b406cfd41e53438d93944fe2afc8c459271b41f9b44d8191"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  601,
+                  55,
+                  334,
+                  338
+                ],
+                "margin": [
+                  125,
+                  31,
+                  250,
+                  246
+                ],
+                "source_anchor": [
+                  768,
+                  389
+                ],
+                "rgba_sha256": "f7b21375b61200db70b677ae1a8eb9abaea4533587213e33530c7212797a6f95"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  109,
+                  411,
+                  368,
+                  337
+                ],
+                "margin": [
+                  145,
+                  32,
+                  216,
+                  247
+                ],
+                "source_anchor": [
+                  256,
+                  744
+                ],
+                "rgba_sha256": "78cd6f871f9f28ec4795caa7b904dfc0d94a88ab72954198c305a4bb395613c7"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  500,
+                  454,
+                  495,
+                  301
+                ],
+                "margin": [
+                  24,
+                  68,
+                  89,
+                  283
+                ],
+                "source_anchor": [
+                  768,
+                  751
+                ],
+                "rgba_sha256": "f8cb4fe1ca28a07f67e3b7f9de79285b46011b1e152f88269bd44adcf0ae1099"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  112,
+                  784,
+                  363,
+                  323
+                ],
+                "margin": [
+                  148,
+                  46,
+                  221,
+                  261
+                ],
+                "source_anchor": [
+                  256,
+                  1103
+                ],
+                "rgba_sha256": "b2fe7a3a221a4969eac8b45f5316a82513c38502e366d591e4dd7882d5ee4547"
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  632,
+                  800,
+                  351,
+                  322
+                ],
+                "margin": [
+                  156,
+                  47,
+                  233,
+                  262
+                ],
+                "source_anchor": [
+                  768,
+                  1118
+                ],
+                "rgba_sha256": "3c16133b33495b46a7a1616f4cfd335a1d1542493578c0894c54704ae1cb30f3"
+              },
+              {
+                "row": 6,
+                "direction": "SW",
+                "region": [
+                  99,
+                  1163,
+                  368,
+                  304
+                ],
+                "margin": [
+                  135,
+                  65,
+                  216,
+                  280
+                ],
+                "source_anchor": [
+                  256,
+                  1463
+                ],
+                "rgba_sha256": "4be71d1435876469afcf770ad4029e2364dfe2bccb7549cfbdf910922eeee473"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 333.5,
+            "canvas_size": [
+              584,
+              584
+            ],
+            "foot": [
+              292,
+              365
+            ]
+          }
+        },
+        {
+          "source": "queen-combat-W-v01",
+          "source_sha256": "efa759cc5f6cc45924fe8a8eebad72545f66744f8ae9b2b181c231b8e7e09a7a",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 600,
+          "desired_body_canvas": 600,
+          "minimum_complete_source_canvas": 552,
+          "preview_body_world_height": 85.44304761904762,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                66,
+                397
+              ],
+              [
+                75,
+                396
+              ]
+            ],
+            "standing_equivalent_height": 326
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  121,
+                  58,
+                  315,
+                  347
+                ],
+                "margin": [
+                  165,
+                  32,
+                  285,
+                  253
+                ],
+                "source_anchor": [
+                  256,
+                  401
+                ],
+                "rgba_sha256": "28b655b29bfbb39866c6cba320b754505300158676981975649fd3b609723b28"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  622,
+                  70,
+                  335,
+                  332
+                ],
+                "margin": [
+                  154,
+                  47,
+                  265,
+                  268
+                ],
+                "source_anchor": [
+                  768,
+                  398
+                ],
+                "rgba_sha256": "e01168ee5e5a382aed7dab2ef431424e39954fb74cd0baa36b76f0983a9c58aa"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  111,
+                  457,
+                  374,
+                  326
+                ],
+                "margin": [
+                  155,
+                  53,
+                  226,
+                  274
+                ],
+                "source_anchor": [
+                  256,
+                  779
+                ],
+                "rgba_sha256": "e0db8b228f52f0f09900f7c38b0911e69c89dadf0781600e68314e86115ee8c4"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  535,
+                  486,
+                  456,
+                  296
+                ],
+                "margin": [
+                  67,
+                  83,
+                  144,
+                  304
+                ],
+                "source_anchor": [
+                  768,
+                  778
+                ],
+                "rgba_sha256": "8b3795437efed547984906fa5c32721ec000c010322e53faebcf90ec9aceb65d"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  138,
+                  816,
+                  336,
+                  325
+                ],
+                "margin": [
+                  182,
+                  54,
+                  264,
+                  275
+                ],
+                "source_anchor": [
+                  256,
+                  1137
+                ],
+                "rgba_sha256": "2a4a2885385aeb59624457d7ed300c328b346e16231b760406e575029a56103e"
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  640,
+                  807,
+                  348,
+                  338
+                ],
+                "margin": [
+                  172,
+                  41,
+                  252,
+                  262
+                ],
+                "source_anchor": [
+                  768,
+                  1141
+                ],
+                "rgba_sha256": "92f2c90f404fd200a0d875d5fdb3fcc8d9736534859475fc3e3c88a275ef3b46"
+              },
+              {
+                "row": 6,
+                "direction": "W",
+                "region": [
+                  83,
+                  1190,
+                  359,
+                  290
+                ],
+                "margin": [
+                  127,
+                  89,
+                  241,
+                  310
+                ],
+                "source_anchor": [
+                  256,
+                  1476
+                ],
+                "rgba_sha256": "3512156e529ad36478c4ac355c865fce18075dc218eed739400f9f265f5e48f5"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 333.5,
+            "canvas_size": [
+              600,
+              600
+            ],
+            "foot": [
+              300,
+              375
+            ]
+          }
+        },
+        {
+          "source": "queen-combat-NW-v01",
+          "source_sha256": "5b4c52da21f6f6783f441c066f9e26fd6aa976f55a9a147b5c00e569d066e861",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 528,
+          "desired_body_canvas": 528,
+          "minimum_complete_source_canvas": 512,
+          "preview_body_world_height": 86.37229437229438,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                78,
+                368
+              ],
+              [
+                82,
+                372
+              ]
+            ],
+            "standing_equivalent_height": 290
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  156,
+                  68,
+                  287,
+                  311
+                ],
+                "margin": [
+                  164,
+                  23,
+                  241,
+                  217
+                ],
+                "source_anchor": [
+                  256,
+                  375
+                ],
+                "rgba_sha256": "35d99ecc6bb6ff8faadec72a0334e934314e135913816cb5bea70ad744bd7947"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  645,
+                  74,
+                  301,
+                  309
+                ],
+                "margin": [
+                  141,
+                  25,
+                  227,
+                  219
+                ],
+                "source_anchor": [
+                  768,
+                  379
+                ],
+                "rgba_sha256": "d1266a33685a3e97bba3b5c3d4f58b38ee8bacd20a3cd9da7ceb3becc1c76fd2"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  110,
+                  437,
+                  369,
+                  310
+                ],
+                "margin": [
+                  118,
+                  24,
+                  159,
+                  218
+                ],
+                "source_anchor": [
+                  256,
+                  743
+                ],
+                "rgba_sha256": "282737a082efde313671c270a58c171dd6071745f655468e704ea59e3248f98f"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  557,
+                  453,
+                  410,
+                  296
+                ],
+                "margin": [
+                  53,
+                  38,
+                  118,
+                  232
+                ],
+                "source_anchor": [
+                  768,
+                  745
+                ],
+                "rgba_sha256": "cf5f4de99d5dc191f5c3fedd5c88a2b1a40db3e05a8dbe56f38441f49710389c"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  129,
+                  778,
+                  322,
+                  324
+                ],
+                "margin": [
+                  137,
+                  10,
+                  206,
+                  204
+                ],
+                "source_anchor": [
+                  256,
+                  1098
+                ],
+                "rgba_sha256": "d354c168eb9d6c646a872205d5b63a90085d40d067b7c1e8869540eec610d5eb"
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  636,
+                  793,
+                  318,
+                  307
+                ],
+                "margin": [
+                  132,
+                  27,
+                  210,
+                  221
+                ],
+                "source_anchor": [
+                  768,
+                  1096
+                ],
+                "rgba_sha256": "31e1fa3948c938a97c97fba1a760e9e29e16dc113ab0c1dcaa7e1d0e0b446cb7"
+              },
+              {
+                "row": 6,
+                "direction": "NW",
+                "region": [
+                  121,
+                  1167,
+                  329,
+                  293
+                ],
+                "margin": [
+                  129,
+                  41,
+                  199,
+                  235
+                ],
+                "source_anchor": [
+                  256,
+                  1456
+                ],
+                "rgba_sha256": "ad82be5a353a4ed3454fca1f88eb0f0c56d494b75421e9064ecc108fe8de6417"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 304.0,
+            "canvas_size": [
+              528,
+              528
+            ],
+            "foot": [
+              264,
+              330
+            ]
+          }
+        },
+        {
+          "source": "queen-combat-N-v03",
+          "source_sha256": "776d4c2a743d2224fe74c941bbbb1230e98f4e6a889f76d693cb6a7c4cd13095",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 576,
+          "desired_body_canvas": 544,
+          "minimum_complete_source_canvas": 576,
+          "preview_body_world_height": 80.94920634920635,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                74,
+                373
+              ],
+              [
+                79,
+                373
+              ]
+            ],
+            "standing_equivalent_height": 296.5
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  123,
+                  21,
+                  291,
+                  359
+                ],
+                "margin": [
+                  155,
+                  5,
+                  285,
+                  217
+                ],
+                "source_anchor": [
+                  256,
+                  376
+                ],
+                "rgba_sha256": "5a9cf478535247e388c7291487d6d0186eace558beaeea3f1a80f0368d0cf447"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  602,
+                  21,
+                  311,
+                  359
+                ],
+                "margin": [
+                  122,
+                  5,
+                  265,
+                  217
+                ],
+                "source_anchor": [
+                  768,
+                  376
+                ],
+                "rgba_sha256": "d2163210d55cf847c9ea7c8c669e1b818802a976551260c2ff96ae2eb520397d"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  109,
+                  411,
+                  367,
+                  364
+                ],
+                "margin": [
+                  141,
+                  0,
+                  209,
+                  212
+                ],
+                "source_anchor": [
+                  256,
+                  771
+                ],
+                "rgba_sha256": "269d601d4d7311c2b32ef95b82fbbdf3214c96d44cc463add2b9f37f797160af"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  576,
+                  428,
+                  358,
+                  345
+                ],
+                "margin": [
+                  96,
+                  19,
+                  218,
+                  231
+                ],
+                "source_anchor": [
+                  768,
+                  769
+                ],
+                "rgba_sha256": "d4a4358278c24262afc8b115e6944b8fd250041e66032de35ff367f3c01ff4f9"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  134,
+                  772,
+                  317,
+                  356
+                ],
+                "margin": [
+                  166,
+                  8,
+                  259,
+                  220
+                ],
+                "source_anchor": [
+                  256,
+                  1124
+                ],
+                "rgba_sha256": "6bef8d5ddd22a6aa618c5ce317f0e7d3fe106a6737b3b2a1c47e7d8e3446d0f8"
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  621,
+                  793,
+                  322,
+                  330
+                ],
+                "margin": [
+                  141,
+                  34,
+                  254,
+                  246
+                ],
+                "source_anchor": [
+                  768,
+                  1119
+                ],
+                "rgba_sha256": "8cb36f9993e44806f4a232e39d7633f16ef3504365836ef954be2e7bba94e08f"
+              },
+              {
+                "row": 6,
+                "direction": "N",
+                "region": [
+                  161,
+                  1161,
+                  287,
+                  310
+                ],
+                "margin": [
+                  193,
+                  54,
+                  289,
+                  266
+                ],
+                "source_anchor": [
+                  256,
+                  1467
+                ],
+                "rgba_sha256": "79b5751aa3bcab8ccb24d04a4c0e2a712134b34db3605a20a732394aa6bae63b"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 353.0,
+            "canvas_size": [
+              576,
+              576
+            ],
+            "foot": [
+              288,
+              360
+            ]
+          }
+        },
+        {
+          "source": "queen-combat-NE-v01",
+          "source_sha256": "ed16dad069085ca8ced346a41fa0098a559e4d14802738552b518c055710d1b7",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 624,
+          "desired_body_canvas": 624,
+          "minimum_complete_source_canvas": 592,
+          "preview_body_world_height": 85.68498168498168,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                35,
+                373
+              ],
+              [
+                32,
+                374
+              ]
+            ],
+            "standing_equivalent_height": 340
+          },
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  87,
+                  26,
+                  349,
+                  363
+                ],
+                "margin": [
+                  143,
+                  31,
+                  275,
+                  261
+                ],
+                "source_anchor": [
+                  256,
+                  385
+                ],
+                "rgba_sha256": "8339aaa91ebbbebef5fd6c545a34c2d361fbc75748d096e311fb96dea79b4a3c"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  573,
+                  24,
+                  349,
+                  365
+                ],
+                "margin": [
+                  117,
+                  29,
+                  275,
+                  259
+                ],
+                "source_anchor": [
+                  768,
+                  385
+                ],
+                "rgba_sha256": "bd8c00b0effa0c08473aa393230511d66e1df39cdde7f505020a550612e5b5d6"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  40,
+                  401,
+                  405,
+                  374
+                ],
+                "margin": [
+                  96,
+                  20,
+                  219,
+                  250
+                ],
+                "source_anchor": [
+                  256,
+                  771
+                ],
+                "rgba_sha256": "e2d6058cbbfaa6b2707b27df20515467934e0987deb28b9b7d50cfefef4ac481"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  526,
+                  442,
+                  486,
+                  335
+                ],
+                "margin": [
+                  70,
+                  59,
+                  138,
+                  289
+                ],
+                "source_anchor": [
+                  768,
+                  773
+                ],
+                "rgba_sha256": "e429203e80f4aded3a1589cd7d76d70ddaf8fcbf3e9ef5dd1d3b28aaee9f70de"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  70,
+                  783,
+                  376,
+                  364
+                ],
+                "margin": [
+                  126,
+                  30,
+                  248,
+                  260
+                ],
+                "source_anchor": [
+                  256,
+                  1143
+                ],
+                "rgba_sha256": "cce16bb05519e10eef70a1ebf3ee61f55bd29bc5271b4d2cbc2e0e6ee4f55e1f"
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  585,
+                  780,
+                  328,
+                  371
+                ],
+                "margin": [
+                  129,
+                  23,
+                  296,
+                  253
+                ],
+                "source_anchor": [
+                  768,
+                  1147
+                ],
+                "rgba_sha256": "d3e3759f1a820f165143e4e688f6b93a950f3e85db524298789b234809ffd8ef"
+              },
+              {
+                "row": 6,
+                "direction": "NE",
+                "region": [
+                  57,
+                  1189,
+                  412,
+                  312
+                ],
+                "margin": [
+                  113,
+                  82,
+                  212,
+                  312
+                ],
+                "source_anchor": [
+                  256,
+                  1497
+                ],
+                "rgba_sha256": "1152c3f6b5beddf70657ea768ff5c62f68faec306ef5ad872b3ac88a861a2fa0"
+              }
+            ],
+            "distinct_pixel_frames": 7,
+            "neutral_height": 358.0,
+            "canvas_size": [
+              624,
+              624
+            ],
+            "foot": [
+              312,
+              390
+            ]
+          }
+        },
+        {
+          "source": "queen-hit-W-v01",
+          "source_sha256": "367d22859d00709d9c8e2f0c79647651b3505d32a5cd8c4d87a45e8ebf50bf09",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 1208,
+          "desired_body_canvas": 1208,
+          "minimum_complete_source_canvas": 1064,
+          "preview_body_world_height": 85.918637653737,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                80,
+                670
+              ]
+            ],
+            "standing_equivalent_height": 660,
+            "basis": "Recoil knees/torso are compressed; provisional standing equivalent from visible articulated body, not staff/wing bounds."
+          },
+          "geometry": {
+            "image_size": [
+              2172,
+              724
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  278,
+                  6,
+                  690,
+                  667
+                ],
+                "margin": [
+                  339,
+                  92,
+                  518,
+                  541
+                ],
+                "source_anchor": [
+                  543,
+                  669
+                ],
+                "rgba_sha256": "7ce4a0e8c029d30eee95219192ab947854b78f25b1a25eb46384dcb5aa6196a3"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  1319,
+                  38,
+                  712,
+                  648
+                ],
+                "margin": [
+                  294,
+                  111,
+                  496,
+                  560
+                ],
+                "source_anchor": [
+                  1629,
+                  682
+                ],
+                "rgba_sha256": "ab1a5fcd919f6016cfde3a6b7bc1ea91bec46f1f6b73f967a9d006fc2b489b69"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 651.5,
+            "canvas_size": [
+              1208,
+              1208
+            ],
+            "foot": [
+              604,
+              755
+            ]
+          }
+        },
+        {
+          "source": "queen-hit-SW-v01",
+          "source_sha256": "ca032391d92d3ec2559fb0953539b230d9d96962b8f6968ea41b0dc40ca1b138",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 1240,
+          "desired_body_canvas": 1240,
+          "minimum_complete_source_canvas": 1160,
+          "preview_body_world_height": 86.23778801843318,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                128,
+                735
+              ]
+            ],
+            "standing_equivalent_height": 680,
+            "basis": "Recoil knees/torso are compressed; provisional standing equivalent from visible articulated body, not staff/wing bounds."
+          },
+          "geometry": {
+            "image_size": [
+              1983,
+              793
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  179,
+                  31,
+                  825,
+                  712
+                ],
+                "margin": [
+                  303,
+                  67,
+                  415,
+                  528
+                ],
+                "source_anchor": [
+                  496,
+                  739
+                ],
+                "rgba_sha256": "365f83483d3b800e8ac030f752b73eb05dd8bc71f8a667f20d04cd84e0e9c853"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  1119,
+                  21,
+                  717,
+                  727
+                ],
+                "margin": [
+                  252,
+                  52,
+                  523,
+                  513
+                ],
+                "source_anchor": [
+                  1487,
+                  744
+                ],
+                "rgba_sha256": "950c7930021545bea4ec5422b6b1a01e1adedfc1b61717a1097ca1653f28a489"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 713.5,
+            "canvas_size": [
+              1240,
+              1240
+            ],
+            "foot": [
+              620,
+              775
+            ]
+          }
+        },
+        {
+          "source": "queen-death-S-v01",
+          "source_sha256": "cc52b011b9fef0bb444399e287e7adbb64bb08c16bb8d289412504db23bf5360",
+          "strict_original_canvas": 2048,
+          "normalized_canvas": 960,
+          "desired_body_canvas": 960,
+          "minimum_complete_source_canvas": 848,
+          "preview_body_world_height": 86.0,
+          "body_measurement": {
+            "crown_sole_y": [
+              [
+                94,
+                531
+              ]
+            ],
+            "standing_equivalent_height": 525,
+            "basis": "Kneeling first death is not a standing neutral. Provisional same-head-scale transfer from S combat; final source-plane support review required."
+          },
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  149,
+                  7,
+                  569,
+                  531
+                ],
+                "margin": [
+                  245,
+                  73,
+                  391,
+                  429
+                ],
+                "source_anchor": [
+                  384,
+                  534
+                ],
+                "rgba_sha256": "7bc9621d227f4ac98860c116c26c6ffdd70b4b870b9947a470ec6d8dbc85ebd0"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  819,
+                  44,
+                  578,
+                  495
+                ],
+                "margin": [
+                  147,
+                  109,
+                  382,
+                  465
+                ],
+                "source_anchor": [
+                  1152,
+                  535
+                ],
+                "rgba_sha256": "6ae9c66e5261fd068c1b60afc0e73c6590d7b3c1d920dc6dbfae1582420d4f2d"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  145,
+                  549,
+                  606,
+                  423
+                ],
+                "margin": [
+                  241,
+                  181,
+                  354,
+                  537
+                ],
+                "source_anchor": [
+                  384,
+                  968
+                ],
+                "rgba_sha256": "186ded39112d0a7dfb94a974426149299b7e8cc584cbb1c57b4896fe4b184645"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  765,
+                  716,
+                  734,
+                  242
+                ],
+                "margin": [
+                  93,
+                  362,
+                  226,
+                  718
+                ],
+                "source_anchor": [
+                  1152,
+                  954
+                ],
+                "rgba_sha256": "3488310494fd831fa277b41d88ac1843bebf8d3193f74377e107c14968e89cf0"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 525.0,
+            "canvas_size": [
+              960,
+              960
+            ],
+            "foot": [
+              480,
+              600
+            ]
+          }
+        }
+      ],
+      "source_count": 11,
+      "pixel_scale": 0.6142857142857143,
+      "reference_height": 140,
+      "source_pixels_unchanged": true,
+      "production_connected": false,
+      "new_approvals": 0,
+      "status": "TECHNICALLY_STAGED_QUALITY_HOLD",
+      "quality_HOLD": [
+        "N staff continuity improved in v03 but pale slit/covered leg identity still swaps between poses.",
+        "NE exact rear heading and SE/SW attack vector require gameplay-size visual review.",
+        "All source-plane anchors default to preserved geometry conventions; actual boots/cloth/staff ground contacts are unapproved.",
+        "Hit/death standing-equivalent scale estimates require visual confirmation; no mythic-quality approval inferred."
+      ],
+      "default_catalog_switches": 0,
+      "native_track_count": 25,
+      "native_pose_count": 60
+    }
+  }
+}

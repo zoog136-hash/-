@@ -5,6 +5,8 @@ docs/remake/evidence/pr100-direction-fix/**/*.log -whitespace
 # Archived verification output is data; retain the original log bytes.
 docs/map-remake-20261015/expansion25/**/*.log -whitespace
 docs/map-remake-20261015/expansion25/**/validation-logs/*.txt -whitespace
+# Lossless evidence parts are compressed binary data, including metadata-first streams.
+docs/remake/evidence/pr122-remaining106/**/*.tar.zst.part* binary
 
 # Navigation source definition/index are SHA-256-verified as exact bytes.
 # Windows checkout must not rewrite LF/CRLF for these immutable pack records.
@@ -15,6 +17,34 @@ data/map_remake/private/aden/definitions/*.json -text
 # autocrlf from converting its single LF terminator to CRLF.
 data/aden_world_visuals/routes/*.json -text
 
+# This approved provenance is authenticated as exact source bytes. Preserve
+# its pinned SHA on Windows instead of rewriting LF to CRLF at checkout.
+assets/actors/eight_direction/original_based/reaper_male/provenance.json -text
+data/pr122_prior_approved_native_20261019.json -text
+docs/remake/evidence/pr122-remaining106/batch17/** -text
+# These six preserved approval packs are now authenticated byte-for-byte.
+assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres -text
+assets/actors/eight_direction/original_based/spear_captain/provenance.json -text
+assets/actors/eight_direction/original_based/albino_giant_crab/SpriteFrames.tres -text
+assets/actors/eight_direction/original_based/albino_giant_crab/provenance.json -text
+assets/actors/eight_direction/original_based/albino_snapping_turtle_transform/SpriteFrames.tres -text
+assets/actors/eight_direction/original_based/albino_snapping_turtle_transform/provenance.json -text
+assets/actors/eight_direction/original_based/spear_guard_green/SpriteFrames.tres -text
+assets/actors/eight_direction/original_based/spear_guard_green/provenance.json -text
+assets/actors/eight_direction/original_based/spear_guard_red/SpriteFrames.tres -text
+assets/actors/eight_direction/original_based/spear_guard_red/provenance.json -text
+assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres -text
+assets/actors/eight_direction/original_based/spear_guard/provenance.json -text
+
+# These six connected native boss packs are authenticated by their source SHA.
+# Preserve the exact recorded bytes when Windows checkout uses core.autocrlf.
+assets/actors/eight_direction/monster_boss_repair/ice_queen/published-v01/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/albino_demon/published-v01/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/albino_unicorn/published-v02/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/thebes_anubis/published-v02/SpriteFrames.tres -text
+assets/actors/eight_direction/monster_boss_repair/kurtz/published-v02/SpriteFrames.tres -text
+
 # The native PNG plan is authenticated as exact bytes by private pack records.
 # Preserve its LF bytes when a Windows checkout enables core.autocrlf.
 data/maps/native_png_*.json -text
@@ -22,7 +52,7 @@ data/maps/aden_faith_png_*.json -text
 # Shared PNG loading authenticates this plan even when opening Aden.
 data/maps/domination_png_plan.json -text
 
-# Preserve every authenticated map review and bundled index on Windows.
-# Do not normalize bytes or relax the runtime SHA checks.
+# Preserve every SHA-authenticated map review and bundled index on Windows.
+# Keep the original expected digests and all existing provenance rules above.
 data/maps/*.json -text
 external_map_packs/**/*.json -text

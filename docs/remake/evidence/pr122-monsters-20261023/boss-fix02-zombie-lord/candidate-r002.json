@@ -1,0 +1,3362 @@
+{
+  "schema": "pr122-monster-staging-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord",
+  "actors": {
+    "monster:죽음의 좀비 로드": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/SpriteFrames.tres",
+      "frames_sha256": "0f287d79b177abdf5b5b6ab12f8be8064803102c644870656e6ff62934e6d0cb",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/NativeMotionProfile.tres",
+      "native_profile_sha256": "919cb1872cf1b1db8ac8a50b6035d48462ac8169add1d14ff6ef1abac04d8343",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 33,
+      "native_pose_count": 116,
+      "missing_required_tracks": [],
+      "quality_review": "HOLD: S support exchange source corrected; E/other RUN phase repetition/occlusion and full mythic/Main quality remain unresolved. No runtime switch or approval.",
+      "reference_pin": {
+        "path": "assets/monsters/original/atlas_3.png",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "region": [
+          656,
+          299,
+          328,
+          300
+        ],
+        "region_rgba_sha256": "b8a6658e5d03cd4bf3be640e104107660a93c7e386188a58509db581fd6b3b6e",
+        "basis": "monster_world_catalog.visual atlas/cell + art_atlases exact region",
+        "scope": "Existing project art, not verified external original game art"
+      },
+      "distinct_source_pose_count": 116,
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "idle",
+          "animation": "idle_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-core8-v01.png",
+          "source_sha256": "4a7915ff9bc42ec8f72f34bc4e0cc4b814975ba78e63d9f4d014912ffe958803",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  57,
+                  23,
+                  325,
+                  389
+                ],
+                "margin": [
+                  603,
+                  575,
+                  1211,
+                  1147
+                ],
+                "source_anchor": [
+                  222,
+                  408
+                ],
+                "rgba_sha256": "0d9405fa9322e0832b0e25d1e4ace87cfe19ca1717e9bcc6140922db38c2276b"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  494,
+                  18,
+                  317,
+                  393
+                ],
+                "margin": [
+                  597,
+                  571,
+                  1219,
+                  1143
+                ],
+                "source_anchor": [
+                  665,
+                  407
+                ],
+                "rgba_sha256": "1351995213605abd04267fbe51f0188611febc6194991bb5b67f8bef146452f6"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 385.0,
+            "canvas_size": [
+              1536,
+              1536
+            ],
+            "foot": [
+              768,
+              960
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "attack",
+          "animation": "attack_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-core8-v01.png",
+          "source_sha256": "4a7915ff9bc42ec8f72f34bc4e0cc4b814975ba78e63d9f4d014912ffe958803",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  921,
+                  25,
+                  366,
+                  385
+                ],
+                "margin": [
+                  580,
+                  579,
+                  1170,
+                  1151
+                ],
+                "source_anchor": [
+                  1109,
+                  406
+                ],
+                "rgba_sha256": "cd4218c000643240330a8767d475a54d5bb0d7251326936598e4b579ba57d1f0"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  1347,
+                  55,
+                  412,
+                  360
+                ],
+                "margin": [
+                  563,
+                  604,
+                  1124,
+                  1176
+                ],
+                "source_anchor": [
+                  1552,
+                  411
+                ],
+                "rgba_sha256": "255af17d630b1c1dfb9aba75ef9fd862940a20deb43dd1934588ea5816e0a00a"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  44,
+                  487,
+                  371,
+                  356
+                ],
+                "margin": [
+                  590,
+                  608,
+                  1165,
+                  1180
+                ],
+                "source_anchor": [
+                  222,
+                  839
+                ],
+                "rgba_sha256": "80e842eff0a7611fb7098e1bb346d1c7b18a2a270c440a7982d5b263597a08e4"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  497,
+                  467,
+                  319,
+                  376
+                ],
+                "margin": [
+                  600,
+                  588,
+                  1217,
+                  1160
+                ],
+                "source_anchor": [
+                  665,
+                  839
+                ],
+                "rgba_sha256": "a5fc9d932449b5eccf2de4db73d30a238dee123eeed48f30749f0fcad7996194"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 385.0,
+            "canvas_size": [
+              1536,
+              1536
+            ],
+            "foot": [
+              768,
+              960
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "hit",
+          "animation": "hit_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-core8-v01.png",
+          "source_sha256": "4a7915ff9bc42ec8f72f34bc4e0cc4b814975ba78e63d9f4d014912ffe958803",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "E",
+                "region": [
+                  932,
+                  461,
+                  347,
+                  383
+                ],
+                "margin": [
+                  591,
+                  581,
+                  1189,
+                  1153
+                ],
+                "source_anchor": [
+                  1109,
+                  840
+                ],
+                "rgba_sha256": "09cecd2f181423907546fd3eba514eae5536e8a569862b77754a7aafa523a9f6"
+              },
+              {
+                "row": 7,
+                "direction": "E",
+                "region": [
+                  1375,
+                  491,
+                  342,
+                  352
+                ],
+                "margin": [
+                  591,
+                  612,
+                  1194,
+                  1184
+                ],
+                "source_anchor": [
+                  1552,
+                  839
+                ],
+                "rgba_sha256": "cdff7ceb363c89dad43203be6d9bd0c476ccacc7c7ec0213fbe5a5250e4800f2"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 385.0,
+            "canvas_size": [
+              1536,
+              1536
+            ],
+            "foot": [
+              768,
+              960
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-run6-v02.png",
+          "source_sha256": "5901f44fc942cd9628af3bcfbc93f07e524d71edeeb5cfdc3fbda9e9b19b0d35",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-run6-v02.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  99,
+                  67,
+                  352,
+                  408
+                ],
+                "margin": [
+                  647,
+                  601,
+                  1256,
+                  1200
+                ],
+                "source_anchor": [
+                  256,
+                  471
+                ],
+                "rgba_sha256": "2119922b6c1989b61f30831a55b6ba667d607ea0211ffe9e92efaeb51d514e38"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  607,
+                  62,
+                  348,
+                  420
+                ],
+                "margin": [
+                  643,
+                  589,
+                  1260,
+                  1188
+                ],
+                "source_anchor": [
+                  768,
+                  478
+                ],
+                "rgba_sha256": "94b3a60b4f051920a496d69851675c33f989784e88fc5c6e61d3579f88c23794"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  1105,
+                  66,
+                  351,
+                  405
+                ],
+                "margin": [
+                  629,
+                  604,
+                  1257,
+                  1203
+                ],
+                "source_anchor": [
+                  1280,
+                  467
+                ],
+                "rgba_sha256": "c3be90a2d242f8135e6ef0b025d1e0f4eb8109c313bc88242a2ce153e2aad6a2"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  89,
+                  559,
+                  351,
+                  407
+                ],
+                "margin": [
+                  637,
+                  602,
+                  1257,
+                  1201
+                ],
+                "source_anchor": [
+                  256,
+                  962
+                ],
+                "rgba_sha256": "0dd918fbc6157b10c46bbeb8df246b1e46a786452c67aef0af16115308b20d13"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  612,
+                  559,
+                  318,
+                  410
+                ],
+                "margin": [
+                  648,
+                  599,
+                  1290,
+                  1198
+                ],
+                "source_anchor": [
+                  768,
+                  965
+                ],
+                "rgba_sha256": "b89310fa77f7fa6c2ca19a41101ebf09a4bca49364cf53c2f96577bd1edeeeba"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  1100,
+                  559,
+                  356,
+                  407
+                ],
+                "margin": [
+                  624,
+                  602,
+                  1252,
+                  1201
+                ],
+                "source_anchor": [
+                  1280,
+                  962
+                ],
+                "rgba_sha256": "877c93a615428fc4978d801bb9495744d24f980fe8226fe20c8b76098cde14bb"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 401.5,
+            "canvas_size": [
+              1608,
+              1608
+            ],
+            "foot": [
+              804,
+              1005
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "idle",
+          "animation": "idle_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-core8-v01.png",
+          "source_sha256": "c3e0879d95f2d1007c9ad69f23f41180219b9865e6698f70e09b805d55702742",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  99,
+                  86,
+                  285,
+                  314
+                ],
+                "margin": [
+                  501,
+                  470,
+                  963,
+                  934
+                ],
+                "source_anchor": [
+                  222,
+                  396
+                ],
+                "rgba_sha256": "258850f8e8b07dd26c90a43f0072b75e046facd278a905b0898127e39f4594fe"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  523,
+                  80,
+                  291,
+                  320
+                ],
+                "margin": [
+                  482,
+                  464,
+                  957,
+                  928
+                ],
+                "source_anchor": [
+                  665,
+                  396
+                ],
+                "rgba_sha256": "c1d223d4f90b7e5863b9e9a924d1358f68f28d28a0852ce490077f8ccf9da827"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 311.0,
+            "canvas_size": [
+              1248,
+              1248
+            ],
+            "foot": [
+              624,
+              780
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "attack",
+          "animation": "attack_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-core8-v01.png",
+          "source_sha256": "c3e0879d95f2d1007c9ad69f23f41180219b9865e6698f70e09b805d55702742",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  951,
+                  90,
+                  312,
+                  314
+                ],
+                "margin": [
+                  466,
+                  470,
+                  936,
+                  934
+                ],
+                "source_anchor": [
+                  1109,
+                  400
+                ],
+                "rgba_sha256": "fce69a994ef7fafddd50c92e0b1ee5569709c03f375bea3082907e26acd5f482"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  1392,
+                  101,
+                  305,
+                  300
+                ],
+                "margin": [
+                  464,
+                  484,
+                  943,
+                  948
+                ],
+                "source_anchor": [
+                  1552,
+                  397
+                ],
+                "rgba_sha256": "e24d5ec5267df88e98c7cb9f93ae31c3f918ade3d3162fa8223c1c087a05459c"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  81,
+                  544,
+                  295,
+                  271
+                ],
+                "margin": [
+                  483,
+                  513,
+                  953,
+                  977
+                ],
+                "source_anchor": [
+                  222,
+                  811
+                ],
+                "rgba_sha256": "f06b5a462cff042867614888e79a5d9c45dbf6933373154439bc5396b2ecfea3"
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  541,
+                  520,
+                  265,
+                  295
+                ],
+                "margin": [
+                  500,
+                  489,
+                  983,
+                  953
+                ],
+                "source_anchor": [
+                  665,
+                  811
+                ],
+                "rgba_sha256": "fefe7f6ee14ebbe5dcca0f9aca2e81c1dd537893b04b3c47a2663448f53231ec"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 311.0,
+            "canvas_size": [
+              1248,
+              1248
+            ],
+            "foot": [
+              624,
+              780
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "hit",
+          "animation": "hit_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-core8-v01.png",
+          "source_sha256": "c3e0879d95f2d1007c9ad69f23f41180219b9865e6698f70e09b805d55702742",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "N",
+                "region": [
+                  948,
+                  518,
+                  318,
+                  296
+                ],
+                "margin": [
+                  463,
+                  488,
+                  930,
+                  952
+                ],
+                "source_anchor": [
+                  1109,
+                  810
+                ],
+                "rgba_sha256": "8ea2579313bbbc03a2ba83b70a7e3673003ac0c79aecf1b09b3c9878988b6d2d"
+              },
+              {
+                "row": 7,
+                "direction": "N",
+                "region": [
+                  1415,
+                  549,
+                  271,
+                  265
+                ],
+                "margin": [
+                  487,
+                  519,
+                  977,
+                  983
+                ],
+                "source_anchor": [
+                  1552,
+                  810
+                ],
+                "rgba_sha256": "ec8a5a696ad18eda1b694504566afed5a5690f08e2dfa1bd83164502be1ff4cf"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 311.0,
+            "canvas_size": [
+              1248,
+              1248
+            ],
+            "foot": [
+              624,
+              780
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "run",
+          "animation": "run_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-run6-v02.png",
+          "source_sha256": "7635fffe2265d62f18ca669107397c03edf23ab9a37407697e3556d44de26ee3",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-run6-v02.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  77,
+                  55,
+                  373,
+                  407
+                ],
+                "margin": [
+                  621,
+                  597,
+                  1227,
+                  1193
+                ],
+                "source_anchor": [
+                  256,
+                  458
+                ],
+                "rgba_sha256": "dfe4a67f90998dbae0c4d4f532a278b91e3be4ed40d0536bf2037e574cb13f62"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  592,
+                  58,
+                  362,
+                  392
+                ],
+                "margin": [
+                  624,
+                  612,
+                  1238,
+                  1208
+                ],
+                "source_anchor": [
+                  768,
+                  446
+                ],
+                "rgba_sha256": "128b44459ce9938852a4efa58e62d225cfe2fe9033b6509ddb291810c980cfd6"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  1092,
+                  55,
+                  358,
+                  394
+                ],
+                "margin": [
+                  612,
+                  610,
+                  1242,
+                  1206
+                ],
+                "source_anchor": [
+                  1280,
+                  445
+                ],
+                "rgba_sha256": "0473f2ca973ed9fe319b8089639604cfad92493f6b0e8c18e7a5614acfb06c87"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  74,
+                  565,
+                  380,
+                  406
+                ],
+                "margin": [
+                  618,
+                  598,
+                  1220,
+                  1194
+                ],
+                "source_anchor": [
+                  256,
+                  967
+                ],
+                "rgba_sha256": "bb25ea195c0a826fe831f495b771f108649d9849d56e18480c4a4726e8058078"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  588,
+                  567,
+                  373,
+                  394
+                ],
+                "margin": [
+                  620,
+                  610,
+                  1227,
+                  1206
+                ],
+                "source_anchor": [
+                  768,
+                  957
+                ],
+                "rgba_sha256": "6c4ade6466dca6bc0a8e9b618fa05e784c1030a35eea7d392cb7ac0f723d5630"
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1097,
+                  565,
+                  379,
+                  393
+                ],
+                "margin": [
+                  617,
+                  611,
+                  1221,
+                  1207
+                ],
+                "source_anchor": [
+                  1280,
+                  954
+                ],
+                "rgba_sha256": "d43c6ef26ba94ecda0bd839157e99d7411b57d566b6d773b9d4822a21930eb95"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 400.5,
+            "canvas_size": [
+              1600,
+              1600
+            ],
+            "foot": [
+              800,
+              1000
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "idle",
+          "animation": "idle_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-core8-v01.png",
+          "source_sha256": "7cc1bb34d8b089bbb17cdaf7774185239719145d4769d4ce93083967c28c2ac3",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  110,
+                  75,
+                  256,
+                  323
+                ],
+                "margin": [
+                  520,
+                  471,
+                  1008,
+                  941
+                ],
+                "source_anchor": [
+                  222,
+                  394
+                ],
+                "rgba_sha256": "982db7b969659008fe95549a08cb25af4f4c60146ee260a466ca7af972782f01"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  554,
+                  77,
+                  252,
+                  321
+                ],
+                "margin": [
+                  521,
+                  473,
+                  1012,
+                  943
+                ],
+                "source_anchor": [
+                  665,
+                  394
+                ],
+                "rgba_sha256": "975088ce38a11a657b8ff1fede687dc674cc0516bb47ba3181ffd95db2974774"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 316.0,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "attack",
+          "animation": "attack_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-core8-v01.png",
+          "source_sha256": "7cc1bb34d8b089bbb17cdaf7774185239719145d4769d4ce93083967c28c2ac3",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  978,
+                  66,
+                  277,
+                  332
+                ],
+                "margin": [
+                  501,
+                  462,
+                  987,
+                  932
+                ],
+                "source_anchor": [
+                  1109,
+                  394
+                ],
+                "rgba_sha256": "882b5f5d8f7e14d0234778d57099e19deb68ff18f51e7021d4d3cf5b2f9a0cd3"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  1394,
+                  104,
+                  341,
+                  294
+                ],
+                "margin": [
+                  474,
+                  500,
+                  923,
+                  970
+                ],
+                "source_anchor": [
+                  1552,
+                  394
+                ],
+                "rgba_sha256": "3320e4cab1839ef091b10f18a3cf268cec1712ad391f2b8e48344e94755c495d"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  84,
+                  535,
+                  328,
+                  285
+                ],
+                "margin": [
+                  494,
+                  509,
+                  936,
+                  979
+                ],
+                "source_anchor": [
+                  222,
+                  816
+                ],
+                "rgba_sha256": "9dfe95e9e834bd26518375c0a60d4653cadbc68e2f1506c61736209f1f010dec"
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  534,
+                  514,
+                  266,
+                  315
+                ],
+                "margin": [
+                  501,
+                  479,
+                  998,
+                  949
+                ],
+                "source_anchor": [
+                  665,
+                  825
+                ],
+                "rgba_sha256": "bdfd580300a92e7f9d0307e4eca4283188a8bbfe1eecf840078dd7adccd6fb7d"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 316.0,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "hit",
+          "animation": "hit_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-core8-v01.png",
+          "source_sha256": "7cc1bb34d8b089bbb17cdaf7774185239719145d4769d4ce93083967c28c2ac3",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "NE",
+                "region": [
+                  982,
+                  503,
+                  308,
+                  322
+                ],
+                "margin": [
+                  505,
+                  472,
+                  956,
+                  942
+                ],
+                "source_anchor": [
+                  1109,
+                  821
+                ],
+                "rgba_sha256": "a88ea8121790820f4c152ad328a344f32a07010f3ddd2d17e05b430f2c1a6869"
+              },
+              {
+                "row": 7,
+                "direction": "NE",
+                "region": [
+                  1403,
+                  536,
+                  292,
+                  289
+                ],
+                "margin": [
+                  483,
+                  505,
+                  972,
+                  975
+                ],
+                "source_anchor": [
+                  1552,
+                  821
+                ],
+                "rgba_sha256": "52a79034ffbb989cd516772a3fe137cbd7164a62f43621f54873053e66715269"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 316.0,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "run",
+          "animation": "run_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-run6-v01.png",
+          "source_sha256": "30626163698d306d2afa91d94981ab9e4160484451c54cf53f2dc0d91c7282c2",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1448,
+              1086
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  242,
+                  5,
+                  325,
+                  355
+                ],
+                "margin": [
+                  580,
+                  524,
+                  1075,
+                  1045
+                ],
+                "source_anchor": [
+                  362,
+                  356
+                ],
+                "rgba_sha256": "2630ec8eaec830fdd504b5674bb479e9bea77c4cd6b54ce1a18768766778233f"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  903,
+                  8,
+                  349,
+                  352
+                ],
+                "margin": [
+                  517,
+                  527,
+                  1051,
+                  1048
+                ],
+                "source_anchor": [
+                  1086,
+                  356
+                ],
+                "rgba_sha256": "9ec601e1ddbb5de0a824f9f439b5121f44a612d01a0097e496a5193efab9baa7"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  212,
+                  363,
+                  357,
+                  354
+                ],
+                "margin": [
+                  550,
+                  525,
+                  1043,
+                  1046
+                ],
+                "source_anchor": [
+                  362,
+                  713
+                ],
+                "rgba_sha256": "30c2292f03db726225bf3b3673ef2b16c052270b797fabfcc0f6248837de0fcf"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  931,
+                  364,
+                  349,
+                  358
+                ],
+                "margin": [
+                  545,
+                  521,
+                  1051,
+                  1042
+                ],
+                "source_anchor": [
+                  1086,
+                  718
+                ],
+                "rgba_sha256": "0e73293a9115940a37f35fcdb2f3e05b4394ec5d56ac6356017bb3aa9142f204"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  242,
+                  721,
+                  321,
+                  343
+                ],
+                "margin": [
+                  580,
+                  536,
+                  1079,
+                  1057
+                ],
+                "source_anchor": [
+                  362,
+                  1060
+                ],
+                "rgba_sha256": "6a3bc111bfc03512bd3cefa77f2b8a695248adc9a52bf804d230580a602f5f0a"
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  935,
+                  720,
+                  355,
+                  356
+                ],
+                "margin": [
+                  549,
+                  523,
+                  1045,
+                  1044
+                ],
+                "source_anchor": [
+                  1086,
+                  1072
+                ],
+                "rgba_sha256": "5ed4c2d41ca6a2dd696b63dcd5480926221ea422d9b792092ee865171523f6e4"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 350.5,
+            "canvas_size": [
+              1400,
+              1400
+            ],
+            "foot": [
+              700,
+              875
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "idle",
+          "animation": "idle_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-core8-v01.png",
+          "source_sha256": "ba777efb8652abd2ad3ab0f518f9c2098b8a600efe426cca9f38826e8f8ccaef",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  85,
+                  90,
+                  256,
+                  302
+                ],
+                "margin": [
+                  455,
+                  442,
+                  928,
+                  882
+                ],
+                "source_anchor": [
+                  222,
+                  388
+                ],
+                "rgba_sha256": "88f98af7d7bc55dc467e3cf5a1bf275aa7d2b495583198edc5e69f33b51b05d5"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  532,
+                  89,
+                  265,
+                  303
+                ],
+                "margin": [
+                  459,
+                  441,
+                  919,
+                  881
+                ],
+                "source_anchor": [
+                  665,
+                  388
+                ],
+                "rgba_sha256": "c4761ca0f341ad6ca8dd4c488abd620c49c0dcaf89ad505738a50e3b1512838b"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 296.5,
+            "canvas_size": [
+              1184,
+              1184
+            ],
+            "foot": [
+              592,
+              740
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "attack",
+          "animation": "attack_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-core8-v01.png",
+          "source_sha256": "ba777efb8652abd2ad3ab0f518f9c2098b8a600efe426cca9f38826e8f8ccaef",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  942,
+                  65,
+                  306,
+                  332
+                ],
+                "margin": [
+                  425,
+                  412,
+                  878,
+                  852
+                ],
+                "source_anchor": [
+                  1109,
+                  393
+                ],
+                "rgba_sha256": "4f36625bd4e6db53338901e8dc5499ff257523c755034a7199e540c16d1de4d8"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  1377,
+                  102,
+                  348,
+                  295
+                ],
+                "margin": [
+                  417,
+                  449,
+                  836,
+                  889
+                ],
+                "source_anchor": [
+                  1552,
+                  393
+                ],
+                "rgba_sha256": "db864a75b653b7a33e464f5d0025142ffc4f63c3ac9df73dc00f87bb926c410c"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  39,
+                  545,
+                  335,
+                  292
+                ],
+                "margin": [
+                  409,
+                  452,
+                  849,
+                  892
+                ],
+                "source_anchor": [
+                  222,
+                  833
+                ],
+                "rgba_sha256": "e4a0de607961de6eb9f6d1a30ee8da73290fe7d24852c8fe80dbfb2490cea3fc"
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  531,
+                  530,
+                  274,
+                  306
+                ],
+                "margin": [
+                  458,
+                  438,
+                  910,
+                  878
+                ],
+                "source_anchor": [
+                  665,
+                  832
+                ],
+                "rgba_sha256": "c1b6a543a48aff6ffb8116fe6f1845566ca7c063b4abba2270ce053a3fe3cf70"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 296.5,
+            "canvas_size": [
+              1184,
+              1184
+            ],
+            "foot": [
+              592,
+              740
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "hit",
+          "animation": "hit_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-core8-v01.png",
+          "source_sha256": "ba777efb8652abd2ad3ab0f518f9c2098b8a600efe426cca9f38826e8f8ccaef",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "NW",
+                "region": [
+                  970,
+                  551,
+                  283,
+                  283
+                ],
+                "margin": [
+                  453,
+                  461,
+                  901,
+                  901
+                ],
+                "source_anchor": [
+                  1109,
+                  830
+                ],
+                "rgba_sha256": "64698b378b2bb45acc10e1bf6e537ae0d277707cc3c51aaa70d78307fefaeb3f"
+              },
+              {
+                "row": 7,
+                "direction": "NW",
+                "region": [
+                  1418,
+                  548,
+                  304,
+                  285
+                ],
+                "margin": [
+                  458,
+                  459,
+                  880,
+                  899
+                ],
+                "source_anchor": [
+                  1552,
+                  829
+                ],
+                "rgba_sha256": "c174e0baa62cf79e2929d966f0c2f32cb4ae9a8e5dba360989a43d38a3b38057"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 296.5,
+            "canvas_size": [
+              1184,
+              1184
+            ],
+            "foot": [
+              592,
+              740
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "run",
+          "animation": "run_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-run6-v01.png",
+          "source_sha256": "58d6dad665b932e643043de52271838fea94f5ae672152d4f724776c5f4cfea4",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  300,
+                  6,
+                  366,
+                  328
+                ],
+                "margin": [
+                  548,
+                  466,
+                  898,
+                  936
+                ],
+                "source_anchor": [
+                  384,
+                  330
+                ],
+                "rgba_sha256": "a41c50a25c0dc2ea7fed775a26fd935ebb9daca6152641c34c17bcf45c745aa9"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  902,
+                  8,
+                  366,
+                  326
+                ],
+                "margin": [
+                  382,
+                  468,
+                  898,
+                  938
+                ],
+                "source_anchor": [
+                  1152,
+                  330
+                ],
+                "rgba_sha256": "1b560451f4f0f2b3e9c09fb3baac42d88f52e6df3c871c5e37ef51425c25806e"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  299,
+                  347,
+                  375,
+                  323
+                ],
+                "margin": [
+                  547,
+                  471,
+                  889,
+                  941
+                ],
+                "source_anchor": [
+                  384,
+                  666
+                ],
+                "rgba_sha256": "e7533eddb0a66f5f99a8a7d5d8873dc33ca8a9626b70b1d52560a14758f6fd4c"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  892,
+                  346,
+                  371,
+                  317
+                ],
+                "margin": [
+                  372,
+                  477,
+                  893,
+                  947
+                ],
+                "source_anchor": [
+                  1152,
+                  659
+                ],
+                "rgba_sha256": "14c3f676e93310ee830d8f82b0f0f6b4b2336515297d1242ae9d9a6d3ded9e83"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  273,
+                  683,
+                  377,
+                  321
+                ],
+                "margin": [
+                  521,
+                  473,
+                  887,
+                  943
+                ],
+                "source_anchor": [
+                  384,
+                  1000
+                ],
+                "rgba_sha256": "51bee959fd1496a140f7a56f44fa524baf43ebfd1761fda0f921f40a28b04144"
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  912,
+                  679,
+                  384,
+                  328
+                ],
+                "margin": [
+                  392,
+                  466,
+                  880,
+                  936
+                ],
+                "source_anchor": [
+                  1152,
+                  1003
+                ],
+                "rgba_sha256": "cba759eb28538d289bf808e2196abd860e34081475926425596d9d0125250c4d"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 316.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "idle",
+          "animation": "idle_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-core8-v01.png",
+          "source_sha256": "e5c625d9ab5fafb1303aff3aeeeecf90c8a3c11a8d95c96390086c0cf39fa430",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  30,
+                  37,
+                  363,
+                  377
+                ],
+                "margin": [
+                  560,
+                  567,
+                  1141,
+                  1127
+                ],
+                "source_anchor": [
+                  222,
+                  410
+                ],
+                "rgba_sha256": "76ec088d77979a51799532e96a8928f5ac124825f80242fcd56295cde55f11e7"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  482,
+                  29,
+                  363,
+                  386
+                ],
+                "margin": [
+                  569,
+                  558,
+                  1141,
+                  1118
+                ],
+                "source_anchor": [
+                  665,
+                  411
+                ],
+                "rgba_sha256": "7a00e1e45df1d659032046ee5d58090e81ea6d41621179a4f5de4e9fee2cf442"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 375.5,
+            "canvas_size": [
+              1504,
+              1504
+            ],
+            "foot": [
+              752,
+              940
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "attack",
+          "animation": "attack_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-core8-v01.png",
+          "source_sha256": "e5c625d9ab5fafb1303aff3aeeeecf90c8a3c11a8d95c96390086c0cf39fa430",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  925,
+                  29,
+                  385,
+                  391
+                ],
+                "margin": [
+                  568,
+                  553,
+                  1119,
+                  1113
+                ],
+                "source_anchor": [
+                  1109,
+                  416
+                ],
+                "rgba_sha256": "c9c160773330f386bdba4d7dbd14bafe3ecbf9c8de3712b9bf8c9e3601ee9883"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  1382,
+                  58,
+                  351,
+                  359
+                ],
+                "margin": [
+                  582,
+                  585,
+                  1153,
+                  1145
+                ],
+                "source_anchor": [
+                  1552,
+                  413
+                ],
+                "rgba_sha256": "3aa8425da397d3261b5a20d883a5d77d120fd3479068112ac81ba3badc96ce63"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  44,
+                  493,
+                  347,
+                  361
+                ],
+                "margin": [
+                  574,
+                  583,
+                  1157,
+                  1143
+                ],
+                "source_anchor": [
+                  222,
+                  850
+                ],
+                "rgba_sha256": "8a08c5cae447ba0b7b26530df197e119646c04c595a54a087bd3aa11457299b5"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  491,
+                  488,
+                  354,
+                  363
+                ],
+                "margin": [
+                  578,
+                  581,
+                  1150,
+                  1141
+                ],
+                "source_anchor": [
+                  665,
+                  847
+                ],
+                "rgba_sha256": "e07b4c4963f1f6db8cc94402eb4e574b0dfdd07e59c5b972bbde0b3dbfcfddda"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 375.5,
+            "canvas_size": [
+              1504,
+              1504
+            ],
+            "foot": [
+              752,
+              940
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "hit",
+          "animation": "hit_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-core8-v01.png",
+          "source_sha256": "e5c625d9ab5fafb1303aff3aeeeecf90c8a3c11a8d95c96390086c0cf39fa430",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "S",
+                "region": [
+                  926,
+                  472,
+                  380,
+                  373
+                ],
+                "margin": [
+                  569,
+                  571,
+                  1124,
+                  1131
+                ],
+                "source_anchor": [
+                  1109,
+                  841
+                ],
+                "rgba_sha256": "a714bd207e9090b3b36952f7167f4e96262f45233994cdc478841c75f0a83004"
+              },
+              {
+                "row": 7,
+                "direction": "S",
+                "region": [
+                  1384,
+                  515,
+                  348,
+                  337
+                ],
+                "margin": [
+                  584,
+                  607,
+                  1156,
+                  1167
+                ],
+                "source_anchor": [
+                  1552,
+                  848
+                ],
+                "rgba_sha256": "1a42442ad69b184d10e01cdce4ba1cc5df61e89d577b99e8683b74ac4e393a8a"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 375.5,
+            "canvas_size": [
+              1504,
+              1504
+            ],
+            "foot": [
+              752,
+              940
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "death",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-death4-v01.png",
+          "source_sha256": "228d48ae13305b7221c1484fc6354be7ff0231af412fbba445290fcf8804c68a",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-death4-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  121,
+                  23,
+                  542,
+                  492
+                ],
+                "margin": [
+                  709,
+                  727,
+                  1402,
+                  1452
+                ],
+                "source_anchor": [
+                  384,
+                  511
+                ],
+                "rgba_sha256": "a36d2c586ca3c50e360cec747364f8276fdbaf5e674e3d0d172e0f08baa02a6a"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  911,
+                  78,
+                  513,
+                  437
+                ],
+                "margin": [
+                  731,
+                  782,
+                  1431,
+                  1507
+                ],
+                "source_anchor": [
+                  1152,
+                  511
+                ],
+                "rgba_sha256": "7efbd299aadc4912ec31f1cd0553d5bdc3fc0e73de2ff0f01a3048272bb79eaa"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  18,
+                  590,
+                  708,
+                  386
+                ],
+                "margin": [
+                  606,
+                  833,
+                  1236,
+                  1558
+                ],
+                "source_anchor": [
+                  384,
+                  972
+                ],
+                "rgba_sha256": "5140ad58a11ba4a50fbbe1c1a10f516f6c3e7f6012447a53e83b56ca8bcdaccb"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  808,
+                  664,
+                  705,
+                  294
+                ],
+                "margin": [
+                  628,
+                  925,
+                  1239,
+                  1650
+                ],
+                "source_anchor": [
+                  1152,
+                  954
+                ],
+                "rgba_sha256": "75d01537ae77c9cd703b933d4e54ec419c6e3c129d5e996c34a9eacac2159816"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 486.0,
+            "canvas_size": [
+              1944,
+              1944
+            ],
+            "foot": [
+              972,
+              1215
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-run6-support-columns-v02.png",
+          "source_sha256": "b5df37652060618c65d3ab9a61b2c97b190320009484d02c681a9ec1c598a588",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/zombie-lord-S-run6-support-columns-v02.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  79,
+                  30,
+                  413,
+                  467
+                ],
+                "margin": [
+                  743,
+                  687,
+                  1427,
+                  1373
+                ],
+                "source_anchor": [
+                  256,
+                  493
+                ],
+                "rgba_sha256": "1ac8a6e10f5566492b29f42273e20a8e28988c8adcabb008efd59cd0c87852f3"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  70,
+                  528,
+                  427,
+                  477
+                ],
+                "margin": [
+                  734,
+                  677,
+                  1413,
+                  1363
+                ],
+                "source_anchor": [
+                  256,
+                  1001
+                ],
+                "rgba_sha256": "4e70fa697efb67e2a7c6722f9eb1d372e585c24f30cb378e3599024c89949f36"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  69,
+                  1020,
+                  437,
+                  480
+                ],
+                "margin": [
+                  733,
+                  674,
+                  1403,
+                  1360
+                ],
+                "source_anchor": [
+                  256,
+                  1496
+                ],
+                "rgba_sha256": "e6f3920413f14bf87615dd74478a46a9ce6ec29d6a9ededd1174653566d63b90"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  537,
+                  30,
+                  403,
+                  466
+                ],
+                "margin": [
+                  689,
+                  688,
+                  1437,
+                  1374
+                ],
+                "source_anchor": [
+                  768,
+                  492
+                ],
+                "rgba_sha256": "51e4a97b50f1948aaf0de4bffc3566092cc1fe37f4ecf8d94c8aa206d4fa804a"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  541,
+                  527,
+                  431,
+                  475
+                ],
+                "margin": [
+                  693,
+                  679,
+                  1409,
+                  1365
+                ],
+                "source_anchor": [
+                  768,
+                  998
+                ],
+                "rgba_sha256": "3ede2806c73a4063518bdd414e172002773e422e7fabbc296dda2e0c23ddd865"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  551,
+                  1021,
+                  425,
+                  478
+                ],
+                "margin": [
+                  703,
+                  676,
+                  1415,
+                  1362
+                ],
+                "source_anchor": [
+                  768,
+                  1495
+                ],
+                "rgba_sha256": "bcca0b4feb5449364fd7d05a54cbea3369cce63f82edcdf8d18449bf4fbddfff"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 460.5,
+            "canvas_size": [
+              1840,
+              1840
+            ],
+            "foot": [
+              920,
+              1150
+            ]
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "observed_support_sequence": [
+            "RIGHT",
+            "RIGHT",
+            "RIGHT",
+            "LEFT",
+            "LEFT",
+            "LEFT"
+          ],
+          "source_plane_review": "Observed opposite screen-side full-sole support; anatomicalRIGHT=screenLEFT. Main gait/weight review still HOLD."
+        },
+        {
+          "direction": "SE",
+          "role": "idle",
+          "animation": "idle_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-core8-v01.png",
+          "source_sha256": "06ebbc4bde8508abb3c226f3c927472842e79268312af1edde5ebca8d2858b9a",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  27,
+                  85,
+                  338,
+                  377
+                ],
+                "margin": [
+                  603,
+                  587,
+                  1198,
+                  1159
+                ],
+                "source_anchor": [
+                  192,
+                  458
+                ],
+                "rgba_sha256": "3ecb6ae3209358bedeb642329c45af1a221daffe4e4c7720fdc34be3a33ea01c"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  396,
+                  67,
+                  364,
+                  401
+                ],
+                "margin": [
+                  588,
+                  563,
+                  1172,
+                  1135
+                ],
+                "source_anchor": [
+                  576,
+                  464
+                ],
+                "rgba_sha256": "561eb4ba3e1c52df50e5c53ab75fe88baac169bea3cf13645fad684ebc302a90"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 383.0,
+            "canvas_size": [
+              1536,
+              1536
+            ],
+            "foot": [
+              768,
+              960
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "attack",
+          "animation": "attack_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-core8-v01.png",
+          "source_sha256": "06ebbc4bde8508abb3c226f3c927472842e79268312af1edde5ebca8d2858b9a",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  767,
+                  59,
+                  377,
+                  411
+                ],
+                "margin": [
+                  575,
+                  553,
+                  1159,
+                  1125
+                ],
+                "source_anchor": [
+                  960,
+                  466
+                ],
+                "rgba_sha256": "7d46adcf8695bd2e4540be49fd4ba31210c221d3dd7f2168d5f0711d4e613f6e"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  1144,
+                  141,
+                  381,
+                  332
+                ],
+                "margin": [
+                  568,
+                  632,
+                  1155,
+                  1204
+                ],
+                "source_anchor": [
+                  1344,
+                  469
+                ],
+                "rgba_sha256": "80f1dfd8a4b12c4f1034b1a160a997b69d0ea6193650e6e4402ce329140ada4b"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  23,
+                  606,
+                  367,
+                  323
+                ],
+                "margin": [
+                  599,
+                  641,
+                  1169,
+                  1213
+                ],
+                "source_anchor": [
+                  192,
+                  925
+                ],
+                "rgba_sha256": "74644cdc8c9d19f1bed5d8f122604cba4fac2996afc61877a2290f21940ae269"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  408,
+                  579,
+                  362,
+                  359
+                ],
+                "margin": [
+                  600,
+                  605,
+                  1174,
+                  1177
+                ],
+                "source_anchor": [
+                  576,
+                  934
+                ],
+                "rgba_sha256": "e31f1dc266826f2ee6c70f14c77ed0dde4125f74d380d83148f16869898c7c48"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 383.0,
+            "canvas_size": [
+              1536,
+              1536
+            ],
+            "foot": [
+              768,
+              960
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "hit",
+          "animation": "hit_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-core8-v01.png",
+          "source_sha256": "06ebbc4bde8508abb3c226f3c927472842e79268312af1edde5ebca8d2858b9a",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "SE",
+                "region": [
+                  779,
+                  557,
+                  370,
+                  395
+                ],
+                "margin": [
+                  587,
+                  569,
+                  1166,
+                  1141
+                ],
+                "source_anchor": [
+                  960,
+                  948
+                ],
+                "rgba_sha256": "440786d23f8a6b7032a4e41746347a3b4c5ce985dc27ba7da4287c30334bd8d3"
+              },
+              {
+                "row": 7,
+                "direction": "SE",
+                "region": [
+                  1166,
+                  588,
+                  342,
+                  348
+                ],
+                "margin": [
+                  590,
+                  616,
+                  1194,
+                  1188
+                ],
+                "source_anchor": [
+                  1344,
+                  932
+                ],
+                "rgba_sha256": "df84d784eb6ef1b6ee28718f35303d4c39f7e09f03a110e1a98b9a9dbb9ca093"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 383.0,
+            "canvas_size": [
+              1536,
+              1536
+            ],
+            "foot": [
+              768,
+              960
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-run6-v01.png",
+          "source_sha256": "0827272c426351d259dd9992fe533c7c5627247b2f0b7ba1325ea4d046a2430f",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  53,
+                  40,
+                  452,
+                  443
+                ],
+                "margin": [
+                  669,
+                  651,
+                  1292,
+                  1301
+                ],
+                "source_anchor": [
+                  256,
+                  479
+                ],
+                "rgba_sha256": "9d2fa7eda97b720f2a5bdae3bc1395ee53845551312ec20fed7aa7b2fb95d6b7"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  567,
+                  39,
+                  413,
+                  443
+                ],
+                "margin": [
+                  671,
+                  651,
+                  1331,
+                  1301
+                ],
+                "source_anchor": [
+                  768,
+                  478
+                ],
+                "rgba_sha256": "727b81359dcca239ab2d1d5362d40475a2905a7d358b71c5a6c1d70da930a2db"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  55,
+                  528,
+                  461,
+                  415
+                ],
+                "margin": [
+                  671,
+                  679,
+                  1283,
+                  1329
+                ],
+                "source_anchor": [
+                  256,
+                  939
+                ],
+                "rgba_sha256": "88bb77bc7da3ffd6a70801ec3e90cb87e4cbc967c069b2eb82ca3471737534f0"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  554,
+                  533,
+                  442,
+                  440
+                ],
+                "margin": [
+                  658,
+                  654,
+                  1302,
+                  1304
+                ],
+                "source_anchor": [
+                  768,
+                  969
+                ],
+                "rgba_sha256": "f15155fdc84bca38b1367ff4997a9f17bee57502f24ae6515c480ccea822e16d"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  52,
+                  1015,
+                  447,
+                  443
+                ],
+                "margin": [
+                  668,
+                  651,
+                  1297,
+                  1301
+                ],
+                "source_anchor": [
+                  256,
+                  1454
+                ],
+                "rgba_sha256": "a3f43d3697f266ba7c58e651aa655b61a77d8920f28904f55bd567e9b4830982"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  541,
+                  1012,
+                  451,
+                  445
+                ],
+                "margin": [
+                  645,
+                  649,
+                  1293,
+                  1299
+                ],
+                "source_anchor": [
+                  768,
+                  1453
+                ],
+                "rgba_sha256": "281edefc23b5dd8111aec8e1d115753ac3b8f2557b026ebcdef9d9876d7485a1"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 435.5,
+            "canvas_size": [
+              1744,
+              1744
+            ],
+            "foot": [
+              872,
+              1090
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "idle",
+          "animation": "idle_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-core8-v02.png",
+          "source_sha256": "77b18f73cdd1d1be4fb4d8346ef6dd83b4ac795075b583f5f9fc943e342014ac",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-core8-v02.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  74,
+                  77,
+                  283,
+                  318
+                ],
+                "margin": [
+                  492,
+                  486,
+                  997,
+                  962
+                ],
+                "source_anchor": [
+                  222,
+                  391
+                ],
+                "rgba_sha256": "f93f94c9ce991e7fbe6d205e630c8a9b3208789ef0e56571a9191f38995cebd7"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  515,
+                  62,
+                  296,
+                  333
+                ],
+                "margin": [
+                  490,
+                  471,
+                  984,
+                  947
+                ],
+                "source_anchor": [
+                  665,
+                  391
+                ],
+                "rgba_sha256": "597cfba1555ffb84ec3112ec0cfc3d91677054093ff38431efc16e8f4b8c92e9"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 319.5,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "attack",
+          "animation": "attack_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-core8-v02.png",
+          "source_sha256": "77b18f73cdd1d1be4fb4d8346ef6dd83b4ac795075b583f5f9fc943e342014ac",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-core8-v02.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  964,
+                  52,
+                  283,
+                  338
+                ],
+                "margin": [
+                  495,
+                  466,
+                  997,
+                  942
+                ],
+                "source_anchor": [
+                  1109,
+                  386
+                ],
+                "rgba_sha256": "1c72488e5ba0eaec738bf0e2ea5cef0ad6ba07cad28586f9d9fdfdcf5ca775c1"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  1340,
+                  86,
+                  391,
+                  302
+                ],
+                "margin": [
+                  428,
+                  502,
+                  889,
+                  978
+                ],
+                "source_anchor": [
+                  1552,
+                  384
+                ],
+                "rgba_sha256": "da03991b0c4b34b5a9c929cf5cacd19cfe892c02ee942002afecbd996dc16340"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  58,
+                  522,
+                  333,
+                  303
+                ],
+                "margin": [
+                  476,
+                  501,
+                  947,
+                  977
+                ],
+                "source_anchor": [
+                  222,
+                  821
+                ],
+                "rgba_sha256": "dabcf9b26e246aabd61bf6ab27dd709a0164182c0ddc4929dcb414c625241f85"
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  525,
+                  518,
+                  299,
+                  306
+                ],
+                "margin": [
+                  500,
+                  498,
+                  981,
+                  974
+                ],
+                "source_anchor": [
+                  665,
+                  820
+                ],
+                "rgba_sha256": "b6b10b27db3b9506314206c90e2fbb06cb77c04f435de85ecc536dd6d4a2cd69"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 319.5,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "hit",
+          "animation": "hit_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-core8-v02.png",
+          "source_sha256": "77b18f73cdd1d1be4fb4d8346ef6dd83b4ac795075b583f5f9fc943e342014ac",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-core8-v02.png",
+          "geometry": {
+            "image_size": [
+              1774,
+              887
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "SW",
+                "region": [
+                  949,
+                  494,
+                  359,
+                  326
+                ],
+                "margin": [
+                  480,
+                  478,
+                  921,
+                  954
+                ],
+                "source_anchor": [
+                  1109,
+                  816
+                ],
+                "rgba_sha256": "76c16eff6477fb009b7273161209fcbcdedc49274d048d1f775fb82362655641"
+              },
+              {
+                "row": 7,
+                "direction": "SW",
+                "region": [
+                  1399,
+                  523,
+                  311,
+                  296
+                ],
+                "margin": [
+                  487,
+                  508,
+                  969,
+                  984
+                ],
+                "source_anchor": [
+                  1552,
+                  815
+                ],
+                "rgba_sha256": "b2763c2a7354c112a64fb6bd56b04a5dd68080ef84b4bc005bb3e71b1ac50e30"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 319.5,
+            "canvas_size": [
+              1280,
+              1280
+            ],
+            "foot": [
+              640,
+              800
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "run",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-run6-v02.png",
+          "source_sha256": "2cd54bb7cf5e8b20820c157cf5324cf78d7e35e5f8d91852b99e6579f0213db2",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-run6-v02.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  65,
+                  62,
+                  388,
+                  410
+                ],
+                "margin": [
+                  617,
+                  604,
+                  1228,
+                  1206
+                ],
+                "source_anchor": [
+                  256,
+                  468
+                ],
+                "rgba_sha256": "3ddb428d96ecbfbd3f87f603f6ee38377664ee300f6ad7384f24816110384122"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  570,
+                  67,
+                  393,
+                  405
+                ],
+                "margin": [
+                  610,
+                  609,
+                  1223,
+                  1211
+                ],
+                "source_anchor": [
+                  768,
+                  468
+                ],
+                "rgba_sha256": "e4ba5820f8b095d4a3bd5bbe57c5ad54611378df58a9906b21d28249c7f638a0"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  1097,
+                  62,
+                  382,
+                  389
+                ],
+                "margin": [
+                  625,
+                  625,
+                  1234,
+                  1227
+                ],
+                "source_anchor": [
+                  1280,
+                  447
+                ],
+                "rgba_sha256": "539da78c2ef8e777b7c84e6cac732c54f36d8357b5e00efc4e2b9495e6ab0af6"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  63,
+                  570,
+                  392,
+                  409
+                ],
+                "margin": [
+                  615,
+                  605,
+                  1224,
+                  1207
+                ],
+                "source_anchor": [
+                  256,
+                  975
+                ],
+                "rgba_sha256": "76d436d806bf7af7c3a0416fad947426229333f60eb92a75ccba985855726f11"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  566,
+                  572,
+                  402,
+                  407
+                ],
+                "margin": [
+                  606,
+                  607,
+                  1214,
+                  1209
+                ],
+                "source_anchor": [
+                  768,
+                  975
+                ],
+                "rgba_sha256": "2512cd200c4aae92181b97a522d3038c0e1ce8daa871f17830b99d837bd54034"
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  1089,
+                  569,
+                  377,
+                  391
+                ],
+                "margin": [
+                  617,
+                  623,
+                  1239,
+                  1225
+                ],
+                "source_anchor": [
+                  1280,
+                  956
+                ],
+                "rgba_sha256": "1fbbb5551b92a590e6accf02647834845826c82c128cc9cef67bc8d4ab6f2859"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 403.5,
+            "canvas_size": [
+              1616,
+              1616
+            ],
+            "foot": [
+              808,
+              1010
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "idle",
+          "animation": "idle_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-core8-v01.png",
+          "source_sha256": "81e8e32ed597630659820a54b7a5a33c00fd6c6b082729caa62a7e7c276344b0",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  78,
+                  130,
+                  242,
+                  316
+                ],
+                "margin": [
+                  518,
+                  478,
+                  1022,
+                  948
+                ],
+                "source_anchor": [
+                  192,
+                  442
+                ],
+                "rgba_sha256": "6aee60cf262d6eeb7f7db29c24f15ffeb9d8f78507f623d7307940f705e13266"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  439,
+                  121,
+                  265,
+                  327
+                ],
+                "margin": [
+                  495,
+                  467,
+                  999,
+                  937
+                ],
+                "source_anchor": [
+                  576,
+                  444
+                ],
+                "rgba_sha256": "428c1871309ad205d074d76c49d194ae4195b180160f866d8eba35407d1eb811"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 315.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "attack",
+          "animation": "attack_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-core8-v01.png",
+          "source_sha256": "81e8e32ed597630659820a54b7a5a33c00fd6c6b082729caa62a7e7c276344b0",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  774,
+                  103,
+                  318,
+                  339
+                ],
+                "margin": [
+                  446,
+                  455,
+                  946,
+                  925
+                ],
+                "source_anchor": [
+                  960,
+                  438
+                ],
+                "rgba_sha256": "0d1ee7a39ce9affb1bf3c4c3b85ad543cb4a36d71b6e261222341ae9d8275559"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  1120,
+                  160,
+                  395,
+                  288
+                ],
+                "margin": [
+                  408,
+                  506,
+                  869,
+                  976
+                ],
+                "source_anchor": [
+                  1344,
+                  444
+                ],
+                "rgba_sha256": "1c2923f5d3a0e438f499655180632d816f649ee7518e608e40396d2fe6eec6a1"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  45,
+                  624,
+                  325,
+                  283
+                ],
+                "margin": [
+                  485,
+                  511,
+                  939,
+                  981
+                ],
+                "source_anchor": [
+                  192,
+                  903
+                ],
+                "rgba_sha256": "83edf569bdb09a1029240cc87d4c73e9ad23b772f2c3889309041b8f693bb995"
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  459,
+                  600,
+                  273,
+                  306
+                ],
+                "margin": [
+                  515,
+                  488,
+                  991,
+                  958
+                ],
+                "source_anchor": [
+                  576,
+                  902
+                ],
+                "rgba_sha256": "db0c2bb533a91afa45e017d5350d6f503fe610fc3a08a2666c541f06d2cd8732"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 315.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "hit",
+          "animation": "hit_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-core8-v01.png",
+          "source_sha256": "81e8e32ed597630659820a54b7a5a33c00fd6c6b082729caa62a7e7c276344b0",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-core8-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 6,
+                "direction": "W",
+                "region": [
+                  802,
+                  602,
+                  299,
+                  302
+                ],
+                "margin": [
+                  474,
+                  492,
+                  965,
+                  962
+                ],
+                "source_anchor": [
+                  960,
+                  900
+                ],
+                "rgba_sha256": "1a957025147de0db2e4fec62a4aca05190f10897ea1345cbf3f4bfc855411df8"
+              },
+              {
+                "row": 7,
+                "direction": "W",
+                "region": [
+                  1216,
+                  619,
+                  281,
+                  289
+                ],
+                "margin": [
+                  504,
+                  505,
+                  983,
+                  975
+                ],
+                "source_anchor": [
+                  1344,
+                  904
+                ],
+                "rgba_sha256": "71b6fd70fb140710ff96476841166de23448c9630d4a02084f6b146b2610186f"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 315.5,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "run",
+          "animation": "run_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-run6-v01.png",
+          "source_sha256": "26346a44eacb66fd8ea0fbf9192d7557a872436a0b80cebe4c01a7d8d687f603",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  277,
+                  13,
+                  307,
+                  318
+                ],
+                "margin": [
+                  525,
+                  476,
+                  957,
+                  946
+                ],
+                "source_anchor": [
+                  384,
+                  327
+                ],
+                "rgba_sha256": "0568514fa521c0d03bb9ab5bdc727d3c5383e55be3a41511f18594d485228f71"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  984,
+                  16,
+                  313,
+                  311
+                ],
+                "margin": [
+                  464,
+                  483,
+                  951,
+                  953
+                ],
+                "source_anchor": [
+                  1152,
+                  323
+                ],
+                "rgba_sha256": "000d3dff6f1d1843c6a4e235f1ef8e7352fb02a535a5a3b1cac469e3dbbf6170"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  254,
+                  352,
+                  333,
+                  312
+                ],
+                "margin": [
+                  502,
+                  482,
+                  931,
+                  952
+                ],
+                "source_anchor": [
+                  384,
+                  660
+                ],
+                "rgba_sha256": "7cf9aae58bbcbcf5c962d91729f36e4517231c67bd6b8fea8102f748d5461f3b"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  992,
+                  349,
+                  300,
+                  324
+                ],
+                "margin": [
+                  472,
+                  470,
+                  964,
+                  940
+                ],
+                "source_anchor": [
+                  1152,
+                  669
+                ],
+                "rgba_sha256": "4e8fd408e298adf2d01ad824dfd598edc2e87a8af1d3525947f8b6f4642c0588"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  298,
+                  683,
+                  283,
+                  321
+                ],
+                "margin": [
+                  546,
+                  473,
+                  981,
+                  943
+                ],
+                "source_anchor": [
+                  384,
+                  1000
+                ],
+                "rgba_sha256": "8ff3e9be2ec6e2cf436de638945b2c49fa8526f293172ea9bc730d63c3f2ebdd"
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  969,
+                  682,
+                  324,
+                  321
+                ],
+                "margin": [
+                  449,
+                  473,
+                  940,
+                  943
+                ],
+                "source_anchor": [
+                  1152,
+                  999
+                ],
+                "rgba_sha256": "83ddbe5e90a5ee306be42f4b5fa078312e74a1c30a26c9f4142dfcfbaea219a4"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 315.0,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "family_adapters": {},
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "source_pixel_edits": 0,
+  "mirrored_source_poses": 0,
+  "duplicated_source_poses": 0,
+  "new_walk_sources": 0,
+  "old_approved_assets_preserved": true,
+  "reference_scope": "Existing project atlas art; external original-game authenticity not established",
+  "appearance_choice": "Reference crop shows empty fists and attached chains. DB fallback weapon=axe is not visible in the project reference; no new axe invented.",
+  "revision": "r002",
+  "previous_candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/candidate.json",
+  "new_source_poses_this_revision": 6,
+  "reused_source_poses_from_r001": 110,
+  "comparison": "Only S RUN source and its playback index order changed. Old r001 and approved runtime assets remain byte-identical."
+}

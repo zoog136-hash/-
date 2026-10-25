@@ -1,0 +1,90 @@
+{
+  "schema": "pr122-actual-physical-canvas-fit-proposal-fixtures-v1",
+  "status": "PASS_PURE_NUMERIC_HELPER_AND_STATIC_GUARD_FIXTURES_ONLY",
+  "proposal_path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/pr122_reviewed_runtime_layout_physical_canvas_proposal.py",
+  "proposal_sha256": "f9c3b0dcf7021de49cde2cef90825235055c64f3a9acaf130d4af20876222d9c",
+  "official_layout_sha256_unchanged": "ebb9a0be9caf8c44c43f48aa2abb5e208bc26450a620538fc4e638c398a3e13b",
+  "checks": 17,
+  "results": [
+    {
+      "name": "valid_perpose2560_nominal2048",
+      "result": "PASS_ACCEPTED"
+    },
+    {
+      "name": "non2048_nominal",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "bool_canvas_member",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "float_canvas_member",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "short_canvas_list",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "oversize_canvas",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "undersize_canvas",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "nonmultiple8_canvas",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "nominal2048_false_fit_reject",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "actual2560_padded_root_fit",
+      "result": "PASS_ACCEPTED"
+    },
+    {
+      "name": "actual2560_real_width_overflow_reject",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "actual2560_real_bottom_overflow_reject",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "actual2560_anchor_outside_owned_region_reject",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "actual2560_real_top_overflow_reject",
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "no_perpose_nominal_layout_literal_equivalence",
+      "result": "PASS_ACCEPTED"
+    },
+    {
+      "name": "physical_sizes_follow_authored_row_through_playback_permutation",
+      "result": "PASS_ACCEPTED"
+    },
+    {
+      "name": "original_source_sha_identity_distinctness_complete_region_ownership_calls_retained",
+      "result": "PASS_ACCEPTED"
+    }
+  ],
+  "example": {
+    "root_native_y_analytic": 1395.95,
+    "nominal2048_foot_y": 1280,
+    "actual2560_foot_y": 1600,
+    "nominal_margin_y_if_region_top0": -115.95,
+    "actual_margin_y_if_region_top0": 204.05,
+    "review_source_anchors_remain_strict_integer_pairs": true
+  },
+  "no_png_or_game_processing": true,
+  "repo_writes": 0,
+  "git_commands": 0,
+  "godot_or_ci_runs": 0
+}

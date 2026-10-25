@@ -1,0 +1,36 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01-3D-LEFT-contact001",
+  "raw_path": "/workspace/scratch/girtas-W-run-LEFT-contact0-3D-v01/girtas-W-run-LEFT-contact0-3D-v01.png",
+  "raw_png": "/workspace/scratch/girtas-W-run-LEFT-contact0-3D-v01/girtas-W-run-LEFT-contact0-3D-v01.png",
+  "raw_sha256": "1a310b3d233dd1a5306e055ed686f08349e3e3b7e4de4b9ebaa00b7431b5c1a4",
+  "raw_bytes": 1379682,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_sha256": "d1b96ebeeb3facda150eb2e80586d8ca9e36387fecd51fe562525e98aa78eaac",
+  "expected_poses": 1,
+  "game_phases": [
+    0
+  ],
+  "newly_authored_poses": 1,
+  "source_visual_status": "PASS",
+  "identity_visual_status": "ARTIST_CANDIDATE_PASS_INDEPENDENT_PENDING",
+  "geometry_status": "PASS_STRICT_PARTIAL1",
+  "integration_ready": false,
+  "actor_approval": false,
+  "approved_actor_count_added": 0,
+  "visual_findings": [
+    "Independent actual nearLEFT hip\u2192frontthigh\u2192largekneepad\u2192frontshin/boot is LEFT contact0 with farRIGHTrecoveryboot AIR; faithful original Wmodel/rays/longrobe/RIGHTblade/EMPTYLEFT.",
+    "Source-only onepose partial, no full6/commonphysical/actualruntime/actor approval."
+  ],
+  "runtime_validation": "NOT_RUN_PARTIAL_SOURCE_ONLY",
+  "independent_source_review_path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/W-run-new-contacts0-3-independent-source-opposite-leg-review.json",
+  "independent_source_review_sha256": "3bfd1a5f57177b11b6108eb50654ec72da7ae2ceae02fe495a86b805a17a94fc",
+  "independent_status": "PASS_SCOPED_LEFT_CONTACT0"
+}

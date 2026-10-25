@@ -1,0 +1,124 @@
+{
+  "status": "PASS_INDEPENDENT_TYPED_REVIEWED_PLAYBACK_FIX_AND_ALL_PREPARATION_AUDIT",
+  "before_pose_canvas_test": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v04-reviewed-playback/pr122_girtas_native_default_main_connection_test.before-reviewed-playback-fix.gd",
+    "sha256": "8e30c985d52c02337faf501688d8b881632d737fbbbd3dd75c00296fe6bb6be3",
+    "bytes": 20477
+  },
+  "before_untyped_playback_test": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v05-typed-playback/test-before-typed-playback.gd",
+    "sha256": "218caf25bba58eddccd1b8d71dfe3a4852dcde9ae3e3f5a121d1cfe3fc6131a9",
+    "bytes": 21085
+  },
+  "new_test": {
+    "path": "/workspace/twilight/tests/pr122_girtas_native_default_main_connection_test.gd",
+    "sha256": "63f7d6a995d09e00274955bcc746c6f738ac65f185b5addbd4bfe0a0241ac979",
+    "bytes": 21167
+  },
+  "all_other_test_bytes_unchanged": true,
+  "playback_policy": "Exact selected runtime_layout_proof.playback_order, identity only if absent; six finite numeric integer unique rows0..5. No source/region/margin/SHA changes.",
+  "preparation_checks": {
+    "actor_counts_and_frames_profile_sha": true,
+    "48_unique_role_direction_animations": true,
+    "all_source_texture_exact_png_sha_and_nonempty_header": true,
+    "all48_loop_and_six_frames": true,
+    "all48_expected_orders_integer_finite_unique_permutations": true,
+    "all288_registered_rows_and_directions_equal_reviewed_order": true,
+    "all288_exact_region_margin": true,
+    "all288_effective_canvas_and_atlas_size": true,
+    "all_present_authored_arrays_consistent": true,
+    "native_profile_identity_path_layout_white_default_attack_frame3": true,
+    "one_real_catalog_record_prebound_to_exact_production_frames": true
+  },
+  "tracks": 48,
+  "poses": 288,
+  "nonidentity_orders": [
+    {
+      "animation": "run_2",
+      "order": [
+        0,
+        3,
+        2,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "all288_rows_numeric_finite_exact_integers": true,
+  "all288_comparison_digest_sha256": "d83db81bccc5a030f42af5d43307786c379d1465d6c0b087b5aac5818170fcd0",
+  "valid_permutation_cases_passed": 2,
+  "invalid_permutation_cases_rejected": [
+    "short",
+    "duplicate",
+    "range",
+    "negative",
+    "fraction",
+    "string",
+    "bool",
+    "nan",
+    "inf",
+    "null"
+  ],
+  "register": {
+    "path": "/workspace/twilight/data/pr122_native_locomotion_staging.json",
+    "sha256": "dc3cb8d172a9d52b112afbbdd83cdacf382864045b964d23021e9eabcbbaaeb5",
+    "bytes": 1764659
+  },
+  "production_numeric": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/actual-production-r001-all48-numeric-pins.json",
+    "sha256": "6bd38f73f9cb086499069fdc9173433d9e31c86b2b5a9488f8b810a41ac23f09",
+    "bytes": 300307
+  },
+  "production_frames": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_production/girtas_267/r001/SpriteFrames.tres",
+    "sha256": "437f4f3e8657a0ea39d4f5ab2f7236bd2b64052580bca9d7baa234c0ee893291"
+  },
+  "production_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_production/girtas_267/r001/NativeMotionProfile.tres",
+    "sha256": "573eb9ccb979c2a3c8d928433395f4a3cf9999095ee7783bec554ed7ea9aaa71"
+  },
+  "catalog": {
+    "path": "/workspace/twilight/data/catalog_v19.json",
+    "sha256": "92d520f4caa178927d3598844e6b275e987854f080e102913b676fb2c6663b00",
+    "bytes": 1908677
+  },
+  "protected_original_files": [
+    {
+      "path": "/workspace/twilight/tests/pr122_native_default_main_connection_test.gd",
+      "sha256": "7a87758f959adb8d205fb0f32294ce1423524b4eec11e084c180b407fc5f3b7b",
+      "bytes": 13934
+    },
+    {
+      "path": "/workspace/twilight/tools/pr122_native_production_approvals.py",
+      "sha256": "2d0305cf49b3d944a2994111855046d37675ba72efa8180862ad5b78291f7706",
+      "bytes": 20341
+    }
+  ],
+  "guard_variants_only_test_pin_changed": [
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed-v05-typed-playback/approve-girtas-production-r001.py",
+      "sha256": "edc6d854c56a42575d5547425911d3a66b68741d14f7d7d050d2034561ed614d",
+      "bytes": 12967
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed-v05-typed-playback/commit-girtas-production-r001.py",
+      "sha256": "bfa9b7dadd4bbb0e6f79a0e11b8d294007fcb271d38835e313c54b91c6851db9",
+      "bytes": 10540
+    }
+  ],
+  "unchanged_guard": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v05-typed-playback/girtas_review_guard.py",
+    "sha256": "c45becf1e68e927bf6eb908c5f8304fc1ffeaa64b2be5daaf2fefb187465655f",
+    "bytes": 3685
+  },
+  "new_finalizer_only_test_pin_changed": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/finalize_official_quality_fresh_v05_typed_playback.py",
+    "sha256": "f1f1b3f51c3d530ed2f52982e395fd5cc1a4084b7eff167d15bfde230984bae3",
+    "bytes": 7838
+  },
+  "actual_Main_status": "NOT_EXECUTED_PENDING_REAL_RUN",
+  "official_final_quality_issued": false,
+  "actor_approved": false,
+  "counts_changed": false
+}

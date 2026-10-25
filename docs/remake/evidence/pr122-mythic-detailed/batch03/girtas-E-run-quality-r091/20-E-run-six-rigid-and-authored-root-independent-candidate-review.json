@@ -1,0 +1,81 @@
+{
+  "schema": "pr122-independent-authored-root-candidate-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "status": "PASS_SCOPED_SIX_POSE_RIGID_SCALE_AUTHORED_ROOT_CANDIDATE_ACTUAL_RUNTIME_HOLD",
+  "source_visual_status": "SOURCE_PASS",
+  "raw_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+  "candidate_configuration": "/workspace/scratch/girtas-E-run-physical-layout-authoring-v01/authored-root-configuration-DRAFT-v01.json",
+  "candidate_configuration_sha256": "b3f57aae2030faf371eb4c80a4f7aa5cf49eb4c04db84e5e023258cebc9cda77",
+  "numeric_root_proof": "/workspace/scratch/girtas-E-run-physical-layout-authoring-v01/first-authored-ground-root-numeric-proof-DRAFT-v01.json",
+  "numeric_root_proof_sha256": "fb9cc1d68ce554bbcdf0d8db6b524c8820a9abd393abf2f4ddf1a069981f8435",
+  "pose_canvas_sizes": [
+    2664,
+    2560,
+    2560,
+    2256,
+    2256,
+    2048
+  ],
+  "source_native_root_anchors": [
+    [
+      679,
+      1273
+    ],
+    [
+      683,
+      1267
+    ],
+    [
+      704,
+      1310
+    ],
+    [
+      687,
+      1200
+    ],
+    [
+      755,
+      1157
+    ],
+    [
+      686,
+      1185
+    ]
+  ],
+  "visual_findings": [
+    "At common physical scale, the six rigid skull/helmet core and shoulder/waist volumes remain coherent with selected E idle. Source0/1 and3/4 use genuinely different loaded leg halves; their full equipment bbox is not used to normalize scale. Projected pauldron widths change with the arms sweeping and torso yaw, without a persistent giant shoulder/head-size switch.",
+    "The near RIGHT and far LEFT hips/boots genuinely exchange support: LEFTcontact0->LEFTload1->RIGHTleadingAIR2, RIGHTcontact3->RIGHTload4->LEFTleadingAIR5. Two complete connected leg and arm chains remain, with original RIGHT sinuous weapon/empty LEFT, HARD rays/palehair/longrobe. Both loaded source knees flex and the body descends, rather than just translating a straight leg.",
+    "Grounded roots use actual support sole and the selected E20canonical near/far projection. AIR2/5 use deliberately authored roots below both flexed boots; conservative all-foreground clearance proves both boots above the higher far-side ground, not an inferred PNG floor.",
+    "The physical sequence shows a coherent loading/rising/landing body arc and a plausible5->0 landing. Across2->3 the brow rises while the visible belt surface descends as the torso unfolds. That is a source posture change; no detached neck, scale switch or root correction to conceal a missing pose is evident. The front crest is a surface marker, not a measured hidden pelvis center.",
+    "Original clipped AIR5 c73b and boundaryHOLD remain preserved. The selected restored b686 source has complete empty LEFT fist and retains the correct flight-side chains; no padding-only endpoint repair was accepted."
+  ],
+  "numeric_profile_limit": {
+    "candidate_preview_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/NativeMotionProfile.tres",
+    "candidate_preview_scale": 0.281509916827,
+    "latest_actor_frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r089/SpriteFrames.tres",
+    "latest_actor_pixel_scale": 0.22715539494062983,
+    "uniform_world_scale_ratio": 0.8069179142993624,
+    "conservative_air_clearance_if_current_scale_used": {
+      "2": 13.811048012390298,
+      "5": 12.834279814145587
+    },
+    "required_followup": "Pin current actual profile in final metadata and recompute world-unit numeric evidence. SameC/anchors/relative proportions remain unchanged by this uniform scale; no new image needed for numerical rescale. Actual compiled final clip still needs focused review."
+  },
+  "evidence": {
+    "private_preview": "/workspace/scratch/girtas-E-run-authored-root-candidate-v01/private-seven-panel-authored-root-candidate.jpg",
+    "private_preview_sha256": "3a6bc28e9e01f580d4df5c7504d6e53030b9c0d392f872e8f801a44095642387",
+    "private_preview_bytes": 132737,
+    "native_face_landmark_draft": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-rigid-face-landmarks-DRAFT.json"
+  },
+  "visual_limitations": [
+    "This is static authored-candidate physical review, not actual compiled SpriteFrames/Player/Godot rendering. Final selection/texture/region/margin/actualprofile/airclearance/idle and loop transition need the focused compiled check.",
+    "No exact hidden-bone coordinates or full Girtas48/defaultcatalog/actor approval is implied. All prior raw/HOLDs and approval counts remain preserved."
+  ],
+  "preview_budget_total_bytes": 5245657,
+  "complete_clip": false,
+  "actor_approval": false,
+  "reviewed_at": "2026-10-19T15:13:36.954771+00:00"
+}

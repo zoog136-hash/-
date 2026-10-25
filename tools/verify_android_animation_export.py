@@ -21,6 +21,8 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
+from android_animation_export_scope import audit_authoring_exclusions
+
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -68,18 +70,25 @@ def sdk_checks(sdk: Path | None, apk: Path, output: Path, report: dict, timeout:
 
 def inspect_resources(apk: Path, root: Path, output: Path, report: dict) -> list[dict]:
     index = []
+    scope = audit_authoring_exclusions(root)
+    report["animation_export_scope"] = scope
+    archived = {row["path"] for row in scope["excluded_authoring_resources"]}
     with zipfile.ZipFile(apk) as archive:
         report["zip_crc_failure"] = archive.testzip()
         if report["zip_crc_failure"]:
             report["failures"].append("APK ZIP CRC failed: " + report["zip_crc_failure"])
         names = set(archive.namelist())
+        for relative in sorted(archived):
+            if "assets/" + relative in names or "assets/" + relative + ".remap" in names:
+                report["failures"].append("Archived review clip unexpectedly exported: " + relative)
         libraries = sorted(name for name in names if name.startswith("lib/") and name.endswith(".so"))
         report["native_libraries"] = libraries
         report["architectures"] = sorted({name.split("/")[1] for name in libraries})
         if report["architectures"] != ["arm64-v8a"]:
             report["failures"].append("Expected the existing Android ARM64 export preset")
         art_root = root / "assets/actors/eight_direction"
-        sources = sorted(art_root.rglob("SpriteFrames.tres"))
+        sources = sorted(source for source in art_root.rglob("SpriteFrames.tres")
+                         if source.relative_to(root).as_posix() not in archived)
         if not sources:
             report["failures"].append("No native SpriteFrames sources found")
         for source in sources:

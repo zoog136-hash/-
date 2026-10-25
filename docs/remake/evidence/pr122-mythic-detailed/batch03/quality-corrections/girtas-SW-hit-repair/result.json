@@ -1,0 +1,73 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_NOT_APPROVED",
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "hit",
+  "version": "v02",
+  "source_batch": "batch03",
+  "request_path": "/workspace/scratch/girtas-SW-hit-repair/request.json",
+  "request_sha256": "6b29d18badd32ab6f039bafcb4854a593f2ee5e1a4a7d01c39e2c8453687953b",
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "original_generated_file": "/workspace/generated_images/exec-5b44c881-2b7e-48da-bb79-5856c7ace4aa.png",
+  "raw_png": "/workspace/scratch/girtas-SW-hit-repair/girtas-SW-hit-v02.png",
+  "raw_sha256": "23bce4c123caff91327d0fba7c0b2cd37475d4689d1b7b25d47386f9cae7066a",
+  "raw_bytes": 2571332,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "detected_large_alpha_components": 6,
+  "component_phase_slots": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "private_preview": "/workspace/scratch/girtas-SW-hit-repair/private-preview.jpg",
+  "private_preview_bytes": 323734,
+  "private_preview_queue_total_bytes": 1453320,
+  "created_at": "2026-10-19T10:46:51.505610+00:00",
+  "reviewed_at": "2026-10-19T10:47:24.249915+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "strict_geometry_status": "GEOMETRY_PASS",
+  "strict_geometry_details": {
+    "status": "GEOMETRY_PASS",
+    "frames": 6,
+    "distinct": 6
+  },
+  "visual_findings": [
+    "The faithful original model is preserved: pale exposed face, long pale hair, gold head structure, narrow hard-gold radial spines, long dark gold-trimmed skirt, original boots and one full long sinuous weapon at the anatomical right/image-left hand.",
+    "Compass failure: guard phase0 and early impact phase1 retain a right-looking face/helmet rather than the required DOWN-LEFT/SOUTHWEST head heading. Phase2 continues that wrong-side head yaw under backward pitch.",
+    "Stagger/recovery phases3-5 turn the face more clearly DOWN-LEFT. This mixed head/helmet heading across the six-pose clip violates the consistent SOUTHWEST contract even though the torso/support stance and impact articulation are readable.",
+    "There is genuine torso/head recoil at1-2 and bent-knee/counterstep recovery at3-4, without a tint/translation substitute or weapon attack, but actual reaction quality does not override the wrong guard/impact direction.",
+    "Strict geometry passes six complete distinct source poses. This does not approve the compass or authorize this raw sheet as a selected SW hit track; it must stay visual HOLD."
+  ],
+  "visual_limitations": [
+    "Do not integrate this as SW hit without a genuinely corrected all-six compass source. Exactly one generation was made, and the worker did not retry, mirror, relabel, combine or edit poses.",
+    "Pale face is visibly readable, so this is a concrete wrong-facing observation rather than automatic rejection due the tiny original portrait.",
+    "Private source review only; runtime hit timing/readability, cross-role body calibration, actual Player/SpriteFrames connection and final actor approval remain for integration. No actor/detailed completion added.",
+    "Original tiny portrait limits exact facial/hidden-landmark judgment. Faithful canonical identity is the detailed authority; tiny-guide uncertainty alone is not automatic rejection.",
+    "The generator again enlarged figures beyond the requested about300px body/330px silhouette cap. Sparse-layout discrepancy is preserved and reported; no bbox-based normalization, cropping, resampling, manual body edits or validator relaxation."
+  ],
+  "phase_contract": [
+    "brace",
+    "impact_response",
+    "maximum_head_torso_shoulder_recoil",
+    "balanced_leg_stagger",
+    "recover",
+    "guard"
+  ],
+  "all_actor_approvals": "HOLD_UNTIL_INTEGRATION_AND_FINAL_QUALITY",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "production_receipt": "/workspace/scratch/girtas-SW-hit-repair/receipt.json",
+  "production_receipt_sha256": "3379df8542361468cd885768d48e75971c45e212fae0f6e03d151ba2ae727816"
+}

@@ -1,0 +1,140 @@
+{
+  "schema": "twilight-independent-exact-source-packet-receipt-v01",
+  "status": "INDEPENDENT_EXACT_REQUEST_AND_ACTUAL_SOURCE_LOOP_PASS",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "idle",
+  "version": "NWidleSixActualRig01",
+  "request_path": "/workspace/scratch/mythic413-NW-idle-actual-packed-r001-20261020/request-NWidleSixActualRig01.json",
+  "request_sha256": "b3da7227ab67929ffbd66820cc3c1ad3a830bd333f6136d2c9e6636b970aef55",
+  "raw_path": "/workspace/scratch/mythic413-NW-idle-actual-packed-r001-20261020/thunder_female-NW-idle-six-actual-poses-r001.png",
+  "raw_sha256": "6be6dc2150501008128349205cd1d946a1c8b22ed07765a53e9fe932e0a17cdb",
+  "raw_bytes": 2139700,
+  "packing_path": "/workspace/scratch/mythic413-NW-idle-actual-packed-r001-20261020/thunder_female-NW-idle-six-actual-poses-r001.packing.json",
+  "packing_sha256": "853055de2408614bd4190d18795e23788b9e7671878df0c1ad7116833c8948fb",
+  "source_visual_status": "PASS",
+  "visual_findings": [
+    "Complete right-hand double-ended staff, grip, costume, face, bun, hair and ribbon retained.",
+    "Relaxed LEFT upperarm, cuff, wrist and fingers form connected anatomical contours without observed duplicated cuff remnants or detached material.",
+    "Actual corset/rib surface expands by3.8149681174490695 native units; gentle neck, hair and farcoat lag accompany breathing without whole-actor bob or root motion.",
+    "Six source poses and5-to-0 wrap show a smooth restrained idle rhythm; no blocking source defect observed.",
+    "Exact fixed semantic leg32843pixels and complete-staff23241pixels RGBA changes0 across all6; actual arm joint affine residual1.1368683772161603e-13.",
+    "Exact request/packing/raw and six final source digests are bound; all six complete RGBA tile comparisons changed0, every nonzero-alpha pixel is retained inside its reviewed region.",
+    "C2048/unit2/root641,1058.3 preserved; one common rounding delta[0,-.3] is applied identically to all6, with no source resampling or per-pose fitting."
+  ],
+  "visual_limitations": [
+    "Private reduced previews plus exact source/material checks establish the scoped source conclusion. This is not a claim of uniquely reconstructed hidden3D anatomy.",
+    "Game SpriteFrames binding and actual1.2second idle runtime are separate pending parent integration gates.",
+    "No actor detailed-completion count is increased by this source/loop review."
+  ],
+  "exact_final_source_contract": {
+    "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/NW-IDLE-six-actual-native-source-common-root-and-loop-contract-v02.json",
+    "sha256": "4d08f9c6353405137dfc17755a36c7121bc3a65a436c46ad652242d1ae2c4bf8"
+  },
+  "actual_source_cycle_proof": {
+    "path": "/workspace/scratch/mythic413-NW-idle-independent-qc-20261020-v01/NW-IDLE-v02-exact-six-actual-source-and-visible-loop-PASS-v01.json",
+    "sha256": "69679697bb6aafe5ea62c7f5e796757285eec12875119885956d7af0602e82ff"
+  },
+  "exact_six_fullRGBA_checks": [
+    {
+      "phase": 0,
+      "exact_source_sha256": "da557d3ba1653dcd02b56ba0372205c6d09469e931c117ddf85132fa589c0c09",
+      "full_RGBA_changed_pixels": 0,
+      "all_alpha_nonzero_pixels_retained": 183748,
+      "requested_region_encloses_all_alpha": true,
+      "atlas_origin": [
+        0,
+        0
+      ],
+      "common_root_rounding_delta": [
+        0,
+        -0.2999999999999545
+      ]
+    },
+    {
+      "phase": 1,
+      "exact_source_sha256": "2582b831ec10aca8c92717c12fec98626ef8826d437934cfaa0b8bd51e41c3e9",
+      "full_RGBA_changed_pixels": 0,
+      "all_alpha_nonzero_pixels_retained": 183205,
+      "requested_region_encloses_all_alpha": true,
+      "atlas_origin": [
+        1536,
+        0
+      ],
+      "common_root_rounding_delta": [
+        0,
+        -0.2999999999999545
+      ]
+    },
+    {
+      "phase": 2,
+      "exact_source_sha256": "9b394e26aafda8e709295205aa838f83458c7e87860f6729653231572028314a",
+      "full_RGBA_changed_pixels": 0,
+      "all_alpha_nonzero_pixels_retained": 183612,
+      "requested_region_encloses_all_alpha": true,
+      "atlas_origin": [
+        0,
+        1536
+      ],
+      "common_root_rounding_delta": [
+        0,
+        -0.2999999999999545
+      ]
+    },
+    {
+      "phase": 3,
+      "exact_source_sha256": "8e7408b8df41b003091192b683f9a223fcc40049ddfda9870983c95b681f480f",
+      "full_RGBA_changed_pixels": 0,
+      "all_alpha_nonzero_pixels_retained": 183589,
+      "requested_region_encloses_all_alpha": true,
+      "atlas_origin": [
+        1536,
+        1536
+      ],
+      "common_root_rounding_delta": [
+        0,
+        -0.2999999999999545
+      ]
+    },
+    {
+      "phase": 4,
+      "exact_source_sha256": "b534c4e465fe931da1c2861b0a0a1d6afc784a71198d07d6badf3614d776a90e",
+      "full_RGBA_changed_pixels": 0,
+      "all_alpha_nonzero_pixels_retained": 183314,
+      "requested_region_encloses_all_alpha": true,
+      "atlas_origin": [
+        0,
+        3072
+      ],
+      "common_root_rounding_delta": [
+        0,
+        -0.2999999999999545
+      ]
+    },
+    {
+      "phase": 5,
+      "exact_source_sha256": "65c183bcb97c56687277714618260a3c31e8932219f18b461b2db28a59f7e806",
+      "full_RGBA_changed_pixels": 0,
+      "all_alpha_nonzero_pixels_retained": 183854,
+      "requested_region_encloses_all_alpha": true,
+      "atlas_origin": [
+        1536,
+        3072
+      ],
+      "common_root_rounding_delta": [
+        0,
+        -0.2999999999999545
+      ]
+    }
+  ],
+  "source_resampled": false,
+  "NW_IDLE_source_scope_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-NW-idle-independent-qc-20261020-v01/private-image-ledger-through-NW-IDLE-source-cycle-frozen-v01.json",
+    "sha256": "2c4aed7f3b6679a224d8dbd8b6a7e4e3369dd118eb4a2aaa040edf0f7e65cb5f",
+    "cumulative_returned_image_bytes": 2707351
+  },
+  "current_global_private_image_context_cumulative_bytes": 2897480,
+  "extra_image_views_for_this_packet_review": 0,
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

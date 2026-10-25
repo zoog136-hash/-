@@ -1,0 +1,60 @@
+{
+  "schema": "pr122-413-NW-LOAD1-independent-source-HOLD-v1",
+  "actor": "transform:413",
+  "contact0": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-bounded-v02.png",
+    "sha256": "0874d56a0adf0d76b5e91c565ec41d601d8bbb76457c64e703a89dba54cf0645",
+    "bytes": 519225
+  },
+  "raw_LOAD1": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/thunder_female-NW-walk-LOAD1-v01-service.png",
+    "sha256": "2af61fc2c5a09d24cf5473e36109e8e2fdb7757505b71a3164923e5f843e748a",
+    "bytes": 651435
+  },
+  "bounded_LOAD1": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/thunder_female-NW-walk-LOAD1-bounded-v01.png",
+    "sha256": "fb96de344b3526b05b19a3789df922f8d67165e32c905c92451d1fc0afcbc153",
+    "bytes": 541494
+  },
+  "allowed_mask": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/allowed-LOAD1-legs-and-local-hip-mask.png",
+    "sha256": "20a4b92b1042272a7f4cfacaa8cc3dbf9acc0c89add925d1765af67f90954c38",
+    "bytes": 3914
+  },
+  "private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NW-LOAD1-view14-frozen.json",
+    "sha256": "e79c6f3a22dda6475b19a680a6c366de51f3cce61d936b20584b785cb2c1ea6f",
+    "bytes": 6961
+  },
+  "fixed_C": 2048,
+  "body_factor": 2,
+  "status": "ACTUAL_SOURCE_COMPLETENESS_HOLD",
+  "independent_RGBA_checks": {
+    "outside_allowed_mask_changed": 0,
+    "inside_allowed_final_vs_new_service_changed": 0,
+    "protected_upper_y_lt690_changed": 0,
+    "all_changed_pixels": 82028
+  },
+  "actual_view_findings": [
+    "LEFT supporting boot and stiletto are cut off at mask boundary; complete foot is absent.",
+    "New lower skirt overlaps the preserved original hem, creating a horizontal duplicated cloth/thigh seam.",
+    "Protected upperbody/RIGHT staff are retained, but preservation metrics alone do not establish quality."
+  ],
+  "actual_alpha_check": {
+    "stance_ROI_xyxy": [
+      500,
+      950,
+      710,
+      1160
+    ],
+    "raw_alpha16_removed_in_bounded": 7526,
+    "bounded_last_alpha_y_in_stance_ROI": 1076,
+    "raw_continues_through_ROI_bottom": true
+  },
+  "physical_status": "HOLD; absent final stance heel prevents paired plant approval. Author raw heel approx630,1187 differs substantially from625.3543,1044.2189 target; no independent heel precision claimed.",
+  "next_action": "Preserve all candidates, maintain contact0 quality PASS and constant C2048. Change input cause to single native1254 costume pose-control and explicit local legs bounds; one genuine localized repair. Do not widen mask merely to accept overlong raw limbs.",
+  "actor_APPROVED": false,
+  "clip_APPROVED": false,
+  "completed_added": 0,
+  "images_forwarded": 0
+}

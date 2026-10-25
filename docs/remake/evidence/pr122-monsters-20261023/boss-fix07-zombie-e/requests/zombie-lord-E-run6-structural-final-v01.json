@@ -1,0 +1,28 @@
+{
+  "name": "zombie-lord-E-run6-structural-final-v01",
+  "direction": "E",
+  "role": "run",
+  "rows": 6,
+  "directions_axis": "phase_grid3",
+  "reference_rows": [
+    0,
+    3
+  ],
+  "intended_support_sequence": [
+    "RIGHT",
+    "RIGHT",
+    "RIGHT",
+    "LEFT",
+    "LEFT",
+    "LEFT"
+  ],
+  "request": {
+    "prompt": "Create the same Zombie Lord as SIX small full-body run keyframes in THREE columns TWO rows, row-major phases0,1,2 / 3,4,5. Exact RIGHT-facing elevated SIDE CAMERA as first two references, identical massive belly/torso/head, chains, gray mottled skin, rusted back nails, graybrown ragged skirt and gold belt plate. Empty fists. Preserve original muted body palette, huge body mass and same physical scale across all6. No redesign or horizontal mirror.\n\nThis is a STRUCTURAL LEG SUPPORT REPAIR. Use third reference's six skeletons as exact leg poses, not just text inspiration. Pink skeleton leg = NEAR/anatomical RIGHT foreground thigh/knee/foot. Blue skeleton leg = FAR/anatomical LEFT background thigh/knee/foot. Final monster uses original gray skin only, never skeleton colors/labels/lines. FIRST ROW 0/1/2: nearRIGHT leg is planted flat grounded carrying all mass, farLEFT leg airborne swings behind->under->forward. SECOND ROW 3/4/5: farLEFT leg is planted flat grounded carrying all mass, nearRIGHT leg airborne swings behind->under->forward. The supporting foot MUST CHANGE LEG between rows. Only ONE foot grounded perpose. Pose0 nearRIGHT plant +farLEFT foot curled back high. Pose1 nearRIGHT plant +farLEFT foot flexed underhip high. Pose2 nearRIGHT plant +farLEFT knee/wholefoot forward high. Pose3 farLEFT plant +nearRIGHT large thigh bends backward with the nearfoot curled high behindscreenLEFT. Pose4 farLEFT plant +nearRIGHT large foreground knee bent and foot suspended underhip: match SECOND reference's already-correct raised foreground leg and grounded thinner background leg. Pose5 farLEFT plant +nearRIGHT large foreground knee/wholefoot forward high, entire nearsole abovefarLEFT ankle. All swinging soles visibly far above ground. The large thigh just below foreground wrist/skirt is the NEAR leg; when it is airborne in second row, there CANNOT remain a straight near thigh going down to a planted nearfoot. Do not repeat first-row foreground-footplant in second row. Belly weight shifts over stance knee, hips compress and heavy chains/shoulders countershift subtly. Complete knees and feet visible belowskirt so limb ownership is testable.\n\nSix small complete bodies only, each central40% of equally spaced cells and no more than50% cell height, huge pure alpha0 empty gutters. True transparent alpha0 background, clean connected silhouette, no floor/shadow/grid/text/diagram/colors/arrows/labels/loose specks. Never clip any limb/head/chain, do not perposefit. Detail as painted rendered gameart, not anatomical diagram.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/reference-E-phase0.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/reference-far-left-support-midcrop.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/pose-guide-E-full6-support-halves.png"
+    ]
+  }
+}

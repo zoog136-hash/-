@@ -1,0 +1,68 @@
+{
+  "schema": "pr122-corrective-source-reuse-equality-v1",
+  "actor": "transform:393",
+  "direction": "S",
+  "role": "attack",
+  "composite_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+  "old_source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+  "assembly_sha256": "8e24e275c0cc91d51742bb907654051f7d2d33480c6827847b85ac1a1582e458",
+  "scope": "five old poses only; new phase3 anatomy/scale awaiting actual staged review",
+  "reused_old_poses": [
+    {
+      "phase": 0,
+      "RGBA_unchanged": true,
+      "physical_C_unchanged": 1024,
+      "region_translation_equals_anchor_translation": [
+        366,
+        389
+      ],
+      "normalized_pixelworld_mapping_exact_unchanged": true
+    },
+    {
+      "phase": 1,
+      "RGBA_unchanged": true,
+      "physical_C_unchanged": 1024,
+      "region_translation_equals_anchor_translation": [
+        1170,
+        391
+      ],
+      "normalized_pixelworld_mapping_exact_unchanged": true
+    },
+    {
+      "phase": 2,
+      "RGBA_unchanged": true,
+      "physical_C_unchanged": 1024,
+      "region_translation_equals_anchor_translation": [
+        351,
+        1174
+      ],
+      "normalized_pixelworld_mapping_exact_unchanged": true
+    },
+    {
+      "phase": 4,
+      "RGBA_unchanged": true,
+      "physical_C_unchanged": 1024,
+      "region_translation_equals_anchor_translation": [
+        352,
+        1978
+      ],
+      "normalized_pixelworld_mapping_exact_unchanged": true
+    },
+    {
+      "phase": 5,
+      "RGBA_unchanged": true,
+      "physical_C_unchanged": 1024,
+      "region_translation_equals_anchor_translation": [
+        1143,
+        1991
+      ],
+      "normalized_pixelworld_mapping_exact_unchanged": true
+    }
+  ],
+  "new_phase": 3,
+  "newly_authored_poses": 1,
+  "old_reused_poses": 5,
+  "source_RGBA_and_physical_mapping_exact_unchanged_for_old_five": true,
+  "actor_approved": false,
+  "counts_changed": false
+}

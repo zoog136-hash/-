@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py", line 180, in <module>
+    main()
+  File "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py", line 57, in main
+    assert path.read_bytes() == archive.read(member), 'Extracted source differs from pinned ZIP: ' + member.filename
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Extracted source differs from pinned ZIP: SHA256_manifest.json

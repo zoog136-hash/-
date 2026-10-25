@@ -1,0 +1,63 @@
+{
+  "schema": "pr122-queen-combined-verification-v1",
+  "frozen": true,
+  "input_manifest_files_verified": 296,
+  "input_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/candidate.json",
+      "bytes": 70214,
+      "sha256": "c7a90431b2682364c5c518914f7486fa63120d72d866ed92d2d2be4269245ebc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/candidate.json",
+      "bytes": 109891,
+      "sha256": "ab2664859c630804e816e629a317e2e8d941250d482d43ccabe01053ba3a98cc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/file-manifest.json",
+      "bytes": 19663,
+      "sha256": "a65ff40ff2d360869eb3348e5ce0dea991b6320548449c6045ad5e755eac3fa2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/manifest.json",
+      "bytes": 53992,
+      "sha256": "9e0f09006cb6756c26e4a2e748537af9d3b26ee7877625b2d21b26dc6f66e195"
+    }
+  ],
+  "input_candidate_or_source_files_mutated": false,
+  "native_clips": 32,
+  "source_poses": 102,
+  "new_source_PNGs": 0,
+  "new_poses_generated_by_composition": 0,
+  "profile_changed_fields": [
+    "frames_path"
+  ],
+  "common_pixel_scale": 0.6142857142857143,
+  "sprite_offset": [
+    0,
+    -19.65714285714286
+  ],
+  "canvas_reference_metadata": [
+    256,
+    256
+  ],
+  "per_direction_canvas_RGBA_region_margin_phase_order_preserved": true,
+  "input_animation_speed_loop_frame_durations_preserved": true,
+  "combat_source_geometry_table_lift_verified_against_original_AtlasTextures": true,
+  "missing_required_tracks": [
+    "run_6"
+  ],
+  "old_or_reversed_slit_N_RUN_connected": false,
+  "all_source_poses_ActorMotion": "PASS",
+  "engine_AnimatedSprite2D_play_1x_progress": "PASS",
+  "case_count": 39,
+  "phase_visits": 130,
+  "death_S_all8headings": "PASS",
+  "N_RUN_unavailable_no_fallback": "PASS",
+  "default_Main": "NOT_RUN",
+  "physical_contact_or_mythic_quality_approval": false,
+  "production_connected": false,
+  "detailed_completed": false,
+  "new_approvals": 0,
+  "Git_mutations_by_child": false
+}

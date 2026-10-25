@@ -1,0 +1,139 @@
+{
+  "schema": "pr122-kurtz-r003-source-selection-review-v1",
+  "review_scope": "Private actual source-frame first pass only; no Main contact or mythic final approval",
+  "sources": [
+    {
+      "name": "kurtz-S-idle-hit4-v01",
+      "requested_direction": "S",
+      "selected_direction": "S",
+      "select": true,
+      "identity": "PASS_SOURCE_SCREEN",
+      "direction": "PASS_SOURCE_SCREEN",
+      "sword_hand": "PASS_SOURCE_SCREEN",
+      "observation": "All four remain front/S. Anatomical right sword grip stays image-left and empty left hand image-right. Heavy spiked armor, closed horned helmet, skull clasp and torn scarlet cape match project reference. IDLE breath and HIT chest recoil differ without a camera flip.",
+      "independent_review": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-first2-review.json",
+      "standing_head_to_boot_landmarks": [
+        [
+          8,
+          594
+        ],
+        [
+          11,
+          593
+        ]
+      ],
+      "source_anchors": [
+        [
+          352,
+          594
+        ],
+        [
+          974,
+          593
+        ],
+        [
+          350,
+          1200
+        ],
+        [
+          985,
+          1200
+        ]
+      ],
+      "ground_anchor_basis": "Manual private source-view first pass to near-side armored boot plane and stance midpoint; blade tip excluded. Estimated uncertainty 8 source px; physical contact remains unapproved."
+    },
+    {
+      "name": "kurtz-E-idle-hit4-v01",
+      "requested_direction": "E",
+      "selected_direction": "SE",
+      "select": true,
+      "identity": "PASS_SOURCE_SCREEN",
+      "direction": "PASS_SOURCE_SCREEN_AS_SE_ONLY",
+      "sword_hand": "PASS_SOURCE_SCREEN",
+      "observation": "Requested pure E was not achieved: broad front chest/skull clasp and front-right visor show a consistent SE view in all four. Selected only as SE, never E. Visible near anatomical right glove retains the sword and far left hand stays empty; complete heavy armor/cape remain distinct from generic shared knight.",
+      "independent_review": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-first2-review.json",
+      "standing_head_to_boot_landmarks": [
+        [
+          8,
+          620
+        ],
+        [
+          15,
+          621
+        ]
+      ],
+      "source_anchors": [
+        [
+          355,
+          620
+        ],
+        [
+          995,
+          621
+        ],
+        [
+          345,
+          1208
+        ],
+        [
+          1016,
+          1214
+        ]
+      ],
+      "ground_anchor_basis": "Manual private source-view first pass to armored boot sole plane and stance midpoint. Estimated uncertainty 8 source px; physical contact remains unapproved."
+    },
+    {
+      "name": "kurtz-E-idle-hit4-v02",
+      "requested_direction": "E",
+      "selected_direction": "E",
+      "select": true,
+      "identity": "PASS_SOURCE_SCREEN",
+      "direction": "PASS_SOURCE_SCREEN",
+      "sword_hand": "PASS_SOURCE_SCREEN",
+      "observation": "Corrected E profile has narrow chest side, overlapping near/far shoulders and hidden frontal skull clasp/buckle. Same near right shoulder/elbow/wrist maintains greatsword grip across all four source poses. HIT recoil changes body articulation while remaining lateral. Independent actual source examination agrees.",
+      "independent_review": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-last2-review.json",
+      "standing_head_to_boot_landmarks": [
+        [
+          8,
+          605
+        ],
+        [
+          9,
+          606
+        ]
+      ],
+      "source_anchors": [
+        [
+          408,
+          605
+        ],
+        [
+          1026,
+          606
+        ],
+        [
+          396,
+          1201
+        ],
+        [
+          1048,
+          1211
+        ]
+      ],
+      "ground_anchor_basis": "Manual private source-view first pass to armored boot sole plane and stance midpoint; blade tip excluded. Estimated uncertainty 8 source px; physical contact remains unapproved."
+    },
+    {
+      "name": "kurtz-SW-idle-hit4-v01",
+      "requested_direction": "SW",
+      "selected_direction": null,
+      "select": false,
+      "identity": "PASS_SOURCE_SCREEN",
+      "direction": "HOLD_WRONG_CAMERA_S_TO_SE",
+      "sword_hand": "PASS_SOURCE_SCREEN",
+      "observation": "Requested SW is not present: broad frontal cuirass, skull clasp and front/right visor expose S-to-SE camera. Preserve the complete raw generation and exact request; never select or silently rename as SW. No additional generation in this four-call batch.",
+      "independent_review": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-last2-review.json"
+    }
+  ],
+  "new_approvals": 0,
+  "production_connected": false
+}

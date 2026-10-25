@@ -1,0 +1,73 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_NEAR_RIGHT_FORWARD_CONTACT_KEY",
+  "raw_path": "/workspace/scratch/girtas-E-run-right-landing-key-v01/girtas-E-run-right-landing-key-v01.png",
+  "raw_sha256": "8e4f1ac67c6ee2bab6a832f8a14a8ab58301868bd426df237ac18007ae047299",
+  "source_region": [
+    0,
+    8,
+    1232,
+    1196
+  ],
+  "nominal_canvas": 2048,
+  "candidate_game_phase": 3,
+  "actual_support": "anatomical_RIGHT_near",
+  "checks": {
+    "palehair_hard_goldrays_longrobe_identity": true,
+    "RIGHT_weapon_LEFT_empty_two_arms_two_legs": true,
+    "E_head_torso_facing": true,
+    "RIGHT_near_forward_flat_contact": true,
+    "LEFT_far_raised_drive": true,
+    "compression_key": false
+  },
+  "findings": [
+    "Actual near RIGHT lower leg reaches a flat sole ahead of the approximate near hip. The RIGHT thigh/shin/boot form one connected chain; the far LEFT thigh is raised ahead and its whole boot is lifted. This differs materially from the failed far LEFT terminal-push-off candidate.",
+    "RIGHT weapon/near shoulder and empty far LEFT hand match the selected E idle. Face/chest point RIGHT with slight chest exposure; pale hair, rigid narrow gold rays and long dark gold-trim robe retained.",
+    "The raised LEFT boot does not supply a third support limb. Near RIGHT heel and toe lie on a roughly horizontal sole; the knee is softly flexed for contact, without the lowered bent-knee loading needed for a separate compression phase.",
+    "All strong-alpha pixels clear the original image boundaries; alpha16 bbox [2,10,1230,1202], edge alpha16 counts all zero, maximum edge alpha [3,0,0,1]. Exact strict singleton geometry/repack is owned separately by production tools."
+  ],
+  "approximate_raw_landmarks": {
+    "near_RIGHT_hip_under_robe": [
+      835,
+      650
+    ],
+    "near_RIGHT_knee": [
+      955,
+      835
+    ],
+    "near_RIGHT_ankle": [
+      949,
+      1090
+    ],
+    "near_RIGHT_heel_sole": [
+      918,
+      1188
+    ],
+    "near_RIGHT_toe_sole": [
+      1110,
+      1188
+    ],
+    "far_LEFT_raised_knee": [
+      1146,
+      655
+    ],
+    "far_LEFT_raised_ankle": [
+      1130,
+      880
+    ]
+  },
+  "landmark_limitations": [
+    "Hip/upper thigh are occluded by the robe. Hip and knee center estimates have roughly +/-25 to40px uncertainty; visible sole endpoints roughly +/-10px. These are pose-guide estimates, not measured skeletal truth or world-ground/root authority.",
+    "No complete opposite-support cycle, compression/air phases, per-pose physical C/anchor, compiled runtime or actor approval is asserted."
+  ],
+  "preview_budget_total_bytes": 279478,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_or_gameplay_claim": false,
+  "reviewed_at": "2026-10-19T14:21:41.721206+00:00"
+}

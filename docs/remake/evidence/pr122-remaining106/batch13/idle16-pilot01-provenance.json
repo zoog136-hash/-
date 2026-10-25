@@ -1,0 +1,32 @@
+{
+  "key": "monster:알비노 변이된 골렘",
+  "request": {
+    "prompt": "Create an original-based production SOURCE SPRITE SHEET of the exact BLUE CRYSTAL GOLEM in the supplied reference, not a different ice robot. It is a grounded heavy biped: very broad triangular crystalline shoulder masses, a pointed faceted crystal head with two luminous pale-blue eyes, cobalt/sapphire and icy white angular facets, a tapering V-shaped chest, very large long stone/crystal forearms and fists, stout faceted thighs and calves and broad flat crystalline feet. Preserve its distinctive anatomy, proportions, crystal cluster pattern and blue/white palette. The limbs, head and torso must be continuously attached with dark blue solid joint bridges, not floating separated crystals. No sword, staff, clothing, hair, tail or new body design. Same detailed painted 2D isometric fantasy RPG style as the reference; do not switch to cartoon, voxel or photoreal 3D.\n\nExactly SIXTEEN complete figures, arranged in EIGHT COLUMNS and TWO ROWS, one complete independent figure in each cell. Columns left-to-right are E (right profile), SE (front-right), S (front), SW (front-left), W (left profile), NW (back-left), N (back), NE (back-right). Back views must show the real back anatomy without a front face drawn on the back. Same isometric camera elevation and same physical model and size in every cell, no mirrored/repeated view substitutions. Every figure must have broad clear transparent space around all head spikes, shoulders, fists, toes; no overlap or touching neighboring figures. Use a wide high-resolution canvas; keep all16 figures fully inside it. No labels, text, borders, arrows, grid lines, floor or ground shadow.\n\nRow1: grounded idle A, a heavy neutral stance with both soles flat, weight slightly on left supporting leg, connected arms hanging low with subtly bent elbows, stable head. Row2: grounded idle B of the SAME MODEL and viewing angle: a small articulated settling of the knees/hips, shoulders and elbows, shifting weight toward the opposite leg while both soles remain planted. Actual small joint pose differences, not a scaled/rotated/translated duplicate and not merely a brightness change. A rock golem does not inflate like an organic chest. Preserve the core's blue light inside its facets.\n\nTRANSPARENT background: alpha ZERO everywhere outside each continuous full body. No free-floating glow flecks, detached crystals, particles, sparkles, fog, aura cloud or colored backdrop. A very thin connected blue rim on the body is okay; keep the original luminous blue crystal appearance within the body. No cut-off parts, no disembodied limb pieces, no multiple bodies within one cell. Source art for animation authoring only; all16 poses must be clean and separate.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/runtime/albino-mutated-golem-reference.png"
+    ]
+  },
+  "reference_atlas": "res://assets/monsters/original/atlas_2.png",
+  "reference_atlas_sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+  "region": [
+    916,
+    0,
+    292,
+    321
+  ],
+  "reference_region_RGBA_SHA256": "94faa27ac13a8f22476f7c2edf8cc269a0571e77b6cf6d9dc3b67e500a1b893c",
+  "original_output": "/workspace/generated_images/exec-4996f0af-272c-4bd3-be01-9d377428710d.png",
+  "planned_contract": {
+    "idle": 2,
+    "walk": 8,
+    "attack": 3,
+    "hit": 2,
+    "death": 3,
+    "directions": 8,
+    "poses": 144
+  },
+  "quality": "HOLD_PENDING_REVIEW",
+  "production_applied": false,
+  "completed_added": 0
+}

@@ -1,0 +1,54 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "SE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_faithful_locomotion_contact_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 3,
+  "intended_anatomical_support": "LEFT",
+  "references": [
+    "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+    "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/production-contact-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+    "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/production-contact-guide.png": "6b56cfc73b9a072348575296684410a3d84605918d1d1ff048926401e5a5c4d5"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Original SEwalk is wrong redmask/segmentedpants/flamefan identity. Author faithful SE grounded WALK opposite contacts, not whole6 copyleg loop. Existing selected SEidle only identity/camera authority.",
+  "prompt": "EDIT the FIRST image, the ACTUAL SELECTED faithful GIRTAS SOUTH-EAST IDLE, into exactly ONE FULL-BODY SOUTH-EAST WALK CONTACT keyframe, game phase 3, anatomical LEFT FOOT FORWARD. Image1 neutral SEidle is the ONLY body/camera/gear authority. Image2 is a JOINT TRAJECTORY INSTRUCTION diagram: GREEN is anatomical RIGHT/near/weapon side; MAGENTA is anatomical LEFT/far/free hand side. It is not finished art. Output a newly drawn actual pose, no colored lines or text.\n\nFIXED SE CAMERA: facing diagonally SCREEN DOWN-RIGHT with visible PALE face and frontal chest turned toward imageRIGHT, exactly same three-quarter front orthographic view as primary. Anatomical RIGHT leg belongs to the NEAR/imageLEFT half of pelvis and the RIGHT hand with long sinuous weapon on imageLEFT. Anatomical LEFT leg belongs to FAR/imageRIGHT pelvis and freeLEFT hand on imageRIGHT. Never swap or mirror sides.\n\nCONTACT LEFT: The FAR anatomicalLEFT hip-to-knee-to-ankle chain reaches forward diagonally DOWN-RIGHT in travel direction. LEFT boot HEEL touches ground AHEAD of pelvis, the advancing boot visibly lower/right at far-left chain endpoint. LEFT knee extended softly, toes slightly up at heel strike. NEAR anatomicalRIGHT boot trails behind/up-left on its TOES with RIGHT heel raised; RIGHT leg is the trailing chain, not the advancing one. This is LEFT advancing, the OPPOSITE contact from the usual near/right-leg-forward pose. Do not copy neutral legs.\n\nThis is a grounded relaxed WALK, not attack, crouch, jump, run, or two-feet-flight. Keep one heel landing and opposite toe lightly contacting ground. Clearly articulate both real legs/boots under the parted EXISTING long robe panels. Robe remains LONG dark black-gold layered cloth with its original golden trim. Do not shorten it into armor pants or invent extra legs. Weight, pelvis slight rotation, freeLEFT arm counterbalance and weaponRIGHT arm stabilization should match selected support. Preserve exact model volume/proportions, face, long PALE hair, narrow HARD straight GOLD radial spikes (not wings/feathers/flames), gold horn crown, dark gold armor, ONE original LONG SINUOUS orange-gold weapon in RIGHT near hand imageLEFT; LEFT far hand EMPTY. No red face/V mask, segmentedpants, new shield/sword/wings, extra arm/hand/leg, hand transfer or front camera change.\n\nOne isolated complete figure on transparent 1024x1024 PNG, full long blade tip and all spike tips/robe/boots inside with 80-100px truly alpha0 margins; no cropped gear. Hard-edged solid orange weapon with bright material inside silhouette, NO outward glow or haze. Fine game-sprite materials/detail as primary; no smear/blur/aura/effects/trails/shadow/floor/labels/grid/text/guide colors or duplicate figures. Most important: anatomically correct LEFT FORWARD WALK CONTACT with both leg chains distinct and original SE model. Exactly ONE pose only.",
+  "requested_at": "2026-10-19T12:51:26.769970+00:00",
+  "user_authorization": "Production image generation authorized, main chat images forbidden. Private bounded previews only.",
+  "idle_reference_exact_crop_proof": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+    "source_sha256": "e3b15578727710866b76c6495ad1b538156b35d74820061c362713db48441071",
+    "source_pose": 0,
+    "region": [
+      24,
+      0,
+      460,
+      511
+    ],
+    "rgba_sha256": "89271079b5c2493c9d9f595305d1209de9885643fc779b4630b65fdf0a936e01",
+    "crop_path": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+    "crop_sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+    "source_anchor": [
+      256,
+      507
+    ],
+    "source_canvas": [
+      1024,
+      1024
+    ]
+  },
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide": "Reference-only joint instruction; final art not geometrically moved/warped from idle."
+}

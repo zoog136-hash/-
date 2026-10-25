@@ -1,0 +1,75 @@
+{
+  "schema": "pr122-private-view-encoded-byte-ledger-v1",
+  "reviewer": "/root/girtas_final_actual_quality_v04",
+  "limit_handoff_bytes": 6000000,
+  "hard_limit_bytes": 8000000,
+  "files": [
+    {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-r097-W-walk-actual-idle-six-idle.jpg",
+      "bytes": 98266,
+      "sha256": "405d4694304fae7d6e414f566e3dc2e148ba22b611d95c9ee1a755eb8aaa6ce8",
+      "viewed": true,
+      "actual_revision": "r097",
+      "direction": "W",
+      "role": "walk",
+      "zoom_world": 2.65,
+      "quality": 40,
+      "construction": "PIL exact actual TRES region/margin + profile proportional scaling, original PNG unchanged; not Godot screenshot"
+    },
+    {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-r097-SE-run-actual-idle-six-idle.jpg",
+      "bytes": 99004,
+      "sha256": "861def01ed1cd9b06824af2f2ce5722c018bd77717491c077793f5239ef698ec",
+      "viewed": true,
+      "actual_revision": "r097",
+      "direction": "SE",
+      "role": "run",
+      "zoom_world": 2.45,
+      "quality": 36,
+      "construction": "PIL exact actual TRES region/margin + profile proportional scaling, original PNG unchanged; not Godot screenshot"
+    },
+    {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-r098-NW-run-actual-idle-six-idle.jpg",
+      "bytes": 98870,
+      "sha256": "7a9cfd4ad35d94364b4549472696ea704e1786dac9176ac2dae94fb9147f18e1",
+      "viewed": true,
+      "actual_revision": "r098",
+      "direction": "NW",
+      "role": "run",
+      "zoom_world": 2.45,
+      "quality": 48,
+      "construction": "PIL exact actual TRES region/margin + profile proportional scaling, original PNG unchanged; not Godot screenshot"
+    }
+  ],
+  "view_events": [
+    {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-r097-W-walk-actual-idle-six-idle.jpg",
+      "sha256": "405d4694304fae7d6e414f566e3dc2e148ba22b611d95c9ee1a755eb8aaa6ce8",
+      "encoded_file_bytes": 98266,
+      "utc": "2026-10-19T16:48:15.839900+00:00",
+      "tool": "tools.view_image -> image (self context only)",
+      "display_resize": "2240x395 to2048x361",
+      "ordinal": 1
+    },
+    {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-r097-SE-run-actual-idle-six-idle.jpg",
+      "sha256": "861def01ed1cd9b06824af2f2ce5722c018bd77717491c077793f5239ef698ec",
+      "encoded_file_bytes": 99004,
+      "returned_view_buffer_bytes": 99004,
+      "utc": "2026-10-19T16:49:38.160461+00:00",
+      "tool": "tools.view_image detail original -> image detail original (self context only)",
+      "ordinal": 2
+    },
+    {
+      "ordinal": 3,
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-r098-NW-run-actual-idle-six-idle.jpg",
+      "sha256": "7a9cfd4ad35d94364b4549472696ea704e1786dac9176ac2dae94fb9147f18e1",
+      "encoded_file_bytes": 98870,
+      "returned_view_buffer_bytes": 98870,
+      "utc": "2026-10-19T16:53:43.855032+00:00",
+      "tool": "tools.view_image detail original -> image detail original, self context only"
+    }
+  ],
+  "viewed_encoded_bytes": 296140,
+  "created_encoded_bytes": 296140
+}

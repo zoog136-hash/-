@@ -1,0 +1,51 @@
+{
+  "schema": "pr122-independent-contact-key-reassessment-v1",
+  "status": "PASS_WITH_FULL_CYCLE_QA_HOLD",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "walk",
+  "review_scope": "Visible contact-key compatibility only; not a six-frame gait, game integration, or actor approval.",
+  "candidate_source_sha256": "99a5803dd60f98d7f42b44dd8e011b3521edee217ba05aad9324ae7e7c1475d0",
+  "candidate_source": "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/girtas-W-walk-opposite-contact-v01.png",
+  "contact0_source_sha256": "a4230b576ab233f54a58c12c83e5fda2d7e41f46351e0c79ecda4917ad708568",
+  "contact0_exact_crop_sha256": "a2cf0de9cdb5e7c3cd333f56395ce47075c36bfd938a8e328d6654b4b3e77a71",
+  "original_author_result_sha256": "3ad7663e467c165427e93c237f9063f2072b27ae4be9e93a8767e7532c6aa3fc",
+  "original_author_status_preserved": "GENERATED_SINGLE_POSE_HOLD_OPPOSITE_CONTACT_OWNERSHIP_UNRESOLVED",
+  "visible_contact_geometry": "PASS",
+  "opposite_physical_leg_identity": "UNRESOLVED_FROM_ISOLATED_OCCLUDED_KEYS; no anatomical ownership labels assigned.",
+  "same_physical_leg_leading_proven": false,
+  "contact_pair_usable_for_full_cycle_authorship": true,
+  "evidence": {
+    "heading": "Both keys face screen LEFT/W; boots and pale face point left, with free near hand and far sinuous weapon preserved.",
+    "front_contact": "The screen-left front boot has a low rear heel and toe tipped up/forward to the left. Its armored knee and shin form one plausible continuous leg.",
+    "rear_contact": "The screen-right rear boot points left; its heel is visibly lifted while its forward toe is lower, a clear trailing toe-push contact. The new stride/contact articulation is more explicit than the old key.",
+    "pair_difference": "The candidate widens the front-heel/back-toe stride and changes the rear ankle. Both keys still place the forward greave under the front skirt edge. That edge alone does not establish which concealed hip owns the greave.",
+    "visible_joint_contradiction": null,
+    "depth_evidence_limit": "The skirt occludes the thigh roots; no exposed thigh crossing is required by the original model. Similar front-greave decoration is not a unique physical-leg identifier because the equipment is paired."
+  },
+  "concrete_visible_model_or_joint_defects": [],
+  "full_cycle_release_conditions": [
+    "Author and inspect all six chronological poses, including both different passing/support exchanges.",
+    "Check continuous knee/ankle/boot trajectories into and out of each contact, and the final-to-first seam; reject a repeated single-leg step, joint teleport, double limb, or stride reversal if visible.",
+    "Do not claim the new key is a proven anatomical LEFT/RIGHT contact solely from its prompt or from concealed thigh labels.",
+    "Maintain the original long skirt, face/camera, paired armor and weapon-hand occlusion; do not expose or shorten the skirt to manufacture ownership evidence.",
+    "Validate actual compiled playback, world-foot/root alignment, proportions and cadence before integration approval."
+  ],
+  "quality_note": "Higher native source resolution alone is not a physical model/proportion defect. Contact-compatible keys do not establish a completed opposing-leg cycle.",
+  "private_previews_examined": [
+    {
+      "path": "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/private-contact-comparison.jpg",
+      "bytes": 88263
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-walk-opposite-contact-key-v01/private-leg-ownership-detail.jpg",
+      "bytes": 80822
+    }
+  ],
+  "reviewed_at": "2026-10-19T11:40:45.117391+00:00",
+  "integration_ready": false,
+  "actor_approval_change": 0,
+  "detailed_completion_change": 0,
+  "source_pixels_changed": false,
+  "repository_mutated": false
+}

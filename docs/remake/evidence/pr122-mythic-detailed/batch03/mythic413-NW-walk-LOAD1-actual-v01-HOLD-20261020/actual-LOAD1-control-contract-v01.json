@@ -1,0 +1,167 @@
+{
+  "status": "ACTUAL_COSTUME_LOAD1_POSE_CONTROL_ONLY_NOT_FINAL_SOURCE",
+  "source_master": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-bounded-v02.png",
+  "source_master_sha256": "0874d56a0adf0d76b5e91c565ec41d601d8bbb76457c64e703a89dba54cf0645",
+  "virtual_C_fixed": 2048,
+  "body_unit_factor_fixed": 2,
+  "raw_size": [
+    1254,
+    1254
+  ],
+  "native_plant_delta": [
+    111.35431880224218,
+    100.21888692201796
+  ],
+  "LEFT_heel0_stiletto": [
+    514.0,
+    944.0
+  ],
+  "LEFT_heel1_target": [
+    625.3543188022422,
+    1044.2188869220179
+  ],
+  "LEFT_forefoot_sole0_estimate": {
+    "xy": [
+      481.0,
+      906.0
+    ],
+    "uncertainty_px": [
+      8,
+      8
+    ],
+    "not_ornamental_toe": "Used for CONTROL footroll only, not final ground approval"
+  },
+  "LEFT_footroll_control_degrees": 9.443384994664548,
+  "LEFT_ankle1_target": [
+    625.7168182558354,
+    983.3255628832165
+  ],
+  "LEFT_knee1_target": [
+    592.0,
+    852.0
+  ],
+  "RIGHT_knee1_target": [
+    650.0,
+    830.0
+  ],
+  "RIGHT_ankle1_target": [
+    722.0,
+    959.0
+  ],
+  "RIGHT_air_boot_control_shift": [
+    -68.0,
+    -87.0
+  ],
+  "RIGHT_toe_extremity1_control": [
+    680.0,
+    1030.0
+  ],
+  "body_root_or_frame_shift": "NONE; same native body placement and same C; actual new hip/knee/ankle articulation required",
+  "raw_source_anchor": "Common source0/1 anchor must be pinned by root; pairwise plantdelta independent of common translation, not perpose retuning",
+  "original_RGBA_resampled": false,
+  "control_only_parts_affine": true,
+  "final_source_rule": "New service RGBA inside explicit legs/localhipmask only, original master elsewhere; no finalresource resample",
+  "ops": [
+    {
+      "part": "LEFT_thigh",
+      "old_joint_pair": [
+        [
+          612.0,
+          706.0
+        ],
+        [
+          563.0,
+          808.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          612.0,
+          706.0
+        ],
+        [
+          592.0,
+          852.0
+        ]
+      ],
+      "CONTROL_ONLY_projected_scale": 1.302267268669242,
+      "CONTROL_ONLY_rotation_degrees": -17.859076632785648
+    },
+    {
+      "part": "LEFT_shin",
+      "old_joint_pair": [
+        [
+          563.0,
+          808.0
+        ],
+        [
+          521.0,
+          890.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          592.0,
+          852.0
+        ],
+        [
+          625.7168182558354,
+          983.3255628832165
+        ]
+      ],
+      "CONTROL_ONLY_projected_scale": 1.4716623966436548,
+      "CONTROL_ONLY_rotation_degrees": -41.52054402050357
+    },
+    {
+      "part": "RIGHT_thigh",
+      "old_joint_pair": [
+        [
+          670.0,
+          716.0
+        ],
+        [
+          704.0,
+          851.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          670.0,
+          716.0
+        ],
+        [
+          650.0,
+          830.0
+        ]
+      ],
+      "CONTROL_ONLY_projected_scale": 0.8313798198974198,
+      "CONTROL_ONLY_rotation_degrees": 24.086688486098673
+    },
+    {
+      "part": "RIGHT_shin",
+      "old_joint_pair": [
+        [
+          704.0,
+          851.0
+        ],
+        [
+          790.0,
+          1046.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          650.0,
+          830.0
+        ],
+        [
+          722.0,
+          959.0
+        ]
+      ],
+      "CONTROL_ONLY_projected_scale": 0.6931844000004285,
+      "CONTROL_ONLY_rotation_degrees": -5.368904176676723
+    }
+  ],
+  "actor_approval_added": 0
+}

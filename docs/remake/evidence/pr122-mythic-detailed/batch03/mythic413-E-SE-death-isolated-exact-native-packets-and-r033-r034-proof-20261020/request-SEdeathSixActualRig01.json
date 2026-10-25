@@ -1,0 +1,329 @@
+{
+  "status": "REQUESTED_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "SE",
+  "role": "death",
+  "version": "SEdeathSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+      "packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+      "direction": "SE",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2816,
+        2816,
+        2816,
+        2816,
+        2816,
+        2816
+      ],
+      "root_float": [
+        723.7916666666666,
+        1067.2150113422247
+      ],
+      "root_integer": [
+        724,
+        1067
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          980,
+          1323
+        ],
+        [
+          3284,
+          1323
+        ],
+        [
+          980,
+          3627
+        ],
+        [
+          3284,
+          3627
+        ],
+        [
+          980,
+          5931
+        ],
+        [
+          3284,
+          5931
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "a057dfb91cb45c39e15f2548250be55e024649db41f62cedb3f35cb827703292",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "base_geometry_sha256": "06aed81b6fb916856487c06eebf59d984365215a2e965df64fe5ca5974bce41d",
+    "direction": "SE",
+    "regions": [
+      [
+        529,
+        218,
+        765,
+        1247
+      ],
+      [
+        2707,
+        145,
+        875,
+        1367
+      ],
+      [
+        227,
+        2624,
+        1132,
+        1397
+      ],
+      [
+        2667,
+        2992,
+        1244,
+        1183
+      ],
+      [
+        468,
+        5717,
+        1252,
+        913
+      ],
+      [
+        2778,
+        5743,
+        1252,
+        899
+      ]
+    ],
+    "nearest_owner_sha256": "8eacefc5028a20766f4c265dde020aff30f8e66ab648cb9798e82b8b51ba7b7b",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "direction": "SE",
+    "role": "death",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        980,
+        1323
+      ],
+      [
+        3284,
+        1323
+      ],
+      [
+        980,
+        3627
+      ],
+      [
+        3284,
+        3627
+      ],
+      [
+        980,
+        5931
+      ],
+      [
+        3284,
+        5931
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+      "packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+      "direction": "SE",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2816,
+        2816,
+        2816,
+        2816,
+        2816,
+        2816
+      ],
+      "root_float": [
+        723.7916666666666,
+        1067.2150113422247
+      ],
+      "root_integer": [
+        724,
+        1067
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          980,
+          1323
+        ],
+        [
+          3284,
+          1323
+        ],
+        [
+          980,
+          3627
+        ],
+        [
+          3284,
+          3627
+        ],
+        [
+          980,
+          5931
+        ],
+        [
+          3284,
+          5931
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "a057dfb91cb45c39e15f2548250be55e024649db41f62cedb3f35cb827703292",
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+  "authored_common_root_float": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "common_root_integer": [
+    724,
+    1067
+  ],
+  "common_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0
+}

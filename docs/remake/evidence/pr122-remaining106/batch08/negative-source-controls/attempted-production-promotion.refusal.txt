@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 134, in <module>
+    main()
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 31, in main
+    assert fixture['prototype_only'] and not fixture['production_applied'] and not fixture['final_model_approval']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

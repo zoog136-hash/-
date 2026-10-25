@@ -1,0 +1,137 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "SW",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02iso01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png": "5d8a262b38675dde9de72b4422753a2389c833083f1e925b7303d2aec44e33b9"
+  },
+  "transparent_background": true,
+  "user_authorization": "Production image tools authorized; no images or image links in main chat. One private repair attempt.",
+  "corrective_reason": "SW/run/v01 all six poses incorrectly face screen-right. Author genuine SOUTHWEST lower-left fast-flight poses from correct SW walk/idle; never reference wrong SW/run.",
+  "prompt": "Create ONE production game-animation sprite sheet: six independently articulated FAST AIRBORNE RUN / FLIGHT poses of the SAME unique boss 해방된 할파스 (Halpas). This is a direction-correction commission. The attached second and third images show the CORRECT SOUTHWEST orientation and exact established character model; the first portrait is the original identity authority. Use ONLY these references. Preserve the helmet, face, gold-and-black armor, burgundy cape, crystalline purple wings, exact weapon and anatomical weapon hand from these correct references.\n\nDIRECTION IS THE MOST IMPORTANT REQUIREMENT. EVERY ONE of the SIX complete figures faces SOUTHWEST: screen LOWER-LEFT, front-left three-quarter view. The nose/helmet face points LEFT and slightly DOWN. Chest, pelvis, knees, toes and the weapon perspective face LEFT and slightly DOWN, matching the correct second-reference SW WALK model. The blade projects to the LEFT of the body. Cape trails to the RIGHT. Show the SAME correct side of the character in every phase. No figure may face screen-right. No reversal, back view, changing viewpoint, rotating-in-place or mirrored weapon hand. Render new poses from this correct SW model; do not use any unprovided old run sprite.\n\nAnimate a distinctive FAST airborne movement cycle, rather than tracing the slow walk reference: stronger forward lean, coordinated shoulder/hip articulation, visibly exchanged leg extensions and tucks, wing propulsion and delayed cape response. Six phase order is left-to-right then top-to-bottom: (0) leading forward leg extension with rear leg bent, wings raised in powerful upstroke; (1) forward surge with legs tucking through and wings driving down; (2) far-side leg extends forward while near leg recoils, wings low and cape catches up; (3) opposite leg lead, new upstroke, same heading and same complete anatomy; (4) second strong downstroke with opposing arm/leg counter-response; (5) recoil/recovery flowing back toward phase0. This is one coherent flying armored humanoid with the exact same two legs, two arms, two existing crystalline wings, single established weapon and cape in all frames. Make all six silhouettes and joint poses clearly different. Do not add limbs, weapons, energy trails, ornaments or detached parts.\n\nTechnical atlas: 1024x1536 PNG, EXACTLY TWO COLUMNS and THREE ROWS, SIX figures only, each on its own512x512 cell. Keep each complete silhouette within the central320x320 area of its cell, including the full wing tips, helmet horns, boot tips and entire weapon. Keep at least96px of empty transparent margin on every cell edge. Sparse layout with large empty gutters is essential; do not enlarge a figure to fill the page. Same elevated orthographic isometric camera, body proportions, material rendering and pixel scale across all six. Fully visible uncropped figures, no overlap of body bounding rectangles between cells.\n\nDetailed crisp game-sprite cutouts with readable gold trim and opaque black armor. Shading stays inside the character. Background entirely transparent alpha0, including gaps between limbs and wings. Only1-2px anti-aliasing on silhouette edges. No floor, cast shadow, contact shadow, bloom, haze, fog, halo, aura, drop shadow, motion blur, diffuse glow, background panel, text, captions, grid, cell outlines or labels. Purple light must stay inside the existing solid crystal-wing and blade shapes. Preserve exact identity and correct LOWER-LEFT facing in ALL SIX poses.",
+  "requested_at": "2026-10-19T10:10:31.011884+00:00",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "docs/remake/evidence/pr122-mythic-detailed/batch03/request-103-halpas-SW-run-v02.json",
+  "parent_request_sha256": "d1c0349fbb50eee414b9a55ec80a7a29a6de6f4baec8b3725373c2e6195cf15a",
+  "processing_proof": {
+    "source_sha256": "0083e2bf23ee49248c42ff3cb1627c8a2ce4a930febaf019a39a0c272e0f9ea7",
+    "output_sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02.png",
+    "output": "/workspace/scratch/halpas-SW-run-v02iso01.png",
+    "preserved_foreground_rgba": true,
+    "source_canvas": [
+      1024,
+      1536
+    ],
+    "output_canvas": [
+      1536,
+      1536
+    ],
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 72119,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 497650,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          2
+        ],
+        "pixels": 87102,
+        "foreground_pixels": 81782,
+        "rgba_sha256": "fb5237e897360d26d21a58f75e9ef1303d471c815b3b5dd5c643fe034295861e"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -42
+        ],
+        "pixels": 86004,
+        "foreground_pixels": 81386,
+        "rgba_sha256": "d86cc47e41fd7401e7607e2fd04574ef8b96011e4b1cf227a5dbdedb591092ac"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          2
+        ],
+        "pixels": 87857,
+        "foreground_pixels": 82806,
+        "rgba_sha256": "5633ff7fb686b8c544a5de3c9de10b787720c7903106214b59947a07058a3a4e"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          26
+        ],
+        "pixels": 86407,
+        "foreground_pixels": 81216,
+        "rgba_sha256": "4f3b059d7c57463057528646d5d4e0bccae39fc8fffc88c35f6689864e875e39"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          26
+        ],
+        "pixels": 91819,
+        "foreground_pixels": 86897,
+        "rgba_sha256": "0264cee9fd3833d2157c7048c251ec1aa660e87e303c8ddb3bbe5b1087c12a13"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          42
+        ],
+        "pixels": 88491,
+        "foreground_pixels": 83563,
+        "rgba_sha256": "2d96c568eaf55576583976cf416aec6e789825493fea36d8b497ef51447413e6"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
+  "output_sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462",
+  "output_bytes": 1499152,
+  "original_generated_file": "/workspace/scratch/halpas-SW-run-v02iso01.png",
+  "private_source_review": {
+    "raw_sha256": "0083e2bf23ee49248c42ff3cb1627c8a2ce4a930febaf019a39a0c272e0f9ea7",
+    "raw_bytes": 2356719,
+    "source_visual_status": "PASS",
+    "visual_findings": [
+      "All six helmet/face, chest, blade and leg perspectives face screen LOWER-LEFT/SOUTHWEST; no screen-right reversal.",
+      "Gold/black armor, burgundy cape, paired crystalline purple wings and the established blade hand match the correct SW walk/idle generated model at game-view scale.",
+      "New fast-flight poses show stronger forward lean, visible leg tuck/exchange and upstroke/downstroke wing/cape response; phase3 has a clear deeper tuck differing from slow walk.",
+      "All six figures appear complete and uncropped in the private comparison."
+    ],
+    "visual_limitations": [
+      "Source visual PASS concerns replacement SW/run direction and motion at game-view scale.",
+      "Exact identity details remain limited by the original108x132 portrait.",
+      "Strict geometry, SpriteFrames, actual Player and integration tests remain for root; no actor completion or approval granted."
+    ]
+  }
+}

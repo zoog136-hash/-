@@ -1,0 +1,32 @@
+{
+  "schema": "pr122-scoped-actual-native-quality-review-v1",
+  "actor": "transform:393",
+  "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/SpriteFrames.tres",
+  "frames_sha256": "6e497557701026263e10ed2e9d81e6177afaa335ee2d6fe2b0b74f6ebe96441c",
+  "scope": "corrected NW attack sixposes with actual selected NW idle entry/recovery reference",
+  "status": "PASS_SCOPED_NW_ATTACK_6_POSES",
+  "reviewed_pose_count": 6,
+  "authored_pose_canvas_sizes": [
+    1208,
+    1208,
+    2648,
+    2768,
+    2768,
+    1208
+  ],
+  "actual_frame_equality_proof": {
+    "file": "/workspace/scratch/halpas-final-native-quality-20261019/actual-r070-NW-attack-frame-equality-proof.json",
+    "sha256": "a54f054f2762575ab2f21486059d8aae0e3eba08ffe355e2c8b27bcb43f709d6"
+  },
+  "source_RGBA_unchanged": true,
+  "heading_and_weapon_review": "All six actual poses retain NW rear-up-left body/head/hips and the same Halpas dark/gold armor, paired gold horns, purple wings and red cape. Empty near LEFT arm is distinct from the far RIGHT continuous weapon chain. Guard0 -> raised1 -> load2 -> extended upper-left contact3 -> cross-body follow4 -> recovery5 is a distinct native attack cycle with correct NW blade aim at contact3. No former SW frontal camera, extra hand, detached grip or equipment swap remains.",
+  "follow4_occlusion_adjudication": "Visible near LEFT free hand/forearm and far RIGHT weapon hand/forearm do not branch from one visible socket; the proximal RIGHT upper arm is legitimately hidden by the helmet/near shoulder and upper torso in a cross-body follow-through after phase3. This agrees with the earlier independent occlusion review without claiming to see the hidden humerus.",
+  "physical_scale_and_root_review": "Actual perpose texture canvas values keep helmet, neck, shoulder-to-pelvis size coherent between reused0/1/5 and new2/3/4 despite their different native pixel resolution. Source3/4 forward-left torso/arm lunge and leg trailing are preserved. Idle0 -> attack0 and recovery5 -> idle0 do not show a material body scale or pivot pop; no wing/cape bbox size fitting was used.",
+  "timing_scope": "Actual TRES attack is non-looping; contact3 anatomy/aim reviewed. Root focused action test owns hitmarker timing and recovery state validation.",
+  "private_panel": "actual-r070-NW-attack-all6-vs-idle.jpg",
+  "private_panel_bytes": 84766,
+  "actor_approved": false,
+  "completed_added": 0,
+  "counts_changed": false,
+  "default_enable_authorized_by_review": false
+}

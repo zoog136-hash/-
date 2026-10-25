@@ -1,0 +1,213 @@
+{
+  "schema": "PR122-independent-final-exact-request-source-cycle-review-v1",
+  "status": "PASS_EXACT_S_ATTACK_SOURCE_REQUEST_BINDING_PENDING_ROOT_GAME_ADOPTION",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "S",
+  "role": "attack",
+  "version": "SattackSixActualRig01",
+  "request_sha256": "aaceb2b7ebd69fc7d650f469b1244dffe992c3b4c212e1f4c500d67d8cd9b546",
+  "request_path": "/workspace/scratch/mythic413-S-attack-actual-packed-r001-20261020/request-SattackSixActualRig01.json",
+  "raw_sha256": "45e8a24f1681606e374b4b60b2471c439883093ff5d5f2e00d0e8a2f0f8a5124",
+  "raw_bytes": 4627649,
+  "raw_path": "/workspace/scratch/mythic413-S-attack-actual-packed-r001-20261020/thunder_female-S-attack-six-actual-poses-r001.png",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/actual-S-ATTACK6-own-native-articulated-rig-v07/S-ATTACK6-final-actual-native-SOURCE-ONE-SHOT-PASS-contract-v08.json",
+    "sha256": "6994157cc90d78d61e3ef8044f0ad6c4bbacc2247f314ae42fa628b735f1341d",
+    "bytes": 37162
+  },
+  "actual_source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Sattack-final699415-peer-visual-and-independent-numeric-source-cycle-binding-v01.json",
+    "sha256": "9bd19941672b8a55fd385005f1531c9d053563e580dc0c67f7479f0dfbb08275",
+    "bytes": 45743
+  },
+  "exact_source_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SattackSixActualRig01-independent-exact-source-shipping-storage-binding-v01.json",
+    "sha256": "9a3f41c1b2bcbe79c35fdfb567efd4a5e3208f52eebbc26592f7e8f2b06931b7",
+    "bytes": 13681
+  },
+  "canonical_declared_descriptor": {
+    "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+    "source_sha256": "45e8a24f1681606e374b4b60b2471c439883093ff5d5f2e00d0e8a2f0f8a5124",
+    "packing_proof_sha256": "8938200566199818b54ef6a8436aa3fab1ead4367b64d1a0ce7d5ea0bd74c833",
+    "direction": "S",
+    "canonical_canvas": 2048,
+    "physical_canvases": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "root_float": [
+      655.0833333333334,
+      1017.9227375838406
+    ],
+    "root_integer": [
+      655,
+      1018
+    ],
+    "tile_size": 2304,
+    "storage_translations": [
+      [
+        128,
+        128
+      ],
+      [
+        128,
+        128
+      ],
+      [
+        128,
+        128
+      ],
+      [
+        128,
+        128
+      ],
+      [
+        128,
+        128
+      ],
+      [
+        128,
+        128
+      ]
+    ],
+    "atlas_origins": [
+      [
+        0,
+        0
+      ],
+      [
+        2304,
+        0
+      ],
+      [
+        0,
+        2304
+      ],
+      [
+        2304,
+        2304
+      ],
+      [
+        0,
+        4608
+      ],
+      [
+        2304,
+        4608
+      ]
+    ],
+    "source_anchors": [
+      [
+        783,
+        1146
+      ],
+      [
+        3087,
+        1146
+      ],
+      [
+        783,
+        3450
+      ],
+      [
+        3087,
+        3450
+      ],
+      [
+        783,
+        5754
+      ],
+      [
+        3087,
+        5754
+      ]
+    ]
+  },
+  "canonical_declared_descriptor_sha256": "33c8e69670fac2522b25acf332c22df02e6318464b3d5c11170224e5365d6032",
+  "isolated_builder_provenance": {
+    "path": "/workspace/scratch/mythic413-S-attack-actual-packed-r001-20261020/isolated-three-copy-preload-provenance-v01.json",
+    "sha256": "1620ad8d9062f4a67752f09bfda3328ebbdcbb8f266371c21e196d95b30a47ca",
+    "bytes": 1771
+  },
+  "required_matching_module_copies": {
+    "pr122_reviewed_runtime_layout": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/pr122_reviewed_runtime_layout.py",
+      "sha256": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2",
+      "bytes": 14709
+    },
+    "stage_pr122_native_locomotion": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/stage_pr122_native_locomotion.py",
+      "sha256": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701",
+      "bytes": 12040
+    },
+    "advance_pr122_native_locomotion": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/advance_pr122_native_locomotion.py",
+      "sha256": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e",
+      "bytes": 10690
+    }
+  },
+  "required_runtime_adoption": [
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval."
+  ],
+  "runtime_adoption_approved": false,
+  "runtime_tests_run": 0,
+  "proposal_pipeline_executed_by_this_audit": false,
+  "physical_canvas": 2560,
+  "common_unpadded_root": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "original_reviewed_storage": [
+    128,
+    128
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "uniform_extra_shipping_translation": [
+    0,
+    0
+  ],
+  "uniform_integer_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615955587
+  ],
+  "loop": false,
+  "cycle_seconds": 0.42,
+  "runtime_cycle_seconds": null,
+  "resource_role_seconds": null,
+  "phase_seconds": 0.07,
+  "intended_contact_frame": 3,
+  "held_dead_terminal": false,
+  "visual_findings": [
+    "First exact-six board reads READY→WINDUP→COIL→frontward/downwardSTRIKE3→FOLLOW→RECOVER. Both full staff tips remain visible; gripping fingers and shaft turn together in native contacts. Pose silhouettes and free counterarm remain readable.",
+    "Genuine royal-blue triangular ribbon retained on head/CORE. Short actual-source blue backing cap joins existing edges, remaining continuous in posedSTRIKE3/FOLLOW. No broad deletion or thin wire.",
+    "Continuous locally authored703 gold hem now joins original visible cape band; black/navy slots and tile breaks removed. Genuine original387RGBA capeV point restored exactly toCORE after independent actual-source owner confirmation, terminalalpha100[437,986]. Cyan jewel/beveled fins stay rigidstaff.",
+    "Complete actual white puff and correct curved rim belong forearm; current0/3/4 nativejoint has no protruding detached white triangle and reads as rounded gold/white cloth overlap.",
+    "Former transparent internal gap and hard artificial skin cut repaired with actual-skin joint material. Remaining fine short mark visibly matches genuine original native skin/collar detail and directBODY UV; it is preserved rather than blurred/deleted. Current original-vs-posed comparison and independent second reader resolve prior narrowHOLD.",
+    "Inspected native head/neck/proxshoulder and complete LEFT/free-hand contacts stay coherent. No new whole-actor mirror/resample/perposebodyfit introduced."
+  ],
+  "visual_limitations": [
+    "SOURCE PASS applies to exact current six, not earlierfailed candidates.",
+    "Genuine703cloth is newly authored material, not proof of hidden original truth; one priorlocalservice raw islogical250fragment.",
+    "Independent final numeric/floor, exactPACK bindings, Godot role/contact validation and actor approval remain separate.",
+    "Actual SOURCE/one-shot judgement is inherited from the exact peer visual receipt. This independent work does not view original art or repeat once-body registration.",
+    "All actual36 source node rasters compose exact sixRGBA; thirty original affine parts and six BODY/actual-skin retouch envelopes are independently matched. The actual feet remain in the original BODY; foreground equipment may legitimately occlude them and does not become a foot deformation.",
+    "The common original-neutral painted-material planes supply finite guarded sourcecard and actual raster bounds. They are one stationary compatibility witness, not recovered hidden anatomical3D, a calibrated physical skeleton, or a3D weapon-rotation proof. Staff rotation/length/grip are verified in the authored projected metric.",
+    "All source CORE texel-quad bounds include the exact piecewise quadratic spine-Y extrema; outer cape motion is transverse and does not alter the floor-Z bound. Genuine authored skin joint and local cape remain the separately approved native material derivatives.",
+    "FixedC/root/storage, original bodyunit, one-shot .42/contact3 and source ownership are retained. No per-pose alpha-height/root fit, source resizing, quality threshold change, game adoption or actor approval is added.",
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval.",
+    "Final packing uses one identical integer shipping translation for all6, exact reverseRGBA reconstruction, transparent padding only, and one common integer root quantization. Every original native world-space point is unchanged. No new source/image view or physical/body/profile fit was introduced."
+  ],
+  "images_forwarded": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

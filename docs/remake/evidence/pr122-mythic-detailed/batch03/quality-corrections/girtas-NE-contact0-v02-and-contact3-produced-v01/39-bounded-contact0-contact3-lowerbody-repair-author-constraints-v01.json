@@ -1,0 +1,109 @@
+{
+  "schema": "NE_RUN_CONTACT0_3_BOUNDED_LOWERBODY_REPAIR_AUTHOR_CONSTRAINTS_V1",
+  "status": "BOUNDED_REPAIR_CONSTRAINTS_NOT_SOURCE_OR_PHYSICAL_APPROVAL",
+  "current_HOLD_candidate_immutable": {
+    "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/candidate-receipt-v01.json",
+    "sha256": "156724341720f84fbb71e43f1404caeab2ab9f885e803784c9899aed736eb8b2"
+  },
+  "source6_and_Cstage_unchanged": true,
+  "camera": [
+    5,
+    -7,
+    5
+  ],
+  "target": [
+    0,
+    0,
+    1
+  ],
+  "forward_ground_slope": -0.5902918298980975,
+  "lateral_coefficient": 0.8914611308665146,
+  "pixel_scale": 0.21910501173173982,
+  "poses": [
+    {
+      "phase": 0,
+      "C_fixed": 1936,
+      "actual_source_heel": [
+        683,
+        1143
+      ],
+      "source_pale_hair_root_Y_registration_not_scale_fit": 205,
+      "existing_ground_root_X": 730,
+      "lateral_screen_X_canonical_nominal": -50,
+      "existing_projected_heel_ground_DY_native": -56.52721902201463,
+      "v04_contact_uppercore_height_world_bound": [
+        92,
+        98
+      ],
+      "target_root_Y_native_at_fixed_rootX": [
+        998.8545021186441,
+        1050.627621822034
+      ],
+      "target_heel_Y_native_at_existing_heelX": [
+        942.3272830966295,
+        994.1004028000193
+      ],
+      "target_heel_X_Y_band_formula": "heelY = boundAtOriginalX + (-0.5902918298980975)*(heelX-originalHeelX)",
+      "target_support_move_UP_native": [
+        148.8995971999807,
+        200.67271690337054
+      ],
+      "same_uppercore_immutable": true,
+      "actual_lowerbody_change_required": "Genuine flex/foreshortening through continuous thigh-knee-shin-ankle-foot. Preserve boot rigid gear size/width, proper +Y leading heel/forefoot touchdown, high opposite connected boot. No boot-only translation, telescopedshin or C/root compensation.",
+      "scope": "Bounds for one source repair; not approval or exact hiddenbone claim."
+    },
+    {
+      "phase": 3,
+      "C_fixed": 1776,
+      "actual_source_heel": [
+        905,
+        1136
+      ],
+      "source_pale_hair_root_Y_registration_not_scale_fit": 165,
+      "existing_ground_root_X": 717,
+      "lateral_screen_X_canonical_nominal": 79,
+      "existing_projected_heel_ground_DY_native": 11.169239988039962,
+      "v04_contact_uppercore_height_world_bound": [
+        105,
+        111
+      ],
+      "target_root_Y_native_at_fixed_rootX": [
+        996.1511158994607,
+        1043.6454653794299
+      ],
+      "target_heel_Y_native_at_existing_heelX": [
+        1007.3203558875007,
+        1054.8147053674697
+      ],
+      "target_heel_X_Y_band_formula": "heelY = boundAtOriginalX + (-0.5902918298980975)*(heelX-originalHeelX)",
+      "target_support_move_UP_native": [
+        81.18529463253026,
+        128.67964411249932
+      ],
+      "same_uppercore_immutable": true,
+      "actual_lowerbody_change_required": "Genuine flex/foreshortening through continuous thigh-knee-shin-ankle-foot. Preserve boot rigid gear size/width, proper +Y leading heel/forefoot touchdown, high opposite connected boot. No boot-only translation, telescopedshin or C/root compensation.",
+      "scope": "Bounds for one source repair; not approval or exact hiddenbone claim."
+    }
+  ],
+  "projection_vs_source_decisive_reason": "For true farLEFT (-X) + leadingforward(+Y) contact0, both ground contributions project screenUP relative root. Correcting current uppercore26.32world pop by root alone would put unchangedsole1143 below targetroot~1025; this cannot be leading farLEFT ground. Moving rootX far enough would make foot rearward and displace body horizontally. NearRIGHT3 lateral depth can cover only bounded tens of canonical pixels, not its entire excessive uppercore/support gap. This identifies a source support-to-core projected-separation issue within accepted C, without claiming exact hiddenbone ratio defect.",
+  "protection": {
+    "contact0": "Producer-owned nonrectangular actual farLEFT chain/attached innerrobe mask, tentative bounding[500,680,800,1170]. Preserve all upperbody/helmet/skull/hair/pauldrons/cuirass/arms/weapon, outside lowerbody mask, nearRIGHT high recovery, outerrobe. Suggested flex-knee visible intervalx650..740/y790..900 only as pose guide, not measured bone.",
+    "contact3": "Producer nonrectangularnearRIGHT thigh/knee/shin/boot+attachedlowerrobe mask, upperbody/weapon/hand/farLEFTrecovery immutable. Proposed heel9301018 is inside targetband.",
+    "opposite_boot_clearance": "At revised roots, existing exact opposite recovery sole samples retain >120canonical (~26world) conservative clearance. No opposite boot repair needed under chosen plane."
+  },
+  "AIR5_followup_constraint": {
+    "source_regeneration_automatically_requested": false,
+    "existing_uppercore_height_world": 121.22120582950076,
+    "existing_interval_minimum_sole_clearance_world": 2.1336264840976096,
+    "minimum_after_4native_XY_sample_error_world": 1.3964291868086969,
+    "predicted_AIR5_to_new_contact0_descent_world": [
+      23.22120582950076,
+      29.22120582950076
+    ],
+    "interpretation": "Root5 lowering has only about1.4world conservative clearance slack. It cannot silently remove20world of AIR5/contact0 descent while preserving current leadingfarLEFT outsole and reasonable rootX/lateral. Independent actual5→0 cycle decision remains required after new source0."
+  },
+  "no_images_generated": true,
+  "no_sourcePNG_edits": true,
+  "no_Git_or_repository_mutations": true,
+  "actor_approval": false
+}

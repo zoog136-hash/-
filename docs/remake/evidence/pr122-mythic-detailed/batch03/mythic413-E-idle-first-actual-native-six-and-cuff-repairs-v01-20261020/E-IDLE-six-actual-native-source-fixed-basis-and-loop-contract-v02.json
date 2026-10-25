@@ -1,0 +1,556 @@
+{
+  "status": "ACTUAL_OWN_E_IDLE_SIX_NATIVE_JOINT_AND_BREATH_CANDIDATES_PENDING_INDEPENDENT_SOURCE_LOOP",
+  "actor_id": 413,
+  "direction": "E",
+  "action": "idle",
+  "loop": true,
+  "loop_seconds": 1.2,
+  "physical_canvas_fixed": 2816.0,
+  "body_unit_fixed": 2.75,
+  "logical_canvas": 1024,
+  "common_rig_root_in_unpadded_frame": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "storage_size": [
+    1536,
+    1536
+  ],
+  "shared_basis": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "393e66b3d965b2286fc2a1bea1ac561444f9463b2b30de140f3b06ee0f46d886",
+    "bytes": 3295
+  },
+  "shared_basis_independent_SOURCE_PASS": {
+    "path": "/workspace/scratch/mythic413-E-base-independent-qc-20261020-v01/E-new-native-source-and-once-C2816-body-root-registration-PASS-v01.json",
+    "sha256": "a33172b92818d8735ab1a8dfaf83f1b9efc9efa6f2e7d6aba5709396cb0d1598",
+    "bytes": 4008
+  },
+  "base_native_source": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "35883c6c11693141bd3988c47399298a1cd37152ba12403e9d94678ab75fbf62",
+    "bytes": 974323
+  },
+  "actual_material_handoff": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/common-own-E-native-arm-staff-materials-v03r1/E-own-native-complete-arm-staff-and-LEFT-only-body-readonly-handoff-v03.json",
+    "sha256": "6836606104129d227dbb443642db2814298b87d6be361da5a226dedb716e8548",
+    "bytes": 10267
+  },
+  "LEFT_erased_body_input": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/common-own-E-native-arm-staff-materials-v03r1/actual-E-complete-LEFT-arm-old-erased-BODY-with-original-RIGHT-staff-and-boots-complete-native-cap-v03.png",
+    "sha256": "777d784dadd73e84258e79a6b1ee1ace2550b61dae54da752e36587845689d7c",
+    "bytes": 932870
+  },
+  "original_complete_LEFT_arm": {
+    "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/actual-original-complete-LEFT-arm-continuous-RGBA-input.png",
+    "sha256": "21cb201aab5fcbf36d5288915275af613b744795b44e08eb464be30eb886f621",
+    "bytes": 57091
+  },
+  "source_native_controls": {
+    "LEFT_shoulder": [
+      795.0,
+      471.0
+    ],
+    "LEFT_cuff_interface_approx": [
+      808.0,
+      513.0
+    ],
+    "LEFT_wrist": [
+      953.0,
+      596.0
+    ],
+    "nape": [
+      685,
+      315
+    ],
+    "waist": [
+      651,
+      549
+    ],
+    "hem": [
+      720,
+      688
+    ]
+  },
+  "protection_mask": {
+    "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/exact-fixed-RIGHT-arm-grip-fullstaff-and-lowerlegs-protection-mask.png",
+    "sha256": "5058ba17a430ad3dda90910ff3cd36b4206689326f1bd97b39739594b4b6e97b",
+    "bytes": 8340
+  },
+  "LEFT_material_operator": "Continuous original complete RGBA arm: two bone plane with smooth32px original cuff UV transition; no straight source cutoff or endpoint clamp",
+  "method": "True corset transverse volume, dedicated relaxed LEFT arm with natural changing elbow/wrist, complete head/bun/ribbon delayed neck node and upper coat lag; same fixed feet and RIGHT staff hand",
+  "new_services": 0,
+  "new_author_images": 0,
+  "private_image_context_bytes_unchanged": 5538937,
+  "old_profiles_or_sources_modified": false,
+  "whole_actor_bob_or_color_change": false,
+  "actor_approval_added": 0,
+  "frames": [
+    {
+      "phase": 0,
+      "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-0-actual-native-breath-relax-v02.png",
+      "sha256": "e5651f59cf84bf97498ea40c4685a2f679785439c084f9119181245502593957",
+      "bytes": 979134,
+      "pose_nodes": {
+        "thorax_amplitude": 0.0,
+        "neck_angle_deg": -0.3897114317029974,
+        "cloth_delta": [
+          -2.68467875173176,
+          -1.5
+        ],
+        "LEFT_shoulder": [
+          795.0,
+          471.0
+        ],
+        "LEFT_elbow": [
+          805.0,
+          516.0
+        ],
+        "LEFT_wrist": [
+          943.0,
+          609.0
+        ]
+      },
+      "actual_chest_surface_observations": [
+        {
+          "source": [
+            630.0,
+            445.0
+          ],
+          "displacement": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "source": [
+            705.0,
+            445.0
+          ],
+          "displacement": [
+            0.0,
+            -0.0
+          ]
+        },
+        {
+          "source": [
+            745.0,
+            445.0
+          ],
+          "displacement": [
+            0.0,
+            -0.0
+          ]
+        }
+      ],
+      "complete_RIGHTstaff_neararm_and_lowerlegs_RGBA_changes": 0,
+      "protected_original_pixels": 1051399,
+      "actual_continuous_LEFT_mesh": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/phase0-actual-relaxed-continuous-LEFT-arm-node.png",
+        "sha256": "85ec4411c68dcb474738bb3c5e6f942e416c16a93818eff138bed3cc185ff989",
+        "bytes": 57907
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 365231,
+          "bbox": [
+            399,
+            136,
+            1126,
+            1348
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_E_IDLE_SOURCE_AND_VISIBLE_LOOP"
+    },
+    {
+      "phase": 1,
+      "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-1-actual-native-breath-relax-v02.png",
+      "sha256": "d3d9e61c46be47beb311697ed7d6b2f89b643e7e6f14cf4f2d7cc9508ee1c197",
+      "bytes": 982508,
+      "pose_nodes": {
+        "thorax_amplitude": 1.5999999999999996,
+        "neck_angle_deg": 0.0,
+        "cloth_delta": [
+          0.0,
+          -0.75
+        ],
+        "LEFT_shoulder": [
+          795.0,
+          471.0
+        ],
+        "LEFT_elbow": [
+          806.2528203230275,
+          515.28
+        ],
+        "LEFT_wrist": [
+          944.9992304845414,
+          608.739422863406
+        ]
+      },
+      "actual_chest_surface_observations": [
+        {
+          "source": [
+            630.0,
+            445.0
+          ],
+          "displacement": [
+            -0.05284687011110025,
+            -0.04390355363076025
+          ]
+        },
+        {
+          "source": [
+            705.0,
+            445.0
+          ],
+          "displacement": [
+            0.8218766755080438,
+            -0.6340191496776334
+          ]
+        },
+        {
+          "source": [
+            745.0,
+            445.0
+          ],
+          "displacement": [
+            1.073940620399372,
+            -0.4083999542363808
+          ]
+        }
+      ],
+      "complete_RIGHTstaff_neararm_and_lowerlegs_RGBA_changes": 0,
+      "protected_original_pixels": 1051399,
+      "actual_continuous_LEFT_mesh": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/phase1-actual-relaxed-continuous-LEFT-arm-node.png",
+        "sha256": "d6ee2c32a743eb8b00b8a768a870a21d97575e475613fe1d7731a753bf4e0efa",
+        "bytes": 58026
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 365413,
+          "bbox": [
+            399,
+            136,
+            1128,
+            1348
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_E_IDLE_SOURCE_AND_VISIBLE_LOOP"
+    },
+    {
+      "phase": 2,
+      "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-2-actual-native-breath-relax-v02.png",
+      "sha256": "6b44c4dd7040e788053dad15b8651f8acd644e08aefd06e38102700ce2dcc5a8",
+      "bytes": 977677,
+      "pose_nodes": {
+        "thorax_amplitude": 4.8,
+        "neck_angle_deg": 0.3897114317029974,
+        "cloth_delta": [
+          2.68467875173176,
+          0.7499999999999998
+        ],
+        "LEFT_shoulder": [
+          795.0,
+          471.0
+        ],
+        "LEFT_elbow": [
+          807.3728203230276,
+          513.84
+        ],
+        "LEFT_wrist": [
+          946.9192304845413,
+          606.659422863406
+        ]
+      },
+      "actual_chest_surface_observations": [
+        {
+          "source": [
+            630.0,
+            445.0
+          ],
+          "displacement": [
+            -0.1585406103333008,
+            -0.13171066089228076
+          ]
+        },
+        {
+          "source": [
+            705.0,
+            445.0
+          ],
+          "displacement": [
+            2.4656300265241313,
+            -1.9020574490329003
+          ]
+        },
+        {
+          "source": [
+            745.0,
+            445.0
+          ],
+          "displacement": [
+            3.2218218611981166,
+            -1.2251998627091425
+          ]
+        }
+      ],
+      "complete_RIGHTstaff_neararm_and_lowerlegs_RGBA_changes": 0,
+      "protected_original_pixels": 1051399,
+      "actual_continuous_LEFT_mesh": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/phase2-actual-relaxed-continuous-LEFT-arm-node.png",
+        "sha256": "90d99fd021621664559ec2d8000091ba1563a937d7177c81f706fcf4cd38ba5a",
+        "bytes": 57835
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 365599,
+          "bbox": [
+            399,
+            136,
+            1130,
+            1348
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_E_IDLE_SOURCE_AND_VISIBLE_LOOP"
+    },
+    {
+      "phase": 3,
+      "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-3-actual-native-breath-relax-v02.png",
+      "sha256": "4af8ac15cd4841c43d32c427fb55974600ce1bf32d5e17194ec18a4dba097c47",
+      "bytes": 977158,
+      "pose_nodes": {
+        "thorax_amplitude": 6.4,
+        "neck_angle_deg": 0.3897114317029973,
+        "cloth_delta": [
+          2.6846787517317594,
+          1.5
+        ],
+        "LEFT_shoulder": [
+          795.0,
+          471.0
+        ],
+        "LEFT_elbow": [
+          807.24,
+          513.12
+        ],
+        "LEFT_wrist": [
+          946.84,
+          604.84
+        ]
+      },
+      "actual_chest_surface_observations": [
+        {
+          "source": [
+            630.0,
+            445.0
+          ],
+          "displacement": [
+            -0.2113874804444011,
+            -0.17561421452304102
+          ]
+        },
+        {
+          "source": [
+            705.0,
+            445.0
+          ],
+          "displacement": [
+            3.2875067020321755,
+            -2.5360765987105345
+          ]
+        },
+        {
+          "source": [
+            745.0,
+            445.0
+          ],
+          "displacement": [
+            4.29576248159749,
+            -1.6335998169455237
+          ]
+        }
+      ],
+      "complete_RIGHTstaff_neararm_and_lowerlegs_RGBA_changes": 0,
+      "protected_original_pixels": 1051399,
+      "actual_continuous_LEFT_mesh": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/phase3-actual-relaxed-continuous-LEFT-arm-node.png",
+        "sha256": "3f8fec574e0e6d70af6771e03966ad285ecdb660bf0ef0ae1b766ff348cec7b0",
+        "bytes": 57593
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 365495,
+          "bbox": [
+            399,
+            136,
+            1130,
+            1348
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_E_IDLE_SOURCE_AND_VISIBLE_LOOP"
+    },
+    {
+      "phase": 4,
+      "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-4-actual-native-breath-relax-v02.png",
+      "sha256": "9a5983d448a37a92596f5efe56ed39bc3f01440f25d0b3ce8158e961814662c8",
+      "bytes": 981338,
+      "pose_nodes": {
+        "thorax_amplitude": 4.800000000000002,
+        "neck_angle_deg": 5.5109105961630896e-17,
+        "cloth_delta": [
+          3.796405077356795e-16,
+          0.7500000000000004
+        ],
+        "LEFT_shoulder": [
+          795.0,
+          471.0
+        ],
+        "LEFT_elbow": [
+          805.9871796769723,
+          513.84
+        ],
+        "LEFT_wrist": [
+          944.8407695154586,
+          605.100577136594
+        ]
+      },
+      "actual_chest_surface_observations": [
+        {
+          "source": [
+            630.0,
+            445.0
+          ],
+          "displacement": [
+            -0.15854061033330083,
+            -0.1317106608922808
+          ]
+        },
+        {
+          "source": [
+            705.0,
+            445.0
+          ],
+          "displacement": [
+            2.4656300265241327,
+            -1.9020574490329012
+          ]
+        },
+        {
+          "source": [
+            745.0,
+            445.0
+          ],
+          "displacement": [
+            3.2218218611981175,
+            -1.2251998627091432
+          ]
+        }
+      ],
+      "complete_RIGHTstaff_neararm_and_lowerlegs_RGBA_changes": 0,
+      "protected_original_pixels": 1051399,
+      "actual_continuous_LEFT_mesh": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/phase4-actual-relaxed-continuous-LEFT-arm-node.png",
+        "sha256": "3784f6112ca819ab33fb6d0cbce05026b7999fb97bcec2472814e4e41722df3c",
+        "bytes": 57421
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 365231,
+          "bbox": [
+            399,
+            136,
+            1128,
+            1348
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_E_IDLE_SOURCE_AND_VISIBLE_LOOP"
+    },
+    {
+      "phase": 5,
+      "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-5-actual-native-breath-relax-v02.png",
+      "sha256": "0c479ef7bdab53e0f35fc4487f23a000119016cd8b384a3834473b80544bdb38",
+      "bytes": 976837,
+      "pose_nodes": {
+        "thorax_amplitude": 1.5999999999999996,
+        "neck_angle_deg": -0.3897114317029975,
+        "cloth_delta": [
+          -2.6846787517317603,
+          -0.7500000000000002
+        ],
+        "LEFT_shoulder": [
+          795.0,
+          471.0
+        ],
+        "LEFT_elbow": [
+          804.8671796769723,
+          515.28
+        ],
+        "LEFT_wrist": [
+          942.9207695154587,
+          607.180577136594
+        ]
+      },
+      "actual_chest_surface_observations": [
+        {
+          "source": [
+            630.0,
+            445.0
+          ],
+          "displacement": [
+            -0.05284687011110025,
+            -0.04390355363076025
+          ]
+        },
+        {
+          "source": [
+            705.0,
+            445.0
+          ],
+          "displacement": [
+            0.8218766755080438,
+            -0.6340191496776334
+          ]
+        },
+        {
+          "source": [
+            745.0,
+            445.0
+          ],
+          "displacement": [
+            1.073940620399372,
+            -0.4083999542363808
+          ]
+        }
+      ],
+      "complete_RIGHTstaff_neararm_and_lowerlegs_RGBA_changes": 0,
+      "protected_original_pixels": 1051399,
+      "actual_continuous_LEFT_mesh": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/phase5-actual-relaxed-continuous-LEFT-arm-node.png",
+        "sha256": "cba46f5f43f63967019f19b1bacb99fc070c61edf0c7f996abd9ead4d8c21733",
+        "bytes": 57639
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 365142,
+          "bbox": [
+            399,
+            136,
+            1126,
+            1348
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_E_IDLE_SOURCE_AND_VISIBLE_LOOP"
+    }
+  ]
+}

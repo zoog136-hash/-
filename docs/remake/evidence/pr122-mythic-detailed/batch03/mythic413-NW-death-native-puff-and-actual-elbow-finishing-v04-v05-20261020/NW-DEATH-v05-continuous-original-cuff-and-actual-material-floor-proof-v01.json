@@ -1,0 +1,733 @@
+{
+  "status": "SCOPED_NUMERIC_NATIVE_CURVE_FLOOR_AND_RIGID_GEAR_CHECK_PENDING_ACTUAL_SOURCE_QC",
+  "source_contract_sha256": "a679a569756ba2c5b1aeac4f66ef04aeb4ce5a9c039db383091efe19f76e1b96",
+  "fixed_C": 2048,
+  "root": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "LEFT_actual_source_hinge_approx": [
+    550,
+    558
+  ],
+  "LEFT_goldband_ownership": "Sourcey<=540 actualUPPER",
+  "LEFT_distal_ownership": "Sourcey>=570 actualFORE rigid",
+  "LEFT_joint": "Actual same originalwhite sleeve contiguousUVmesh540..570, no colorfill/straightcut/wire",
+  "records": [
+    {
+      "phase": 0,
+      "source_sha256": "1f41b2eabd8fb5d69e8d683eb1c18bf2694d302f930362050f35e9f1e41237ef",
+      "parts": [
+        {
+          "part": "pelvis_skirt",
+          "raster_guard_min_Z": 327.89084850218416,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "torso_corset",
+          "raster_guard_min_Z": 444.2453618012877,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "raster_guard_min_Z": 618.8442761484706,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "raster_guard_min_Z": 1.718886922017873,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_thigh",
+          "raster_guard_min_Z": 153.36186302504473,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "raster_guard_min_Z": 70.30719000352659,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "raster_guard_min_Z": 156.1874693301332,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "raster_guard_min_Z": 60.80256949141262,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 1.718886922017873,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "raster_guard_min_Z": 2.038886922018037,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "raster_guard_min_Z": 133.5419945261379,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "raster_guard_min_Z": 46.554672999206105,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "raster_guard_min_Z": 139.38722337904485,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "raster_guard_min_Z": 40.122950928585794,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 2.038886922018037,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 550.1792862009264,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "raster_guard_min_Z": 534.960326045088,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "raster_guard_min_Z": 270.14478723653684,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 563.1388587594636,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "raster_guard_min_Z": 387.8216607275456,
+          "rule": "Bilinear native UV sampling; fullmesh domain actualalpha bbox+3sourcepx; every rastertriangleZ convexcombination of positivevertices"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "raster_guard_min_Z": 132.73627208281061,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        }
+      ],
+      "min_floor_guard_Z": 1.718886922017873,
+      "bone_length_error": 2.842170943040401e-14,
+      "strong_bodies": 1,
+      "RIGHT_fore_and_staff_rigid_unit_basis": true
+    },
+    {
+      "phase": 1,
+      "source_sha256": "4b2226f1116252d0eaffb1bb2fbca0d86d226ee7ff334c42d28e5f54f18c3d86",
+      "parts": [
+        {
+          "part": "pelvis_skirt",
+          "raster_guard_min_Z": 253.2820179836896,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "torso_corset",
+          "raster_guard_min_Z": 366.33395953318745,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "raster_guard_min_Z": 527.7683814914835,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "raster_guard_min_Z": 1.7188869220178726,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_thigh",
+          "raster_guard_min_Z": 65.72238241060963,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "raster_guard_min_Z": 77.64988345585222,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "raster_guard_min_Z": 83.82633044510737,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "raster_guard_min_Z": 76.96631808780303,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 1.7188869220178726,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "raster_guard_min_Z": 2.0388869220180363,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "raster_guard_min_Z": 65.15052624439546,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "raster_guard_min_Z": 50.061006803075465,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "raster_guard_min_Z": 77.58698837645403,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "raster_guard_min_Z": 48.153922892565596,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 2.0388869220180363,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 470.66972571209766,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "raster_guard_min_Z": 460.62131361345206,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "raster_guard_min_Z": 229.0130868965815,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 475.1050045222045,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "raster_guard_min_Z": 268.5443222908598,
+          "rule": "Bilinear native UV sampling; fullmesh domain actualalpha bbox+3sourcepx; every rastertriangleZ convexcombination of positivevertices"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "raster_guard_min_Z": 66.6711654060411,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        }
+      ],
+      "min_floor_guard_Z": 1.7188869220178726,
+      "bone_length_error": 5.684341886080802e-14,
+      "strong_bodies": 1,
+      "RIGHT_fore_and_staff_rigid_unit_basis": true
+    },
+    {
+      "phase": 2,
+      "source_sha256": "6bb31eb5073cbee789f7398cc0b4439832b6593ad6c86ef1e8e63f8558c58ca6",
+      "parts": [
+        {
+          "part": "pelvis_skirt",
+          "raster_guard_min_Z": 155.118729771594,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "torso_corset",
+          "raster_guard_min_Z": 264.28283866428706,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "raster_guard_min_Z": 379.39543609687286,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "raster_guard_min_Z": 1.7188869220178726,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_thigh",
+          "raster_guard_min_Z": 7.866269351233877,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "raster_guard_min_Z": 19.798252053973712,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "raster_guard_min_Z": 15.198833172483454,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "raster_guard_min_Z": 68.07365398704171,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 1.7188869220178726,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "raster_guard_min_Z": 2.0388869220180363,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "raster_guard_min_Z": 11.166562784815506,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "raster_guard_min_Z": 22.7185723498837,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "raster_guard_min_Z": 21.279406249700624,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "raster_guard_min_Z": 48.31249059657324,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 2.0388869220180363,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 348.51848643255374,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "raster_guard_min_Z": 329.890594979966,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "raster_guard_min_Z": 167.5993629018654,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 340.77411808188276,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "raster_guard_min_Z": 120.90944334884236,
+          "rule": "Bilinear native UV sampling; fullmesh domain actualalpha bbox+3sourcepx; every rastertriangleZ convexcombination of positivevertices"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "raster_guard_min_Z": 8.204805256094582,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "raster_guard_min_Z": 10.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        }
+      ],
+      "min_floor_guard_Z": 1.7188869220178726,
+      "bone_length_error": 2.842170943040401e-14,
+      "strong_bodies": 1,
+      "RIGHT_fore_and_staff_rigid_unit_basis": true
+    },
+    {
+      "phase": 3,
+      "source_sha256": "78c3c7a66560c42454d367e292d5dbf8d672f4f702679bba794f6865c66a9458",
+      "parts": [
+        {
+          "part": "pelvis_skirt",
+          "raster_guard_min_Z": 133.19464092007883,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "torso_corset",
+          "raster_guard_min_Z": 202.01443502802186,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "raster_guard_min_Z": 244.80733906558365,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "raster_guard_min_Z": 27.544454417115155,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_thigh",
+          "raster_guard_min_Z": 11.611975699844807,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "raster_guard_min_Z": 20.324902228756347,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "raster_guard_min_Z": 16.301977889287876,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "raster_guard_min_Z": 62.54942981325787,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 27.544454417115155,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "raster_guard_min_Z": 32.72799887674758,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "raster_guard_min_Z": 14.275933558648905,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "raster_guard_min_Z": 22.27274660291045,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "raster_guard_min_Z": 20.332875448037413,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "raster_guard_min_Z": 56.77112989627444,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 32.72799887674758,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 235.92504347402553,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "raster_guard_min_Z": 204.7005491742914,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "raster_guard_min_Z": 129.06788578779992,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 231.74144749064976,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "raster_guard_min_Z": 52.77812261173787,
+          "rule": "Bilinear native UV sampling; fullmesh domain actualalpha bbox+3sourcepx; every rastertriangleZ convexcombination of positivevertices"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "raster_guard_min_Z": 8.102090351164248,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "raster_guard_min_Z": 10.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        }
+      ],
+      "min_floor_guard_Z": 8.102090351164248,
+      "bone_length_error": 2.842170943040401e-14,
+      "strong_bodies": 1,
+      "RIGHT_fore_and_staff_rigid_unit_basis": true
+    },
+    {
+      "phase": 4,
+      "source_sha256": "fe33a246d8bab6d417203cb74ae8caf76a9ba311cdc8ff870a238458fd440394",
+      "parts": [
+        {
+          "part": "pelvis_skirt",
+          "raster_guard_min_Z": 33.97046484727621,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "torso_corset",
+          "raster_guard_min_Z": 38.367801431791364,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "raster_guard_min_Z": 43.032620200549445,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "raster_guard_min_Z": 23.626876409901758,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_thigh",
+          "raster_guard_min_Z": 22.900859039437723,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "raster_guard_min_Z": 23.512217519608654,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "raster_guard_min_Z": 22.978269272547838,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "raster_guard_min_Z": 29.116526868785844,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 23.626876409901758,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "raster_guard_min_Z": 23.654766247581023,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "raster_guard_min_Z": 23.156151992769562,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "raster_guard_min_Z": 23.81531733725656,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "raster_guard_min_Z": 23.607901001665716,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "raster_guard_min_Z": 27.503978941684743,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 23.654766247581023,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 41.857751102041476,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "raster_guard_min_Z": 14.501061144532178,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "raster_guard_min_Z": 19.99999999999998,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 42.5557410360915,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "raster_guard_min_Z": 14.745875386728818,
+          "rule": "Bilinear native UV sampling; fullmesh domain actualalpha bbox+3sourcepx; every rastertriangleZ convexcombination of positivevertices"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "raster_guard_min_Z": 9.420787199270531,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "raster_guard_min_Z": 10.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        }
+      ],
+      "min_floor_guard_Z": 9.420787199270531,
+      "bone_length_error": 5.684341886080802e-14,
+      "strong_bodies": 1,
+      "RIGHT_fore_and_staff_rigid_unit_basis": true
+    },
+    {
+      "phase": 5,
+      "source_sha256": "4d6efe06094d6e1d803d4a40d811ec80f684e63b409b259e865bb8730bd8afb3",
+      "parts": [
+        {
+          "part": "pelvis_skirt",
+          "raster_guard_min_Z": 29.999999999999993,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "torso_corset",
+          "raster_guard_min_Z": 30.000000000000025,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "raster_guard_min_Z": 30.00000000000006,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "raster_guard_min_Z": 20.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_thigh",
+          "raster_guard_min_Z": 23.40046856696603,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "raster_guard_min_Z": 19.659995451444185,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "raster_guard_min_Z": 23.350693654764616,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "raster_guard_min_Z": 19.251535137593834,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 20.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "raster_guard_min_Z": 20.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "raster_guard_min_Z": 23.524637531603116,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "raster_guard_min_Z": 19.795394891972574,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "raster_guard_min_Z": 23.60622931703542,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "raster_guard_min_Z": 19.53136866648519,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "raster_guard_min_Z": 20.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 30.000000000000046,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "raster_guard_min_Z": 17.57892396620719,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "raster_guard_min_Z": 19.99999999999998,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "raster_guard_min_Z": 30.00000000000005,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "raster_guard_min_Z": 17.77885947400398,
+          "rule": "Bilinear native UV sampling; fullmesh domain actualalpha bbox+3sourcepx; every rastertriangleZ convexcombination of positivevertices"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "raster_guard_min_Z": 9.307781328797057,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "raster_guard_min_Z": 10.0,
+          "rule": "PILbicubic plane actualsource nonzero texels plus2.5sourcepixel support guard"
+        }
+      ],
+      "min_floor_guard_Z": 9.307781328797057,
+      "bone_length_error": 5.684341886080802e-14,
+      "strong_bodies": 1,
+      "RIGHT_fore_and_staff_rigid_unit_basis": true
+    }
+  ],
+  "actor_approval_added": 0
+}

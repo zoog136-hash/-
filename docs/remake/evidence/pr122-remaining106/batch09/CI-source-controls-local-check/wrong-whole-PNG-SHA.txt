@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 167, in <module>
+    main()
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 46, in main
+    assert spec['file'] not in sheets and motion.sha(source) == spec['source_sha256']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

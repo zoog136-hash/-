@@ -1,0 +1,48 @@
+{
+  "status": "HOLD_KNEE_MATERIAL_FINISH_RIGHT_ELBOW5_NARROW_SOURCE_PASS",
+  "source_visual_status": "HOLD",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "death",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-local-joint-prototype-v08/actual-NE-DEATH-local-joint-source-contract-v08.json",
+    "sha256": "b2c1b18f29aede3343a70925b06c6a043d11ea1c20f2cf5c1a19955c12aff8d6",
+    "bytes": 34113
+  },
+  "RIGHT_elbow_phase5": {
+    "source_visual_status": "PASS_NARROW_ACTUAL_SLEEVE_JOIN_ONLY",
+    "finding": "Full original curved white/gold padded sleeve now continuously joins blue uppercuff and bracer, with no observed old background wedge."
+  },
+  "knees": [
+    {
+      "phase": 2,
+      "stored_ROI": [
+        1137,
+        1409,
+        1337,
+        1609
+      ],
+      "source_visual_status": "HOLD",
+      "finding": "Large relatively uniform darkbrown cap is visibly exposed beyond the black/gold leg material; original surface texture and directional shading do not flow through the cap."
+    },
+    {
+      "phase": 5,
+      "stored_ROI": [
+        791,
+        1322,
+        991,
+        1522
+      ],
+      "source_visual_status": "HOLD",
+      "finding": "Round brown disk is visible at inner/top side of folded knee. Preserve natural innerV space and finish an original leather curved overlap rather than a flat circular fill."
+    }
+  ],
+  "requested_scope": "Keep fixed bones/pose/C/root/complete counter-stiletto, retain repaired right sleeve, and use original directional leather material in a short continuous nativeUV joint overlap. No wholebody or source generation retry requested.",
+  "immutable_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NEdeath-v08-local-source-view86-frozen.json",
+    "sha256": "dd8b010078d7a61d04a2bc0222402be634e86ad68d599efa85e01df4afc32438",
+    "bytes": 42561
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

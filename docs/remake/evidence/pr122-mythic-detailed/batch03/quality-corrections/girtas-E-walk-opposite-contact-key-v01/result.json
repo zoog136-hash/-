@@ -1,0 +1,53 @@
+{
+  "status": "GENERATED_SINGLE_POSE_HOLD_NEAR_FAR_SUPPORT_EXCHANGE_UNPROVEN",
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "version": "opposite-contact-v01",
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "requested_game_phase": 3,
+  "request_path": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/request.json",
+  "request_sha256": "ba490c300ac75fc32f766125d4b2c871b80ebd4e06772f23923231f6a48ca1a2",
+  "original_generated_file": "/workspace/generated_images/exec-48b9e55f-a594-470f-a72d-9738aaf75798.png",
+  "raw_png": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/girtas-E-walk-opposite-contact-v01.png",
+  "raw_sha256": "abf51a674064173ca307e65c124239b99e4a0316b1de857cd8063e86e23c4c57",
+  "raw_bytes": 1324723,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/private-contact-comparison.jpg",
+  "private_preview_bytes": 151134,
+  "created_at": "2026-10-19T11:32:02.775780+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "chat_image_attachments": 0,
+  "source_visual_status": "HOLD",
+  "integration_ready": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "reviewed_at": "2026-10-19T11:32:49.166839+00:00",
+  "identity_validation": "PASS_MAJOR_LANDMARKS",
+  "heading_validation": "PASS_E_RIGHT",
+  "gait_contact_validation": "HOLD_OPPOSITE_LEAD_UNPROVEN",
+  "physical_proportions_validation": "PASS_PRIVATE_UNIFORM_DISPLAY_MAJOR_HEAD_TORSO_HIP_BOOT_RATIOS",
+  "visual_findings": [
+    "A single newly edited complete E-facing contact pose was produced; no full-six retry was performed.",
+    "Pale face/long pale hair, hard thin gold radial spines, long dark goldtrim skirt, near anatomicalRIGHT weapon arm and long sinuous weapon remain coherent. Exactly two visible arms/hands and two legs/boots; no equipment hand swap or mirroring seen.",
+    "Private uniform-size display shows broadly matching head, torso, pelvis, armor and boot proportions at the same elevated E camera. New source has higher pixel resolution rather than a demonstrated model-scale defect.",
+    "HOLD requested opposite contact: after uniform display the leading screen-right shin/boot still has essentially the same near-looking armor/occlusion relation as old contact0, while trailing screen-left boot repeats the old shape. FarLEFT-thigh ownership behind nearRIGHT thigh is not clearly established. Cannot accept this as opposite support/lead without evidence."
+  ],
+  "visual_limitations": [
+    "Opposite anatomical near/far contact remains unresolved, so no usable opposite key, finished gait, geometry approval or game integration claimed.",
+    "Physical normalization suggestion is review metadata only, based on matching head/torso/pelvis alongside fullheight ratio; no original pixels resampled."
+  ],
+  "virtual_canvas_size_candidate_for_review": 2456,
+  "virtual_canvas_review_basis": "Raw alpha>100 silhouetteheight1158 versus original483, ratio2.3975. Same-height private comparison also matches head/torso/pelvis/boot body proportions and camera; candidate1024*1158/483 rounded8=2456. Not applied because contact identity failed.",
+  "source_crop_proof": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-crop-proof.json",
+  "normalized_display_proof": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/normalized-display-proof.json",
+  "valid_opposite_contact_keys": 0,
+  "imagegen_attempt_limit_reached": true,
+  "further_generation_attempts": 0
+}

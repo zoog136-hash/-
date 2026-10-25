@@ -1,0 +1,114 @@
+{
+  "key": "transform:393",
+  "direction": "E",
+  "role": "idle",
+  "name": "해방된 할파스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG IDLE animation sprites of EXACTLY 해방된 할파스. The first original portrait is identity authority. The second saved E native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for E.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces EAST / screen right, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: neutral breathing; 1: inhale begins; 2: inhale peak; 3: weight / wing settling; 4: exhale; 5: return close to initial guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nThis is an idle breathing/hover loop. Keep the support/root stable, with coherent chest and wing articulation. Last phase should lead naturally back to phase0.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "neutral breathing",
+    "inhale begins",
+    "inhale peak",
+    "weight / wing settling",
+    "exhale",
+    "return close to initial guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-038-halpas-E-idle-v01.json",
+  "processing_proof": {
+    "source_sha256": "7ba9942cde10f869c4d6294a3e72875d7338650744a111f1f2a27311bdd609d4",
+    "output_sha256": "77fdf18c910fdf1e80da6d6e05fcf4e1217472267a916d3f38bf9e2a1274880e",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01.png",
+    "output": "/workspace/scratch/halpas-E-idle-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 89035,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 556522,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -18
+        ],
+        "pixels": 96088,
+        "foreground_pixels": 90780,
+        "rgba_sha256": "fbcaa199a40a952b65ef31083b2821f3996d18aa26bca56653f1a126e8dc0550"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          0
+        ],
+        "pixels": 94607,
+        "foreground_pixels": 89391,
+        "rgba_sha256": "2a6eeb2a605620de74af52267e7a90bb561dfe430faf799f727cfa4075dc32a9"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          36
+        ],
+        "pixels": 111536,
+        "foreground_pixels": 105519,
+        "rgba_sha256": "776506562df66f07aa26dc556ae32fc3070d578e5f63450d57c8ab317ce9b727"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          -6
+        ],
+        "pixels": 93278,
+        "foreground_pixels": 88025,
+        "rgba_sha256": "453e1b9c49de13e25a81a369aa87694c4e7dc2c47b6a58b81dc71849a8cb26d1"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          26
+        ],
+        "pixels": 101059,
+        "foreground_pixels": 95986,
+        "rgba_sha256": "12a49ca6b90a8e764df0a644e3c58a7adef755a25b5ddcc06d877de067b67bba"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          31
+        ],
+        "pixels": 91840,
+        "foreground_pixels": 86821,
+        "rgba_sha256": "1b83f0f4e473c3a02d79d16c0189c5e81d6337c1585a560fe294fe03f8d0baef"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+  "output_sha256": "77fdf18c910fdf1e80da6d6e05fcf4e1217472267a916d3f38bf9e2a1274880e",
+  "output_bytes": 1624011,
+  "original_generated_file": "/workspace/scratch/halpas-E-idle-v01iso01.png"
+}

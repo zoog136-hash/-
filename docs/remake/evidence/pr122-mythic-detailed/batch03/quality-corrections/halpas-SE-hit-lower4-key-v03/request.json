@@ -1,0 +1,28 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "SE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v03lower4",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 4,
+  "references": [
+    "/workspace/scratch/halpas-SE-hit-release3-key-v03/halpas-SE-hit-release3-v03.png",
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase5-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-SE-hit-release3-key-v03/halpas-SE-hit-release3-v03.png": "c5816b61765dd558997c9169b44debeb8ea768f1954ff58acaecc59c72547346",
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase5-lossless.png": "41fba4d2810fc0eb3b66bf73c95a388d8400778b0aafd3b547e5a390287ffd2f"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Distinct missing single SE lower4 between verified two-arm release3 and exactRGBA guard5. Same continuous low imageRIGHT blade arm, imageLEFT empty hand alone lowers to waist with residual recovery tension. No failed-art ref or full6 retry.",
+  "prompt": "Create ONE final HIT-RECOVERY LOWER4 pose of this exact SAME Halpas, between verified release3 in PRIMARY image1 and normal settled guard5 in image2. Same SE FRONT-RIGHT/DOWN-RIGHT elevated camera, same visible front pink chest jewels, closed gold-horn helmet, black/gold segmented armor, TWO full solid purple crystal fan wings rooted on back, torn burgundy LEFT/back cape, same short broad purple blade and complete two-legged hovering stance. Exact physical model/proportions/equipment, no side/rear view swap.\n\nTWO ARMS only: preserve imageRIGHT original shoulder -> upperarm -> elbow -> forearm -> closed low hand gripping original blade beside hip, one continuous LOW chain. Blade stays in that same hand and never floats. Do not lift empty right fist. The OTHER imageLEFT EMPTY arm alone now lowers: same gold LEFT pauldron -> elbow dropping beside left ribs -> forearm angled downward -> EMPTY left hand at WAIST level, between release3 chest-height hand and guard5 fully down hand. This is same single original LEFT arm redrawn, not an extra lower/upper arm. Do not leave any old chest-height hand or fist behind. No third arm, extra hand, disconnected forearm, weapon hand swap or new equipment.\n\nSpecific lower4 motion: LEFT wrist clearly BELOW pink upper chest jewel near left side of WAIST, relaxed partly open fingers, elbow below shoulder close to left ribs, not raised at face or shoulder. Head/neck nearly back to original down-right guard angle, torso mostly settled, hips same SE. Wings easing toward neutral and cape slightly still trailing from recoil. Keep a little recovery tension in left elbow so this is visibly different from final guard5: empty hand not quite fully down yet, slight remaining wing/cape tension. No attack, no fullbody translation/spin, no new stance. Low RIGHT blade-arm grip follows torso only a small amount and remains continuous.\n\nONE complete centered transparent1024x1024cutout. Entire wing/cape/horn/blade/toe silhouette fits central700x800 with large transparent gutters of at least120px around every extreme. Do not crop tips, shorten gear or enlarge until edge touches. Opaque armor/cloth/crystal, crisp detailed RPG sprite and thin AA, alpha0 background/gaps. No glow, shadow, floor, particles, trails, text, labels, grids, guide marks or extra objects.",
+  "requested_at": "2026-10-19T13:21:54.625071+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

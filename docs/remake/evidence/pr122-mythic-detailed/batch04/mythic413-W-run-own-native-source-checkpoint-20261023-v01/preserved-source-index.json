@@ -1,0 +1,1754 @@
+{
+  "status": "SIX_NEW_ACTUAL_OWN_NATIVE_W_RUN_POSES_SAVED_SOURCE_QUALITY_HOLD",
+  "actor": "transform:413",
+  "direction": "W",
+  "role": "run",
+  "latest_actual_unique_poses": 6,
+  "shared_source_guard": {
+    "path": "tools/pr122_reviewed_source_regions.py",
+    "sha256": "2875466e7d88218e24062d87d95308683524b8b84b35cc6522f87223464b0a52"
+  },
+  "approved_Unique_comparison_inputs": [
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/assemble-full-original-PNGs-v01.py",
+      "sha256": "47c7a539b20ef77cc8f4ba943ac85a6f2e18e179140f2c02a737e4c9f3e84c94",
+      "read_only": true
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/build-canonical-ready-packet-v01.py",
+      "sha256": "4f9d731d54ceee6930b8c85d6b1ef9049ade2e19a0747b728c0ac58292b28f08",
+      "read_only": true
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/validate-physical-layout-candidate-v03.py",
+      "sha256": "9a50774bf722f1686c5cce2dc8e7c8311b412a5af5e3e47c736cd2e34b0844d2",
+      "read_only": true
+    }
+  ],
+  "changed_nodes_rendered": 6,
+  "unchanged_nodes_reused": 54,
+  "confirmed_causes": [
+    "native calf masks left 922 original texels assigned to torso",
+    "generated hidden leg fill was incorrectly counted as preserving 641 original foreground texels",
+    "original linear knee skinning folded source texels; circular rotation preserves radius"
+  ],
+  "repeated_foot_and_direction_errors_reproduced_in_current_settings": false,
+  "five_known_defect_inputs_rejected_before_render": true,
+  "approved_Unique_common_import_region_layout_implementation_reused": true,
+  "selected_Unique_W_producer_has_no_shared_part_skinning_renderer": true,
+  "character_ratios_and_rig_coordinates_copied_from_Unique": false,
+  "latest_source_contract": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/W-RUN-six-own-native-source-contract-v05.json",
+  "source_texture": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/thunder_female-W-run-own-native-real-six-v05.png",
+  "source_texture_sha256": "5079804ef7eaa35060e1798ba1813eaea66d1a2cac6768dbcf586ae14415f7df",
+  "runtime_proof": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/new-W-run-own-native-six-main-player-runtime-proof-v05.json",
+  "runtime_status": "PASS_EXPLICIT_FIXTURE_ONLY",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "world_foot_contact": "NOT_RUN_HOLD",
+  "production_connected": false,
+  "actor_approvals_added": 0,
+  "production_clips_added": 0,
+  "current_active_approved": 2,
+  "current_active_total": 19,
+  "current_active_incomplete": 17,
+  "historical_native_approved": 2,
+  "historical_native_total": 31,
+  "previous_source_versions_and_failures_preserved": true,
+  "preview_images_created": 0,
+  "files": [
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/pack.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/pack.log",
+      "bytes": 333,
+      "sha256": "422f6c1de552e523b106370b54e82c4d22616f6e5980d531b000f0a25ae9c032",
+      "git_blob_oid": "4cafa01d700beed12203ae4ed4c179915c5a557a"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/packing-plan.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/packing-plan.json",
+      "bytes": 2365,
+      "sha256": "f22734bab5802d92870c3b749b14f8b308464f2fbc445b48575722f492ab5994",
+      "git_blob_oid": "4c9ad556f72a99978cb53a8638fedfc82dc3c45f"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/phase-0-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/phase-0-exact-2304.png",
+      "bytes": 768338,
+      "sha256": "37d8a4096c85aa020162934344ee500cb1606d8a3a8669a319fa28f166e54a8a",
+      "git_blob_oid": "f1ba156a12cb7dbe77a8168e7904887299b75861"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/phase-1-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/phase-1-exact-2304.png",
+      "bytes": 755243,
+      "sha256": "a7ea2d4554a4782105c7b4106b3b7c581ad0172422b02bd6b3e27b1054a91b4c",
+      "git_blob_oid": "cde0c22b4e5776e19b5c83e09c54640367987993"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/phase-2-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/phase-2-exact-2304.png",
+      "bytes": 788890,
+      "sha256": "385d74f3b99977c13a57fcd9743e9a695187f95ef8a6bb5b342b25a3e00bfa7a",
+      "git_blob_oid": "925f9f446ffb277793d471c22d99e93404a2c804"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/phase-3-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/phase-3-exact-2304.png",
+      "bytes": 783089,
+      "sha256": "05a14b69b9f7f87fde01421cba27473017d09b9f45da1ae7bab8c98b9cfa996b",
+      "git_blob_oid": "b38297fd887f3bf0877b4db57566ef87f1fa2b67"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/phase-4-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/phase-4-exact-2304.png",
+      "bytes": 786914,
+      "sha256": "170c9f529be3019c4d4a765bdae5b66af3dc67c037c4e0645dffb895604b6648",
+      "git_blob_oid": "d20076661bb19c3680b0b950d642a9e7a88ca155"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/phase-5-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/phase-5-exact-2304.png",
+      "bytes": 785610,
+      "sha256": "13b379af76a707f5512d54bfe5018f66bdcd1079c6291cdf6219e2a0d680e702",
+      "git_blob_oid": "884c5034a9e67b415320440edcc09b64eb0f7aff"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/request-WrunOwnNative05.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/request-WrunOwnNative05.json",
+      "bytes": 3006,
+      "sha256": "3ce99c858a25b55260d1fd1b5433e60791f6b77c200ec15e682610af3034904a",
+      "git_blob_oid": "73eb0825a8f0056cf47f290d2a515d89d957f3fd"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/request.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/request.log",
+      "bytes": 484,
+      "sha256": "b0a3757a1b40c80f18036ef5077ad16a38cb12020465537015b65cee24311141",
+      "git_blob_oid": "c96e175f9a71b16461ccdd5c153ea3c767c9452b"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/six-source-to-packed-candidate-proof.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/six-source-to-packed-candidate-proof.json",
+      "bytes": 7556,
+      "sha256": "5794eaf9966eb9142f04667d18c16439c27dbd3b5699a40ac6f7ffe70e1aa98b",
+      "git_blob_oid": "4781b2f6c53326c6d120de152db756ec0d7fa0c1"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/thunder_female-W-run-own-native-real-six-v05.packing.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/thunder_female-W-run-own-native-real-six-v05.packing.json",
+      "bytes": 5620,
+      "sha256": "2b50e817d0155155ea71d0c3b2b1a459b5e63b77d35c1c45ce76dd86fa54dcdd",
+      "git_blob_oid": "473d528cf6c3168e8e77573a560931e9e8438cc9"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v05/thunder_female-W-run-own-native-real-six-v05.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/corrected-v05-packet/thunder_female-W-run-own-native-real-six-v05.png",
+      "bytes": 4667704,
+      "sha256": "5079804ef7eaa35060e1798ba1813eaea66d1a2cac6768dbcf586ae14415f7df",
+      "git_blob_oid": "1e3bfb27e9b1d5b802c347083fb4327e855bcc28"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W_413_own_native_run_main_player_test.gd",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/W_413_own_native_run_main_player_test.gd",
+      "bytes": 6474,
+      "sha256": "6ea4cbbb26a74da056f40ff372280336eb1b74d9e50d7cde9e8f6d201b402791",
+      "git_blob_oid": "ce9b7ee4429602f7eb1662ad1f9db5ecfaec4a27"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/new-W-run-own-native-six-candidate-runtime-geometry-v05.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/new-W-run-own-native-six-candidate-runtime-geometry-v05.json",
+      "bytes": 3622,
+      "sha256": "aff08666c4080961648e5b971ab33b382b1a81e6d1e7a851bcda0ff51607e597",
+      "git_blob_oid": "c4b93090cd3662ef55b1741ff652cc9fb0aace4c"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/new-W-run-own-native-six-main-player-runtime-proof-v05.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/new-W-run-own-native-six-main-player-runtime-proof-v05.json",
+      "bytes": 557,
+      "sha256": "7fd41348209f4935ff82abf882c0a75a125f12e81f7f29dcc8f9043a675886f9",
+      "git_blob_oid": "e259b539d0b90db946f59d54f2d7c7c7db9fd5c6"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/new-W-run-own-native-six-main-player-runtime-v05.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/new-W-run-own-native-six-main-player-runtime-v05.log",
+      "bytes": 251,
+      "sha256": "93204d44ff5256d540c9f9f67e5e8098e05e357412f25540211d778788c7ed66",
+      "git_blob_oid": "3b4ea2d81f2d375b7298f7f454a367b2877a9c72"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/pack-corrected-W-run-own-native-six-once-v04.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/pack-corrected-W-run-own-native-six-once-v04.py",
+      "bytes": 4359,
+      "sha256": "f73ca1999a7134e144265ebe3f1073b0422090c79b71be1eb765c63f9bf9f638",
+      "git_blob_oid": "59b4fd6ecca4f671771398e22f503fc67b94b724"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/pack-corrected-W-run-v04-original-preserved.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/pack-corrected-W-run-v04-original-preserved.py",
+      "bytes": 4164,
+      "sha256": "49324b13bbe7091147879317530a54b3aec32229c8c9869b6ebea5d3ea9a9cb0",
+      "git_blob_oid": "d3d7683a21965cc7c08c38625ef1399d5b15606d"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/pack-new-W-run-own-native-six-once.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/pack-new-W-run-own-native-six-once.py",
+      "bytes": 4164,
+      "sha256": "877c4d71583970f8d7fe3cabc60740213be412eabf807e4d9d864602bd09bd00",
+      "git_blob_oid": "1ff8e3db9f4f3aff7da7a4ecf392ce36630d1078"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/prepare-W-run-geometry-v04-original-preserved.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/prepare-W-run-geometry-v04-original-preserved.py",
+      "bytes": 2359,
+      "sha256": "03e0e84c2adf134a02d1a0e843fdd22ed57418dd2fe1a8e8badfb054e443aa1f",
+      "git_blob_oid": "0b827f6f10fa04bf0f64d47b11fcc257aca80b4d"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/prepare-corrected-W-run-candidate-runtime-geometry-v04.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/exact-source-replay/prepare-corrected-W-run-candidate-runtime-geometry-v04.py",
+      "bytes": 2539,
+      "sha256": "2e92d7afc7a479d7965cf8a339a9577470773cc47cff4022b290068a3edb28b1",
+      "git_blob_oid": "649971a6f123a74890e507cbce4117d50c0e7a4a"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/W-own-native-motion-settings-v01.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/W-own-native-motion-settings-v01.json",
+      "bytes": 3299,
+      "sha256": "79a63db8a6a7a6705583047394620ebb0c8aa9e064429ece284ef09c4c33933a",
+      "git_blob_oid": "974713493a30c9a6a1d62256eba47eeecdf2e058"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-authoring-v01.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-authoring-v01.log",
+      "bytes": 525,
+      "sha256": "7352ae2268e4904b47202a5eb794d40081c8857982738eec3a02f5f1dd717278",
+      "git_blob_oid": "3a62a5f4b2e9909737fc2fc9d1a46673a74ec0ab"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-authoring-v02.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-authoring-v02.log",
+      "bytes": 364,
+      "sha256": "bc65e1392bc14191bd688c31342770a40b9492ac387400a91ab136032e7d2ec5",
+      "git_blob_oid": "335afa2ae2a7310623551c7e81c248b3a66918cd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-authoring-v03.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-authoring-v03.log",
+      "bytes": 403,
+      "sha256": "3c058f396c21db81a8110b22b27248fe234d8e72e3176d3d231a726f87689dc8",
+      "git_blob_oid": "dc581d93f098cac976327ec83a52a2cf8f4acc75"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-authoring-v04.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-authoring-v04.log",
+      "bytes": 403,
+      "sha256": "253d4a620cf0ac169a7044965def0c094672aa2a8f20c731860cece41584f167",
+      "git_blob_oid": "11054273eaeb721364b90928c7501560f224f695"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 345347,
+      "sha256": "da15b23f3b88867c246cc5eeb5b79755a086a3efb8e90e26bb9f9e2c77db4b8c",
+      "git_blob_oid": "963ca5df80c4ea6671d708744efe3df7a548aff0"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-L-near-own-native-articulated-leg.png",
+      "bytes": 116034,
+      "sha256": "442d5716661023cbf8e83132cf85e34d831193b7d6ce29fbc6daec9811373670",
+      "git_blob_oid": "aacb5766b4c6c3f0b82c1160075f5e54b5d3712b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 55171,
+      "sha256": "2014e3e4676e5b2f2b80bdd7e9df38899ca2c8d01afed334a38638be3fc3771c",
+      "git_blob_oid": "d976120471329e5db925b486c227d880fe5c6ddd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-LEFT-full-near-upper-arm.png",
+      "bytes": 55852,
+      "sha256": "3f4826eed5e8bf42d776f8840822458fb72b7661176b0a83d8a1b64ab36722f0",
+      "git_blob_oid": "4dd53424a975d765e6f869e40365f02257635ee4"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14459,
+      "sha256": "c3c46b37a1379b1acf1345c166e9575967adf584938034027317773e75ce6156",
+      "git_blob_oid": "37becb374242bbe292651a3bfa625da7c9c7d55c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-R-far-own-native-articulated-leg.png",
+      "bytes": 81214,
+      "sha256": "257d697bedc4f4079890eda50b5d9a234074ecb95d7ce3e64bb853d7570b6773",
+      "git_blob_oid": "7843fceeae3e99716dc24dc64bda255a9948e20b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30812,
+      "sha256": "e2c6bc90883a168d14746e35de18a9c1b127de306d4602e897003ac02d558f0f",
+      "git_blob_oid": "37a9ad5cbb06a241833fcdee4adf25c83110902c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15446,
+      "sha256": "7a613bfcb49459bdd6602cc02aae6c0864b47b3544053bb9826c9d892d01fa28",
+      "git_blob_oid": "79beeb733f42971951f5734361f83add913cefed"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-RIGHT-white-puff-elbow.png",
+      "bytes": 26830,
+      "sha256": "f8d36d7d10080e331caccb772713f549cdfb6c0b4dd6984c5526c96c0f7f9567",
+      "git_blob_oid": "62c1eb0fd1af58f08e4c7f62110f6da52765c0b8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-0-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-0-complete-rigid-RIGHT-staff.png",
+      "bytes": 125481,
+      "sha256": "5f9db18e4b0033a8ac814c346d288a8895cb1846347f7671492d161bf1077fdd",
+      "git_blob_oid": "1fc3d0b517616b1d58a6b497bce6e376ebd7ad0e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 347753,
+      "sha256": "3ec1896f3adaf007463c70606baac462f08a1f4c6633df51e3870682ed937535",
+      "git_blob_oid": "5c064dcd6d8d6e5b52a60a9ac15c416f4e826e91"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-L-near-own-native-articulated-leg.png",
+      "bytes": 117900,
+      "sha256": "c17e528cb3bcc32e5f4419b23395bd7400386c8b89bca3dbb0635e233c8bfbbc",
+      "git_blob_oid": "948d4cbfdad7a01dec46179c5a0ebc3c6185c8fc"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 54943,
+      "sha256": "12cbc535727dd2f83688cfe56d8001c7743d17c991456e657750ebfe808995b0",
+      "git_blob_oid": "2aa82505a523fdc511a3071d1becccbc5f96ee9c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-LEFT-full-near-upper-arm.png",
+      "bytes": 54970,
+      "sha256": "af0adb767d48a950548cd29eb5d4baa53e281115aee4c63a3257d8bd821fd6b6",
+      "git_blob_oid": "a5c891c841dbc80fb941d06a4d5fe62890498a7b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14431,
+      "sha256": "555c1c03938b4d4830774ff024d9ad33cea4e65cbddf71db9fa7bc80f9ece774",
+      "git_blob_oid": "42e5e12b8a3e0093d0b083da1669ba0eb7efcd54"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-R-far-own-native-articulated-leg.png",
+      "bytes": 49959,
+      "sha256": "d456af082dbaa8e1fb024871b75ea01ba9644a79d507ff4fc062d41c9ec1e8be",
+      "git_blob_oid": "7b4c1f7d7278787a7f9298fc9a1a2b03d311b2e8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30865,
+      "sha256": "da2b2e5176b4cbdd819183d8014665cec59f507276aa3301d2f90a49a3c032ba",
+      "git_blob_oid": "36a1b7f39a92974546cd10197c4bb99eff992cbb"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15509,
+      "sha256": "24f8ef46b8153c42586703e747f85532a1252c7c4670dd5a4a72726c0f68dab1",
+      "git_blob_oid": "9467a45e40a01e6b5531c845af8a69bd97797de5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-RIGHT-white-puff-elbow.png",
+      "bytes": 26947,
+      "sha256": "baadb4165a04d47bc54c8ef2292c2efce9ff652419c9bc30ec135bf8cc41c419",
+      "git_blob_oid": "6091b37ebd87f6e844b376f98fabc9f78f37cf1b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/phase-1-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/phase-1-complete-rigid-RIGHT-staff.png",
+      "bytes": 128452,
+      "sha256": "c3fb627db7b0c42d20c9afc573d1f4503754d3843281b899ea373cb9b65ac43b",
+      "git_blob_oid": "0d61bdf27307e9fc2002ad6306fb2bb6194f9d54"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v02.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v02.png",
+      "bytes": 664619,
+      "sha256": "337bc8efddd28108359a1aba2f2bb614c3955b720aa10b176b381795c6952481",
+      "git_blob_oid": "4b909d3afd23ca79b2aa780a7c771cc5e569107b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v02/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v02.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v02/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v02.png",
+      "bytes": 649865,
+      "sha256": "f3882e20854164e2b455968c57eba0e04396d6acd5f8d19631c318955e474b74",
+      "git_blob_oid": "bcd270b23c742c54a9916293fac09c0bfb58f681"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/W-RUN-six-own-native-source-contract-v03.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/W-RUN-six-own-native-source-contract-v03.json",
+      "bytes": 52365,
+      "sha256": "eb792256b50bfb0595702734159b219f2a06962360e109258ac836cbd8dfb7f2",
+      "git_blob_oid": "855d98c4e11d58c3433a99b9b1026cc476326744"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/original-lower-actor-surface-outside-articulated-legs-exact-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/original-lower-actor-surface-outside-articulated-legs-exact-v03.png",
+      "bytes": 145334,
+      "sha256": "672491496bf41681700dbcbef98b93885eb8ab698c5adf82d31f9022379f750b",
+      "git_blob_oid": "513522cb2edee8d63472c964737fe58eb5a1a9e5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/original-lower-surface-ownership-restoration-v03.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/original-lower-surface-ownership-restoration-v03.json",
+      "bytes": 830,
+      "sha256": "b1d566edff0702c711da738624ebfe10dd77aa2bd80dd29365023f363ebe6bf8",
+      "git_blob_oid": "587c801b3775cd075367f298eaa33ed8c09706f9"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 474938,
+      "sha256": "6d8f6e4e427a3f83e69ad1b916059300c7347fc96d74344876c76c93b8245425",
+      "git_blob_oid": "0eecda10b63e57a318c56f5519fff79969337c82"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-L-near-own-native-articulated-leg.png",
+      "bytes": 116034,
+      "sha256": "442d5716661023cbf8e83132cf85e34d831193b7d6ce29fbc6daec9811373670",
+      "git_blob_oid": "aacb5766b4c6c3f0b82c1160075f5e54b5d3712b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 55171,
+      "sha256": "2014e3e4676e5b2f2b80bdd7e9df38899ca2c8d01afed334a38638be3fc3771c",
+      "git_blob_oid": "d976120471329e5db925b486c227d880fe5c6ddd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-LEFT-full-near-upper-arm.png",
+      "bytes": 55852,
+      "sha256": "3f4826eed5e8bf42d776f8840822458fb72b7661176b0a83d8a1b64ab36722f0",
+      "git_blob_oid": "4dd53424a975d765e6f869e40365f02257635ee4"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14459,
+      "sha256": "c3c46b37a1379b1acf1345c166e9575967adf584938034027317773e75ce6156",
+      "git_blob_oid": "37becb374242bbe292651a3bfa625da7c9c7d55c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-R-far-own-native-articulated-leg.png",
+      "bytes": 81214,
+      "sha256": "257d697bedc4f4079890eda50b5d9a234074ecb95d7ce3e64bb853d7570b6773",
+      "git_blob_oid": "7843fceeae3e99716dc24dc64bda255a9948e20b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30812,
+      "sha256": "e2c6bc90883a168d14746e35de18a9c1b127de306d4602e897003ac02d558f0f",
+      "git_blob_oid": "37a9ad5cbb06a241833fcdee4adf25c83110902c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15446,
+      "sha256": "7a613bfcb49459bdd6602cc02aae6c0864b47b3544053bb9826c9d892d01fa28",
+      "git_blob_oid": "79beeb733f42971951f5734361f83add913cefed"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-RIGHT-white-puff-elbow.png",
+      "bytes": 26830,
+      "sha256": "f8d36d7d10080e331caccb772713f549cdfb6c0b4dd6984c5526c96c0f7f9567",
+      "git_blob_oid": "62c1eb0fd1af58f08e4c7f62110f6da52765c0b8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-0-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-0-complete-rigid-RIGHT-staff.png",
+      "bytes": 125481,
+      "sha256": "5f9db18e4b0033a8ac814c346d288a8895cb1846347f7671492d161bf1077fdd",
+      "git_blob_oid": "1fc3d0b517616b1d58a6b497bce6e376ebd7ad0e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 476645,
+      "sha256": "6bf1b22f1eea336789f949573e6df469360b13a0c535dac529fc044038e842f3",
+      "git_blob_oid": "3e8d31d97111452be772ee88e5af07e593a58e3d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-L-near-own-native-articulated-leg.png",
+      "bytes": 117900,
+      "sha256": "c17e528cb3bcc32e5f4419b23395bd7400386c8b89bca3dbb0635e233c8bfbbc",
+      "git_blob_oid": "948d4cbfdad7a01dec46179c5a0ebc3c6185c8fc"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 54943,
+      "sha256": "12cbc535727dd2f83688cfe56d8001c7743d17c991456e657750ebfe808995b0",
+      "git_blob_oid": "2aa82505a523fdc511a3071d1becccbc5f96ee9c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-LEFT-full-near-upper-arm.png",
+      "bytes": 54970,
+      "sha256": "af0adb767d48a950548cd29eb5d4baa53e281115aee4c63a3257d8bd821fd6b6",
+      "git_blob_oid": "a5c891c841dbc80fb941d06a4d5fe62890498a7b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14431,
+      "sha256": "555c1c03938b4d4830774ff024d9ad33cea4e65cbddf71db9fa7bc80f9ece774",
+      "git_blob_oid": "42e5e12b8a3e0093d0b083da1669ba0eb7efcd54"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-R-far-own-native-articulated-leg.png",
+      "bytes": 49959,
+      "sha256": "d456af082dbaa8e1fb024871b75ea01ba9644a79d507ff4fc062d41c9ec1e8be",
+      "git_blob_oid": "7b4c1f7d7278787a7f9298fc9a1a2b03d311b2e8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30865,
+      "sha256": "da2b2e5176b4cbdd819183d8014665cec59f507276aa3301d2f90a49a3c032ba",
+      "git_blob_oid": "36a1b7f39a92974546cd10197c4bb99eff992cbb"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15509,
+      "sha256": "24f8ef46b8153c42586703e747f85532a1252c7c4670dd5a4a72726c0f68dab1",
+      "git_blob_oid": "9467a45e40a01e6b5531c845af8a69bd97797de5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-RIGHT-white-puff-elbow.png",
+      "bytes": 26947,
+      "sha256": "baadb4165a04d47bc54c8ef2292c2efce9ff652419c9bc30ec135bf8cc41c419",
+      "git_blob_oid": "6091b37ebd87f6e844b376f98fabc9f78f37cf1b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-1-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-1-complete-rigid-RIGHT-staff.png",
+      "bytes": 128452,
+      "sha256": "c3fb627db7b0c42d20c9afc573d1f4503754d3843281b899ea373cb9b65ac43b",
+      "git_blob_oid": "0d61bdf27307e9fc2002ad6306fb2bb6194f9d54"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 477846,
+      "sha256": "3a940fa15fe1940721b55a9d7129f20fcdf518743fb397dc95e88f6eacc153e4",
+      "git_blob_oid": "ce85c5fcf6be65b85297dd94c50cb21f4c060a1c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-L-near-own-native-articulated-leg.png",
+      "bytes": 117958,
+      "sha256": "6f98e1c30bfdbc2fea058562c49026b26e06501f9ab08efb564ba7bb4b9cf825",
+      "git_blob_oid": "88769ebb18caaafde74659726b6f803802486da3"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 54753,
+      "sha256": "1f910a3269ab1f92a7fcfe80cd4f111c241ff9e2be1840bfe564895c7d55625c",
+      "git_blob_oid": "97146f05bbbbd5dac564cfc3bc60e439763fa0cd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-LEFT-full-near-upper-arm.png",
+      "bytes": 54142,
+      "sha256": "4cc086e5b03cc1a7c71a66008fc7b9591e720e5c4ec51d44fd5c9ce5ead08778",
+      "git_blob_oid": "804c3a1f7d7de92196b040d5c279c1ddf4bca7db"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14448,
+      "sha256": "b1f8f3bcd4a18b544f737c1ba47a0864fd1b7c364d38c169291a67efbd090e1c",
+      "git_blob_oid": "19f6e5386916c498a93093bd97de9861fac24647"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-R-far-own-native-articulated-leg.png",
+      "bytes": 83030,
+      "sha256": "f3a243dcb0e921baad568c9238abeeac9ab2b9552c786ad85bd56424b1d7334b",
+      "git_blob_oid": "6bd7936267b819a331a50d39c7b14a123602f91c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30927,
+      "sha256": "16d2b27d9c51f875173f4be3a319fc981c051da0f55005e5d4df268309d3de4e",
+      "git_blob_oid": "b98ebbbe4fb71f68c27fdc279c4d3adaedcb8bbe"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15434,
+      "sha256": "2e515af706af8401225e41caff42833cace652cfdcdcbfdb1282f4a2573bf987",
+      "git_blob_oid": "55af2c891b8bcd31290dc8ea81f7cd1b681b6330"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-RIGHT-white-puff-elbow.png",
+      "bytes": 26970,
+      "sha256": "b22fd3b157ca4a5b9fd9917b0e39ea04dbd8d0adc3ee7bbcccdaa5a767d95c12",
+      "git_blob_oid": "77b4fb4271e2d96213cb15a6c2e0dea97017e13d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-2-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-2-complete-rigid-RIGHT-staff.png",
+      "bytes": 129827,
+      "sha256": "93606daa659a841bd4704901242471a8b8134715987c4a17a279423af5250596",
+      "git_blob_oid": "3353cf2e1fd6b4e7c2e632078d7a7459867137e5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 475508,
+      "sha256": "e4ba6740b2ffdcb1fe4ddb3d9c10d2ff7fa0b12fa9e73ad704f6f0a26e372a8b",
+      "git_blob_oid": "9bef900ef19f8073c06ad68c7b387e76e62c7f1d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-L-near-own-native-articulated-leg.png",
+      "bytes": 115676,
+      "sha256": "9c5a28c28e6b18c45107cb055070b393496b3d758a4d7f65890279e34afd19f2",
+      "git_blob_oid": "c60fb5bce5b6061464f64df7d5ed76de36b4e136"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 55143,
+      "sha256": "ee7f6bfd815a38b3039ee7fd0405e0a6ca89752c2bc9974c9f4ad2c9e39625f8",
+      "git_blob_oid": "e08a51810397ed6afe5ac5f14fbe0b10fd26050d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-LEFT-full-near-upper-arm.png",
+      "bytes": 53591,
+      "sha256": "81007f3bcd81389d2dda72d029474da78e5543bc9924e433393133e787ccfd75",
+      "git_blob_oid": "53603e0d238efb577a18e1d05351110c66635b71"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14517,
+      "sha256": "2edd88fa05ffc6bc6f152ba0c6c0ec2fe3a436b6f239d02157325cd7b5921279",
+      "git_blob_oid": "2f029be9a6ce2e725e312fad4485dfc9731d48e6"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-R-far-own-native-articulated-leg.png",
+      "bytes": 82633,
+      "sha256": "802867cfb0a3200d777ae32453ba2c888d738582eeb1ff8a5fd12e81bb128290",
+      "git_blob_oid": "c9f3a7b987756d11879623677fecb20160d6ee0b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30823,
+      "sha256": "53dde28def77a18f5cbb9537955670bcc50a0d2edce237df2f8b5833f8d1809a",
+      "git_blob_oid": "af58e207b7535f6ba4424059b2e11f203d6accb9"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15435,
+      "sha256": "501b65ab6a5f369266a8e3fc8ae4f77efb71e4d99d76b9ac6dc6628b341730b2",
+      "git_blob_oid": "d99f21a4a58ff52235496a255dcc7701abd93e78"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-RIGHT-white-puff-elbow.png",
+      "bytes": 26987,
+      "sha256": "67bcde4340d5e0e88c9c16f45b392dc691b6cbb4ec115005f946f899fefa67d8",
+      "git_blob_oid": "90dd91208fbe3ff5a9cd96c303bebc9faef13893"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-3-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-3-complete-rigid-RIGHT-staff.png",
+      "bytes": 132276,
+      "sha256": "4031076e55f0de8d3740eb704abe4464c451789aeb4973badf63206517df6738",
+      "git_blob_oid": "c015d3699c2df8d5359a2a1cbc863073ffc50e3b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 477276,
+      "sha256": "035b41631cd92a225803b84dc9d5c110fe80a162068a0c06d921ff0f1368919e",
+      "git_blob_oid": "1e0ec8564ee0578c30220a9a38bcfb572e7f2e8d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-L-near-own-native-articulated-leg.png",
+      "bytes": 88345,
+      "sha256": "b0313ec60ae9e01ec57c8d8797ed668fcee90826de25257cb983f4e3107bd5d6",
+      "git_blob_oid": "14019adcbd6e5716ff42c3648331230f134c6d6a"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 54058,
+      "sha256": "104ac79a2a2552c3f6734ae1a3932ae20b16c0dfa14cb70cffb6b158c5997f72",
+      "git_blob_oid": "c77059d64d075ac20ab65ebc6186f7bdc5f305b8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-LEFT-full-near-upper-arm.png",
+      "bytes": 53919,
+      "sha256": "86106274ce2ebb0c4e6059868b65c8aaeb853e09e1472882344a0dfd0d9bd96b",
+      "git_blob_oid": "2d2c871d73ee8167f9ac4cb38e895a573921607c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14367,
+      "sha256": "bc72c0631d7287389c6348dc3d2c2bb9f4f5e5e7c52ab6b9502c70ac4c816f42",
+      "git_blob_oid": "1c6396ed6e7d97db20743e8ecb7753fbe29b0e25"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-R-far-own-native-articulated-leg.png",
+      "bytes": 83717,
+      "sha256": "b1c88f3f39d1a6cd70efff7d9d6f164754d94756088b62212ac4c96cf89c9422",
+      "git_blob_oid": "5b8831abf21ccfd7ad00d4ba34b3732a1d266b0d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30911,
+      "sha256": "51586ec4c3b83ca66eeefb45e23afc0f16369d3021e0a1acc8b0b6d3fa14beba",
+      "git_blob_oid": "4b8d9f0695100840e0c5f3296a55afa5458cad0e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15498,
+      "sha256": "77981a3103953f19d084b18113502ef7109e095595f942806c95e8d8138991b5",
+      "git_blob_oid": "ceedc63af9079d607048de94f1a7ed37e7cb12e8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-RIGHT-white-puff-elbow.png",
+      "bytes": 27003,
+      "sha256": "5783721841cc7ea0e5b25704644709b6e4f086f6c3cabd0c738fd20247638ef6",
+      "git_blob_oid": "e1af15404fc45c1de4201a8bb4092737ab0ba2af"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-4-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-4-complete-rigid-RIGHT-staff.png",
+      "bytes": 131371,
+      "sha256": "1702fdc760ee880d6004c5cde96adfd1d9bbe2648cf39337c7069116f8769587",
+      "git_blob_oid": "b832da104c3e4a799b76cf5b9ee2dd4ce3d7ce0a"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 478277,
+      "sha256": "fa2724582b85497345c59102c2d5d8c4475ef38bcd54a9445ec9adb8fdde35bb",
+      "git_blob_oid": "8ade46930f7c6fc8a724aa4fcfe34da0ddd7b590"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-L-near-own-native-articulated-leg.png",
+      "bytes": 117589,
+      "sha256": "3e6bfee5be7c0b8fc3cfb5d08e149e2ecee319b082da034cff2661ef556ff07a",
+      "git_blob_oid": "ae0e2b877134cdd0b0c6fd28655637046c599be9"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 55094,
+      "sha256": "bb715ffc15f46588b84c893348875c6de508f3f88df9d8ee09b82fc148a9f52e",
+      "git_blob_oid": "9384396e682831f91b1efc630c136652b7351580"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-LEFT-full-near-upper-arm.png",
+      "bytes": 54585,
+      "sha256": "698addd65d57ee6288a0515f25cf8680a2d7ef3d75080bb5f516c8529db85fc2",
+      "git_blob_oid": "db19a374c7bb5c4e0e5f01e42586a7cdfe470833"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14446,
+      "sha256": "777a0a57a04472a1ae494b22b8cd6b05fc0b0812f1d1ad967854b0e61fcd27d1",
+      "git_blob_oid": "5c82e8741d7036b5dc3056a6b351dec9e5bc97bd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-R-far-own-native-articulated-leg.png",
+      "bytes": 83627,
+      "sha256": "0fd116e7de53128aa8d76056379de11d38193a216753d985ac9fc37a00eed6fb",
+      "git_blob_oid": "0cfe0e2e1f67ca416d86fed1f3450ff440108936"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30877,
+      "sha256": "14f6f32636f943822e79ff42362547b27e0bb12527d81160af13a425edcff5ce",
+      "git_blob_oid": "ae15289c0770d9c167237ea26a02fc4194f46e28"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15447,
+      "sha256": "178c879bdbf1d989973cf2d9e1b7af0235ff6021abca643c35cd494d08979b09",
+      "git_blob_oid": "0e2191431370d4c4be0a0cc2a7675eaf564bd360"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-RIGHT-white-puff-elbow.png",
+      "bytes": 26864,
+      "sha256": "c73397d9690a438e3a7daf0f20c373777b381f01bcbdca4116cd7a3331201a7a",
+      "git_blob_oid": "d617bb488b203bc67fd16ad39593c324858a6559"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/phase-5-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/phase-5-complete-rigid-RIGHT-staff.png",
+      "bytes": 128262,
+      "sha256": "d438dc6c64e4bd50d11e138671e6ea3ca275f2783c1b9fe83320c8ea2c406284",
+      "git_blob_oid": "153caacc6170f409435c41f479b4925abebcb47e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v03.png",
+      "bytes": 750933,
+      "sha256": "14aae94e88fdf871c54d462c9700962c94e63ad6423f30d5b4f2e3f473e1b6cc",
+      "git_blob_oid": "1c459131328defc3d4d16064425a61c5e58b5567"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v03.png",
+      "bytes": 739452,
+      "sha256": "cc47c4c2bc7a698187e206237f13c38cbbf4dd38dd33e1af218aae9c2e403376",
+      "git_blob_oid": "b66639fa9059b2151abb280c3b9eb584479440b5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/thunder_female-W-run-2-NEAR_TOEOFF_FAR_REACH-actual-native-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/thunder_female-W-run-2-NEAR_TOEOFF_FAR_REACH-actual-native-v03.png",
+      "bytes": 769633,
+      "sha256": "1a23c5362d8994a0b50feedb62160d13725b9852a6330791670b04257d900766",
+      "git_blob_oid": "edda5dad3fd9bf41e678bf666438750b2b67fdec"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/thunder_female-W-run-3-FAR_CONTACT_NEAR_AIR-actual-native-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/thunder_female-W-run-3-FAR_CONTACT_NEAR_AIR-actual-native-v03.png",
+      "bytes": 763192,
+      "sha256": "fcd0b4f8ae4abc317c75eac198fb5ceb133557ec46bd09ecdc1b5e3296652d64",
+      "git_blob_oid": "fe66ff3a60bd465ea021408a8a1b78dd08cf3e3c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/thunder_female-W-run-4-FAR_COMPRESSION_NEAR_RECOVER-actual-native-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/thunder_female-W-run-4-FAR_COMPRESSION_NEAR_RECOVER-actual-native-v03.png",
+      "bytes": 765697,
+      "sha256": "11c72802d298b5acf8798ebb357446d1b61e7ea8ba2fad39d8492564ae629c9c",
+      "git_blob_oid": "ae86b6551eaeee0459ccf311af2b1865e61dd67b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v03/thunder_female-W-run-5-FAR_TOEOFF_NEAR_REACH-actual-native-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v03/thunder_female-W-run-5-FAR_TOEOFF_NEAR_REACH-actual-native-v03.png",
+      "bytes": 769550,
+      "sha256": "c69db0f754474b71a914b0eea7117cc92c06c96604db3f8bb428d7ed2f952331",
+      "git_blob_oid": "4e2005639c4feda5cc04018c446a9f9204b17d3d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/L-near-exact-original-calf-gap-ownership-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/L-near-exact-original-calf-gap-ownership-native-v04.png",
+      "bytes": 107896,
+      "sha256": "db68445a641340b835cbfa6582e47859df52a56aa806e74964f0ac1d07ebd758",
+      "git_blob_oid": "bc4ad5a624e63245d66f883d9b654cd21702e6b8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/R-far-exact-original-calf-gap-ownership-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/R-far-exact-original-calf-gap-ownership-native-v04.png",
+      "bytes": 74690,
+      "sha256": "ec0dc9abf405d4b21c21465bcc33e561af3d76a882277323b345baf08b837899",
+      "git_blob_oid": "3851f17280b3f265cff7faa75703a395ab995876"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/W-RUN-six-own-native-source-contract-v04.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/W-RUN-six-own-native-source-contract-v04.json",
+      "bytes": 53540,
+      "sha256": "5f94daa8b5d12f33f41712b25ee76d42f31bae175197491c2acd78a560e87d90",
+      "git_blob_oid": "fc3acc6185e4eae69b91955dda47653b30858aaa"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/exact-original-calf-strip-ownership-v04.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/exact-original-calf-strip-ownership-v04.json",
+      "bytes": 1078,
+      "sha256": "b84521435df5fadebb0b92022f85272cb48ac00e6cb5d2226766562c5e7a544d",
+      "git_blob_oid": "164ac8a5e9cca4bfd551d40b81497371e949892d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/original-lower-actor-surface-outside-articulated-legs-exact-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/original-lower-actor-surface-outside-articulated-legs-exact-v03.png",
+      "bytes": 142380,
+      "sha256": "848c544cd27e5300af522b1b494adf45cbb4a311046f31d0e34b84ae0445c2d7",
+      "git_blob_oid": "69071073810d72ccc8d3647eddd19efd40f16521"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/original-lower-surface-ownership-restoration-v03.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/original-lower-surface-ownership-restoration-v03.json",
+      "bytes": 830,
+      "sha256": "00424e089ed4d98795535c5b187240d786903a9b6c249d7de4d4fa256567a062",
+      "git_blob_oid": "769a5d2c1246ff6b8fd0f1b6a2352085753163dd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 472241,
+      "sha256": "aa3d7598db254750a556f5cb21dbf0d8a0d24f8f08df89e9a06d8ce2ca780c87",
+      "git_blob_oid": "6c4e1ec40969cd386ed6a5e6440cd45e08582743"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-L-near-own-native-articulated-leg.png",
+      "bytes": 116722,
+      "sha256": "0d9a9e0c1a522926a49cd19fb7a15b44eedabb3b7a75dcfb6f39a5bf79e9a881",
+      "git_blob_oid": "e2938d6697501f83fd5a91d82a02ffe42d65b8f3"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 55171,
+      "sha256": "2014e3e4676e5b2f2b80bdd7e9df38899ca2c8d01afed334a38638be3fc3771c",
+      "git_blob_oid": "d976120471329e5db925b486c227d880fe5c6ddd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-LEFT-full-near-upper-arm.png",
+      "bytes": 55852,
+      "sha256": "3f4826eed5e8bf42d776f8840822458fb72b7661176b0a83d8a1b64ab36722f0",
+      "git_blob_oid": "4dd53424a975d765e6f869e40365f02257635ee4"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14459,
+      "sha256": "c3c46b37a1379b1acf1345c166e9575967adf584938034027317773e75ce6156",
+      "git_blob_oid": "37becb374242bbe292651a3bfa625da7c9c7d55c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-R-far-own-native-articulated-leg.png",
+      "bytes": 81308,
+      "sha256": "093e07a07d002a2bcac3f016ce02bd272caeddae02a032bb5c19f024817472a5",
+      "git_blob_oid": "8427c861e980c41a53346fbc1c90acb119c7ea26"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30812,
+      "sha256": "e2c6bc90883a168d14746e35de18a9c1b127de306d4602e897003ac02d558f0f",
+      "git_blob_oid": "37a9ad5cbb06a241833fcdee4adf25c83110902c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15446,
+      "sha256": "7a613bfcb49459bdd6602cc02aae6c0864b47b3544053bb9826c9d892d01fa28",
+      "git_blob_oid": "79beeb733f42971951f5734361f83add913cefed"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-RIGHT-white-puff-elbow.png",
+      "bytes": 26830,
+      "sha256": "f8d36d7d10080e331caccb772713f549cdfb6c0b4dd6984c5526c96c0f7f9567",
+      "git_blob_oid": "62c1eb0fd1af58f08e4c7f62110f6da52765c0b8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-0-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-0-complete-rigid-RIGHT-staff.png",
+      "bytes": 125481,
+      "sha256": "5f9db18e4b0033a8ac814c346d288a8895cb1846347f7671492d161bf1077fdd",
+      "git_blob_oid": "1fc3d0b517616b1d58a6b497bce6e376ebd7ad0e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 473384,
+      "sha256": "a91c52d4bb50134619a6cd9af46dd2b83f112d15beeab81733f9c6413a59e993",
+      "git_blob_oid": "6c830cfa81859e6b50b42e8187c2c3230ff3a25e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-L-near-own-native-articulated-leg.png",
+      "bytes": 118667,
+      "sha256": "9524cd8c8dc2dfc50a5c698fb10e5f0531ab6292d9209bb8f66213d3c9c6f7bc",
+      "git_blob_oid": "3c0202115b04ba328abf97338d399b950f6a2771"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 54943,
+      "sha256": "12cbc535727dd2f83688cfe56d8001c7743d17c991456e657750ebfe808995b0",
+      "git_blob_oid": "2aa82505a523fdc511a3071d1becccbc5f96ee9c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-LEFT-full-near-upper-arm.png",
+      "bytes": 54970,
+      "sha256": "af0adb767d48a950548cd29eb5d4baa53e281115aee4c63a3257d8bd821fd6b6",
+      "git_blob_oid": "a5c891c841dbc80fb941d06a4d5fe62890498a7b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14431,
+      "sha256": "555c1c03938b4d4830774ff024d9ad33cea4e65cbddf71db9fa7bc80f9ece774",
+      "git_blob_oid": "42e5e12b8a3e0093d0b083da1669ba0eb7efcd54"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-R-far-own-native-articulated-leg.png",
+      "bytes": 49994,
+      "sha256": "888f8ccf195771b8d6530ad74361e3849999a49d6a3752603ee2099982666e12",
+      "git_blob_oid": "eed5cafd920c64ba1f0848b6d4173429beddba97"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30865,
+      "sha256": "da2b2e5176b4cbdd819183d8014665cec59f507276aa3301d2f90a49a3c032ba",
+      "git_blob_oid": "36a1b7f39a92974546cd10197c4bb99eff992cbb"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15509,
+      "sha256": "24f8ef46b8153c42586703e747f85532a1252c7c4670dd5a4a72726c0f68dab1",
+      "git_blob_oid": "9467a45e40a01e6b5531c845af8a69bd97797de5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-RIGHT-white-puff-elbow.png",
+      "bytes": 26947,
+      "sha256": "baadb4165a04d47bc54c8ef2292c2efce9ff652419c9bc30ec135bf8cc41c419",
+      "git_blob_oid": "6091b37ebd87f6e844b376f98fabc9f78f37cf1b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-1-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-1-complete-rigid-RIGHT-staff.png",
+      "bytes": 128452,
+      "sha256": "c3fb627db7b0c42d20c9afc573d1f4503754d3843281b899ea373cb9b65ac43b",
+      "git_blob_oid": "0d61bdf27307e9fc2002ad6306fb2bb6194f9d54"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 474339,
+      "sha256": "9dc6b791c282e8d43022bcd531cb90d6efc34eb0f2a2e05bf1f11f64efa9a66f",
+      "git_blob_oid": "520332b4fba1ae06ebec54a854bc93b1d035d4b1"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-L-near-own-native-articulated-leg.png",
+      "bytes": 118743,
+      "sha256": "9947aa3260eaf165dd44a5fd11a4bd22eeafb0df5ce883a0b64b7be4c1229434",
+      "git_blob_oid": "f860ec5886015825a06f46b69425fcc5d5d40325"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 54753,
+      "sha256": "1f910a3269ab1f92a7fcfe80cd4f111c241ff9e2be1840bfe564895c7d55625c",
+      "git_blob_oid": "97146f05bbbbd5dac564cfc3bc60e439763fa0cd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-LEFT-full-near-upper-arm.png",
+      "bytes": 54142,
+      "sha256": "4cc086e5b03cc1a7c71a66008fc7b9591e720e5c4ec51d44fd5c9ce5ead08778",
+      "git_blob_oid": "804c3a1f7d7de92196b040d5c279c1ddf4bca7db"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14448,
+      "sha256": "b1f8f3bcd4a18b544f737c1ba47a0864fd1b7c364d38c169291a67efbd090e1c",
+      "git_blob_oid": "19f6e5386916c498a93093bd97de9861fac24647"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-R-far-own-native-articulated-leg.png",
+      "bytes": 84234,
+      "sha256": "e7b6514779b0a20a29aad13c57213d655f4af485ad2562100952439d5004b1e1",
+      "git_blob_oid": "560b0b6899aa013f5cf45e1993bd15c6f94740bb"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30927,
+      "sha256": "16d2b27d9c51f875173f4be3a319fc981c051da0f55005e5d4df268309d3de4e",
+      "git_blob_oid": "b98ebbbe4fb71f68c27fdc279c4d3adaedcb8bbe"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15434,
+      "sha256": "2e515af706af8401225e41caff42833cace652cfdcdcbfdb1282f4a2573bf987",
+      "git_blob_oid": "55af2c891b8bcd31290dc8ea81f7cd1b681b6330"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-RIGHT-white-puff-elbow.png",
+      "bytes": 26970,
+      "sha256": "b22fd3b157ca4a5b9fd9917b0e39ea04dbd8d0adc3ee7bbcccdaa5a767d95c12",
+      "git_blob_oid": "77b4fb4271e2d96213cb15a6c2e0dea97017e13d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-2-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-2-complete-rigid-RIGHT-staff.png",
+      "bytes": 129827,
+      "sha256": "93606daa659a841bd4704901242471a8b8134715987c4a17a279423af5250596",
+      "git_blob_oid": "3353cf2e1fd6b4e7c2e632078d7a7459867137e5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 472707,
+      "sha256": "e45e36f41f14ee34c7cb4c567f1e84918b0123a5b4e7c24f268520f8d94ff957",
+      "git_blob_oid": "f6fda78787a2081c6216ca4547cc704133df3802"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-L-near-own-native-articulated-leg.png",
+      "bytes": 116408,
+      "sha256": "285ff6e403773400580bca360ece0cb98ceb832f1ffcd2801b4082c580448498",
+      "git_blob_oid": "e232999b78f2fdd076951448b4787e10db31b414"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 55143,
+      "sha256": "ee7f6bfd815a38b3039ee7fd0405e0a6ca89752c2bc9974c9f4ad2c9e39625f8",
+      "git_blob_oid": "e08a51810397ed6afe5ac5f14fbe0b10fd26050d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-LEFT-full-near-upper-arm.png",
+      "bytes": 53591,
+      "sha256": "81007f3bcd81389d2dda72d029474da78e5543bc9924e433393133e787ccfd75",
+      "git_blob_oid": "53603e0d238efb577a18e1d05351110c66635b71"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14517,
+      "sha256": "2edd88fa05ffc6bc6f152ba0c6c0ec2fe3a436b6f239d02157325cd7b5921279",
+      "git_blob_oid": "2f029be9a6ce2e725e312fad4485dfc9731d48e6"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-R-far-own-native-articulated-leg.png",
+      "bytes": 83767,
+      "sha256": "8e27e7f1c4483fb5c16d3484c9b20f01c33c95a6c6199ed13fdfa053c31c82ea",
+      "git_blob_oid": "cc90f6310ae94327c38787c8f802659cf636e1b7"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30823,
+      "sha256": "53dde28def77a18f5cbb9537955670bcc50a0d2edce237df2f8b5833f8d1809a",
+      "git_blob_oid": "af58e207b7535f6ba4424059b2e11f203d6accb9"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15435,
+      "sha256": "501b65ab6a5f369266a8e3fc8ae4f77efb71e4d99d76b9ac6dc6628b341730b2",
+      "git_blob_oid": "d99f21a4a58ff52235496a255dcc7701abd93e78"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-RIGHT-white-puff-elbow.png",
+      "bytes": 26987,
+      "sha256": "67bcde4340d5e0e88c9c16f45b392dc691b6cbb4ec115005f946f899fefa67d8",
+      "git_blob_oid": "90dd91208fbe3ff5a9cd96c303bebc9faef13893"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-3-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-3-complete-rigid-RIGHT-staff.png",
+      "bytes": 132276,
+      "sha256": "4031076e55f0de8d3740eb704abe4464c451789aeb4973badf63206517df6738",
+      "git_blob_oid": "c015d3699c2df8d5359a2a1cbc863073ffc50e3b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 473913,
+      "sha256": "c7accc0b19f52b59988474cbe4f066fba4b5095f90f731f5d74142afdc1305b0",
+      "git_blob_oid": "513afa438e7cc9420be72673075d5e5c5a0b8649"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-L-near-own-native-articulated-leg.png",
+      "bytes": 89196,
+      "sha256": "6f0fcb54473926f2866f4e469d3b7bb2306e1404a2d90a62ec9b7d4911ae821f",
+      "git_blob_oid": "4371409c09b348bebe62256056d838a31a0a4c97"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 54058,
+      "sha256": "104ac79a2a2552c3f6734ae1a3932ae20b16c0dfa14cb70cffb6b158c5997f72",
+      "git_blob_oid": "c77059d64d075ac20ab65ebc6186f7bdc5f305b8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-LEFT-full-near-upper-arm.png",
+      "bytes": 53919,
+      "sha256": "86106274ce2ebb0c4e6059868b65c8aaeb853e09e1472882344a0dfd0d9bd96b",
+      "git_blob_oid": "2d2c871d73ee8167f9ac4cb38e895a573921607c"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14367,
+      "sha256": "bc72c0631d7287389c6348dc3d2c2bb9f4f5e5e7c52ab6b9502c70ac4c816f42",
+      "git_blob_oid": "1c6396ed6e7d97db20743e8ecb7753fbe29b0e25"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-R-far-own-native-articulated-leg.png",
+      "bytes": 84940,
+      "sha256": "eef4714b0cc9cca25a801f1915c933f2b77b969dedb7b4453e02e5b597f4811c",
+      "git_blob_oid": "3fc0045568cfc214bd5c02ea2e712f5a414fdfc5"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30911,
+      "sha256": "51586ec4c3b83ca66eeefb45e23afc0f16369d3021e0a1acc8b0b6d3fa14beba",
+      "git_blob_oid": "4b8d9f0695100840e0c5f3296a55afa5458cad0e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15498,
+      "sha256": "77981a3103953f19d084b18113502ef7109e095595f942806c95e8d8138991b5",
+      "git_blob_oid": "ceedc63af9079d607048de94f1a7ed37e7cb12e8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-RIGHT-white-puff-elbow.png",
+      "bytes": 27003,
+      "sha256": "5783721841cc7ea0e5b25704644709b6e4f086f6c3cabd0c738fd20247638ef6",
+      "git_blob_oid": "e1af15404fc45c1de4201a8bb4092737ab0ba2af"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-4-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-4-complete-rigid-RIGHT-staff.png",
+      "bytes": 131371,
+      "sha256": "1702fdc760ee880d6004c5cde96adfd1d9bbe2648cf39337c7069116f8769587",
+      "git_blob_oid": "b832da104c3e4a799b76cf5b9ee2dd4ce3d7ce0a"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 474722,
+      "sha256": "70ef72f8761bcff426a539f37654e5f9c46d21c9212dbb43819130e95c2b3e06",
+      "git_blob_oid": "4ffc33b9735248060474ae68e148de2f5e9a2d3e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-L-near-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-L-near-own-native-articulated-leg.png",
+      "bytes": 118279,
+      "sha256": "dd22f469d0b4b87d82bd84e2b2ec0eaabbd58fed2fe56324e94ce2cb9db4151d",
+      "git_blob_oid": "2bbd990d9b68a3a1cf9981f058aa31b4486f00ec"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-LEFT-complete-original-curved-cuff-forearm-free-fingers.png",
+      "bytes": 55094,
+      "sha256": "bb715ffc15f46588b84c893348875c6de508f3f88df9d8ee09b82fc148a9f52e",
+      "git_blob_oid": "9384396e682831f91b1efc630c136652b7351580"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-LEFT-full-near-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-LEFT-full-near-upper-arm.png",
+      "bytes": 54585,
+      "sha256": "698addd65d57ee6288a0515f25cf8680a2d7ef3d75080bb5f516c8529db85fc2",
+      "git_blob_oid": "db19a374c7bb5c4e0e5f01e42586a7cdfe470833"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-LEFT-original-distal-upper-cuff-follows-rigid-forearm.png",
+      "bytes": 14446,
+      "sha256": "777a0a57a04472a1ae494b22b8cd6b05fc0b0812f1d1ad967854b0e61fcd27d1",
+      "git_blob_oid": "5c82e8741d7036b5dc3056a6b351dec9e5bc97bd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-R-far-own-native-articulated-leg.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-R-far-own-native-articulated-leg.png",
+      "bytes": 84721,
+      "sha256": "83f312ed4bfb07fd8b286d1de463e53fb1a934f0d3fac056b7efa3fedbfd8694",
+      "git_blob_oid": "7d04a308a1819779d86e360d72dabff871eb5f70"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-complete-forearm-cuff-grip-fingers.png",
+      "bytes": 30877,
+      "sha256": "14f6f32636f943822e79ff42362547b27e0bb12527d81160af13a425edcff5ce",
+      "git_blob_oid": "ae15289c0770d9c167237ea26a02fc4194f46e28"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-full-visible-upper-arm.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-full-visible-upper-arm.png",
+      "bytes": 15447,
+      "sha256": "178c879bdbf1d989973cf2d9e1b7af0235ff6021abca643c35cd494d08979b09",
+      "git_blob_oid": "0e2191431370d4c4be0a0cc2a7675eaf564bd360"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-white-puff-elbow.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-RIGHT-white-puff-elbow.png",
+      "bytes": 26864,
+      "sha256": "c73397d9690a438e3a7daf0f20c373777b381f01bcbdca4116cd7a3331201a7a",
+      "git_blob_oid": "d617bb488b203bc67fd16ad39593c324858a6559"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/phase-5-complete-rigid-RIGHT-staff.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/phase-5-complete-rigid-RIGHT-staff.png",
+      "bytes": 128262,
+      "sha256": "d438dc6c64e4bd50d11e138671e6ea3ca275f2783c1b9fe83320c8ea2c406284",
+      "git_blob_oid": "153caacc6170f409435c41f479b4925abebcb47e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v04.png",
+      "bytes": 750902,
+      "sha256": "7ede787fa78f8581395e372ea79d2e8ebcddbdefa9a446ddee658b407e6c73a6",
+      "git_blob_oid": "3bab45c28494b7e93d1366e1c42ea6283bf3d65a"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v04.png",
+      "bytes": 736508,
+      "sha256": "b176c21a200d6936a895a9a22f02d265cc8bc2df1a4b75fed45f139b2ce3c9be",
+      "git_blob_oid": "b259be66d567733474b546daeff0c4a40ff9829e"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/thunder_female-W-run-2-NEAR_TOEOFF_FAR_REACH-actual-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/thunder_female-W-run-2-NEAR_TOEOFF_FAR_REACH-actual-native-v04.png",
+      "bytes": 770471,
+      "sha256": "374358d44d622b9dd09eacd5567f76b612a1a600cc46b08feaee8ea7c85aa86a",
+      "git_blob_oid": "75c3189730c99c454efc82f6e1757277644c0a35"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/thunder_female-W-run-3-FAR_CONTACT_NEAR_AIR-actual-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/thunder_female-W-run-3-FAR_CONTACT_NEAR_AIR-actual-native-v04.png",
+      "bytes": 761768,
+      "sha256": "0749f6424563d386b8eca7a30ed52c2ad402f64ad65ed064360152dce39a0c14",
+      "git_blob_oid": "b1aff5b67af5a6981dd56ca89027200b27460f36"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/thunder_female-W-run-4-FAR_COMPRESSION_NEAR_RECOVER-actual-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/thunder_female-W-run-4-FAR_COMPRESSION_NEAR_RECOVER-actual-native-v04.png",
+      "bytes": 765758,
+      "sha256": "e8e7884e216cfd71d26d9af54ee5cef1db3eb4c9e249dab2826e851ee5fed787",
+      "git_blob_oid": "22b8288f2307910e478bc2c07c43e9773360bcc8"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v04/thunder_female-W-run-5-FAR_TOEOFF_NEAR_REACH-actual-native-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v04/thunder_female-W-run-5-FAR_TOEOFF_NEAR_REACH-actual-native-v04.png",
+      "bytes": 767516,
+      "sha256": "ab0f6920322a6551b86d884b256fad1714018d1d025910a4f3c3dc27717f081e",
+      "git_blob_oid": "298bad15584a184862d751fe82a80890f4fc9d42"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/W-RUN-six-own-native-source-contract-v05.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/W-RUN-six-own-native-source-contract-v05.json",
+      "bytes": 55020,
+      "sha256": "6de097f1f8bfd65292c01bb14e6ca0efaff4fbfdb2798022dc57864381d8944b",
+      "git_blob_oid": "090d06ae7deddd5011f2d931024b90841390e80f"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/original-lower-actor-surface-outside-articulated-legs-exact-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/original-lower-actor-surface-outside-articulated-legs-exact-v03.png",
+      "bytes": 143190,
+      "sha256": "04eddb215e4a099888fbc0c9321a29133cb5c05d309940db9947bb5d40a4c2a0",
+      "git_blob_oid": "6417578dabb8a3c7e26a5eb244ceed99c0df54ea"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/original-lower-surface-ownership-restoration-v03.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/original-lower-surface-ownership-restoration-v03.json",
+      "bytes": 830,
+      "sha256": "ec84dc6f3721b51f6aeb1eb962e79b58b66ff6ec98aadf337eecd204ebb89451",
+      "git_blob_oid": "aa9b0ce9b3e7894c37af86bc7339084e413c083a"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/phase-0-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 472795,
+      "sha256": "887d74e4b0ae12894dd380837b1d110c17d342884ce3341d2bc12102ce043c7f",
+      "git_blob_oid": "017ada3b0d939e83550b69f9c8b5dee05c460509"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/phase-1-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 474013,
+      "sha256": "71ae38cd63e7a5686c63fcd7fe03668fb35680f060a1bdcf14a22761514f1092",
+      "git_blob_oid": "881d70a1f59f53d946601cdc94dd7f682f814823"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-2-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/phase-2-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 474994,
+      "sha256": "83c43b2570e4e3bfc01b03e5227b45030de298bd828bb1279b3dfd9f8c04309d",
+      "git_blob_oid": "64d90df9a1c424e21991c4b2bb3d18b9eb7a8ed6"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-3-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/phase-3-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 473249,
+      "sha256": "83b1df70c2f78a4cda0174211578812866cd73f58bf9f47fd8ca28c82d04ef95",
+      "git_blob_oid": "54c9b6f905186fdefc463b1d3233b131b4e50804"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-4-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/phase-4-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 474564,
+      "sha256": "334133593b599c2f2827581a33cf4cd44f677e540a6a149c94fb2fc52204cd63",
+      "git_blob_oid": "cd4a15ae27758646c32528a8715b682e4bf65446"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/phase-5-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/phase-5-BODY-HEAD-NECK-real-COAT-native-material.png",
+      "bytes": 475350,
+      "sha256": "dbbd1526b8780216d1df96f3c12549b0b47baae1643aca689021c92b0b143083",
+      "git_blob_oid": "79d91eecc4bcfba07a75a2c903831e83026648e1"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v05.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/thunder_female-W-run-0-NEAR_CONTACT_FAR_AIR-actual-native-v05.png",
+      "bytes": 751322,
+      "sha256": "feafe6a2c8b1be51e36b386dd4cc78d454041eed454034920792bd19fce0369e",
+      "git_blob_oid": "f8e060f17feeaca3a4b32f1cea34c954620f5d7b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v05.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/thunder_female-W-run-1-NEAR_COMPRESSION_FAR_RECOVER-actual-native-v05.png",
+      "bytes": 736754,
+      "sha256": "bab5a3c278b145b37683c7942e14f5a33a67b3bed065b4ec4ffb55ed796b3895",
+      "git_blob_oid": "bad7a02886eed9a9f82bf18a755f4aaeafa8324b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-2-NEAR_TOEOFF_FAR_REACH-actual-native-v05.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/thunder_female-W-run-2-NEAR_TOEOFF_FAR_REACH-actual-native-v05.png",
+      "bytes": 770170,
+      "sha256": "329058c9cacb1ba74908937d10afa2f312b9ee3afee61de7e9aa4cfbd0e94df0",
+      "git_blob_oid": "950d5ffc47cc9a28ab7710c7f04a038757a7081b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-3-FAR_CONTACT_NEAR_AIR-actual-native-v05.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/thunder_female-W-run-3-FAR_CONTACT_NEAR_AIR-actual-native-v05.png",
+      "bytes": 762227,
+      "sha256": "1324394797ed60c1327fc3d2bdb7a3e27b66511c17a814b3b7826b6077f13842",
+      "git_blob_oid": "f4a92fee85ccc534a5e97471e6e7a2d58f65c479"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-4-FAR_COMPRESSION_NEAR_RECOVER-actual-native-v05.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/thunder_female-W-run-4-FAR_COMPRESSION_NEAR_RECOVER-actual-native-v05.png",
+      "bytes": 766296,
+      "sha256": "1256e644ba3be539cd0f902a86adb626dafef30604dc5ccbaf1643b7748d0907",
+      "git_blob_oid": "4f5c4fdfac9c2578af732da811ee4d88e8d82eb3"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/actual-W-RUN-six-own-native-v05/thunder_female-W-run-5-FAR_TOEOFF_NEAR_REACH-actual-native-v05.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/actual-W-RUN-six-own-native-v05/thunder_female-W-run-5-FAR_TOEOFF_NEAR_REACH-actual-native-v05.png",
+      "bytes": 768062,
+      "sha256": "a2fd1d9e3aa6038463cd59302bd886e0722177c9d684033626ac627e374a4742",
+      "git_blob_oid": "21b57d43bbebea886c0456ddfa7fc0351e7f0149"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/author-W-RUN-six-own-native-v01.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/author-W-RUN-six-own-native-v01.py",
+      "bytes": 14536,
+      "sha256": "5096ba3f9a3dd990b0c3d435f1ee3f9318f5030c6a3016b9ad960e452f85b2f1",
+      "git_blob_oid": "e6118fd7addf49c390c05215e067553e754d35e1"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/author-W-RUN-six-own-native-v02.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/author-W-RUN-six-own-native-v02.py",
+      "bytes": 15552,
+      "sha256": "f6641ce5a1f7839ebad8b386faf3fd480ad7e847a800a8f7bc387d990ff3e528",
+      "git_blob_oid": "6e8ce5c21a376c942441870d4df29e7659e260f2"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/author-W-RUN-six-own-native-v03.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/author-W-RUN-six-own-native-v03.py",
+      "bytes": 17573,
+      "sha256": "d78465363ab82e0e31d60a08a6d3d82630945abe226b8fc7359d311ca1496923",
+      "git_blob_oid": "3e3c7fe524246d5e4ed052de7e2d94231f601161"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/author-W-RUN-six-own-native-v04-original-preserved.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/author-W-RUN-six-own-native-v04-original-preserved.py",
+      "bytes": 19543,
+      "sha256": "85e55c6ca69f1f561ca51f67bd8794812302ae6112303cce9f473ec37d904c49",
+      "git_blob_oid": "b7104ab07f452848fbe3b75fbfc501f5413b9b82"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/author-W-RUN-six-own-native-v04.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/author-W-RUN-six-own-native-v04.py",
+      "bytes": 27148,
+      "sha256": "6c87aeb51accdfb0dd297c27a957efae099657ba768081c4e9166d25c5c6073d",
+      "git_blob_oid": "7214571cb745322b53b46e478de351312f195632"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/body-only-original-RGBA-ownership-repair-v05.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/body-only-original-RGBA-ownership-repair-v05.log",
+      "bytes": 571,
+      "sha256": "7e2587c834907b64e7bae16eaf01fea15a79227b9a12ab066202ba4720ab40a9",
+      "git_blob_oid": "fedb2015d1ba0e0ca51de54f05884696d8571028"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/circular-knee-nonfolding-native-ownership-preflight-v02.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/circular-knee-nonfolding-native-ownership-preflight-v02.json",
+      "bytes": 1436,
+      "sha256": "2c5334791bbcc5ccab36c6b7218775c0a87d14ec7bd954cb10acb42829bd44f9",
+      "git_blob_oid": "5ed50d8e589356468fdc3e2c313faa3f1d24901d"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/circular-knee-skinning-v02.py",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/circular-knee-skinning-v02.py",
+      "bytes": 3021,
+      "sha256": "91e113b7bc5c86d5a0fe059179336f8c7bbe91b37fcbf100f09353bd64f8d6a3",
+      "git_blob_oid": "8374fda6f5d73cbb298baa112c7ceab7e87da0fd"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/shared-source-input-regression-v05.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/shared-source-input-regression-v05.json",
+      "bytes": 878,
+      "sha256": "5d3d9a15f0534773fac0457e76f79d684a8c2d4709f2952e01d740b4cff40bfb",
+      "git_blob_oid": "5d580e6cde33a66ad00d7a3fefafa68af0ffb525"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/shared-source-input-regression-v05.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/shared-source-input-regression-v05.log",
+      "bytes": 593,
+      "sha256": "ae3a2aaede52bf22d6c96754cc1fe2bf66300937bf54103a6e52fd7545f84ade",
+      "git_blob_oid": "029442c9076d87336c1235b169aacfb34c4a5d2b"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/source-input-regression-v05.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/source-input-regression-v05.json",
+      "bytes": 663,
+      "sha256": "58afc861eddf94711ac06303b0561a1e0cdce255b2044cf2b3ceb61e2a05549b",
+      "git_blob_oid": "018afe90c57b840964490302cbe23e437000be80"
+    },
+    {
+      "source_path": "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/source-input-regression-v05.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/own-native-W-run/source-input-regression-v05.log",
+      "bytes": 593,
+      "sha256": "ae3a2aaede52bf22d6c96754cc1fe2bf66300937bf54103a6e52fd7545f84ade",
+      "git_blob_oid": "029442c9076d87336c1235b169aacfb34c4a5d2b"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/pack.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/pack.log",
+      "bytes": 333,
+      "sha256": "d8a771d966f94e4a208206cf92b7dd0a5cda0a8ce75c8d6ea878d2a4d6e3bdf4",
+      "git_blob_oid": "ada8057e9085e0b053fc87f5d67699880d3be534"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/packing-plan.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/packing-plan.json",
+      "bytes": 2365,
+      "sha256": "8f834a77ad0aabf74dda37232662ca972dfa0994fee5da82896976d94709f424",
+      "git_blob_oid": "84b23a066bc54f31a0f2195154edb912ef1cff04"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/phase-0-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/phase-0-exact-2304.png",
+      "bytes": 767922,
+      "sha256": "40c3bab4cbc7e98484d78ebc394a85bc82d51b2a15020e5c5e58edc31b816197",
+      "git_blob_oid": "71008fbb7491800bf3e49e443418f01a5dab0b4b"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/phase-1-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/phase-1-exact-2304.png",
+      "bytes": 757226,
+      "sha256": "fb1ab1c3c6579cd28f5f53826eb322002f6ec0369abc3c2d4eebfc1938f7d7fe",
+      "git_blob_oid": "454d4a42625faaaaf522684b7d591de14b268621"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/phase-2-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/phase-2-exact-2304.png",
+      "bytes": 788339,
+      "sha256": "3a0ba9deb43bd3e7220a397afe4a2717fa53db5d5a5c0ce7270bde996f8e91c3",
+      "git_blob_oid": "de48918af30e7a73a9bcfc448f7ffdb50547bd7b"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/phase-3-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/phase-3-exact-2304.png",
+      "bytes": 783481,
+      "sha256": "d408ffeafae170adc0f18657e379e273d92c165c9ad3d019ba9f9924e60f0569",
+      "git_blob_oid": "b7c942a1bbae9bb79370ce13ae2b804801aab47e"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/phase-4-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/phase-4-exact-2304.png",
+      "bytes": 786079,
+      "sha256": "8df93f382c9b5d5744adc6da799be5503e03ac6f7e65565ddd8151e177d5c933",
+      "git_blob_oid": "7fe1a1ebccf7597cb1ede75aaede087833c3520c"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/phase-5-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/phase-5-exact-2304.png",
+      "bytes": 786971,
+      "sha256": "a2d88a47169adcf9e35e6e0b5af3c02a7a1a1b51339711b86c226d1889fccfc4",
+      "git_blob_oid": "51fcd486d25d3ef9d89a6db3d788ebe5169e1bac"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/request.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/request.log",
+      "bytes": 900,
+      "sha256": "386f4c67bd8a953480ed78161676ca97eb95d4ed356f1d2034159e6d75042d28",
+      "git_blob_oid": "d91fced933887b47c8e6a9e39154de685f06d4b1"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/thunder_female-W-run-own-native-real-six-v03.packing.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/thunder_female-W-run-own-native-real-six-v03.packing.json",
+      "bytes": 5620,
+      "sha256": "bf5504f60d57e71173b3b5cc63f92bf77a7988563614ac765d6ee0ad193811e8",
+      "git_blob_oid": "d51e3bde377367a1c04698eacc8c91d7e7935383"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v03/thunder_female-W-run-own-native-real-six-v03.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v03-packet/thunder_female-W-run-own-native-real-six-v03.png",
+      "bytes": 4669750,
+      "sha256": "da6fb3b088e42462d9f5f6f1abcd06108fa808aa6b010bfab07b4a2726c5beff",
+      "git_blob_oid": "d824abe14dee88d53aa95e09c2ba16d9ff16a268"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/pack.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/pack.log",
+      "bytes": 333,
+      "sha256": "02743f0e5167f0b7ade6ade94c7bc9758afa76d4ab53d6f568408c027d769b27",
+      "git_blob_oid": "e1060a4e63abaad2df5657442e2d30865ef81a69"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/packing-plan.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/packing-plan.json",
+      "bytes": 2365,
+      "sha256": "de239731fa4923875145e36a25cc9217a460bcb1f719b07dd17a4382e9c54078",
+      "git_blob_oid": "2d1c35ba7ce3f6a7b241973ca9115575a6f768ca"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/phase-0-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/phase-0-exact-2304.png",
+      "bytes": 768014,
+      "sha256": "2d099fcdf18228788193d40a144efa40f1761f69af1d2b73d62b3c45b65cb4d2",
+      "git_blob_oid": "1791642aa15ce4f7e5a201d937be2f31556499c6"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/phase-1-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/phase-1-exact-2304.png",
+      "bytes": 754755,
+      "sha256": "cafe4944898584146905c7532112376dc2f5fd4311ede007ab29c08dca1da901",
+      "git_blob_oid": "96a8e85f9b6046302db2a532028a8bd1f3ffb3ef"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/phase-2-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/phase-2-exact-2304.png",
+      "bytes": 789166,
+      "sha256": "3dc9d7271a492afca158ecdee0d649970cc24653b15a7c5b5e80edb0c9bf39f2",
+      "git_blob_oid": "0e89954f46c5069137ac9d32440fa39b0d7f65b3"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/phase-3-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/phase-3-exact-2304.png",
+      "bytes": 782594,
+      "sha256": "134433e5748502a33c23947aee381ed68cb08543d3399171335d908c951c5ae9",
+      "git_blob_oid": "f761607bf28fe2dd5bd2d76be9e92b370a9b9c7a"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/phase-4-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/phase-4-exact-2304.png",
+      "bytes": 786141,
+      "sha256": "91818b98d013f47916ba66a2e7f43dcd5220d8b41009df918246758aae57adbd",
+      "git_blob_oid": "f9a103a1122fdc0b2f5980527f3cb7758117643e"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/phase-5-exact-2304.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/phase-5-exact-2304.png",
+      "bytes": 784873,
+      "sha256": "1b2dad36dd9c6f2e41b954548bce6556c165aaaedc5e8f391308a0102f2a8c1d",
+      "git_blob_oid": "c967ea9a8ee61ca175876f967e720f4f5105212b"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/request-WrunOwnNative04.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/request-WrunOwnNative04.json",
+      "bytes": 3006,
+      "sha256": "6ec73c43e1a9ca7ddbbd14155e42b4b7bc4f2bac8968bc3318841df8f0b3666b",
+      "git_blob_oid": "641ffc9b5b404ebad65ae891cdfa60f28f931d1d"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/request.log",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/request.log",
+      "bytes": 484,
+      "sha256": "27f1d7ff57431d93a2baba6992265191804566e24870cf0803fc182b3f971154",
+      "git_blob_oid": "00e86f695583e9bd7daea5ee99d47da3bb587b3f"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/six-source-to-packed-candidate-proof.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/six-source-to-packed-candidate-proof.json",
+      "bytes": 7556,
+      "sha256": "5e0d4f7080aee5df9329e8e94c29c5d3084b1db40887330bdc3dea665185174c",
+      "git_blob_oid": "19941dee30383f586f739baf5880dd8d30c89af0"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/thunder_female-W-run-own-native-real-six-v04.packing.json",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/thunder_female-W-run-own-native-real-six-v04.packing.json",
+      "bytes": 5620,
+      "sha256": "199cb08d5b994c1d8003e563054feb2df0dc89e04f7479889cee47fcedf6a8dc",
+      "git_blob_oid": "850d437d61acb4ee9422959b0fe7925ccaaa633d"
+    },
+    {
+      "source_path": "/workspace/scratch/pr122-death-s-only-20261022-v01/W-run-own-native-six-exact-packed-candidate-v04/thunder_female-W-run-own-native-real-six-v04.png",
+      "repo_path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-W-run-own-native-source-checkpoint-20261023-v01/preserved-v04-packet/thunder_female-W-run-own-native-real-six-v04.png",
+      "bytes": 4664685,
+      "sha256": "f83357189d838307e0530d6a35f6540ab3d6bd061c5b9112f2108822ac5c174a",
+      "git_blob_oid": "68ae748fbbcf57bb2f5b49eff63b44505d00625a"
+    }
+  ],
+  "frozen_file_sha256": {
+    "data/pr122_native_locomotion_staging.json": "849023820ab702b2687101db4164577c9423588880428514afd022d9b8c3db8e",
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json": "92db614bf19f47111fea93c41788efe4514e61fa315d3870ec35ecc3212d7de8",
+    "data/combat_animation_profiles.json": "22550e0dfc48a07bfb0b69793560ae1c0a9f5719e5aa786fc16e2ea4d2867910",
+    "data/pr122_palette_finish_20261019.json": "f3d841b2da1a41cb9419eae29b74753b7e2b852439b0dea27f8a47ba3840a8c4",
+    "data/pr122_transform_motion_scope.json": "dbe29d7c343b6d454258ec87b7332dc51d08aec71db3c6d0f78746816a9d5e85",
+    "docs/remake/evidence/pr122-mythic-detailed/batch01/queue.json": "7e7d419efbc55a3cff93baf04087f3573bbac188bc7d55247fa3fc240c352e61"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+  "source_sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6",
+  "base_geometry_sha256": "786652f2209c748228a97a9c41145edc8dbf956e47692eb2ab725070cbeb2a2a",
+  "derived_geometry_sha256": "b1fc1d1f465a3ba03a808efdb1f895e42018faa1eed0c9d40a2af96bb1404f34",
+  "review_sha256": "7777d675a4db6e1cf60adce2ba9e5c9d2d12af77c27e803387a2801dc094d961",
+  "review_basis": "Accepted exact source6 and accepted fixed rigid Cs. One explicit actual-sole projected-floor root candidate: FAR_LEFT0/1 support, NEAR_RIGHT3/4 support, AIR2/5 actual sole clearances, bounded lateral/foreaft projection and uncertain hidden pelvis. Deep loads and idle/contact uppercore difference exposed for independent QC; author grants no approval.",
+  "direction": "NE",
+  "pose_count": 6,
+  "canvas_size": [
+    2048,
+    2048
+  ],
+  "foot": [
+    1024,
+    1280
+  ],
+  "source_anchors": [
+    [
+      846,
+      1363
+    ],
+    [
+      2364,
+      1279
+    ],
+    [
+      841,
+      2953
+    ],
+    [
+      2377,
+      2844
+    ],
+    [
+      889,
+      4342
+    ],
+    [
+      2468,
+      4500
+    ]
+  ],
+  "runtime_pixel_scale_ratio": [
+    1024,
+    2048
+  ],
+  "source_pixels_unchanged": true,
+  "resampled": false,
+  "approval_granted": false,
+  "source_region_review_sha256": "d4d7dac58dcf0d863448c7e03f87abb252c305d97acbc8db77a1a147d0249e82",
+  "pose_canvas_sizes": [
+    1936,
+    2240,
+    1936,
+    1776,
+    2048,
+    1936
+  ],
+  "runtime_reference_canvas_size": 1024,
+  "per_pose_runtime_pixel_scale_ratios": [
+    [
+      1024,
+      1936
+    ],
+    [
+      1024,
+      2240
+    ],
+    [
+      1024,
+      1936
+    ],
+    [
+      1024,
+      1776
+    ],
+    [
+      1024,
+      2048
+    ],
+    [
+      1024,
+      1936
+    ]
+  ],
+  "pose_canvas_size_allowed_range": [
+    256,
+    4096
+  ],
+  "newly_authored_poses": 0
+}

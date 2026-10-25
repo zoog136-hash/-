@@ -1,0 +1,78 @@
+{
+  "status": "POSE_CONTROL_INPUT_ONLY_NEVER_FINAL_SOURCE_OR_APPROVAL",
+  "original_master_sha256": "dc5da66b30171bdff9ab4c25cf5a22327debe8c8b41088693824433cb4e684db",
+  "fixed_virtual_C": 2048,
+  "body_unit_factor": 2,
+  "generation_target": "LEFTnear arm real backswing preserving allbody/RIGHTstaff/legs",
+  "actual_source_resampling": false,
+  "derived_control_reference_arm_resampled": true,
+  "resampling_scope": "Only isolated oldcostume segments in temporary MODEL INPUT, not original, not game resource, not final output. Service must paint/refine genuine arm anew.",
+  "ops": [
+    {
+      "part": "upperarm_material_scaffold",
+      "old_joint_start": [
+        589.0,
+        458.0
+      ],
+      "old_joint_end": [
+        550.0,
+        558.0
+      ],
+      "target_joint_start": [
+        589.0,
+        458.0
+      ],
+      "target_joint_end": [
+        632.0,
+        550.0
+      ],
+      "reference_only_projected_scale": 0.946122608664339,
+      "reference_only_rotation_degrees": -46.35676143427165,
+      "method": "RGBA segment affine for model pose control ONLY, not final game source"
+    },
+    {
+      "part": "forearm_gauntlet_emptyglove_material_scaffold",
+      "old_joint_start": [
+        550.0,
+        558.0
+      ],
+      "old_joint_end": [
+        482.0,
+        640.0
+      ],
+      "target_joint_start": [
+        632.0,
+        550.0
+      ],
+      "target_joint_end": [
+        674.0,
+        648.0
+      ],
+      "reference_only_projected_scale": 1.000880824622459,
+      "reference_only_rotation_degrees": -62.866431631988625,
+      "method": "RGBA segment affine for model pose control ONLY, not final game source"
+    }
+  ],
+  "native_size": [
+    1254,
+    1254
+  ],
+  "new_allowed_mask_bbox": [
+    444,
+    435,
+    748,
+    731
+  ],
+  "final_output_rule": "Native service art only inside explicit allowed mask; all originalRGBA outside exact; no resize of original or service output.",
+  "service_calls_this_variant": 0,
+  "actor_approval_added": 0,
+  "old_LEFT_glove_detached_residue_cleanup_ROI": [
+    463,
+    704,
+    476,
+    719
+  ],
+  "cleanup_scope": "Only small detached originalLEFTglove residue in derived input, actual source original remains immutable; include ROI in final arm-only generated pixel mask.",
+  "actual_pose_control_sha256": "3a9c9be5ff6cb8a7881728d18769ce8c51682d4e706b15877cfcfaf5f92f2c9a",
+  "actual_mask_sha256": "455d3552cdd4252168ad54df86a3f2ba515e18a50aa8d99bc8e93df003024181"
+}

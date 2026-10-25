@@ -1,0 +1,37 @@
+{
+  "schema": "pr122-native-source-authoring-request-v1",
+  "status": "REQUESTED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-LEFTcontact0-v01",
+  "source_batch": "batch03",
+  "expected_poses": 1,
+  "game_phases": [
+    0
+  ],
+  "newly_authored_poses": 1,
+  "operation": "AUTHOR_MISSING_OPPOSITE_LEFT_WALK_CONTACT",
+  "corrective_reason": "Two-contact attempt produced only RIGHT-front support in both rows; preserve both and salvage only game3. Create actual opposite nearLEFT front support using masked hip/knee/ankle guide, no repeated whole-pair attempt.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-repair-v02/reference-current-W-idle0-native1024.png",
+    "/workspace/scratch/girtas-W-walk-contacts-v02/usable-RIGHT-contact3-row1.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-v01/reference-LEFT0-mask-and-joint-guide.png"
+  ],
+  "reference_sha256": [
+    "a05e76923d2ea196e752eb63fc12e909547b34fab0f2a1defc91e18f47db0f36",
+    "96ac1392634a1671af73004dcaf8d3852667092b6caa3bc772d42d2ac41de473",
+    "c1bc9d9ffab2799027e337e7501133ea5b54fa568772efc6b1ad313e20a09f90"
+  ],
+  "reference_roles": [
+    "PRIMARY character/current W idle0",
+    "Equipment/style only: correct opposite RIGHTcontact3; its legs MUST NOT be copied",
+    "PRIMARY leg-pose-only masked reference: redNEARLEFT forward, blueFARRIGHT trailing; no final marks/colors"
+  ],
+  "prompt": "Author exactly ONE NEW GIRTAS game WALK pose, gamephase0: LEFT NEAR FOOT FORWARD HEEL-STRIKE. Transparent RGBA 1254x1254 square, one complete whole figure in central1000x1050 area, all full blade/spine/hair/robe/boots intact and at least70px transparent margin. No grid, floor, shadows, diagrams, labels, colors from guides, duplicated figures or particle glow bridges.\n\nUse reference1 PRIMARY for the true WEST/LEFT side camera and exact original character. Reference2 confirms the same faithful new character/equipment/hair/robe model, BUT ITS LEGS ARE THE OPPOSITE CONTACT3 AND MUST NOT BE COPIED. Reference3 is PRIMARY ONLY for NEW desired hip->knee->ankle/heel/toe joint placement. The gray area deliberately masks wrong old gait; its red line is the near anatomical LEFT leg and blue line is far anatomical RIGHT. These are NOT output colors or costume. Reconstruct original dark GOLD-TRIMMED LONG split ROBE and two actual dark/gold boots around this NEW skeleton; all original long sinuous blade sections must be intact, including where a guide mask temporarily obscures them.\n\nRequired NEW leg arrangement: anatomical LEFT = NEAR side, the same body side as the visible EMPTY hanging LEFT arm/hand. This LEFT hip must now connect diagonally FORWARD toward image LEFT through the near knee to the LEFT boot in front, on the slightly LOWER screen floor-depth lane. Its HEEL is down supporting body, toes ahead LEFT slightly raised. Anatomical RIGHT = FAR side, same side as permanent weapon arm. This RIGHT hip must connect BEHIND toward image RIGHT, rear toe on the slightly HIGHER screen floor-depth lane and heel lifted. Refer to the actual red/blue guide joint paths: near empty-arm-side hip -> FRONT-LEFT boot, far weapon-arm-side hip -> REAR-RIGHT boot. Do NOT repeat reference2 where far RIGHT leg leads and near LEFT trails. Do not merely change a boot shape while retaining the same hips/knees. No mirroring of body/equipment; articulate actual two hip/knee/ankle chains. No airborne, run or high-knee pose.\n\nKeep upper body/camera/equipment original: nose and pale visible profile face point LEFT, one visible side eye, long silver-white hair, original crown, very thin HARD straight GOLD radial back needles pointing behind to image RIGHT (NOT soft feathers/flame fans), dark long robe with original sharp gold trimmed panels (not plated pants). ONE head, TWO arms, TWO legs. ONE LONG solid sinuous gold/orange blade in the original anatomical RIGHT FAR hand with continuous shoulder->elbow->wrist->grip; same full wave-shaped blade as refs. The near LEFT hand remains EMPTY and readable, natural relaxed walk counter-swing. No extra hand, swapped sword, extra blade or shortened gear.\n\nThis is an upright gentle WALK front heel-contact only. Preserve exact hard-spine/crown/longrobe/silverhair/color quality. New LEFT support must be unambiguously different from reference2 RIGHT support, following reference3's near/far hip depth. Produce ONLY the finished full-quality single pose on transparent background, no guide marks.",
+  "transparent_background": true,
+  "attempt_policy": "One single opposite-contact generation, actual anatomical support review; no identical retries/approval without evidence.",
+  "actor_approval": false,
+  "image_chat_attachment": false
+}

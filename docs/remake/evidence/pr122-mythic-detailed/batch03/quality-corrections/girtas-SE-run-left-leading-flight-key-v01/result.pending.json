@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "PENDING_INDEPENDENT_SOURCE_QC",
+  "source_visual_status": "HOLD",
+  "raw_path": "/workspace/scratch/girtas-SE-run-left-leading-flight-key-v01/girtas-SE-run-left-leading-flight-key-v01.png",
+  "raw_sha256": "ba0c87e37c3c689705ee578e444305eb9040bcf5d59f5605fd3a7372ab59f5e2",
+  "raw_bytes": 1429065,
+  "request_path": "/workspace/scratch/girtas-SE-run-left-leading-flight-key-v01/request-girtas-SE-run-left-leading-flight-key-v01.json",
+  "request_sha256": "d576735497fc9be0fe13a3b11eeb81607d8a53740c09bc51392cf00a867effe5",
+  "corrective_reason": "Existing SE run uses unfaithful old model/generic motion. Author a genuinely new faithful dedicated run key with constant-bone solid3D joint/depth guide; current SEidle upperbody/material references contain no old complete leg chain. No completed game pose is redone.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "canvas_size": 2048,
+    "distinct": null
+  },
+  "intended_game_phase": 5,
+  "intended_anatomical_support": null,
+  "intended_air_lead": "LEFT",
+  "visual_findings": [
+    "Author has exhausted private image ledger and has NOT viewed this new source. Correct source identity/absolute SE compass/actual articulated support must be independently reviewed."
+  ],
+  "visual_limitations": [
+    "No actual source stance/identity PASS claimed yet. Source composition, rigid physical scale, all-six authored roots/AIR clearance, compiled SpriteFrames/Player/action QC and actor approval pending."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "newly_authored_pose_candidate_count": 1,
+  "approved_actors_delta": 0,
+  "preview_for_fresh_reviewer": {
+    "path": "/workspace/scratch/girtas-SE-run-left-leading-flight-key-v01/private-independent-source-review.jpg",
+    "bytes": 89727,
+    "sha256": "9f69164adf6ee784772c3fc52515633841071ecc71795955c13db8d53e2fdd61"
+  }
+}

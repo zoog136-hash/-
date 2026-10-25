@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 142, in <module>
+    main()
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 56, in main
+    assert entry['phase'] == phase and len(geometry['frames']) == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

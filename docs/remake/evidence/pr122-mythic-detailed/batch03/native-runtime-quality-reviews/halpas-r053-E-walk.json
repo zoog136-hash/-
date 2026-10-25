@@ -1,0 +1,30 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_E_IDLE_WALK_RUNTIME_LAYOUT",
+  "actor_key": "transform:393",
+  "revision": "r053",
+  "checkpoint": "cb5ca409b34189000e96c8bdf153676585ebcbf8",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/halpas_393/r053/SpriteFrames.tres",
+  "frames_sha256": "b1facce788b32b5f9f2441df349aca87db984cdc677ca36d7c44605fdcfd71ec",
+  "scope": [
+    "Eidlephase0_to_Ewalkphase0",
+    "Ewalkall6",
+    "Ewalkphase5_to_phase0"
+  ],
+  "all_eight_sampled_actual_tres_crop_regions_margins_and_SHA_match": true,
+  "canvas": 1280,
+  "runtime_pixel_scale": 0.2449547668754349,
+  "findings": [
+    "Reviewed Eidle and Ewalk now share1280 virtual canvas and equal physical pixel scale. The former25percent whole-body enlargement is removed; helmet/shoulder/torso/pelvis proportions remain comparable across transition.",
+    "Uniform+80sourceX places flying body/hip around the same actor-root support column as Eidle. No former approximately23worldpx forward whole-body snap remains.",
+    "All six poses keep trueE heading, same handed weapon/helmet/wing/cape identity, and retained flight articulation. Wing extension and bent-leg positions vary physically; no planted-foot lock is imposed.",
+    "Phase5_to0 keeps body size and heading, with only the existing small flight pitch/bob/cloth-wing change; no alternating-column root placement snap.",
+    "Only this Eidle-to-Ewalk runtime normalization and six-pose loop are PASS. Existing actor-level quality HOLD and unapproved detailed animation status are unchanged."
+  ],
+  "source_RGBA_changed": false,
+  "new_art_generated_for_this_QC": false,
+  "actor_approval_granted": false,
+  "detailed_complete_added": 0,
+  "private_preview_bytes": 259999,
+  "private_preview_not_for_chat": true
+}

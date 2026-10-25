@@ -1,0 +1,46 @@
+{
+  "schema": "pr122-independent-actual-compiled-native-movement-review-v1",
+  "status": "PASS_SCOPED_ACTUAL_R091_E_RUN_COMPILED_LAYOUT_GAIT_AND_AIR_CLEARANCE",
+  "independent": true,
+  "actor": "transform:267",
+  "revision": "r091",
+  "role": "run",
+  "direction": "E",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r091/SpriteFrames.tres",
+  "frames_sha256": "8a3d306948409a0abec259d95ae27fb57ab7152eb4dd9783b79ceaaec07e5e4b",
+  "actual_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r091/NativeMotionProfile.tres",
+  "actual_profile_sha256": "0e52badb1ef2e286de4a01635ee338045533ea53363f61c839d0606c74217d31",
+  "actual_pixel_scale": 0.227155394941,
+  "selected_source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+  "evidence": {
+    "actual-layout-measurements.json": {
+      "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/actual-r091-E-run/actual-layout-measurements.json",
+      "sha256": "cd4223f60579725e158a36c6cdfae18d345ffee40e40c1745c7f63bb8c2329c1"
+    },
+    "actual-compiled-conservative-AIR-clearance.json": {
+      "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/actual-r091-E-run/actual-compiled-conservative-AIR-clearance.json",
+      "sha256": "16c44fe8d413447a3f9e27a663f8c49309c52029a158db3991271f00ae31e3e1"
+    }
+  },
+  "verified": [
+    "Eight actual SpriteFrames samples: idle0, all six run phases, repeat0; source SHA, RGBA crop, region, margin, canonical C and anchor match selected source bindings.",
+    "Genuine LEFT0/1 support-load followed by RIGHT-leading AIR2, RIGHT3/4 support-load and LEFT-leading AIR5; no relabelled same-leg cycle.",
+    "Grounded knees visibly load; actual authored projected support planes are preserved. Both AIR phases have all alpha>16 foreground above the higher far-ground plane, hence both boots clear.",
+    "Rigid skull/helmet and torso proportions remain coherent versus E idle; arm-swing pauldron projection varies plausibly. RIGHT3 extends more upright; 2-to-3 head rise with crest descent reads as torso unfolding.",
+    "Idle-to-run entry, six-phase cadence, 5-to-0 LEFT lead-to-contact loop and hair/cloth/weapon followthrough are coherent in actual compiled-layout reconstruction.",
+    "Selected AIR5 has complete restored empty LEFT fist endpoint; hard gold rays, pale hair, long robe, permanent RIGHT sinuous blade and empty LEFT remain faithful."
+  ],
+  "minimum_conservative_AIR_clearance_world": {
+    "2": 13.720185854436398,
+    "5": 12.720702116696
+  },
+  "clearance_convention": "All alpha>16 foreground bounding bottom EXCLUSIVE, deliberately one native pixel more conservative than last occupied pixel-center bounds.",
+  "animation_speed": 12.5,
+  "loop": true,
+  "limitations": [
+    "Private panel reconstructs exact compiled SpriteFrames layout; it is not a Godot screenshot.",
+    "Actual Godot resource/Player/32-action checks are parent-provided separate evidence.",
+    "This scoped clip review does not grant whole-actor final approval or increase completion counts."
+  ],
+  "actor_approval_changed": false
+}

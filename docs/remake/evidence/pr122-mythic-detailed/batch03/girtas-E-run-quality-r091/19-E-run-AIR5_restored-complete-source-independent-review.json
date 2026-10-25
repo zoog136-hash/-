@@ -1,0 +1,42 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_FLIGHT_SOURCE_ART_FULL_ENDPOINTS_WORLD_ROOT_HOLD",
+  "raw_path": "/workspace/scratch/girtas-E-run-right-flight-endpoint-repair-v02/girtas-E-run-right-flight-endpoint-v02.png",
+  "raw_sha256": "b686c0fdb315e6ed285d3789082f1424f14bed395a430008a188ddb173949e8f",
+  "image_size": [
+    1254,
+    1254
+  ],
+  "candidate_game_phase": 5,
+  "actual_leading_leg": "anatomical_LEFT_far",
+  "actual_trailing_leg": "anatomical_RIGHT_near",
+  "strong_alpha_gt100_outer_edge_counts_LRTB": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "edge_max_alpha_LRTB": [
+    1,
+    0,
+    0,
+    1
+  ],
+  "findings": [
+    "The new source retains far LEFT leading/imageRIGHT and near RIGHT trailing/imageLEFT with complete separate flexed leg/boot chains. The leading LEFT shin descends toward the next LEFT contact; the RIGHT trailing knee folds its ankle behind the body. This preserves the approved earlier leg-art concept rather than replacing it with a same-leg opposite label.",
+    "The formerly clipped empty far LEFT fist now has a complete closed outer knuckle/gauntlet contour with clear transparent gap beyond its right edge. Face/helmet/HARD rays/long pale hair/long dark gold-trim robe/RIGHT sinuous weapon also retain coherent E identity and contained endpoints.",
+    "The image was regenerated from a localized endpoint-restoration request and may redraw body pixels; no exact-body-RGBA identity to the old clipped raw is claimed. The old c73b source and strong-boundary HOLD remain preserved.",
+    "Independent raw boundary check finds zero alpha>100 pixels on all four image edges. The private full source view also shows complete gear/limb endpoints. Strict full-source geometry is separately owned by production tools.",
+    "Transparent PNG art does not establish worldfloor or actual airborne boot clearance. Full-six physical C/anchors/authored root and actual compiled review remain HOLD before AIR/clip approval."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_or_gameplay_claim": false,
+  "preview_budget_total_bytes": 2530882,
+  "reviewed_at": "2026-10-19T14:46:58.232948+00:00"
+}

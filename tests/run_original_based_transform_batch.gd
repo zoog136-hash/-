@@ -46,6 +46,7 @@ func find_clearing() -> Vector2:
 			# Walking clearance alone does not rule out tall foreground art.
 			# Inspect the same streamed prop rectangles as the monster pose QA.
 			var body := Rect2(point + Vector2(-128, -160), Vector2(256, 176))
+			if not preload("res://tests/qa_rendered_prop_clearance.gd").clear_bounds(world.field_renderer, body): continue
 			for prop: Node2D in world.field_renderer.faded:
 				if prop is Sprite2D and prop.global_position.y + 16.0 > point.y:
 					var bounds: Rect2 = prop.global_transform * (prop as Sprite2D).get_rect()

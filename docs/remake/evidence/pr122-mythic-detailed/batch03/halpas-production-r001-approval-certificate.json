@@ -1,0 +1,39 @@
+{
+  "schema": "pr122-native-production-certificate-v1",
+  "key": "transform:393",
+  "status": "APPROVED",
+  "approved_history_preserved": 405,
+  "pins": {
+    "default_catalog": {
+      "path": "data/catalog_v19.json",
+      "group": "변신",
+      "source_id": "393",
+      "record_sha256": "06b6190fd897760f7faa8cd44d0a55b10c3ae846059282635d6b2d9fba4b02c2",
+      "inline_profile_sha256": "aa8ad624947ee950546b5c934f33d26fae56dfa12d7ac7f370c4bd6f51a718f2"
+    },
+    "profile_catalog": {
+      "path": "data/combat_animation_profiles.json",
+      "key": "transform:393",
+      "record_sha256": "942aba0d0e4bd337c53680d0850137b32538766967744bbef8262510675edb96"
+    },
+    "effective_profile_sha256": "77922dee1d956e734bac84099c9241967c0d25e20a321caf3625cdc81a8927a1",
+    "production_frames": {
+      "path": "res://assets/actors/eight_direction/native_production/halpas_393/r001/SpriteFrames.tres",
+      "sha256": "d54cca2c6ccebb4e1dd7133e8091377e298da7fbe8e038852ceac3e02de93260"
+    },
+    "production_profile": {
+      "path": "res://assets/actors/eight_direction/native_production/halpas_393/r001/NativeMotionProfile.tres",
+      "sha256": "337e4179cefa41348727dc73650a63985b3a9d09cf3f958fc7657a5056b43cf2"
+    },
+    "source_selection_sha256": "c2205bc707775d422df803a2b4f1b76f56a3bbf849869557bb7c6e3bcb596f20",
+    "actor_record_sha256": "fdd731b3667151d7153eaebe1a34be82688cc8164cc3f1b080c4535f22d25f41"
+  },
+  "quality_evidence": {
+    "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/halpas-production-r001-independent-quality-FINAL.json",
+    "sha256": "bb27a9c04256d6c1e02b3b6a711477e241d70d6840231c0fd7ebbefa18fc849b"
+  },
+  "default_main_evidence": {
+    "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-production-r001-default-main-evidence.json",
+    "sha256": "3c65dd6f90f94847b64e4c6651505b97762b4907d01fbc0a6b3442252e339fe2"
+  }
+}

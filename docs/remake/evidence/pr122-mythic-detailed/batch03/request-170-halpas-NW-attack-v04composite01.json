@@ -1,0 +1,1320 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "v04composite01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 3,
+  "reused_poses": 3,
+  "contact_phase": 3,
+  "references": [
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png",
+    "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+    "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/NW-contact3-two-arm-chain-guide.png",
+    "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+    "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/halpas-NW-attack-phase4-followthrough-v04.png",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase0-guard-lossless.png",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase5-recover-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png": "5f05cd3d83c07457a4c328ab41c4e5bd53ba088b59c5b3b86ed8e8b46c1553b5",
+    "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png": "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956",
+    "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/NW-contact3-two-arm-chain-guide.png": "60ef038f65047c0e35ba8373a06718113382d6f19962d8ab7995c3c1eea930e0",
+    "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png": "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+    "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/halpas-NW-attack-phase4-followthrough-v04.png": "c96713efd51849d47b3b68505a32b247758682b4066ca9c3221e1289e7b1eb0f",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase0-guard-lossless.png": "8f5f708dacf7e3609c00a7c7be665af311df03c5d270240cfe77bd9f11f75cef",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase5-recover-lossless.png": "21aa1040c8de9b789d4fec163602d9ef80d5e03c4eb4c6bb794e97cadbacc21a"
+  },
+  "transparent_background": true,
+  "kind": "reviewed_native_pose_composition",
+  "corrective_reason": "Replace remaining wrongheading/grip NWattack with exactRGBA good0/1/5 plus genuinelynew singlekeys2/3/4, neverfull6regeneration. CorrectNWbackcamera, samefarRIGHTgrip/nearLEFTempty, UPLEFTcontact3. Scopedindependentfollow4occlusionPASS and reviewedmixedbodycanvas metadata; actor/gameapproval remains pending.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v01iso01.png",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+    "canvas_size": 2048,
+    "review_basis": "Strict nominal2048 fits exactRGBA mixednative-resolution 6pose composition. Physicalruntime sizes are separate SHA-pinned perposeC [1208,1208,2648,2768,2768,1208] reviewed from anatomicalbodylandmarks, notimage dimensions."
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "key": "transform:393",
+    "direction": "NW",
+    "role": "attack",
+    "source_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+    "canvas_size": 2048,
+    "authored_pose_canvas_sizes": [
+      1208,
+      1208,
+      2648,
+      2768,
+      2768,
+      1208
+    ],
+    "source_anchors": [
+      [
+        648,
+        863
+      ],
+      [
+        1957,
+        866
+      ],
+      [
+        776,
+        2449
+      ],
+      [
+        2127,
+        2512
+      ],
+      [
+        894,
+        3694
+      ],
+      [
+        1941,
+        3422
+      ]
+    ],
+    "review_basis": "Absolutephysicalsourcepixel display compares helmet/crown-neck, nearpauldron span, backplate segment spacing and pelviswidth against actual393r062 NWidle C1280 and existingN/NE C1024,W C1152. Csnormalize independentlyauthoredkeys withoutresampling, notimage/bboxheight. Groundedattackanchors use nearLEFT heel-support projection calibrated against NWidle0 anchor[286,479] (strongheelbandmedian291,deltaX-5), retaining original hip/knee/lunge relativeheel ratherthanforcinghips stationary. Armraisedweaponextents, cape/wings do not setscale/root. NativePlayer/privatecompiledtemporalQC remainsrequired.",
+    "physical_scale_reference": {
+      "actor_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+      "NWidle_canvas": 1280,
+      "N_NEidle_canvas": 1024,
+      "Widle_canvas": 1152,
+      "profile_pixel_scale": 0.3036576949620428
+    },
+    "source_pose_anchor_review": [
+      {
+        "phase": 0,
+        "canvas": 1208,
+        "source_anchor": [
+          287,
+          476
+        ],
+        "heel_band_height": 11,
+        "heel_strong_pixel_median_x": 292.0,
+        "heel_ground_y": 476,
+        "atlas_translation": [
+          361,
+          387
+        ],
+        "atlas_anchor": [
+          648,
+          863
+        ]
+      },
+      {
+        "phase": 1,
+        "canvas": 1208,
+        "source_anchor": [
+          796,
+          479
+        ],
+        "heel_band_height": 11,
+        "heel_strong_pixel_median_x": 801.0,
+        "heel_ground_y": 479,
+        "atlas_translation": [
+          1161,
+          387
+        ],
+        "atlas_anchor": [
+          1957,
+          866
+        ]
+      },
+      {
+        "phase": 2,
+        "canvas": 2648,
+        "source_anchor": [
+          814,
+          1163
+        ],
+        "heel_band_height": 25,
+        "heel_strong_pixel_median_x": 824.0,
+        "heel_ground_y": 1163,
+        "atlas_translation": [
+          -38,
+          1286
+        ],
+        "atlas_anchor": [
+          776,
+          2449
+        ]
+      },
+      {
+        "phase": 3,
+        "canvas": 2768,
+        "source_anchor": [
+          854,
+          1216
+        ],
+        "heel_band_height": 26,
+        "heel_strong_pixel_median_x": 865.0,
+        "heel_ground_y": 1216,
+        "atlas_translation": [
+          1273,
+          1296
+        ],
+        "atlas_anchor": [
+          2127,
+          2512
+        ]
+      },
+      {
+        "phase": 4,
+        "canvas": 2768,
+        "source_anchor": [
+          878,
+          1190
+        ],
+        "heel_band_height": 26,
+        "heel_strong_pixel_median_x": 889.0,
+        "heel_ground_y": 1190,
+        "atlas_translation": [
+          16,
+          2504
+        ],
+        "atlas_anchor": [
+          894,
+          3694
+        ]
+      },
+      {
+        "phase": 5,
+        "canvas": 1208,
+        "source_anchor": [
+          801,
+          1496
+        ],
+        "heel_band_height": 11,
+        "heel_strong_pixel_median_x": 806.0,
+        "heel_ground_y": 1496,
+        "atlas_translation": [
+          1140,
+          1926
+        ],
+        "atlas_anchor": [
+          1941,
+          3422
+        ]
+      }
+    ],
+    "resampled": false,
+    "actor_approval_added": 0
+  },
+  "reviewed_runtime_layout_proposal_path": "/workspace/scratch/halpas-NW-attack-composite-v04/reviewed_runtime_layout.proposal.json",
+  "reviewed_runtime_layout_proof": {
+    "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+    "source_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+    "base_geometry_sha256": "36118b9df97f59c4fbb3e88f2e1696d5ae60b2f64cb8bef68d9b774d5aa9d1d4",
+    "derived_geometry_sha256": "8c081ef5046fe1ecbdd134032606bdfcc8ce23d9e59e04b31ec44eff82427d7d",
+    "review_sha256": "ca209f51f2aa2cd75929c09c39d3db83e72d38427c479f20265270f6c8145ca1",
+    "review_basis": "Absolutephysicalsourcepixel display compares helmet/crown-neck, nearpauldron span, backplate segment spacing and pelviswidth against actual393r062 NWidle C1280 and existingN/NE C1024,W C1152. Csnormalize independentlyauthoredkeys withoutresampling, notimage/bboxheight. Groundedattackanchors use nearLEFT heel-support projection calibrated against NWidle0 anchor[286,479] (strongheelbandmedian291,deltaX-5), retaining original hip/knee/lunge relativeheel ratherthanforcinghips stationary. Armraisedweaponextents, cape/wings do not setscale/root. NativePlayer/privatecompiledtemporalQC remainsrequired.",
+    "direction": "NW",
+    "pose_count": 6,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ],
+    "source_anchors": [
+      [
+        648,
+        863
+      ],
+      [
+        1957,
+        866
+      ],
+      [
+        776,
+        2449
+      ],
+      [
+        2127,
+        2512
+      ],
+      [
+        894,
+        3694
+      ],
+      [
+        1941,
+        3422
+      ]
+    ],
+    "runtime_pixel_scale_ratio": [
+      1024,
+      2048
+    ],
+    "source_pixels_unchanged": true,
+    "resampled": false,
+    "approval_granted": false,
+    "pose_canvas_sizes": [
+      1208,
+      1208,
+      2648,
+      2768,
+      2768,
+      1208
+    ],
+    "runtime_reference_canvas_size": 1024,
+    "per_pose_runtime_pixel_scale_ratios": [
+      [
+        1024,
+        1208
+      ],
+      [
+        1024,
+        1208
+      ],
+      [
+        1024,
+        2648
+      ],
+      [
+        1024,
+        2768
+      ],
+      [
+        1024,
+        2768
+      ],
+      [
+        1024,
+        1208
+      ]
+    ],
+    "pose_canvas_size_allowed_range": [
+      256,
+      4096
+    ],
+    "newly_authored_poses": 0
+  },
+  "source_composition": {
+    "method": "lossless_reviewed_pose_map_2x3_1280cells",
+    "pose_map": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "attack",
+      "status": "SOURCE_VISUAL_REVIEW_PASS_ALL6_NOT_ACTOR_APPROVAL",
+      "poses": [
+        {
+          "game_phase": 0,
+          "path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "region": [
+            41,
+            26,
+            475,
+            454
+          ],
+          "rgba_sha256": "c475de792e1b90aaa9198897083e7eecd0eefa4cf1aa3c6056f1d711b66b1665",
+          "source_pose": 0,
+          "newly_authored": false,
+          "review_basis": "Salvaged NWattackv03 individualkeyPASS exactlytwoarms, farRIGHTgrip andnearLEFTempty; originalfull6HOLD retained."
+        },
+        {
+          "game_phase": 1,
+          "path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "region": [
+            543,
+            22,
+            432,
+            461
+          ],
+          "rgba_sha256": "a764c077900e05ca373832a9ce0657e55b601c609ecfd8c9e07fa47a90da7007",
+          "source_pose": 1,
+          "newly_authored": false,
+          "review_basis": "Salvaged NWattackv03 individualkeyPASS exactlytwoarms, farRIGHTgrip andnearLEFTempty; originalfull6HOLD retained."
+        },
+        {
+          "game_phase": 2,
+          "path": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+          "source_sha256": "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956",
+          "region": [
+            184,
+            104,
+            988,
+            1060
+          ],
+          "rgba_sha256": "0fcd67b7b7fcbb4597dea86aee1d8c670872a70b25c130392498629bc2af40dc",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "New singlekey privatePASS sameNWcamera exactly2arms continuousfarRIGHTgrip, nearLEFTempty and correctrolephase. Allalpha>16pinnedsource region; originalRGBAunchanged."
+        },
+        {
+          "game_phase": 3,
+          "path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png",
+          "source_sha256": "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec",
+          "region": [
+            104,
+            30,
+            1085,
+            1187
+          ],
+          "rgba_sha256": "31bdab25ab68edc89d3691a1eecc282d50fa2be2a03bc1114d6d7bec1d0ffdbf",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "New singlekey privatePASS sameNWcamera exactly2arms continuousfarRIGHTgrip, nearLEFTempty and correctrolephase. Allalpha>16pinnedsource region; originalRGBAunchanged."
+        },
+        {
+          "game_phase": 4,
+          "path": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/halpas-NW-attack-phase4-followthrough-v04.png",
+          "source_sha256": "c96713efd51849d47b3b68505a32b247758682b4066ca9c3221e1289e7b1eb0f",
+          "region": [
+            33,
+            200,
+            1182,
+            992
+          ],
+          "rgba_sha256": "1d4b337d4c2b5ce630702efbeb0f94977b340bdee5fbb65d2d4aceebdbe3ce38",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "IndependentvisibleanatomyPASSwithoccludedfarRIGHThumerus (no explicit2ndsocket, extraarm, detachedelbow orgripswap); originalnearLEFTfreechaincontinuous andweaponforearm→elbowconsistentwithfarRIGHTcross-frontfollowthroughfromcontact3. Allsource4camera/model/phase/geometry reviewed separately in final6record."
+        },
+        {
+          "game_phase": 5,
+          "path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "region": [
+            544,
+            1047,
+            471,
+            453
+          ],
+          "rgba_sha256": "effc7576415b54dded94a6d86010ae7ad09893b276e2f135f7b57df0b359e3a3",
+          "source_pose": 5,
+          "newly_authored": false,
+          "review_basis": "Salvaged NWattackv03 individualkeyPASS exactlytwoarms, farRIGHTgrip andnearLEFTempty; originalfull6HOLD retained."
+        }
+      ],
+      "expected_final_game_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "missing_phases": [],
+      "physical_scale_review": {
+        "status": "REVIEWED_PROPOSAL_NOT_NATIVE_APPROVAL",
+        "reference": "actual393r062 N/NE/W/NW idle; NW C1280",
+        "authored_pose_canvas_sizes": [
+          1208,
+          1208,
+          2648,
+          2768,
+          2768,
+          1208
+        ],
+        "landmarks": "helmet/crown-neck, nearpauldronwidth/height, backplatesegmentspacing, pelviswidth; preserve hip/kneeweight/lunge and weaponreach",
+        "pixel_resampling": false
+      },
+      "newly_authored_poses": 3,
+      "reused_poses": 3
+    },
+    "assembly_proof": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "role": "attack",
+      "assembler_sha256": "cb3357b0029a55321fd07832c31889fde954517cb8a6f9b7e7d1333f9922f6c0",
+      "direction": "NW",
+      "metadata_sha256": "2ef1c2d7e4751160ddaa1b19bad969599958554021e5b51e4ee0ae1f9ea10959",
+      "metadata_path": "/workspace/scratch/halpas-NW-attack-composite-v04/pose-map-review-candidate-v01.json",
+      "metadata_hash_basis": "file_bytes",
+      "output": "/workspace/scratch/halpas-NW-attack-composite-v04/halpas-NW-attack-v04composite01.png",
+      "output_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+      "output_canvas": [
+        2560,
+        3840
+      ],
+      "cell_size": [
+        1280,
+        1280
+      ],
+      "virtual_canvas_size": 2048,
+      "poses": [
+        {
+          "phase": 0,
+          "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "source_pose": 0,
+          "source_region": [
+            41,
+            26,
+            475,
+            454
+          ],
+          "rgba_sha256": "c475de792e1b90aaa9198897083e7eecd0eefa4cf1aa3c6056f1d711b66b1665",
+          "visible_pose_sha256": "ea1b98bbd364aebd0d7efbfbe03d9a4184ccbfa0523ebca7fb92e775904690aa",
+          "newly_authored": false,
+          "review_basis": "Salvaged NWattackv03 individualkeyPASS exactlytwoarms, farRIGHTgrip andnearLEFTempty; originalfull6HOLD retained.",
+          "output_region": [
+            402,
+            413,
+            475,
+            454
+          ],
+          "translation": [
+            361,
+            387
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 96664
+        },
+        {
+          "phase": 1,
+          "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "source_pose": 1,
+          "source_region": [
+            543,
+            22,
+            432,
+            461
+          ],
+          "rgba_sha256": "a764c077900e05ca373832a9ce0657e55b601c609ecfd8c9e07fa47a90da7007",
+          "visible_pose_sha256": "d04f42d790986d8371869ad9583afa7c3092effd8dbcbda8816d1a4efca79693",
+          "newly_authored": false,
+          "review_basis": "Salvaged NWattackv03 individualkeyPASS exactlytwoarms, farRIGHTgrip andnearLEFTempty; originalfull6HOLD retained.",
+          "output_region": [
+            1704,
+            409,
+            432,
+            461
+          ],
+          "translation": [
+            1161,
+            387
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 96699
+        },
+        {
+          "phase": 2,
+          "source_path": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+          "source_sha256": "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956",
+          "source_pose": 0,
+          "source_region": [
+            184,
+            104,
+            988,
+            1060
+          ],
+          "rgba_sha256": "0fcd67b7b7fcbb4597dea86aee1d8c670872a70b25c130392498629bc2af40dc",
+          "visible_pose_sha256": "ab1a5965d53281deef6113af8b49b70f8b23f62fe630fc293ca160b4842a7234",
+          "newly_authored": true,
+          "review_basis": "New singlekey privatePASS sameNWcamera exactly2arms continuousfarRIGHTgrip, nearLEFTempty and correctrolephase. Allalpha>16pinnedsource region; originalRGBAunchanged.",
+          "output_region": [
+            146,
+            1390,
+            988,
+            1060
+          ],
+          "translation": [
+            -38,
+            1286
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 523242
+        },
+        {
+          "phase": 3,
+          "source_path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png",
+          "source_sha256": "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec",
+          "source_pose": 0,
+          "source_region": [
+            104,
+            30,
+            1085,
+            1187
+          ],
+          "rgba_sha256": "31bdab25ab68edc89d3691a1eecc282d50fa2be2a03bc1114d6d7bec1d0ffdbf",
+          "visible_pose_sha256": "3b76c36f2c385994b6bb76fe96c8405b714fc194448e0e4b0160ec23f69cebd3",
+          "newly_authored": true,
+          "review_basis": "New singlekey privatePASS sameNWcamera exactly2arms continuousfarRIGHTgrip, nearLEFTempty and correctrolephase. Allalpha>16pinnedsource region; originalRGBAunchanged.",
+          "output_region": [
+            1377,
+            1326,
+            1085,
+            1187
+          ],
+          "translation": [
+            1273,
+            1296
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 524679
+        },
+        {
+          "phase": 4,
+          "source_path": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/halpas-NW-attack-phase4-followthrough-v04.png",
+          "source_sha256": "c96713efd51849d47b3b68505a32b247758682b4066ca9c3221e1289e7b1eb0f",
+          "source_pose": 0,
+          "source_region": [
+            33,
+            200,
+            1182,
+            992
+          ],
+          "rgba_sha256": "1d4b337d4c2b5ce630702efbeb0f94977b340bdee5fbb65d2d4aceebdbe3ce38",
+          "visible_pose_sha256": "66388170a6e9e6654abb0242d7309f7543c702cc6479398d6abc9d8d57200b80",
+          "newly_authored": true,
+          "review_basis": "Reviewed exactly2visiblearms andtrueNWfollowthrough; farRIGHTshoulder-ownedcrossbodyocclusion UNRESOLVED_PENDING_INDEPENDENT_REVIEW. This atlas is UNAPPROVED_REVIEW_CANDIDATE only, not sourceartPASS.",
+          "output_region": [
+            49,
+            2704,
+            1182,
+            992
+          ],
+          "translation": [
+            16,
+            2504
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 524929
+        },
+        {
+          "phase": 5,
+          "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "source_pose": 5,
+          "source_region": [
+            544,
+            1047,
+            471,
+            453
+          ],
+          "rgba_sha256": "effc7576415b54dded94a6d86010ae7ad09893b276e2f135f7b57df0b359e3a3",
+          "visible_pose_sha256": "693a8d73a66399cb178592d8743dc69401a5bc9f4d3bd00b403484bacaf04524",
+          "newly_authored": false,
+          "review_basis": "Salvaged NWattackv03 individualkeyPASS exactlytwoarms, farRIGHTgrip andnearLEFTempty; originalfull6HOLD retained.",
+          "output_region": [
+            1684,
+            2973,
+            471,
+            453
+          ],
+          "translation": [
+            1140,
+            1926
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 103299
+        }
+      ],
+      "newly_authored_poses": 3,
+      "reused_poses": 3,
+      "preserved_region_rgba_exact": true,
+      "preserved_pose_alpha_gt16": true,
+      "resampled": false,
+      "mirrored": false,
+      "recolored": false,
+      "cleaned_pixels": 0,
+      "strict_importer": "PASS",
+      "geometry": {
+        "image_size": [
+          2560,
+          3840
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "NW",
+            "region": [
+              402,
+              413,
+              475,
+              454
+            ],
+            "margin": [
+              786,
+              830,
+              1573,
+              1594
+            ],
+            "source_anchor": [
+              640,
+              863
+            ],
+            "rgba_sha256": "c475de792e1b90aaa9198897083e7eecd0eefa4cf1aa3c6056f1d711b66b1665"
+          },
+          {
+            "row": 1,
+            "direction": "NW",
+            "region": [
+              1704,
+              409,
+              432,
+              461
+            ],
+            "margin": [
+              808,
+              823,
+              1616,
+              1587
+            ],
+            "source_anchor": [
+              1920,
+              866
+            ],
+            "rgba_sha256": "a764c077900e05ca373832a9ce0657e55b601c609ecfd8c9e07fa47a90da7007"
+          },
+          {
+            "row": 2,
+            "direction": "NW",
+            "region": [
+              143,
+              1387,
+              993,
+              1066
+            ],
+            "margin": [
+              527,
+              218,
+              1055,
+              982
+            ],
+            "source_anchor": [
+              640,
+              2449
+            ],
+            "rgba_sha256": "01951f6e37e739d4eb4215223279181126de8cc50409fa869bd2e285c593bfdf"
+          },
+          {
+            "row": 3,
+            "direction": "NW",
+            "region": [
+              1375,
+              1324,
+              1089,
+              1192
+            ],
+            "margin": [
+              479,
+              92,
+              959,
+              856
+            ],
+            "source_anchor": [
+              1920,
+              2512
+            ],
+            "rgba_sha256": "17805fe6e4dd938ab62c26efd2e1eed17d64476330bb6e34420f88573c97ed42"
+          },
+          {
+            "row": 4,
+            "direction": "NW",
+            "region": [
+              47,
+              2701,
+              1186,
+              997
+            ],
+            "margin": [
+              431,
+              287,
+              862,
+              1051
+            ],
+            "source_anchor": [
+              640,
+              3694
+            ],
+            "rgba_sha256": "f3f412163a789bbbf2e757263734d36e1f217d22a061d273c37e57e28362af8b"
+          },
+          {
+            "row": 5,
+            "direction": "NW",
+            "region": [
+              1684,
+              2973,
+              471,
+              453
+            ],
+            "margin": [
+              788,
+              831,
+              1577,
+              1595
+            ],
+            "source_anchor": [
+              1920,
+              3422
+            ],
+            "rgba_sha256": "effc7576415b54dded94a6d86010ae7ad09893b276e2f135f7b57df0b359e3a3"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 817.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "approval": false,
+      "visual_approval": "NOT_RUN",
+      "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+      "external_physical_scale_review": "PENDING_NWidleC1280_landmark_and_N_NE_W_absolute_comparison; exactRGBAassemblynotapproval",
+      "region_height_span": [
+        453,
+        1187
+      ],
+      "possible_region_height_mismatch": true,
+      "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+    },
+    "assembly_proof_sha256": "3ca14f829d771c82808f411473b87b2bf4da1037ae6668c58fc0af8c8a64ca28",
+    "initial_UNRESOLVED_candidate_metadata_preserved": "/workspace/scratch/halpas-NW-attack-composite-v04/pose-map-review-candidate-v01.json",
+    "phase4_original_UNRESOLVED_preserved": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/result.json",
+    "independent_follow4_report": {
+      "schema": "pr122-independent-single-key-anatomy-review-v1",
+      "status": "INDEPENDENT_SCOPED_ANATOMY_PASS_WITH_OCCLUSION",
+      "verdict": "PASS",
+      "source_visual_status": "PASS",
+      "scope": "Only follow4 two-arm anatomy/handed continuity, not complete source/game/actor approval",
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "attack",
+      "target_phase": 4,
+      "raw_png": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/halpas-NW-attack-phase4-followthrough-v04.png",
+      "raw_sha256": "c96713efd51849d47b3b68505a32b247758682b4066ca9c3221e1289e7b1eb0f",
+      "raw_bytes": 1387536,
+      "original_UNRESOLVED_result": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/result.json",
+      "original_result_sha256": "f0703acbe23b76141f33a37e51235a1e83d22e76abae68dc9c18e1416d745dbc",
+      "original_result_preserved": true,
+      "contact3_context_raw_sha256": "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec",
+      "preview_coordinate_system": "550x540 bodydetail preview, not rawPNG skeleton annotation",
+      "observations": [
+        "Exactly two visible arm/hand chains. NearLEFTfree chain is continuous outer/rear arm: pauldron around[316,240]→upperarm[304,300]→elbow[276,365]→forearm[238,430]→fist[194,499]. No extra hanging or weapon-bearing thirdhand is present.",
+        "Weapon hand around[91,119] connects through wrist/forearm[160,160] to bentelbow around[238,207]. The proximal segment disappears against the helmet/nearpauldron occlusion near[281,217]; it does not depict a second explicit shoulder socket or detached elbow.",
+        "In NW rear-quarter view the farRIGHT upperarm can pass across the hidden front/chest plane, with forearm emerging to the torsoLEFT while the nearLEFTfree arm remains hanging outside the nearpauldron. The overlap does not alone demonstrate a forked humerus.",
+        "Validcontact3 context shows the weaponRIGHTarm overhead and the same nearLEFTfree arm hanging. Lowering the farRIGHTarm across the hidden chest plane into this followthrough is a plausible continuation; no required hand swap or observed joint inversion."
+      ],
+      "verdict_basis": "PASS for the requested visible-anatomy question: two coherent visible chains and a physically plausible occluded farRIGHTcross-body connection; no positive drawn joint contradiction observed. Mere hidden upperarm is not treated as anatomy failure.",
+      "limits": [
+        "FarRIGHT humerus is occluded and cannot be directly traced through opaque helmet/armor; no claim about exact hidden skeleton geometry.",
+        "Final assembled and normalized attack6 cadence/handcontinuity and fresh wholeactor review remain necessary; this is not fullactor approval."
+      ],
+      "reviewed_previews": [
+        {
+          "path": "/workspace/scratch/halpas-NW-attack-follow4-independent-arm-qc/private-body-detail-under120k.jpg",
+          "bytes": 100215
+        },
+        {
+          "path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/generated-private.jpg",
+          "bytes": 118716
+        }
+      ],
+      "source_RGBA_changed": false,
+      "actor_approval_granted": false,
+      "detailed_complete_added": 0,
+      "chat_images_shared": false
+    },
+    "independent_follow4_report_sha256": "2488caed2df448e54ef599c72428d3a9c43cc6782060597c94072528f406618e",
+    "source_authoring_requests": [
+      {
+        "game_phase": 2,
+        "request_path": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/request-halpas-NW-attack-phase2-v04.json",
+        "request_sha256": "75ca9238823559c5dde80a2b45b213db2891f2eb794213b489add31693a77cab",
+        "request_snapshot": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "NW",
+          "role": "attack",
+          "source_batch": "batch03",
+          "version": "v04",
+          "target_phase": 2,
+          "phase_name": "loaded_anticipation",
+          "expected_poses": 1,
+          "newly_authored_poses": 1,
+          "status": "REQUESTED_NOT_APPROVED",
+          "references": [
+            "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png": "5f05cd3d83c07457a4c328ab41c4e5bd53ba088b59c5b3b86ed8e8b46c1553b5"
+          },
+          "source_good_key_proof": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-good-keys-proof.json",
+          "source_good_key_proof_sha256": "8e9d5c8d2a064c3ffd6e2ccfdc7619c47f8335d51c211f3da795abb54c90bf73",
+          "source_phase": 1,
+          "unprovided_bad_fullsheet_not_referenced": true,
+          "transparent_background": true,
+          "user_authorization": "Production image tools authorized; no images or image links in root/main chat. ONE localized new single-key edit from newly salvaged correct two-arm phase1; no fullsheet generation and no retries.",
+          "prompt": "LOCAL SINGLE-KEY ANIMATION EDIT. Produce exactly ONE complete transparent character pose, NOT an atlas or multiple figures. The reference is the approved TWO-ARM raised-sword phase1 for released Halpas, true rear-three-quarter NORTHWEST. Edit that ONE existing figure into phase2, a stronger loaded anticipation before an attack toward UPPER-LEFT away from camera.\n\nKeep exact rear-upperLEFT camera and back-facing body. Helmet profile, chest-normal, pelvis, knees and standing boot toes keep NW orientation; visible segmented black/gold BACK/SPINE armor remains toward camera. NO frontal skull breastplate, no front face, no NE/right turn. Keep the exact ornate gold horn helmet, TWO original solid purple crystalline-feather fans and gold roots, burgundy torn cape on original anatomical LEFT/back, TWO armored legs and complete boots, and original SINGLE compact purple crystal sword. Near anatomical LEFT arm remains EMPTY hanging lower-LEFT, with a continuous shoulder→upperarm→elbow→forearm→empty hand. Exactly TWO arms/shoulders/hands and ONE sword total.\n\nCRITICAL ANATOMY EDIT: the existing far anatomical RIGHT arm is ALREADY RAISED holding the sword. Move and bend ONLY THIS EXISTING RAISED WEAPON ARM into a deeper loaded windup. Trace farRIGHT shoulder on upper/right side of back→one raised upperarm→one high bent elbow→one folded forearm→one gripping hand→one original sword. Keep all those joints continuously connected. Bring the existing elbow slightly farther upper-right/back, flex the same forearm/wrist over and just behind the helmet, with the single sword drawn back above the shoulder ready to cut UPPER-LEFT. The raised hand/sword replace their old position, they do NOT duplicate. There MUST NOT be any second right arm hanging down the right flank, any second empty right fist, extra forearm, detached grip or arm growing out of the chest/neck/wing. The farRIGHT side below the raised arm contains only torso/hip/cape/leg, NO spare hanging hand. Preserve the separate nearLEFT empty hanging arm exactly as the only free arm.\n\nMake a distinct physical loaded phase2, not a duplicate of phase1: slightly deeper torso crouch and counter-rotation while still facing NW, shoulders gather under the raised original weapon, knees flex and weight compresses coherently. Wings adjust slightly backward for balance and cape follows with slight delayed fold. Keep body/head/gear proportions and original wing fan construction; no new ornaments, shortened blade, replacement weapon, extra wing, changed helmet or armor. Show every complete connected part, including full sword tip, both fan tips, all cape and both boots.\n\nCanvas: ONE single character on1024x1024 RGBA transparent PNG. Retain approximately the reference's native full silhouette height460px, centered with extensive empty transparent padding on every side; do not zoom to fill the canvas. Entire complete silhouette fits within a640px square at center with at least192px alpha0 gutter each side. Body and equipment share one uniform scale. If resolution differs, do not distort body or shorten gear. Opaque armor/crystal/cape and crisp internal gold detail, clean1–2px edge antialiasing. All purple light stays INSIDE original hard opaque feather/crystal blade surfaces. No external glow, shadow, floor, halo, aura, fog, blur, trails, text, labels, grid or background.\n\nFINAL CHECK: exactly ONE NW back-view loaded-attack pose; exactly TWO continuous arm chains. Empty nearLEFT arm downleft. Original farRIGHT weapon arm ONLY raised/loaded, one connected sword; absolutely no duplicate right downarm/fist.",
+          "requested_at": "2026-10-19T12:35:02.698728+00:00"
+        },
+        "raw_png": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+        "raw_sha256": "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956",
+        "original_result_path": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/result.json",
+        "original_result_sha256": "c85e8ae856a7013f1d31764544e1292d0e29d7d3b8ab9844860d48d29e0d6267",
+        "original_source_status": "PASS",
+        "phase4_original_uncertainty_superseded_by_scoped_independent_report": false
+      },
+      {
+        "game_phase": 3,
+        "request_path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/request.json",
+        "request_sha256": "578d212b318a74e60b2ecba9233fba61a10dfb65ccad8d0f2dbdf0b5ae11c886",
+        "request_snapshot": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "NW",
+          "role": "attack",
+          "source_batch": "batch03",
+          "version": "phase3-contact-v04",
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "requested_game_phase": 3,
+          "references": [
+            "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+            "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/NW-contact3-two-arm-chain-guide.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png": "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956",
+            "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/NW-contact3-two-arm-chain-guide.png": "60ef038f65047c0e35ba8373a06718113382d6f19962d8ab7995c3c1eea930e0"
+          },
+          "reference_phase2_review": {
+            "path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/reference-phase2-private-review.json",
+            "sha256": "a991ee73db69d04a6c605cc8c722edf45f869b7ea7ef3700f4b581a273ede015"
+          },
+          "guide_proof": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/guide-proof.json",
+          "transparent_background": true,
+          "corrective_reason": "FullsixNWattackv03 has3arms in2/3/4. This isONEcontact3 edit fromNEWcorrecttwoarmloaded2ONLY, no bad3armreference, explicittwoarmguide. ExtendexistingraisedfarRIGHTarmratherthanaddanotherarm; nearLEFTfree.",
+          "user_authorization": "Privateproductionimage tools allowed, no mainchat images/binary. One localizedmissingphase edit, no fullsixretry or identicalretry.",
+          "prompt": "Edit ONE existing correct loaded-windup RIGHT arm into ONE NORTHWEST CONTACT/HIT key of the exact SAME Halpas boss. Single fullbody pose only, not a sheet. Image1 is the NEW VALID TWO-ARM loaded phase2; preserve same model/camera and use its SAME arms. Image2 is a reference-only two-arm contact3 anatomical guide, never copy diagram style/colors/text/arrows.\n\nLOCAL ARM MOTION: The existing FAR anatomicalRIGHT arm in image1 is ALREADY RAISED above the upper/right shoulder with bent elbow and same purpleblade grip. Open/extend THAT SAME right elbow FORWARD toward screenUPPER-LEFT over/above the helmet to deliver a decisive NW strike. Same right shoulder→same upperarm→same elbow→same forearm→same wrist→closed right grip→same soleblade must remain continuous. The original right upperarm MOVES into the contact position, not left behind as another limb. The right wrist reaches farther UP-LEFT and the original purple crystal blade points UP-LEFT into targetspace beyond helmet in a true completed contact endpoint, with rightelbow more extended than loaded image1. Use image2's farRIGHT shoulder→raisedelbow→overheadwrist→UPLEFTblade path; physical two-limb skeleton, no attackarm from the nearLEFT shoulder.\n\nEXACTLY TWO ARMS/HANDS TOTAL. Existing NEAR anatomicalLEFT arm is the lower-left arm, keep its same empty freefist counterbalancing lower-left in front of cape. It never holds blade. FarRIGHT is the raised strikingarm and ALONE owns blade. DO NOT add or retain a right arm/forearm/fist hanging downRIGHT below the right shoulder: that arm is the one now extended overhead, not a third arm. No duplicated arm stump, extra fist, ghost sword, transferred grip or disconnected hand. Exactly two legs/knees/boots too.\n\nSAME NW rear-left camera as image1: visible black/gold segmented back/spine, helmet back/side left-away profile, nearLEFT shoulder lower-left and farRIGHT shoulder upper-right, head/back/hips still NW/UPLEFT throughout actual strike. No N/NE/SW/front-facing torso, no frontal chestskull or face, no wholebody/camera rotation or horizontalmirror. Modest true NW forward weight/lunge through existing hips/knees permitted for force, same general NW bootaxes/stance and plausible jointchains. Keep original uniqueHalpas goldhorn crown, black/gold armor/materials, TWO solidpurple crystalline featherfans at two goldbackroots, tatteredburgundyLEFT/back cape and original compactbroad purplecrystallineblade. Exact sourceblade geometry/model, no long sinuous yellow Girtasweapon or new shield. Same physical head/torso/limb sizes and elevated orthographic camera.\n\nContact3 should visibly advance from bent loaded2: rightarm extends NW, blade tip clearly UPLEFT and more forward, shoulders/back carry force, nearLEFT emptyfist/cape/feathers respond subtly with lag, hips/knees absorb. Wings may fold/react naturally but keep both original fans/roots, never hide all arm continuity or turn into limbs. Whole silhouette complete and consistent. No magical effect, blast, trail, alternate blade image or arbitrary motionblur to substitute a real pose.\n\nOutputONE detailed fullbody cutout, PNG1024x1024transparent. Keep entire high/extendedUPLEFTblade/horns/wings/cape/boots inside generous central750x800region with at least100px blanktransparentmargin around completepose. Do not zoom/crop/shorten gear. Rich crisp productionRPG sprite, opaque solidarmor/cloth/crystals, alpha0 background/gaps,1-2px edgeantialiasing. Purplecolor/light INSIDE solidwings/bladeonly. No outerglow,bloom,halo,haze,fog,shadow,floor,ground,particles,sparks,blur,trails,text,numbers,grid,labels,guidearrows,coloredlimbcoding,frames or extrafigure. Required success ONE NWcontact key, exactTWO arms, continuous originalfarRIGHT strikegrip, nearLEFT remainsEMPTY, bladecontacttoUPLEFT and faithfulbody/gear.",
+          "requested_at": "2026-10-19T12:38:20.756003+00:00",
+          "imagegen_attempt_limit": 1,
+          "private_jpeg_budget_cumulative_estimate_before_source": 4410734,
+          "private_jpeg_budget_limit": 8000000
+        },
+        "raw_png": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png",
+        "raw_sha256": "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec",
+        "original_result_path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/result.json",
+        "original_result_sha256": "bf82aa41a884bc749c9e25bdb3537fa03eee16e04b4421d5a8bd8427b503b1b5",
+        "original_source_status": "PASS",
+        "phase4_original_uncertainty_superseded_by_scoped_independent_report": false
+      },
+      {
+        "game_phase": 4,
+        "request_path": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/request-halpas-NW-attack-phase4-v04.json",
+        "request_sha256": "e42fac5848ef5fe81e89518904575d3ed6344128b54ac4e739f6fd2e1cc92c6d",
+        "request_snapshot": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "NW",
+          "role": "attack",
+          "source_batch": "batch03",
+          "version": "v04",
+          "target_phase": 4,
+          "phase_name": "follow_through",
+          "expected_poses": 1,
+          "newly_authored_poses": 1,
+          "status": "REQUESTED_NOT_APPROVED",
+          "references": [
+            "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png": "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec"
+          },
+          "source_good_key_review": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/result.json",
+          "source_good_key_review_sha256": "bf82aa41a884bc749c9e25bdb3537fa03eee16e04b4421d5a8bd8427b503b1b5",
+          "source_phase": 3,
+          "unprovided_bad_fullsheet_not_referenced": true,
+          "transparent_background": true,
+          "user_authorization": "Production image tools authorized; no image blocks/links in root or main chat. ONE distinct single-key follow-through edit from newly PASS contact3, no fullsheet retry.",
+          "prompt": "LOCAL SINGLE-KEY ANIMATION EDIT: exactly ONE complete figure on transparent canvas. The ONLY reference is the newly approved correct TWO-ARM Halpas NW attack phase3 CONTACT. Produce the next phase4 FOLLOW-THROUGH, not another contact copy, not a sheet and not multiple bodies. Redraw real connected arm/body joints into the next motion key; never merely translate/rotate/mirror/recolor the existing whole sprite.\n\nKeep the exact true NW rear-three-quarter UPPER-LEFT view away from camera: helmet profile, head/torso front-normal, pelvis and original boots stay upper-left. Segmented black/gold dorsal BACK/SPINE armor faces camera. No frontal face or skull breastplate, no NE/right/front camera turn. Preserve original ornate gold horn helmet, two purple solid crystalline feather-fan wings at the same two gold roots, burgundy torn cape at anatomical LEFT/back, two original armored legs/boots and one original compact purple crystal sword. Body/head/gear proportions and camera unchanged.\n\nEXACTLY TWO ARM CHAINS. Near anatomical LEFT arm is EMPTY down-LEFT with continuous shoulder→upperarm→elbow→forearm→open/closed empty hand. Original far anatomical RIGHT shoulder on upper/right side of back owns the SINGLE sword. In the reference that same RIGHT arm is raised and extended above the helmet at contact. Edit/move THIS EXISTING ARM ONLY into the follow-through, deleting its old arm/hand position as it moves. Maintain a visibly connected farRIGHT shoulder→one upperarm→one elbow→one forearm→one gripping hand→one sword. Do not create any spare downRIGHT arm or empty fist. Do not add an arm from chest, neck, spine or wing. No extra shoulder, elbow, forearm, disconnected hand or weapon.\n\nGenuine phase4 motion: let the same raised farRIGHT sword hand continue the completed strike LOWER and farther UPPER-LEFT/away, from its old high-contact position toward the upper-left side of helmet/shoulder level. The same elbow begins to re-bend and follows the shoulder into a controlled follow-through. The sword tip follows a clearly lowered leftward arc compared with phase3 while still projecting LEFT/UPPER-LEFT away from camera, never screen-right or toward the viewer. Keep the striking hand/forearm above the nearLEFT empty hand, clearly separated. The FAR RIGHT upperarm must still connect visibly back to its original upper-right shoulder; no new arm at the left chest. Only TWO hands are visible total, one empty and one sword-grip. The old high-contact arm is NOT left behind as a third arm.\n\nSupport the strike physically with a modest additional upper-left torso/shoulder lean, coherent soft knee flexion and pelvis counterbalance in the same NW direction. Both original wing fans settle slightly lower/open for balance and the same burgundy cape lags behind with a distinct delayed fold. Preserve complete coherent spine/back plates. Do not turn the whole figure, add a dash, run, jump or death pose. The key should read as controlled post-contact release before returning to guard phase5.\n\nKeep ONE complete uncropped fullbody cutout on1024x1024 transparent RGBA. Use generous alpha0 padding on every side, full blade tip, both wing tips, horns, entire cape and both boot tips inside the canvas. Preserve source body and equipment relative scale; if tool resolution changes, do not stretch anatomy or shorten wings/blade. Opaque hard armor/crystal/cape with fine gold detail and crisp1–2px edge antialiasing. Purple light stays INSIDE existing solid feather and blade shapes. No external glow, halo, aura, haze, blur, motion trail, floor, cast/contact shadow, text, labels, grid or background.\n\nFINAL: one NW rear-left FOLLOW-THROUGH key, actual lower/swept-left sword and changed same-arm elbow relative to phase3, exactly two continuous arms; original nearLEFT empty arm lower-left, original farRIGHT arm alone wields ONE original sword. No duplicate old raised arm or extra right downarm.",
+          "requested_at": "2026-10-19T12:42:24.304192+00:00"
+        },
+        "raw_png": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/halpas-NW-attack-phase4-followthrough-v04.png",
+        "raw_sha256": "c96713efd51849d47b3b68505a32b247758682b4066ca9c3221e1289e7b1eb0f",
+        "original_result_path": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/result.json",
+        "original_result_sha256": "f0703acbe23b76141f33a37e51235a1e83d22e76abae68dc9c18e1416d745dbc",
+        "original_source_status": "UNRESOLVED",
+        "phase4_original_uncertainty_superseded_by_scoped_independent_report": true
+      }
+    ],
+    "salvaged_good_keys_proof": {
+      "schema": "pr122-salvaged-good-keys-v1",
+      "key": "transform:393",
+      "direction": "NW",
+      "role": "attack",
+      "raw_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+      "source_geometry": "UNCHANGED_STRICT6_COMPLETE_REGION_PASS",
+      "valid_source_phases": [
+        0,
+        1,
+        5
+      ],
+      "invalid_source_phases": [
+        2,
+        3,
+        4
+      ],
+      "keys": [
+        {
+          "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "source_pose": 0,
+          "role_phase": "guard",
+          "source_region": [
+            41,
+            26,
+            475,
+            454
+          ],
+          "path": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase0-guard-lossless.png",
+          "sha256": "8f5f708dacf7e3609c00a7c7be665af311df03c5d270240cfe77bd9f11f75cef",
+          "rgba_sha256": "c475de792e1b90aaa9198897083e7eecd0eefa4cf1aa3c6056f1d711b66b1665",
+          "size": [
+            475,
+            454
+          ],
+          "pixel_processing": "exactRGBA rectangularcrop only, noresample/mask/recolor",
+          "source_visual_status": "PASS_SINGLE_KEY_ONLY",
+          "review_basis": "NWbody+samefarRIGHTweaponarm connected+nearLEFTempty, exactly2arms, completegear."
+        },
+        {
+          "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "source_pose": 1,
+          "role_phase": "raise",
+          "source_region": [
+            543,
+            22,
+            432,
+            461
+          ],
+          "path": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png",
+          "sha256": "5f05cd3d83c07457a4c328ab41c4e5bd53ba088b59c5b3b86ed8e8b46c1553b5",
+          "rgba_sha256": "a764c077900e05ca373832a9ce0657e55b601c609ecfd8c9e07fa47a90da7007",
+          "size": [
+            432,
+            461
+          ],
+          "pixel_processing": "exactRGBA rectangularcrop only, noresample/mask/recolor",
+          "source_visual_status": "PASS_SINGLE_KEY_ONLY",
+          "review_basis": "NWbody+samefarRIGHTweaponarm connected+nearLEFTempty, exactly2arms, completegear."
+        },
+        {
+          "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+          "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+          "source_pose": 5,
+          "role_phase": "recover",
+          "source_region": [
+            544,
+            1047,
+            471,
+            453
+          ],
+          "path": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase5-recover-lossless.png",
+          "sha256": "21aa1040c8de9b789d4fec163602d9ef80d5e03c4eb4c6bb794e97cadbacc21a",
+          "rgba_sha256": "effc7576415b54dded94a6d86010ae7ad09893b276e2f135f7b57df0b359e3a3",
+          "size": [
+            471,
+            453
+          ],
+          "pixel_processing": "exactRGBA rectangularcrop only, noresample/mask/recolor",
+          "source_visual_status": "PASS_SINGLE_KEY_ONLY",
+          "review_basis": "NWbody+samefarRIGHTweaponarm connected+nearLEFTempty, exactly2arms, completegear."
+        }
+      ],
+      "full_clip_status": "HOLD",
+      "approval_change": 0,
+      "created_at": "2026-10-19T12:30:57.580567+00:00"
+    },
+    "physical_scale_and_support_review": {
+      "status": "REVIEWED_PHYSICAL_SCALE_AND_SUPPORT_PROPOSAL_NOT_NATIVE_APPROVAL",
+      "source_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+      "reference_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+      "reference_frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+      "reference_canvases": {
+        "Nidle": 1024,
+        "NEidle": 1024,
+        "Widle": 1152,
+        "NWidle": 1280
+      },
+      "authored_pose_canvas_sizes": [
+        1208,
+        1208,
+        2648,
+        2768,
+        2768,
+        1208
+      ],
+      "atlas_source_anchors": [
+        [
+          648,
+          863
+        ],
+        [
+          1957,
+          866
+        ],
+        [
+          776,
+          2449
+        ],
+        [
+          2127,
+          2512
+        ],
+        [
+          894,
+          3694
+        ],
+        [
+          1941,
+          3422
+        ]
+      ],
+      "method": "Fixed sourcepixel-to-world display compares helmet/crown-neck, nearpauldron span, rearplate segment spacing and pelviswidth against actual N/NE/W and NWidleC1280. Cs [1208,1208,2648,2768,2768,1208] normalize independentlydrawn bodyresolution only, never image/weapon/bboxheight. NearLEFT heel-support anchor calibrated to NWidle0 [286,479], strongheelmedian291 deltaX-5; preserve hip/knee/lunge relativeheel ratherthanfixinghips.",
+      "source_support_measurements": [
+        {
+          "phase": 0,
+          "canvas": 1208,
+          "source_anchor": [
+            287,
+            476
+          ],
+          "heel_band_height": 11,
+          "heel_strong_pixel_median_x": 292.0,
+          "heel_ground_y": 476,
+          "atlas_translation": [
+            361,
+            387
+          ],
+          "atlas_anchor": [
+            648,
+            863
+          ]
+        },
+        {
+          "phase": 1,
+          "canvas": 1208,
+          "source_anchor": [
+            796,
+            479
+          ],
+          "heel_band_height": 11,
+          "heel_strong_pixel_median_x": 801.0,
+          "heel_ground_y": 479,
+          "atlas_translation": [
+            1161,
+            387
+          ],
+          "atlas_anchor": [
+            1957,
+            866
+          ]
+        },
+        {
+          "phase": 2,
+          "canvas": 2648,
+          "source_anchor": [
+            814,
+            1163
+          ],
+          "heel_band_height": 25,
+          "heel_strong_pixel_median_x": 824.0,
+          "heel_ground_y": 1163,
+          "atlas_translation": [
+            -38,
+            1286
+          ],
+          "atlas_anchor": [
+            776,
+            2449
+          ]
+        },
+        {
+          "phase": 3,
+          "canvas": 2768,
+          "source_anchor": [
+            854,
+            1216
+          ],
+          "heel_band_height": 26,
+          "heel_strong_pixel_median_x": 865.0,
+          "heel_ground_y": 1216,
+          "atlas_translation": [
+            1273,
+            1296
+          ],
+          "atlas_anchor": [
+            2127,
+            2512
+          ]
+        },
+        {
+          "phase": 4,
+          "canvas": 2768,
+          "source_anchor": [
+            878,
+            1190
+          ],
+          "heel_band_height": 26,
+          "heel_strong_pixel_median_x": 889.0,
+          "heel_ground_y": 1190,
+          "atlas_translation": [
+            16,
+            2504
+          ],
+          "atlas_anchor": [
+            894,
+            3694
+          ]
+        },
+        {
+          "phase": 5,
+          "canvas": 1208,
+          "source_anchor": [
+            801,
+            1496
+          ],
+          "heel_band_height": 11,
+          "heel_strong_pixel_median_x": 806.0,
+          "heel_ground_y": 1496,
+          "atlas_translation": [
+            1140,
+            1926
+          ],
+          "atlas_anchor": [
+            1941,
+            3422
+          ]
+        }
+      ],
+      "resampled": false,
+      "native_Player_and_temporal_validation": "NOT_RUN_AUTHORING_ONLY",
+      "actor_approval_added": 0
+    },
+    "newly_authored_poses": 3,
+    "reused_poses": 3,
+    "preserved_region_rgba_exact": true,
+    "resampled": false,
+    "mirrored": false,
+    "recolored": false,
+    "cleaned_pixels": 0
+  },
+  "user_authorization": "ExistingPR122 production. Privatevisuals only, no mainchatimage/binary, no author Git/data edits.",
+  "prompt": "ExactRGBA composite ordered [salvaged0,salvaged1,newloaded2,newcontact3,newfollow4,salvaged5]; no imagegeneration for composite. Source and authoringrequest SHA/provenance preserved inline.",
+  "imagegen_attempts": 0,
+  "requested_at": "2026-10-19T13:18:11.545372+00:00",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "All6 preserve correctNWrear-left head/back/hip/shoulder plane, hiddenfrontskull/chest, originalgoldhorn/blackgoldarmor/twocrystalwingfans/cape/compactpurpleblade.",
+      "Exactlytwoarms/hands throughout: nearLEFTlower-leftempty, samefarRIGHTsolebladegrip through0guard,1raise,2loaded,3elbowextension-UPLEFTcontact,4cross-frontfollow,5guardrecovery. No leftoverdownRIGHTarm or newthirdattackarm.",
+      "Follow4 independentanatomyPASS finds nearLEFTfreechain andweaponforearm/elbow continuous, farRIGHThumerus occludedbyhelmet/nearpauldron; no explicitsecondsocket, armduplication, separatedelbow orhandswap. OriginalUNRESOLVEDrecord preserved andindependentreportSHApinned.",
+      "Actualguard→raise→load→contact3UPLEFT→follow→recover withwing/cape response, sourceposeorder unchanged. GroundedNWleg/kneechains coherent; genuinehip/kneelunge retainedrelativeheel support.",
+      "ExactRGBA assembly reuses3validkeys andadds3newmissingkeys. Sixuniquevisiblefingerprints, everyselectedalpha>16 pixelcoveredonce, unchangedstrict6completegeometry nominal2048PASS. Noresampling/mirror/recolor/cleanedpixels orgearclipping.",
+      "Anatomicalhelmet/pauldron/backplate/pelvis comparisonagainstactualN/NE/W andNWidleC1280 supports perposeC [1208,1208,2648,2768,2768,1208] andgroundsupport metadata. Pythonlayoutmodule validates all6fit andsourceRGBA unchanged; actualcompiledphysical/game approval remains pending."
+    ],
+    "visual_limitations": [
+      "Source6 andstrictRGBAgeometryPASS withreviewedphysicalmetadata proposal only. Rootmustapplyreviewed_runtime_layout beforestage andrunGodotresource/Player/actiontests plusprivateactualnative6/full48qualityreview. No actor/defaultcatalogapproval.",
+      "Follow4proximalfarRIGHTarm isoccluded; scopedindependentPASS supportsplausiblecross-bodyfollow butdoesnotassertuniquelyvisiblehiddenskeleton. Alloriginaluncertainty/badthree-armart preserved."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+    "raw_bytes": 5366882,
+    "request_sha256": "d9cfc60d10dfb43130366f0862814791dbab3ecdfbf2d278b794b51e0f425158",
+    "review_sha256": "0c9ac14b2d7340bc5dae508b607768e6d219a53e83881d3e2aa089c7543761a8"
+  },
+  "available_repository_reference_sources": {
+    "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+    "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png",
+    "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-5f05cd3d83c07457a4c328ab41c4e5bd53ba088b59c5b3b86ed8e8b46c1553b5.png",
+      "sha256": "5f05cd3d83c07457a4c328ab41c4e5bd53ba088b59c5b3b86ed8e8b46c1553b5",
+      "bytes": 375897,
+      "original_reference": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-60ef038f65047c0e35ba8373a06718113382d6f19962d8ab7995c3c1eea930e0.png",
+      "sha256": "60ef038f65047c0e35ba8373a06718113382d6f19962d8ab7995c3c1eea930e0",
+      "bytes": 51718,
+      "original_reference": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/NW-contact3-two-arm-chain-guide.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-c96713efd51849d47b3b68505a32b247758682b4066ca9c3221e1289e7b1eb0f.png",
+      "sha256": "c96713efd51849d47b3b68505a32b247758682b4066ca9c3221e1289e7b1eb0f",
+      "bytes": 1387536,
+      "original_reference": "/workspace/scratch/halpas-NW-attack-phase4-followthrough-v04/halpas-NW-attack-phase4-followthrough-v04.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-8f5f708dacf7e3609c00a7c7be665af311df03c5d270240cfe77bd9f11f75cef.png",
+      "sha256": "8f5f708dacf7e3609c00a7c7be665af311df03c5d270240cfe77bd9f11f75cef",
+      "bytes": 392870,
+      "original_reference": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase0-guard-lossless.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-21aa1040c8de9b789d4fec163602d9ef80d5e03c4eb4c6bb794e97cadbacc21a.png",
+      "sha256": "21aa1040c8de9b789d4fec163602d9ef80d5e03c4eb4c6bb794e97cadbacc21a",
+      "bytes": 401519,
+      "original_reference": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase5-recover-lossless.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
+  "output_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+  "output_bytes": 5366882,
+  "original_generated_file": "/workspace/scratch/halpas-NW-attack-composite-v04/halpas-NW-attack-v04composite01.png"
+}

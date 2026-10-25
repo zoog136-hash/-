@@ -1,0 +1,67 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_FAR_LEFT_LOADED_COMPRESSION_KEY",
+  "raw_path": "/workspace/scratch/girtas-E-run-left-compression-key-v01/girtas-E-run-left-compression-key-v01.png",
+  "raw_sha256": "277db3fc7f71611af6290a72926e8ecd2d782c1f38e86f22a61feefa63c6f34f",
+  "reference_landing_path": "/workspace/scratch/girtas-E-run-left-landing-key-v02/girtas-E-run-left-landing-key-v02.png",
+  "reference_landing_sha256": "22efb7bf18a10018e0b053a4ddb5cb14786b83d68c2cac554dd9d9438c87d35d",
+  "candidate_game_phase": 1,
+  "actual_support": "anatomical_LEFT_far",
+  "checks": {
+    "faithful_original_E_camera_identity_permanent_RIGHT_weapon": true,
+    "two_connected_arm_leg_chains": true,
+    "far_LEFT_knee_loaded_bent_under_lowered_body": true,
+    "near_RIGHT_leg_drive_boot_wholly_raised": true,
+    "distinct_from_straighter_LEFT_landing": true
+  },
+  "findings": [
+    "The far LEFT chain stays behind the near lifted thigh, reaches its now more flexed support knee and then returns toward the planted flat LEFT ankle/sole. The torso/head/waist sit materially lower above that sole than in the approved LEFT contact22efb7bf. Together these changes read as loaded support rather than the nearly straight first failed push-off.",
+    "The near RIGHT thigh remains lifted across the foreground to a high forward knee, then folds back to its separate suspended shin/boot. This is the raised near/weapon-side leg from the preceding approved LEFT support source; no anatomical side relabel is needed.",
+    "The two knees overlap in projection but separate shins/boots remain visible and connected. The raised RIGHT boot stays above the only LEFT support sole; no third leg or second planted foot appears.",
+    "Pale face/long pale hair, HARD narrow gold rays, long dark gold-trim robe, permanent near RIGHT sinuous blade and empty LEFT hand retain the same RIGHT-facing slight chest E camera. The forward lean and trailing cloth follow the loaded movement."
+  ],
+  "approximate_raw_landmarks": {
+    "far_LEFT_hip_under_robe": [
+      970,
+      740
+    ],
+    "far_LEFT_support_knee": [
+      1020,
+      965
+    ],
+    "far_LEFT_support_ankle": [
+      1018,
+      1140
+    ],
+    "far_LEFT_support_heel_sole": [
+      965,
+      1208
+    ],
+    "far_LEFT_support_toe_sole": [
+      1145,
+      1208
+    ],
+    "near_RIGHT_raised_knee": [
+      1040,
+      845
+    ],
+    "near_RIGHT_raised_ankle": [
+      790,
+      1030
+    ]
+  },
+  "landmark_limitations": [
+    "Raw image1165x1350. Partly occluded hip/knee estimates roughly +/-35px; visible support sole approximately +/-12px. These are production guide estimates, not measured bones or world-root calibration.",
+    "Actual rigid C, projected far/near support plane and six-phase root arc remain HOLD until complete-source authorship and compiled review. A loaded source drawing alone cannot approve the full clip."
+  ],
+  "preview_budget_total_bytes": 1675099,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_or_gameplay_claim": false,
+  "reviewed_at": "2026-10-19T14:35:53.474150+00:00"
+}

@@ -1,0 +1,25 @@
+{
+  "actor": "monster:오만한 우그누스",
+  "slug": "ugnus",
+  "clip": "NW-hit-v01",
+  "role": "hit",
+  "direction": "NW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/NW-hit-v01.png",
+  "source_sha256": "7f83983d458a480a2d11b64dcf4efe6c065d82b4c57c8163382b36467036eec3",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      88134,
+      85385,
+      85354,
+      84699,
+      83864,
+      82189
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

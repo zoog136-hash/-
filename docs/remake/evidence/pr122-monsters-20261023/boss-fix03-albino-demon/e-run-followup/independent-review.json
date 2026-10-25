@@ -1,0 +1,83 @@
+{
+  "schema": "pr122-albino-demon-E-run-followup-independent-static-review-v1",
+  "id": "monster:알비노 데몬",
+  "date": "2026-10-23",
+  "frozen": true,
+  "reviewer": "independent child agent e_run_independent_review",
+  "review_method": "Actual private tool vision of exact project reference crop and all six source poses. No new generation, render, timed playback or pixel modification performed.",
+  "source": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/raw/albino-demon-E-run6-side-v01.png",
+    "bytes": 1546883,
+    "sha256": "453db496c392f8170be42b2635dfa438b78e3014c058f256dc7ecdeb0de6d2a2"
+  },
+  "reference": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/28.png",
+    "bytes": 196146,
+    "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b"
+  },
+  "physical_grid": "2 columns by 3 rows; left column phases0/1/2, right column phases3/4/5",
+  "examined_poses": 6,
+  "examined_views": [
+    "E"
+  ],
+  "examined_roles": [
+    "run"
+  ],
+  "current_review": "HOLD",
+  "new_approvals": 0,
+  "recommend_r003": false,
+  "recommended_selection": "Keep the existing r002 selection; preserve this source and its request as a held followup.",
+  "findings": [
+    {
+      "criterion": "exact_reference_identity",
+      "result": "PASS_WITHIN_STATIC_SCOPE",
+      "observation": "The sheet retains the red muscular horned demon, paired swept dark horns, dark spiked armor, skull belt/chains, attached tail and large iron axe. No lava-fist or white-palette substitution is visible. This does not approve mythic boss quality."
+    },
+    {
+      "criterion": "strict_E_camera",
+      "result": "HOLD",
+      "observation": "Noses and toes point screen right and only the near eye is readily visible, so the head reads strongly in profile. However a broad front chest/abdomen plane and the full frontal skull-belt face remain visible rather than being hidden or edge-on. This does not satisfy the requested pure right-flank camera."
+    },
+    {
+      "criterion": "phase0_vs_phase3_opposite_support",
+      "result": "HOLD",
+      "observations": [
+        {
+          "phase": 0,
+          "cell": "top-left",
+          "observation": "The foreground/near armored leg descends forward to the lowest flat claw/toe plant on screen right. The other leg trails backward to screen left with its foot lifted."
+        },
+        {
+          "phase": 3,
+          "cell": "top-right",
+          "observation": "The foreground/near armored leg again descends forward to the lowest flat claw/toe plant on screen right. The trailing far foot is again lifted behind to screen left. The shin/armor depth order and low-toe silhouette match the same support side as phase0."
+        }
+      ],
+      "conclusion": "The top pair does not expose a far-LEFT flat toeplant with a raised near-RIGHT knee at phase3. The observed pattern supports the same near-leg plant being repeated, rather than an independently established anatomical RIGHT/LEFT support swap. No complete six-phase gait approval is justified."
+    },
+    {
+      "criterion": "weapon_hand_consistency",
+      "result": "PASS_WITHIN_STATIC_SCOPE",
+      "observation": "The near hand continuously carries the axe and the other claw remains empty across the six figures; no whole-body mirror or obvious hand swap is visible. Anatomical RIGHT ownership follows the intended near-side assignment; this is a static appearance observation only."
+    },
+    {
+      "criterion": "clipping_or_limb_collapse",
+      "result": "PASS_WITHIN_STATIC_SCOPE",
+      "observation": "No obvious missing horn, extra arm/leg or severe cut-off weapon/body part is visible in the privately viewed source. The parent already reports a strict six-pose geometry pass; that does not repair the camera/support failures."
+    }
+  ],
+  "reasons": [
+    "The skull-belt frontal face and broad front chest are still visible in a requested pure-side E view.",
+    "Both top support poses show the same foreground leg planted and the far leg lifted; an opposite anatomical toeplant is not established."
+  ],
+  "unseen_not_reviewed": [
+    "Timed RUN sequence and transitions",
+    "Anatomical rig/occlusion beyond the visible painted poses",
+    "Actual sole-ground contact or moving-world collision",
+    "Main integration and GPU materials/VFX",
+    "Final boss-quality or release approval"
+  ],
+  "existing_frozen_files_modified": 0,
+  "assets_modified": 0,
+  "git_mutations": 0
+}

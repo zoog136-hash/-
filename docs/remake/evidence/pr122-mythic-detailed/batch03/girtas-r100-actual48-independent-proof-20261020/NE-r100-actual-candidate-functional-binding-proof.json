@@ -1,0 +1,145 @@
+{
+  "schema": "pr122-independent-actual-NE6-candidate-functional-binding-v1",
+  "key": "transform:267",
+  "status": "PASS_ACTUAL_TRES_PROFILE_ALL6_EXACT_CANDIDATE_TRANSFER",
+  "revision": "r100",
+  "actual_numeric_pins": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/actual-r100-all48-numeric-pins.json",
+    "sha256": "b0af5129a37e356485f1267969faa27434de78259586ef40ea8630b059b5fd7d"
+  },
+  "actual_frames": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r100/SpriteFrames.tres",
+    "sha256": "b95e8534a4cc710b1a8e05c5faa0487f978d58159c2e8ca7bec5dceb50493352"
+  },
+  "actual_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r100/NativeMotionProfile.tres",
+    "sha256": "f8b2a0a47c78b516a0acb83e09c8bcabd1c7dd9c7d833f0820e873db7f8e8da4"
+  },
+  "immutable_register": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/register-r100-compiled-candidate.json",
+    "sha256": "15ff76030cbc51245657221f6842f639f49e3f6ad4caebc916ced17bb71877d7"
+  },
+  "source_atlas_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "reviewed_candidate_geometry": {
+    "path": "/workspace/scratch/girtas-NE-run-new-contacts-physical-candidate-v02/geometry-with-authored-root-candidate-v01.json",
+    "sha256": "f77f8f5bbdd1609102579c80d198b2c4971baecf610fd2571896f7537cb40681"
+  },
+  "independent_physical_review": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/NE-run-whole6-new-contacts-v02-independent-physical-PASS.json",
+    "sha256": "1a23acdea4b402fc59dc3e58aa9d039fa4d8842384676b07f47a7577e0990139"
+  },
+  "all6_source_RGBA_regions_margins_C_roots_exact": [
+    {
+      "phase": 0,
+      "status": "PASS",
+      "compared": {
+        "region": true,
+        "margin": true,
+        "canvas_size": true,
+        "source_anchor": true,
+        "rgba_sha256": true
+      }
+    },
+    {
+      "phase": 1,
+      "status": "PASS",
+      "compared": {
+        "region": true,
+        "margin": true,
+        "canvas_size": true,
+        "source_anchor": true,
+        "rgba_sha256": true
+      }
+    },
+    {
+      "phase": 2,
+      "status": "PASS",
+      "compared": {
+        "region": true,
+        "margin": true,
+        "canvas_size": true,
+        "source_anchor": true,
+        "rgba_sha256": true
+      }
+    },
+    {
+      "phase": 3,
+      "status": "PASS",
+      "compared": {
+        "region": true,
+        "margin": true,
+        "canvas_size": true,
+        "source_anchor": true,
+        "rgba_sha256": true
+      }
+    },
+    {
+      "phase": 4,
+      "status": "PASS",
+      "compared": {
+        "region": true,
+        "margin": true,
+        "canvas_size": true,
+        "source_anchor": true,
+        "rgba_sha256": true
+      }
+    },
+    {
+      "phase": 5,
+      "status": "PASS",
+      "compared": {
+        "region": true,
+        "margin": true,
+        "canvas_size": true,
+        "source_anchor": true,
+        "rgba_sha256": true
+      }
+    }
+  ],
+  "actual_effective_profile": {
+    "pixel_scale": 0.219105011732,
+    "sprite_offset": [
+      0,
+      -28.045441501663
+    ],
+    "reference_canvas": [
+      1024,
+      1024
+    ]
+  },
+  "profile_literal_equal_prior_actual_r099": true,
+  "normal_per_pose_C_proportional_world_factors_exact": true,
+  "same_reviewed_NE_idle_source_C_root": true,
+  "timing": {
+    "fps": 12.5,
+    "duration_per_pose": 0.08,
+    "loop_seconds": 0.48
+  },
+  "actual_required_Godot_4_7_2_logs": [
+    {
+      "path": "/tmp/twilight-girtas_267-r100-resume-20261020.resource.log",
+      "sha256": "96e7f6ff8addb9e62a4b6467487a4c56bab606d04340dba2a4e1ae7711d278d8",
+      "marker": "PR122_NATIVE_RESOURCE_PASS",
+      "marker_count": 1,
+      "root_verified_exit_code": 0
+    },
+    {
+      "path": "/tmp/twilight-girtas_267-r100-resume-20261020.player.log",
+      "sha256": "cdb14c8a240f809ea65624737604439803e58aba9552a5d2477b77aafc2c780d",
+      "marker": "PR122_NATIVE_PLAYER_CONNECTION_PASS",
+      "marker_count": 1,
+      "root_verified_exit_code": 0
+    },
+    {
+      "path": "/tmp/twilight-girtas_267-r100-resume-20261020.action.log",
+      "sha256": "ecac86c2c89896b0062831c9d861195efad4ba804637186ff8d27f165773751b",
+      "marker": "PR122_NATIVE_ACTION_PASS",
+      "marker_count": 1,
+      "root_verified_exit_code": 0
+    }
+  ],
+  "visual_review_transferred_from_identical_functional_candidate": true,
+  "duplicate_private_views": 0,
+  "actor_approved": false,
+  "counts_changed": false
+}

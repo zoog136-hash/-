@@ -1,0 +1,724 @@
+{
+	"NPC_speed_124_RUN": "PASS",
+	"PNG_load": "PASS",
+	"S_death_8_headings_terminal_hold": "PASS",
+	"SpriteFrames_and_NativeProfile_load": "PASS",
+	"actor": "monster:알비노 데몬",
+	"actual_ActorMotion_playback": "PASS",
+	"all_107_source_poses_visited": "PASS",
+	"all_8_attack_contact_frames_visited": "PASS",
+	"canvas_foot_anchor_and_regions": "PASS",
+	"clips": [
+		{
+			"animation": "idle_0",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_0",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "hit_0",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "idle_1",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_1",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "hit_1",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "idle_2",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_2",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "hit_2",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "idle_3",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_3",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "hit_3",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "idle_4",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_4",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "hit_4",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "idle_5",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "hit_5",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "idle_6",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_6",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "hit_6",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "idle_7",
+			"frame_order": [
+				0,
+				1,
+				0,
+				1,
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_7",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "hit_7",
+			"frame_order": [
+				0,
+				1
+			],
+			"seen_source_frames": [
+				0,
+				1
+			],
+			"source_poses": 2
+		},
+		{
+			"animation": "attack_5",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		},
+		{
+			"animation": "run_0",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "run_1",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "run_2",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "run_3",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "run_4",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "run_5",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "run_6",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "run_7",
+			"frame_order": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			],
+			"source_poses": 6
+		},
+		{
+			"animation": "death_2",
+			"frame_order": [
+				0,
+				1,
+				2
+			],
+			"seen_source_frames": [
+				0,
+				1,
+				2
+			],
+			"source_poses": 3
+		}
+	],
+	"dedicated_clips": 33,
+	"default_Main": "NOT_RUN",
+	"default_catalog_switches": 0,
+	"engine": "4.7.2-stable (official)",
+	"new_approvals": 0,
+	"new_walk_sources": 0,
+	"physical_support_and_real_target_contact": "NOT_REVIEWED",
+	"quality_scope": "Headless real ActorMotion sequencing and geometry only; see visual-review.json for separate static observations and unresolved quality",
+	"unique_source_poses_replayed": 107
+}

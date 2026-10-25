@@ -1,0 +1,75 @@
+{
+  "id": "monster:알비노 디어",
+  "name": "알비노 디어",
+  "status": "APPROVED",
+  "decided_UTC": "2026-10-18T23:21:46.044868+00:00",
+  "scope": "Local newly authored reference-based native completion; final integrated CI pending, not recovered SPX or independent human approval",
+  "species_gates": {
+    "source_review": "PASS",
+    "static_image_gate": "PASS",
+    "temporal_gate": "PASS",
+    "game_function_gate": "PASS",
+    "actual_Main_visual_gate": "PASS",
+    "baseline_comparison": "PASS"
+  },
+  "independent_visual_review": "Resuming agent reviewed actual Main E idle/attack, SE/W gait, N attack, NW death. No independent human claim.",
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "motion_contract": {
+    "idle": 2,
+    "walk": 8,
+    "attack": 3,
+    "hit": 2,
+    "death": 3,
+    "unique_poses": 144,
+    "run": "No separate source run defined; none invented"
+  },
+  "newly_drawn_poses": 56,
+  "preserved_prior_poses": 88,
+  "new_raw_PNG": 12,
+  "total_pack_PNG": 17,
+  "runtime_connected": true,
+  "actual_Main_checks": 1787,
+  "with_baseline_gameplay_checks": 3272,
+  "continuous_with_baseline_checks": 81417,
+  "source_reference_SHA256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+  "visual_notes": "Broad antler silhouette, connected neck/body/hooves retained. Four-beat walk64 and three-phase lowered-antler attack24 preserve complete raw source bounds. One whole-source canvas calibrated to full-height recovery prevents enlarged low-head impact. Ground and eight-view transitions reviewed. No gameplay stats, AI, collision or save changes.",
+  "final_CI": "PENDING_BATCH",
+  "Android_device": "NOT_RUN",
+  "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch16/deer-source-preservation.json",
+  "reviewed_profile_sha256": "3e6dde6585af70d06e89daa1faa3145eacabe83e2410bbda8ebfd741f530ef9b",
+  "evidence_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/deer-source-preservation.json",
+      "sha256": "c839defbccfa9d97019e4e53a8fd76f5854f1b64446d8a1d40b0b900d0f54eb6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/deer-candidate.json",
+      "sha256": "37c09ca8c9758f29309677fcab6a8770070fa5aa578b08f74a7c63d4b44a7319"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/Deer-Main-reports/gameplay.json",
+      "sha256": "d006d6041c65c0cb32880a74638dbd9ce2bd17ba66d1421bb970d0adb26b8b3a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/Deer-Main-reports/gameplay-cases/albino-deer.json",
+      "sha256": "2e142e489610462fe934057f510eaeeb0506183f73285e43ef1137dd0820c967"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/Deer-Temporal-reports/report.json",
+      "sha256": "e664ddc50037a33837b66c733b9826054424390491483fca24079d76849f6cab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/Deer-Temporal-reports/report-cases/albino-deer.json",
+      "sha256": "4ab4256a7ff7a65694049bb38fe739bde9e9a1f3dbcd15d423f9f2d65dba524a"
+    }
+  ]
+}

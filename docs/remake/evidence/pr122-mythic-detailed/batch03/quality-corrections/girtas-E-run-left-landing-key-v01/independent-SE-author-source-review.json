@@ -1,0 +1,29 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_se_walk_author",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "intended_game_phase": 0,
+  "raw_sha256": "56f1c4aba2286782327ea9f0a37740453d3446eec1b5f9d2a39d6763058bc0a5",
+  "source_visual_status": "HOLD",
+  "status": "HOLD_REQUESTED_LEFT_FORWARD_LANDING_NOT_PRESENT",
+  "checks": {
+    "original_pale_face_long_palehair_hard_gold_spines_longdark_goldtrim_robe": true,
+    "RIGHT_sinuous_weapon_LEFT_empty_two_leg_chains": true,
+    "FAR_LEFT_support_NEAR_RIGHT_knee_drive": true,
+    "LEFT_forward_heel_landing": false,
+    "LEFT_loaded_support_knee_compression": false
+  },
+  "findings": [
+    "Actual farLEFT boot/ankle is WELL BEHIND pelvis on imageLEFT, heel elevated relative to pointed/planting toe. Whole LEFT hip\u2192shin\u2192boot chain extends backward while NEAR RIGHT knee drives forward/high.",
+    "This reads LEFT terminal-stance/push-off with RIGHT knee drive, not LEFT forward heel-contact/landing. It cannot satisfy phase0 merely bylabel, groundedroottranslation orfootsoleorientation.",
+    "LEFT support leg is nearlystraight, pelvis notclearlyloadeddown; no convincing LEFT loaded-knee compression salvage either.",
+    "Faithful original head/hair/hardspines/longdarkrobe/sinuousrightweapon and two connectedlegs preserved. Possible future LEFT terminalpush-offkey only if a separateactualcycle/root role requiresit; no suchapproval here."
+  ],
+  "salvage_scope": "Potential terminalpush-off anatomy only, notapprovedlanding/compression/fullclip.",
+  "actor_approval": false,
+  "complete_clip": false,
+  "preview_bytes": 67048,
+  "reviewed_at": "2026-10-19T14:17:15.600178+00:00"
+}

@@ -1,0 +1,65 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "SE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v03peak2",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 2,
+  "references": [
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase1-lossless.png",
+    "/workspace/scratch/halpas-SE-hit-peak2-key-v03/SE-peak2-two-arm-authority-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase1-lossless.png": "a8d441f93fec811e249a0543fb810c16738f7cb223d751b5c0f29cbf25b6a7c1",
+    "/workspace/scratch/halpas-SE-hit-peak2-key-v03/SE-peak2-two-arm-authority-guide.png": "8bebcf533040b8bdfd0c47684216f584526f7fd43c84e79f323fe9e7f5aa0e3e"
+  },
+  "reference_provenance": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-good-keys-proof.json",
+  "guide_joint_authority": {
+    "coordinates_in_reference": [
+      506,
+      471
+    ],
+    "fixed_RIGHT_shoulder_elbow_grip": [
+      [
+        367,
+        224
+      ],
+      [
+        375,
+        253
+      ],
+      [
+        395,
+        279
+      ]
+    ],
+    "moving_EMPTY_LEFT_shoulder_elbow_wrist": [
+      [
+        273,
+        161
+      ],
+      [
+        218,
+        206
+      ],
+      [
+        304,
+        184
+      ]
+    ],
+    "body_camera": "SE_FRONT_RIGHT",
+    "same_arm_replacement_only": true
+  },
+  "transparent_background": true,
+  "corrective_reason": "Materially new SINGLE SEpeak2 from verified correct flinch1 exactRGBA key plus actual arm authority guide. Preserve imageRIGHT low blade arm and only bend existing imageLEFT empty forearm, avoiding old failed full6 anatomy.",
+  "prompt": "Create ONE genuine HIT-REACTION PEAK2 key pose by editing the SAME Halpas in image1 (already-correct flinch1). Image2 is ONLY an arm ownership diagram. Keep same SE FRONT-RIGHT/DOWN-RIGHT body/camera, visible pink chest jewel, same closed gold-horn helmet, black/gold segmented armor, TWO solid purple crystal feather wings on back roots, torn burgundy LEFT/back cape, SAME short broad purple blade and hovering two legs. No front/back turn, no model/proportion or equipment changes.\n\nStrict TWO ARMS TOTAL. The existing imageRIGHT low BLADE arm is LOCKED LOW: follow GREEN line from same imageRIGHT shoulder through elbow/forearm to closed low hand gripping the original blade beside hip. Never lift this arm, never add an empty right fist, never detach blade from wrist or leave blade floating at waist. Keep wrist/hilt contact visible.\n\nONLY move the existing EMPTY imageLEFT arm seen bent in image1. Follow CYAN: its SAME gold pauldron on imageLEFT (273,161 in 506x471 ref) -> SAME elbow remaining imageLEFT (218,206) -> forearm bending toward (304,184). Draw EMPTY left fist below the imageLEFT cheek/upper-left chest, a little higher and more tucked inward than flinch1. The upperarm/elbow must still start from imageLEFT pauldron, never from imageRIGHT weapon shoulder. REPLACE the old left forearm/fist with the new bent one, do not leave two versions. No third hand/arm, no duplicated empty downarm, no extra raised fist above original blade arm.\n\nReal peak2 hit jerk: head tilts backward slightly and upper torso recoils a little opposite facing, knees flex/wings tense and cape lags, empty LEFT forearm braces below cheek. Preserve existing front-right pelvis/shoulder plane; same helmet profile and exact gear. Low RIGHT blade arm follows torso a tiny amount but stays one continuously attached gripping chain. Clear transient recoil beyond flinch1, not an attack swing or generic idle.\n\nSingle complete centered transparent cutout,1024x1024. Full horns, both wings, cape, toes and blade inside central800x800 with at least100px transparent margin. Same physical body proportions. Opaque materials, crisp detailed RPG sprite, thin edgeAA, alpha0 background/gaps. No guide marks/text/colored dots, panels, floor, shadows, outerglow, particles, trails or other objects.",
+  "requested_at": "2026-10-19T13:17:14.641090+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

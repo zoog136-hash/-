@@ -1,0 +1,68 @@
+{
+  "key": "267",
+  "direction": "N",
+  "role": "run",
+  "version": "left-halfcycles-v01",
+  "expected_poses": 2,
+  "intended_game_phases": [
+    1,
+    2
+  ],
+  "original_generated_file": "/workspace/generated_images/exec-f12e60b3-f186-4f60-ba93-fca515e98813.png",
+  "raw_path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/girtas-N-run-left-halfcycles-v01.png",
+  "raw_sha256": "ecb2a4b33d4ecad0c3bec0f1284ad17e2f75c269fd05376563c7ba27ec35301c",
+  "raw_bytes": 1150966,
+  "image_size": [
+    1774,
+    887
+  ],
+  "request_path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/request-girtas-N-run-left-halfcycles-v01-guidev02.json",
+  "request_sha256": "17b49214921df5b59d7a988db115edf1ba6983cceae9d8733937e934f2d1e627",
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "created_at": "2026-10-19T12:31:56.807306+00:00",
+  "actor_approval": false,
+  "runtime_final_status": "HOLD",
+  "status": "HOLD_MISSING_RUN_PHASES_NOT_PROVEN",
+  "reviewed_at": "2026-10-19T12:52:03.653715+00:00",
+  "geometry_status": "PASS",
+  "geometry_path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/geometry-base2048.json",
+  "geometry_sha256": "349e4137c54609a92af641f3e028cb6c86ae584ee7256a717ef83100905d1626",
+  "individual_row_crop_proof": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/individual-row-crop-proof.json",
+  "individual_row_crop_proof_sha256": "d0f693294197c565940a575477938a88ece70d519bf9ca932476ce0d27728bc8",
+  "independent_review_path": "/workspace/scratch/girtas-N-run-independent-source-qc/independent-source-qc.json",
+  "independent_review_sha256": "bf0336a6256c4e229e34048cca2ee5907e9b3f48fe0d7a8f019b9da4084080bb",
+  "per_pose_source_status": [
+    {
+      "source_row": 0,
+      "intended_game_phase": 1,
+      "status": "HOLD",
+      "reason": "Correct anatomical support side, but actual support knee is near-straight/contact-like rather than distinct compressed loaded run pose."
+    },
+    {
+      "source_row": 1,
+      "intended_game_phase": 2,
+      "status": "HOLD",
+      "reason": "Correct opposite leading/trailing legs and visible articulated boot soles; full airborne clearance is not proven beyond rigid-point/ground-plane uncertainty."
+    }
+  ],
+  "visual_findings": [
+    "All figures preserve true N rear camera, pale hair, thin hard gold spines, long dark gold-trim robe and original anatomical right-hand long sinuous weapon.",
+    "Distinct intended leg sides and pose variation alone do not establish required run phases.",
+    "LEFTflight2 relative body landmark fits disagree; RIGHTflight5 nominal clearance41.8px is promising but its positive conservative interval is unproved."
+  ],
+  "visual_limitations": [
+    "HOLD raw sources and every exact RGBA crop are retained unchanged.",
+    "Exactly one attempt per distinct missing half; no same half or six-pose retry.",
+    "These source figures do not complete a run, actor or approval."
+  ],
+  "newly_authored_pose_count": 2,
+  "newly_usable_required_run_poses": 0,
+  "reused_existing_game_poses": 0,
+  "new_approvals": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "source_PNG_mutations": false,
+  "repo_mutations": false,
+  "chat_image_attachments": false
+}

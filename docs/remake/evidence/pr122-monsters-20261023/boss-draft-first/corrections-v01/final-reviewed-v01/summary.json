@@ -1,0 +1,484 @@
+{
+  "first_draft_slots": 495,
+  "actors": [
+    {
+      "key": "monster:알비노 유니콘",
+      "slug": "albino_unicorn",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/albino_unicorn/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/albino_unicorn/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/albino_unicorn/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 33,
+      "poses": 198,
+      "missing": [],
+      "eligible_complete": true
+    },
+    {
+      "key": "monster:아크모",
+      "slug": "arcmo",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 31,
+      "poses": 186,
+      "missing": [
+        "idle_4",
+        "run_7"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 28,
+      "poses": 168,
+      "missing": [
+        "attack_1",
+        "attack_3",
+        "attack_4",
+        "attack_7",
+        "idle_3"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 32,
+      "poses": 192,
+      "missing": [
+        "idle_3"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 31,
+      "poses": 185,
+      "missing": [
+        "attack_4",
+        "idle_0"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 26,
+      "poses": 156,
+      "missing": [
+        "attack_0",
+        "hit_4",
+        "idle_0",
+        "idle_3",
+        "run_2",
+        "run_3",
+        "run_4"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:질투의 공주 이자벨",
+      "slug": "isabelle",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 29,
+      "poses": 174,
+      "missing": [
+        "hit_7",
+        "idle_5",
+        "idle_7",
+        "run_6"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:욥니르",
+      "slug": "jopnir",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 31,
+      "poses": 186,
+      "missing": [
+        "hit_3",
+        "idle_3"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:교만의 왕자 데우스",
+      "slug": "prince_deus",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/prince_deus/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 32,
+      "poses": 190,
+      "missing": [
+        "attack_4"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:테베 아누비스",
+      "slug": "thebes_anubis",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 33,
+      "poses": 198,
+      "missing": [],
+      "eligible_complete": true
+    },
+    {
+      "key": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 28,
+      "poses": 168,
+      "missing": [
+        "attack_4",
+        "hit_4",
+        "idle_3",
+        "idle_4",
+        "run_4"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 31,
+      "poses": 186,
+      "missing": [
+        "attack_3",
+        "idle_3"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 32,
+      "poses": 192,
+      "missing": [
+        "idle_7"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 29,
+      "poses": 174,
+      "missing": [
+        "attack_0",
+        "attack_3",
+        "hit_3",
+        "idle_3"
+      ],
+      "eligible_complete": false
+    },
+    {
+      "key": "monster:제로스",
+      "slug": "zeros",
+      "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/reviewed-final-v01/candidate.json",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/SpriteFrames.tres",
+      "tracks": 32,
+      "poses": 192,
+      "missing": [
+        "hit_4"
+      ],
+      "eligible_complete": false
+    }
+  ],
+  "selected_clips": 458,
+  "holds": [
+    {
+      "slug": "thebes_horus",
+      "clip": "W-run-v01",
+      "reason": "Left-camera reference triage shows the original W run advances right. Preserve it but do not qualify this actor as corrected WEST; no new generation during wrap-up.",
+      "cause": "affected_existing_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "arcmo",
+      "clip": "NE-run-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "arcmo",
+      "clip": "W-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "NE-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "SE-attack-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "SW-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "SW-idle-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "W-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "SW-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "E-idle-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "W-attack-v02",
+      "reason": "Full owned pose cannot fit its unchanged registration",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "E-attack-v02",
+      "reason": "Full owned pose cannot fit its unchanged registration",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "E-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "S-run-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-idle-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-run-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "W-hit-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "W-run-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "N-run-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NE-hit-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NE-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NW-idle-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-hit-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-idle-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "prince_deus",
+      "clip": "W-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "SW-idle-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-attack-v02",
+      "reason": "Initial/restored WEST guards face right around leftward strike",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-hit-v02",
+      "reason": "WEST brace and restored poses still face right; not merely head recoil",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-idle-v02",
+      "reason": "All six WEST idle poses still face right",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v02",
+      "reason": "Front-right ready/recovery guards remain around leftward contact",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v02",
+      "reason": "SW standing poses retain front-right canonical facing",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "ugnus",
+      "clip": "NE-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-attack-v02",
+      "reason": "Confirmed visual or missing-output HOLD",
+      "cause": "targeted_generation_hold",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-hit-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-idle-v02",
+      "reason": "Expected exactly 6 separated poses, found 5; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zeros",
+      "clip": "W-hit-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "E-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    }
+  ],
+  "normal_art_changed": 0,
+  "source_versions_preserved": true
+}

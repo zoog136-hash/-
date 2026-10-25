@@ -1,0 +1,143 @@
+{
+  "status": "BOUNDED_NATIVE_ARM_EDIT_INPUT_NOT_SOURCE_APPROVAL",
+  "original": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/thunder_female-NW-walk-contact0-v01-service.png",
+  "original_sha256": "dc5da66b30171bdff9ab4c25cf5a22327debe8c8b41088693824433cb4e684db",
+  "virtual_C_fixed": 2048,
+  "factor_fixed": 2,
+  "new_anatomical_LEFT_near_free_chain": {
+    "shoulder": [
+      589,
+      458
+    ],
+    "elbow": [
+      632,
+      550
+    ],
+    "wrist": [
+      674,
+      648
+    ],
+    "fingers_end": [
+      696,
+      696
+    ]
+  },
+  "right_arm_staff": "UNCHANGED_PROTECTED",
+  "both_legs": "UNCHANGED_PROTECTED",
+  "nape": "UNCHANGED_PROTECTED",
+  "derived_input": "Only original nearLEFTarm alpha cleared, magenta targetscaffold added; original immutable.",
+  "old_left_erasure_polygon": [
+    [
+      573,
+      440
+    ],
+    [
+      613,
+      451
+    ],
+    [
+      628,
+      480
+    ],
+    [
+      609,
+      523
+    ],
+    [
+      592,
+      553
+    ],
+    [
+      573,
+      588
+    ],
+    [
+      542,
+      619
+    ],
+    [
+      515,
+      646
+    ],
+    [
+      508,
+      680
+    ],
+    [
+      501,
+      706
+    ],
+    [
+      447,
+      709
+    ],
+    [
+      444,
+      680
+    ],
+    [
+      460,
+      639
+    ],
+    [
+      475,
+      602
+    ],
+    [
+      497,
+      575
+    ],
+    [
+      513,
+      537
+    ],
+    [
+      527,
+      500
+    ],
+    [
+      538,
+      469
+    ],
+    [
+      550,
+      449
+    ]
+  ],
+  "allowed_edit_mask_bbox": [
+    444,
+    435,
+    721,
+    721
+  ],
+  "composition_rule": "Only generatedRGBA inside allowed-left-arm-only-mask; every RGBA byte outside must equal original. Do not resample or change C/roots.",
+  "costume_crops": [
+    [
+      [
+        475,
+        560,
+        554,
+        636
+      ],
+      [
+        10,
+        20
+      ]
+    ],
+    [
+      [
+        542,
+        447,
+        623,
+        521
+      ],
+      [
+        130,
+        20
+      ]
+    ]
+  ],
+  "actual_service_calls": 0,
+  "approval_added": 0,
+  "mask_neck_head_protection": "Every pixel y<435 excluded from allowed edit mask; all upper hair/nape stay original RGBA."
+}

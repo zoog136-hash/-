@@ -1,0 +1,26 @@
+{
+  "args": [
+    "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+    "--path",
+    "/workspace/runtime/batch16/Main-project",
+    "--rendering-method",
+    "gl_compatibility",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tests/pr122_tomb269_baseline_visual_review.gd"
+  ],
+  "env": {
+    "DISPLAY": ":107",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "XDG_DATA_HOME": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/platform/data",
+    "APPDATA": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/platform/data",
+    "LOCALAPPDATA": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/platform/data",
+    "XDG_CONFIG_HOME": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/platform/config",
+    "XDG_CACHE_HOME": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/platform/cache",
+    "TWILIGHT_PR100_BATCH_ISOLATED": "1",
+    "TWILIGHT_PR100_BATCH_CONFIG": "res://tests/fixtures/pr122_tomb269_batch16.json",
+    "TWILIGHT_PR100_BATCH_REPORT": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/report.json",
+    "TWILIGHT_PR100_BATCH_CAPTURE_DIR": "/workspace/runtime/batch16/Tomb-Main-QA-v01/actual-Main/captures"
+  }
+}

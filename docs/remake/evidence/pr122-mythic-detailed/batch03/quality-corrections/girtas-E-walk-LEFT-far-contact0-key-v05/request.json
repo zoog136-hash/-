@@ -1,0 +1,93 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v05LEFTcontact0",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 0,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png",
+    "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v05/E-walk-contact0-farLEFT-lead-nearRIGHT-trail-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v05/E-walk-contact0-farLEFT-lead-nearRIGHT-trail-guide.png": "8a496007b8a07e4e0ea31fcd6c1bc2b80fbf1a3267904b70271135749c90645c"
+  },
+  "reference_provenance": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+    "source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+    "region": [
+      46,
+      4,
+      427,
+      495
+    ],
+    "reference": "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png",
+    "reference_sha256": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "operation": "exactRGBAcrop_no_rescale_recolor_mask",
+    "frame": 0,
+    "currentframes": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/SpriteFrames.tres"
+  },
+  "guide_joint_authority": {
+    "reference_canvas": [
+      427,
+      495
+    ],
+    "near_RIGHT_trails_lower_ground": [
+      [
+        286,
+        288
+      ],
+      [
+        225,
+        375
+      ],
+      [
+        181,
+        470
+      ],
+      [
+        198,
+        490
+      ]
+    ],
+    "far_LEFT_leads_upper_ground": [
+      [
+        322,
+        286
+      ],
+      [
+        372,
+        365
+      ],
+      [
+        420,
+        445
+      ],
+      [
+        418,
+        470
+      ],
+      [
+        452,
+        456
+      ]
+    ],
+    "near_ground_y": 490,
+    "far_ground_y": 470,
+    "garment_must_remain_long": true
+  },
+  "transparent_background": true,
+  "corrective_reason": "Materially new explicit farLEFT leadingheel/nearRIGHT trailingtoe single0 from actualcurrentfaithfulEidle +actual projectedtwoleg/grounddepth guide. PriorEwalk sources failed foreleg/supportexchange; do not reference failed sheets or pass byleglabels. Require real visible shin/boot forward/back andfar/near lane ownership.",
+  "user_authorization": "Continue actual Unique production, privateimagegen/boundedJPEG allowed, no mainchatimage/binary. RootonlyGit/data/integration.",
+  "prompt": "Author ONE real WALK LEFT-HEEL CONTACT0 key of EXACT SAME GIRTAS in image1, walking EAST/RIGHT. Image2 is ONLY joint/ground-depth authority, never output guide marks. Preserve same E side/oblique body plane as reference: pale face/profile and long PALE SILVER hair, gold crown, blackgold segmented shoulder/chest armor, THIN STRAIGHT HARD GOLD RADIAL RAYS, LONG DARK ROBE with samegoldtrim panels/slits, boots and same LONG SINUOUS yellowgold blade in anatomicalRIGHT NEAR hand. EMPTY LEFT far hand remains free. No Halpasfeatherwings/purpleblade/redVmask, no newpants/shortskirt or broadstraight sword. Same orthographic camera/model/proportions, no SE frontturn or mirror.\n\nSpecific LEFT/far HEEL contact0, double-support WALK (not run): character faces RIGHT. AnatomicalRIGHT is the NEAR foreground leg and near weaponarm side, its ground is LOWER onscreen; anatomicalLEFT is FAR behind near thigh, its ground is about20referencepixels HIGHER. The FAR LEFT leg now extends FORWARD SCREEN-RIGHT: far LEFT hip underrobe -> knee infront ofhip -> shin slantsforward -> FAR LEFT heel clearly on UPPER/FAR ground in front of pelvis, toes slightly lifted facingRIGHT. Same FAR thigh may naturally remain partly hidden under original longrobe, but FAR leading shin/boot must read behind NEAR thigh and in the UPPER ground lane, not relabelled near leg.\n\nAt same time NEAR RIGHT leg extends BACK SCREEN-LEFT: nearRIGHT hip->knee behindhip->ankle behindbody->toe touching LOWER/NEAR ground, heel lifting during push-off. It is the REAR foot, not leading foreground shin. Follow orangeguide nearRIGHT trailinglower foot and blueguide farLEFT leadingupper heel. BOTH feet have groundcontact (one heel/front, one toe/rear), no hovering/airborne boot, no foot kickingup at face, no running knee-up. Two real unbroken legchains/twofeet only, toe/heel natural, no swapped boots or pasted limbs. Small walking forward weightshift, no exaggerated crouch or lunge. Keep longrobe panels naturally open/swaying around stride without removing them or inventing new slits.\n\nRIGHT/near hand holds original sinuous blade LOW/backward-outward asidle; same continuous shoulder-elbow-wrist-grip, no hand swap or floating weapon. EMPTY far LEFT hand only small relaxed walking counterbalance low, two arms only. Head/crown/hips face RIGHT, HARD rays rigid attached not feathers. Complete longhair/robe/blade/ray/crown/boot tips.\n\nONE complete centered transparent1024x1024cutout, whole silhouette central800x800 with clear100px gutters all sides. Opaque crisp detailedRPG materials, thin edgeAA, alpha0 background/gaps. No coloredjointguide, words, labels, grids, floor/shadows, glow, bloom, particles, trails or extraobjects.",
+  "requested_at": "2026-10-19T14:11:45.613281+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

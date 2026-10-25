@@ -1,0 +1,37 @@
+{
+  "schema": "pr122-monster-review-scope-v1",
+  "user_instruction_date": "2026-10-23",
+  "include_previously_approved": true,
+  "normal": {
+    "target": 258,
+    "review": "frame_integrity_only",
+    "checks": [
+      "actual_texture_files_present_and_loadable",
+      "SpriteFrames_references_and_positive_frame_counts",
+      "idle_run_attack_hit_eight_direction_resolution",
+      "existing_requested_or_S_death_resolution",
+      "invalid_regions_or_empty_frames"
+    ],
+    "existing_walk_as_runtime_run_fallback_allowed": true,
+    "detailed_visual_quality_review_requested": false,
+    "old_visual_quality_holds_block_this_review": false
+  },
+  "boss": {
+    "target": 60,
+    "review": "mythic_quality",
+    "checks": [
+      "identity_against_existing_reference",
+      "eight_direction_camera_and_silhouette",
+      "idle_run_attack_hit_action_distinction",
+      "weight_support_contact_and_core_parts",
+      "clipping_and_body_integrity"
+    ],
+    "inspect_previously_approved": true,
+    "shared_resource_load_is_quality_approval": false
+  },
+  "existing_approvals_and_assets_preserved": true,
+  "runtime_proxies_and_dedicated_staging_are_reported_separately": true,
+  "frame_integrity_is_original_art_delivery": false,
+  "chat_image_or_base64_output_allowed": false,
+  "full_CI": "deferred_per_user"
+}

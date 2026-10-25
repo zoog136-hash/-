@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "N",
+  "role": "walk",
+  "version": "v01",
+  "source_batch": "batch03",
+  "asset_type": "four_missing_walk_halfcycle_sources",
+  "status": "REQUESTED_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nidle_phase0-lossless.png",
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_phase2-opposite-contact-lossless.png",
+    "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/target-four-missing-halfcycle-leg-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nidle_phase0-lossless.png": "86771e8e7c2a00c43eaeab69c453c79b01be8cf71e083cfd238cb76ee28eed92",
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_phase2-opposite-contact-lossless.png": "4b2df7477c66483f91ecada8c09156adec5405fa1495a7a79e06317abd569c54",
+    "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/target-four-missing-halfcycle-leg-guide.png": "51a439606bae3188dc7e57743056bd9505b855e1158bb7771e3ad4f4ed167e85"
+  },
+  "prompt": "Author ONLY FOUR MISSING NORTH WALK PHASES of the exact original Girtas. These are the passing/advance phases needed BETWEEN TWO ALREADY AVAILABLE OPPOSITE CONTACTS. Do not re-author the existing contact keys and do not make a6-frame sheet. Output transparent1024x1024, TWO COLUMNS x TWO ROWS, one complete full-body N/back character per512cell; four temporal slots correspond to final game phases1,2,4,5 row-major.\n\nREFERENCE ROLES: image1 exact original tiny portrait identity; image2 faithful Nidle0 crop for pureBACK identity/scale; image3 EXISTING contact0 with LEFT/imageLEFT leg long trailingDOWN and RIGHT shortUP; image4 EXISTING opposite contact3 with RIGHT/imageRIGHT leg long trailingDOWN and LEFT shortUP. Both existing physical contacts are valid, use them as precise endpoints. Image5 is the authoritative4-slot TARGET LEG POSE GUIDE: BLUE is anatomicalRIGHT/imageRIGHT leg, PINK is anatomicalLEFT/imageLEFT leg. Guide colors/lines/text never appear in final art. Output ONLY the missing guide poses, not repeated contacts.\n\nEXACT FOUR MISSING PHASES: TOPLEFT finalphase1 = RIGHT leg supports beneath hip, LEFT knee flexes and LEFT foot passes forwardUP/away, lifted slightly under hem; right support boot lower than lifted left boot. TOPRIGHT finalphase2 = RIGHT support moves to back/toe-offDOWN, LEFT leg extends forwardUP/away toward the next contact, left knee straightens from passing pose but boot still unweighted; do not duplicate contact3. BOTTOMLEFT finalphase4 = LEFT leg supports beneath hip, RIGHT knee flexes and RIGHT foot passes forwardUP/away, slightly lifted; LEFT support boot lower than liftedRIGHT boot. BOTTOMRIGHT finalphase5 = LEFT support moves back/toe-offDOWN, RIGHT leg extends forwardUP/away toward contact0, knee straightens from passing pose but boot still unweighted. These are two OPPOSITE anatomical halfcycles, not the same near leg copied four times. Phase1 and4 must use opposite SUPPORT legs and opposite lifted/pass legs. Phase2 and5 must use opposite trailing and forward legs. Match corresponding guide hip-knee-ankle chains explicitly. True WALK has modest knee/ankle motion and grounded support; no high marching/running/jumping. Preserve equal physical leg lengths; shortened projections come only from bent/lifted/away perspective. Both complete legs/boots connect to correct hips.\n\nPURE NORTH BACK VIEW ALL4: back helmet, long pale back hair, back torso/pelvis and boot toes face UP/away; no face/eyes/nose/mouth/front cheststar, no side/backward turn. SAME ANATOMICALRIGHT/imageRIGHT hand holds original long THIN SINUOUS orange/gold curved weapon through every phase. LEFT/imageLEFT hand remains EMPTY. Do not mirror body or swap hand when changing leg support. Original tall dark/gold head ornaments, THIN HARD GOLD RADIAL SPINES physically attached behind shoulders, long DARK GOLD-TRIM skirt/coat over original dark boots and opaque dark/gold armor. Preserve long skirt panels, letting them part/overlap naturally enough to reveal actual left/right support exchange without changing costume into segmented fitted leg armor. No redVmask, thick orange flamefeather wings, short broad blade, new gear or generic demon redesign.\n\nSame anatomical ratios, camera, body size and equipment contour as the two provided actual contact crops, across ALL4. Use about1:1 native pixel scale of those crops inside512cells, with boots near localy480 and small breathing/hip bob only as gait needs. Full head, every thin spine, hair, robe, both complete boots and entire long curved weapon tip remain uncropped with transparent gutters; no neighboring pose overlap. Local pelvis/knee/ankle articulation and gentle cloth/hair response, not rigid translated copies or tint changes. Torso stays controlled in sameBACKheading; coherent transition contact0->missing1->missing2->oppositecontact3->missing4->missing5->contact0.\n\nHigh-quality faithful original game source. Opaque armor/gold material, alpha0 outside physical silhouette and between connected thinspines. NO outer glow cloud, detached sparks/rays, floor, shadow, backdrop, grid, text, labels, borders, guide colors or extra figures. FOUR distinct missing articulated poses only; preserve the pair of opposite support legs exactly as the guide states.",
+  "transparent_background": true,
+  "expected_poses": 4,
+  "layout": "2x2_rowmajor",
+  "intended_game_phase_slots": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "phase_contract": [
+    "RIGHT_support_LEFT_passingUP",
+    "RIGHT_backtoe_LEFT_advanceUP",
+    "LEFT_support_RIGHT_passingUP",
+    "LEFT_backtoe_RIGHT_advanceUP"
+  ],
+  "corrective_reason": "Avoid redundant new opposite-contact generation after recognizing existingNwalkphase2 is valid opposite contact3. Reuse lossless known-good contacts0+3, author only missing opposite passing/advance halfcycles with precise leg-role guide; no duplicate6same-leg request.",
+  "source_contact_crop_proof_paths": [
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/lossless-source-crop-proof.json",
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/lossless-contact2-source-proof.json"
+  ],
+  "pose_guide_proof_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/pose-guide-proof.json",
+  "user_authorization": "Actual missing movement source production from existing valid contact keys, one4pose generation, no fullloop/approval claim, privateboundedreview only and no repo/index/chat images.",
+  "repo_mutations": false,
+  "new_approvals": 0
+}

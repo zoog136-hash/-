@@ -1,0 +1,92 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_ACTUAL_R085_NW_IDLE_SIX_AND_ATTACK_TRANSITIONS",
+  "actor_key": "transform:267",
+  "revision": "r085",
+  "checkpoint": "70aa4204f9f179d87f177297c4577ac993275c23",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r085/SpriteFrames.tres",
+  "frames_sha256": "4ef40b8762a78d020ad6c91dfe8f37b8d1b824f6d2488daac8fa4eea17835b2f",
+  "scope": [
+    "actualNWidleall6breath_hair_cloth_withtwofootstance",
+    "actualNWidle0_to_NWattack0_bodyroot_rigidsize",
+    "actualNWattack5_return_to_NWidle0",
+    "minimal_Nidle_Widle_NWidle_distinct_camera_check",
+    "actualNWidle5_to_0_loop"
+  ],
+  "NWidle_source_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+  "NWattack_source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+  "idle_pose_canvas_sizes": [
+    944,
+    944,
+    944,
+    944,
+    944,
+    944
+  ],
+  "attack_entry_canvas": 1696,
+  "attack_return_canvas": 2264,
+  "all_twelve_actual_TRES_crop_region_margin_RGBA_SHA_canvas_anchor_checks": "PASS",
+  "native_idle_count": 6,
+  "idle_native_speed": 5.0,
+  "findings": [
+    "AllsixactualNWidleframeskeeptrueNWrear3/4camera: back/hairdominant, nearLEFTshoulder/emptyarmatimageLEFT, farRIGHTweaponarmbehindatimageRIGHT; hip/bootsobliquetowardupperLEFT. DistinctfromsymmetricstraightNbackandface/chestvisiblefullWside inminimalactualN/Wcomparison.",
+    "OriginalnarrowHARDgoldradialrays, longsilver/palehair, longdarkgoldtrimrobe, originalRIGHTsinuousweaponandexacttwoarms/legs retainedall6. No Ncameraalias, mirror, handtransfer, featherflamefan orsegmentedpantsreplacement.",
+    "Sixframesactuallydifferwithsubtlebreathing/shoulderriseandhair/clothcontourdelay whilefeetretainoriginaltwosolestance. No legexchange/walk orglobalbodytranslation substitutedforidle. AllC944andexactsourceRGBAcoveragepreserved.",
+    "Actualtwo-bootROIcentroidrelativegroundrootXrange0.2593world/Yrange0.2074world acrosssix. Guard0targetmean[-2.9203,-0.1131]worldmatchesnewidlecentroidwithinrounding; no cell-center/bladebboxrootbias.",
+    "NWidle\u2194NWattackguard0head/shoulder/hips/bootsretaincoherentrigidsize andsame3/4camera despite sourceC944versus1696. Attackrecovery5C2264matchesbody/skull/armorvolume, sameactualRIGHTweaponarm andfloorprojection; authoredstance narrows/weightshifts beforewideridle, not actorrescaling.",
+    "Attack5two-solecentroid[-5.8700,+0.1100]world versusguard[-2.9203,-0.1131]: verticalmeangroundcontinuity0.2231world; \u22482.95worldhorizontalstanceadjustmentbelongsactualrecoverystepandremainssmallnexttofootspan45\u201351world. Bodyhiproot/cameracontinuityvisuallycoherent.",
+    "Idle5\u21920samefootidentities/weaponhand, breath/hairreturnwithstabletwofootmean andsmallcrestchange, no mismatchedframecanvas orsource-scalejump."
+  ],
+  "numeric_evidence": {
+    "idle_sole_mean_X_world_range": 0.25928407994187497,
+    "idle_sole_mean_Y_world_range": 0.20744850605561108,
+    "central_crown_peak_world_y": [
+      -134.36134335317783,
+      -135.27744342149495,
+      -137.41501024756823,
+      -138.33111031588535,
+      -138.6364770053244,
+      -136.4989101792511
+    ],
+    "central_crown_world_Y_range": 4.275133652146565,
+    "idle5_to_0_central_crown_world_delta": 2.1375668260732823,
+    "idle5_to_0_two_sole_mean_world_delta": [
+      0.08198546497869952,
+      0.045367681398484266
+    ],
+    "guard0_2sole_mean_world": [
+      -2.920299543422191,
+      -0.11311343789320095
+    ],
+    "recovery5_2sole_mean_world": [
+      -5.870043546326997,
+      0.11001083719709455
+    ]
+  },
+  "evidence_files": [
+    {
+      "path": "/workspace/scratch/girtas-r085-NW-idle-runtime-qc/actual-layout-measurements.json",
+      "sha256": "e709891e1d46175a571629b1eb800b49d4d7f57e4ab2806b84734d4cc4c1a261"
+    },
+    {
+      "path": "/workspace/scratch/girtas-r085-NW-idle-runtime-qc/actual-idle-six-body-root-motion-evidence.json",
+      "sha256": "71a1e53dba1f0c2cd1d485b263f87b98d4a90c38cdd717359bd137da50ffc99f"
+    },
+    {
+      "path": "/workspace/scratch/girtas-r085-NW-idle-runtime-qc/attack-entry-return-two-sole-ROI-probe.json",
+      "sha256": "0b51032f7d48e0365a78df967234f96c338276cdbcb7df49a57d85203223d96d"
+    }
+  ],
+  "limits": [
+    "PrivatepanelsreconstructactualcompiledTREStexture/region/margin/nativeprofilephysicalscales exactly; notGodotengineScreenshot. Rootreportedresource/actualPlayer/actionPASS atthisr085checkpoint, notrepeatedhere.",
+    "Hairthresholdcomponentcentroidisnotusedasindependentkinematicmeasurementbecauseillumination/fragmentscanchangemasks. Visualactual6plusphysicalrootchecksestablishscope.",
+    "ThisisNWidleandentry/returnscopedQC, notwholeGirtas48actorapproval. Noapprovalcountchangefromthisreview."
+  ],
+  "private_preview_bytes": [
+    144777,
+    81107
+  ],
+  "actor_approval": false,
+  "new_approvals": 0,
+  "reviewed_at": "2026-10-19T14:23:36.666646+00:00"
+}

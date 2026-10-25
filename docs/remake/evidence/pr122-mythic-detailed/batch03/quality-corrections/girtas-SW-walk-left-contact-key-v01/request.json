@@ -1,0 +1,53 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "SW",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_faithful_locomotion_contact_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 0,
+  "intended_anatomical_support": "LEFT",
+  "references": [
+    "/workspace/scratch/girtas-SW-walk-production-v01/SWidle0-lossless.png",
+    "/workspace/scratch/girtas-SW-walk-left-contact-key-v01/single-contact-joint-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-walk-production-v01/SWidle0-lossless.png": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+    "/workspace/scratch/girtas-SW-walk-left-contact-key-v01/single-contact-joint-production-guide.png": "9e71a403093b4362c2c786ad05372a9f40654d8168f5ab6a2ff7e84744b147bd"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Original SWwalk wrongredmask/segmentedpants/flamefan model. Author only actual two opposite groundedcontact keys from currentfaithfulSWidle, no wrongidentity originalwalk or PR100 refs.",
+  "prompt": "Edit FIRST image, the CURRENT SELECTED faithful GIRTAS SOUTHWEST IDLE, into exactly ONE new SOUTHWEST WALK CONTACT keypose, game0, anatomicalLEFT forward. SECOND image is an explicit masked-leg joint-target diagram only, not final art. Color names are anatomy: GREEN anatomicalRIGHT is FAR/imageLEFT and weapon-side; MAGENTA anatomicalLEFT is NEAR/imageRIGHT and free-hand side. Do not output guide marks. Exactly ONE full original figure, not2/6sheet.\n\nFIXED SW camera: original uncovered PALE face looks DOWN-LEFT, frontal3/4 chest turned toward IMAGELEFT. Near anatomicalLEFT shoulder/arm/hip are on IMAGERIGHT, its LEFT hand EMPTY. Far anatomicalRIGHT shoulder/arm/hip are on IMAGELEFT, RIGHT hand holds original long SINUOUS weapon at IMAGELEFT; keep that continuous connected real RIGHT arm, no transfer/mirror. Originalface/hair/body dimensions andorthographiccamera retained.\n\nNEAR LEFT CONTACT = LONG LOWER-RIGHT LEG. Directly below near/free-hand IMAGERIGHT hip, the anatomicalLEFT thigh/knee/shin extends DOWN to a clearly LOWER-RIGHT planted boot. LEFT heel lands with toes slightly tipped UP/LEFT, knee softly extended and weight reaching onto LEFT support. LEFT boot MUST be the LOWEST boot, at IMAGE RIGHT of the other boot. FAR RIGHT leg under weapon-side IMAGELEFT hip is now shorter/trailing UP-LEFT, RIGHT heel raised and toe lightly on receding ground. Keep RIGHT far boot above/left of nearLEFT landing boot. Do not put RIGHT boot long forward at lowerLEFT. Actual target LEFT hip[335,350]\u2192knee[355,435]\u2192ankle[375,550]\u2192toe[345,565]; RIGHTfar hip[280,350]\u2192knee[250,415]\u2192ankle[235,480]\u2192toe[208,495]. This is the nearLEFT down-right leg despite travelheadingDOWNLEFT; do not mirror the body or swap support.\n\nThis is a GROUNDED WALK contact, one heelstrike and opposite toes lightly supporting, not run/jump/attack/crouch/standingstill. Actual knees/hips/ankles must change from neutral. Use slight pelviscounterrotation, freeLEFT armcountermotion and stable RIGHTweaponarm, original longrobe/hair natural delayed sway. Part/fold EXISTING long dark goldtrimrobe panels enough to see both real knee-shin-boot chains; preserve skirt length and goldtrim. Never replace it with segmentedpants, remove the hem, add extra boots/legs or hide the required joints under a solid cone.\n\nFaithfuloriginal unique model: same pale uncovered face, long PALE hair, originalhorncrown, narrow HARD straight GOLD radialspines (not wings/flames/feathers), darkblackgold armor, LONG DARK goldtrim robe, one original LONG SINUOUS orangegold weapon in RIGHT FAR hand IMAGELEFT, LEFT NEAR empty IMAGERIGHT. Keep all hardspines and entireblade originalshape/length, no newgear/redVmask/shortbroad sword/hand swap/extra arm or missingparts.\n\nOutput ONE finished wholefigure on transparent requested1024x1024PNG. Body500-600px and wholegear envelope<=800px, >=96px truealpha0 margins allouteredges. Keep every hardspinetip/fullblade/robe/boot insidecanvas. Same fine gameart materials; hardopaque weaponwithinternalshine and no outwardglow/haze. No text/diagram/arrows/coloredchains/ground/shadow/particles/aura/blur/trails/grid/duplicates. Most important actual final leg geometry: NEAR anatomicalLEFT at LOWER-RIGHT planted, FAR anatomicalRIGHT UPPER-LEFT trailing.",
+  "requested_at": "2026-10-19T13:27:43.133303+00:00",
+  "source_idle_crop_proof": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
+    "source_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+    "source_pose": 0,
+    "region": [
+      0,
+      0,
+      486,
+      499
+    ],
+    "rgba_sha256": "68cb5c313ad3a00b0b963dddfd40aa178c06c2b1c26e7d6577378f3548f59bef",
+    "crop_path": "/workspace/scratch/girtas-SW-walk-production-v01/SWidle0-lossless.png",
+    "crop_sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+    "source_anchor": [
+      256,
+      495
+    ],
+    "source_canvas": [
+      1024,
+      1024
+    ]
+  },
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_reference_only": true
+}

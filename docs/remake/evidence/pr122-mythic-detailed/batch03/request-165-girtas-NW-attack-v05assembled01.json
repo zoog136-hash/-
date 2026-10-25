@@ -1,0 +1,903 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NW",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "v05assembled01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "request_kind": "LOSSLESS_REVIEWED_POSE_MAP_ASSEMBLY",
+  "references": [
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png",
+    "/workspace/scratch/girtas-NW-attack-recovery5-repair-v05/girtas-NW-attack-recovery5-v05.png",
+    "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+    "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png": "09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723",
+    "/workspace/scratch/girtas-NW-attack-recovery5-repair-v05/girtas-NW-attack-recovery5-v05.png": "a78435d6b7af85abdcfe9eaa52add8a54ba3409826b1695439697cf49bc48910",
+    "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+    "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.png": "d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Preserve two correct old NW attack phases1/2 and replace guard/contact/follow/recovery with four independently reviewed faithful source poses; exact empty-nearLEFT/farRIGHT sinuous weapon and low impact3/recovery5, no source resampling. Actual compiled physical layout/Player review remains HOLD.",
+  "prompt": "Assemble only the exact reviewed six-pose map; no image generation or source pixel changes.",
+  "user_authorization": "Continue actual PR122 production using preserved source art without chat images.",
+  "requested_at": "2026-10-19T13:02:40.877752+00:00",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+    "canvas_size": 2048,
+    "review_basis": "Six distinct exact-copy poses fit strict2048 canonical geometry; complete alpha16 coverage validated by pinned explicit reviewed source regions."
+  },
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+    "base_geometry_sha256": "23404c273cd6e0579866b13ba69a1989085707970dcd9a9bc28467f75cc59bda",
+    "direction": "NW",
+    "review_basis": "Six exact pinned source rectangles copied once into separated spacious cells; expand each automatic alpha100+3 rectangle only to its known complete copied RGBA rectangle. This preserves original source pixels and all owned alpha>16 without changing thresholds, anchors, role/order or body scale.",
+    "regions": [
+      [
+        168,
+        196,
+        944,
+        887
+      ],
+      [
+        1753,
+        393,
+        334,
+        494
+      ],
+      [
+        468,
+        1692,
+        344,
+        455
+      ],
+      [
+        1490,
+        1503,
+        859,
+        833
+      ],
+      [
+        231,
+        2779,
+        817,
+        843
+      ],
+      [
+        1452,
+        2661,
+        937,
+        1078
+      ]
+    ],
+    "nearest_owner_sha256": "8b48b4ff5d80ca7b94dc1ee37bc5de28c56c383fd7ce079ddb769cef3d00a8c7",
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+    "canvas_size": 2048,
+    "direction": "NW",
+    "role": "attack",
+    "authored_pose_canvas_sizes": [
+      1696,
+      832,
+      832,
+      1472,
+      1472,
+      2264
+    ],
+    "source_anchors": [
+      [
+        592,
+        1040
+      ],
+      [
+        1950,
+        871
+      ],
+      [
+        671,
+        2128
+      ],
+      [
+        2168,
+        2297
+      ],
+      [
+        885,
+        3584
+      ],
+      [
+        1823,
+        3724
+      ]
+    ],
+    "review_basis": "Absolute comparison against selected faithful native NW idle0 (C1024, sourceSHA4a140dd2...): match original helmet/head and rigid shoulder/torso scale, checking neutral guard/recovery crown-to-support span as supporting evidence; exclude large weapon/rays from scale inference. Different old/new source pixel resolutions require six virtual canvases. The centroid/depth of two visible soles supplies a candidate body root, avoiding the rejected single-heel pivot that exaggerated stance widening into whole-body translation. Both foot advance/spread and torso loading remain authored. Approximate manual landmark proposal only; final compiled/Player visual QC remains HOLD."
+  },
+  "newly_authored_poses": 4,
+  "reused_poses": 2,
+  "expected_poses": 6,
+  "approval": "NOT_APPROVED",
+  "source_provenance": {
+    "packet_v02": {
+      "status": "SIX_SOURCE_CENTROID_LAYOUT_PROPOSAL_PENDING_COMPILED_RUNTIME_VISUAL_QC",
+      "key": "transform:267",
+      "direction": "NW",
+      "role": "attack",
+      "version": "v05assembled01",
+      "source_batch": "batch03",
+      "raw_png": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/girtas-NW-attack-v05assembled01.png",
+      "raw_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+      "raw_bytes": 3308212,
+      "source_canvas_review": 2048,
+      "source_region_review": {
+        "schema": 1,
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+        "base_geometry_sha256": "23404c273cd6e0579866b13ba69a1989085707970dcd9a9bc28467f75cc59bda",
+        "direction": "NW",
+        "review_basis": "Six exact pinned source rectangles copied once into separated spacious cells; expand each automatic alpha100+3 rectangle only to its known complete copied RGBA rectangle. This preserves original source pixels and all owned alpha>16 without changing thresholds, anchors, role/order or body scale.",
+        "regions": [
+          [
+            168,
+            196,
+            944,
+            887
+          ],
+          [
+            1753,
+            393,
+            334,
+            494
+          ],
+          [
+            468,
+            1692,
+            344,
+            455
+          ],
+          [
+            1490,
+            1503,
+            859,
+            833
+          ],
+          [
+            231,
+            2779,
+            817,
+            843
+          ],
+          [
+            1452,
+            2661,
+            937,
+            1078
+          ]
+        ],
+        "nearest_owner_sha256": "8b48b4ff5d80ca7b94dc1ee37bc5de28c56c383fd7ce079ddb769cef3d00a8c7",
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+      },
+      "runtime_layout_review": {
+        "status": "REVIEWED_LAYOUT_PROPOSAL",
+        "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+        "canvas_size": 2048,
+        "direction": "NW",
+        "role": "attack",
+        "authored_pose_canvas_sizes": [
+          1696,
+          832,
+          832,
+          1472,
+          1472,
+          2264
+        ],
+        "source_anchors": [
+          [
+            592,
+            1040
+          ],
+          [
+            1950,
+            871
+          ],
+          [
+            671,
+            2128
+          ],
+          [
+            2168,
+            2297
+          ],
+          [
+            885,
+            3584
+          ],
+          [
+            1823,
+            3724
+          ]
+        ],
+        "review_basis": "Absolute comparison against selected faithful native NW idle0 (C1024, sourceSHA4a140dd2...): match original helmet/head and rigid shoulder/torso scale, checking neutral guard/recovery crown-to-support span as supporting evidence; exclude large weapon/rays from scale inference. Different old/new source pixel resolutions require six virtual canvases. The centroid/depth of two visible soles supplies a candidate body root, avoiding the rejected single-heel pivot that exaggerated stance widening into whole-body translation. Both foot advance/spread and torso loading remain authored. Approximate manual landmark proposal only; final compiled/Player visual QC remains HOLD."
+      },
+      "per_pose_landmark_proposals": [
+        {
+          "phase": 0,
+          "virtual_canvas_size": 1696,
+          "source_anchor": [
+            592,
+            1040
+          ],
+          "prior_automatic_anchor": [
+            640,
+            1047
+          ],
+          "observed_two_sole_centroid_in_reference_pixels": [
+            461,
+            634
+          ],
+          "target_native_idle_two_sole_centroid_in_reference_pixels": [
+            490,
+            638
+          ],
+          "observation_precision_reference_pixels": 4,
+          "landmark_method": "The two visible sole-contact centroid/depth supplies a candidate body root. Both authored feet remain free to widen/advance, with torso/knee/NW reach unchanged; no single-foot lock or rigid torso-pose normalization."
+        },
+        {
+          "phase": 1,
+          "virtual_canvas_size": 832,
+          "source_anchor": [
+            1950,
+            871
+          ],
+          "prior_automatic_anchor": [
+            1920,
+            877
+          ],
+          "observed_two_sole_centroid_in_reference_pixels": [
+            527,
+            631
+          ],
+          "target_native_idle_two_sole_centroid_in_reference_pixels": [
+            490,
+            638
+          ],
+          "observation_precision_reference_pixels": 4,
+          "landmark_method": "The two visible sole-contact centroid/depth supplies a candidate body root. Both authored feet remain free to widen/advance, with torso/knee/NW reach unchanged; no single-foot lock or rigid torso-pose normalization."
+        },
+        {
+          "phase": 2,
+          "virtual_canvas_size": 832,
+          "source_anchor": [
+            671,
+            2128
+          ],
+          "prior_automatic_anchor": [
+            640,
+            2137
+          ],
+          "observed_two_sole_centroid_in_reference_pixels": [
+            528.5,
+            627
+          ],
+          "target_native_idle_two_sole_centroid_in_reference_pixels": [
+            490,
+            638
+          ],
+          "observation_precision_reference_pixels": 4,
+          "landmark_method": "The two visible sole-contact centroid/depth supplies a candidate body root. Both authored feet remain free to widen/advance, with torso/knee/NW reach unchanged; no single-foot lock or rigid torso-pose normalization."
+        },
+        {
+          "phase": 3,
+          "virtual_canvas_size": 1472,
+          "source_anchor": [
+            2168,
+            2297
+          ],
+          "prior_automatic_anchor": [
+            1920,
+            2332
+          ],
+          "observed_two_sole_centroid_in_reference_pixels": [
+            662.5,
+            613.5
+          ],
+          "target_native_idle_two_sole_centroid_in_reference_pixels": [
+            490,
+            638
+          ],
+          "observation_precision_reference_pixels": 4,
+          "landmark_method": "The two visible sole-contact centroid/depth supplies a candidate body root. Both authored feet remain free to widen/advance, with torso/knee/NW reach unchanged; no single-foot lock or rigid torso-pose normalization."
+        },
+        {
+          "phase": 4,
+          "virtual_canvas_size": 1472,
+          "source_anchor": [
+            885,
+            3584
+          ],
+          "prior_automatic_anchor": [
+            640,
+            3618
+          ],
+          "observed_two_sole_centroid_in_reference_pixels": [
+            660.5,
+            614
+          ],
+          "target_native_idle_two_sole_centroid_in_reference_pixels": [
+            490,
+            638
+          ],
+          "observation_precision_reference_pixels": 4,
+          "landmark_method": "The two visible sole-contact centroid/depth supplies a candidate body root. Both authored feet remain free to widen/advance, with torso/knee/NW reach unchanged; no single-foot lock or rigid torso-pose normalization."
+        },
+        {
+          "phase": 5,
+          "virtual_canvas_size": 2264,
+          "source_anchor": [
+            1823,
+            3724
+          ],
+          "prior_automatic_anchor": [
+            1920,
+            3735
+          ],
+          "observed_two_sole_centroid_in_reference_pixels": [
+            446,
+            633
+          ],
+          "target_native_idle_two_sole_centroid_in_reference_pixels": [
+            490,
+            638
+          ],
+          "observation_precision_reference_pixels": 4,
+          "landmark_method": "The two visible sole-contact centroid/depth supplies a candidate body root. Both authored feet remain free to widen/advance, with torso/knee/NW reach unchanged; no single-foot lock or rigid torso-pose normalization."
+        }
+      ],
+      "absolute_reference": {
+        "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+        "source_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+        "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r063/NW-idle.png",
+        "geometry": {
+          "image_size": [
+            1024,
+            1536
+          ],
+          "frames": [
+            {
+              "row": 0,
+              "direction": "NW",
+              "region": [
+                23,
+                9,
+                495,
+                485
+              ],
+              "margin": [
+                279,
+                159,
+                529,
+                539
+              ],
+              "source_anchor": [
+                256,
+                490
+              ],
+              "rgba_sha256": "391b851a8302f40740ceeb8bbe0e4426c60b28e0a679efbc014bd9648119ad71"
+            },
+            {
+              "row": 1,
+              "direction": "NW",
+              "region": [
+                534,
+                8,
+                486,
+                486
+              ],
+              "margin": [
+                278,
+                158,
+                538,
+                538
+              ],
+              "source_anchor": [
+                768,
+                490
+              ],
+              "rgba_sha256": "f3ba690c22297032f726d677908eb73dd298c6cf600eb531772790e6b190e342"
+            },
+            {
+              "row": 2,
+              "direction": "NW",
+              "region": [
+                21,
+                510,
+                496,
+                494
+              ],
+              "margin": [
+                277,
+                150,
+                528,
+                530
+              ],
+              "source_anchor": [
+                256,
+                1000
+              ],
+              "rgba_sha256": "e5189450ad0a051e424436d1480e307272ef22a2d1f8f9606045d5931b7dc52a"
+            },
+            {
+              "row": 3,
+              "direction": "NW",
+              "region": [
+                535,
+                514,
+                486,
+                490
+              ],
+              "margin": [
+                279,
+                154,
+                538,
+                534
+              ],
+              "source_anchor": [
+                768,
+                1000
+              ],
+              "rgba_sha256": "f6c52e0008bd97c017d43eda685048a249e82d66e908836e2747da4957c4a9d9"
+            },
+            {
+              "row": 4,
+              "direction": "NW",
+              "region": [
+                22,
+                1025,
+                491,
+                488
+              ],
+              "margin": [
+                278,
+                156,
+                533,
+                536
+              ],
+              "source_anchor": [
+                256,
+                1509
+              ],
+              "rgba_sha256": "084d98bb09869663e2575ec090f5c8fc4cac8af63a1e402d63114107b8100c9a"
+            },
+            {
+              "row": 5,
+              "direction": "NW",
+              "region": [
+                533,
+                1026,
+                486,
+                487
+              ],
+              "margin": [
+                277,
+                157,
+                538,
+                537
+              ],
+              "source_anchor": [
+                768,
+                1509
+              ],
+              "rgba_sha256": "5699b5cc23395919e26b0ea9aafc5f44f485955abe8220cb0a7e4638166f2277"
+            }
+          ],
+          "distinct_pixel_frames": 6,
+          "neutral_height": 481.5,
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ]
+        },
+        "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r082/NativeMotionProfile.tres",
+        "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r082/SpriteFrames.tres"
+      },
+      "physical_scale_status": "PROPOSED_ONLY; rigid helmet/torso qualitative match, neutral crown-to-support evidence and manual support-sole landmarks; independent compiled physical-scale/hand/pose continuity review required.",
+      "support_anchor_status": "PROPOSED_ONLY; two visible sole centroid/depth root; both foot stance/advance, crouch and forward reach unchanged. Rejected prior single-heel pivot remains immutable/HOLD. No bodybbox-bottom/weapon-tip anchoring.",
+      "source_copy_proof": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/six-source-independent-assembly-proof.json",
+      "original_assembler_error_preserved": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/girtas-NW-attack-v05assembled01.assembly-error.json",
+      "repack_proof": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.repack.json",
+      "region_proof": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/reviewed-regions.proof.json",
+      "layout_proof": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/runtime-proposed-v02.proof.json",
+      "proposed_geometry": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/runtime-proposed-v02.geometry.json",
+      "private_preview": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/private-absolute-scale-and-foot-centroid-v02.jpg",
+      "private_preview_bytes": 91764,
+      "source_art_status": "Individual intended source poses reviewed; whole six-pose temporal composite still pending.",
+      "newly_authored_source_poses": 4,
+      "reused_original_source_poses": 2,
+      "newly_authored_by_assembly": 0,
+      "integrated": false,
+      "integration_ready": false,
+      "actor_approval_change": 0,
+      "detailed_completion_change": 0,
+      "repository_mutated": false,
+      "created_at": "2026-10-19T12:50:56.141447+00:00"
+    },
+    "exact_copy_proof": {
+      "status": "PASS_EXACT_SIX_SOURCE_PIXELS_AND_REVIEWED_FOREGROUND_REGIONS_NOT_APPROVED",
+      "source": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/girtas-NW-attack-v05assembled01.png",
+      "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+      "source_map": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/six-source-pose-map-v05.json",
+      "source_map_sha256": "952c62deaee172532d93ea138704f8d8cb013b235ea9dad4afd37f3277b7cbf3",
+      "pose_map": [
+        {
+          "phase": 0,
+          "path": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png",
+          "source_sha256": "09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723",
+          "region": [
+            0,
+            0,
+            944,
+            887
+          ],
+          "rgba_sha256": "ced6870d0c27f18201bbadda41e1e37fc1677791484eef1127114d04b6b8b87b",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Partial v04 reviewed guard0: complete empty nearLEFT and farRIGHT weapon chain; original crop/proof pinned.",
+          "output_region": [
+            168,
+            196,
+            944,
+            887
+          ],
+          "translation": [
+            168,
+            196
+          ],
+          "copy_RGBA_exact": true
+        },
+        {
+          "phase": 1,
+          "path": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+          "source_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+          "region": [
+            605,
+            6,
+            334,
+            494
+          ],
+          "rgba_sha256": "1537f9ee7c0368b8556e7a66c1dec2e5961339a16891b88002095ce31a915ff5",
+          "source_pose": 1,
+          "newly_authored": false,
+          "review_basis": "Original v03 correct phase1 exact prior reference crop preserved; independent hand adjudication confirms nearLEFT empty arm and raised farRIGHT weapon chain.",
+          "output_region": [
+            1753,
+            393,
+            334,
+            494
+          ],
+          "translation": [
+            1148,
+            387
+          ],
+          "copy_RGBA_exact": true
+        },
+        {
+          "phase": 2,
+          "path": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+          "source_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+          "region": [
+            146,
+            540,
+            344,
+            455
+          ],
+          "rgba_sha256": "98ddd2c0a20b6b726c05cf98d54d86d6f8f8096327e63142f0b510d0ae752cd6",
+          "source_pose": 2,
+          "newly_authored": false,
+          "review_basis": "Original v03 correct phase2 exact prior reference crop preserved; independent hand adjudication confirms correct farRIGHT loaded arm, not recreated.",
+          "output_region": [
+            468,
+            1692,
+            344,
+            455
+          ],
+          "translation": [
+            322,
+            1152
+          ],
+          "copy_RGBA_exact": true
+        },
+        {
+          "phase": 3,
+          "path": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.png",
+          "source_sha256": "d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b",
+          "region": [
+            238,
+            48,
+            859,
+            833
+          ],
+          "rgba_sha256": "40f972adaf287a760b54465f8b63237d0bf4d12ec06513a6932350be15e5e3ee",
+          "source_pose": "contact-follow-v05 row0 / game3",
+          "newly_authored": true,
+          "review_basis": "New two-pose v05 source visual PASS contact3; separate farRIGHT weapon and empty nearLEFT chain, retained NW extended contact. Lossless partial repack preserves all alpha>16 RGBA.",
+          "output_region": [
+            1490,
+            1503,
+            859,
+            833
+          ],
+          "translation": [
+            1252,
+            1455
+          ],
+          "copy_RGBA_exact": true
+        },
+        {
+          "phase": 4,
+          "path": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.png",
+          "source_sha256": "d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b",
+          "region": [
+            1513,
+            44,
+            817,
+            842
+          ],
+          "rgba_sha256": "beaf6ffcffa255bbddd85a5bca8ae1561872de8ffb94177cca529efd16443820",
+          "source_pose": "contact-follow-v05 row1 / game4",
+          "newly_authored": true,
+          "review_basis": "New two-pose v05 source visual PASS follow4; separate farRIGHT weapon and empty nearLEFT chain, retained NW forward follow-through. Lossless partial repack preserves all alpha>16 RGBA.",
+          "output_region": [
+            231,
+            2779,
+            817,
+            842
+          ],
+          "translation": [
+            -1282,
+            2735
+          ],
+          "copy_RGBA_exact": true
+        },
+        {
+          "phase": 5,
+          "path": "/workspace/scratch/girtas-NW-attack-recovery5-repair-v05/girtas-NW-attack-recovery5-v05.png",
+          "source_sha256": "a78435d6b7af85abdcfe9eaa52add8a54ba3409826b1695439697cf49bc48910",
+          "region": [
+            260,
+            75,
+            936,
+            1076
+          ],
+          "rgba_sha256": "85e0d2790d21b6d295109292168f912d8a728293fe5ec4d4d9887c030e10458b",
+          "source_pose": 5,
+          "newly_authored": true,
+          "review_basis": "New single recovery5 v05 source visual PASS: low right weapon and empty nearLEFT arm; retain genuine recovering NW pose.",
+          "output_region": [
+            1452,
+            2662,
+            936,
+            1076
+          ],
+          "translation": [
+            1192,
+            2587
+          ],
+          "copy_RGBA_exact": true
+        }
+      ],
+      "newly_authored_poses": 4,
+      "reused_original_poses": 2,
+      "whole_output_RGBA_equals_exact_six_source_copies": true,
+      "default_strict_six_pose_analyze2048": "PASS",
+      "original_assembler_status": "STOP_PRESERVED_NOT_APPROVED; automatic alpha100+3 region coverage omitted some alpha>16 fringe; original error receipt retained.",
+      "original_assembler_error": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/girtas-NW-attack-v05assembled01.assembly-error.json",
+      "reviewed_regions_validation": "PASS",
+      "source_region_review": {
+        "schema": 1,
+        "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+        "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+        "base_geometry_sha256": "23404c273cd6e0579866b13ba69a1989085707970dcd9a9bc28467f75cc59bda",
+        "direction": "NW",
+        "review_basis": "Six exact pinned source rectangles copied once into separated spacious cells; expand each automatic alpha100+3 rectangle only to its known complete copied RGBA rectangle. This preserves original source pixels and all owned alpha>16 without changing thresholds, anchors, role/order or body scale.",
+        "regions": [
+          [
+            168,
+            196,
+            944,
+            887
+          ],
+          [
+            1753,
+            393,
+            334,
+            494
+          ],
+          [
+            468,
+            1692,
+            344,
+            455
+          ],
+          [
+            1490,
+            1503,
+            859,
+            833
+          ],
+          [
+            231,
+            2779,
+            817,
+            843
+          ],
+          [
+            1452,
+            2661,
+            937,
+            1078
+          ]
+        ],
+        "nearest_owner_sha256": "8b48b4ff5d80ca7b94dc1ee37bc5de28c56c383fd7ce079ddb769cef3d00a8c7",
+        "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+      },
+      "all_alpha_gt16_covered_exactly_once": true,
+      "all_alpha_positive_covered": true,
+      "foreign_foreground_pixels": 0,
+      "new_source_pixels_authored_by_assembly": 0,
+      "resampled": false,
+      "recolored": false,
+      "mirrored": false,
+      "physical_scale_anchors": "HOLD_PENDING_ABSOLUTE_NW_IDLE_LANDMARK_REVIEW",
+      "actor_approval_change": 0,
+      "repository_mutated": false
+    },
+    "pose_map": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:267",
+      "role": "attack",
+      "direction": "NW",
+      "poses": [
+        {
+          "path": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png",
+          "source_sha256": "09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723",
+          "region": [
+            0,
+            0,
+            944,
+            887
+          ],
+          "rgba_sha256": "ced6870d0c27f18201bbadda41e1e37fc1677791484eef1127114d04b6b8b87b",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Partial v04 reviewed guard0: complete empty nearLEFT and farRIGHT weapon chain; original crop/proof pinned."
+        },
+        {
+          "path": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+          "source_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+          "region": [
+            605,
+            6,
+            334,
+            494
+          ],
+          "rgba_sha256": "1537f9ee7c0368b8556e7a66c1dec2e5961339a16891b88002095ce31a915ff5",
+          "source_pose": 1,
+          "newly_authored": false,
+          "review_basis": "Original v03 correct phase1 exact prior reference crop preserved; independent hand adjudication confirms nearLEFT empty arm and raised farRIGHT weapon chain."
+        },
+        {
+          "path": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+          "source_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+          "region": [
+            146,
+            540,
+            344,
+            455
+          ],
+          "rgba_sha256": "98ddd2c0a20b6b726c05cf98d54d86d6f8f8096327e63142f0b510d0ae752cd6",
+          "source_pose": 2,
+          "newly_authored": false,
+          "review_basis": "Original v03 correct phase2 exact prior reference crop preserved; independent hand adjudication confirms correct farRIGHT loaded arm, not recreated."
+        },
+        {
+          "path": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.png",
+          "source_sha256": "d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b",
+          "region": [
+            238,
+            48,
+            859,
+            833
+          ],
+          "rgba_sha256": "40f972adaf287a760b54465f8b63237d0bf4d12ec06513a6932350be15e5e3ee",
+          "source_pose": "contact-follow-v05 row0 / game3",
+          "newly_authored": true,
+          "review_basis": "New two-pose v05 source visual PASS contact3; separate farRIGHT weapon and empty nearLEFT chain, retained NW extended contact. Lossless partial repack preserves all alpha>16 RGBA."
+        },
+        {
+          "path": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.png",
+          "source_sha256": "d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b",
+          "region": [
+            1513,
+            44,
+            817,
+            842
+          ],
+          "rgba_sha256": "beaf6ffcffa255bbddd85a5bca8ae1561872de8ffb94177cca529efd16443820",
+          "source_pose": "contact-follow-v05 row1 / game4",
+          "newly_authored": true,
+          "review_basis": "New two-pose v05 source visual PASS follow4; separate farRIGHT weapon and empty nearLEFT chain, retained NW forward follow-through. Lossless partial repack preserves all alpha>16 RGBA."
+        },
+        {
+          "path": "/workspace/scratch/girtas-NW-attack-recovery5-repair-v05/girtas-NW-attack-recovery5-v05.png",
+          "source_sha256": "a78435d6b7af85abdcfe9eaa52add8a54ba3409826b1695439697cf49bc48910",
+          "region": [
+            260,
+            75,
+            936,
+            1076
+          ],
+          "rgba_sha256": "85e0d2790d21b6d295109292168f912d8a728293fe5ec4d4d9887c030e10458b",
+          "source_pose": 5,
+          "newly_authored": true,
+          "review_basis": "New single recovery5 v05 source visual PASS: low right weapon and empty nearLEFT arm; retain genuine recovering NW pose."
+        }
+      ],
+      "physical_scale_review": "HOLD_PENDING_ABSOLUTE_HEAD_TORSO_LANDMARK_AND_SUPPORT_ANCHOR_REVIEW_AGAINST_SELECTED_FAITHFUL_NW_IDLE",
+      "partial_repack_proof": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.repack.json",
+      "partial_repack_source_sha256": "59e701ee72214485d9aa8c0ac46d52e4431aa0c34cf4d5b7b463054a33689bc7",
+      "partial_repack_output_sha256": "d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b",
+      "approval": false,
+      "completed_added": 0
+    }
+  },
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v02iso01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Source reviewers verified NW rear heading and original pale hair, thin hard gold rays, long dark goldtrim robe, empty near LEFT and far RIGHT sinuous-weapon chain in the four new keys and two retained old keys.",
+      "The corrected guard0 and recovery5 are low phases; contact3 and follow4 retain the actual low strike and follow motion, not copied loaded poses.",
+      "The assembler preserves all six selected RGBA crops exactly; candidate private sequence and absolute helmet/rigid-torso comparison are recorded in composite-review-packet-v02 and candidate-composite-layout-qc-v02."
+    ],
+    "visual_limitations": [
+      "Actual compiled Player physical scale, centroid/depth foot-root transitions, contact marker3 and complete actor approval remain HOLD until post-integration review.",
+      "Automatic source rectangles omitted five alpha>16 fringe pixels; explicit pinned reviewed regions cover them with no foreign foreground and no source pixel deletion. Original assembler error is preserved."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+    "raw_bytes": 3308212,
+    "request_sha256": "ee0b817b387902a3325a5b05d833871b80b3465cb443902bbc1dd8ca283efb62",
+    "review_sha256": "d76c9486fbf7fcab50b3dbbbc08c82e8932731504a8cb1ff5fb1f7b9154f1880"
+  },
+  "available_repository_reference_sources": {
+    "a78435d6b7af85abdcfe9eaa52add8a54ba3409826b1695439697cf49bc48910": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-NW-attack-recovery5-repair-v05/girtas-NW-attack-recovery5-v05.png",
+    "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-NW-attack-repair/girtas-NW-attack-v03.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723.png",
+      "sha256": "09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723",
+      "bytes": 591871,
+      "original_reference": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b.png",
+      "sha256": "d38b31a982c3ab5fa4333ceb808ffe508af0ee7ae2c45d783c3b1fc4e06b775b",
+      "bytes": 1061895,
+      "original_reference": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/contact-follow-v05iso01.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+  "output_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+  "output_bytes": 3308212,
+  "original_generated_file": "/workspace/scratch/girtas-NW-attack-six-assembly-v05/girtas-NW-attack-v05assembled01.png"
+}

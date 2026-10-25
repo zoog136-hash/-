@@ -1,0 +1,99 @@
+"""APK authoring exclusions must never hide a selected/runtime dependency."""
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from android_animation_export_scope import DRAFT_EXPORT_PATTERN, DRAFT_ROOT, audit_authoring_exclusions
+
+
+class AndroidAnimationExportScopeTest(unittest.TestCase):
+    def fixture(self, root):
+        (root / "export_presets.cfg").write_text('exclude_filter="docs/*,' + DRAFT_EXPORT_PATTERN + '"\n')
+        (root / "data").mkdir()
+        for name in ("combat_animation_profiles.json", "animation_presentation.json", "catalog_v19.json"):
+            (root / "data" / name).write_text('{}\n')
+        archive = root / DRAFT_ROOT / "transform_412/draft001/SpriteFrames.tres"
+        archive.parent.mkdir(parents=True)
+        archive.write_text('[gd_resource type="SpriteFrames" format=3]\n'
+                           '[ext_resource type="Texture2D" path="res://docs/remake/evidence/'
+                           'pr122-mythic-detailed/batch03/transform_412-S-attack-draft-v01.png" id="1"]\n')
+        production = root / DRAFT_ROOT / "transform_412/native010/SpriteFrames.tres"
+        production.parent.mkdir()
+        production.write_text('[gd_resource type="SpriteFrames" format=3]\n')
+        return archive, production
+
+    def test_only_detached_archived_clips_are_excluded_without_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archive, production = self.fixture(root)
+            before = {p.relative_to(root): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            report = audit_authoring_exclusions(root)
+            self.assertEqual(report['excluded_count'], 1)
+            self.assertEqual(report['production_resources_excluded'], 0)
+            self.assertEqual(report['excluded_authoring_resources'][0]['path'], archive.relative_to(root).as_posix())
+            self.assertNotEqual(report['excluded_authoring_resources'][0]['path'], production.relative_to(root).as_posix())
+            self.assertEqual(before, {p.relative_to(root): p.read_bytes() for p in root.rglob('*') if p.is_file()})
+
+    def test_selected_manifest_reference_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archive, _ = self.fixture(root)
+            (root / 'data/pr122_native_locomotion_staging.json').write_text(
+                '{"frames": "res://' + archive.relative_to(root).as_posix() + '"}')
+            with self.assertRaisesRegex(ValueError, 'selected staging'):
+                audit_authoring_exclusions(root)
+
+    def test_runtime_scene_script_or_resource_reference_fails(self):
+        for path in ('Main.tscn', 'scripts/catalog.gd', 'assets/live.tres'):
+            with self.subTest(path=path), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                archive, _ = self.fixture(root)
+                reference = root / path
+                reference.parent.mkdir(parents=True, exist_ok=True)
+                reference.write_text('"res://' + archive.relative_to(root).as_posix() + '"')
+                with self.assertRaisesRegex(ValueError, 'Exported code/resource references'):
+                    audit_authoring_exclusions(root)
+
+    def test_indirect_new_json_manifest_cannot_hide_archive_reference(self):
+        for relative in ('data/extra_live_profiles.json', 'assets/live/extra.json'):
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                archive, _ = self.fixture(root)
+                manifest = root / relative
+                manifest.parent.mkdir(parents=True, exist_ok=True)
+                manifest.write_text('{"frames": "res://' + archive.relative_to(root).as_posix() + '"}')
+                loader = root / 'scripts/extra_loader.gd'
+                loader.parent.mkdir()
+                loader.write_text('var path = "res://' + relative + '"\n')
+                with self.assertRaisesRegex(ValueError, 'selected staging manifest references'):
+                    audit_authoring_exclusions(root)
+
+    def test_broader_exclusion_cannot_hide_native_resources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            (root / 'export_presets.cfg').write_text(
+                'exclude_filter="' + DRAFT_EXPORT_PATTERN + ',assets/*"\n')
+            with self.assertRaisesRegex(ValueError, 'Non-archive runtime resource excluded'):
+                audit_authoring_exclusions(root)
+
+    def test_unknown_archive_contents_fail_closed(self):
+        for change in ('extra_png', 'different_source', 'different_type'):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                archive, _ = self.fixture(root)
+                if change == 'extra_png':
+                    (archive.parent / 'new-runtime.png').write_bytes(b'not-an-image')
+                elif change == 'different_source':
+                    archive.write_text(archive.read_text().replace('res://docs/', 'res://assets/'))
+                else:
+                    archive.write_text(archive.read_text().replace('type="SpriteFrames"', 'type="Resource"'))
+                with self.assertRaises(ValueError):
+                    audit_authoring_exclusions(root)
+
+
+if __name__ == '__main__':
+    unittest.main()

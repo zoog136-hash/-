@@ -1,0 +1,75 @@
+{
+  "schema": "pr122-boss-combat-visual-precheck-v1",
+  "new_approvals": 0,
+  "production_connected": false,
+  "scope": "Source-only visual precheck; gameplay-scale support, contact and mythic-quality approval remain separate.",
+  "sources": {
+    "queen-combat-E-v01": {
+      "status": "CANDIDATE",
+      "identity": "Pale queen/silver hair/gold crown/violet wings/black gold gown/staff retained.",
+      "facing": "E maintained; attack staff projects screen right.",
+      "contact_clip_index": 1,
+      "remaining": "Actual game-size contact, anchors, two-leg continuity and final identity approval unresolved."
+    },
+    "queen-combat-S-v01": {
+      "status": "SOURCE_HOLD",
+      "reason": "Contact phase turns into diagonal/E and sends staff screen right rather than toward S/front target. Re-author v02 requested; keep original."
+    },
+    "queen-combat-N-v01": {
+      "status": "SOURCE_HOLD",
+      "reason": "Contact phase turns rear-diagonal/E instead of fixed north back view; visible bare thigh also needs anatomical-side correction. Re-author v02 requested; keep original."
+    },
+    "queen-combat-S-v02": {
+      "status": "CANDIDATE",
+      "facing": "Contact is newly foreshortened toward viewer, fixing v01 E-directed contact. Actual cast release/ground support review remains unapproved."
+    },
+    "queen-combat-SW-v01": {
+      "status": "SOURCE_HOLD",
+      "reason": "All figures predominantly E/right-facing, mismatched SW."
+    },
+    "queen-combat-SW-v02": {
+      "status": "CANDIDATE_PARTIAL",
+      "reason": "IDLE/ATTACK retained as left-facing diagonal candidate. Original hit recovery faces E and is replaced by dedicated HIT2 source."
+    },
+    "queen-combat-W-v01": {
+      "status": "CANDIDATE_PARTIAL",
+      "reason": "IDLE/ATTACK retained. Hit recovery faces E and is replaced by dedicated HIT2 source."
+    },
+    "queen-combat-W-v02": {
+      "status": "SOURCE_HOLD",
+      "reason": "Strict source completeness rejects 2 visible pixels outside core pose rectangles; original preserved, not cropped or discarded. Also retains reversed hit recovery."
+    },
+    "queen-hit-W-v01": {
+      "status": "CANDIDATE",
+      "reason": "Fresh two-pose HIT drawn facing W in both cells, fixes observed reversed-facing recovery. Staff hand anatomical continuity and scale need final approval."
+    },
+    "queen-hit-SW-v01": {
+      "status": "CANDIDATE",
+      "reason": "Fresh two-pose HIT drawn left/front-diagonal in both cells, fixes observed reversed-facing recovery. Exact heading and scale need final approval."
+    },
+    "queen-combat-N-v02": {
+      "status": "SOURCE_HOLD",
+      "reason": "Direction improved to back view, but staff/arm and slit side change between poses."
+    },
+    "queen-combat-N-v03": {
+      "status": "QUALITY_HOLD_PREVIEW_ONLY",
+      "reason": "Staff contact now remains at left side, but pale slit/covered thigh still swaps between neutral/body poses. Included only as clearly unapproved diagnostic candidate."
+    },
+    "queen-combat-NE-v01": {
+      "status": "QUALITY_HOLD_PREVIEW_ONLY",
+      "reason": "Back hair/wing silhouette drawn, but torso may remain too side-facing; exact NE angle/contact requires review."
+    },
+    "queen-combat-SE-v01": {
+      "status": "CANDIDATE_WITH_OBSERVATION",
+      "reason": "SE idle/body drawn; contact shaft largely rightward and needs game-size target-vector review."
+    },
+    "queen-combat-NW-v01": {
+      "status": "CANDIDATE",
+      "reason": "Rear/left silhouette and backward hair/wing attachments visible; gameplay-size hand/heading/contact unapproved."
+    },
+    "queen-death-S-v01": {
+      "status": "CANDIDATE",
+      "reason": "Four genuinely distinct buckle/kneel/collapse/side-corpse phases, staff remains in hand. Initial kneeling scale and final anatomical ground anchors need gameplay review."
+    }
+  }
+}

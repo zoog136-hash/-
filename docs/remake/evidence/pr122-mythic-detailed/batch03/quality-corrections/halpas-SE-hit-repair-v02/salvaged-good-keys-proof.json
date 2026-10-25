@@ -1,0 +1,65 @@
+{
+  "status": "THREE_EXACT_KEYS_SALVAGED_FULL6_REMAINS_VISUAL_HOLD",
+  "key": "transform:393",
+  "direction": "SE",
+  "role": "hit",
+  "original_raw_sha256": "674773fd342e76489cc7ae7e07b05bbef2e07d8feffc2d3009b2b10c393adb4c",
+  "isolated_all6_sha256": "827be9966479fe293b4eec7cf612590ba7e18e0dd1250b9c6d17443ee94d180a",
+  "all6_visual_approval": false,
+  "preserved_foreground_rgba": true,
+  "repack_proof": "/workspace/scratch/halpas-SE-hit-repair-v02/halpas-SE-hit-v02-all6-lossless-isolation-NOT-APPROVED.repack.json",
+  "valid_source_phases": [
+    0,
+    1,
+    5
+  ],
+  "invalid_source_phases": [
+    2,
+    3,
+    4
+  ],
+  "keys": [
+    {
+      "source_pose": 0,
+      "path": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase0-lossless.png",
+      "sha256": "767c7244e1160e7e0b5498198b9c1b37c30a9c87599d81b8689838cb52f5d0ac",
+      "region_in_isolated_source": [
+        142,
+        22,
+        504,
+        470
+      ],
+      "rgba_sha256": "301ad842f8f9a8adc8a888ee737e405379f9c7fdac6d045847afd22f9ca1953c",
+      "operation": "exact_RGBA_crop_no_rescale_recolor_or_mask",
+      "source_visual_status": "PASS_SINGLE_KEY_ONLY"
+    },
+    {
+      "source_pose": 1,
+      "path": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase1-lossless.png",
+      "sha256": "a8d441f93fec811e249a0543fb810c16738f7cb223d751b5c0f29cbf25b6a7c1",
+      "region_in_isolated_source": [
+        890,
+        22,
+        506,
+        471
+      ],
+      "rgba_sha256": "7c803a73237ecb7cce3d5ecfc72e5f84cb7e4a4eafc858705ef546cfd3bd5a97",
+      "operation": "exact_RGBA_crop_no_rescale_recolor_or_mask",
+      "source_visual_status": "PASS_SINGLE_KEY_ONLY"
+    },
+    {
+      "source_pose": 5,
+      "path": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase5-lossless.png",
+      "sha256": "41fba4d2810fc0eb3b66bf73c95a388d8400778b0aafd3b547e5a390287ffd2f",
+      "region_in_isolated_source": [
+        906,
+        1049,
+        489,
+        465
+      ],
+      "rgba_sha256": "a99aabf947d3243ab5daa63c715f7f2ea1760273eb7b3eb2b7b9d4c3cc0d84a2",
+      "operation": "exact_RGBA_crop_no_rescale_recolor_or_mask",
+      "source_visual_status": "PASS_SINGLE_KEY_ONLY"
+    }
+  ]
+}

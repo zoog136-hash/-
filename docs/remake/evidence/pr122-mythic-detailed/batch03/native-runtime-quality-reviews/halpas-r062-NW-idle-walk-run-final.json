@@ -1,0 +1,30 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_NATIVE_NW_IDLE_WALK_RUN_RUNTIME_QC",
+  "actor_key": "transform:393",
+  "revision": "r062",
+  "checkpoint": "f471f9c343a1c5a84e612d7610dbbee049b46359",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+  "frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+  "scope": [
+    "NWidle_all6_and5to0",
+    "NWwalk_all6_and5to0",
+    "NWrun_all6_and5to0",
+    "N_NE_W_idle0_physical_reference_comparison",
+    "NWidle_to_walk_run_physicalroot_transition"
+  ],
+  "all_twentyseven_actual_sample_regions_margins_crop_SHA_match": true,
+  "all18_native_poses_canvas": 1280,
+  "findings": [
+    "All18new poses retain trueNW/rearLEFT torso/backspine and head/horns, two continuous physical arms/legs and unchangedRIGHTweapon/LEFTfree identity. SEtrailing toes follow coherent hip/knee/ankle chains, not a reversed torso heading.",
+    "Common1280canvas removes enlarged current-source runtimebody scale and preserves comparable wholehelmet/horn-to-neck and shoulder/pelvis dimensions against N/W physicalreference. Longhanging idleleg and differentwingextent are authentic pose geometry, not sizingguides.",
+    "Shared practicalNWpelvis reference keeps bodyroot/pelvis in one convention acrossidle/walk/run; no oldcell/wingbbox columnshift or canvas-dependent modeljump remains.",
+    "AlloriginalY/bob retained. Idlebreathing, movingwingbeat, forwardrunlean and rearwardlegtrail remain authored motion; no new foot/wholebody rigidlock imposed. Allthree5to0 seams preserve size/heading/root while completing the respective cycle."
+  ],
+  "baseline_limit": "OlderNE rearhelmet appears rounder/bulkier; independentfreshwhole48clip review must assess that existing source model consistency. This scopedNW PASS does not approve the actor or alterNE.",
+  "source_RGBA_changed": false,
+  "actor_approval_granted": false,
+  "detailed_complete_added": 0,
+  "private_previews_not_for_chat": true,
+  "private_preview_bytes": 488096
+}

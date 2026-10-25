@@ -1,0 +1,160 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "run",
+  "version": "NWrunSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+    "base_geometry_sha256": "3fff90d31a62dc95364faf636d559e0527f4d4b2aae2141338c9150083fe543e",
+    "direction": "NW",
+    "regions": [
+      [
+        35,
+        13,
+        1177,
+        1256
+      ],
+      [
+        1575,
+        83,
+        1177,
+        1237
+      ],
+      [
+        161,
+        1639,
+        1177,
+        1294
+      ],
+      [
+        1699,
+        1677,
+        1177,
+        1256
+      ],
+      [
+        167,
+        3283,
+        1177,
+        1258
+      ],
+      [
+        1697,
+        3175,
+        1177,
+        1294
+      ]
+    ],
+    "nearest_owner_sha256": "c8df5fe15c5bb20b54f0db69caf65f99a49605d4fa750c04b1f5feeb5ccddbb5",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 5f6c1839c10b05660b63d3b316c59e49f0506f4e7aa299e9cfb5031cac27d890"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+    "direction": "NW",
+    "role": "run",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        669,
+        1268
+      ],
+      [
+        2205,
+        1268
+      ],
+      [
+        797,
+        2932
+      ],
+      [
+        2333,
+        2932
+      ],
+      [
+        797,
+        4468
+      ],
+      [
+        2333,
+        4468
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "5f6c1839c10b05660b63d3b316c59e49f0506f4e7aa299e9cfb5031cac27d890",
+  "authored_common_root_float": [
+    669,
+    1267.95
+  ],
+  "common_root_integer": [
+    669,
+    1268
+  ],
+  "common_root_rounding_delta": [
+    0,
+    0.049999999999954525
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Reviewed all six exact authored NW RUN poses at one fixed body unit/root, including the phase5→0→1 seam and phase2→3→4 counterpart.",
+      "Opposite LEFT/RIGHT heel contact, compressed loaded stance and high-knee/trailing flight poses are distinct and coherent; this is actual new gait artwork, not a shared motion or color-only substitution.",
+      "Body bob [0,70,-38] repeats across the two steps and free LEFT arm follows0/15/30/30/15/0 counterphase; phase5→0 returns naturally with stable identity and registration.",
+      "Accepted actor413 hair/ribbon, blue/gold bodice/white pleats/split coat, full boots and original RIGHT gold/turquoise double-ended staff are retained. Both true staff-end opaque pixels are byte-exact to accepted SOURCE0 at each actual body translation.",
+      "All recent narrow ankle joins use real blackleather source material and are continuous; original opaque thigh/shaft/gold ornaments and complete shoes remain unchanged, with no translucent fades, detached shoe cuff or missing structural heel.",
+      "Independent exact control audit confirms all twelve250/250 leg chains and rigid congruent boot triangles; actual same-heel clock compensates16.8world perphase and both support steps include genuine heel-pinned17degree forefoot roll.",
+      "Independent authored shoe-card surface audit includes every nonzero actual shoe texel/pixel quad and an explicit eight-native thickness bound; phase2 and5 full rendered shoe surfaces remain above the declared ground by at least47.590819native.",
+      "Exact atlas comparison preserves every original pose RGBA pixel, source order/storage inverse and one C2560 body unit; one common root rounding [0,+0.05] affects all poses equally."
+    ],
+    "visual_limitations": [
+      "3D depths, authored2.5D shoe planes and eight-native hidden thickness are explicit compatible construction choices; they are not uniquely recovered hidden anatomy.",
+      "Ground support assessment covers actual heelclock/footroll and critical structural H/F patches in that model; a full hidden volumetric sole/floor mesh was not uniquely measured.",
+      "Frozen roster clock210 names the retained reference speed. Actual game RUN262.5 uses effective15.625Hz/dt0.064 and the same16.8world step.",
+      "This approves this exact six-pose NW RUN source/cycle for native integration; complete actor actions and actual game validation remain separate gates, detailed actor approval is unchanged."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+    "raw_bytes": 4738172,
+    "request_sha256": "3e5a0214cf0e14992e95267a82cef842faec1ad55c873419d7e6dc3d48575702",
+    "review_sha256": "e2d2aff4a67d45afc738b2a0aa03ba44c630f386dd76878a7e03e86f92418f48"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-NW-run-actual-packed-r001-20261020/thunder_female-NW-run-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-484jvd69/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-NW-run-actual-packed-r001-20261020/request-NWrunSixActualRig01.json": "3e5a0214cf0e14992e95267a82cef842faec1ad55c873419d7e6dc3d48575702",
+      "/workspace/scratch/mythic413-NW-run-actual-packed-r001-20261020/thunder_female-NW-run-six-actual-poses-r001.png": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+      "/workspace/scratch/mythic413-nw-run-cycle-qc-fresh-v02-20261020/NWrunSixActualRig01-exact-request-source-cycle-PASS-v01.json": "e2d2aff4a67d45afc738b2a0aa03ba44c630f386dd76878a7e03e86f92418f48",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-run-NWrunSixActualRig01.png",
+  "output_sha256": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+  "output_bytes": 4738172,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-484jvd69/reviewed-source.png"
+}

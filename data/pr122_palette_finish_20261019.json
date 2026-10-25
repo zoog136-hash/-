@@ -1,0 +1,915 @@
+{
+  "schema": 1,
+  "pr": 122,
+  "basis_head": "c5c0425d9d38226d104f67f74e5d88a406c4ec67",
+  "request": "Prioritize fast existing-motion palette variants; preserve previous work.",
+  "policy": "EXPLICIT_PROJECT_MOTION_PROXY_NOT_NEW_NATIVE_ART_OR_APPROVAL",
+  "approved_history_unchanged": 405,
+  "frame_quality_followup_unchanged": 14,
+  "new_native_poses": 0,
+  "new_native_art_approvals": 0,
+  "entries": [
+    {
+      "target": "transform:44",
+      "name": "랜스 마스터",
+      "source": "transform:176",
+      "frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "color_tint": "d9e2eb",
+      "basis": "armored_spear_base",
+      "previous_profile": {
+        "name": "랜스 마스터",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:179",
+      "name": "랜스 마스터(레드)",
+      "source": "transform:44",
+      "frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "color_tint": "ff766b",
+      "basis": "same_lance_master_base_source_tinted",
+      "previous_profile": {
+        "name": "랜스 마스터(레드)",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false,
+        "shared_visual_source": "transform:44",
+        "color_tint": "ff766b",
+        "shared_visual_policy": "same_lance_master_base_source_tinted"
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:182",
+      "name": "랜스 마스터(블루)",
+      "source": "transform:44",
+      "frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "color_tint": "75aeff",
+      "basis": "same_lance_master_base_source_tinted",
+      "previous_profile": {
+        "name": "랜스 마스터(블루)",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false,
+        "shared_visual_source": "transform:44",
+        "shared_visual_policy": "same_lance_master_base_source_tinted",
+        "color_tint": "75aeff"
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:231",
+      "name": "유니크 랜서",
+      "source": "transform:44",
+      "frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+      "color_tint": "edcf8a",
+      "basis": "armored_spear_variant",
+      "previous_profile": {
+        "name": "유니크 랜서",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:411",
+      "name": "신화-투사(여)",
+      "source": "transform:413",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/SpriteFrames.tres",
+      "frames_sha256": "0f856a69aed009fd66d97d2e3757888c14b2d32e4ffaa6f20dac89c730ece18f",
+      "color_tint": "efc8a2",
+      "basis": "female_chain_armored_fighter",
+      "previous_profile": {
+        "name": "신화-투사(여)",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:142",
+      "name": "신화-투사(남)",
+      "source": "transform:283",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
+      "frames_sha256": "5d5d54c9d19293744018b61f42b1b5a2015bf94a2146993f16f765dc7922bd7d",
+      "color_tint": "efc8a2",
+      "basis": "male_chain_armored_fighter",
+      "previous_profile": {
+        "name": "신화-투사(남)",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:139",
+      "name": "신화-다크엘프(여)",
+      "source": "transform:346",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "50ceb93dbaac6b90d3c7ac3a632588bc6ee1f55e5bff09f58811f78dcb230fa3",
+      "color_tint": "bc9ddc",
+      "basis": "female_dark_armored_melee_proxy",
+      "previous_profile": {
+        "name": "신화-다크엘프(여)",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:138",
+      "name": "신화-다크엘프(남)",
+      "source": "transform:139",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "50ceb93dbaac6b90d3c7ac3a632588bc6ee1f55e5bff09f58811f78dcb230fa3",
+      "color_tint": "bc9ddc",
+      "basis": "same_as_female_directional_visual",
+      "previous_profile": {
+        "name": "신화-다크엘프(남)",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false,
+        "shared_visual_source": "transform:139",
+        "shared_visual_policy": "same_as_female_directional_visual"
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:141",
+      "name": "신화-총사(여)",
+      "source": "transform:135",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_leather_head_long_longbow/SpriteFrames.tres",
+      "frames_sha256": "ab5d3b6813479003a0c2147a1a636c1b287c552603cb25483f3da1a37f95c020",
+      "color_tint": "c4d5ef",
+      "basis": "female_ranged_proxy_bow_not_firearm",
+      "previous_profile": {
+        "name": "신화-총사(여)",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:140",
+      "name": "신화-총사(남)",
+      "source": "transform:141",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_leather_head_long_longbow/SpriteFrames.tres",
+      "frames_sha256": "ab5d3b6813479003a0c2147a1a636c1b287c552603cb25483f3da1a37f95c020",
+      "color_tint": "c4d5ef",
+      "basis": "same_as_female_directional_visual",
+      "previous_profile": {
+        "name": "신화-총사(남)",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false,
+        "shared_visual_source": "transform:141",
+        "shared_visual_policy": "same_as_female_directional_visual"
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:393",
+      "name": "해방된 할파스",
+      "source": "monster:드레이크",
+      "frames_path": "res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres",
+      "frames_sha256": "8b32f7658336c1a60303c28a52433c80fd5bf642bc046b5104d2b9901de43610",
+      "color_tint": "d5b3ef",
+      "basis": "winged_dragon_proxy_not_halpas_original",
+      "previous_profile": {
+        "name": "해방된 할파스",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": true
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:267",
+      "name": "지배자 기르타스",
+      "source": "monster:아시타지오",
+      "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+      "frames_sha256": "d341a1d23b837953b7c301fa239425e86af90ecdedf2107a02529ff1d3fcac8f",
+      "color_tint": "c7a0e3",
+      "basis": "horned_demon_proxy_not_girtas_original",
+      "previous_profile": {
+        "name": "지배자 기르타스",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:375",
+      "name": "전설의 낚시왕 폴",
+      "source": "transform:102",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "073eddbb0bdec03e44d4ec70af6c471465bafe8089716a40f12ec9014ef9737e",
+      "color_tint": "efcf91",
+      "basis": "staff_caster_proxy_not_fishing_rod",
+      "previous_profile": {
+        "name": "전설의 낚시왕 폴",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:376",
+      "name": "베테랑 낚시꾼 폴",
+      "source": "transform:375",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "073eddbb0bdec03e44d4ec70af6c471465bafe8089716a40f12ec9014ef9737e",
+      "color_tint": "bbd6b9",
+      "basis": "same_fishing_family_proxy",
+      "previous_profile": {
+        "name": "베테랑 낚시꾼 폴",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:339",
+      "name": "실렌의 파수꾼",
+      "source": "transform:345",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "color_tint": "aacdc2",
+      "basis": "armored_sentinel_variant",
+      "previous_profile": {
+        "name": "실렌의 파수꾼",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:338",
+      "name": "그랑카인의 역린",
+      "source": "transform:399",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/SpriteFrames.tres",
+      "frames_sha256": "57a1b85f3c3b6f6c33941c71b01028adae84d7d6b8cfc41ae647bf49fb040cbd",
+      "color_tint": "e5a5a7",
+      "basis": "armored_greatsword_variant",
+      "previous_profile": {
+        "name": "그랑카인의 역린",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:191",
+      "name": "하딘의 영혼",
+      "source": "transform:102",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "073eddbb0bdec03e44d4ec70af6c471465bafe8089716a40f12ec9014ef9737e",
+      "color_tint": "bdd6f3",
+      "basis": "hadin_caster_variant",
+      "previous_profile": {
+        "name": "하딘의 영혼",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:166",
+      "name": "다크 하딘",
+      "source": "transform:102",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "073eddbb0bdec03e44d4ec70af6c471465bafe8089716a40f12ec9014ef9737e",
+      "color_tint": "ab92cf",
+      "basis": "hadin_dark_caster_variant",
+      "previous_profile": {
+        "name": "다크 하딘",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:406",
+      "name": "화염의 네루파",
+      "source": "monster:서큐버스",
+      "frames_path": "res://assets/actors/eight_direction/original_based/succubus/SpriteFrames.tres",
+      "frames_sha256": "e19fd266154de15122ae1439e7a76c648dc88b319051a4043be6a59011fd15b8",
+      "color_tint": "f1b28c",
+      "basis": "winged_humanoid_fire_proxy",
+      "previous_profile": {
+        "name": "화염의 네루파",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:405",
+      "name": "화염의 페어리",
+      "source": "monster:풍룡의 둥지 하피",
+      "frames_path": "res://assets/actors/eight_direction/original_based/harpy/SpriteFrames.tres",
+      "frames_sha256": "74b907887e4e2f20d4d862adb07c54ea2c337dcc359a80703ca95e0a90517219",
+      "color_tint": "f2c79b",
+      "basis": "winged_fairy_proxy_not_native_fairy",
+      "previous_profile": {
+        "name": "화염의 페어리",
+        "layout": "directional4",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:386",
+      "name": "벚꽃 소녀",
+      "source": "transform:137",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "22832122a8177eaf568f6ef914b8c56e88afd216d01469a202b2f1ca1fb29ded",
+      "color_tint": "f2bdd6",
+      "basis": "female_pink_caster_proxy",
+      "previous_profile": {
+        "name": "벚꽃 소녀",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:360",
+      "name": "서커스단 카드 마술사",
+      "source": "transform:102",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "073eddbb0bdec03e44d4ec70af6c471465bafe8089716a40f12ec9014ef9737e",
+      "color_tint": "cfb0e5",
+      "basis": "circus_caster_proxy_no_card_art",
+      "previous_profile": {
+        "name": "서커스단 카드 마술사",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:359",
+      "name": "서커스단 트롬본 인형",
+      "source": "monster:스파토이",
+      "frames_path": "res://assets/actors/eight_direction/expanded/skeleton/SpriteFrames.tres",
+      "frames_sha256": "e7962cf2ebc15ec3b332c0809bc9a7275423368c2d47068007395955022d0b9e",
+      "color_tint": "e8ce91",
+      "basis": "circus_puppet_proxy_no_trombone_art",
+      "previous_profile": {
+        "name": "서커스단 트롬본 인형",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:358",
+      "name": "서커스단 드러머",
+      "source": "transform:212",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/SpriteFrames.tres",
+      "frames_sha256": "3e81c1289eda180be3358de7fbf25b091eea6d06785395d72e870f14c09ff2c5",
+      "color_tint": "e5b3a4",
+      "basis": "circus_performer_proxy_no_drum_art",
+      "previous_profile": {
+        "name": "서커스단 드러머",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:357",
+      "name": "서커스단 단장",
+      "source": "transform:345",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "color_tint": "edc79a",
+      "basis": "circus_leader_armored_proxy",
+      "previous_profile": {
+        "name": "서커스단 단장",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:276",
+      "name": "메이드 안나",
+      "source": "transform:413",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/SpriteFrames.tres",
+      "frames_sha256": "0f856a69aed009fd66d97d2e3757888c14b2d32e4ffaa6f20dac89c730ece18f",
+      "color_tint": "e9d1e5",
+      "basis": "female_humanoid_proxy_no_maid_costume",
+      "previous_profile": {
+        "name": "메이드 안나",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:268",
+      "name": "천상의 수호 기사",
+      "source": "transform:345",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "color_tint": "e6eaf3",
+      "basis": "celestial_armored_knight_variant",
+      "previous_profile": {
+        "name": "천상의 수호 기사",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:197",
+      "name": "사단장 하퍼",
+      "source": "transform:399",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/SpriteFrames.tres",
+      "frames_sha256": "57a1b85f3c3b6f6c33941c71b01028adae84d7d6b8cfc41ae647bf49fb040cbd",
+      "color_tint": "c2cdec",
+      "basis": "armored_commander_variant",
+      "previous_profile": {
+        "name": "사단장 하퍼",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:155",
+      "name": "데스",
+      "source": "transform:258",
+      "frames_path": "res://assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres",
+      "frames_sha256": "9c7b0762939f8c6ec20f51924e7f2a48c55424a23fd935821182891e8a966ffd",
+      "color_tint": "c6b5db",
+      "basis": "reaper_variant",
+      "previous_profile": {
+        "name": "데스",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:123",
+      "name": "이실로테(총)",
+      "source": "transform:141",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_leather_head_long_longbow/SpriteFrames.tres",
+      "frames_sha256": "ab5d3b6813479003a0c2147a1a636c1b287c552603cb25483f3da1a37f95c020",
+      "color_tint": "edc2d6",
+      "basis": "female_ranged_proxy_bow_not_firearm",
+      "previous_profile": {
+        "name": "이실로테(총)",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:16",
+      "name": "각성:발록",
+      "source": "monster:아시타지오",
+      "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+      "frames_sha256": "d341a1d23b837953b7c301fa239425e86af90ecdedf2107a02529ff1d3fcac8f",
+      "color_tint": "f1ad8b",
+      "basis": "horned_fire_demon_variant",
+      "previous_profile": {
+        "name": "각성:발록",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:9",
+      "name": "헬바인",
+      "source": "monster:정예 다크엘프",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/SpriteFrames.tres",
+      "frames_sha256": "50b6a520b61ad24eb33d5bdd64bf354cd14cb54e1d6003fd35cdca05473e5cf8",
+      "color_tint": "b8b0df",
+      "basis": "dark_ranged_humanoid_proxy",
+      "previous_profile": {
+        "name": "헬바인",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "transform:4",
+      "name": "천상의 기사",
+      "source": "transform:345",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "color_tint": "f0dfab",
+      "basis": "celestial_knight_variant",
+      "previous_profile": {
+        "name": "천상의 기사",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:얼음 여왕",
+      "name": "얼음 여왕",
+      "source": "transform:137",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "22832122a8177eaf568f6ef914b8c56e88afd216d01469a202b2f1ca1fb29ded",
+      "color_tint": "c5ddff",
+      "basis": "female_caster_proxy_native_queen_WIP_preserved",
+      "previous_profile": {
+        "name": "얼음 여왕",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:그림 리퍼",
+      "name": "그림 리퍼",
+      "source": "transform:258",
+      "frames_path": "res://assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres",
+      "frames_sha256": "9c7b0762939f8c6ec20f51924e7f2a48c55424a23fd935821182891e8a966ffd",
+      "color_tint": "c4b5d5",
+      "basis": "reaper_family",
+      "previous_profile": {
+        "name": "그림 리퍼",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:말하는 섬 들개",
+      "name": "말하는 섬 들개",
+      "source": "monster:불신의 다이어울프",
+      "frames_path": "res://assets/actors/eight_direction/original_based/dire_wolf/SpriteFrames.tres",
+      "frames_sha256": "70146418979a95e8d9d2b90b9f4ba0b621caba0eb8b363d075a51cd05678ccf2",
+      "color_tint": "d4bb9d",
+      "basis": "canine_proxy_native_dog_HOLD_preserved",
+      "previous_profile": {
+        "name": "말하는 섬 들개",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:천상계 성광기사",
+      "name": "천상계 성광기사",
+      "source": "monster:천상계 천상수호자",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "color_tint": "f1e5bb",
+      "basis": "celestial_armored_knight",
+      "previous_profile": {
+        "name": "천상계 성광기사",
+        "layout": "still",
+        "motion_style": "slash",
+        "floating": false
+      },
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:교만의 왕자 데우스",
+      "name": "교만의 왕자 데우스",
+      "source": "monster:커츠",
+      "frames_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
+      "frames_sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
+      "color_tint": "ddc5a1",
+      "basis": "armored_boss_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:교만의 제라키엘",
+      "name": "교만의 제라키엘",
+      "source": "monster:서큐버스",
+      "frames_path": "res://assets/actors/eight_direction/original_based/succubus/SpriteFrames.tres",
+      "frames_sha256": "e19fd266154de15122ae1439e7a76c648dc88b319051a4043be6a59011fd15b8",
+      "color_tint": "cbb5e7",
+      "basis": "winged_humanoid_boss_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:놀",
+      "name": "놀",
+      "source": "monster:늑대인간",
+      "frames_path": "res://assets/actors/eight_direction/original_based/werewolf/SpriteFrames.tres",
+      "frames_sha256": "ceedb48fe1aa55a40858ee3d016a4d6826cc92b5396a5449771a8f2bc0743011",
+      "color_tint": "d2b18e",
+      "basis": "canine_biped_proxy_native_gnoll_WIP_preserved",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:로머",
+      "name": "로머",
+      "source": "monster:오우거",
+      "frames_path": "res://assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres",
+      "frames_sha256": "545882b03696e0a0bb3dd18e81652d93c022f234fdf287f2a851af194b3dbf37",
+      "color_tint": "c2bd9b",
+      "basis": "large_biped_proxy_native_identity_unverified",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:분노의 데스 리퍼",
+      "name": "분노의 데스 리퍼",
+      "source": "transform:258",
+      "frames_path": "res://assets/actors/eight_direction/original_based/reaper_male/SpriteFrames.tres",
+      "frames_sha256": "9c7b0762939f8c6ec20f51924e7f2a48c55424a23fd935821182891e8a966ffd",
+      "color_tint": "f0a7a1",
+      "basis": "reaper_rage_variant",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:사라만다",
+      "name": "사라만다",
+      "source": "monster:도마뱀",
+      "frames_path": "res://assets/actors/eight_direction/original_based/lizard/SpriteFrames.tres",
+      "frames_sha256": "c41afdd32264f8e3f554c0f99b6f980560be5e7296ad072db99b9f091df4dff5",
+      "color_tint": "f2b285",
+      "basis": "lizard_fire_variant",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:알비노 몽크",
+      "name": "알비노 몽크",
+      "source": "monster:에티",
+      "frames_path": "res://assets/actors/eight_direction/original_based/yeti/SpriteFrames.tres",
+      "frames_sha256": "ef8eb934b29c8874661c5687746ef59c25de11bc6565285d1bd5527e326ff67e",
+      "color_tint": "e0e9f5",
+      "basis": "white_primate_proxy_native_gorilla_WIP_preserved",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:알비노 유니콘",
+      "name": "알비노 유니콘",
+      "source": "monster:알비노 디어",
+      "frames_path": "res://assets/actors/eight_direction/original_based/albino_deer_batch16_authored/SpriteFrames.tres",
+      "frames_sha256": "f59d6c1bca1e95393ae272326b9c05469b9a1981d1d8f2f15a14a49c236cb905",
+      "color_tint": "e4ddf8",
+      "basis": "quadruped_proxy_no_unicorn_horn_native_HOLD_preserved",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:에스카로스 치프",
+      "name": "에스카로스 치프",
+      "source": "monster:마이노",
+      "frames_path": "res://assets/actors/eight_direction/expanded/minotaur/SpriteFrames.tres",
+      "frames_sha256": "c04e06bf5ab66949306aef45b5e7d66b9a59a41660867890400d99f5bb9d5ed8",
+      "color_tint": "c4b2dc",
+      "basis": "large_biped_chief_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:오만한 아스모데우스",
+      "name": "오만한 아스모데우스",
+      "source": "monster:아시타지오",
+      "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+      "frames_sha256": "d341a1d23b837953b7c301fa239425e86af90ecdedf2107a02529ff1d3fcac8f",
+      "color_tint": "d2b2db",
+      "basis": "horned_demon_boss_variant",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:오만한 우그누스",
+      "name": "오만한 우그누스",
+      "source": "monster:아시타지오",
+      "frames_path": "res://assets/actors/eight_direction/original_based/asitagio/SpriteFrames.tres",
+      "frames_sha256": "d341a1d23b837953b7c301fa239425e86af90ecdedf2107a02529ff1d3fcac8f",
+      "color_tint": "ddc79f",
+      "basis": "horned_demon_boss_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:왜곡의 메두사",
+      "name": "왜곡의 메두사",
+      "source": "monster:라미아",
+      "frames_path": "res://assets/actors/eight_direction/original_based/lamia/SpriteFrames.tres",
+      "frames_sha256": "db7f285dcd2cefb59a7f7d004dc6c664e303f2aaf2d9a1144568009d5a2de7b0",
+      "color_tint": "a6c7b2",
+      "basis": "serpentine_humanoid_variant",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:왜곡의 제니스 퀸",
+      "name": "왜곡의 제니스 퀸",
+      "source": "monster:라미아",
+      "frames_path": "res://assets/actors/eight_direction/original_based/lamia/SpriteFrames.tres",
+      "frames_sha256": "db7f285dcd2cefb59a7f7d004dc6c664e303f2aaf2d9a1144568009d5a2de7b0",
+      "color_tint": "cdb3e1",
+      "basis": "serpentine_queen_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:욥니르",
+      "name": "욥니르",
+      "source": "monster:에틴",
+      "frames_path": "res://assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres",
+      "frames_sha256": "221ad6774c03e1e418dd8f5c9746b003b960f5fd1fc4b887d0bb812acc800c3a",
+      "color_tint": "b9d2de",
+      "basis": "large_biped_boss_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:잔혹한 아이리스",
+      "name": "잔혹한 아이리스",
+      "source": "monster:서큐버스",
+      "frames_path": "res://assets/actors/eight_direction/original_based/succubus/SpriteFrames.tres",
+      "frames_sha256": "e19fd266154de15122ae1439e7a76c648dc88b319051a4043be6a59011fd15b8",
+      "color_tint": "ddaec7",
+      "basis": "winged_female_boss_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:질투의 공주 이자벨",
+      "name": "질투의 공주 이자벨",
+      "source": "transform:137",
+      "frames_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
+      "frames_sha256": "22832122a8177eaf568f6ef914b8c56e88afd216d01469a202b2f1ca1fb29ded",
+      "color_tint": "dcc2eb",
+      "basis": "female_caster_boss_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    },
+    {
+      "target": "monster:탐욕의 여왕 벨리엘",
+      "name": "탐욕의 여왕 벨리엘",
+      "source": "monster:서큐버스",
+      "frames_path": "res://assets/actors/eight_direction/original_based/succubus/SpriteFrames.tres",
+      "frames_sha256": "e19fd266154de15122ae1439e7a76c648dc88b319051a4043be6a59011fd15b8",
+      "color_tint": "e1c4a1",
+      "basis": "winged_queen_proxy",
+      "previous_profile": null,
+      "native_art_status": "PRIOR_STATUS_UNCHANGED",
+      "runtime_qa": "GODOT_4_7_2_MOTION_RESOLVER_PASS_NOT_NATIVE_ART_APPROVAL",
+      "original_identity_verified": false
+    }
+  ],
+  "target_count": 54,
+  "stages": [
+    "monsters",
+    "transforms"
+  ]
+}

@@ -1,0 +1,390 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:267",
+  "role": "run",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "NE",
+  "metadata_sha256": "ce1a7924813b8b307d5ae568748b338eace88a15b2cbabadd0f1b007d9e0ce2a",
+  "metadata_path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/spec.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/girtas-NE-run-reviewed-composite-v01.png",
+  "output_sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6",
+  "output_canvas": [
+    3072,
+    4608
+  ],
+  "cell_size": [
+    1536,
+    1536
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+      "source_sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+      "source_pose": 0,
+      "source_region": [
+        59,
+        53,
+        1186,
+        1103
+      ],
+      "rgba_sha256": "09c779cb1783abd78ae34b7f3c4a59dba535ec645ffc7f068abcddb1ba8c08be",
+      "visible_pose_sha256": "a14c1c28298175df44f57553c8687db5d49d27753c438d66ce9416a35252b1b8",
+      "newly_authored": true,
+      "review_basis": "Actual individual SOURCE motion/ownership/gear reviewed in /workspace/scratch/girtas-final-actual-quality-v03/NE-new-farLEFT-run0-source-ownership-independent-QC.json SHA256 96e94ac247ee699cdf697b84af38c4b9d4b27b1987c2dbc7bc12f2790ed1fdc6. Whole-six camera/model/cycle bridge and physical C/root still pending; no actor approval from assembly.",
+      "output_region": [
+        175,
+        216,
+        1186,
+        1103
+      ],
+      "translation": [
+        116,
+        163
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 451517
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/girtas-NE-run-LEFT-compression1-complete-endpoint-v03.png",
+      "source_sha256": "aeee4ab97376b2520e07f6ce140434930cf9400f2fe928d1fb63afa8d58d87c6",
+      "source_pose": 0,
+      "source_region": [
+        106,
+        166,
+        1225,
+        1075
+      ],
+      "rgba_sha256": "f44f8cd28b3338c9754a0d49660be029d73211f075f5bcd791170c6ba55ba7d3",
+      "visible_pose_sha256": "30e16764bbbbd240d74e6b2d8419c3f828fb42d480fbe8ee6c1d0918787a5d30",
+      "newly_authored": true,
+      "review_basis": "Actual individual SOURCE motion/ownership/gear reviewed in /workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new1-2-5-source-PASS-original4-ownership-HOLD-independent-QC-v01.json SHA256 59007d18f69c2ee0348c762ecb64b332e64a3a709d511e9750d5ca8f0698bd54. Whole-six camera/model/cycle bridge and physical C/root still pending; no actor approval from assembly.",
+      "output_region": [
+        1691,
+        230,
+        1225,
+        1075
+      ],
+      "translation": [
+        1585,
+        64
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 471307
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/girtas-NE-run-RIGHT-flight2-from-run3-v01.png",
+      "source_sha256": "2e4dd041fc58fc0faa25eb91008875e9525d3c93b842a70e00cd6f7793367177",
+      "source_pose": 0,
+      "source_region": [
+        42,
+        51,
+        1210,
+        1107
+      ],
+      "rgba_sha256": "0485d7df805a907406c3991a7d8ef0eb543f8ceeb1d668e910c15b5178733261",
+      "visible_pose_sha256": "99e246705970bab56100903657a9f7c3d5c04ca966e5a33e2c79e1b30d42791b",
+      "newly_authored": true,
+      "review_basis": "Actual individual SOURCE motion/ownership/gear reviewed in /workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new1-2-5-source-PASS-original4-ownership-HOLD-independent-QC-v01.json SHA256 59007d18f69c2ee0348c762ecb64b332e64a3a709d511e9750d5ca8f0698bd54. Whole-six camera/model/cycle bridge and physical C/root still pending; no actor approval from assembly.",
+      "output_region": [
+        163,
+        1750,
+        1210,
+        1107
+      ],
+      "translation": [
+        121,
+        1699
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 465394
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+      "source_sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+      "source_pose": 0,
+      "source_region": [
+        39,
+        19,
+        1209,
+        1132
+      ],
+      "rgba_sha256": "10d6bcfdd605143e8f2bca422c760b60c1cb4079bec3c3cf4a80c1742fcca3a3",
+      "visible_pose_sha256": "1b6c5e958f2857b74b6af9ef1840b3c887130170ae252cf4a31b31dedc9db63b",
+      "newly_authored": true,
+      "review_basis": "Actual individual SOURCE motion/ownership/gear reviewed in /workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new-contact0-HOLD-contact3-PASS-independent-source-QC-v01.json SHA256 b01c7cab2d90930852a8033969aa29e51da950e2cc8774230e2211e27d9c0d54. Whole-six camera/model/cycle bridge and physical C/root still pending; no actor approval from assembly.",
+      "output_region": [
+        1699,
+        1738,
+        1209,
+        1132
+      ],
+      "translation": [
+        1660,
+        1719
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 466091
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02.png",
+      "source_sha256": "c86670e35fbfb1f2a1af607130f119878b3bf089e7be5e610f55f24f5e5b2279",
+      "source_pose": 0,
+      "source_region": [
+        21,
+        49,
+        1232,
+        1154
+      ],
+      "rgba_sha256": "d90b5603e9363e79628c4a3d4578f7df3d4834bff9f3bd37ca04c50ef8b63d28",
+      "visible_pose_sha256": "39dfd2dda22aab199c2fea2516df7bbb907a38c2a3f81b783361fc55aa0f290d",
+      "newly_authored": true,
+      "review_basis": "Actual individual SOURCE motion/ownership/gear reviewed in /workspace/scratch/girtas-final-actual-quality-v04/NE-run4-repaired-nearRIGHT-load-source-ownership-PASS.json SHA256 37650a221e1bf69b1d21eb5527345f8ab48c3d0937cf6db48ee32bad1dedc719. Whole-six camera/model/cycle bridge and physical C/root still pending; no actor approval from assembly.",
+      "output_region": [
+        152,
+        3263,
+        1232,
+        1154
+      ],
+      "translation": [
+        131,
+        3214
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 537811
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/girtas-NE-run-LEFT-flight5-from-run0-v01.png",
+      "source_sha256": "7b07b03dd9a17c1efbe56da03d9e2d18330adac5b7aec0f524f9d3e976187c31",
+      "source_pose": 0,
+      "source_region": [
+        34,
+        55,
+        1214,
+        1088
+      ],
+      "rgba_sha256": "ea34df9defba4006f8b23c7a9c1c56472704620e41d326cef308a1b67faa1b5c",
+      "visible_pose_sha256": "37413acbceaa5d92e3872ccc8746bfaeb8aac6286f40041c11f29ebe48552d97",
+      "newly_authored": true,
+      "review_basis": "Actual individual SOURCE motion/ownership/gear reviewed in /workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new1-2-5-source-PASS-original4-ownership-HOLD-independent-QC-v01.json SHA256 59007d18f69c2ee0348c762ecb64b332e64a3a709d511e9750d5ca8f0698bd54. Whole-six camera/model/cycle bridge and physical C/root still pending; no actor approval from assembly.",
+      "output_region": [
+        1697,
+        3296,
+        1214,
+        1088
+      ],
+      "translation": [
+        1663,
+        3241
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 449854
+    }
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      3072,
+      4608
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NE",
+        "region": [
+          173,
+          214,
+          1190,
+          1107
+        ],
+        "margin": [
+          429,
+          177,
+          858,
+          941
+        ],
+        "source_anchor": [
+          768,
+          1317
+        ],
+        "rgba_sha256": "762e42766ba98a4ded799ddbee22de438c8b9f075f38bdbf7c858f1e7422ccf6"
+      },
+      {
+        "row": 1,
+        "direction": "NE",
+        "region": [
+          1688,
+          228,
+          1230,
+          1079
+        ],
+        "margin": [
+          408,
+          205,
+          818,
+          969
+        ],
+        "source_anchor": [
+          2304,
+          1303
+        ],
+        "rgba_sha256": "e7cde39b3df08dae4c7989292a776bfa4d3cb2185881c1c81493a992a37701d2"
+      },
+      {
+        "row": 2,
+        "direction": "NE",
+        "region": [
+          160,
+          1747,
+          1215,
+          1112
+        ],
+        "margin": [
+          416,
+          172,
+          833,
+          936
+        ],
+        "source_anchor": [
+          768,
+          2855
+        ],
+        "rgba_sha256": "6644512f29f6717ca1754503dc91839973dcdfa8325109975b6a37f7a84a59d0"
+      },
+      {
+        "row": 3,
+        "direction": "NE",
+        "region": [
+          1696,
+          1736,
+          1214,
+          1136
+        ],
+        "margin": [
+          416,
+          148,
+          834,
+          912
+        ],
+        "source_anchor": [
+          2304,
+          2868
+        ],
+        "rgba_sha256": "587929df2508a1cae7210dbf8bc98126de53895cd0916758f3cb8b74041928f4"
+      },
+      {
+        "row": 4,
+        "direction": "NE",
+        "region": [
+          149,
+          3261,
+          1238,
+          1159
+        ],
+        "margin": [
+          405,
+          125,
+          810,
+          889
+        ],
+        "source_anchor": [
+          768,
+          4416
+        ],
+        "rgba_sha256": "e59f5a93cc2820f1a1013e293717d52718f686b01cd822e6e12dc1067317fbb1"
+      },
+      {
+        "row": 5,
+        "direction": "NE",
+        "region": [
+          1695,
+          3294,
+          1218,
+          1092
+        ],
+        "margin": [
+          415,
+          192,
+          830,
+          956
+        ],
+        "source_anchor": [
+          2304,
+          4382
+        ],
+        "rgba_sha256": "592c423a1e9bf1b8c9a7d85350564f671d3c2cb2f9d503c10ed9c2d354a15982"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 1115.5,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": null,
+  "region_height_span": [
+    1075,
+    1154
+  ],
+  "possible_region_height_mismatch": false,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+}

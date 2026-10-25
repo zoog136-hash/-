@@ -1,0 +1,41 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-3D-LEFT-halfcycles01",
+  "source_batch": "batch03",
+  "raw_path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+  "raw_png": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+  "raw_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+  "raw_bytes": 2134218,
+  "image_size": [
+    1536,
+    1024
+  ],
+  "request_sha256": "249e6e1a972a9a1adda073743ed3b56c2d33ef56d38380c439a719aaf4a7d8d5",
+  "expected_poses": 2,
+  "game_phases": [
+    1,
+    2
+  ],
+  "source_visual_status": "PASS",
+  "geometry_status": "PARTIAL2_STRICT_PASS",
+  "geometry_path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/geometry-partial2-base2048.json",
+  "integration_ready": false,
+  "newly_authored_poses": 2,
+  "usable_game_phases": [
+    1,
+    2
+  ],
+  "source_visual_review_path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/W-walk-LEFT-halfcycles-3D-v02-independent-source-review.json",
+  "independent_source_review_sha256": "626b817e02339f509e32148828293b9cd43b9c98fd449fbb44c1686fdfd609b2",
+  "visual_findings": [
+    "Independent1 nearLEFT hip->plantedflatsole underbody +farRIGHTliftedknee/fullboot passing PASS.",
+    "Independent2 nearLEFTrearheelUP/toeDOWNsupport +farRIGHTforeheelHOVER/dorsiflexedreach WALKtoeoff, notwholebodyAIR PASS.",
+    "FaithfulWcamera/longrobe/HARDgoldrays/RIGHTsinuousblade+EMPTYLEFT/twoarmslegs/oneheadblade PASS. Strict2geometrycomplete PASS. PhysicalCs/roots/worldsupport/full6remainpending."
+  ],
+  "actor_approval": false,
+  "approved_actor_count_added": 0,
+  "generation_attempts": 1
+}

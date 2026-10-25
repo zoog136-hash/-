@@ -1,0 +1,247 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/SW-attack-v01.png",
+  "source_sha256": "501caad8e1f4a56ffd1ed86ec27bb8ba2106db17d426b59539000b772f7099e8",
+  "texture": "assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/SW-attack-v01.png",
+  "texture_sha256": "9fdeeaa0f775249c959a7a9db7e9abfb9e827c7aa5ce7e351bd034d27cc8e8f9",
+  "geometry": {
+    "image_size": [
+      1824,
+      1216
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "SW",
+        "region": [
+          3,
+          3,
+          552,
+          500
+        ],
+        "margin": [
+          396,
+          321,
+          752,
+          804
+        ],
+        "source_anchor": [
+          259,
+          497
+        ],
+        "rgba_sha256": "79ba3bf6ae8542eb10fa49710741307f48f84cfe9ad55b96b54df472a6de863e",
+        "original_source_region": [
+          0,
+          18,
+          552,
+          500
+        ],
+        "original_source_anchor": [
+          256,
+          512
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "SW",
+        "region": [
+          611,
+          3,
+          567,
+          549
+        ],
+        "margin": [
+          389,
+          310,
+          737,
+          755
+        ],
+        "source_anchor": [
+          874,
+          508
+        ],
+        "rgba_sha256": "8b0a7fdf8e6652cd573e1db90512739d4d7e291502276aeb05b9d969b5b5c504",
+        "original_source_region": [
+          505,
+          9,
+          567,
+          549
+        ],
+        "original_source_anchor": [
+          768,
+          514
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "SW",
+        "region": [
+          1219,
+          3,
+          583,
+          557
+        ],
+        "margin": [
+          325,
+          335,
+          721,
+          747
+        ],
+        "source_anchor": [
+          1546,
+          483
+        ],
+        "rgba_sha256": "f5965f468c3a77618e865b1a55f1a193c511391f45551341ef5bb3c675007975",
+        "original_source_region": [
+          953,
+          33,
+          583,
+          557
+        ],
+        "original_source_anchor": [
+          1280,
+          513
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "SW",
+        "region": [
+          3,
+          611,
+          602,
+          478
+        ],
+        "margin": [
+          404,
+          342,
+          702,
+          826
+        ],
+        "source_anchor": [
+          251,
+          1084
+        ],
+        "rgba_sha256": "34af3e02f5f8d923568599417d82bc67ae80ff7125533da28860962bb9d2e1b7",
+        "original_source_region": [
+          8,
+          521,
+          602,
+          478
+        ],
+        "original_source_anchor": [
+          256,
+          994
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "SW",
+        "region": [
+          611,
+          611,
+          473,
+          537
+        ],
+        "margin": [
+          473,
+          307,
+          831,
+          767
+        ],
+        "source_anchor": [
+          790,
+          1119
+        ],
+        "rgba_sha256": "9705cecd14505e2ab8c2b842fad0035989eabc1b5bc5f3d77b6e4ea0a429f39a",
+        "original_source_region": [
+          589,
+          487,
+          473,
+          537
+        ],
+        "original_source_anchor": [
+          768,
+          995
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "SW",
+        "region": [
+          1219,
+          611,
+          503,
+          496
+        ],
+        "margin": [
+          377,
+          327,
+          801,
+          808
+        ],
+        "source_anchor": [
+          1494,
+          1099
+        ],
+        "rgba_sha256": "3aaa732c1db50f2cc26a5b7de2d04fd3a54ac2f031c67fd1d9247aa2134377fc",
+        "original_source_region": [
+          1005,
+          515,
+          503,
+          496
+        ],
+        "original_source_anchor": [
+          1280,
+          1003
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 489.0,
+    "canvas_size": [
+      1304,
+      1304
+    ],
+    "foot": [
+      652,
+      815
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 675666,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "b113bf7f1a8e1b145d0d87a42452e4feba2a3bbb4eea7381260a970fe67c2f02",
+    "foreground_owner_sha256": "c7f05903f4f1536d80e14e3a84f2f9f521da23e25499273c2181aa16c6557c74",
+    "detached_pixels": 1,
+    "detached_fragments": [
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          1437,
+          875,
+          1438,
+          876
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 396.9886648255842,
+        "owner_margin_min": 394.9886648255842
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 137324,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:질투의 공주 이자벨",
+  "slug": "isabelle",
+  "clip": "SW-attack-v01",
+  "role": "attack",
+  "direction": "SW",
+  "original_cause": "foreign_body_rectangle"
+}

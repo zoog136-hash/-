@@ -1,0 +1,159 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "attack",
+  "version": "NWattackSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+    "base_geometry_sha256": "2a321d54c7508ef30d2e59ef8a5b61a6ea61c23c1781937e687d62d5b787d517",
+    "direction": "NW",
+    "regions": [
+      [
+        463,
+        15,
+        607,
+        1105
+      ],
+      [
+        1999,
+        85,
+        600,
+        1035
+      ],
+      [
+        463,
+        1666,
+        687,
+        990
+      ],
+      [
+        1668,
+        1750,
+        939,
+        906
+      ],
+      [
+        88,
+        3346,
+        985,
+        846
+      ],
+      [
+        1999,
+        3086,
+        610,
+        1106
+      ]
+    ],
+    "nearest_owner_sha256": "b2f39ba8d9fca8d44246d541a4b065e16b410bdd3549b3ae431f68e175e29353",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 6fc2495e87b578b2a28443e28d7f661d17adac145433ae7263c0db83d4251538"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+    "direction": "NW",
+    "role": "attack",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        641,
+        1058
+      ],
+      [
+        2177,
+        1058
+      ],
+      [
+        641,
+        2594
+      ],
+      [
+        2177,
+        2594
+      ],
+      [
+        641,
+        4130
+      ],
+      [
+        2177,
+        4130
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "6fc2495e87b578b2a28443e28d7f661d17adac145433ae7263c0db83d4251538",
+  "authored_common_root_float": [
+    641,
+    1058.3
+  ],
+  "common_root_integer": [
+    641,
+    1058
+  ],
+  "common_root_rounding_delta": [
+    0,
+    -0.2999999999999545
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Dedicated READY/WINDUP/COIL, NW-directed STRIKE3, FOLLOW and RECOVER poses articulate actual torso/knees/nearLEFT counterarm and farRIGHT staff arm rather than relabeling an existing clip.",
+      "The rearNW unique head/bun/ribbon, gold-blue costume, white skirt and complete high-heeled boots remain coherent. Both real flat shoes preserve their initial native yaw and fixed support material across all six poses.",
+      "Complete far anatomicalRIGHT hand/forearm and rigid double-ended staff stay connected. All six reviewed grip/staff nodes transfer byte-exactly from the native reviewed grip sequence, with orthonormal staff rotations.",
+      "The new continuous RIGHT calf uses actual owned calf-to-flatshoe material and closes the earlier sawtooth/cut contour. The isolated dark old-underarm fragment now follows the real underarm cap; old LEFT fingertip traces are removed while preserving the complete moving hand.",
+      "STRIKE3 reaches the NW quadrant with the actual blade endpoint around[136.294,219.771]; recovery returns toward the ready guard without a body/equipment pop."
+    ],
+    "visual_limitations": [
+      "Final atlas/request preserves all six reviewed actual source RGBA pixels. Uniform root rounding adds no relative fixed-stance drift.",
+      "This approves actual source appearance and visible one-shot attack cycle. Final exact atlas/request binding and actual scoped Godot/Player/impact scheduling remain pending.",
+      "Visible stationary complete-shoe material is independently fixed; hidden3D anatomy and finite foot volume are not uniquely reconstructed. Foot perimeter yaw is retained rather than forced to a common heading slope.",
+      "One3px source bow-edge alpha fragment remains in WINDUP1; it is not a detached hand/armor or additional strong body. No alpha threshold or gameplay validation was relaxed.",
+      "The initial RIGHT flatshoe placement changed once by1nativeY before this final shared stance. It is constant across all six final frames and is not a perpose foot/root fit.",
+      "Only this new NW ATTACK source cycle is approved here; detailed actor approvals remain unchanged."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+    "raw_bytes": 2834041,
+    "request_sha256": "fd1e017144e8c7a68c5dd7e9b029f891bfa49e28a7e9cc6edbf94e76a7d75a6c",
+    "review_sha256": "25f5bbf9de9c07309c10a6f352f6f0881397a31491f7df1bea281072bfa4d19f"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-NW-attack-actual-packed-r001-20261020/thunder_female-NW-attack-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-ew_wjdlg/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-NW-attack-actual-packed-r001-20261020/request-NWattackSixActualRig01.json": "fd1e017144e8c7a68c5dd7e9b029f891bfa49e28a7e9cc6edbf94e76a7d75a6c",
+      "/workspace/scratch/mythic413-NW-attack-actual-packed-r001-20261020/thunder_female-NW-attack-six-actual-poses-r001.png": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NWattackSixActualRig01-fd1e01-independent-final-source-cycle-PASS-v01.json": "25f5bbf9de9c07309c10a6f352f6f0881397a31491f7df1bea281072bfa4d19f",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-attack-NWattackSixActualRig01.png",
+  "output_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+  "output_bytes": 2834041,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-ew_wjdlg/reviewed-source.png"
+}

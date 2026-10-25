@@ -1,0 +1,228 @@
+{
+  "schema": "pr122-albino-demon-run-private-visual-review-v1",
+  "id": "monster:알비노 데몬",
+  "date": "2026-10-23",
+  "frozen": true,
+  "review_method": "Actual private tool vision of exact reference and every generated source sheet; static six-pose sheets, not timed gameplay. No image output was forwarded to parent/user.",
+  "current_review": "HOLD",
+  "new_approvals": 0,
+  "production_connected": false,
+  "shared_source_reuse": false,
+  "reference": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/28.png",
+    "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b",
+    "identity": "Muscular red biped; two black swept horns; heavy spiked dark armor; skull belt/chains; two arms/two clawed legs; attached thick tail; RIGHT-hand iron axe; LEFT empty claw; no wings. Do not recolor white based on the name."
+  },
+  "selected_source_count": 8,
+  "examined_selected_poses": 48,
+  "distinct_rgba_poses": 48,
+  "distinct_visible_fingerprints": 48,
+  "all_generated_source_count": 13,
+  "preserved_rejected_sources": [
+    "albino-demon-E-run6-v01",
+    "albino-demon-NW-run6-v01",
+    "albino-demon-NW-run6-v02",
+    "albino-demon-S-run6-v01",
+    "albino-demon-SW-run6-v01"
+  ],
+  "selected_sources": [
+    {
+      "name": "albino-demon-E-run6-v02",
+      "direction": "E",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-E-run6-v02.png",
+      "sha256": "5f692ea863d6db111f605d318820ab5415dbc68e94b46fb903431bbc02fb31b3",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    },
+    {
+      "name": "albino-demon-SE-run6-v01",
+      "direction": "SE",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SE-run6-v01.png",
+      "sha256": "934f7e32733916a538bf5a9e79e84be9d5c55997248984b1403c595ad00bb6db",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    },
+    {
+      "name": "albino-demon-S-run6-v02",
+      "direction": "S",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-S-run6-v02.png",
+      "sha256": "93e59af435f78e38c5ae0987cba17ebb774f2b5dbdc65ecc77448acbb491283b",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    },
+    {
+      "name": "albino-demon-SW-run6-v02",
+      "direction": "SW",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SW-run6-v02.png",
+      "sha256": "eaa6f064d21f210b8da96f4600701419269d5970e55fa0342052b2348399a3b1",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    },
+    {
+      "name": "albino-demon-W-run6-v01",
+      "direction": "W",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-W-run6-v01.png",
+      "sha256": "7fdf8ead19fed22490aadb70b4b43a00c489ff9ffaefd1e17b4ea8679f2bd3e7",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    },
+    {
+      "name": "albino-demon-NW-run6-v03",
+      "direction": "NW",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NW-run6-v03.png",
+      "sha256": "9bbb6c3dbddcbf14567eb6f1de8a754fbf47fa9741bd75b3b9f2e7bb8b07e58b",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    },
+    {
+      "name": "albino-demon-N-run6-v01",
+      "direction": "N",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-N-run6-v01.png",
+      "sha256": "f7626a545a32708a9da1bc1e42e05684a6808cf77c097829f246ce74c7b37e9c",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    },
+    {
+      "name": "albino-demon-NE-run6-v01",
+      "direction": "NE",
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NE-run6-v01.png",
+      "sha256": "3f6b01e4ab5438a0965c45cd23d0e6e5099eeb537c88bbe591abfbbf2345a251",
+      "axis": "phase_grid2",
+      "rows": 6,
+      "reference_rows": [
+        0,
+        3
+      ]
+    }
+  ],
+  "identity_observation": {
+    "result": "PASS",
+    "scope": "Species/major armor/weapon appearance in private static source sheets",
+    "observation": "Dedicated new sources restore red muscular demon anatomy, swept horns, spiked armor, skull belt, tail and actual axe instead of the previous lava-fist golem. This does not grant completed mythic production approval."
+  },
+  "representative_support_repair": {
+    "source": "albino-demon-S-run6-v02",
+    "sha256": "93e59af435f78e38c5ae0987cba17ebb774f2b5dbdc65ecc77448acbb491283b",
+    "result": "PASS_WITHIN_STATIC_SCOPE",
+    "frames": [
+      {
+        "phase": 0,
+        "grid_cell": "top-left",
+        "observed_support": "anatomical RIGHT = SCREEN LEFT toeplant",
+        "observation": "Right lower leg reaches the lowest foot line with splayed flattened toes; left knee/foot is raised on screen-right above the planted sole."
+      },
+      {
+        "phase": 3,
+        "grid_cell": "middle-right",
+        "observed_support": "anatomical LEFT = SCREEN RIGHT toeplant",
+        "observation": "Left lower leg reaches the low foot line with splayed toes; right knee/foot is raised on screen-left. Axe remains screen-left RIGHT hand and left hand empty, so this is not a whole-body mirror."
+      }
+    ],
+    "improvement": "Prior S-v01 did not establish opposite support; new S-v02 exposes opposite anatomical toeplant in phases0/3.",
+    "limit": "Static pose support only. Phase1/2 ordering, full cycle timing, ground-plane collision and actual moving-world contact remain NOT_REVIEWED. No whole six-phase gait approval."
+  },
+  "direction_findings": {
+    "E": {
+      "result": "HOLD",
+      "source": "albino-demon-E-run6-v02",
+      "observation": "Right-facing body is visible, but frontal chest/skullbelt presentation reads closer to three-quarter SE than a clear pure E profile; opposite anatomical support is not established."
+    },
+    "SE": {
+      "result": "HOLD",
+      "source": "albino-demon-SE-run6-v01",
+      "observation": "Front-right orientation is visible and identity preserved; exposed foreground support appears similar between phases0/3, so the six-phase alternating gait is not approved."
+    },
+    "S": {
+      "result": "PARTIAL_STATIC_PASS",
+      "source": "albino-demon-S-run6-v02",
+      "observation": "Front identity and right-hand axe/left empty hand preserved. Opposite anatomical toeplant in phases0/3 is actually visible. Full cycle timing and contact remain unreviewed."
+    },
+    "SW": {
+      "result": "HOLD",
+      "source": "albino-demon-SW-run6-v02",
+      "observation": "New v02 corrects previous wrong right-facing v01 to LEFT-facing. The distinction between frontal-left SW and W remains weak and needs in-game camera review; opposite support not established."
+    },
+    "W": {
+      "result": "HOLD",
+      "source": "albino-demon-W-run6-v01",
+      "observation": "Clear left-facing orientation; torso retains some frontal presentation and W/SW camera separation is not independently approved. Opposite support not established."
+    },
+    "NW": {
+      "result": "PARTIAL_STATIC_PASS",
+      "source": "albino-demon-NW-run6-v03",
+      "observation": "New v03 preserves broad BACK-left, rear armor/tail origin, near LEFT empty claw and far RIGHT hand gripping axe on screen-right. This repairs ambiguous/swapped weapon ownership in v01. Alternating anatomical foot support remains unapproved."
+    },
+    "N": {
+      "result": "PARTIAL_STATIC_PASS",
+      "source": "albino-demon-N-run6-v01",
+      "observation": "Back-only silhouette with no front face/chest and axe held on anatomical RIGHT=screen-right is clear. Rear support leg alternation is not established."
+    },
+    "NE": {
+      "result": "PARTIAL_STATIC_PASS",
+      "source": "albino-demon-NE-run6-v01",
+      "observation": "Broad back-right silhouette distinct from front-right is visible; right hand holds axe on screen-right, left hand empty. Opposite support not established."
+    }
+  },
+  "source_failures": [
+    {
+      "name": "albino-demon-E-run6-v01",
+      "status": "SOURCE_HOLD",
+      "reason": "Strict check found visible pose touching image boundary. Initial background suspicion was retracted: source RGB retains brown outside character but sampled exterior alpha is zero; this is not asserted to be an opaque backdrop."
+    },
+    {
+      "name": "albino-demon-S-run6-v01",
+      "status": "QUALITY_HOLD_SUPERSEDED",
+      "reason": "Opposite anatomical toe support was not established; replaced by newly generated S-v02."
+    },
+    {
+      "name": "albino-demon-SW-run6-v01",
+      "status": "QUALITY_HOLD_SUPERSEDED",
+      "reason": "Actual vision showed right-facing front/SE-like pose despite requested SW. Replaced by newly generated left-facing v02."
+    },
+    {
+      "name": "albino-demon-NW-run6-v01",
+      "status": "QUALITY_HOLD_SUPERSEDED",
+      "reason": "Back-left orientation was present, but near arm held axe and appeared to be anatomical LEFT. New v03 explicitly redraws far RIGHT weapon ownership."
+    },
+    {
+      "name": "albino-demon-NW-run6-v02",
+      "status": "SOURCE_HOLD",
+      "reason": "Strict check found visible pose touching image boundary; N-reference also pulled orientation close to straight rear. Preserved; replaced by v03."
+    }
+  ],
+  "unseen_not_reviewed": [
+    "Timed RUN cycle and transitions",
+    "Actual target/ground contact and sole-ground plane",
+    "GPU materials/tint/VFX",
+    "Default Main runtime integration",
+    "Final release/completed status or new approval"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "scope": "Three conservative QA position-selection fixes on unchanged latest production map; no authored source promotion",
+  "baseline_commit": "ea37605a1c35dac54eee4b1d400ce04ef631ba9e",
+  "counts": {
+    "qualified_completed": 392,
+    "runtime_connected": 394,
+    "new_completed": 0,
+    "other_HOLD": 16,
+    "pending_CI_APK": 2,
+    "not_authored_or_not_connected": 88
+  },
+  "production_assets_changed_in_this_batch": false,
+  "existing_capture_assertions_removed_or_weakened": false,
+  "map_hidden_or_changed": false,
+  "walk_speed_distance_duration_changed": false,
+  "AI_combat_lifecycle_super_calls_retained": true,
+  "validation": {
+    "actual": {
+      "checks": 3389,
+      "failures": [],
+      "AI_directions_per_subject": 8,
+      "manual_pickup_per_subject": true
+    },
+    "temporal": {
+      "checks": 81009,
+      "failures": [],
+      "native_phases": [
+        112,
+        104
+      ],
+      "rendered_native_phases": [
+        112,
+        104
+      ]
+    },
+    "comparison": {
+      "checks": 295,
+      "failures": [],
+      "completed_baseline": "지옥의 쿠거"
+    },
+    "transform": {
+      "checks": 69055,
+      "failures": [],
+      "native_phases": 112,
+      "actual_marker_contacts": 8
+    },
+    "QA_source_sha256": {
+      "tests/run_remaining106_visual_review.gd": "fedc25d71e940f63b9da7ed0f6ebe3543fb333388fabc330b200b8d324c71acf",
+      "tests/original_based_pose_review_helper.gd": "4fd72fdb476fc0cf2ff976db958153e13c09e5e3414451bb46287b57a5b8aa81",
+      "tests/original_based_temporal_main_test.gd": "210eaec4af65c7658b65e75e18a3b823fd699920cdf5b0005fa87a99a476a727",
+      "tests/run_remaining106_style_compare.gd": "f8b5cec46e67dcdc010ea386214798874b14ced21fcf10e7c6b78f7d0b94e549",
+      ".github/workflows/remaining106-animation-validate.yml": "f8faebdbb32bc4ec00ed945db6ac5c7a74519f5fa07b23a5c1d3155cce8ba993"
+    },
+    "engine": "4.7.2.stable.official.ed1daf0bf",
+    "renderer": "OpenGL3 compatibility, Mesa llvmpipe software; actual Main viewport",
+    "VRAM": "NOT_MEASURED",
+    "Android_real_device": "NOT_RUN",
+    "full_PNG_delivery": "Only two selected PNG bodies are in Git; other local PNG bodies are explicitly not delivered here. New remote CI artifacts are separate."
+  },
+  "remote_CI": "Next exact commit must be dispatched; prior ea37605 successes do not approve the subsequent SHA",
+  "Android_real_device": "NOT_RUN",
+  "emergency_source_backup": "8f339971f8efbfed53976a36db0e7d7f22567414 on separate recovery/pr122-qa-20261018-0323 branch during transport outage; interrupted runs not promoted"
+}

@@ -1,0 +1,46 @@
+{
+  "status": "PASS_INDIVIDUAL_SOURCE_COVERAGE_AND_EXACT_RGBA_TRANSFER_NEW_CYCLE_PHYSICAL_HOLD",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "source_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "selected_manifest": {
+    "path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/selected-six-bounded-contacts-PROVISIONAL-v01.json",
+    "sha256": "30928e3c5d0cf115bc4f6060c3cd1aa55ab9fccf2f9572fb3e27a4dfe931ff35",
+    "bytes": 10813
+  },
+  "assembly": {
+    "path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/girtas-NE-run-reviewed-composite-v02.assembly.json",
+    "sha256": "310ed2280dec17cd52f7de7c1df8d23fcfb58df98bb36aa3589118b049b7f671",
+    "bytes": 11282
+  },
+  "selected_source0_independent_review": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-contact0-bounded-v02-independent-source-PASS.json",
+    "sha256": "f71977cb04e446a7176b92561b65024e58fa69d2d89776f77c636a97cdd049c8",
+    "bytes": 4683
+  },
+  "selected_source3_independent_review": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/NE-run-contact3-bounded-v04-independent-source-PASS.json",
+    "sha256": "3c327d250d6770064df028f94f4ff29c6f1c3c2e5652777056d7a8769cc80afd",
+    "bytes": 4950
+  },
+  "unchanged_sources1_2_4_5_historical_independent_review": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-selected-final-six-independent-source-cycle-bridge-v01.json",
+    "sha256": "8e99326ebfe236e3d47c9106ddf58f645aed095da1325bf77aa8b9a3c466d307",
+    "bytes": 14638
+  },
+  "unchanged_source_phases": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "all_six_exact_source_RGBA_crops_preserved": true,
+  "scope": "Formal evidence bridge from already independent SOURCE0/3 and byte-identical earlier source1/2/4/5. This is not a new independent whole-cycle/ground/body review.",
+  "whole_cycle_status": "HOLD_PENDING_CURRENT_ACTUAL_COMMON_WORLD_REVIEW",
+  "physical_status": "HOLD",
+  "runtime_status": "HOLD",
+  "integration_ready": false,
+  "actor_approval": false,
+  "new_approvals": 0
+}

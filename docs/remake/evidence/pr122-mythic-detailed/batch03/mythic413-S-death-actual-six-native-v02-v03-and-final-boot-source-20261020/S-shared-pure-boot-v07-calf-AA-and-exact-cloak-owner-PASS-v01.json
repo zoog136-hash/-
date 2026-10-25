@@ -1,0 +1,165 @@
+{
+  "source_visual_status": "PASS",
+  "scope": "SHARED_S_BOOT_ONLY_CALF_EDGE_OWNER_FINAL_V07",
+  "input": {
+    "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-calf-full-true-source-AA-owners-v07/own-S-native-source-owned-complete-boot-only-calf-edges-and-head-input-v07.json",
+    "sha256": "3ec2f3fbe2f70166de34acd6cc1f68dfe320f776be37d100d5466c4be5775df5"
+  },
+  "materials": {
+    "R-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-calf-full-true-source-AA-owners-v07/R-actual-complete-native-boot-skin-and-all-original-calf-AA-owned-v07.png",
+      "sha256": "3299dfd6e9439e5d94a614e70b0c3286cba437e658f4046139fc2dcebe2cda3e",
+      "bytes": 104532
+    },
+    "L-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-calf-full-true-source-AA-owners-v07/L-actual-complete-native-boot-skin-and-all-original-calf-AA-owned-v07.png",
+      "sha256": "a0de9c46ccf711ae65702a5e4ef26bfb898303c0b5ace3c6cc808b203d97552c",
+      "bytes": 106568
+    },
+    "head-face-bun-and-both-blue-ribbons": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-boot-only-and-complete-head-owners-v04/actual-own-S-complete-head-face-goldcurls-and-entire-original-blue-ribbons-native-v04.png",
+      "sha256": "1ab53f13a3d8b78d27009031d7e576f4290e6cb93f98a398586e5f803cac8f8d",
+      "bytes": 143314
+    }
+  },
+  "mattes": {
+    "R-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-calf-full-true-source-AA-owners-v07/R-actual-complete-native-boot-skin-true-goldfins-and-calf-edge-owner-matte-v07.png",
+      "sha256": "72d387622ac0ff81c3b7989bebb2b7b9755bc6211e8ee18b7ed7ab6517df07ce",
+      "bytes": 3914
+    },
+    "L-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-calf-full-true-source-AA-owners-v07/L-actual-complete-native-boot-skin-true-goldfins-and-calf-edge-owner-matte-v07.png",
+      "sha256": "4ac246fe9715db593e5dfb03fdee8864ed79473258dd75438c393b3fec920571",
+      "bytes": 3661
+    },
+    "head-face-bun-and-both-blue-ribbons": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-boot-only-and-complete-head-owners-v04/actual-own-S-complete-head-face-and-ribbon-original-native-owner-matte-v04.png",
+      "sha256": "4f19a7ef7bd6cf6c17d94fbc3565a5fee6399ce4fb1cc70fd265de97890915d6",
+      "bytes": 3986
+    }
+  },
+  "actual_arm_erased_CORE": {
+    "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/actual-own-S-native-original-cloak-point-exact-owner-restored-v09/actual-S-complete-CORE-genuine-original-smooth-cloak-point-fully-restored-v09.png",
+    "sha256": "d47b4b07532676f2d0bdbbb27b08811e8586cfa8cfdfbd1876377bbb27fb8caa",
+    "bytes": 714020
+  },
+  "prior_knee_and_exact_twelve_cloak_owner_PASS": {
+    "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/S-shared-pure-boot-v05-exact-twelve-cloak-texel-owner-PASS-v01.json",
+    "sha256": "abf16473ccc21b61ee9e8cb5916335621bbcc8f8e03d503cceacc9d4ada7d03e"
+  },
+  "visual_findings": [
+    "One original-versus-v07 native calf comparison preserves the original black leather contour and gold shin/ankle rails on both sides. The recovered outer antialiasing follows the actual calf edge; nearby broad cape material remains excluded.",
+    "The earlier twelve RIGHT calf-edge gold texels remain excluded from boot and preserved by their cloak CORE owner. Genuine knee plates and sidefins retain the preceding local visual approval."
+  ],
+  "native_visual_evidence": {
+    "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/private-own-S-original-versus-v07-complete-calf-native-AA-owner-band.jpg",
+    "sha256": "c7cefb247ef8fcb4c0cbaa7ce3448d2520bc0370f1743dca15b34c18a166e1dc",
+    "bytes": 45553,
+    "native_ROIs": [
+      [
+        480,
+        900,
+        585,
+        1040
+      ],
+      [
+        690,
+        900,
+        810,
+        1040
+      ]
+    ]
+  },
+  "independent_exact_pixel_checks": [
+    {
+      "side": "R",
+      "new_original_RGBA_edge_pixels": 1985,
+      "changed_bounds": [
+        496,
+        900,
+        580,
+        1040
+      ],
+      "retained_original_RGBA_changed": 0,
+      "new_pixels_source_RGBA_exact": true,
+      "outside_native_calf_band_changed": 0,
+      "canonical_lowerboot_unchanged": true,
+      "all_painted_material_within_owner_matte": true,
+      "matte_transparent_source_region_not_art": true
+    },
+    {
+      "side": "L",
+      "new_original_RGBA_edge_pixels": 545,
+      "changed_bounds": [
+        696,
+        900,
+        801,
+        1040
+      ],
+      "retained_original_RGBA_changed": 0,
+      "new_pixels_source_RGBA_exact": true,
+      "outside_native_calf_band_changed": 0,
+      "canonical_lowerboot_unchanged": true,
+      "all_painted_material_within_owner_matte": true,
+      "matte_transparent_source_region_not_art": true
+    }
+  ],
+  "author_semantic_component_and_AA_rule": [
+    {
+      "side": "R",
+      "semantic_isolated_native_band": [
+        450,
+        900,
+        620,
+        1040
+      ],
+      "actual_source_seed": [
+        525,
+        950
+      ],
+      "core_component_source_alpha_gt16": 2,
+      "component_bbox": [
+        490,
+        900,
+        579,
+        1039
+      ],
+      "component_pixels": 8273,
+      "new_original_RGBA_leather_edge_pixels": 1985,
+      "AA_rule": "Every original alpha>0 pixel is assigned to its nearest alpha>16 semantic component within4native pixels; cape core is separately labelled and never included. No alpha value changed on retained source pixels.",
+      "source_RGBA_recolored": false
+    },
+    {
+      "side": "L",
+      "semantic_isolated_native_band": [
+        680,
+        900,
+        850,
+        1040
+      ],
+      "actual_source_seed": [
+        750,
+        950
+      ],
+      "core_component_source_alpha_gt16": 2,
+      "component_bbox": [
+        696,
+        900,
+        800,
+        1039
+      ],
+      "component_pixels": 8442,
+      "new_original_RGBA_leather_edge_pixels": 545,
+      "AA_rule": "Every original alpha>0 pixel is assigned to its nearest alpha>16 semantic component within4native pixels; cape core is separately labelled and never included. No alpha value changed on retained source pixels.",
+      "source_RGBA_recolored": false
+    }
+  ],
+  "new_preview_views": 1,
+  "actor_approvals_added": 0,
+  "limits": [
+    "Shared boot-versus-cloak source ownership approval only, usable by S DEATH and S RUN. Actual pose articulation, physical support, cycle, floor, PACK and game require their separate checks.",
+    "No original whole-body or once/C registration repeated; no head art approval added.",
+    "No alpha thresholds relaxed and no original RGBA repainted."
+  ]
+}

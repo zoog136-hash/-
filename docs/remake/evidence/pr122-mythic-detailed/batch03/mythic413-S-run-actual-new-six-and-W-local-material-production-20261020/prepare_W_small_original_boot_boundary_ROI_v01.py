@@ -1,0 +1,7 @@
+from pathlib import Path
+from PIL import Image,ImageDraw
+import json,hashlib
+B=Path(__file__).parent;D=B/'W-original-native-boot-semantic-prep-v01';D.mkdir(exist_ok=False);H=Path('/workspace/scratch/mythic413-W-hit-author-20261020-v01/W-final-once-body-real-cloth-complete-LEFT-original-boots-readonly-future-action-handoff-v01.json');d=json.loads(H.read_text());p=Path(d['source']['path']);assert hashlib.sha256(p.read_bytes()).hexdigest()==d['source']['sha256'];im=Image.open(p).convert('RGBA');box=[425,625,955,1220];roi=im.crop(box);out=Image.new('RGB',roi.size,'#405265');out.paste(roi,(0,0),roi);dr=ImageDraw.Draw(out)
+for x in range(450,956,50):dr.line([(x-box[0],0),(x-box[0],roi.height)],fill='#6d7e8a',width=1);dr.text((x-box[0]+2,3),str(x),fill='white')
+for y in range(650,1221,50):dr.line([(0,y-box[1]),(roi.width,y-box[1])],fill='#6d7e8a',width=1);dr.text((2,y-box[1]+2),str(y),fill='white')
+pv=D/'private-original-W-small-native-boot-cloak-boundary-ROI-v01.jpg';out.save(pv,quality=83);assert pv.stat().st_size<=150000;l=B/'image-ledger-v01.json';ld=json.loads(l.read_text());ld['entries'].append(dict(path=str(pv),bytes=pv.stat().st_size,kind='required-original-W-small-native-boot-vs-cloak-boundary-ROI-explicit-root-authorization'));ld['actual_cumulative_bytes']+=pv.stat().st_size;l.write_text(json.dumps(ld,indent=2)+'\n');print({'path':str(pv),'bytes':pv.stat().st_size,'cumulative':ld['actual_cumulative_bytes'],'source_SHA':d['source']['sha256'],'source_ROI':box})

@@ -1,0 +1,82 @@
+{
+  "observed_utc": "2026-10-16T02:39:10.771585+00:00",
+  "production_assets_or_profiles_changed": false,
+  "completed": 392,
+  "remaining": 106,
+  "entries": [
+    {
+      "id": "monster:알비노 이구아나",
+      "slug": "albino-iguana-monster-authored",
+      "native_poses_reviewed": 112,
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "roles": [
+        "idle",
+        "walk",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "source_png_count": 31,
+      "reviewer": "Codex root in new 2026-10-16 session; separate review stage, no authorship or regenerated image",
+      "static_and_ordered_native_phase_review": "PASS",
+      "reference_review": "Original atlas_2 cell 8 lizard or cell 4 flame; source SHA and project-reference limit retained",
+      "observations": "Right spear / left shield retained. Far shield interior visible in E source endpoints; true opposing E/W hip-knee-foot chains checked at source resolution. Eight-direction root-aligned phase series inspected for heel support, joined tail/torso, stable core, spear-hand contact and intact collapse.",
+      "temporal_report_sha256": "be929cca0e31565965f64d4f47becbf2d05dea81b2c32e0ee9494eba4f1952a7",
+      "scope_precision": "Every rendered native phase captured from continuous production MotionController in actual Main reviewed in temporal order. This is not a new real-time video or a wall-clock performance claim.",
+      "existing_completed_peers_compared": [
+        "batch29/hell_cougar_monster_boss_v3/Main-representatives/authored-E-walk-0.png",
+        "batch30/nungma_monster_authored/Main-representatives/authored-S-attack-1.png"
+      ],
+      "actual_Main_final_visual_review": "PENDING complete AI/contact/lifecycle full-viewport review and latest-code replay",
+      "strict_current_readonly_preflight": "PASS mixed_sources_v1 112",
+      "final_status": "HOLD_UNTIL_ALL_FINAL_GATES",
+      "completed_added": 0
+    },
+    {
+      "id": "monster:공포의 아그니",
+      "slug": "fear-agni-monster-authored",
+      "native_poses_reviewed": 104,
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "roles": [
+        "idle",
+        "walk",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "source_png_count": 16,
+      "reviewer": "Codex root in new 2026-10-16 session; separate review stage, no authorship or regenerated image",
+      "static_and_ordered_native_phase_review": "PASS",
+      "reference_review": "Original atlas_2 cell 8 lizard or cell 4 flame; source SHA and project-reference limit retained",
+      "observations": "Legless orange/yellow connected flame body, two joined arms, central vortex support; N back hides eyes. All eight-direction idle/walk/attack/hit/death sequences inspected; attack extends then recovers; intact flame body collapses into ground pool without detached body fragments.",
+      "temporal_report_sha256": "c417b9bd36e86ad0957e9a36ed1017e3d4b370031a55f3afeed2ebd48d49cd14",
+      "scope_precision": "Every rendered native phase captured from continuous production MotionController in actual Main reviewed in temporal order. This is not a new real-time video or a wall-clock performance claim.",
+      "existing_completed_peers_compared": [
+        "batch29/hell_cougar_monster_boss_v3/Main-representatives/authored-E-walk-0.png",
+        "batch30/nungma_monster_authored/Main-representatives/authored-S-attack-1.png"
+      ],
+      "actual_Main_final_visual_review": "PENDING complete AI/contact/lifecycle full-viewport review and latest-code replay",
+      "strict_current_readonly_preflight": "BLOCKED: legacy whole-sheet candidate unsupported by current --validate-candidate; 16 raw source PNG SHAs match archived runtime",
+      "final_status": "HOLD_UNTIL_ALL_FINAL_GATES",
+      "completed_added": 0
+    }
+  ]
+}

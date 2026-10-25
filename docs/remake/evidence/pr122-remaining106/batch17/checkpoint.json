@@ -1,0 +1,39 @@
+{
+  "state": "STOPPED_BY_USER; ALL_CURRENT_WORK_PRESERVED; NO_NEW_PRODUCTION_OR_CI",
+  "approved_total": 405,
+  "new_approvals": 0,
+  "remaining": 93,
+  "counts": {
+    "NOT_AUTHORED": 75,
+    "VERIFIED_COMPLETED": 391,
+    "FRAME_INSUFFICIENT": 14,
+    "SOURCE_HOLD": 17,
+    "IN_PROGRESS": 1
+  },
+  "raw_new_PNGs": 67,
+  "staged_candidate_native_poses": 384,
+  "selected_new_source_poses": 272,
+  "preserved_monk_source_poses": 112,
+  "production_connected_new_species": 0,
+  "preserved_prior_six_Main": "PASS 10518 + 250861 + 69815 checks; not new approvals",
+  "candidate_status": {
+    "monk": "SOURCE_HOLD; Main3128 + continuous81257 PASS, visual gait FAIL",
+    "queen": "SOURCE_HOLD; v1 cast alias344 failures preserved, v2 Main3932 + combined continuous121966 PASS, visual gait/scale/contact HOLD",
+    "gnoll": "SOURCE_HOLD; Main1626 + combined continuous121966 PASS, visual gait/contact HOLD"
+  },
+  "local_full_regression": "INTERRUPTED_BY_USER; PASS149 FAIL1 SKIP4 in partial log; corrected catalog targeted recheck PASS; no full-suite claim",
+  "final_CI": "NOT_VERIFIED; manual dispatch HTTP401; no successful manual dispatch claimed; historical CI not reused",
+  "private_backup": "NOT_DELIVERED",
+  "old_reaper": "UNRECOVERED",
+  "stopped_at_utc": "2026-10-19T02:52:14.991375+00:00",
+  "stop_reason": "Repeated message capacity errors; user requested stop and save everything",
+  "source_commit": "c3115b7a82bab5e2faf579ad218abe47eee07cf4",
+  "stop_preservation": "docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/preservation-manifest.json",
+  "handoff": "docs/remake/TWILIGHT_PR122_STOP_20261019.md",
+  "resume_only_on_new_instruction": true,
+  "complete_evidence_commit": "4459ada3ea38d0a554deb69adf13dd9d4e72736e",
+  "all_162_archive_parts_remote_redownload_SHA256_verified": true,
+  "remote_archive_bytes": 4751840049,
+  "remote_preservation_receipt": "docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/transfer/batch17-stop-remote-verification.json",
+  "current_stop_save_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_STOP_20261019.md"
+}

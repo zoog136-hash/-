@@ -1,0 +1,28 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "SE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v03release3",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 3,
+  "references": [
+    "/workspace/scratch/halpas-SE-hit-peak2-key-v03/halpas-SE-hit-peak2-v03.png",
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase1-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-SE-hit-peak2-key-v03/halpas-SE-hit-peak2-v03.png": "67a1467756ff3e8aabbde98a19a72b59baa18a95fd28bf401ea8972c986da31b",
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase1-lossless.png": "a8d441f93fec811e249a0543fb810c16738f7cb223d751b5c0f29cbf25b6a7c1"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Distinct missing SE release3 single phase from good two-arm peak2 and exactRGBA good flinch1. LOWER same imageLEFT forearm to upper chest, reduce head recoil; preserve same continuous LOW imageRIGHT blade arm. No full6 retry or bad-anatomy reference.",
+  "prompt": "Draw ONE new HIT RELEASE3 pose of the SAME Halpas, immediately after the GOOD PEAK2 in primary image1, easing back toward correct flinch1 in image2. Same SE FRONT-RIGHT/DOWN-RIGHT camera, same visible pink chest jewels, closed gold-horn helmet, black/gold segmented armor, TWO full purple crystal fan wings rooted on upper back, torn burgundy LEFT/back cape, ONE same compact purple blade and hovering two-legged stance. Exact same physical model/gear/proportions, no side/rear camera turn.\n\nEXACTLY TWO arms. Existing imageRIGHT low BLADE arm stays LOW, one real continuous same shoulder -> upperarm -> elbow -> forearm -> closed hand -> original blade beside hip. Do not raise an empty right fist or leave blade floating separately at waist. Preserve obvious wrist/hilt contact. All change happens in OTHER imageLEFT EMPTY arm, whose upperarm begins on same imageLEFT pauldron. Do not add another downarm or leave old fist behind.\n\nSpecific new RELEASE3: from primary peak2, LOWER the same EMPTY LEFT elbow and forearm so the LEFT fist is at UPPER CHEST height, well BELOW cheek/helmet and no longer bracing against face. Elbow still imageLEFT/outside ribs, natural shoulder-upperarm-elbow-wrist connection. Empty hand begins to open/unfold as arm descends. Reduce backward head/neck tilt by about half: head is still slightly recoiled but starting toward original forward-down-right helmet angle. Upper torso eases forward toward guard, hips and complete bent flight legs retain same SE plane. Wings ease from peak flare and cape still trails/lags. This must visibly differ from peak2: lower wrist/elbow, less head/back lean, recovery feather/cape tension. Keep RIGHT low blade arm attached and low throughout. No attack swing, third arm, second empty fist, missing forearm, torso spin or gear morph.\n\nONE complete centered transparent PNG cutout 1024x1024. Show ALL horn/wing/cape/blade/toe tips, overall figure occupies only65percent canvas width, with at least150px TRANSPARENT gutter around every extreme. Do not enlarge figure until its feathers almost touch border. Preserve equipment length rather than clipping. Opaque materials, fine crisp RPG sprite details, thin edge antialias, alpha0 background/gaps. No glow, shadows, floor, particles, afterimage, motion trails, guides, labels, text, panels or extra objects.",
+  "requested_at": "2026-10-19T13:19:54.004151+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

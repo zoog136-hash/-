@@ -1,0 +1,36 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "request_kind": "BOUNDED_GENERATED_ENDPOINT_PATCH_COMPOSITION",
+  "source_kind": "original_new_LEFT_load1_motion_with_actual_generated_complete_tip_only",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    1
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/girtas-NE-run-LEFT-compression1-from-run0-v01.png",
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/generated-weapon-endpoint-patch.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/girtas-NE-run-LEFT-compression1-from-run0-v01.png": "d5bb5467d4681f3145ebc0823e9d643384c3a49673fc4a9fa9aac9b12a625904",
+    "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/generated-weapon-endpoint-patch.png": "7f733eda1ab7c7b59dab94c182db15bf7d4685649832dfd93bc4993713726d4c"
+  },
+  "transparent_background": true,
+  "prompt": "No wholeactor generation. Compose actualnewimagegenendpoint inside narrowexplicitROI; completeoriginalactorRGBA translated64px remainsbyteidentical everywhereelse. OriginalsourceboundaryHOLD retained. Newopaqueendpointpixelspastoldcanvas prove actualartcompletion, notpaddingalone. SameoriginalNELEFTload1motion, no addedmotion/approvalcount.",
+  "composition_proof_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/actual-endpoint-composite-outside-ROI-proof.json",
+  "composition_proof_sha256": "2af428bf96b0b01771784a1cbe3f57d335c5a2f36933e2581b29bfaaad3cce64",
+  "original_generation_request_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/request.json",
+  "original_generation_request_sha256": "32181ebfa6a76f5990f1b5f7d8b1b8a3d2fbb6ba680f47041b146dd00bc879af",
+  "endpoint_generation_request_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-endpoint-edit-v03/request.json",
+  "endpoint_generation_request_sha256": "994fc0db772d6831e5f9d582e53a66f2e994ba89ea4610561d00a2f0c0631b41",
+  "new_motion_poses_in_endpoint_step": 0,
+  "newly_authored_poses": 1,
+  "reused_game_poses": 0,
+  "actor_approval": false,
+  "requested_at": "2026-10-19T16:53:18.433951+00:00"
+}

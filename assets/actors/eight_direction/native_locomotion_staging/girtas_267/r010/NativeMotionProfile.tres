@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+profile_id = "transform:267"
+frames_path = "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r010/SpriteFrames.tres"
+layout = "directional8"
+motion_style = "slash"
+movement_fps = 12.5
+reference_speed = 210.0
+floating = false
+body_kind = "humanoid"
+pixel_scale = 0.286085825748
+sprite_offset = Vector2(0, -36.618985695709)
+authored_motion_weight = 0.0
+hit_recoil = 0.0
+embedded_shadow = false
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false

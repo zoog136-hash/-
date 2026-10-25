@@ -1,0 +1,55 @@
+{
+  "observed_utc": "2026-10-16T03:15:02.877627+00:00",
+  "parent_PR_head": "80f22e190d4e9b1920fab0ba3e2a31975e693d17",
+  "main": "e2119c37293a783e93b421ee0055d1318271b071",
+  "completed": 392,
+  "remaining": 106,
+  "HOLD": 18,
+  "not_produced_or_connected": 88,
+  "individual_Main_eight_direction": 121,
+  "canonical_Main_reports": 255,
+  "new_completed": 0,
+  "production_game_assets_profiles_maps_data_modified": false,
+  "Godot": "4.7.2.stable.official.ed1daf0bf",
+  "official_engine_zip_sha256": "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4",
+  "local_resource_integrity": "PASS 723 sheets / 41442 frames",
+  "local_world_regression": "PASS 24 maps / 7246 checks",
+  "local_python_baseline": "PASS 138 tests; includes 107 importer/coverage/link tests",
+  "local_runner_after": "PASS 28 tests",
+  "local_path_guards": "PASS 13 positive/negative checks",
+  "local_source_frame_guards": "PASS 336 checks including all312 actual native phases across old/new provenance schemas and negative controls",
+  "local_Main_OpenGL_affected_batches": {
+    "batch25": {
+      "cases": 2,
+      "checks": 2411,
+      "failures": 0
+    },
+    "batch20": {
+      "cases": 5,
+      "checks": 4999,
+      "failures": 0
+    }
+  },
+  "local_other_affected_regressions": "PASS real elder/DeathKnight specials, Raziel lifecycle, three-subject temporal Main, exact catalog/fallback contract, production and explicit legacy ruby icon paths",
+  "full_transform_temporal_replay": "PENDING separate full10-subject rerun after metadata compatibility repair; do not count intermediate failed run as success",
+  "parent80_full_CI": "FAILED; do not substitute its successful jobs for repaired HEAD CI",
+  "repaired_HEAD_full_CI": "PENDING commit/push; inspect exact new SHA",
+  "merge": "NOT_PERFORMED",
+  "Android_APK_for_repaired_HEAD": "PENDING",
+  "Android_real_device": "UNVERIFIED",
+  "preserved_parent_CI_capture_artifacts": [
+    {
+      "id": 12021275038,
+      "bytes": 365102838,
+      "sha256": "b2cd237023cfc20384ba5d4b4858753b96bf82899fff0f06aa2f81be6bc8c221",
+      "scope": "batch25 full224 captures; ZIP downloaded and CRC checked"
+    },
+    {
+      "id": 12020594513,
+      "bytes": 797394495,
+      "sha256": "9a7eafe6a7dd3cc8e2f4385104e8e243dc8f9dc63720f9ad1529668148e05c8f",
+      "scope": "batch20 parent CI full captures; remote metadata only, not downloaded locally"
+    }
+  ],
+  "next": "Finish full10 temporal replay; inspect exact repaired HEAD all CI and APK. Merge only after every required gate passes. Then create latest-main continuation PR; recover source-path/SHA mappings and remaining HOLDs, never apply unvalidated candidates."
+}

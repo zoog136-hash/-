@@ -1,0 +1,59 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "death",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "transparent_background": true,
+  "phase_contract": [
+    "fatal_strike",
+    "knees_fail",
+    "deep_buckle",
+    "eastward_fall",
+    "ground_impact",
+    "settled_corpse"
+  ],
+  "corrective_reason": "Old native Girtas identity HOLD. Author original-faithful EAST death with actual horizontal full-body corpse, preserving pale exposed face, long pale hair, narrow gold radial spines, long dark skirt and long sinuous weapon.",
+  "user_authorization": "Production image tools authorized; no images forwarded into main chat. One private production attempt.",
+  "requested_at": "2026-10-19T10:23:25.062810+00:00",
+  "prompt": "Produce ONE high-quality game animation sprite sheet for the EXACT UNIQUE boss Girtas in the two supplied identity references. The tiny first reference is the original identity authority. The second is a faithful enlarged canonical guide, preserving the original pale exposed face, long pale hair, sharp GOLD radial back spines, long DARK armor skirt with GOLD trim, and one long thin SINUOUS orange-gold weapon held in the original anatomical RIGHT hand. Preserve these exact characteristics, anatomy, material colors, equipment contours and weapon hand in every pose. This is a new death action for that same character, not a redesign. NO closed red V-shaped mask, NO broad orange flame-feather fan, NO broad short sword, NO tight segmented leg armor replacing the long dark skirt. Keep the face pale and exposed where the camera can see it, and long pale hair separate from the narrow hard golden spines.\n\nThe action is an EAST-facing DEATH: six physically articulated stages of the same character collapsing to the ground, ordered LEFT-TO-RIGHT, TOP-TO-BOTTOM in a 2-column, 3-row sheet. Every stage maintains the EAST/right body heading with the face and chest directed SCREEN RIGHT; consistent fixed isometric camera elevation, no front-facing turn, no reversal, no mirror. The final corpse has its HEAD to SCREEN RIGHT and FEET to SCREEN LEFT, having fallen forward along its established right-facing direction. The golden back-spine array remains physically attached to the upper back, moving and tilting with the body; do not leave it suspended upright after the torso falls. Same two arms, same two legs, same one weapon. Retain all hair, long dark skirt, back spines and entire weapon, never crop or dissolve anything.\n\nSix distinct readable phases:\n0: Fatally struck but still upright EAST-facing side/three-quarter stance. Head pitches forward slightly, shoulder reels, knees begin to soften; face points screen right. Original long sinuous weapon in the same RIGHT hand, its tip lowered. Spines and skirt attached normally.\n1: EAST-facing knees bend deeply and torso loses strength, head drops forward towards screen right, weapon hand droops; distinct supported but failing posture.\n2: Deep buckling collapse, one knee almost on the ground, torso bends forward towards screen right, left arm reaches down, golden back spines tip with the shoulders and long pale hair falls toward ground; skirt follows the knee bend.\n3: The EAST-facing body falls forward to the RIGHT, almost horizontal, arms and head leading the fall, feet trail LEFT. This is a genuinely articulated falling pose, not a resized standing sprite. The spine array is now tilted with the torso; full weapon remains beside its hand, no duplication.\n4: Ground impact on right side/front, HEAD to RIGHT, FEET to LEFT. Torso and hips contact ground, arms land, skirt and hair spread, back-spine fan lies in the same body's fallen plane; full long sinuous weapon lies beside its original hand. Clearly grounded, no floating standing aura.\n5: Final motionless FULL-BODY CORPSE, lying horizontally along screen left-to-right with head RIGHT and feet LEFT, all limbs, skirt, hair, every physical back spike and full original sinuous weapon visible. Body relaxed after impact, physically different from stage4 in settling shoulders/head/hand. No kneeling survivor, no raised standing ghost, no particle disappearance, no dissolve or fade. The last frame must be an unmistakably dead character on the ground.\n\nTechnical sheet: exactly 1024 x 1536 pixels, TWO 512px COLUMNS by THREE 512px ROWS, six figures only. Each full physical silhouette, including the widest golden spines, hair tips, skirt, boots and the ENTIRE long weapon, fits completely within the CENTRAL 320x320 area of its own cell, with at least96px blank alpha gutter at EVERY cell edge. Leave transparent separation between every figure, do not let gear cross cell borders. Same model scale throughout, fixed camera; a corpse may become wider but never cropped or shrunk to evade fitting. Use conservative smaller complete figures so every extremity fits comfortably. Crisp richly shaded black/dark armor, sharp thin gold trim, pale hair and face. Golden spines are opaque thin hard metal, not soft orange flames. Weapon luminosity is confined inside its physical sharp sinuous contour. Entire background and all gaps alpha0; only1-2pixel edge anti-aliasing. NO floor, cast shadow, surrounding glow, halo, bloom, fog, smoke, extra spark particles, trail, motion blur, text, labels, borders, grid or colored background. Render the six new death poses with clear action continuity while preserving the supplied original's exact unique identity.",
+  "generated_original_path": "/workspace/generated_images/exec-94ba14c1-4413-4e2b-afc7-d467819f2b27.png",
+  "preserved_raw_path": "/workspace/scratch/girtas-E-death-repair/girtas-E-death-v02.png",
+  "raw_sha256": "b40ad2f6771ca2221fba9a128836698b9613d72927fad5bfebf19d248efa446c",
+  "raw_bytes": 2197549,
+  "source_visual_review_path": "/workspace/scratch/girtas-E-death-repair/result.json",
+  "actor_approval": false,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six poses retain the corrected pale exposed face, long pale hair, narrow hard gold radial back spines, dark gold-trim long skirt and long thin sinuous weapon. No prior red V mask, orange feather fan or short broad sword.",
+      "All six head/chest orientations remain east/right with the same weapon hand; no front-facing reversal appears during the collapse.",
+      "Distinct upright fatal recoil, bowed failing knees, low knee buckle, forward falling/landing pose, grounded impact and settled horizontal corpse are present. Final head lies screen right and feet left; the spine array follows the fallen torso rather than remaining a standing ghost.",
+      "Full silhouette including weapon and physical golden spines is visible, with no source outer-edge clipping. Six large disjoint foreground bodies are available."
+    ],
+    "visual_limitations": [
+      "Original portrait is only108x132, so exact subpixel face/insignia detail cannot be proven; the supplied canonical enlarged guide is the conservative structural identity reference.",
+      "The generated raw sheet violates512x512-cell gutters and several figures extend across nominal row/cell boundaries. Geometry is NOT approved. Lossless six-body repacking and the unchanged strict geometry/import checks are required before selecting or connecting it.",
+      "No runtime integration, timing review or actor final approval has been performed."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "b40ad2f6771ca2221fba9a128836698b9613d72927fad5bfebf19d248efa446c",
+    "raw_bytes": 2197549,
+    "request_sha256": "00bb93382e9b1deaf4564c5523dbaca19e8b1c283f88acd6a54cf75072dd88b4",
+    "review_sha256": "cc971ebd817c42652fabe87cfc46d95d88a05e946765ef16615546191357bab6"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
+  "output_sha256": "b40ad2f6771ca2221fba9a128836698b9613d72927fad5bfebf19d248efa446c",
+  "output_bytes": 2197549,
+  "original_generated_file": "/workspace/scratch/girtas-E-death-repair/girtas-E-death-v02.png"
+}

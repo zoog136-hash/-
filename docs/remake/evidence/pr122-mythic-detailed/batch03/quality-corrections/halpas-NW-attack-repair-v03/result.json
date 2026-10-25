@@ -1,0 +1,72 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_THREE_ARMS_MIDDLE_PHASES_NOT_APPROVED",
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "attack",
+  "version": "v03",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "contact_phase": 3,
+  "request_path": "/workspace/scratch/halpas-NW-attack-repair-v03/request.json",
+  "request_sha256": "9f7ad91a985885977ba4c021a5c83de57d5499653423ca65f3e4dd8710441668",
+  "original_generated_file": "/workspace/generated_images/exec-cdafa73d-92b1-4cd4-a197-785a041e9b35.png",
+  "raw_png": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+  "raw_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+  "raw_bytes": 2636715,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "private_preview": "/workspace/scratch/halpas-NW-attack-repair-v03/generated-private.jpg",
+  "private_preview_bytes": 157575,
+  "created_at": "2026-10-19T12:29:13.989851+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "chat_image_attachments": 0,
+  "source_visual_status": "HOLD",
+  "integration_ready": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "reviewed_at": "2026-10-19T12:30:57.580939+00:00",
+  "camera_validation": "PASS_CANONICAL_NW_REARLEFT_ALL6",
+  "identity_validation": "PASS_MATERIALS_MODEL_GEAR_EXCEPT_EXTRA_ARMS",
+  "handedness_validation": "HOLD_PHASE2_3_4_THIRD_ATTACK_ARM_WITH_BOTH_ORIGINAL_DOWNARMS_REMAINING",
+  "motion_validation": "HOLD_FULL_ATTACK_DESPITE_NW_CONTACT3_WEAPON_VECTOR",
+  "geometry_validation": "GEOMETRY_PASS6_DISTINCT_COMPLETE_FRAMES_NOT_ART_APPROVAL",
+  "visual_findings": [
+    "All6 preserve newNWbackcamera and correctHalpasarmor/crown/wing/cape/compactpurpleblade materials, bothUPLEFTboots and hiddenfrontchest.",
+    "Phase0guard and5recover: exactly2arms, nearLEFTempty lower-left and farRIGHTowning originalblade onupper/right side. Phase1raise: correctfarRIGHTshoulder→raisedarm→wrist→blade abovehead, nearLEFT remains empty downleft. These3keys are usable individually.",
+    "Concreteextra-limb defect phase2: originalnearLEFTemptydownarm remains lower-left, originalfarRIGHTguardarm remains downRIGHT endingemptyfist, AND another raisedupperRIGHTattackarm/hand holdsblade overhead. THREE arms/hands simultaneously.",
+    "Concreteextra-limb defect phase3: blade correctlypointsUPLEFT atcontact, but newextendedattackarm abovehelmet coexists with both originaldownarms; not a valid sameRIGHT-arm strike.",
+    "Phase4followthrough repeats same thirdattackarm plusbothdownarms. This is observed extra-limb duplication, not uncertainty about a hidden shoulder or harmless sideocclusion.",
+    "No source repair/retry performed. ExactRGBA keys0guard,1raise,5recover cropped from strictcompletevalidatedpose regions and individuallypinned; originalfullraw PNG preserved unchanged. No completeattackclip orphase3approval claimed."
+  ],
+  "visual_limitations": [
+    "Threegoodindividualkeys do not make complete6poseattack. Invalid2/3/4 require legitimate future localizedanatomy correction; currentfullsource MUST NOT replace liveNWattack.",
+    "GeometryPASS alone neveroverrides visiblethree-armartHOLD. No nativeSpriteFrames/Player/actorapproval/defaultprofilechanges."
+  ],
+  "valid_source_phases": [
+    0,
+    1,
+    5
+  ],
+  "invalid_source_phases": [
+    2,
+    3,
+    4
+  ],
+  "salvaged_good_keys_proof": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-good-keys-proof.json",
+  "salvaged_key_paths": [
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase0-guard-lossless.png",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png",
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase5-recover-lossless.png"
+  ],
+  "private_detail_preview": "/workspace/scratch/halpas-NW-attack-repair-v03/private-grip-arm-chain-review.jpg",
+  "private_detail_preview_bytes": 114556,
+  "private_jpeg_budget_cumulative_estimate_bytes": 4288234,
+  "private_jpeg_budget_limit": 8000000,
+  "imagegen_attempt_limit_reached": true,
+  "further_generation_attempts": 0
+}

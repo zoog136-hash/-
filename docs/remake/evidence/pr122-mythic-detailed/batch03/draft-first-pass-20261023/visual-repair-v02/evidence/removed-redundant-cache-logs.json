@@ -1,0 +1,31 @@
+{
+  "removed": [
+    {
+      "path": "/workspace/scratch/pr122-visual-repair-20261024/main-player-00.log",
+      "bytes": 18173834,
+      "sha256": "d54f71f23895b2349f3ca8129b3c88b32637683efb1e267c677623789d5811a8",
+      "error_lines": 23449,
+      "unique_error_lines": 734,
+      "cause": "Ephemeral imported texture cache missing; final real-source texture/SVG restoration run has zero errors"
+    },
+    {
+      "path": "/workspace/scratch/pr122-visual-repair-20261024/main-player-restored-00.log",
+      "bytes": 117547,
+      "sha256": "de6dc59236f394f57525a31d9db9802afc574c2fd38d04facda3e5caf5e3c984",
+      "error_lines": 39,
+      "unique_error_lines": 15,
+      "cause": "Ephemeral imported texture cache missing; final real-source texture/SVG restoration run has zero errors"
+    },
+    {
+      "path": "/workspace/scratch/pr122-visual-repair-20261024/main-player-restored-v02-00.log",
+      "bytes": 117134,
+      "sha256": "4fc9c24fef41a2a432b09ee6d240b539b488fd95328c681de176464780c7c986",
+      "error_lines": 36,
+      "unique_error_lines": 12,
+      "cause": "Ephemeral imported texture cache missing; final real-source texture/SVG restoration run has zero errors"
+    }
+  ],
+  "bytes_removed": 18408515,
+  "source_assets_deleted": 0,
+  "final_validation": "PASS:29clips/8death/0errors"
+}

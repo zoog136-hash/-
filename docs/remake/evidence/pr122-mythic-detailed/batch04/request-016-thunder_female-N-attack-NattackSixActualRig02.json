@@ -1,0 +1,158 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "attack",
+  "version": "NattackSixActualRig02",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+    "base_geometry_sha256": "7b552347a28cab3d30f09e8b83804bd0bb95a6078e1dfd674b983386c4728e03",
+    "direction": "N",
+    "regions": [
+      [
+        17,
+        168,
+        1173,
+        1142
+      ],
+      [
+        1536,
+        165,
+        1254,
+        1153
+      ],
+      [
+        12,
+        1703,
+        1210,
+        1197
+      ],
+      [
+        1537,
+        1581,
+        1185,
+        1254
+      ],
+      [
+        0,
+        3229,
+        1126,
+        1154
+      ],
+      [
+        1554,
+        3241,
+        1195,
+        1159
+      ]
+    ],
+    "nearest_owner_sha256": "4e04678b23074f9d0e473a41d7db3ba4076b33c582f40d21970b646ad54bb361",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 150f9e7a07185c52e11310b2b68737bb7bdb92bb393c702a99036312b57c8710"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+    "direction": "N",
+    "role": "attack",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        663,
+        1078
+      ],
+      [
+        2199,
+        1078
+      ],
+      [
+        663,
+        2614
+      ],
+      [
+        2199,
+        2614
+      ],
+      [
+        663,
+        4150
+      ],
+      [
+        2199,
+        4150
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      1920,
+      1920,
+      1920,
+      1920,
+      1920,
+      1920
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "150f9e7a07185c52e11310b2b68737bb7bdb92bb393c702a99036312b57c8710",
+  "authored_common_root_float": [
+    662.8125,
+    917.6920531878804
+  ],
+  "common_root_integer": [
+    663,
+    918
+  ],
+  "common_root_rounding_delta": [
+    0.1875,
+    0.3079468121195532
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Six dedicated READY, WINDUP, COIL, STRIKE, FOLLOW and RECOVER phases show real torso weight shift, distinct joint articulation, the RIGHT staff swing and costume/ribbon follow-through.",
+      "Actual STRIKE3 remains the independently reviewed ac4cfa source. The five other poses preserve the same rear-N identity, bun/ribbon, blue/gold costume, white skirt and complete high-heeled boots.",
+      "The old LEFT sleeve/finger shell and old staff alpha thread are removed; original-material blue/gold overlap caps now join the actual moving LEFT cuff naturally in COIL2 and FOLLOW4. Existing opaque joint/hand pixels are preserved.",
+      "The complete anatomical RIGHT-held double-ended staff stays attached to its grip through the attack. Both observed heel cores and actual support tips remain stationary across all six poses.",
+      "RECOVER returns close to the dedicated READY guard as a one-shot attack; this is not a relabeled walking sequence or a whole-picture translation."
+    ],
+    "visual_limitations": [
+      "Exact final atlas preserves all six independently reviewed source RGBA pixels; integer root rounding is uniform, so it adds no relative stance drift.",
+      "This approves the actual six source images and visible one-shot attack cycle. Exact final atlas/request binding and Godot resource, Player and action/impact checks remain pending.",
+      "Fixed opaque heel material verifies visible stationary support; hidden anatomical depth and a unique original 3D skeleton are not reconstructed.",
+      "The source impact is phase3. Runtime phase durations and combat contact scheduling must be verified on the actual integrated clip; no production approval follows from this source gate alone.",
+      "Only this new N ATTACK source is approved here; detailed actor approvals remain unchanged."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+    "raw_bytes": 3327524,
+    "request_sha256": "f0072517af971eac916c17f6c175171d029968a5a667e5e6c6cdf792e536398b",
+    "review_sha256": "2bf01454c12c174511b84edb31badbfdc925caf7f3820a98845773627d431c1c"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-N-attack-actual-packed-r002-20261020/thunder_female-N-attack-six-actual-poses-r002.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-85kljkcd/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-N-attack-actual-packed-r002-20261020/request-NattackSixActualRig02.json": "f0072517af971eac916c17f6c175171d029968a5a667e5e6c6cdf792e536398b",
+      "/workspace/scratch/mythic413-N-attack-actual-packed-r002-20261020/thunder_female-N-attack-six-actual-poses-r002.png": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NattackSixActualRig02-f00725-independent-final-source-cycle-PASS-v01.json": "2bf01454c12c174511b84edb31badbfdc925caf7f3820a98845773627d431c1c",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-attack-NattackSixActualRig02.png",
+  "output_sha256": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+  "output_bytes": 3327524,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-85kljkcd/reviewed-source.png"
+}

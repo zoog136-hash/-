@@ -1,0 +1,1497 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "N",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03composite02",
+  "status": "REQUEST_SCHEMA_HOLD_PRESERVED",
+  "request_kind": "lossless_reviewed_single_pose_keys_with_authored_ground_root_arc",
+  "references": [
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+    "/workspace/scratch/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png",
+    "/workspace/scratch/girtas-N-run-left-flight-key-v01/girtas-N-run-left-flight-key-v01.png",
+    "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+    "/workspace/scratch/girtas-N-run-right-compression-key-v01/girtas-N-run-right-compression-key-v01.png",
+    "/workspace/scratch/girtas-N-run-right-flight-key-v01/girtas-N-run-right-flight-key-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+    "/workspace/scratch/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png": "bab36ad1f2c2445b8ebc48a263c24d0e2b289224ba7a2822210f3ca3daee13a1",
+    "/workspace/scratch/girtas-N-run-left-flight-key-v01/girtas-N-run-left-flight-key-v01.png": "e6af7aead669e4773a36ab60820168ad5f1dac9f4f781ccd9f312b9a5d5d353b",
+    "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+    "/workspace/scratch/girtas-N-run-right-compression-key-v01/girtas-N-run-right-compression-key-v01.png": "b46cc4d15184fc5b851cf7a46d8ec06da3b78cf54ac1fef5148734513238ab72",
+    "/workspace/scratch/girtas-N-run-right-flight-key-v01/girtas-N-run-right-flight-key-v01.png": "792d331689e4c8a0a089f451bb6aad6c23dac037b51c1d2ec616b847b7e6fb26"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Existing original Nrun had only one support side. Preserve exact valid LEFT and RIGHTlanding keys, combine four genuinely newly authored single compression/airborne poses in gameplayorder0..5, and author actual flightground/root metadata. StandaloneAIRtransparent-planeHOLD reviews remain unchanged; independent fullsixnewsource+authoredroot reviewPASS resolves only the NEW animation candidate.",
+  "prompt": "Integrate the preserved exactRGBA six-key Nrun composite with its hash-pinned outward-only transparent AIRgroundspace regions, per-pose rigidhead-based virtual canvases and explicitly authored contact/compression/flight rootarc. No pixelresampling/mirroring/cleanup/falsefloorpaint. Preserve every original source/request/HOLD. Perform actualSpriteFrames/Player/resource/action checks and fresh privatefullsix runtime review before any fullanimation/runtime/actor completion.",
+  "user_authorization": "Continue existing PR122 animation production, preserve all sources, no chatimages. Parent authorized newactualground/rootmetadata using genuine flexedflightlegart, explicittransparentpadding under unchangedsource-owner/inside-regionguards; finalsourcecrossreview required and nowpassed. NoCI/manualworkflow/newPR/mainmerge/forcepush.",
+  "requested_at": "2026-10-19T13:45:15.281080+00:00",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS",
+    "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+    "canvas_size": 2048,
+    "direction": "N",
+    "key": "267",
+    "role": "run",
+    "review_basis": "Strict exactRGBA1536cell six-key atlas and outward-only transparent AIRroot padding; actualsource/privatefull6 arc approval pending.",
+    "actor_approval": false
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+    "canvas_size": 2048,
+    "direction": "N",
+    "key": "267",
+    "role": "run",
+    "authored_pose_canvas_sizes": [
+      2240,
+      2384,
+      2240,
+      784,
+      2320,
+      2392
+    ],
+    "source_anchors": [
+      [
+        676,
+        1332
+      ],
+      [
+        2233,
+        1311
+      ],
+      [
+        690,
+        2900
+      ],
+      [
+        2277,
+        2497
+      ],
+      [
+        692,
+        4368
+      ],
+      [
+        2226,
+        4519
+      ]
+    ],
+    "review_basis": "Actual newly authored six-key ground/root arc; rigidhead marker C proposal plus supportsole anchors and explicitly airborne metadata. ExactRGBA source/transparent AIRpadding verified. Full6 physical/source review and final runtime remain HOLD. Numeric arc /workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json SHA256 451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+    "anchor_measurement_evidence": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json",
+    "anchor_measurement_evidence_sha256": "451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+    "runtime_validation": "HOLD_PENDING_PRIVATE_FULL6_AND_ACTUAL_PLAYER",
+    "actor_approval": false,
+    "new_actor_approvals": 0
+  },
+  "reviewed_source_regions": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+    "base_geometry_sha256": "c64c8e72faf5919bdd4115f6291daf48ef59a06318320a4150664d799972b950",
+    "direction": "N",
+    "review_basis": "Explicit outward-only TRANSPARENT ground/root padding for AIR2/5. Exact original body/gear pixels stay unchanged; no floorpaint/no cleanup. Empty padding contains authored flight-ground anchor within its1536packingcell. Private full6source/arc QC pending.",
+    "regions": [
+      [
+        219,
+        200,
+        1097,
+        1135
+      ],
+      [
+        1733,
+        218,
+        1142,
+        1099
+      ],
+      [
+        206,
+        1752,
+        1124,
+        1157
+      ],
+      [
+        2134,
+        2108,
+        339,
+        392
+      ],
+      [
+        240,
+        3309,
+        1056,
+        1062
+      ],
+      [
+        1769,
+        3294,
+        1069,
+        1234
+      ]
+    ],
+    "nearest_owner_sha256": "9f009b8089b145169371d6ee4bfce349327382085c86e979764a876dc550c0c6"
+  },
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+    "base_geometry_sha256": "c64c8e72faf5919bdd4115f6291daf48ef59a06318320a4150664d799972b950",
+    "direction": "N",
+    "review_basis": "Explicit outward-only TRANSPARENT ground/root padding for AIR2/5. Exact original body/gear pixels stay unchanged; no floorpaint/no cleanup. Empty padding contains authored flight-ground anchor within its1536packingcell. Private full6source/arc QC pending.",
+    "regions": [
+      [
+        219,
+        200,
+        1097,
+        1135
+      ],
+      [
+        1733,
+        218,
+        1142,
+        1099
+      ],
+      [
+        206,
+        1752,
+        1124,
+        1157
+      ],
+      [
+        2134,
+        2108,
+        339,
+        392
+      ],
+      [
+        240,
+        3309,
+        1056,
+        1062
+      ],
+      [
+        1769,
+        3294,
+        1069,
+        1234
+      ]
+    ],
+    "nearest_owner_sha256": "9f009b8089b145169371d6ee4bfce349327382085c86e979764a876dc550c0c6"
+  },
+  "newly_authored_poses": 4,
+  "reused_poses": 2,
+  "approval": false,
+  "source_provenance": {
+    "schema": "pr122-exact-six-source-root-arc-composite-v1",
+    "source_pngs": [
+      {
+        "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+        "sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png",
+        "sha256": "bab36ad1f2c2445b8ebc48a263c24d0e2b289224ba7a2822210f3ca3daee13a1"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-left-flight-key-v01/girtas-N-run-left-flight-key-v01.png",
+        "sha256": "e6af7aead669e4773a36ab60820168ad5f1dac9f4f781ccd9f312b9a5d5d353b"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+        "sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-right-compression-key-v01/girtas-N-run-right-compression-key-v01.png",
+        "sha256": "b46cc4d15184fc5b851cf7a46d8ec06da3b78cf54ac1fef5148734513238ab72"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-right-flight-key-v01/girtas-N-run-right-flight-key-v01.png",
+        "sha256": "792d331689e4c8a0a089f451bb6aad6c23dac037b51c1d2ec616b847b7e6fb26"
+      }
+    ],
+    "ordered_exact_pose_map": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "267",
+      "role": "run",
+      "direction": "N",
+      "poses": [
+        {
+          "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+          "source_sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+          "region": [
+            136,
+            47,
+            1097,
+            1135
+          ],
+          "rgba_sha256": "3826dba7c8441a97b1ef3c067ce31b0912dfe9a3e08d3651692de19172c28932",
+          "source_pose": 0,
+          "newly_authored": false,
+          "review_basis": "Existing independently valid LEFTlanding key; original result.json sourcePASS, no wholecycle approval.",
+          "origin": "left-landing-key-v01",
+          "intended_game_phase": 0,
+          "source_review_path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/result.json",
+          "source_review_sha256": "a2586d4f782843e0ce8ed6f200c1080cf2514d6d5e471dcc8ce22307f839b0b2"
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png",
+          "source_sha256": "bab36ad1f2c2445b8ebc48a263c24d0e2b289224ba7a2822210f3ca3daee13a1",
+          "region": [
+            110,
+            75,
+            1142,
+            1099
+          ],
+          "rgba_sha256": "e2c6bb6cddb826456dccafdcf4254269f8c78002e81d28533549c456e06c4393",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "NEW genuinely bent LEFTsupport load; independent SEauthor and Edeath stance reviews SOURCEPASS; runtime full6 pending.",
+          "origin": "left-compression-key-v01",
+          "intended_game_phase": 1,
+          "source_review_path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/result.json",
+          "source_review_sha256": "e883aa92e3eb9682d98f907125cd18c053f42ae52ae26ae72e94b904a39acd08"
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-run-left-flight-key-v01/girtas-N-run-left-flight-key-v01.png",
+          "source_sha256": "e6af7aead669e4773a36ab60820168ad5f1dac9f4f781ccd9f312b9a5d5d353b",
+          "region": [
+            126,
+            46,
+            1124,
+            1103
+          ],
+          "rgba_sha256": "5e14e48b89a61434af052646004cf3b4223ca7c2176e7b634f5ae7f5759941ff",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "NEW actual RIGHTlead LEFTtrail both-flexed-boot art; standalone sourceplane HOLD preserved; new full6 ground/root arc must independently pass.",
+          "origin": "left-flight-key-v01",
+          "intended_game_phase": 2,
+          "source_review_path": "/workspace/scratch/girtas-N-run-left-flight-key-v01/result.json",
+          "source_review_sha256": "77b490a949de8cea4adbaa7ef22ced906c188e62a230fbc572c3cf027a16095b"
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+          "source_sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+          "region": [
+            0,
+            0,
+            339,
+            392
+          ],
+          "rgba_sha256": "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e",
+          "source_pose": 0,
+          "newly_authored": false,
+          "review_basis": "Exact reused original Nrun rawrow0 RIGHTlanding key only; whole old6source stays HOLD; no duplicate row3.",
+          "origin": "right-landing-key-reused-v01",
+          "intended_game_phase": 3,
+          "source_review_path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/lossless-right-contact-proof.json",
+          "source_review_sha256": "e0f69bae6a4aa9b8f0abd463c2386d63498e635a4a1a4bc6a34bcf1a58679236"
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-run-right-compression-key-v01/girtas-N-run-right-compression-key-v01.png",
+          "source_sha256": "b46cc4d15184fc5b851cf7a46d8ec06da3b78cf54ac1fef5148734513238ab72",
+          "region": [
+            148,
+            98,
+            1056,
+            1062
+          ],
+          "rgba_sha256": "2dfdbe466326073637d3cdcbcc42080c4de8d4be2ec515a6956cda542f668c06",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "NEW actually bent RIGHTsupport load / LEFTdrive, author sourcePASS, independent full6 stance pending.",
+          "origin": "right-compression-key-v01",
+          "intended_game_phase": 4,
+          "source_review_path": "/workspace/scratch/girtas-N-run-right-compression-key-v01/result.json",
+          "source_review_sha256": "03909079dda3d7d430333039983bbaeb6cf0c13ef1c3e92b9b18b62cb460198b"
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-run-right-flight-key-v01/girtas-N-run-right-flight-key-v01.png",
+          "source_sha256": "792d331689e4c8a0a089f451bb6aad6c23dac037b51c1d2ec616b847b7e6fb26",
+          "region": [
+            153,
+            82,
+            1069,
+            1091
+          ],
+          "rgba_sha256": "7a105ca5f6aa2fad04d67d6e4ae2a0954e94a60b5f16957285eef16de9b907ba",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "NEW actual LEFTlead RIGHTtrail both-flexed-boot art; standalone sourceplane HOLD pending new full6 ground/root arc.",
+          "origin": "right-flight-key-v01",
+          "intended_game_phase": 5,
+          "source_review_path": "/workspace/scratch/girtas-N-run-right-flight-key-v01/result.json",
+          "source_review_sha256": "8749fd32bff50c5169e5d48492b1e564f661721af66cbbf271736dc62e644114"
+        }
+      ],
+      "source_visual_status": "HOLD_PENDING_AUTHORED_ROOT_ARC_AND_PRIVATE_FULL6_REVIEW",
+      "physical_scale_review": "NEW explicitly authored ground/root arc candidate; old1280atlas and standaloneAIRHOLD reviews preserved. Whole-six privateQC pending.",
+      "approval": false,
+      "new_actor_approvals": 0,
+      "newly_authored_poses": 4,
+      "reused_poses": 2,
+      "independent_left_compression_reviews": [
+        "/workspace/scratch/girtas-N-run-left-compression-key-v01/independent-SE-author-compression-source-review.json",
+        "/workspace/scratch/girtas-N-run-left-compression-independent-qc/independent-source-review.json"
+      ],
+      "standalone_AIR2_HOLD_review": "/workspace/scratch/girtas-N-run-left-flight-key-v01/independent-SE-author-flight-source-review.json"
+    },
+    "exact_RGBA_assembly_proof": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "267",
+      "role": "run",
+      "assembler_sha256": "a9ee1e4f861a30b7c4a458722ddbb55d04948ee3702e69f2ef7e902cd938203c",
+      "direction": "N",
+      "metadata_sha256": "6d671f4ec0e04441c10ba8c29c86576e8dc00c983dfcd83bd586c7296d767d83",
+      "metadata_path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/assembly-spec.json",
+      "metadata_hash_basis": "file_bytes",
+      "output": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/girtas-N-run-v03composite02.png",
+      "output_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "output_canvas": [
+        3072,
+        4608
+      ],
+      "cell_size": [
+        1536,
+        1536
+      ],
+      "virtual_canvas_size": 2048,
+      "poses": [
+        {
+          "phase": 0,
+          "source_path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+          "source_sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+          "source_pose": 0,
+          "source_region": [
+            136,
+            47,
+            1097,
+            1135
+          ],
+          "rgba_sha256": "3826dba7c8441a97b1ef3c067ce31b0912dfe9a3e08d3651692de19172c28932",
+          "visible_pose_sha256": "db148999201317bd4446b2e37e0d103776f917169e9f40217cbe81b142ab7d4c",
+          "newly_authored": false,
+          "review_basis": "Existing independently valid LEFTlanding key; original result.json sourcePASS, no wholecycle approval.",
+          "output_region": [
+            219,
+            200,
+            1097,
+            1135
+          ],
+          "translation": [
+            83,
+            153
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 423002
+        },
+        {
+          "phase": 1,
+          "source_path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png",
+          "source_sha256": "bab36ad1f2c2445b8ebc48a263c24d0e2b289224ba7a2822210f3ca3daee13a1",
+          "source_pose": 0,
+          "source_region": [
+            110,
+            75,
+            1142,
+            1099
+          ],
+          "rgba_sha256": "e2c6bb6cddb826456dccafdcf4254269f8c78002e81d28533549c456e06c4393",
+          "visible_pose_sha256": "1745f1fb731a0546ff497b6f1aa537bdf465df420ead7285b61ccb79d66e47c1",
+          "newly_authored": true,
+          "review_basis": "NEW genuinely bent LEFTsupport load; independent SEauthor and Edeath stance reviews SOURCEPASS; runtime full6 pending.",
+          "output_region": [
+            1733,
+            218,
+            1142,
+            1099
+          ],
+          "translation": [
+            1623,
+            143
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 501173
+        },
+        {
+          "phase": 2,
+          "source_path": "/workspace/scratch/girtas-N-run-left-flight-key-v01/girtas-N-run-left-flight-key-v01.png",
+          "source_sha256": "e6af7aead669e4773a36ab60820168ad5f1dac9f4f781ccd9f312b9a5d5d353b",
+          "source_pose": 0,
+          "source_region": [
+            126,
+            46,
+            1124,
+            1103
+          ],
+          "rgba_sha256": "5e14e48b89a61434af052646004cf3b4223ca7c2176e7b634f5ae7f5759941ff",
+          "visible_pose_sha256": "e98389f61da47d8321fe5b6c9d30581309dae520e8e8a9a9f2bc1b327c1305b0",
+          "newly_authored": true,
+          "review_basis": "NEW actual RIGHTlead LEFTtrail both-flexed-boot art; standalone sourceplane HOLD preserved; new full6 ground/root arc must independently pass.",
+          "output_region": [
+            206,
+            1752,
+            1124,
+            1103
+          ],
+          "translation": [
+            80,
+            1706
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 478623
+        },
+        {
+          "phase": 3,
+          "source_path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+          "source_sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+          "source_pose": 0,
+          "source_region": [
+            0,
+            0,
+            339,
+            392
+          ],
+          "rgba_sha256": "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e",
+          "visible_pose_sha256": "a43c8bfdcccb60a3634a81b3873dee444aefb79f3c6dea1e7f243be658491eb7",
+          "newly_authored": false,
+          "review_basis": "Exact reused original Nrun rawrow0 RIGHTlanding key only; whole old6source stays HOLD; no duplicate row3.",
+          "output_region": [
+            2134,
+            2108,
+            339,
+            392
+          ],
+          "translation": [
+            2134,
+            2108
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 47980
+        },
+        {
+          "phase": 4,
+          "source_path": "/workspace/scratch/girtas-N-run-right-compression-key-v01/girtas-N-run-right-compression-key-v01.png",
+          "source_sha256": "b46cc4d15184fc5b851cf7a46d8ec06da3b78cf54ac1fef5148734513238ab72",
+          "source_pose": 0,
+          "source_region": [
+            148,
+            98,
+            1056,
+            1062
+          ],
+          "rgba_sha256": "2dfdbe466326073637d3cdcbcc42080c4de8d4be2ec515a6956cda542f668c06",
+          "visible_pose_sha256": "1b27dfc889476c11c011d95910d7debb99dcaa03bde8cbcb025fe13eab87c3e5",
+          "newly_authored": true,
+          "review_basis": "NEW actually bent RIGHTsupport load / LEFTdrive, author sourcePASS, independent full6 stance pending.",
+          "output_region": [
+            240,
+            3309,
+            1056,
+            1062
+          ],
+          "translation": [
+            92,
+            3211
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 429077
+        },
+        {
+          "phase": 5,
+          "source_path": "/workspace/scratch/girtas-N-run-right-flight-key-v01/girtas-N-run-right-flight-key-v01.png",
+          "source_sha256": "792d331689e4c8a0a089f451bb6aad6c23dac037b51c1d2ec616b847b7e6fb26",
+          "source_pose": 0,
+          "source_region": [
+            153,
+            82,
+            1069,
+            1091
+          ],
+          "rgba_sha256": "7a105ca5f6aa2fad04d67d6e4ae2a0954e94a60b5f16957285eef16de9b907ba",
+          "visible_pose_sha256": "081797bff69ac8be293a22752ab11e91582bbe99b012b677cc3d81c28221f6b9",
+          "newly_authored": true,
+          "review_basis": "NEW actual LEFTlead RIGHTtrail both-flexed-boot art; standalone sourceplane HOLD pending new full6 ground/root arc.",
+          "output_region": [
+            1769,
+            3294,
+            1069,
+            1091
+          ],
+          "translation": [
+            1616,
+            3212
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 422387
+        }
+      ],
+      "newly_authored_poses": 4,
+      "reused_poses": 2,
+      "preserved_region_rgba_exact": true,
+      "preserved_pose_alpha_gt16": true,
+      "resampled": false,
+      "mirrored": false,
+      "recolored": false,
+      "cleaned_pixels": 0,
+      "strict_importer": "PASS",
+      "geometry": {
+        "image_size": [
+          3072,
+          4608
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "N",
+            "region": [
+              219,
+              200,
+              1097,
+              1135
+            ],
+            "margin": [
+              475,
+              149,
+              951,
+              913
+            ],
+            "source_anchor": [
+              768,
+              1331
+            ],
+            "rgba_sha256": "3826dba7c8441a97b1ef3c067ce31b0912dfe9a3e08d3651692de19172c28932"
+          },
+          {
+            "row": 1,
+            "direction": "N",
+            "region": [
+              1733,
+              218,
+              1142,
+              1099
+            ],
+            "margin": [
+              453,
+              185,
+              906,
+              949
+            ],
+            "source_anchor": [
+              2304,
+              1313
+            ],
+            "rgba_sha256": "e2c6bb6cddb826456dccafdcf4254269f8c78002e81d28533549c456e06c4393"
+          },
+          {
+            "row": 2,
+            "direction": "N",
+            "region": [
+              206,
+              1752,
+              1124,
+              1103
+            ],
+            "margin": [
+              462,
+              181,
+              924,
+              945
+            ],
+            "source_anchor": [
+              768,
+              2851
+            ],
+            "rgba_sha256": "5e14e48b89a61434af052646004cf3b4223ca7c2176e7b634f5ae7f5759941ff"
+          },
+          {
+            "row": 3,
+            "direction": "N",
+            "region": [
+              2134,
+              2108,
+              339,
+              392
+            ],
+            "margin": [
+              854,
+              892,
+              1709,
+              1656
+            ],
+            "source_anchor": [
+              2304,
+              2496
+            ],
+            "rgba_sha256": "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e"
+          },
+          {
+            "row": 4,
+            "direction": "N",
+            "region": [
+              240,
+              3309,
+              1056,
+              1062
+            ],
+            "margin": [
+              496,
+              222,
+              992,
+              986
+            ],
+            "source_anchor": [
+              768,
+              4367
+            ],
+            "rgba_sha256": "2dfdbe466326073637d3cdcbcc42080c4de8d4be2ec515a6956cda542f668c06"
+          },
+          {
+            "row": 5,
+            "direction": "N",
+            "region": [
+              1769,
+              3294,
+              1069,
+              1091
+            ],
+            "margin": [
+              489,
+              193,
+              979,
+              957
+            ],
+            "source_anchor": [
+              2304,
+              4381
+            ],
+            "rgba_sha256": "7a105ca5f6aa2fad04d67d6e4ae2a0954e94a60b5f16957285eef16de9b907ba"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 757.5,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "approval": false,
+      "visual_approval": "NOT_RUN",
+      "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+      "external_physical_scale_review": "NEW explicitly authored ground/root arc candidate; old1280atlas and standaloneAIRHOLD reviews preserved. Whole-six privateQC pending.",
+      "region_height_span": [
+        392,
+        1135
+      ],
+      "possible_region_height_mismatch": true,
+      "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+    },
+    "source_file_and_proof_pins": [
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/assembly-spec.json",
+        "sha256": "6d671f4ec0e04441c10ba8c29c86576e8dc00c983dfcd83bd586c7296d767d83"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/girtas-N-run-v03composite02.assembly.json",
+        "sha256": "055550db154e31979e1e4c81665c19430353ebb753f011ccc50e779cdd4ca666"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/source_canvas_review.json",
+        "sha256": "5c9b4d74e133d5d0c86bc4341b9719c3b9c6ee4fe82d64fe56ec256000f88d3b"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/reviewed_runtime_layout.proposal.json",
+        "sha256": "78716e1fc033c0bbdfb3c855abf166bade362c930865d102eb5c0bb7df2608df"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/reviewed_source_regions.proposal.json",
+        "sha256": "f80767a63f9e14a884d343baac2276a7829dfdc8bf3ca74ad93a759fb3eb1e0d"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json",
+        "sha256": "451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/reviewed_runtime_layout.validation.json",
+        "sha256": "5eaedf59d44e2087a6e534788657ab90228467747e48e1aa22cf9bc31d652c0a"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/reviewed_source_regions.validation.json",
+        "sha256": "7bc9587ce163bdbb76ca5139fe2d83b364548e61c5d5e1c9f564f798181b8766"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/independent-SE-author-sixpose-root-review.json",
+        "sha256": "af2fc1011284d14df4ed1e09b92b93469ed3d5dfca570079a21dd9afcf4cd59e"
+      },
+      {
+        "path": "/workspace/scratch/girtas-N-run-reviewed-composite-v01/rigid-head-native-landmark-scale-proposal.json",
+        "sha256": "270b19eedb2070494e7d1ef230e6f8740129fd51695b7eda69a3522977fe482e"
+      }
+    ],
+    "authored_ground_root_arc": {
+      "status": "AUTHORED_GROUND_ROOT_ARC_PROPOSAL_REQUIRES_INDEPENDENT_FULL6_QC",
+      "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "baseline_Nwalk_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/NativeMotionProfile.tres",
+      "baseline_Nwalk_profile_sha256": "0f1f88c0edcc4eee04a108ef1b745e7135016407fd3dfec7bd69c4a056ecc393",
+      "baseline_pixel_scale": 0.281509916827,
+      "per_pose_runtime_scale_formula": "baseline_pixel_scale*1024/authored_pose_canvas_size",
+      "baseline_Nwalk_rigid_head_measurement": {
+        "phase": -1,
+        "path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+        "sha256": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+        "native_size": [
+          483,
+          493
+        ],
+        "pale_hair_component_bbox": [
+          161,
+          83,
+          251,
+          228
+        ],
+        "pale_hair_component_pixels": 5100,
+        "crown_core_y": 3,
+        "hair_root_y": 83,
+        "crown_to_hair_root_native": 80,
+        "landmark_kind": "RIGID_HELMET_CORE_TO_PALE_HAIR_ROOT_PIXEL_PROPOSAL",
+        "proposal_not_automatic_body_scale_approval": true,
+        "relative_head_height_to_Nwalk": 1.0,
+        "draft_head_based_canvas": 1024
+      },
+      "rigid_head_proposal_path": "/workspace/scratch/girtas-N-run-reviewed-composite-v01/rigid-head-native-landmark-scale-proposal.json",
+      "rigid_head_proposal_sha256": "270b19eedb2070494e7d1ef230e6f8740129fd51695b7eda69a3522977fe482e",
+      "authored_pose_canvas_sizes": [
+        2240,
+        2384,
+        2240,
+        784,
+        2320,
+        2392
+      ],
+      "anatomical_C_basis": "Source-native centralhelmet-core→palehair-root marker relative to already connected Nwalk; no bbox fitting, plus full head/shoulder/waist private review required.",
+      "ground_definition": "Contact0/3 and compression1/4 anchors use actual supportsole boundary. Air2/5 roots are newly authored animation metadata below actual boots; worldfloor is NOT inferred as an embedded transparentPNG feature.",
+      "AIR_rigid_head_world_peak_target": -124.77049629849509,
+      "AIR_head_peak_above_higher_contact_world_pixels": 2.0,
+      "minimum_AIR_boot_clearance_required_world_pixels": 3.0,
+      "poses": [
+        {
+          "phase": 0,
+          "role": "LEFT_LANDING",
+          "source_path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+          "source_sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+          "source_region": [
+            136,
+            47,
+            1097,
+            1135
+          ],
+          "native_virtual_canvas": 2240,
+          "native_spinal_root_x_proposal": 593,
+          "native_ground_root_y": 1179,
+          "native_support_or_lowest_boot_ROI": [
+            450,
+            1060,
+            650,
+            1215
+          ],
+          "native_boot_laststrong": [
+            526.5,
+            1178
+          ],
+          "native_boot_boundary_y": 1179,
+          "physical_scale_world_per_source_pixel": 0.12869024769234286,
+          "boot_clearance_world_pixels": 0.0,
+          "rigid_hair_root_native_y": 225,
+          "rigid_hair_root_world_y": -122.77049629849509,
+          "crown_core_native_y": 50,
+          "crown_core_world_y": -145.29128964465508,
+          "manual_waist_axis_native": [
+            593,
+            590
+          ],
+          "manual_waist_axis_native_uncertainty": 20,
+          "manual_waist_axis_world_y": -75.79855589078994,
+          "translation_into_exact_atlas": [
+            83,
+            153
+          ],
+          "output_ground_root_anchor": [
+            676,
+            1332
+          ],
+          "source_leg_art_status": "SOURCE_KEY_PASS"
+        },
+        {
+          "phase": 1,
+          "role": "LEFT_COMPRESSION_RIGHT_DRIVE",
+          "source_path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png",
+          "source_sha256": "bab36ad1f2c2445b8ebc48a263c24d0e2b289224ba7a2822210f3ca3daee13a1",
+          "source_region": [
+            110,
+            75,
+            1142,
+            1099
+          ],
+          "native_virtual_canvas": 2384,
+          "native_spinal_root_x_proposal": 610,
+          "native_ground_root_y": 1168,
+          "native_support_or_lowest_boot_ROI": [
+            470,
+            1020,
+            760,
+            1240
+          ],
+          "native_boot_laststrong": [
+            606.0,
+            1167
+          ],
+          "native_boot_boundary_y": 1168,
+          "physical_scale_world_per_source_pixel": 0.12091701125455033,
+          "boot_clearance_world_pixels": 0.0,
+          "rigid_hair_root_native_y": 264,
+          "rigid_hair_root_world_y": -109.3089781741135,
+          "crown_core_native_y": 78,
+          "crown_core_world_y": -131.79954226745986,
+          "manual_waist_axis_native": [
+            610,
+            650
+          ],
+          "manual_waist_axis_native_uncertainty": 20,
+          "manual_waist_axis_world_y": -62.63501182985707,
+          "translation_into_exact_atlas": [
+            1623,
+            143
+          ],
+          "output_ground_root_anchor": [
+            2233,
+            1311
+          ],
+          "source_leg_art_status": "SOURCE_KEY_PASS"
+        },
+        {
+          "phase": 2,
+          "role": "AIR_RIGHT_LEAD_LEFT_TRAIL",
+          "source_path": "/workspace/scratch/girtas-N-run-left-flight-key-v01/girtas-N-run-left-flight-key-v01.png",
+          "source_sha256": "e6af7aead669e4773a36ab60820168ad5f1dac9f4f781ccd9f312b9a5d5d353b",
+          "source_region": [
+            126,
+            46,
+            1124,
+            1103
+          ],
+          "native_virtual_canvas": 2240,
+          "native_spinal_root_x_proposal": 610,
+          "native_ground_root_y": 1194,
+          "native_support_or_lowest_boot_ROI": [
+            380,
+            930,
+            760,
+            1220
+          ],
+          "native_boot_laststrong": [
+            565.5,
+            1145
+          ],
+          "native_boot_boundary_y": 1146,
+          "physical_scale_world_per_source_pixel": 0.12869024769234286,
+          "boot_clearance_world_pixels": 6.177131889232457,
+          "rigid_hair_root_native_y": 224,
+          "rigid_hair_root_world_y": -124.82954026157256,
+          "crown_core_native_y": 49,
+          "crown_core_world_y": -147.35033360773258,
+          "manual_waist_axis_native": [
+            610,
+            600
+          ],
+          "manual_waist_axis_native_uncertainty": 20,
+          "manual_waist_axis_world_y": -76.44200712925165,
+          "translation_into_exact_atlas": [
+            80,
+            1706
+          ],
+          "output_ground_root_anchor": [
+            690,
+            2900
+          ],
+          "source_leg_art_status": "GENUINE_FLEXED_LEG_ART_STANDALONE_PLANE_HOLD_PRESERVED"
+        },
+        {
+          "phase": 3,
+          "role": "RIGHT_LANDING",
+          "source_path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+          "source_sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+          "source_region": [
+            0,
+            0,
+            339,
+            392
+          ],
+          "native_virtual_canvas": 784,
+          "native_spinal_root_x_proposal": 143,
+          "native_ground_root_y": 389,
+          "native_support_or_lowest_boot_ROI": [
+            120,
+            335,
+            170,
+            392
+          ],
+          "native_boot_laststrong": [
+            151.0,
+            388
+          ],
+          "native_boot_boundary_y": 389,
+          "physical_scale_world_per_source_pixel": 0.36768642197812246,
+          "boot_clearance_world_pixels": 0.0,
+          "rigid_hair_root_native_y": 64,
+          "rigid_hair_root_world_y": -119.4980871428898,
+          "crown_core_native_y": 3,
+          "crown_core_world_y": -141.92695888355524,
+          "manual_waist_axis_native": [
+            143,
+            178
+          ],
+          "manual_waist_axis_native_uncertainty": 6,
+          "manual_waist_axis_world_y": -77.58183503738384,
+          "translation_into_exact_atlas": [
+            2134,
+            2108
+          ],
+          "output_ground_root_anchor": [
+            2277,
+            2497
+          ],
+          "source_leg_art_status": "SOURCE_KEY_PASS"
+        },
+        {
+          "phase": 4,
+          "role": "RIGHT_COMPRESSION_LEFT_DRIVE",
+          "source_path": "/workspace/scratch/girtas-N-run-right-compression-key-v01/girtas-N-run-right-compression-key-v01.png",
+          "source_sha256": "b46cc4d15184fc5b851cf7a46d8ec06da3b78cf54ac1fef5148734513238ab72",
+          "source_region": [
+            148,
+            98,
+            1056,
+            1062
+          ],
+          "native_virtual_canvas": 2320,
+          "native_spinal_root_x_proposal": 600,
+          "native_ground_root_y": 1157,
+          "native_support_or_lowest_boot_ROI": [
+            480,
+            950,
+            820,
+            1240
+          ],
+          "native_boot_laststrong": [
+            629.0,
+            1156
+          ],
+          "native_boot_boundary_y": 1157,
+          "physical_scale_world_per_source_pixel": 0.12425265294433104,
+          "boot_clearance_world_pixels": 0.0,
+          "rigid_hair_root_native_y": 282,
+          "rigid_hair_root_world_y": -108.72107132628966,
+          "crown_core_native_y": 101,
+          "crown_core_world_y": -131.21080150921358,
+          "manual_waist_axis_native": [
+            600,
+            620
+          ],
+          "manual_waist_axis_native_uncertainty": 20,
+          "manual_waist_axis_world_y": -66.72367463110577,
+          "translation_into_exact_atlas": [
+            92,
+            3211
+          ],
+          "output_ground_root_anchor": [
+            692,
+            4368
+          ],
+          "source_leg_art_status": "SOURCE_KEY_PASS"
+        },
+        {
+          "phase": 5,
+          "role": "AIR_LEFT_LEAD_RIGHT_TRAIL",
+          "source_path": "/workspace/scratch/girtas-N-run-right-flight-key-v01/girtas-N-run-right-flight-key-v01.png",
+          "source_sha256": "792d331689e4c8a0a089f451bb6aad6c23dac037b51c1d2ec616b847b7e6fb26",
+          "source_region": [
+            153,
+            82,
+            1069,
+            1091
+          ],
+          "native_virtual_canvas": 2392,
+          "native_spinal_root_x_proposal": 610,
+          "native_ground_root_y": 1307,
+          "native_support_or_lowest_boot_ROI": [
+            600,
+            930,
+            850,
+            1230
+          ],
+          "native_boot_laststrong": [
+            717.0,
+            1169
+          ],
+          "native_boot_boundary_y": 1170,
+          "physical_scale_world_per_source_pixel": 0.12051260653463546,
+          "boot_clearance_world_pixels": 16.510227095245057,
+          "rigid_hair_root_native_y": 272,
+          "rigid_hair_root_world_y": -124.73054776334769,
+          "crown_core_native_y": 85,
+          "crown_core_world_y": -147.26640518532452,
+          "manual_waist_axis_native": [
+            610,
+            610
+          ],
+          "manual_waist_axis_native_uncertainty": 20,
+          "manual_waist_axis_world_y": -83.99728675464091,
+          "translation_into_exact_atlas": [
+            1616,
+            3212
+          ],
+          "output_ground_root_anchor": [
+            2226,
+            4519
+          ],
+          "source_leg_art_status": "GENUINE_FLEXED_LEG_ART_STANDALONE_PLANE_HOLD_PRESERVED"
+        }
+      ],
+      "loop_seam_5_to_0": {
+        "head_hair_root_delta_world": 1.9600514648525973,
+        "waist_axis_delta_world": 8.198730863850969,
+        "lead_switch": "AIR5_LEFTlead_RIGHTtrail→LEFTlanding0",
+        "runtime_seam_status": "PENDING_PRIVATE_QC"
+      },
+      "limitations": [
+        "Native marker proposals must be independently checked against shoulder/pelvis anatomy and SEauthor full6view.",
+        "Manual waist points have native uncertainty20px (RIGHTreusedkey6px); not hidden precise hip-bone measurements.",
+        "Do not erase standaloneAIR2/5 planeHOLD or oldwhole6/halfcycleHOLD. This is a new actual animation root/ground arc.",
+        "Worldclearance derives from newly authored metadata, not sole-orientation-only approval.",
+        "Actual Player/resource/runtime/actor approval stays HOLD."
+      ],
+      "source_pixels_unchanged": true,
+      "actor_approval": false
+    },
+    "independent_fullsix_source_root_review": {
+      "schema": "pr122-independent-full6-source-and-authored-root-review-v1",
+      "reviewer": "girtas_se_walk_author",
+      "key": "transform:267",
+      "direction": "N",
+      "role": "run",
+      "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "source_visual_status": "PASS",
+      "authored_root_arc_candidate_status": "PASS_FOR_NATIVE_STAGING_NOT_ACTOR_APPROVAL",
+      "runtime_visual_status": "PENDING_ACTUAL_PLAYER",
+      "actor_approval": false,
+      "baseline_profile_sha256": "0f1f88c0edcc4eee04a108ef1b745e7135016407fd3dfec7bd69c4a056ecc393",
+      "layout_proposal_path": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/reviewed_runtime_layout.proposal.json",
+      "layout_proposal_sha256": "78716e1fc033c0bbdfb3c855abf166bade362c930865d102eb5c0bb7df2608df",
+      "authored_arc_proof_sha256": "451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+      "checks": {
+        "all6_correct_N_back_original_identity": true,
+        "original_long_palehair_hard_gold_spines_long_dark_robe": true,
+        "right_sinuous_weapon_empty_left_two_arm_leg_chains": true,
+        "LEFT_contact0_compression1_then_RIGHT_leading_air2": true,
+        "RIGHT_contact3_compression4_then_LEFT_leading_air5": true,
+        "compressed_support_knees_actually_bent_versus_landing": true,
+        "same_rigid_skull_core_physical_height_and_coherent_shoulder_waist_scale": true,
+        "authored_contact_load_support_soles_grounded": true,
+        "authored_air2_both_boots_clear": true,
+        "authored_air5_both_boots_clear": true,
+        "actual_loop_Player_cadence_checked": false
+      },
+      "evidence": [
+        "Viewed full7panel103924B at shared authoredworldroot against already connected Nwalk. All6 keep the same Nrear head/hair/shoulder/waist mass, no wrongmask/wingfan/segmentedpants or handtransfer. Rigidhelmetcore→hairroot normalization is corroborated by visible shoulder/waist proportions; fine source detail differs but no gross scale pop.",
+        "0/3 actual opposite long support legs, 1/4 deep visible support-knee flexion and opposite knee drive; AIR2/5 both legs articulated and opposite lead/trail, not merely lifted standing or recolored copies.",
+        "NEW authored roots explicitly define floor/world trajectory; support0/1/3/4 soles0. AIR2 lowestbootgap6.177world, AIR5 gap16.510world. These values are evidence of new actual animation metadata, not a claimed embedded PNG floor.",
+        "Crown/hairroot moves down about13.46world during LEFTload then rises15.52world to AIR2; opposite load10.78world then rises16.01world to AIR5, coherent heavy-boss run compression/push-off.",
+        "5→0 retains LEFTlead toLEFTlanding; rigid hairroot drops1.96world and manualwaist8.20world atlanding, plausible landing absorption. Actual Player cadence/seam and idle/run transition still required before finalnative quality."
+      ],
+      "standalone_air_plane_HOLD_preserved": true,
+      "manual_waist_native_uncertainty": 20,
+      "limitations": [
+        "This is full6 source+authoredroot candidate pass for isolated native staging only. ActualPlayer, runtimeall6/5→0/cadence, Nwalk/Nidle transitions and fullactor approval remain HOLD.",
+        "Old independent standaloneAIR2HOLD remains valid for old no-root sourceinterpretation; this review pins a new explicit authored root arc, not a retroactive rawsource approval."
+      ],
+      "preview_bytes": 103924,
+      "reviewed_at": "2026-10-19T13:43:03.771456+00:00"
+    },
+    "source_region_validation": {
+      "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "source_RGBA_sha256": "146cb1b157545b7c21d576f455013acf55ad025cac890719797e8881bc72d718",
+      "base_geometry_sha256": "c64c8e72faf5919bdd4115f6291daf48ef59a06318320a4150664d799972b950",
+      "derived_geometry_sha256": "f0cc70b80e5134d1b9cd0735861945649dc765bc8f9b98283ccf53a479449167",
+      "review_sha256": "4b2cc78ab2adec8b2d44b89a42ac9d57248c6e6e9e353a1ac5313c76004e0436",
+      "review_basis": "Explicit outward-only TRANSPARENT ground/root padding for AIR2/5. Exact original body/gear pixels stay unchanged; no floorpaint/no cleanup. Empty padding contains authored flight-ground anchor within its1536packingcell. Private full6source/arc QC pending.",
+      "source_unchanged": true,
+      "canonical_canvas_foot_anchors_unchanged": true,
+      "all_alpha_gt16_covered_exactly_once": true,
+      "foreign_foreground_pixels": 0,
+      "alpha_gt16_pixels": 2302242,
+      "added_alpha_gt16_pixels": 0,
+      "all_alpha_positive_covered": true,
+      "expanded_regions": [
+        [
+          219,
+          200,
+          1097,
+          1135
+        ],
+        [
+          1733,
+          218,
+          1142,
+          1099
+        ],
+        [
+          206,
+          1752,
+          1124,
+          1157
+        ],
+        [
+          2134,
+          2108,
+          339,
+          392
+        ],
+        [
+          240,
+          3309,
+          1056,
+          1062
+        ],
+        [
+          1769,
+          3294,
+          1069,
+          1234
+        ]
+      ],
+      "default_importer_repacker_unchanged": true,
+      "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+      "nearest_owner_sha256": "9f009b8089b145169371d6ee4bfce349327382085c86e979764a876dc550c0c6",
+      "foreground_owner_sha256": "19a489ee87fd899ac8449e5acf40d98759ddfad10459013415a62a3e0b35048e",
+      "detached_pixels": 5,
+      "detached_fragments": [
+        {
+          "row": 2,
+          "pixels": 1,
+          "bbox": [
+            842,
+            2007,
+            843,
+            2008
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 703.1564548519767,
+          "owner_margin_min": 700.9203868744769
+        },
+        {
+          "row": 3,
+          "pixels": 1,
+          "bbox": [
+            2240,
+            2274,
+            2241,
+            2275
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 964.0,
+          "owner_margin_min": 961.1715728752538
+        },
+        {
+          "row": 3,
+          "pixels": 1,
+          "bbox": [
+            2354,
+            2276,
+            2355,
+            2277
+          ],
+          "nearest_max": 4.123105625617661,
+          "second_nearest_min": 968.9850360041686,
+          "owner_margin_min": 964.8619303785509
+        },
+        {
+          "row": 3,
+          "pixels": 1,
+          "bbox": [
+            2270,
+            2392,
+            2271,
+            2393
+          ],
+          "nearest_max": 3.0,
+          "second_nearest_min": 905.883546599672,
+          "owner_margin_min": 902.883546599672
+        },
+        {
+          "row": 5,
+          "pixels": 1,
+          "bbox": [
+            2102,
+            3740,
+            2103,
+            3741
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 987.2638958252246,
+          "owner_margin_min": 985.0278278477248
+        }
+      ],
+      "minimum_required_owner_margin": 32.0
+    },
+    "runtime_layout_metadata_validation": {
+      "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "base_geometry_sha256": "f0cc70b80e5134d1b9cd0735861945649dc765bc8f9b98283ccf53a479449167",
+      "derived_geometry_sha256": "1498d773c0456063b24c82568b45302ce7ae13c78d5afab0711cd2ce1a68dec0",
+      "review_sha256": "6a9acc4826c58df8c5f991e0ece96cb5fdce610075e024aa959152dbe0b0db08",
+      "review_basis": "Actual newly authored six-key ground/root arc; rigidhead marker C proposal plus supportsole anchors and explicitly airborne metadata. ExactRGBA source/transparent AIRpadding verified. Full6 physical/source review and final runtime remain HOLD. Numeric arc /workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json SHA256 451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+      "direction": "N",
+      "pose_count": 6,
+      "canvas_size": [
+        2048,
+        2048
+      ],
+      "foot": [
+        1024,
+        1280
+      ],
+      "source_anchors": [
+        [
+          676,
+          1332
+        ],
+        [
+          2233,
+          1311
+        ],
+        [
+          690,
+          2900
+        ],
+        [
+          2277,
+          2497
+        ],
+        [
+          692,
+          4368
+        ],
+        [
+          2226,
+          4519
+        ]
+      ],
+      "runtime_pixel_scale_ratio": [
+        1024,
+        2048
+      ],
+      "source_pixels_unchanged": true,
+      "resampled": false,
+      "approval_granted": false,
+      "source_region_review_sha256": "4b2cc78ab2adec8b2d44b89a42ac9d57248c6e6e9e353a1ac5313c76004e0436",
+      "pose_canvas_sizes": [
+        2240,
+        2384,
+        2240,
+        784,
+        2320,
+        2392
+      ],
+      "runtime_reference_canvas_size": 1024,
+      "per_pose_runtime_pixel_scale_ratios": [
+        [
+          1024,
+          2240
+        ],
+        [
+          1024,
+          2384
+        ],
+        [
+          1024,
+          2240
+        ],
+        [
+          1024,
+          784
+        ],
+        [
+          1024,
+          2320
+        ],
+        [
+          1024,
+          2392
+        ]
+      ],
+      "pose_canvas_size_allowed_range": [
+        256,
+        4096
+      ],
+      "newly_authored_poses": 0
+    },
+    "newly_authored_poses": 4,
+    "reused_poses": 2,
+    "resampled": false,
+    "mirrored": false,
+    "recolored": false,
+    "old_standalone_AIR_HOLD_reviews_preserved": true,
+    "old_failed_sheet_and_halfcycles_unchanged": true,
+    "actual_Player_status": "HOLD_PENDING_INTEGRATION_AND_FRESH_RUNTIME_QC",
+    "actor_approval": false
+  },
+  "metadata_identity_note": "Top-level logical integration identity transform:267. Embedded exact approved art/layout provenance retains numeric art key267 and equals canonical external JSON; no coordinates, canvases, roots, raw pixels or external review bytes changed.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-run-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "LEFT/RIGHT landing contacts alternate, each has a distinct materially bent loaded support knee with opposite drive; AIR2 RIGHTlead/LEFTtrail and AIR5 LEFTlead/RIGHTtrail both articulate two actual raised boots.",
+      "New ground/root animation metadata grounds actual contacts/compressions, gives AIRclearances6.177/16.510worldpixels and coherent rigidhead/waist arc; independent sixpose source+authoredroot reviewPASS.",
+      "Exact original RGBA of all six pose regions preserved: four new compression/flight poses plus two reused landing keys; only transparentatlas/padding/metadata authored, no resample/mirror/recolor/cleanup."
+    ],
+    "visual_limitations": [
+      "This passes NEW source animation and authoredroot candidate only. Actual gameSpriteFrames/Player/action/loop/cadence/transition checks and fresh runtime review remain HOLD.",
+      "Old standaloneAIR2/5 sourceplaneHOLD and oldfailedwhole6/halfcycleHOLD are immutable and not retrospectively approved.",
+      "VirtualC headmarker was crosschecked visually with shoulders/waist; exact hiddenhip bone positions and full actor approval not claimed."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+    "raw_bytes": 6290901,
+    "request_sha256": "baa456b3f55a5715de5bfd12fb62533756bd74c3d187e392d52014879391290a",
+    "review_sha256": "943c1de1ee6b141e6769e4b7fcd9807f3a0af0e2c79e7288aa1852aa68aed738"
+  },
+  "available_repository_reference_sources": {
+    "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+    "bab36ad1f2c2445b8ebc48a263c24d0e2b289224ba7a2822210f3ca3daee13a1": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-e6af7aead669e4773a36ab60820168ad5f1dac9f4f781ccd9f312b9a5d5d353b.png",
+      "sha256": "e6af7aead669e4773a36ab60820168ad5f1dac9f4f781ccd9f312b9a5d5d353b",
+      "bytes": 1293806,
+      "original_reference": "/workspace/scratch/girtas-N-run-left-flight-key-v01/girtas-N-run-left-flight-key-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a.png",
+      "sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+      "bytes": 229256,
+      "original_reference": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-b46cc4d15184fc5b851cf7a46d8ec06da3b78cf54ac1fef5148734513238ab72.png",
+      "sha256": "b46cc4d15184fc5b851cf7a46d8ec06da3b78cf54ac1fef5148734513238ab72",
+      "bytes": 1141598,
+      "original_reference": "/workspace/scratch/girtas-N-run-right-compression-key-v01/girtas-N-run-right-compression-key-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-792d331689e4c8a0a089f451bb6aad6c23dac037b51c1d2ec616b847b7e6fb26.png",
+      "sha256": "792d331689e4c8a0a089f451bb6aad6c23dac037b51c1d2ec616b847b7e6fb26",
+      "bytes": 1167826,
+      "original_reference": "/workspace/scratch/girtas-N-run-right-flight-key-v01/girtas-N-run-right-flight-key-v01.png"
+    }
+  ],
+  "integration_attempt_hold": {
+    "status": "REQUEST_SCHEMA_HOLD_PRESERVED",
+    "reason": "Invalid source_canvas_review status rejected before source copy. No geometry/runtime gate changed. Preserve exact raw and proposal; corrected metadata requires new authoring request version, not new art.",
+    "raw_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6.png",
+    "sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+    "bytes": 6290901,
+    "request": "docs/remake/evidence/pr122-mythic-detailed/batch03/request-178-girtas-N-run-v03composite02.json",
+    "unselected_runtime_layout": {
+      "status": "REVIEWED_LAYOUT_PROPOSAL",
+      "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "canvas_size": 2048,
+      "direction": "N",
+      "key": "267",
+      "role": "run",
+      "authored_pose_canvas_sizes": [
+        2240,
+        2384,
+        2240,
+        784,
+        2320,
+        2392
+      ],
+      "source_anchors": [
+        [
+          676,
+          1332
+        ],
+        [
+          2233,
+          1311
+        ],
+        [
+          690,
+          2900
+        ],
+        [
+          2277,
+          2497
+        ],
+        [
+          692,
+          4368
+        ],
+        [
+          2226,
+          4519
+        ]
+      ],
+      "review_basis": "Actual newly authored six-key ground/root arc; rigidhead marker C proposal plus supportsole anchors and explicitly airborne metadata. ExactRGBA source/transparent AIRpadding verified. Full6 physical/source review and final runtime remain HOLD. Numeric arc /workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json SHA256 451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+      "anchor_measurement_evidence": "/workspace/scratch/girtas-N-run-reviewed-composite-v02/authored-ground-root-arc-proposal.json",
+      "anchor_measurement_evidence_sha256": "451f93674cfe72f1fbf51b368974fa25a778274357541fa21b9edbe5ea22d994",
+      "runtime_validation": "HOLD_PENDING_PRIVATE_FULL6_AND_ACTUAL_PLAYER",
+      "actor_approval": false,
+      "new_actor_approvals": 0
+    },
+    "actor_approval_added": 0
+  }
+}

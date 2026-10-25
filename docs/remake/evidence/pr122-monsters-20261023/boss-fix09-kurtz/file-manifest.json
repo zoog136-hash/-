@@ -1,0 +1,322 @@
+{
+  "schema": "pr122-kurtz-r003-frozen-file-manifest-v1",
+  "frozen": true,
+  "candidate": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/candidate.json",
+  "candidate_sha256": "1b08547165e3e7faf1dcfcf163265e553fa679d75c3e28fdd054ed8b70fcf34c",
+  "new_source_clips": 6,
+  "new_source_poses": 12,
+  "reused_source_clips": 11,
+  "reused_source_poses": 46,
+  "native_track_count": 17,
+  "native_pose_count": 58,
+  "missing_required_tracks": [
+    "attack_0",
+    "attack_1",
+    "attack_2",
+    "attack_4",
+    "attack_5",
+    "attack_6",
+    "attack_7",
+    "hit_3",
+    "hit_4",
+    "hit_5",
+    "idle_3",
+    "idle_4",
+    "idle_5",
+    "run_3",
+    "run_4",
+    "run_5"
+  ],
+  "new_approvals": 0,
+  "production_connected": false,
+  "detailed_completed": false,
+  "raw_generated_PNGs": 4,
+  "selected_source_PNGs": 3,
+  "held_source_PNGs": 1,
+  "prior_frozen_manifest": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/file-manifest.json",
+  "prior_frozen_manifest_sha256": "b9afb98477841218279a93b94147d3b4758be33ecec4e0a69dff8939b12b0fa3",
+  "prior_frozen_files_reverified": 62,
+  "Godot_actual_ActorMotion": "PASS_HEADLESS_AND_OPENGL_LLVMPipe_24_CASES_58_SOURCE_POSES",
+  "real_new_pose_capture_PNGs": 12,
+  "git_ignored_art_paths": [],
+  "Git_delivery": "Parent agent will commit and record delivery; no child Git mutation",
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/NativeMotionProfile.tres",
+      "bytes": 775,
+      "sha256": "5aff145a155b29d319b8078af5b401ad98f375498414e2cb885785e466bc8b0a"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/SpriteFrames.tres",
+      "bytes": 16511,
+      "sha256": "ba7df401b06c7d97beec2009140c7b510cf8643401326723df88f50c854f127d"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/kurtz-E-idle-hit4-v01.png",
+      "bytes": 1692280,
+      "sha256": "978d10177b5fba11d14d57333e97dabb72a5608664c79b3ef53a519c4b6c3769"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/kurtz-E-idle-hit4-v02.png",
+      "bytes": 1474740,
+      "sha256": "8ae4dad2afcbf156a0586b7f8dd0fcacfbf4b21a39356a33f5c9776ead69f061"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/kurtz-S-idle-hit4-v01.png",
+      "bytes": 1959904,
+      "sha256": "18aa6362fa7704ac1aa93de4b59df086ce77b6a725510008a69a50f6e84dc3d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/RESULT.md",
+      "bytes": 1979,
+      "sha256": "61e7e367b4721e4e7471f4e4aa7a7fd41a0f83e18b81f17f705d780cc6ca5e65"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/build.py",
+      "bytes": 10554,
+      "sha256": "304b5fb06524a306242f9e5949778c52d479f6e5bf4f225ac40a73b9b1fab773"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/candidate.json",
+      "bytes": 69257,
+      "sha256": "1b08547165e3e7faf1dcfcf163265e553fa679d75c3e28fdd054ed8b70fcf34c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/checks-initial.json",
+      "bytes": 4633,
+      "sha256": "8072e3fea5b87a4bd4da208ed1a749cb99c7316dd7aef764c992b11fd09de476"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/checks-last2-initial.json",
+      "bytes": 4638,
+      "sha256": "2343e632329740d6ce0eba3170471b6f7d8fd6e01bd3dae8f88a852e3e2f4a22"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-SW-reuse-review.json",
+      "bytes": 9997,
+      "sha256": "4804fda860710bfa4d2919d696c9cf534ee52a07eb09a2cdf2191509923e2f8e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-candidate-check.json",
+      "bytes": 7379,
+      "sha256": "2d70607c2c6e2217b4ebaad0ae3f88e211dde1f694bac5308c953b0d4d9a4cb1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-first2-review.json",
+      "bytes": 3301,
+      "sha256": "2fd11bd138029f983a0d8a35b137067baac1c329c1b4b5e8c5f0928d957478ab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-last2-review.json",
+      "bytes": 2662,
+      "sha256": "fdb26b8e3103a7855d8b5eab46dcd1e4f77e74a29fb8d2532046047343a0144e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/hit_0-0.png",
+      "bytes": 24312,
+      "sha256": "df3dfbc02b54ccba10c572355b7c3edf351b916c05e2afe8b91c72643b53d230"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/hit_0-1.png",
+      "bytes": 25260,
+      "sha256": "76f470894371ab8251b5aa7e9656cd1efd5b63577dbeb578180077659d1c67ea"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/hit_1-0.png",
+      "bytes": 25248,
+      "sha256": "868d6902722f72cc3f48fd7e2bd8d2bbed29f0505bcd4f6dbdbf602124a4c5d1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/hit_1-1.png",
+      "bytes": 26683,
+      "sha256": "3ab86ce4825afe9ff269ed7eeb3ab4a896e4ca3734adba0c14d8bca79babb5f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/hit_2-0.png",
+      "bytes": 29949,
+      "sha256": "2c038ac4bac0b64bb22002601c0cfbbd9bdbe4967a4e74df23fa234a842f95a9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/hit_2-1.png",
+      "bytes": 30582,
+      "sha256": "bd3cb2b76a007be1bc1b502f2d178c7cd1c0bc9716b4fe666a6490c13b79e9c6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/idle_0-0.png",
+      "bytes": 24624,
+      "sha256": "d56a340eef60aaf55527212afd5faa3fd45970fa517d2d455c17b15c538db2bf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/idle_0-1.png",
+      "bytes": 24186,
+      "sha256": "4a5a99435ac6f4bf435d89b30b14a26e9e1f5868a5cfcac667a060ba0440bcb2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/idle_1-0.png",
+      "bytes": 26249,
+      "sha256": "877413bfbb9f934e96d309fa9be8cea9fa809f516c6e6b75164c59427bf9f294"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/idle_1-1.png",
+      "bytes": 26633,
+      "sha256": "a0ba4e2c91a27f23b3ae26dfd15abf5fedf3b4c34f1750b4120abfb508d3f3e2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/idle_2-0.png",
+      "bytes": 31195,
+      "sha256": "e118d3b0f54df285ba23ceb1c301a08c5f04f82cfc2ada20a82905f54f1c1c1e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/live-captures/idle_2-1.png",
+      "bytes": 30288,
+      "sha256": "ac23f82abbcff2b56c13ded331bd2933980ff81c4b08c209cd07b1a1096a313e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/playback-failed01.gd",
+      "bytes": 7240,
+      "sha256": "cd448c660ff19b6a836855df7155461a4f65742b9a02ca285b8f9be70537de01"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/playback-result.json",
+      "bytes": 9593,
+      "sha256": "95892214514b6ae89c6815e149c31a717e456404075bd6d6f50bdc7a6cce8545"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/playback-run01.txt",
+      "bytes": 372,
+      "sha256": "96018c333ce6e07dc4260d21db281583df91aa3013f251af21d9a65d0b77321d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/playback-run02.txt",
+      "bytes": 171,
+      "sha256": "0f140d3a29571234c5d95bbb4f39fbc2ee6c8732e4a1ea03a2b26cf8a4af7e2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/playback.gd",
+      "bytes": 7276,
+      "sha256": "365dc18c85e406172d613b76fcf98fa510d472c194dbc8532c73316275c98189"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/quality-review.json",
+      "bytes": 7505,
+      "sha256": "034a287e6268402f5a23a7a7271d12e14464fd188bd9dc0b001af1b98d9065fd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v01.png",
+      "bytes": 1692280,
+      "sha256": "978d10177b5fba11d14d57333e97dabb72a5608664c79b3ef53a519c4b6c3769"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v02.png",
+      "bytes": 1474740,
+      "sha256": "8ae4dad2afcbf156a0586b7f8dd0fcacfbf4b21a39356a33f5c9776ead69f061"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-S-idle-hit4-v01.png",
+      "bytes": 1959904,
+      "sha256": "18aa6362fa7704ac1aa93de4b59df086ce77b6a725510008a69a50f6e84dc3d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-SW-idle-hit4-v01.png",
+      "bytes": 2191829,
+      "sha256": "aee4c6fb1b959747830bc621e8fcd7512583632c3ec8e3e973275eb3c7679a03"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/reference.png",
+      "bytes": 155428,
+      "sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback-failed01.gd",
+      "bytes": 9024,
+      "sha256": "1c49571f3449471570f5b0d883e7207bdf708441ebab37d54fe978da967e4d3a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback-result.json",
+      "bytes": 13339,
+      "sha256": "81573a556ae4f1a7fdfc3109b361b40d58a636263ff9e6ffe4c5262b09f2c45e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback-run01.txt",
+      "bytes": 48,
+      "sha256": "f104ec72f8b123bba62472f4d58f245b94c1674b8e31c1db6ebda78ae7cf7cff"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback-run03.txt",
+      "bytes": 1486,
+      "sha256": "72e75b4a55948bc282ab207cb61cb79e567756cf92914a4188e31b0400895dae"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback-run03.xvfb.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback-run04.txt",
+      "bytes": 464,
+      "sha256": "82439ec8a479d7826356b14fae10424ca97fbe5dd008aa22edd4e14df4d6269e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback-run04.xvfb.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/render-playback.gd",
+      "bytes": 9015,
+      "sha256": "c8d6089dc2cee07cecbc32ebaeed1147b774edc7130372d0203f151b015f827e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/requests/kurtz-E-idle-hit4-v01.json",
+      "bytes": 2677,
+      "sha256": "ca4ffdc65c23f6d2d2f3090c843530d62347d65f3a72962670fd2dc284e5b2c5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/requests/kurtz-E-idle-hit4-v02.json",
+      "bytes": 1782,
+      "sha256": "1b79f9070d04541d61ba4679ef36b97dc27976f98da57e68172be8d70513f05a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/requests/kurtz-S-idle-hit4-v01.json",
+      "bytes": 2609,
+      "sha256": "1af7bebf1aa279e88b8d110381224afcb40564ab1ae95aa67a451da9f183fe7f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/requests/kurtz-SW-idle-hit4-v01.json",
+      "bytes": 2617,
+      "sha256": "e593c5022cce0377b54942aed4e909abd7292975cbaf79adb732453bb2544016"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/source-checkpoint01.json",
+      "bytes": 1273,
+      "sha256": "bdd5cc53e3111e1ae9954bcbf7d860b496314bf01cc64e3b911f7d9b6c7d9f5d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/source-checkpoint02.json",
+      "bytes": 2197,
+      "sha256": "f3d975c3644f2ddce5ee7030063da2193293166aec7ad7b63a9a1806ac4c1bea"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/source-checks.json",
+      "bytes": 16820,
+      "sha256": "b2a659b6f6bbbd3498e3c663fd54322b9410f50ee247fc527731560cdb5217a6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/source-review.json",
+      "bytes": 4823,
+      "sha256": "cb4a2f9e36bbe31d85ad98f2b1390b2051bd71ec776aabd3c3e92b951298a4b2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/xvfb-log.failure.json",
+      "bytes": 285,
+      "sha256": "13121c97e1a44dd91fc484edd23e5ee47b9b0599fa5860e4ca8fc549a9583c24"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/xvfb-log.txt.gz",
+      "bytes": 121578,
+      "sha256": "43066f86c61f76f0145df3dd23551ab58550a9bc3843ad33a56f6eeb5ca54bf7"
+    }
+  ],
+  "file_count": 55,
+  "total_bytes": 13280194
+}

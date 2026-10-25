@@ -1,0 +1,176 @@
+{
+  "schema": "private-review-image-byte-ledger-v1",
+  "hard_limit_bytes": 8000000,
+  "rotate_before_bytes": 7000000,
+  "preferred_limit_bytes": 6000000,
+  "entries": [
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v02-full-private-01.jpg",
+      "bytes": 61711,
+      "sha256": "a9e177dc0b71abdd5257b8a88f05fabb7995e237f0ab7c19f4853c3107e3f5ba",
+      "kind": "local_private_jpeg",
+      "tool_return_bytes_accounting": "count equal image file bytes per view"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v02-full-private-01.jpg",
+      "kind": "private_view_tool_return_and_emission",
+      "reserve_bytes": 164614,
+      "views": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v02-arm-leg-grid-crop-private-02.jpg",
+      "sha256": "72d3fa03b16a15cb4e33dab472aa170003cc977df13859925311c5fe949e541e",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 97311,
+      "reserve_tool_return_emission_bytes": 259542,
+      "source_crop_xyxy": [
+        375,
+        350,
+        830,
+        1210
+      ],
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v03-arm-leg-grid-crop-private-03.jpg",
+      "sha256": "9374cab646d49e68ee339ad4620b5c6c94933073b9a95394ddd913817228be3b",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 100039,
+      "reserve_tool_return_emission_bytes": 266822,
+      "source_crop_xyxy": [
+        375,
+        350,
+        830,
+        1210
+      ],
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v04-full-private-04.jpg",
+      "sha256": "a71158cecabf1836aa0428d47caab4ed6c9345fd09663f94a5875d4ca808a71f",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 57192,
+      "reserve_tool_return_emission_bytes": 152558,
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v04-body-master-and-sole-private-05.jpg",
+      "sha256": "88d068022a6f3818cfe54704c3aac501cd6e8560016de1536425a3c9f98c0e49",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 128284,
+      "reserve_tool_return_emission_bytes": 342142,
+      "source_crops": {
+        "915_and_v04_body": [
+          510,
+          310,
+          830,
+          710
+        ],
+        "v04_leg_sole": [
+          480,
+          680,
+          800,
+          1210
+        ]
+      },
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v05-restored-body-occlusion-private-06.jpg",
+      "sha256": "02227f1b06e5449dda579cc1c6ce65b3f78feff53fca043c6602ce4030655ff8",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 58254,
+      "reserve_tool_return_emission_bytes": 155390,
+      "source_crop": [
+        500,
+        310,
+        825,
+        755
+      ],
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v05-hem-finite-comparison-private-07.jpg",
+      "sha256": "a962ea127ff2f035001bf579f0b28dc156742441c6a8924ab02c2f7430cc6bf1",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 40887,
+      "reserve_tool_return_emission_bytes": 109078,
+      "source_crop": [
+        540,
+        635,
+        825,
+        735
+      ],
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v04-new-boot-cuff-boundary-private-08.jpg",
+      "sha256": "74753e838c3b3e135c232dc9ba629f13118d4b6fa79e37cdb334609990397a33",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 11540,
+      "reserve_tool_return_emission_bytes": 30822,
+      "source_crop": [
+        500,
+        650,
+        660,
+        790
+      ],
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v06-restored-hem-join-private-09.jpg",
+      "sha256": "825514e182dbb8d37613816725442f9bdd12888554f40da6961bfd833ccd680b",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 20264,
+      "reserve_tool_return_emission_bytes": 54086,
+      "source_crop": [
+        510,
+        625,
+        835,
+        780
+      ],
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v07-actual-layer-join-private-10.jpg",
+      "sha256": "1f79c6808b237888ad0a9209e3486f9eb9819e77d554392097b91055ab5c162d",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 21055,
+      "reserve_tool_return_emission_bytes": 56198,
+      "source_crop": [
+        510,
+        625,
+        835,
+        800
+      ],
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v07-final-static-full-private-11.jpg",
+      "sha256": "b66528e063c323773ea4d6318087347d043ad7da46db3c508142eaff17d6b5f2",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 59740,
+      "reserve_tool_return_emission_bytes": 159358,
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v08-final-static-full-private-12.jpg",
+      "sha256": "60ef1989d06366ed056ba2bc4494744fba39c8bab93fed9d35d7e0124afb9b1a",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 59882,
+      "reserve_tool_return_emission_bytes": 159734,
+      "view_count": 1
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/contact0-v08-cloth-join-native-private-13.jpg",
+      "sha256": "3c4265e33704f873925294aa5da30c2788d06914a7c89420e8a72be94139d11a",
+      "kind": "local_private_jpeg_and_private_view_tool_return_and_emission",
+      "file_bytes": 25853,
+      "reserve_tool_return_emission_bytes": 68990,
+      "view_count": 1
+    }
+  ],
+  "file_bytes_total": 742012,
+  "tool_return_image_bytes_total": 1979334,
+  "total_bytes": 2721346
+}

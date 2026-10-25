@@ -1,0 +1,30 @@
+{
+  "schema": "pr122-private-production-request-v1",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "NE",
+  "role": "run",
+  "intended_game_phases": [
+    0
+  ],
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "NEW_bounded_farLEFT_support_knee_foreshortening_from_owned_contact0",
+  "references": [
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+    "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/same-owned-farLEFT-support-bend-target-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+    "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/same-owned-farLEFT-support-bend-target-guide.png": "ec7fab0ddba71d063c8155a8289ae5e6adcadee9bf9fbdf187411b62d7664d9e"
+  },
+  "prompt": "Make ONE precisely bounded correction to FIRST image, same GIRTAS true NE run FAR-LEFT-HEEL-LEADING LANDING contact0, same 1254x1254 transparent canvas and exact original rendering. SECOND image is the same source plus a YELLOW permitted lowerbody edit outline and GREEN real physical heel target band; guides/colors/text are instructions only and MUST NOT appear in final.\n\nOnly genuinely rearticulate the anatomically FAR LEFT supporting thigh/knee/shin/boot and immediately attached inner lower robe INSIDE the yellow mask. Keep the very same farLEFT hip-owned chain. Bend/foreshorten this REAL supporting leg so its heel lands near original native pixel (683,967), not the old low (683,1143). Heel target x665..705; target y942..994 at x683, with slope dy/dx=-0.5903 for changed x. The nominal heel is683,967. This is a shorter PROJECTED core-to-support extension from genuine knee flexion and limb foreshortening, NEVER a smaller leg, shrunken skeleton, shortened shin stump, boot-only translation, wholebody move, or copied compression pose. Knee can articulate near native x650..690,y790..890 while preserving plausible original femur/shin lengths through depth projection. Keep original black/gold armored boot width, calf/knee filigree and material, exactly two legs/boots.\n\nThis is still heel/forefoot touchdown with a soft flexed farLEFT support knee, just BEFORE load/compression1, not a tucked airborne foot. The leading planted boot points with the original true NE travel, anatomically farLEFT. Original opposite anatomically NEAR RIGHT leg remains separately high folded recovery with its complete connected hip/thigh/knee/shin/boot around original native (770,900), entirely unchanged. Do not swap boot ownership or infer anatomy from image-left.\n\nALL pixels outside the narrow yellow lowerbody polygon must remain exactly unchanged: skull/crown/face/long silver hair, hard straight gold back-spines, near pauldron/upper torso/waist, both arms/hands, entire sinuous glowing blade and hilt, far outer robe, opposite RIGHT recovery leg. No new pose/camera/zoom/composition. Never redraw the whole body. Naturally reconnect local inner robe folds to the genuine bent support chain; remove the old extended support foot/leg below its new position so no detached sole or third boot remains. Final image has original transparent background, no floor/shadow/grid/text/markers. Only this one new bounded landing articulation, no sprite sheet.",
+  "transparent_background": true,
+  "fixed_runtime_canvas": 1936,
+  "generation_budget": "ONE private production image edit; no repeated service call",
+  "bounded_mask_proposal_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/bounded-mask-proposal.json",
+  "bounded_mask_proposal_sha256": "075eb48f1fcc6a0f16cf83eeb34eb09fc6382ad2c6b78dd96ddd27fdd6df66bf",
+  "actor_approval": false,
+  "requested_utc": "2026-10-19T17:35:45.171401+00:00"
+}

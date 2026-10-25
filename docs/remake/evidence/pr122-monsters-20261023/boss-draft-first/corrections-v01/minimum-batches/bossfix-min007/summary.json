@@ -1,0 +1,75 @@
+{
+  "label": "bossfix-min007",
+  "checked_new_sheets": 6,
+  "safe_played_clips": 0,
+  "held": [
+    {
+      "slug": "iris",
+      "clip": "W-idle-v02",
+      "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+    },
+    {
+      "slug": "iris",
+      "clip": "W-run-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NE-hit-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NW-idle-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "SW-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-idle-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [],
+  "runtime": null,
+  "source_pins": [
+    {
+      "slug": "iris",
+      "clip": "W-idle-v02",
+      "sha256": "203e5daee9de2cb6888f814a87e99d20a08b2d50fadf82a899e4d8267620bf67"
+    },
+    {
+      "slug": "iris",
+      "clip": "W-run-v02",
+      "sha256": "7a790169ae2292797a2ab273acaaf5efa513d79d39134e772813d07c529268a9"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NE-hit-v02",
+      "sha256": "f232abe94d2b9ebcba8687c50b7a1b3913ed97611a7dd94d931e2ac3ecbef8ff"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NW-idle-v02",
+      "sha256": "0642f919387036ce33d2468db87b486089d05191cb243dc9b91d67e220a4ff3d"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "SW-hit-v02",
+      "sha256": "512ca0c37bb52cb56e8a969bb20925ed2ff9c18f6ebbbc5956f3400cdc9cb968"
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-idle-v02",
+      "sha256": "0dc5d44a41f4b9b9b5d24a2123d4aea5e61a87a58f1a5161fb680d8b84c7e590"
+    }
+  ]
+}

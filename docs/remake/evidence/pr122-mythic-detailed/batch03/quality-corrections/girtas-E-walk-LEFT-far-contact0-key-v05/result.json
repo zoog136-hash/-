@@ -1,0 +1,51 @@
+{
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v05LEFTcontact0",
+  "status": "GENERATED_SINGLE_CONTACT_PARTIAL_VALID_RIGHT3_CANDIDATE_LEFT0_HOLD",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "game_pose_map": [
+    0
+  ],
+  "request_path": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v05/request.json",
+  "request_sha256": "e5cdbacf78852eed3d0f9f17d5dab9cc3040c1db218e54c01f1060e0f224f7dd",
+  "original_generated_file": "/workspace/generated_images/exec-af848535-c557-4ecd-a2d3-cc83e800bd14.png",
+  "raw_path": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v05/girtas-E-walk-LEFT-far-contact0-v05.png",
+  "raw_png": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v05/girtas-E-walk-LEFT-far-contact0-v05.png",
+  "raw_sha256": "223b31a22d2b7db14303778d9dca14dd0d4567145077e55a9a71708faf1aca9b",
+  "raw_bytes": 1384357,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v05/generated-private.jpg",
+  "private_preview_bytes": 131301,
+  "source_visual_status": "PARTIAL_PASS_RIGHT_CONTACT3_CANDIDATE_ONLY",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T14:13:38.952565+00:00",
+  "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+  "outer_edge_alpha100_count": 0,
+  "requested_game_pose": 0,
+  "observed_candidate_game_pose": 3,
+  "visual_findings": [
+    "Faithful same E camera/pale profile/longpalehair/HARD goldradialspines/longblackgoldrobe/RIGHTnear sinuousweapon/LEFTfree, two arms and two complete legchains; strict single geometryPASS and no outeredgeclipping.",
+    "The requested farLEFT leading heel upperlane did not occur: leading screenRIGHT boot heel is visibly LOWER than trailing screenLEFT toe plane, leading shin/boot is foreground/near-looking; nearRIGHT leads instead of farLEFT. Do not relabel this as successful LEFT0.",
+    "The actual pose is coherent RIGHTnear heel-contact candidate3: front heel bears low/near contact with toes lifted, rear farLEFT toe higher/upper plane with heel lifted, visible moderate walking double-support rather than flight/run. Preserve as candidate3 pending independent opposite-pair ownership check, not fullcyclePASS.",
+    "No whole6 retry/limbpatch/mirror/rescale/pixel cleanup. Next materialnew contact0 uses CURRENT Eidle minimal preexisting farLEFT-front stance with shorter explicit step and heel/toe roll authority, not this wronglead as primary."
+  ],
+  "visual_limitations": [
+    "FarLEFTcontact0 still missing. A candidateoppositeRIGHT3 alone is not full walk or actorapproval; cannot count game0 from anatomy labels."
+  ],
+  "independent_opposite_pair_status": "HOLD_NO_CONFIRMED_OPPOSITE_HIP_TO_THIGH_EXCHANGE",
+  "independent_opposite_pair_review": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-A-v05-B-v06-independent-opposite-contact-review.json",
+    "sha256": "d4102300416ac82154ed85ec9af9ba6ff0f2fdb2952759458cacbb658a4cee24",
+    "summary": "BconsistentwithoriginalfarLEFTfront; Aproximalhip/thighcrossingunderrobeunproven, soleYsignaloneinsufficient. Neither declaredcompleteoppositepair."
+  }
+}

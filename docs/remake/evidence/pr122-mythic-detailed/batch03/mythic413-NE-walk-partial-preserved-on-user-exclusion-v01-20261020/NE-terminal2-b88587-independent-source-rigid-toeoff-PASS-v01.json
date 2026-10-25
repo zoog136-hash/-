@@ -1,0 +1,84 @@
+{
+  "schema": "PR122-independent-actual-terminal-shoe-and-unit-gait-review-v1",
+  "status": "PASS_NE_TERMINAL2_ACTUAL_SOURCE_AND_RIGID_TOEOFF_UNIT",
+  "source_visual_status": "PASS_UNIT_SOURCE_ONLY",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "walk",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-terminal2-rigid-toeoff-v02/NE-terminal2-actual-native-rigid-toeoff-v02.png",
+    "sha256": "b88587d701550ad89bc900a6579eb4eb6c63fb850706ed766e0602c029134ce0",
+    "bytes": 774442
+  },
+  "author_finite_contract": {
+    "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-terminal2-rigid-toeoff-v02/NE-terminal2-rigid-shoe-articulation-finite-proof-v02.json",
+    "sha256": "1c2e7f59864f46e0c1efb1e614316a6e12aeaef90726046e00962c14d0d5b3f1",
+    "bytes": 2525
+  },
+  "physical_C_fixed": 2432,
+  "common_rig_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "canvas_extension_only": [
+    282,
+    282
+  ],
+  "independent_rigid_foot_and_nominal_bone_errors": {
+    "surface_projection_identity": 1.1102230246251565e-16,
+    "rigid_rotation_orthogonality": 1.1102230246251565e-16,
+    "rotation_determinant": 0.0,
+    "authored_affine": 0.0,
+    "heel_target": 0.0,
+    "ankle_target": 0.0,
+    "fixed_bone_length": 1.7053025658242404e-13,
+    "knee_projection": 0.0
+  },
+  "actual_source_front_outsole_pixel": {
+    "point": [
+      855,
+      1005
+    ],
+    "RGBA": [
+      25,
+      16,
+      5,
+      228
+    ]
+  },
+  "actual_front_outsole_target": [
+    590.5334928446748,
+    1243.0198564397926
+  ],
+  "actual_heel_target": [
+    542.4690829346384,
+    1235.0480301884436
+  ],
+  "actual_heel_raise_native_height": 27.890410538391137,
+  "final_rigid_foot_alpha_gt100_min_height_native": -1.4167140930448183,
+  "observation_uncertainty_native": 3,
+  "strong_body_component_areas": [
+    277714
+  ],
+  "visual_findings": [
+    "The same complete unique RIGHT shoe now performs genuine toeoff with a raised heel about the actual black frontsole pivot.",
+    "Natural articulated near-leg and the complete far LEFT late-air shoe remain visible, with the far calf correctly continuing beneath the original coat.",
+    "Fixed body/material density, complete RIGHT-held staff, skirt, free hand and cloth continuity remain intact; padding extends storage without resampling or changing C/root."
+  ],
+  "visual_limitations": [
+    "This approves actual phase2 static source and the declared rigid-foot unit only; final free-arm counterphase updates/full6/5→0/game remain pending.",
+    "Footsurface and hip/61+61 nominal bone depths are constructive authoring choices, not unique anatomical reconstruction from pixels.",
+    "The earlier0→1 source is flat-contact, not heel-only footroll; tiny integer raster contact residual is retained."
+  ],
+  "private_ledger_snapshot": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NE2-and-Nattack-arm-view59-frozen.json",
+    "sha256": "3360eaae62e7f32737c264fcdb075efc4f56e94a73fe65d129d1a6510867587c",
+    "bytes": 28314
+  },
+  "actor_approvals_added": 0,
+  "images_forwarded": 0
+}

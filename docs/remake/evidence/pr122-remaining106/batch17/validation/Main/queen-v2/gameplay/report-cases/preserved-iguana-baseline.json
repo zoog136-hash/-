@@ -1,0 +1,2802 @@
+{
+	"boss": [],
+	"checks": 1467,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792376676.6609,
+				"expires_at": 1792377276.6609,
+				"grade": "일반",
+				"hunt_batch": "ffd04c34156adb96aa571faf0515b200",
+				"id": "9cca3cbe3ce696bb5d6734c9aed2c2a8",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1880,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 27
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(95.15625, 0.0)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(67.3125, 67.3125)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 95.15625)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-67.3125, 67.3125)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-95.15625, 0.0)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-67.3125, -67.3125)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -95.15625)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(67.3125, -67.3125)",
+			"name": "알비노 이구아나",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 34,
+			"facing": 0,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 1,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 2,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 3,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 4,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 5,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 6,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 7,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		}
+	],
+	"physics_ticks": 1206,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25333.982421875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "f146740dc58f7572021ef5c53f93e573eb512fb6b5cecc903250c192fc6c42a5",
+			"visible_body_viewport": [
+				519.927490234375,
+				235.582107543945,
+				180.510375976562,
+				208.420211791992
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25333.982421875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "f146740dc58f7572021ef5c53f93e573eb512fb6b5cecc903250c192fc6c42a5",
+			"visible_body_viewport": [
+				519.927490234375,
+				235.582107543945,
+				180.510375976562,
+				208.420211791992
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25347.859375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-walk-native-1.png",
+			"physics_tick": 26,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "08dd60043552df889d1a44a3f6a941e72d8c929a42edc633b0ac385f13a31bbb",
+			"visible_body_viewport": [
+				485.793151855469,
+				206.668334960938,
+				222.475524902344,
+				237.333984375
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25361.736328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-walk-native-2.png",
+			"physics_tick": 34,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "b5a944ba22ab412c6ee9abafe41b5bfaa22fb7a66425cb71a6ef43cf5bc021bf",
+			"visible_body_viewport": [
+				492.82470703125,
+				213.495193481445,
+				223.077880859375,
+				230.507125854492
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25375.61328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-walk-native-3.png",
+			"physics_tick": 42,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "21b9550f86f1194b4c702aef91616a4df8c6cf486a19f1788610d1ce59024231",
+			"visible_body_viewport": [
+				510.695007324219,
+				207.069900512695,
+				200.990966796875,
+				236.932418823242
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25427.15625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-attack-0.png",
+			"physics_tick": 70,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "95324a72c149784989095492e41e6152fe0df53d67d7fa41c7a2a16ea67e93cf",
+			"visible_body_viewport": [
+				545.390014648438,
+				245.039627075195,
+				154.951782226562,
+				201.139389038086
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25427.15625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-attack-1.png",
+			"physics_tick": 88,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "9fe713d21d07d88e09cb42a986a0a0e601b241b90a4a6dd7f2640a236ae2ed41",
+			"visible_body_viewport": [
+				550.604736328125,
+				301.656616210938,
+				270.420715332031,
+				144.522369384766
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25427.15625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-E-contact.png",
+			"physics_tick": 88,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "9fe713d21d07d88e09cb42a986a0a0e601b241b90a4a6dd7f2640a236ae2ed41",
+			"visible_body_viewport": [
+				550.604736328125,
+				301.656616210938,
+				270.420715332031,
+				144.522369384766
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25374.408203125,
+				22746.408203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-walk.png",
+			"physics_tick": 101,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "1a77750c30d1abf06cd54002cead56b42c9a3a6f013ae8290da65d5324abb50e",
+			"visible_body_viewport": [
+				490.816802978516,
+				203.054107666016,
+				225.085784912109,
+				240.948211669922
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25374.408203125,
+				22746.408203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-walk-native-2.png",
+			"physics_tick": 101,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "1a77750c30d1abf06cd54002cead56b42c9a3a6f013ae8290da65d5324abb50e",
+			"visible_body_viewport": [
+				490.816802978516,
+				203.054107666016,
+				225.085784912109,
+				240.948211669922
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25377.212890625,
+				22749.212890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-walk-native-3.png",
+			"physics_tick": 104,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "c0facf53a675605e0cbdfbb92188d10e3c319c07f18fd9579a8115685c99d62a",
+			"visible_body_viewport": [
+				469.529113769531,
+				194.420120239258,
+				226.491333007812,
+				249.58219909668
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25387.029296875,
+				22759.029296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-walk-native-0.png",
+			"physics_tick": 112,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "f4683c3363ba260b8235f1cc5d7abd197bf04c9eef69e0e46efb3502933718c0",
+			"visible_body_viewport": [
+				497.037384033203,
+				196.743545532227,
+				227.868194580078,
+				247.373519897461
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25396.845703125,
+				22768.845703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-walk-native-1.png",
+			"physics_tick": 120,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "14f62099920cf98a9694f24d2d4b230d9c87434cf88b3425f3a4a6e5186f1d47",
+			"visible_body_viewport": [
+				515.911682128906,
+				196.833511352539,
+				219.865234375,
+				247.172714233398
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25440.318359375,
+				22812.318359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-attack-0.png",
+			"physics_tick": 153,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "1c57df514a83303ae53e6887b54e662139a2b100429d8249216891d2254cb6de",
+			"visible_body_viewport": [
+				558.80322265625,
+				256.958984375,
+				154.206848144531,
+				189.220031738281
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25440.318359375,
+				22812.318359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-attack-1.png",
+			"physics_tick": 171,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "993b4073261799fb83fc18d8c0eef6171be9416922fc10c2026df745435344a7",
+			"visible_body_viewport": [
+				557.313293457031,
+				297.931823730469,
+				230.192810058594,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25440.318359375,
+				22812.318359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SE-contact.png",
+			"physics_tick": 171,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "993b4073261799fb83fc18d8c0eef6171be9416922fc10c2026df745435344a7",
+			"visible_body_viewport": [
+				557.313293457031,
+				297.931823730469,
+				230.192810058594,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22705.982421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-walk.png",
+			"physics_tick": 184,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "e90d374bb626040c07c849b06850448eb2f84bff2138bd0dcba883aa4c7c3282",
+			"visible_body_viewport": [
+				557.339599609375,
+				220.919006347656,
+				189.632751464844,
+				227.142517089844
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22705.982421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-walk-native-1.png",
+			"physics_tick": 184,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "e90d374bb626040c07c849b06850448eb2f84bff2138bd0dcba883aa4c7c3282",
+			"visible_body_viewport": [
+				557.339599609375,
+				220.919006347656,
+				189.632751464844,
+				227.142517089844
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22713.912109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-walk-native-2.png",
+			"physics_tick": 189,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "59ad1a9f3c4962c9f2b1061164e52ce7335a9a0867a82764d4edf23d0bba0e21",
+			"visible_body_viewport": [
+				519.135131835938,
+				225.086761474609,
+				189.632751464844,
+				223.669403076172
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22729.771484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-walk-native-3.png",
+			"physics_tick": 198,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "efdb5b2a8bc0c022e33c2cf0901a8df9555a0b18ed8cf2598ee5d9dfa312fc22",
+			"visible_body_viewport": [
+				522.608276367188,
+				221.613632202148,
+				188.243530273438,
+				226.447891235352
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22743.6484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-walk-native-0.png",
+			"physics_tick": 206,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "467744d6566fc6aa72edddcad3470fd0989d5cb47b1e90cd99264f987de8a262",
+			"visible_body_viewport": [
+				545.530944824219,
+				225.086761474609,
+				187.548889160156,
+				222.974761962891
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22799.15625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-attack-0.png",
+			"physics_tick": 236,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "ae9bd43d8fb3ea08d5f018465f9c5df466c25f187dfbc335eb7a1b5b03d3b73e",
+			"visible_body_viewport": [
+				558.79931640625,
+				250.999313354492,
+				148.247192382812,
+				195.92463684082
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22799.15625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-attack-1.png",
+			"physics_tick": 254,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "b82d77c4aa5c08f8ab62d571da9e7f44020da3b784ff6c58ab6a92fa25572824",
+			"visible_body_viewport": [
+				561.779113769531,
+				293.462066650391,
+				147.502197265625,
+				168.361114501953
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22799.15625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-S-contact.png",
+			"physics_tick": 254,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "b82d77c4aa5c08f8ab62d571da9e7f44020da3b784ff6c58ab6a92fa25572824",
+			"visible_body_viewport": [
+				561.779113769531,
+				293.462066650391,
+				147.502197265625,
+				168.361114501953
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25569.591796875,
+				22746.408203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-walk.png",
+			"physics_tick": 267,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "f2d70b7ac6aee936c65cd85baf4ac21a40fb44891d6326f904964201f99cdaae",
+			"visible_body_viewport": [
+				533.690734863281,
+				257.449981689453,
+				225.469116210938,
+				189.837982177734
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25569.591796875,
+				22746.408203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-walk-native-0.png",
+			"physics_tick": 267,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "f2d70b7ac6aee936c65cd85baf4ac21a40fb44891d6326f904964201f99cdaae",
+			"visible_body_viewport": [
+				533.690734863281,
+				257.449981689453,
+				225.469116210938,
+				189.837982177734
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25559.775390625,
+				22756.224609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-walk-native-1.png",
+			"physics_tick": 275,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "10c8e3b8db254593e44b9253f3bc4e89a337eef6f41eaba179604bd6e9dd6f28",
+			"visible_body_viewport": [
+				575.163024902344,
+				240.510589599609,
+				224.300903320312,
+				207.361511230469
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25549.958984375,
+				22766.041015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-walk-native-2.png",
+			"physics_tick": 283,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "c38b217e9725a80db3d6de67249481f9bc4c57cc0f760ef9574cb7d7eb0a21ef",
+			"visible_body_viewport": [
+				552.382446289062,
+				258.618225097656,
+				226.05322265625,
+				188.669769287109
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25540.142578125,
+				22775.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-walk-native-3.png",
+			"physics_tick": 291,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "48939a7e2a3bf95a434c6d3cd00fcf0a36100bff111a99e2c336d2a9dd561d7a",
+			"visible_body_viewport": [
+				500.980163574219,
+				242.850967407227,
+				221.964416503906,
+				207.94563293457
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25503.681640625,
+				22812.318359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-attack-0.png",
+			"physics_tick": 319,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "a220065398ef86961dc07c4d3ef29a8843debcf1f630b4af445687f32d83c306",
+			"visible_body_viewport": [
+				575.933349609375,
+				252.489227294922,
+				166.126220703125,
+				193.689788818359
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25503.681640625,
+				22812.318359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-attack-1.png",
+			"physics_tick": 337,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "16fda3b8a992edab6f2f3356a71fb1c88553a180f16b7ebe6102d34b2253da4e",
+			"visible_body_viewport": [
+				492.497802734375,
+				297.931823730469,
+				236.152526855469,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25503.681640625,
+				22812.318359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-SW-contact.png",
+			"physics_tick": 337,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "16fda3b8a992edab6f2f3356a71fb1c88553a180f16b7ebe6102d34b2253da4e",
+			"visible_body_viewport": [
+				492.497802734375,
+				297.931823730469,
+				236.152526855469,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25610.017578125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-walk.png",
+			"physics_tick": 350,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "60d0b2885cbe8e1b52612f7e1277dfd66fb70e1fa5667059fc86347bf217543e",
+			"visible_body_viewport": [
+				567.264404296875,
+				214.642562866211,
+				203.314392089844,
+				229.474502563477
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25610.017578125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-walk-native-2.png",
+			"physics_tick": 350,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "60d0b2885cbe8e1b52612f7e1277dfd66fb70e1fa5667059fc86347bf217543e",
+			"visible_body_viewport": [
+				567.264404296875,
+				214.642562866211,
+				203.314392089844,
+				229.474502563477
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25606.052734375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-walk-native-3.png",
+			"physics_tick": 353,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "0bb1ca7ac9e2f8d4670119505aebeccb64c29fc0982b4cb2b298e77c13a5b625",
+			"visible_body_viewport": [
+				571.094360351562,
+				202.361724853516,
+				222.669372558594,
+				241.723663330078
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25592.17578125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-walk-native-0.png",
+			"physics_tick": 361,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "533b8ce6296406609138c0ae32b38a7553015aaf8d6e70c1de34f6aec373b76a",
+			"visible_body_viewport": [
+				574.542419433594,
+				207.270690917969,
+				198.983093261719,
+				236.731628417969
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25578.298828125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-walk-native-1.png",
+			"physics_tick": 369,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "017110bfb7927400a655fc69cf66cc40f6b55b723362d4e612ba3f32e0aad2c2",
+			"visible_body_viewport": [
+				562.70361328125,
+				202.652526855469,
+				193.561767578125,
+				241.349792480469
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25516.84375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-attack-0.png",
+			"physics_tick": 402,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "50b536d4a4256ddbd9a3951cc3506d97b234a5aab45f25a5544612c7c8cb4159",
+			"visible_body_viewport": [
+				573.253723144531,
+				226.849227905273,
+				207.910766601562,
+				219.418716430664
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25516.84375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-attack-1.png",
+			"physics_tick": 420,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "71a15ef82647693503da383684dd76b549cb48a43e26125fd0ad491e92128c67",
+			"visible_body_viewport": [
+				452.803588867188,
+				292.828308105469,
+				322.223266601562,
+				153.439666748047
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25516.84375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-W-contact.png",
+			"physics_tick": 420,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "71a15ef82647693503da383684dd76b549cb48a43e26125fd0ad491e92128c67",
+			"visible_body_viewport": [
+				452.803588867188,
+				292.828308105469,
+				322.223266601562,
+				153.439666748047
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25569.591796875,
+				22941.591796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-walk.png",
+			"physics_tick": 433,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "9967567062c79b547cd64de1b9d6077746404b2ad7449da8c8b9a7ab5dc95846",
+			"visible_body_viewport": [
+				532.37646484375,
+				206.869110107422,
+				215.046264648438,
+				237.133209228516
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25569.591796875,
+				22941.591796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-walk-native-1.png",
+			"physics_tick": 433,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "9967567062c79b547cd64de1b9d6077746404b2ad7449da8c8b9a7ab5dc95846",
+			"visible_body_viewport": [
+				532.37646484375,
+				206.869110107422,
+				215.046264648438,
+				237.133209228516
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25563.982421875,
+				22935.982421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-walk-native-2.png",
+			"physics_tick": 438,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "7cbec7e1df09aad9f7f3749aaa70ce552dc70a2bb0bbac52723ae9d682c88488",
+			"visible_body_viewport": [
+				545.22705078125,
+				212.577285766602,
+				225.573425292969,
+				231.539779663086
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25552.763671875,
+				22924.763671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-walk-native-3.png",
+			"physics_tick": 447,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "e12804fa6e268c0f2db43439e91caff7d9b5de836f55f53aa28b0986c9b8c670",
+			"visible_body_viewport": [
+				563.298156738281,
+				207.676177978516,
+				229.703979492188,
+				236.330047607422
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25542.947265625,
+				22914.947265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-walk-native-0.png",
+			"physics_tick": 455,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "822e81e591b05fdbb493077ec761cd16e64ba23dbf7586dac39fe0d2e3618bd2",
+			"visible_body_viewport": [
+				549.85302734375,
+				207.069900512695,
+				232.314208984375,
+				236.932418823242
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25503.681640625,
+				22875.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-attack-0.png",
+			"physics_tick": 485,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "5e5c1dbc5d47307d1505f06c0a530fa79cbfcad7f54777175d89e8304d0ec9f6",
+			"visible_body_viewport": [
+				583.227294921875,
+				229.921936035156,
+				182.593200683594,
+				219.418701171875
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25503.681640625,
+				22875.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-attack-1.png",
+			"physics_tick": 503,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "b963b62c8f7a83ecf200b75c2dcce533bb556724f02cf73668a6c4a5cb7cb970",
+			"visible_body_viewport": [
+				538.729797363281,
+				228.387542724609,
+				234.7626953125,
+				219.418731689453
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25503.681640625,
+				22875.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NW-contact.png",
+			"physics_tick": 503,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "b963b62c8f7a83ecf200b75c2dcce533bb556724f02cf73668a6c4a5cb7cb970",
+			"visible_body_viewport": [
+				538.729797363281,
+				228.387542724609,
+				234.7626953125,
+				219.418731689453
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22982.017578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-walk.png",
+			"physics_tick": 516,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "d5a6a7525c62e3800de6305a6c07d4832f30cd6e907df9efd7e9d9eb1981e6b7",
+			"visible_body_viewport": [
+				542.849670410156,
+				259.692993164062,
+				165.001342773438,
+				187.618347167969
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22982.017578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-walk-native-0.png",
+			"physics_tick": 516,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "d5a6a7525c62e3800de6305a6c07d4832f30cd6e907df9efd7e9d9eb1981e6b7",
+			"visible_body_viewport": [
+				542.849670410156,
+				259.692993164062,
+				165.001342773438,
+				187.618347167969
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22968.140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-walk-native-1.png",
+			"physics_tick": 524,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "15a23866db8bc158a5676c22887191ca490d8e5614981c4298d307b80fcded05",
+			"visible_body_viewport": [
+				516.634521484375,
+				255.066787719727,
+				171.169616699219,
+				191.730514526367
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22954.263671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-walk-native-2.png",
+			"physics_tick": 532,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "2625d700a72daee99826cf1f76b5088dd0d1063e024448f7f82c88049df8b7a2",
+			"visible_body_viewport": [
+				572.663024902344,
+				266.375305175781,
+				178.365905761719,
+				180.93603515625
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22940.38671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-walk-native-3.png",
+			"physics_tick": 540,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "8758ec821728994b0ec2eb965cc0d510966ae62b83c599f5baac89be20c288be",
+			"visible_body_viewport": [
+				590.139770507812,
+				249.926559448242,
+				170.655578613281,
+				197.384780883789
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22888.84375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-attack-0.png",
+			"physics_tick": 568,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "748abc5270040622bce6cdba23f8bd1b789cce6af3ba79bb78f1e91e5da6761b",
+			"visible_body_viewport": [
+				565.581787109375,
+				232.219619750977,
+				148.836486816406,
+				220.185897827148
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22888.84375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-attack-1.png",
+			"physics_tick": 586,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "69aca53bdbeb235128b38f67a1564e1468fbe7ea5407638d4df466d14d2c55c8",
+			"visible_body_viewport": [
+				565.581787109375,
+				202.298889160156,
+				145.00048828125,
+				264.683410644531
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25472.0,
+				22888.84375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-N-contact.png",
+			"physics_tick": 586,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "69aca53bdbeb235128b38f67a1564e1468fbe7ea5407638d4df466d14d2c55c8",
+			"visible_body_viewport": [
+				565.581787109375,
+				202.298889160156,
+				145.00048828125,
+				264.683410644531
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25374.408203125,
+				22941.591796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-walk.png",
+			"physics_tick": 599,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "bff525be5d4c0cd5f91cfd4396fcfb2f206f6be616f046932a378a397b31e969",
+			"visible_body_viewport": [
+				495.033386230469,
+				196.428024291992,
+				210.62890625,
+				247.574295043945
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25374.408203125,
+				22941.591796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-walk-native-2.png",
+			"physics_tick": 599,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "bff525be5d4c0cd5f91cfd4396fcfb2f206f6be616f046932a378a397b31e969",
+			"visible_body_viewport": [
+				495.033386230469,
+				196.428024291992,
+				210.62890625,
+				247.574295043945
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25377.212890625,
+				22938.787109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-walk-native-3.png",
+			"physics_tick": 602,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "f38c89741e990225840e7521fea6e9bee6e85cfdacb6b7d0df812c70d0bb2e4a",
+			"visible_body_viewport": [
+				509.887939453125,
+				204.865127563477,
+				207.215454101562,
+				239.141098022461
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25387.029296875,
+				22928.970703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-walk-native-0.png",
+			"physics_tick": 610,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "eaf9ba26134d54ade11c8cdd48efddb0a56e89773317222eb60e0c52a7230cea",
+			"visible_body_viewport": [
+				507.679260253906,
+				205.865173339844,
+				213.038391113281,
+				238.137145996094
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25396.845703125,
+				22919.154296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-walk-native-1.png",
+			"physics_tick": 618,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "5485f0a2320fad5782d63816c906e8d134f0d361eeba9271ca56b806dc3e8337",
+			"visible_body_viewport": [
+				487.801025390625,
+				203.455688476562,
+				203.802001953125,
+				240.546630859375
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25440.318359375,
+				22875.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-attack-0.png",
+			"physics_tick": 651,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "841e84748c47eda03c8a4ef90d4983df9f2026e39313ef19dddf477b89e10069",
+			"visible_body_viewport": [
+				500.373809814453,
+				226.853134155273,
+				194.868377685547,
+				220.185928344727
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25440.318359375,
+				22875.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-attack-1.png",
+			"physics_tick": 669,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "279d02e1cd36c469f4937b4e5683e9638e4d3b15ef9052bf292a38a587966997",
+			"visible_body_viewport": [
+				488.865844726562,
+				236.059524536133,
+				300.74169921875,
+				210.979537963867
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				25440.318359375,
+				22875.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/ai-NE-contact.png",
+			"physics_tick": 669,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "279d02e1cd36c469f4937b4e5683e9638e4d3b15ef9052bf292a38a587966997",
+			"visible_body_viewport": [
+				488.865844726562,
+				236.059524536133,
+				300.74169921875,
+				210.979537963867
+			]
+		},
+		{
+			"actor_hp": 1686,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/lifecycle-hit.png",
+			"physics_tick": 692,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "b5bd569a82f0ea3c3b799950c8ca5d107282c6c825b169f855a1acd57ba15b43",
+			"visible_body_viewport": [
+				533.567016601562,
+				258.150939941406,
+				197.747619628906,
+				187.467163085938
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/lifecycle-ground-drop.png",
+			"physics_tick": 1103,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "69ca96131fa60009c447a20d1aedb579060297056f1e5313435c44d13f15bc43",
+			"visible_body_viewport": [
+				551.3310546875,
+				214.458984375,
+				175.410278320312,
+				231.310302734375
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/lifecycle-death-0.png",
+			"physics_tick": 1105,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "a7114e2c227be8864fa53d2135ef92cdca14dbc39811399db72f0fff6b2edb83",
+			"visible_body_viewport": [
+				523.286560058594,
+				270.245574951172,
+				225.565368652344,
+				176.582000732422
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/lifecycle-manual-pickup.png",
+			"physics_tick": 1116,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "5342a7169eafbd14c1273f309ed345099c00a6860a39dc5e59cb542a8c307e5f",
+			"visible_body_viewport": [
+				523.286560058594,
+				270.245574951172,
+				225.565368652344,
+				176.582000732422
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/lifecycle-death-1.png",
+			"physics_tick": 1119,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "aae8b2301a6fa24065ff7f6a65602d5e1ac002f2da9d06cd80e5b7d37b67b5f6",
+			"visible_body_viewport": [
+				529.938598632812,
+				362.769714355469,
+				263.663513183594,
+				107.642456054688
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/runtime/batch17/Queen-QA-v02/gameplay/captures/preserved-iguana-baseline/lifecycle-death-2.png",
+			"physics_tick": 1133,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "a535f2e2278fc6ed003a7d58c38944113d5ebb7266c36239516222db15e3e3ca",
+			"visible_body_viewport": [
+				526.310241699219,
+				378.492767333984,
+				295.71435546875,
+				91.3146667480469
+			]
+		}
+	],
+	"scope": "original-based albino_iguana_monster_authored, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-walk-native-3.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-3.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-3.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-3.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-3.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-3.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-3.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-3.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "알비노 이구아나",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_2.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

@@ -1,0 +1,54 @@
+{
+  "key": "transform:288",
+  "file": "run-E-05-flight-B.png",
+  "raw_source": "/workspace/generated_images/exec-d7107f10-d0e3-48ba-bed5-a41ea46501f2.png",
+  "source_sha256": "1a89a8c1062a363ba082526427c80bf7b5c5ac06eb9ee7b7932191083d437488",
+  "bytes": 1284034,
+  "direction": "E",
+  "physical_visual_review": "PILOT: large foreground near thigh/paw leads RIGHT, smaller far leg trails LEFT, foreground arm back LEFT. Both complete attached chains opposite of flight-A. Requested80px gap atfloor950 not met; new candidate ground plane needed and original request retained. Final model/fullcycle HOLD.",
+  "source_only": true,
+  "production_applied": false,
+  "final_model_approval": false,
+  "actual_Main": "NOT_RUN",
+  "completed_added": 0,
+  "strict_geometry": "PASS",
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "E",
+        "region": [
+          302,
+          62,
+          932,
+          874
+        ],
+        "margin": [
+          558,
+          410,
+          1116,
+          1174
+        ],
+        "source_anchor": [
+          768,
+          932
+        ],
+        "rgba_sha256": "e26001027dc78a11cae502cdebee19237ec8b9f062e30672b23888b52fc84f38"
+      }
+    ],
+    "distinct_pixel_frames": 1,
+    "neutral_height": 868.0,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  }
+}
