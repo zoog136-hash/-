@@ -1,0 +1,331 @@
+{
+  "all_routes_equal": true,
+  "baseline": {
+    "count": 21,
+    "max_us": 335724,
+    "median_us": 6640,
+    "p95_us": 29170,
+    "p99_us": 335724
+  },
+  "cache_info": {
+    "graph_edges": 4278,
+    "graph_sample_checks": 32768,
+    "oracle_sample_checks": 2494
+  },
+  "current": {
+    "count": 21,
+    "max_us": 180928,
+    "median_us": 6372,
+    "p95_us": 14981,
+    "p99_us": 180928
+  },
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "memory": {
+    "rss_after_baseline_kib": 125104,
+    "rss_after_current_kib": 129264,
+    "rss_before_kib": 124996,
+    "static_after_bytes": 100353358.0,
+    "static_before_bytes": 96909094
+  },
+  "predicate_equal": true,
+  "predicate_segments": 189,
+  "routes": [
+    {
+      "baseline_us": 6990,
+      "current_us": 5543,
+      "exact_equal": true,
+      "from": [
+        3481.0,
+        5160.0
+      ],
+      "points": 3,
+      "to": [
+        3532.4111328125,
+        5088.79150390625
+      ]
+    },
+    {
+      "baseline_us": 29170,
+      "current_us": 14981,
+      "exact_equal": true,
+      "from": [
+        3593.0,
+        5160.0
+      ],
+      "points": 16,
+      "to": [
+        3948.875,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 335724,
+      "current_us": 180928,
+      "exact_equal": true,
+      "from": [
+        3529.0,
+        4824.0
+      ],
+      "points": 99,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 7801,
+      "current_us": 8005,
+      "exact_equal": true,
+      "from": [
+        3929.0,
+        4632.0
+      ],
+      "points": 69,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3866,
+      "current_us": 3873,
+      "exact_equal": true,
+      "from": [
+        3657.0,
+        5112.0
+      ],
+      "points": 11,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 13227,
+      "current_us": 12199,
+      "exact_equal": true,
+      "from": [
+        3529.0,
+        5160.0
+      ],
+      "points": 17,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 2917,
+      "current_us": 3147,
+      "exact_equal": true,
+      "from": [
+        4521.0,
+        4856.0
+      ],
+      "points": 11,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6962,
+      "current_us": 7304,
+      "exact_equal": true,
+      "from": [
+        3501.04248046875,
+        4815.2421875
+      ],
+      "points": 96,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3446,
+      "current_us": 3547,
+      "exact_equal": true,
+      "from": [
+        3642.75390625,
+        5123.318359375
+      ],
+      "points": 12,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 7139,
+      "current_us": 7573,
+      "exact_equal": true,
+      "from": [
+        3997.89111328125,
+        4616.638671875
+      ],
+      "points": 73,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6640,
+      "current_us": 6954,
+      "exact_equal": true,
+      "from": [
+        3571.0908203125,
+        4796.484375
+      ],
+      "points": 91,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6914,
+      "current_us": 6757,
+      "exact_equal": true,
+      "from": [
+        3386.681640625,
+        4777.98046875
+      ],
+      "points": 91,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 4019,
+      "current_us": 4015,
+      "exact_equal": true,
+      "from": [
+        3599.17529296875,
+        5144.52734375
+      ],
+      "points": 15,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 4246,
+      "current_us": 4059,
+      "exact_equal": true,
+      "from": [
+        4449.708984375,
+        4856.0
+      ],
+      "points": 10,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 255,
+      "current_us": 187,
+      "exact_equal": true,
+      "from": [
+        3584.87109375,
+        4793.4130859375
+      ],
+      "points": 91,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6794,
+      "current_us": 6719,
+      "exact_equal": true,
+      "from": [
+        4061.58984375,
+        4586.2841796875
+      ],
+      "points": 73,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3367,
+      "current_us": 3334,
+      "exact_equal": true,
+      "from": [
+        3702.36572265625,
+        5094.9169921875
+      ],
+      "points": 9,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 236,
+      "current_us": 262,
+      "exact_equal": true,
+      "from": [
+        3663.5947265625,
+        5113.529296875
+      ],
+      "points": 11,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 7358,
+      "current_us": 7209,
+      "exact_equal": true,
+      "from": [
+        3623.8828125,
+        4777.9521484375
+      ],
+      "points": 87,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6287,
+      "current_us": 6372,
+      "exact_equal": true,
+      "from": [
+        3456.24951171875,
+        4762.783203125
+      ],
+      "points": 87,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3920,
+      "current_us": 3881,
+      "exact_equal": true,
+      "from": [
+        4381.900390625,
+        4868.935546875
+      ],
+      "points": 8,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    }
+  ],
+  "scope": "same loaded field, two fresh graphs, same ordered endpoint trace; no per-predicate timers; diagnostic process RSS is not Android/GPU memory",
+  "trace_routes": 21
+}

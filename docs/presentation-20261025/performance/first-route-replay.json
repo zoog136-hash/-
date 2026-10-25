@@ -1,0 +1,331 @@
+{
+  "all_routes_equal": true,
+  "baseline": {
+    "count": 21,
+    "max_us": 339746,
+    "median_us": 6632,
+    "p95_us": 29635,
+    "p99_us": 339746
+  },
+  "cache_info": {
+    "graph_edges": 4278,
+    "graph_sample_checks": 4096,
+    "oracle_sample_checks": 2494
+  },
+  "current": {
+    "count": 21,
+    "max_us": 183149,
+    "median_us": 6229,
+    "p95_us": 16200,
+    "p99_us": 183149
+  },
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "memory": {
+    "rss_after_baseline_kib": 125092,
+    "rss_after_current_kib": 126108,
+    "rss_before_kib": 124988,
+    "static_after_bytes": 98100489.0,
+    "static_before_bytes": 96964121
+  },
+  "predicate_equal": true,
+  "predicate_segments": 189,
+  "routes": [
+    {
+      "baseline_us": 7361,
+      "current_us": 5760,
+      "exact_equal": true,
+      "from": [
+        3481.0,
+        5160.0
+      ],
+      "points": 3,
+      "to": [
+        3532.4111328125,
+        5088.79150390625
+      ]
+    },
+    {
+      "baseline_us": 29635,
+      "current_us": 16200,
+      "exact_equal": true,
+      "from": [
+        3593.0,
+        5160.0
+      ],
+      "points": 16,
+      "to": [
+        3948.875,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 339746,
+      "current_us": 183149,
+      "exact_equal": true,
+      "from": [
+        3529.0,
+        4824.0
+      ],
+      "points": 99,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 7747,
+      "current_us": 7761,
+      "exact_equal": true,
+      "from": [
+        3929.0,
+        4632.0
+      ],
+      "points": 69,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 4168,
+      "current_us": 3856,
+      "exact_equal": true,
+      "from": [
+        3657.0,
+        5112.0
+      ],
+      "points": 11,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 13467,
+      "current_us": 10337,
+      "exact_equal": true,
+      "from": [
+        3529.0,
+        5160.0
+      ],
+      "points": 17,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3236,
+      "current_us": 2886,
+      "exact_equal": true,
+      "from": [
+        4521.0,
+        4856.0
+      ],
+      "points": 11,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 9132,
+      "current_us": 6954,
+      "exact_equal": true,
+      "from": [
+        3501.04248046875,
+        4815.2421875
+      ],
+      "points": 96,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3450,
+      "current_us": 3470,
+      "exact_equal": true,
+      "from": [
+        3642.75390625,
+        5123.318359375
+      ],
+      "points": 12,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 7206,
+      "current_us": 7250,
+      "exact_equal": true,
+      "from": [
+        3997.89111328125,
+        4616.638671875
+      ],
+      "points": 73,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 7600,
+      "current_us": 6726,
+      "exact_equal": true,
+      "from": [
+        3571.0908203125,
+        4796.484375
+      ],
+      "points": 91,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6685,
+      "current_us": 6714,
+      "exact_equal": true,
+      "from": [
+        3386.681640625,
+        4777.98046875
+      ],
+      "points": 91,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 4161,
+      "current_us": 5013,
+      "exact_equal": true,
+      "from": [
+        3599.17529296875,
+        5144.52734375
+      ],
+      "points": 15,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 4090,
+      "current_us": 4022,
+      "exact_equal": true,
+      "from": [
+        4449.708984375,
+        4856.0
+      ],
+      "points": 10,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 207,
+      "current_us": 186,
+      "exact_equal": true,
+      "from": [
+        3584.87109375,
+        4793.4130859375
+      ],
+      "points": 91,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6632,
+      "current_us": 6531,
+      "exact_equal": true,
+      "from": [
+        4061.58984375,
+        4586.2841796875
+      ],
+      "points": 73,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3390,
+      "current_us": 3343,
+      "exact_equal": true,
+      "from": [
+        3702.36572265625,
+        5094.9169921875
+      ],
+      "points": 9,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 278,
+      "current_us": 234,
+      "exact_equal": true,
+      "from": [
+        3663.5947265625,
+        5113.529296875
+      ],
+      "points": 11,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6815,
+      "current_us": 6873,
+      "exact_equal": true,
+      "from": [
+        3623.8828125,
+        4777.9521484375
+      ],
+      "points": 87,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 6282,
+      "current_us": 6229,
+      "exact_equal": true,
+      "from": [
+        3456.24951171875,
+        4762.783203125
+      ],
+      "points": 87,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    },
+    {
+      "baseline_us": 3967,
+      "current_us": 3814,
+      "exact_equal": true,
+      "from": [
+        4381.900390625,
+        4868.935546875
+      ],
+      "points": 8,
+      "to": [
+        3936.5,
+        5016.0
+      ]
+    }
+  ],
+  "scope": "same loaded field, two fresh graphs, same ordered endpoint trace; no per-predicate timers; diagnostic process RSS is not Android/GPU memory",
+  "trace_routes": 21
+}

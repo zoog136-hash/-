@@ -4,6 +4,8 @@ extends AStar2D
 var field_ref: WeakRef
 var grid_point_limit: int
 var edge_checks: Dictionary = {}
+var sample_checks=preload("res://scripts/maps/native_line_sample_cache.gd").new()
+var sample_cache_supported: bool=false
 const ROUTE_CACHE_LIMIT: int=128
 var route_cache: Dictionary={}
 var route_order: Array[Vector4i]=[]
@@ -15,7 +17,8 @@ var failed_order: Array[Vector4]=[]
 
 func configure(field: RefCounted) -> void:
 	clear()
-	edge_checks.clear();route_cache.clear();route_order.clear()
+	edge_checks.clear();sample_checks.clear();route_cache.clear();route_order.clear()
+	sample_cache_supported=field.has_method("cached_line_clear")
 	failed_routes.clear();failed_order.clear()
 	field_ref=weakref(field)
 	grid_point_limit=field.width*field.height
@@ -49,7 +52,11 @@ func _filter_neighbor(from_id: int, neighbor_id: int) -> bool:
 	var key:=Vector2i(mini(from_id,neighbor_id),maxi(from_id,neighbor_id))
 	if not edge_checks.has(key):
 		# Physical edges are undirected; retain a check valid in both directions.
-		edge_checks[key]=field.line_clear(from,to) and field.line_clear(to,from)
+		# Shared exact samples avoid repeating the same immutable physical test.
+		if sample_cache_supported:
+			edge_checks[key]=field.cached_line_clear(from,to,sample_checks) and field.cached_line_clear(to,from,sample_checks)
+		else:
+			edge_checks[key]=field.line_clear(from,to) and field.line_clear(to,from)
 	return not bool(edge_checks[key])
 
 func _safe_destination(point: Vector2) -> Vector2:

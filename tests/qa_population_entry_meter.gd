@@ -12,6 +12,8 @@ func _spawn_slot(slot: Dictionary) -> void:
 	var points_before: int=point_us
 	var count: int=world.monsters_root.get_child_count()
 	super._spawn_slot(slot)
+	if world.physics_profile_script!=null:
+		for index: int in range(count,world.monsters_root.get_child_count()):world.install_actor_physics_profile(world.monsters_root.get_child(index))
 	spawn_costs.append({"region":str(slot.region.id),"slot":slot.slot_id,"total_us":Time.get_ticks_usec()-start,"point_us":point_us-points_before,"created":world.monsters_root.get_child_count()-count})
 func _process(delta: float) -> void:
 	var start: int=Time.get_ticks_usec()

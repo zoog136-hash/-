@@ -1,11 +1,11 @@
 {
   "scope": "latest per-check results across targeted runs, not one full-suite pass",
-  "unique_checks": 21,
-  "latest_pass": 21,
+  "unique_checks": 22,
+  "latest_pass": 22,
   "checks": {
     "boot": {
       "status": "PASS",
-      "summary": "followup/regression/summary.json"
+      "summary": "performance/spike-regression/summary.json"
     },
     "card_draw_fusion_test": {
       "status": "PASS",
@@ -17,7 +17,7 @@
     },
     "combat_timing_test": {
       "status": "PASS",
-      "summary": "evidence/audio-guard/summary.json"
+      "summary": "performance/spike-regression/summary.json"
     },
     "ground_drop_smoke_test": {
       "status": "PASS",
@@ -61,7 +61,7 @@
     },
     "auto_selection_order_test": {
       "status": "PASS",
-      "summary": "followup/regression/summary.json"
+      "summary": "performance/spike-regression/summary.json"
     },
     "presentation_catalog_compact_test": {
       "status": "PASS",
@@ -69,11 +69,11 @@
     },
     "native_png_route_recovery_test": {
       "status": "PASS",
-      "summary": "followup/regression/summary.json"
+      "summary": "performance/spike-regression/summary.json"
     },
     "native_route_failure_cache_test": {
       "status": "PASS",
-      "summary": "followup/regression/summary.json"
+      "summary": "performance/spike-regression/summary.json"
     },
     "spawn_safe_memo_test": {
       "status": "PASS",
@@ -86,6 +86,10 @@
     "presentation_detail_states_test": {
       "status": "PASS",
       "summary": "evidence/detail-states/logs/runner-final/summary.json"
+    },
+    "native_line_sample_cache_test": {
+      "status": "PASS",
+      "summary": "performance/spike-regression/summary.json"
     }
   },
   "full_ci": "HELD_BY_LATEST_USER_INSTRUCTION",
@@ -104,5 +108,12 @@
     "pixel_parity": "performance/raster-pixel-comparison.json",
     "resource_integrity": "evidence/raster-resource-integrity.log"
   },
-  "followup_scope": "5/5 final navigation/spawn/boot; UI detail final1/1 plus existing shop authority and UI integration; aggregated latest per-check results, not full CI"
+  "followup_scope": "5/5 final navigation/spawn/boot; UI detail final1/1 plus existing shop authority and UI integration; aggregated latest per-check results, not full CI",
+  "first_spike_followup": {
+    "focused_passed": 6,
+    "summary": "performance/spike-regression/summary.json",
+    "exact_replay": "performance/first-route-exact-baseline.json",
+    "complete_stall_resolved": false,
+    "next_measurement": "continuous per-frame Godot profiler / native thread trace for unattributed remainder"
+  }
 }

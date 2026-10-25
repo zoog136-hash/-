@@ -14,6 +14,7 @@ func run() -> void:
 	var target: Vector2=field.cell_to_world(Vector2i(44,12))
 	check(graph.route(source,target).is_empty(),"disconnected native islands remain unreachable")
 	check(graph.failed_routes.size()==1,"one exact failed endpoint pair retained")
+	check(graph.sample_checks.size()>0,"physical samples populated during failed search")
 	field.precise_routes=graph
 	check(field.path(source,target).is_empty(),"native AUTO path hook retains the exact failure")
 	check(not field.path(source,source+Vector2(16,0)).is_empty(),"native hook immediately accepts a moved reachable target")
@@ -33,6 +34,7 @@ func run() -> void:
 		for x: int in range(23,41):field.reachable[y*field.width+x]=1
 	graph.configure(field)
 	check(graph.failed_routes.is_empty(),"reconfiguration drops all old failure decisions")
+	check(graph.sample_checks.size()==0,"reconfiguration releases old physical sample decisions")
 	check(not graph.route(source,target).is_empty(),"opened corridor is reconsidered after geometry reconfiguration")
 	check(graph.get_point_count()>512,"newly configured geometry adds corridor points")
 	print("ROUTE_FAILURE_CACHE_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))

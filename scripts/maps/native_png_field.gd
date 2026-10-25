@@ -156,15 +156,29 @@ func _portal_endpoint(raw: Variant) -> Vector2:
 	return point
 
 func line_clear(from: Vector2,to: Vector2) -> bool:
-	# The raster physics occupies entire cells. Center-only shortcut tests can
-	# cut a solid cell corner with the real foot, stranding a click path before
-	# its next waypoint. Use the same foot for shortcutting and actor motion.
+	return _line_clear_points(from,to,null)
+
+func cached_line_clear(from: Vector2,to: Vector2, samples: RefCounted) -> bool:
+	# Used only by the immutable route graph; exact sample coordinates, never
+	# rounded cells. The graph owns and releases this bounded memo on configure.
+	return _line_clear_points(from,to,samples)
+
+func _line_clear_points(from: Vector2,to: Vector2,samples: Variant) -> bool:
+	# Preserve the original 2px interpolation and physical-foot checks exactly.
+	# Opposite directions still evaluate their own floating-point sample points.
 	var steps: int=maxi(1,ceili(from.distance_to(to)/2.0))
 	for i: int in range(steps+1):
 		var point: Vector2=from.lerp(to,float(i)/steps)
-		if not walkable(point) or not point_clear(point,4.0):return false
-		for offset: Vector2 in LANDING_BODY_OFFSETS:
-			if not walkable(point+offset):return false
+		var cached: int=-1 if samples==null else samples.lookup(point)
+		if cached>=0:
+			if cached==0:return false
+			continue
+		var clear: bool=walkable(point) and point_clear(point,4.0)
+		if clear:
+			for offset: Vector2 in LANDING_BODY_OFFSETS:
+				if not walkable(point+offset):clear=false;break
+		if samples!=null:samples.store(point,clear)
+		if not clear:return false
 	return true
 
 func _flood_portal_component(start: Vector2i) -> void:
