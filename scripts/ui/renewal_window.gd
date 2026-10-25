@@ -6,6 +6,7 @@ signal closed
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 const SafeArea = preload("res://scripts/ui/safe_area.gd")
+const Surface = preload("res://scripts/ui/renewal_surface.gd")
 var heading: Label
 var subtitle: Label
 var footer: Label
@@ -34,6 +35,9 @@ func _ready() -> void:
 	z_index = 150
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	add_theme_stylebox_override("panel",UI.chrome_panel(Color("201a17"),UI.BRONZE,8))
+	var surface := Surface.new()
+	surface.name = "WindowMaterialSurface"
+	add_child(surface)
 	var layout := VBoxContainer.new()
 	layout.add_theme_constant_override("separation",5)
 	add_child(layout)

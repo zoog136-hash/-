@@ -56,6 +56,8 @@ const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
 var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
 var loot_pickup: TwilightLootPickupController = LOOT_PICKUP_CONTROLLER.new()
+const PRESENTATION_AUDIO = preload("res://scripts/audio/presentation_audio.gd")
+var presentation_audio: Node
 const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
 var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
@@ -322,6 +324,11 @@ func _ready() -> void:
 	consumable_service.call("setup", self)
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
+	presentation_audio = PRESENTATION_AUDIO.new()
+	add_child(presentation_audio)
+	# Observe the existing released attack event; never drive its frame or timing.
+	player.attack_strike.connect(func(_cycle: int) -> void:
+		presentation_audio.play_world("attack", player.global_position))
 	_connect_signals()
 	if hud.has_signal("consumable_auto_settings_changed"):
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
@@ -2344,7 +2351,10 @@ func _drop_grade_color(grade: String) -> Color:
 			return Color("eeeeee")
 
 func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: int = 1, source_batch: String = "") -> Button:
-	return ground_loot.spawn(item_name, world_position, quantity, source_batch)
+	var view: Button = ground_loot.spawn(item_name, world_position, quantity, source_batch)
+	if is_instance_valid(view) and is_instance_valid(presentation_audio):
+		presentation_audio.play_world("drop", world_position)
+	return view
 
 func _collect_ground_drop(drop: Button) -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
@@ -2359,6 +2369,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var quantity: int = int(record["quantity"])
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.refresh_inventory(inventory)
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
@@ -2535,6 +2546,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			_refresh_combat_hud()
 			return
 	hp = maxi(0, hp - reduced)
+	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
 	if attacker.dead:
@@ -6940,6 +6952,7 @@ func _impact_player_attack(action: Dictionary) -> void:
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
+	if is_instance_valid(presentation_audio): presentation_audio.clear()
 	if original_skills != null: original_skills.clear()
 	combat_generation += 1
 	pending_attack.clear()
@@ -6953,6 +6966,9 @@ func show_combat_number(point: Vector2, value: String, color: Color, critical: b
 	if is_instance_valid(combat_vfx): combat_vfx.number(point, value, color, critical)
 
 func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "") -> void:
+	# Named skill hits retain their existing skill audio path.
+	if damage_kind.is_empty() and is_instance_valid(presentation_audio):
+		presentation_audio.play_world("impact", target.combat_hit_position(), critical)
 	if not is_instance_valid(combat_vfx): return
 	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
 	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)

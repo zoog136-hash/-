@@ -27,6 +27,16 @@ var synchronous_decodes: int=0
 var upload_count: int=0
 var cache_hits: int=0
 var shutting_down: bool=false
+# Cache only the visibility request, not stream progress. Explicit refresh calls
+# remain forced; movement, zoom, viewport, field and memory policy invalidate.
+var last_visibility_request: Array = []
+var visibility_refresh_count: int = 0
+
+func visibility_request() -> Array:
+	if field==null or player==null: return []
+	var camera: Camera2D=player.get_node("Camera2D")
+	return [field.get_instance_id(),camera.get_instance_id(),camera.get_screen_center_position(),camera.zoom,get_viewport_rect().size,texture_pixel_budget]
+
 
 func rows_in_view(camera: Camera2D, margin: float) -> Dictionary:
 	var extent: Vector2=get_viewport_rect().size/camera.zoom
@@ -119,7 +129,7 @@ func _process(delta: float) -> void:
 	clock-=delta
 	if clock<=0:
 		clock=.1
-		refresh_visible()
+		if last_visibility_request != visibility_request(): refresh_visible()
 	pump_stream()
 
 func release_source(filename: String) -> void:
@@ -198,6 +208,7 @@ func settle_visible(timeout_ms: int=10000) -> bool:
 
 func refresh_visible() -> void:
 	if field==null or player==null: return
+	visibility_refresh_count+=1
 	var camera: Camera2D=player.get_node("Camera2D")
 	var wanted: Dictionary=visible_rows(camera)
 	for attempt: int in range(12):
@@ -221,3 +232,5 @@ func refresh_visible() -> void:
 	for filename: String in wanted_rows:
 		if chunks.has(filename):
 			access_serial+=1;last_used[filename]=access_serial;cache_hits+=1
+	# Capture after any budget-driven camera adjustment.
+	last_visibility_request=visibility_request()

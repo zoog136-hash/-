@@ -5,6 +5,8 @@ extends RefCounted
 # legible parchment copy. No source-game textures are bundled.
 const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
 const ICONS = preload("res://scripts/ui/renewal_icons.gd")
+const MATERIAL = preload("res://scripts/ui/renewal_material_style.gd")
+static var source_icon_cache: Dictionary = {}
 
 const GOLD = Color("dcc391")
 const BRONZE = Color("766452")
@@ -45,7 +47,7 @@ static func chrome_panel(bg: Color = Color("0c0d11"), rim: Color = GOLD, margin:
 	return s
 
 static func slot_frame(rim: Color = BRONZE, active: bool = false) -> StyleBoxFlat:
-	var s := box(Color("26343c") if active else Color("080808"), rim, 3)
+	var s := box(Color("29251e") if active else Color("0c0b09"), rim, 3)
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
 	return s
@@ -60,20 +62,27 @@ static func item_frame(grade_name: String, active: bool = false) -> StyleBoxFlat
 	return s
 static func icon(kind: String) -> Texture2D:
 	var files: Dictionary = {"inventory":"bag","shop":"shop","skills":"skill","settings":"settings","auto":"macro","map":"teleport","attack":"attack","return":"return","enhance":"sword"}
-	if files.has(kind): return load("res://assets/ui/"+str(files[kind])+".png") as Texture2D
+	if files.has(kind):
+		if source_icon_cache.has(kind): return source_icon_cache[kind]
+		var path: String = "res://assets/ui/"+str(files[kind])+".png"
+		if ResourceLoader.exists(path):
+			var source: Texture2D = load(path) as Texture2D
+			if source != null:
+				source_icon_cache[kind] = source
+				return source
 	return ICONS.texture(kind)
 static func section(value: String, font_size: int = 16) -> Label:
 	var l := label(value,font_size,GOLD)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l
 
-static func tab_frame(active: bool = false) -> StyleBoxFlat:
+static func tab_frame(active: bool = false) -> StyleBoxTexture:
 	var s := box(Color("463620") if active else Color("17171b"), GOLD if active else Color("3e3529"), 7)
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
 	if active:
 		s.border_width_bottom = 2
-	return s
+	return MATERIAL.from_flat(s,active)
 
 static func _divider(vertical: bool) -> StyleBoxLine:
 	var line := StyleBoxLine.new()
@@ -96,10 +105,10 @@ static func make_theme() -> Theme:
 		t.set_color("font_disabled_color",type,MUTED)
 	for type: String in ["Button","OptionButton"]:
 		t.set_stylebox("normal",type,tab_frame())
-		t.set_stylebox("hover",type,box(Color("302a20"),GOLD,7))
+		t.set_stylebox("hover",type,MATERIAL.from_flat(box(Color("302a20"),BRONZE.lightened(.22),7)))
 		t.set_stylebox("pressed",type,tab_frame(true))
 		t.set_stylebox("hover_pressed",type,tab_frame(true))
-		t.set_stylebox("disabled",type,box(Color("121317"),Color("40392e"),7))
+		t.set_stylebox("disabled",type,MATERIAL.from_flat(box(Color("181817"),Color("403b34"),7),true))
 		var focus := box(Color(0,0,0,0),GOLD,0)
 		focus.set_border_width_all(2)
 		focus.shadow_size = 0
@@ -112,8 +121,8 @@ static func make_theme() -> Theme:
 	t.set_stylebox("panel","PanelContainer",chrome_panel())
 	t.set_stylebox("panel","Panel",chrome_panel())
 	t.set_stylebox("panel","PopupMenu",chrome_panel(Color("101014"),BRONZE,6))
-	t.set_stylebox("normal","LineEdit",box(Color("0b1015"),Color("4d463b"),8))
-	t.set_stylebox("focus","LineEdit",box(Color("121a20"),GOLD,8))
+	t.set_stylebox("normal","LineEdit",MATERIAL.from_flat(box(Color("10100f"),Color("4d463b"),8),true))
+	t.set_stylebox("focus","LineEdit",MATERIAL.from_flat(box(Color("181713"),GOLD,8),true))
 	t.set_stylebox("normal","TextEdit",box(Color("0b1015"),BRONZE,7))
 	t.set_stylebox("focus","TextEdit",box(Color("111922"),GOLD,7))
 	t.set_color("font_placeholder_color","LineEdit",MUTED)
@@ -127,7 +136,7 @@ static func make_theme() -> Theme:
 	t.set_stylebox("panel","TabContainer",chrome_panel(Color("101116"),BRONZE,6))
 	t.set_stylebox("tab_selected","TabBar",tab_frame(true))
 	t.set_stylebox("tab_unselected","TabBar",tab_frame())
-	t.set_stylebox("tab_hovered","TabBar",box(Color("302a20"),GOLD,7))
+	t.set_stylebox("tab_hovered","TabBar",MATERIAL.from_flat(box(Color("302a20"),BRONZE.lightened(.22),7)))
 	t.set_stylebox("background","ProgressBar",slot_frame(Color("3b3328")))
 	t.set_stylebox("fill","ProgressBar",box(Color("a98950"),GOLD,0))
 	t.set_stylebox("separator","HSeparator",_divider(false))
@@ -171,6 +180,10 @@ static func button(value: String, action: Callable, min_size: Vector2 = Vector2(
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if action.is_valid():
 		b.pressed.connect(action)
+	b.pressed.connect(func() -> void:
+		if not b.is_inside_tree() or b.disabled: return
+		var audio: Node = b.get_tree().get_first_node_in_group("presentation_audio")
+		if audio != null: audio.call("play_ui","button"))
 	return b
 
 static func rich(value: String) -> RichTextLabel:

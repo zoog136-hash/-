@@ -3,6 +3,8 @@ class_name FieldMinimap
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
+const GEOGRAPHY_CACHE = preload("res://scripts/maps/minimap_geography_cache.gd")
+var geography_cache = GEOGRAPHY_CACHE.new()
 var source_overview: Texture2D
 var world: Node
 var field: PlayableField
@@ -13,6 +15,7 @@ var area := Rect2(9,27,204,136)
 func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
 	field = value
+	geography_cache.configure(value)
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
 	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
 	if field is NativePngField: source_overview = field.overview_texture()
@@ -116,12 +119,10 @@ func _draw_structure_geography() -> void:
 	draw_rect(area,Color(str(structure.void_color)))
 	for raw: Array in field.data.navigable_polygons:
 		draw_colored_polygon(_map_polygon({"polygon":raw}),Color("64715d") if str(field.data.map_id)=="aden_world" else Color("777578"))
-	for zone: Dictionary in structure.terrain_zones:
-		for raw: Array in field.data.navigable_polygons:
-			for polygon: PackedVector2Array in Geometry2D.intersect_polygons(REGION_GEOMETRY.polygon(zone),REGION_GEOMETRY.polygon({"polygon":raw})):
-				var points := PackedVector2Array()
-				for p: Vector2 in polygon: points.append(_point(p))
-				draw_colored_polygon(points,Color(str(zone.tint)))
+	for region: Dictionary in geography_cache.terrain:
+		var points := PackedVector2Array()
+		for p: Vector2 in region.polygon: points.append(_point(p))
+		draw_colored_polygon(points,region.color)
 	for shape: Dictionary in field.data.collision:
 		if str(shape.kind)=="dungeon_pit": draw_colored_polygon(_map_polygon(shape,"points"),Color("090b10"))
 
@@ -144,19 +145,10 @@ func _draw_boss_regions() -> void:
 
 func _draw_hunting_region(region: Dictionary) -> void:
 	if str(region.type)=="safe": return
-	for spawn: Dictionary in field.data.get("monster_spawn",[]):
-		if str(spawn.id)!=str(region.id): continue
-		var geometry: PackedVector2Array
-		if spawn.has("polygon"):
-			geometry=REGION_GEOMETRY.polygon(spawn)
-		else:
-			var a: Array=spawn.rect
-			geometry=PackedVector2Array([Vector2(a[0],a[1]),Vector2(a[0]+a[2],a[1]),Vector2(a[0]+a[2],a[1]+a[3]),Vector2(a[0],a[1]+a[3])])
-		for floor: PackedVector2Array in field.navigable_polygons:
-			for clipped: PackedVector2Array in Geometry2D.intersect_polygons(geometry,floor):
-				var outline := PackedVector2Array()
-				for p: Vector2 in clipped: outline.append(_point(p))
-				draw_colored_polygon(outline,Color(str(region.color),.16))
+	for polygon: PackedVector2Array in geography_cache.hunting.get(str(region.id),[]):
+		var outline := PackedVector2Array()
+		for p: Vector2 in polygon: outline.append(_point(p))
+		draw_colored_polygon(outline,Color(str(region.color),.16))
 
 func _draw_hunting_obstacles() -> void:
 	if not field.data.has("hunting_paths"): return

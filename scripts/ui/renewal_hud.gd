@@ -700,6 +700,7 @@ func _close_workspace() -> void:
 		return
 	catalog_icon_generation += 1
 	if workspace != null and workspace.visible:
+		if not switching_workspace: _presentation_transition()
 		navigation_memory.capture(active_section,workspace.content)
 	if not switching_workspace:
 		navigation_memory.clear_history()
@@ -731,6 +732,7 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	_presentation_transition()
 	navigation_memory.enter(active_section,section)
 	switching_workspace = true
 	_hide_aux_panels()
@@ -741,6 +743,10 @@ func _open_window(section: String,title: String,description: String) -> void:
 	active_section = section
 	workspace.set_back_available(navigation_memory.has_history())
 	call_deferred("_restore_navigation",section)
+
+func _presentation_transition() -> void:
+	var audio: Node = get_tree().get_first_node_in_group("presentation_audio")
+	if audio != null: audio.play_ui("transition")
 
 func _restore_navigation(section: String) -> void:
 	if workspace != null and workspace.visible and active_section == section:
