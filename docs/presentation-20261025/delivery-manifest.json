@@ -27,6 +27,21 @@
       "sha256": "2bc21739aaa3d659477769684f0672df2811f02562b77a9723b274a8f2ddb836"
     },
     {
+      "path": "evidence/audio-guard/combat_timing_test.log",
+      "bytes": 179,
+      "sha256": "1a8087e54fefa8c12a488310c8c1e6f2d6fa1fe4896dab6225e0b971cd9f2a3d"
+    },
+    {
+      "path": "evidence/audio-guard/presentation_audio_main_test.log",
+      "bytes": 174,
+      "sha256": "838deb7b9f66f785c8e4fdb48e510674bc1cee2c5164d3d8c60118662f55487c"
+    },
+    {
+      "path": "evidence/audio-guard/summary.json",
+      "bytes": 10644,
+      "sha256": "cc10733235084f22cce3de8a3980729f0626dd1ae0236cd2c0558df863e008f1"
+    },
+    {
       "path": "evidence/audio/original-skill-audio-regression.log",
       "bytes": 131,
       "sha256": "09d831cd1df6be311f62b71a5f27669f4bb2a7da99b01300a22a3a13fba75c82"
@@ -45,21 +60,6 @@
       "path": "evidence/audio/presentation-audio-test-final.log",
       "bytes": 105,
       "sha256": "597a0a4549225da6c91d46797956c1baa8036ca3ef5b5e657333d502ca53c5d0"
-    },
-    {
-      "path": "evidence/audio-guard/combat_timing_test.log",
-      "bytes": 179,
-      "sha256": "1a8087e54fefa8c12a488310c8c1e6f2d6fa1fe4896dab6225e0b971cd9f2a3d"
-    },
-    {
-      "path": "evidence/audio-guard/presentation_audio_main_test.log",
-      "bytes": 174,
-      "sha256": "838deb7b9f66f785c8e4fdb48e510674bc1cee2c5164d3d8c60118662f55487c"
-    },
-    {
-      "path": "evidence/audio-guard/summary.json",
-      "bytes": 10644,
-      "sha256": "cc10733235084f22cce3de8a3980729f0626dd1ae0236cd2c0558df863e008f1"
     },
     {
       "path": "evidence/compact-final/auto_selection_order_test.log",
@@ -192,6 +192,26 @@
       "sha256": "d1f49464d70a4869109f6e738a5003264d29d4c8e4c11eba606cab4266ae0390"
     },
     {
+      "path": "evidence/detail-states/logs/runner-final.txt",
+      "bytes": 77,
+      "sha256": "452c2e81c6f03b4ca8fabf742280fcf9b20689795ce645e902f3d786c19f5965"
+    },
+    {
+      "path": "evidence/detail-states/logs/runner-final/presentation_detail_states_test.log",
+      "bytes": 480,
+      "sha256": "7d8dda32f8c9e40dd962b5591933fd33017f6b8f89adbaf7a6ad6c75db1802ef"
+    },
+    {
+      "path": "evidence/detail-states/logs/runner-final/summary.json",
+      "bytes": 10597,
+      "sha256": "21655aae8ca0eb08278e0e5f52e89e219c5495cc91edaaa0d22481b5491b06ea"
+    },
+    {
+      "path": "evidence/detail-states/logs/runner.txt",
+      "bytes": 349,
+      "sha256": "ac63bf8745854d674a653bbafce63916271d0e2e8508d7f915869dfad3f8e0a8"
+    },
+    {
       "path": "evidence/detail-states/logs/runner/presentation_detail_states_test.log",
       "bytes": 111,
       "sha256": "6ab42eb24b953fd830d71bb65e62e4fa60a915da08941e18d214d4d556a757ff"
@@ -210,26 +230,6 @@
       "path": "evidence/detail-states/logs/runner/ui_renewal_integration_test.log",
       "bytes": 177,
       "sha256": "1b29bc253d49174c707b1ab0cff48caaead33c6a66fd04c8acda0383beae4098"
-    },
-    {
-      "path": "evidence/detail-states/logs/runner-final/presentation_detail_states_test.log",
-      "bytes": 480,
-      "sha256": "7d8dda32f8c9e40dd962b5591933fd33017f6b8f89adbaf7a6ad6c75db1802ef"
-    },
-    {
-      "path": "evidence/detail-states/logs/runner-final/summary.json",
-      "bytes": 10597,
-      "sha256": "21655aae8ca0eb08278e0e5f52e89e219c5495cc91edaaa0d22481b5491b06ea"
-    },
-    {
-      "path": "evidence/detail-states/logs/runner-final.txt",
-      "bytes": 77,
-      "sha256": "452c2e81c6f03b4ca8fabf742280fcf9b20689795ce645e902f3d786c19f5965"
-    },
-    {
-      "path": "evidence/detail-states/logs/runner.txt",
-      "bytes": 349,
-      "sha256": "ac63bf8745854d674a653bbafce63916271d0e2e8508d7f915869dfad3f8e0a8"
     },
     {
       "path": "evidence/detail-states/manifest.json",
@@ -367,26 +367,6 @@
       "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
     },
     {
-      "path": "evidence/recheck/minimap_geography_cache_test.log",
-      "bytes": 237,
-      "sha256": "de970d9502e9d9ca46eb00b5c2572a4aed6425e2ec6c4787dbeb2a4648ab4036"
-    },
-    {
-      "path": "evidence/recheck/presentation_audio_main_test.log",
-      "bytes": 270,
-      "sha256": "cd3bcfd1684f54e862e26c389335264d6be4937913e173d055f70daeb80b9dc2"
-    },
-    {
-      "path": "evidence/recheck/presentation_ui_material_test.log",
-      "bytes": 300,
-      "sha256": "c0f406e217f95c846055d2bd3f97cf36aacd23ee115c079d6e55aac3e434534b"
-    },
-    {
-      "path": "evidence/recheck/summary.json",
-      "bytes": 10874,
-      "sha256": "bc448d1b2070ba3766210906ea1bf55015357f129a0b5334c04a007d641af88a"
-    },
-    {
       "path": "evidence/recheck-final/minimap_geography_cache_test.log",
       "bytes": 203,
       "sha256": "a64c995c7814e5eea4773decad4f8cbc8397b641317722cff2713baedcb9675b"
@@ -405,6 +385,26 @@
       "path": "evidence/recheck-final/summary.json",
       "bytes": 10799,
       "sha256": "e1d044bcace4040430b377ad078a81e68aea040c62544c8ca309ea40aa316c69"
+    },
+    {
+      "path": "evidence/recheck/minimap_geography_cache_test.log",
+      "bytes": 237,
+      "sha256": "de970d9502e9d9ca46eb00b5c2572a4aed6425e2ec6c4787dbeb2a4648ab4036"
+    },
+    {
+      "path": "evidence/recheck/presentation_audio_main_test.log",
+      "bytes": 270,
+      "sha256": "cd3bcfd1684f54e862e26c389335264d6be4937913e173d055f70daeb80b9dc2"
+    },
+    {
+      "path": "evidence/recheck/presentation_ui_material_test.log",
+      "bytes": 300,
+      "sha256": "c0f406e217f95c846055d2bd3f97cf36aacd23ee115c079d6e55aac3e434534b"
+    },
+    {
+      "path": "evidence/recheck/summary.json",
+      "bytes": 10874,
+      "sha256": "bc448d1b2070ba3766210906ea1bf55015357f129a0b5334c04a007d641af88a"
     },
     {
       "path": "evidence/scene/README.md",
@@ -1292,6 +1292,11 @@
       "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
     },
     {
+      "path": "evidence/ui/logs/runner-count-schema.txt",
+      "bytes": 408,
+      "sha256": "9a6907b79369bc5a584cd32311964b38f39827d878c352d62c5ab4dda1553d06"
+    },
+    {
       "path": "evidence/ui/logs/runner-count-schema/presentation_catalog_compact_test.log",
       "bytes": 187,
       "sha256": "ec5cb4e36da21c78a695f7012a5b25530cad64daf16db077dc72733d57c16ce4"
@@ -1307,9 +1312,9 @@
       "sha256": "8cb1d130303729032bfa31aa7ef81ea0c689b7dde71e478c31249007956ec85b"
     },
     {
-      "path": "evidence/ui/logs/runner-count-schema.txt",
-      "bytes": 408,
-      "sha256": "9a6907b79369bc5a584cd32311964b38f39827d878c352d62c5ab4dda1553d06"
+      "path": "evidence/ui/logs/runner-final.txt",
+      "bytes": 79,
+      "sha256": "8c5960b893015d190d2e92f9279b1131f7fe8c40b78a762419f3d60f1c4511a7"
     },
     {
       "path": "evidence/ui/logs/runner-final/presentation_catalog_compact_test.log",
@@ -1320,11 +1325,6 @@
       "path": "evidence/ui/logs/runner-final/summary.json",
       "bytes": 10523,
       "sha256": "81ce425109d2704b43ae2cf06a5a6f066d662d2beff5ea392f2e8dbdb7d47e29"
-    },
-    {
-      "path": "evidence/ui/logs/runner-final.txt",
-      "bytes": 79,
-      "sha256": "8c5960b893015d190d2e92f9279b1131f7fe8c40b78a762419f3d60f1c4511a7"
     },
     {
       "path": "evidence/ui/logs/runner-first-args.txt",
@@ -1345,6 +1345,11 @@
       "path": "followup/README.md",
       "bytes": 4033,
       "sha256": "6c319b06ab407bf9849353b047a310df722ace04651f6c1f53769884b3f01c8e"
+    },
+    {
+      "path": "followup/regression-runner.log",
+      "bytes": 180,
+      "sha256": "94c4962ed6f79867d64a95a5f2c6761263ac98cc55c467471ae2b24d7bd86166"
     },
     {
       "path": "followup/regression/auto_selection_order_test.log",
@@ -1375,11 +1380,6 @@
       "path": "followup/regression/summary.json",
       "bytes": 11229,
       "sha256": "b227ae174d213d7323fb922b2e9496c9f656c365dddc513c1508d73bd4cae05b"
-    },
-    {
-      "path": "followup/regression-runner.log",
-      "bytes": 180,
-      "sha256": "94c4962ed6f79867d64a95a5f2c6761263ac98cc55c467471ae2b24d7bd86166"
     },
     {
       "path": "followup/resource-integrity.log",
@@ -1465,6 +1465,36 @@
       "path": "performance/combat-comparability.json",
       "bytes": 363,
       "sha256": "17e327db4c550feb5f18681b9f08e17f368c30307f11cdaa0be8917c2d160813"
+    },
+    {
+      "path": "performance/continuous-collector-used.gd",
+      "bytes": 1171,
+      "sha256": "638f2eb7f614e15b3790dfee064040fbb6f6e27cdb88227a8f98d01a920f3661"
+    },
+    {
+      "path": "performance/continuous-first-combat-benchmark.json",
+      "bytes": 57247,
+      "sha256": "8163e007ff717a63605f5f4236222f7d7f95ce3214012af0e35b886ed728b937"
+    },
+    {
+      "path": "performance/continuous-first-combat-decoded.json",
+      "bytes": 6259426,
+      "sha256": "64aa385ec31a4978519a9695fc7b5f0bc0c2430915049f137d8bb4c16dad7cb1"
+    },
+    {
+      "path": "performance/continuous-first-combat-game.log",
+      "bytes": 1460,
+      "sha256": "d804d9c176bbe74bb8c23e4a5c4bbaa86c240146534c857fbd50383f2038a8f7"
+    },
+    {
+      "path": "performance/continuous-first-combat.jsonl",
+      "bytes": 1407005,
+      "sha256": "3464c03e8770537087ff665ac38bb15f1b4dc5dcec6c3ca8bb447bb56e557b8f"
+    },
+    {
+      "path": "performance/continuous-first-combat.md",
+      "bytes": 5967,
+      "sha256": "99782e58c1beb66e5bdc086bda76f76afe105c619a5a067a4cfd6025244a95e1"
     },
     {
       "path": "performance/entry-cost.md",
@@ -1852,6 +1882,11 @@
       "sha256": "376a17e078d332756b37f633179ab7d03841ebcc14063f9f509d5e42e13a8bdb"
     },
     {
+      "path": "performance/spike-regression-runner.log",
+      "bytes": 213,
+      "sha256": "32cf27832dd15fa1c922599ccb7359d41945e51077787dbc4695ade869c80b7d"
+    },
+    {
       "path": "performance/spike-regression/auto_selection_order_test.log",
       "bytes": 240,
       "sha256": "e6b6b7429871b5811a41bef0ffc6da80027f01a94b95fa767096bbfda180dbd0"
@@ -1885,11 +1920,6 @@
       "path": "performance/spike-regression/summary.json",
       "bytes": 11453,
       "sha256": "91df8e0c07332500412ca66e24cbb421de863433af021e50b8eda6efe98c718a"
-    },
-    {
-      "path": "performance/spike-regression-runner.log",
-      "bytes": 213,
-      "sha256": "32cf27832dd15fa1c922599ccb7359d41945e51077787dbc4695ade869c80b7d"
     },
     {
       "path": "performance/spike-resource-integrity.log",
