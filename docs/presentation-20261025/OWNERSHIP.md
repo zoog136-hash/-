@@ -17,3 +17,5 @@ GitHub 대형 PR의 파일 목록 API가 앞부분만 반환해, 공통 파일�
 추가 렌더 수정 전 PR155 `5a10f0c8044d36a84673bf55de741a21dee1c98a`의 미니맵 실제 소스도 재확인했다. 그 PR의 `_draw_boss_regions` MultiMesh 배칭은 가져오지 않았다. main의 해당 함수는 그대로 두고 `_draw_static` 전체 결과만 재사용하므로 이후 두 변경의 통합 검토가 필요하다.
 
 후속 소유 확인: PR155 `5a10f0c8`의 `map_region_geometry.gd` 다중 polygon 준비 캐시와 `PlayableField` floor raster 훅/불필요 snapshot 생략은 미이식·미수정이다. 이번 안전지대 memo는 configure의 별도 스폰 후보 루프만 수정했다. Native field/route graph 전체 소스는 당시 PR155와 main이 같음을 먼저 확인했고 정확한 실패 경로 재사용의 최소 연결만 추가했다.
+
+UI 추가 후속: 원격 main은 f24c0a83(PR122 병합)으로 확인했으며 기존PR157에 새 원화를 가져오지 않았다. PR155 9b5c4750의 theme/HUD/inventory는 이전main과 같고, PR154 11695b3c의 window 수정은 viewport fitting이므로 이번 수정과 분리한다. 공통 스타일·가방 표현·메뉴 생성 블록만 보완했다.

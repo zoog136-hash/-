@@ -1,0 +1,107 @@
+{
+  "baseline": "e5e02cf75ff3094e4bb381e2e49c94d7a32a2334",
+  "same_fixture": true,
+  "capture_pairs": 16,
+  "comparison": [
+    {
+      "screen": "inventory-1280x720",
+      "before_draw_calls": 313,
+      "prototype_draw_calls": 346,
+      "after_draw_calls": 319
+    },
+    {
+      "screen": "inventory-detail-1280x720",
+      "before_draw_calls": 359,
+      "prototype_draw_calls": 392,
+      "after_draw_calls": 367
+    },
+    {
+      "screen": "menu-1280x720",
+      "before_draw_calls": 247,
+      "prototype_draw_calls": 251,
+      "after_draw_calls": 251
+    },
+    {
+      "screen": "skills-1280x720",
+      "before_draw_calls": 245,
+      "prototype_draw_calls": 249,
+      "after_draw_calls": 249
+    },
+    {
+      "screen": "transform-1280x720",
+      "before_draw_calls": 287,
+      "prototype_draw_calls": 291,
+      "after_draw_calls": 291
+    },
+    {
+      "screen": "shop-1280x720",
+      "before_draw_calls": 273,
+      "prototype_draw_calls": 278,
+      "after_draw_calls": 278
+    },
+    {
+      "screen": "warehouse-1280x720",
+      "before_draw_calls": 398,
+      "prototype_draw_calls": 435,
+      "after_draw_calls": 408
+    },
+    {
+      "screen": "crafting-1280x720",
+      "before_draw_calls": 332,
+      "prototype_draw_calls": 336,
+      "after_draw_calls": 336
+    },
+    {
+      "screen": "inventory-854x480",
+      "before_draw_calls": 236,
+      "prototype_draw_calls": 274,
+      "after_draw_calls": 253
+    },
+    {
+      "screen": "inventory-detail-854x480",
+      "before_draw_calls": 234,
+      "prototype_draw_calls": 272,
+      "after_draw_calls": 253
+    },
+    {
+      "screen": "menu-854x480",
+      "before_draw_calls": 188,
+      "prototype_draw_calls": 192,
+      "after_draw_calls": 192
+    },
+    {
+      "screen": "skills-854x480",
+      "before_draw_calls": 167,
+      "prototype_draw_calls": 171,
+      "after_draw_calls": 171
+    },
+    {
+      "screen": "transform-854x480",
+      "before_draw_calls": 182,
+      "prototype_draw_calls": 186,
+      "after_draw_calls": 186
+    },
+    {
+      "screen": "shop-854x480",
+      "before_draw_calls": 164,
+      "prototype_draw_calls": 168,
+      "after_draw_calls": 168
+    },
+    {
+      "screen": "warehouse-854x480",
+      "before_draw_calls": 247,
+      "prototype_draw_calls": 289,
+      "after_draw_calls": 270
+    },
+    {
+      "screen": "crafting-854x480",
+      "before_draw_calls": 167,
+      "prototype_draw_calls": 171,
+      "after_draw_calls": 171
+    }
+  ],
+  "inventory_unchanged": true,
+  "physical_ids_unchanged": true,
+  "detail_layout_assertions": "viewport contains popup; popup contains both actions; real long option text exceeds scroll viewport",
+  "limitations": "draw calls are single-frame observations; no frame-time or Android performance claim"
+}

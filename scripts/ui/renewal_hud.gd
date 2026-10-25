@@ -1035,20 +1035,27 @@ func toggle_menu() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),Vector2(92,88))
 		button.name = "MenuTile_"+section_id
-		button.add_theme_stylebox_override("normal",UI.slot_frame())
-		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
-		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
+		button.add_theme_stylebox_override("normal",UI.menu_tile())
+		button.add_theme_stylebox_override("hover",UI.menu_tile(true))
+		button.add_theme_stylebox_override("pressed",UI.menu_tile(true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon("inventory" if section_id == "equipment_collections" else section_id)
+		artwork.texture = UI.icon(section_id)
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(26,8)
 		artwork.size = Vector2(40,40)
+		artwork.anchor_left = .5
+		artwork.anchor_right = .5
+		artwork.offset_left = -20
+		artwork.offset_right = 20
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(artwork)
-		var caption := UI.label(str(pair[1]),11)
+		var caption := UI.label(str(pair[1]),12)
 		caption.position = Vector2(0,58)
 		caption.size = Vector2(92,20)
+		caption.anchor_right = 1.0
+		caption.offset_left = 2
+		caption.offset_right = -2
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		button.add_child(caption)
 		grid.add_child(button)

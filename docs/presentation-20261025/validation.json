@@ -45,15 +45,15 @@
     },
     "presentation_ui_material_test": {
       "status": "PASS",
-      "summary": "evidence/ui/logs/runner-count-schema/summary.json"
+      "summary": "ui-refinement/final-regression/summary.json"
     },
     "ui_fidelity_regression_test": {
       "status": "PASS",
-      "summary": "evidence/raster-regression/summary.json"
+      "summary": "ui-refinement/final-regression/summary.json"
     },
     "ui_renewal_integration_test": {
       "status": "PASS",
-      "summary": "evidence/detail-states/logs/runner/summary.json"
+      "summary": "ui-refinement/final-regression/summary.json"
     },
     "warehouse_persistence_test": {
       "status": "PASS",
@@ -65,7 +65,7 @@
     },
     "presentation_catalog_compact_test": {
       "status": "PASS",
-      "summary": "evidence/ui/logs/runner-final/summary.json"
+      "summary": "ui-refinement/final-regression/summary.json"
     },
     "native_png_route_recovery_test": {
       "status": "PASS",
@@ -85,7 +85,7 @@
     },
     "presentation_detail_states_test": {
       "status": "PASS",
-      "summary": "evidence/detail-states/logs/runner-final/summary.json"
+      "summary": "ui-refinement/final-regression/summary.json"
     },
     "native_line_sample_cache_test": {
       "status": "PASS",
@@ -128,6 +128,20 @@
     "summary": "performance/spawn-registration/regression/summary.json",
     "comparison": "performance/spawn-registration/comparison.json",
     "complete_stall_resolved": false,
+    "android": "NOT_RUN"
+  },
+  "ui_refinement": {
+    "focused_passed": 5,
+    "summary": "ui-refinement/final-regression/summary.json",
+    "capture_pairs": 16,
+    "capture_resolutions": [
+      "1280x720",
+      "854x480"
+    ],
+    "screenshots_edited": false,
+    "inventory_and_physical_ids_unchanged": true,
+    "detail_action_viewport_assertions_added": 6,
+    "full_ci": "HELD",
     "android": "NOT_RUN"
   }
 }

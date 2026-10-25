@@ -17,6 +17,7 @@ var weight_readout: Label
 var weight_gauge: ProgressBar
 var compact_tabs: HBoxContainer
 var detail_active: bool = false
+var detail_layout_queued: bool = false
 var inventory_left: Control
 var grid_scroll: ScrollContainer
 var gesture_index: int = -1
@@ -33,9 +34,11 @@ var gesture_equipping: bool = false
 func _ready() -> void:
 	super._ready()
 	theme = UI.make_theme()
+	item_grid.draw.connect(_draw_slot_recesses)
+	item_grid.sort_children.connect(item_grid.queue_redraw)
 	z_index = 1
 	inventory_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	inventory_panel.add_theme_stylebox_override("panel",UI.box(Color("211b16"),Color("473b2d"),2))
+	inventory_panel.add_theme_stylebox_override("panel",UI.box(Color("17140f"),Color("514131"),2))
 	var layout: VBoxContainer = inventory_panel.get_child(0)
 	layout.add_theme_constant_override("separation",3)
 	var header: HBoxContainer = layout.get_child(0)
@@ -70,6 +73,7 @@ func _ready() -> void:
 	detail_panel.z_index = 10
 	detail_panel.custom_minimum_size = Vector2(300,0)
 	detail_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color("181714"),UI.BRONZE,12))
+	detail_panel.minimum_size_changed.connect(_queue_detail_layout)
 	detail_grade.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail_type.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var detail_stack: VBoxContainer = detail_panel.get_child(0)
@@ -147,6 +151,18 @@ func _reflow() -> void:
 	detail_panel.size = Vector2(width if small else 310,minf(508,maxf(260,inventory_panel.size.y+(0 if small else 54))))
 	detail_panel.visible = detail_active and not selected_item.is_empty()
 	compact_tabs.hide()
+
+func _queue_detail_layout() -> void:
+	if detail_layout_queued or not detail_active: return
+	detail_layout_queued = true
+	call_deferred("_settle_detail_layout")
+
+func _settle_detail_layout() -> void:
+	detail_layout_queued = false
+	if is_inside_tree() and detail_active:
+		# Wrapped labels can temporarily enlarge the popup while their width
+		# settles. Shrink it back to the viewport budget once that minimum changes.
+		_reflow()
 
 func _input(_event: InputEvent) -> void:
 	# PointerTransfer owns clicks, long presses, scrolling and drops together.
@@ -227,6 +243,7 @@ func open_detail() -> void:
 	detail_active = true
 	_refresh_detail(selected_item)
 	_reflow()
+	_queue_detail_layout()
 
 func show_inventory() -> void:
 	gesture_dragged = false
@@ -244,7 +261,16 @@ func _slot_style_for_grade(grade: String, selected: bool) -> StyleBoxFlat:
 		style.set_border_width_all(2)
 		style.border_color = _grade_color(grade).lightened(0.25)
 		style.bg_color = style.bg_color.lightened(0.08)
+	# Keep the existing flat grade/selection border above the grid's batched
+	# inset texture. Hover/press tint it without covering the slot relief.
+	style.bg_color.a = .12 if selected else .035
 	return style
+
+func _draw_slot_recesses() -> void:
+	var style: StyleBoxTexture = UI.slot_recess()
+	for child: Node in item_grid.get_children():
+		if child is Control and child.visible:
+			item_grid.draw_style_box(style,Rect2(child.position+Vector2(3,3),child.size-Vector2(6,6)))
 
 func _find_item_record(item_name: String) -> Dictionary:
 	var instance_id: String = _ref_instance_id(item_name)
@@ -326,17 +352,33 @@ func _refresh_inventory_grid() -> void:
 		button.add_child(icon)
 		var level: int = _enhance_level(reference)
 		var badge := UI.label("+%d" % level if level > 0 else "", 12, UI.GOLD)
-		badge.position = Vector2(5, 2)
+		badge.name = "InventoryEnhancement"
+		badge.position = Vector2(25, 2)
+		badge.size = Vector2(42,18)
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		button.add_child(badge)
 		var equipped: bool = _is_item_equipped(reference)
 		var amount: int = 1 if _ref_instance_id(reference) != "" else int(inventory.get(item_name, 0))
-		var count := UI.label("E" if equipped else "×%d" % amount, 12, UI.GOLD if equipped else UI.TEXT)
+		if equipped:
+			var mark := UI.label("E",13,Color("f5f4e9"))
+			mark.name = "InventoryEquipped"
+			mark.position = Vector2(4,4)
+			mark.size = Vector2(17,18)
+			mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			mark.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			var blue := UI.box(Color("26577c"),Color("87afc8"),0)
+			blue.shadow_size = 0
+			mark.add_theme_stylebox_override("normal",blue)
+			button.add_child(mark)
+		var count := UI.label(UI.number_text(amount) if amount > 1 or _ref_instance_id(reference).is_empty() else "", 13, UI.GOLD)
 		count.name = "InventoryQuantity"
 		var locked: bool = bool(character_state.get("item_locks",{}).get(reference,false))
 		count.position = Vector2(24 if locked else 4,49)
 		count.size = Vector2(44 if locked else 64,20)
 		count.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		count.tooltip_text = "장착 중" if equipped else "보유 "+UI.number_text(amount)+"개"
+		count.tooltip_text = "보유 "+UI.number_text(amount)+"개"
+		count.add_theme_color_override("font_outline_color",Color.BLACK)
+		count.add_theme_constant_override("outline_size",2)
 		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		button.add_child(count)
 		if bool(character_state.get("item_locks",{}).get(reference,false)):
@@ -355,7 +397,9 @@ func _refresh_inventory_grid() -> void:
 		var empty := Panel.new()
 		empty.custom_minimum_size = Vector2(72,72)
 		empty.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		empty.add_theme_stylebox_override("panel",UI.slot_frame())
+		var empty_style: StyleBoxFlat = UI.slot_frame()
+		empty_style.bg_color.a = 0
+		empty.add_theme_stylebox_override("panel",empty_style)
 		item_grid.add_child(empty)
 	_refresh_weight()
 	_reflow()
@@ -446,6 +490,11 @@ func _refresh_slot_states(references: Array = []) -> void:
 		var grade_name: String = str(_find_item_record(reference).get("grade","일반"))
 		for state: String in ["hover","pressed"]:
 			var style: StyleBoxFlat = _slot_style_for_grade(grade_name,selected)
-			if state == "hover": style.bg_color = style.bg_color.lightened(.035)
-			if state == "pressed": style.bg_color = style.bg_color.darkened(.08)
+			if state == "hover":
+				style.bg_color = style.bg_color.lightened(.035)
+				style.bg_color.a = .16
+			if state == "pressed":
+				style.bg_color = style.bg_color.darkened(.08)
+				style.bg_color.a = .22
 			button.add_theme_stylebox_override(state,style)
+	item_grid.queue_redraw()

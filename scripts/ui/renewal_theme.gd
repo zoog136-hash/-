@@ -7,6 +7,7 @@ const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
 const ICONS = preload("res://scripts/ui/renewal_icons.gd")
 const MATERIAL = preload("res://scripts/ui/renewal_material_style.gd")
 static var source_icon_cache: Dictionary = {}
+static var recess_style: StyleBoxTexture
 
 const GOLD = Color("dcc391")
 const BRONZE = Color("766452")
@@ -54,12 +55,27 @@ static func slot_frame(rim: Color = BRONZE, active: bool = false) -> StyleBoxFla
 
 static func item_frame(grade_name: String, active: bool = false) -> StyleBoxFlat:
 	var tint := grade(grade_name)
-	var s := slot_frame(tint,active)
+	var s := slot_frame(BRONZE if grade_name == "일반" and not active else tint,active)
 	s.bg_color = Color("111317").lerp(tint,.055)
 	s.border_width_bottom = 2
 	s.shadow_size = 3 if grade_name in ["희귀","영웅","전설","신화","유일"] else 0
 	s.shadow_color = Color(tint,.18)
 	return s
+
+static func slot_recess() -> StyleBoxTexture:
+	# The grid draws consecutive recesses with this one shared texture before
+	# any item art. No extra per-slot CanvasItem or per-frame allocation.
+	if recess_style == null:
+		recess_style = MATERIAL.from_flat(box(Color("0c0b09"),Color("42372b"),0),true)
+	return recess_style
+
+static func menu_tile(active: bool = false) -> StyleBoxFlat:
+	var style := box(Color("2b241b") if active else Color(0.065,0.054,0.042,0.3),Color("7a6547") if active else Color(0.40,0.32,0.23,0.36),0)
+	style.shadow_size = 0
+	style.border_width_top = 1 if active else 0
+	style.border_width_left = 1 if active else 0
+	style.border_width_right = 1 if active else 0
+	return style
 static func icon(kind: String) -> Texture2D:
 	var files: Dictionary = {"inventory":"bag","shop":"shop","skills":"skill","settings":"settings","auto":"macro","map":"teleport","attack":"attack","return":"return","enhance":"sword"}
 	if files.has(kind):
@@ -77,7 +93,7 @@ static func section(value: String, font_size: int = 16) -> Label:
 	return l
 
 static func tab_frame(active: bool = false) -> StyleBoxTexture:
-	var s := box(Color("463620") if active else Color("17171b"), GOLD if active else Color("3e3529"), 7)
+	var s := box(Color("342b20") if active else Color("211c17"), Color("b69b6e") if active else Color("514637"), 7)
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
 	if active:
@@ -128,7 +144,10 @@ static func make_theme() -> Theme:
 	t.set_color("font_placeholder_color","LineEdit",MUTED)
 	t.set_color("caret_color","LineEdit",GOLD)
 	t.set_color("selection_color","LineEdit",Color("574222"))
-	t.set_stylebox("panel","ItemList",box(Color("111216"),BRONZE,6))
+	var list_panel := MATERIAL.from_flat(box(Color("12100d"),Color("514233"),6),true)
+	# Tall lists need one shallow surface, rather than repeating button seams.
+	list_panel.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	t.set_stylebox("panel","ItemList",list_panel)
 	t.set_stylebox("selected","ItemList",slot_frame(GOLD,true))
 	t.set_stylebox("selected_focus","ItemList",slot_frame(GOLD,true))
 	t.set_stylebox("hovered","ItemList",slot_frame(Color("97805c")))

@@ -20,6 +20,13 @@ func _draw() -> void:
 	for line: int in range(mini(32,int(size.y/14.0))):
 		var y: float = 9.0+float(line)*14.0
 		draw_line(Vector2(3,y),Vector2(size.x-3,y),Color(0,0,0,0.055),1)
+	# A shallow warm title plate and black inner seam keep the window chrome
+	# distinct from recessed lists. Static draws only; no additional texture.
+	for band: int in range(6):
+		draw_rect(Rect2(3,3+band*6,size.x-6,6),Color(0.45,0.31,0.18,0.12-float(band)*0.013))
+	draw_line(Vector2(3,42),Vector2(size.x-3,42),Color(0,0,0,.6),1)
+	draw_line(Vector2(3,43),Vector2(size.x-3,43),Color(.72,.58,.39,.14),1)
+	draw_rect(Rect2(3,3,size.x-6,size.y-6),Color(.57,.45,.31,.16),false,1)
 	draw_line(Vector2(1,1),Vector2(size.x-1,1),Color(0.76,0.68,0.55,0.12),1)
 	draw_line(Vector2(1,1),Vector2(1,size.y-1),Color(0.76,0.68,0.55,0.08),1)
 	draw_line(Vector2(1,size.y-1),Vector2(size.x-1,size.y-1),Color(0,0,0,0.4),1)

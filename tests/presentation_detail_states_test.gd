@@ -67,6 +67,11 @@ func _run() -> void:
 		_check(bag.lock_button.text == "잠금 해제" and bag.lock_button.icon != null,"locked action and glyph agree")
 		_check(bag.detail_grade.autowrap_mode != TextServer.AUTOWRAP_OFF,"Korean state text wraps")
 		_check(button.get_node_or_null("InventoryLocked") != null,"physical item lock marker exists")
+		var bounds: Rect2 = bag.detail_panel.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,bag.detail_panel.size)
+		_check(root.get_visible_rect().grow(1).encloses(bounds),"long item detail stays inside viewport")
+		for action: Control in [bag.detail_action,bag.lock_button]:
+			var action_bounds: Rect2 = action.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,action.size)
+			_check(bounds.grow(1).encloses(action_bounds),"detail actions stay reachable below long options")
 		await _capture("equipped-locked-%dx%d" % [extent.x,extent.y])
 		world.gold = 100000000
 		world._update_hud()
