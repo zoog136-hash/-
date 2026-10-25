@@ -76,7 +76,7 @@ class GodotCacheContracts(unittest.TestCase):
     def test_exact_cache_fallback_preserves_original_installer(self):
         script = cached_script(ENGINE_INSTALL)
         self.assertIn(ENGINE_CHECK, script)
-        self.assertIn(ENGINE_INSTALL.rstrip('\\n').split('\\n')[0], script)
+        self.assertIn(ENGINE_INSTALL.rstrip('\n').split('\n')[0], script)
         self.assertIn('rm -f /tmp/Godot_v4.7.2-stable_linux.x86_64', script)
         self.assertNotIn('.godot/imported', script)
 
@@ -88,19 +88,19 @@ class GodotCacheContracts(unittest.TestCase):
     def test_validation_rejects_runtime_change(self):
         before = {'jobs': {'validate': {'steps': [
             {'name': 'Install Godot 4.7.2', 'run':
-             'curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\\n'
-             'unzip -q godot.zip\\nchmod +x Godot_v4.7.2-stable_linux.x86_64\\n'
-             './Godot_v4.7.2-stable_linux.x86_64 --version\\n'},
-            {'name': 'Run tests', 'run': 'must-pass\\n'}]}}}
+             'curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\n'
+             'unzip -q godot.zip\nchmod +x Godot_v4.7.2-stable_linux.x86_64\n'
+             './Godot_v4.7.2-stable_linux.x86_64 --version\n'},
+            {'name': 'Run tests', 'run': 'must-pass\n'}]}}}
         after = copy.deepcopy(before)
         after['jobs']['validate']['steps'][0]['run'] = after['jobs']['validate']['steps'][0]['run'].replace(
-            'curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\\n'
-            'unzip -q godot.zip\\nchmod +x Godot_v4.7.2-stable_linux.x86_64\\n',
+            'curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\n'
+            'unzip -q godot.zip\nchmod +x Godot_v4.7.2-stable_linux.x86_64\n',
             cached_script(ENGINE_MAIN_INSTALL, symlink=True))
         after['jobs']['validate']['steps'].insert(0, copy.deepcopy(ENGINE_CACHE_RESTORE))
         after['jobs']['validate']['steps'].insert(2, copy.deepcopy(ENGINE_CACHE_SAVE))
         self.assertEqual(normalize_cached_direct('.github/workflows/godot-validate.yml', before, after), before)
-        after['jobs']['validate']['steps'][-1]['run'] = 'skip-all-tests\\n'
+        after['jobs']['validate']['steps'][-1]['run'] = 'skip-all-tests\n'
         with self.assertRaises(AssertionError):
             normalize_cached_direct('.github/workflows/godot-validate.yml', before, after)
 

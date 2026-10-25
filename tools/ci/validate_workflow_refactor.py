@@ -101,12 +101,12 @@ ENGINE_CACHE_SAVE = {
 
 
 def cached_script(original, *, symlink=False):
-    script = ("if ! { " + ENGINE_CHECK + "; }; then\\n" +
-              "  rm -f " + ENGINE_PATH + "\\n" +
-              "\\n".join("  " + line for line in original.rstrip("\\n").split("\\n")) +
-              "\\nfi\\n" + ENGINE_VALIDATE + "\\n")
+    script = ("if ! { " + ENGINE_CHECK + "; }; then\n" +
+              "  rm -f " + ENGINE_PATH + "\n" +
+              "\n".join("  " + line for line in original.rstrip("\n").split("\n")) +
+              "\nfi\n" + ENGINE_VALIDATE + "\n")
     if symlink:
-        script += "ln -sf " + ENGINE_PATH + " Godot_v4.7.2-stable_linux.x86_64\\n"
+        script += "ln -sf " + ENGINE_PATH + " Godot_v4.7.2-stable_linux.x86_64\n"
     return script
 
 
@@ -136,8 +136,8 @@ def normalize_cached_direct(path, before, expanded):
     expected = copy.deepcopy(original_steps)
     if path.endswith('godot-validate.yml'):
         name = 'Install Godot 4.7.2'
-        old = ("curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\\n"
-               "unzip -q godot.zip\\nchmod +x Godot_v4.7.2-stable_linux.x86_64\\n")
+        old = ("curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\n"
+               "unzip -q godot.zip\nchmod +x Godot_v4.7.2-stable_linux.x86_64\n")
         updated = cached_script(ENGINE_MAIN_INSTALL, symlink=True)
     else:
         name = 'Install Godot 4.7.2 and software GL'
