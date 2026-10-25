@@ -1,0 +1,57 @@
+{
+  "cases": [
+    {
+      "key": "monster:커츠",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r001/NativeMotionProfile.tres",
+      "slug": "kurtz",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "roles": [
+        "run",
+        "death"
+      ],
+      "move_speed": 70.0,
+      "attack_seconds": 1.34,
+      "attack_range": 58.0,
+      "run_seconds": 1.8,
+      "idle_seconds": 1.4
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/NativeMotionProfile.tres",
+      "slug": "zombie_lord",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "roles": [
+        "idle",
+        "run",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "move_speed": 107.0,
+      "attack_seconds": 1.74,
+      "attack_range": 58.0,
+      "run_seconds": 1.8,
+      "idle_seconds": 1.4
+    }
+  ],
+  "output": "/workspace/runtime/boss-repair-arena-r001",
+  "capture": true
+}

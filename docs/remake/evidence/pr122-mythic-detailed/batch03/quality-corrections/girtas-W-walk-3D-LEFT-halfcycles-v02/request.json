@@ -1,0 +1,38 @@
+{
+  "schema": "pr122-native-source-authoring-request-v1",
+  "status": "REQUESTED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-3D-LEFT-halfcycles01",
+  "source_batch": "batch03",
+  "expected_poses": 2,
+  "game_phases": [
+    1,
+    2
+  ],
+  "newly_authored_poses": 2,
+  "operation": "AUTHOR_NEW_WALK_LEFT_SUPPORT_PASSING_AND_TOEOFF_FROM_3D",
+  "corrective_reason": "Faithful walk requires actual perleg weight-bearing/passing/reach. First nearLEFT contact0 now independentSOURCEPASS; these two new phases maintain LEFT support and move farRIGHT through swing with exact3Ddepth.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/3D-W-LEFT-support-game1-2-authority.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/3D-W-LEFT-support-game1-2-authority.png": "efc426a379857f51035ebab5eeff021472b4a715c0a4fcb3ecf41c15445778ca",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png": "480e064084b9245c4ecc18d30ca4dc6b35a1e7c0e2c47257f108a0cfe3e8f23f",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+  },
+  "reference_roles": [
+    "ABSOLUTE3Dleg/pose/depth/support authority",
+    "Identity/equipment ONLY nooldlegs",
+    "Original longrobe material only"
+  ],
+  "prompt": "Dress the EXACT TWO 3D MANNEQUIN WALK POSES of IMAGE1 as the SAME faithful GIRTAS from IMAGE2/3. This produces TWO NEW consecutive WEST WALK gameposes1 and2, NOT contacts or running. Image1 is ABSOLUTE authority for hip/thigh/knee/ankle/boot positions, NEAR/FAR occlusion, which foot is grounded and which is airborne. Image2 is identity/equipment ONLY and has all old lower legs deliberately removed. Image3 is original LONG ROBE material/gold-trim ONLY. Never output mannequin colors, floor, guide text or diagram.\n\nTransparent RGBA landscape1536x1024, exactly TWO complete figures in TWO768x1024 cells. LEFTcell=gamephase1, RIGHTcell=gamephase2, matching image1 row order. Same body pixel size/camera in both. Entire blade, needle-thin radial spines, hair, long robe and every boot inside its own cell with60px transparent margin and wide empty gutter; no cut/overlap. No extra figures, background, floor, shadow, lettering, color guides, trails, motion smear or glow bridges.\n\nBOTH poses support the SAME anatomical LEFT NEAR leg (BLUE in image1), the leg on the same side as the EMPTY LEFT near arm. Anatomical RIGHT is FAR (ORANGE), same side as permanent weapon. Copy the exact 3D joint chains/occlusion, not a generic stride.\nGAME1 LEFTCELL: LEFT NEAR hip->almost vertical knee->boot FLAT on LOWER near floor directly under the body, heel and toe both weight-bearing. RIGHT FAR leg is in PASSING swing: far knee flexed/lifted, far ankle/boot lifted visibly well ABOVE upper far floor behind the near leg; no far-foot ground contact. Same body is upright, not jumping.\nGAME2 RIGHTCELL: LEFT NEAR leg now trails BACK toward imageRIGHT, rear TOE remains on LOWER near floor and heel raised for toe-off. RIGHT FAR leg extends FORWARD toward imageLEFT, boot/heel reaching but still visibly ABOVE its UPPER far floor, toe slightly raised, ready for next RIGHTcontact3. LEFT near thigh/knee runs diagonally BACK RIGHT in FRONT of far RIGHT front-reaching thigh; match image1. One real support foot always remains; NO wholebody AIR or running.\n\nMake leg ownership readable through a NATURAL WALK OPENING of the original long dark gold-trimmed split robe: preserve ankle-length hanging front/side/back panels and original elegant hem; show the actual same-side hip-to-thigh/knee continuity and two boots following the 3D guide without hiding the support swap under a flat skirt. Black hard boot/greave with original gold edging and coherent knee/ankle articulation, NOT newly invented segmented trousers or extra gear.\n\nCharacter EXACTLY faithful: WEST LEFT-facing side camera, pale visible profile face/nose LEFT and one side eye, long pale silver hair, original tall crown, narrow HARD straight GOLD radial back spines behind toward imageRIGHT (not feathers/soft flames/wings), original black/gold armor and long robe. Exactly ONE head,TWO arms,TWO legs. ONE full original LONG SINUOUS GOLD/ORANGE solid wave-shaped blade in anatomical RIGHT FAR hand; continuous right shoulder/elbow/forearm/wrist/grip with natural body occlusion only. Near LEFT hand stays visibly EMPTY and gently counterswings, never a duplicate blade/third arm. Keep gear/hair/rigid spines attached, source color/material quality. No torso redesign.\n\nFinal ONLY the two high-quality dressed Girtas poses, exact LEFT support1/2 and far RIGHT passing/reaching from image1, on transparent background.",
+  "transparent_background": true,
+  "attempt_policy": "One genuine2pose3D-authority generation then strict source/support/ownership review. No identical retries/fullcycleclaims.",
+  "actor_approval": false,
+  "image_chat_attachment": false
+}

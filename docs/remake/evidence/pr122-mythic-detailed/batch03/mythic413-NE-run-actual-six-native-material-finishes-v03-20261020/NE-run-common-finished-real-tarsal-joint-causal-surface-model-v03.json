@@ -1,0 +1,644 @@
+{
+  "schema": "MYTHIC413_NE_RUN_ACTUAL_COMMON_SOFT_TARSAL_SURFACE_MODEL_V03",
+  "status": "AUTHOR_CONSTRUCTIVE_FINITE_MODEL_PENDING_INDEPENDENT_AUDIT",
+  "unchanged_original_rig": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v02/NE-run-six-actual-causal-rig-shoe-surface-and-source-contract-v02.json",
+    "sha256": "1c17170e46401d2fd7483159a77e82e5b1fd675d78ed90d13aee0b91604f21b6",
+    "bytes": 36750
+  },
+  "projection": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "frames": [
+    {
+      "R": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase0-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "a5a11999ca8f6575bf5c650acd6de59cf8d7c5d1b3e81ec85d77105ba18afb1c",
+          "bytes": 19987
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.8738745114072924,
+            -0.21917085466399944
+          ],
+          [
+            -0.05397603264364975,
+            -0.7727491164069185
+          ],
+          [
+            -0.3146469061944904,
+            -1.932830995194727
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          -510.4039935788083,
+          797.9704127965078,
+          2178.1491388574677
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.9782057738842581,
+            0.23617164321403156
+          ],
+          [
+            -0.5590351123612006,
+            -0.37082843126822196
+          ],
+          [
+            -0.2961458233753747,
+            -1.211710898080126
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -1024.8599654444888,
+          828.1601996765121,
+          1482.4073890149816
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 75.03574805162405,
+        "minimum_Z_with_8native_hidden_thickness": 67.03574805162405,
+        "maximum_actual_forward_vertex_projection_residual": 4.547473508864641e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "L": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase0-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "74552385b5201abe5835f4338fd31696c17179779727aa38537fe793e78a52ee",
+          "bytes": 19879
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            -0.10511064278187565,
+            -0.6456796628029504
+          ],
+          [
+            0.7595596116124028,
+            -1.557854074607229
+          ],
+          [
+            -0.2274476583181076,
+            -1.3971784725255179
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          452.2163329820865,
+          809.9218667249788,
+          1656.7069942734877
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.8936670900497699,
+            -0.17426021392555854
+          ],
+          [
+            -0.1728430754425468,
+            -0.22446680919288364
+          ],
+          [
+            -0.7270443900130291,
+            -1.2572915733571095
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -802.8123680846361,
+          307.3828673754011,
+          1929.8267108630916
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 123.78017600000324,
+        "minimum_Z_with_8native_hidden_thickness": 115.78017600000324,
+        "maximum_actual_forward_vertex_projection_residual": 5.684341886080801e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "phase": 0
+    },
+    {
+      "R": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase1-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "df898a0568609b44a3a46aea96551fee561cc12c260a403804f8498999331f70",
+          "bytes": 19938
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.35091563925925745,
+            -1.54241279266364
+          ],
+          [
+            0.7287448999339023,
+            -0.197970599558712
+          ],
+          [
+            -0.2426347806579371,
+            -1.4904707954701848
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          1062.7851646153222,
+          -269.1179396430746,
+          1703.7812380374414
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.9,
+            0.0
+          ],
+          [
+            -0.5230244457077885,
+            -0.2620807276861854
+          ],
+          [
+            -0.5230244457077885,
+            -1.2620807276861854
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -838.5599282198964,
+          806.5869606246719,
+          1715.5770324047755
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 73.00730875163629,
+        "minimum_Z_with_8native_hidden_thickness": 65.00730875163629,
+        "maximum_actual_forward_vertex_projection_residual": 4.547473508864641e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "L": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase1-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "e75d2ee44652aa248be0dc85609cd37d29fd787eca1457f9697e942448297f90",
+          "bytes": 19977
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.5389110977059941,
+            -0.750520411254464
+          ],
+          [
+            0.9602531754853686,
+            1.61211409764313
+          ],
+          [
+            0.15751602510855212,
+            0.9675984399525344
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          136.88436798465278,
+          -1990.5205862035814,
+          -603.077976388061
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            1.024608254591124,
+            0.08963688804612469
+          ],
+          [
+            -0.183664083129147,
+            -0.24627532585690956
+          ],
+          [
+            -0.5230244457077885,
+            -1.2620807276861854
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -1050.1245167889433,
+          691.5159263168282,
+          2053.657479694943
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 404.1244927346237,
+        "minimum_Z_with_8native_hidden_thickness": 396.1244927346237,
+        "maximum_actual_forward_vertex_projection_residual": 5.684341886080801e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "phase": 1
+    },
+    {
+      "R": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase2-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "07607531c783331f67f59aaf17949b5052e195c237cacd83c151aca21e378034",
+          "bytes": 19977
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.2755557029099746,
+            -0.8122997655899957
+          ],
+          [
+            0.6959163334228955,
+            -1.291750010325667
+          ],
+          [
+            -0.25450483988600486,
+            -1.5633868735854584
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          354.7853036569665,
+          741.4683931669176,
+          1831.685163637679
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.7449676167587578,
+            -0.30009966491425694
+          ],
+          [
+            -0.45163816313424354,
+            -0.12389669779573681
+          ],
+          [
+            -0.7734050434263937,
+            -1.247446940921767
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -509.424653512294,
+          569.6815628465033,
+          1954.2659322744096
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 119.4461877112432,
+        "minimum_Z_with_8native_hidden_thickness": 111.4461877112432,
+        "maximum_actual_forward_vertex_projection_residual": 4.547473508864641e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "L": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase2-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "106f9b83667d7a278743838a7fba5dbeee8e9d74ecaa86147fa115555db0dc7b",
+          "bytes": 19917
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.7620206743062223,
+            -0.5426545283754315
+          ],
+          [
+            0.23716039187867793,
+            -0.7898839026558981
+          ],
+          [
+            -0.30969486942256946,
+            -1.9024113407386407
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          -154.78289207593895,
+          565.3779528552348,
+          2212.1034713206554
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            1.0661081114162596,
+            0.19884507226502393
+          ],
+          [
+            -0.18709364075734244,
+            -0.2553003150954857
+          ],
+          [
+            -0.4307187086446304,
+            -1.2477245118091873
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -1101.3734265767691,
+          404.80106666601785,
+          1692.2294384203428
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 139.42232090548572,
+        "minimum_Z_with_8native_hidden_thickness": 131.42232090548572,
+        "maximum_actual_forward_vertex_projection_residual": 3.410605131648481e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "phase": 2
+    },
+    {
+      "R": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase3-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "112b6d1597c9af0adad1676e26f04eaa96a5846579876e57bfb8c8fca09d23e1",
+          "bytes": 19879
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            -0.0995785036880927,
+            -0.6116965226554267
+          ],
+          [
+            0.7583183508963334,
+            -1.5654789618630844
+          ],
+          [
+            -0.2286889190341771,
+            -1.4048033597813734
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          501.149683877766,
+          837.6281839494575,
+          1664.4133114979663
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.7806565565232754,
+            -0.24052320737442673
+          ],
+          [
+            -0.4680715087715589,
+            -0.15132930086713003
+          ],
+          [
+            -0.7270443900130291,
+            -1.2572915733571095
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -563.1085595789175,
+          497.2730801599372,
+          1929.3284720773104
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 123.28070556154005,
+        "minimum_Z_with_8native_hidden_thickness": 115.28070556154005,
+        "maximum_actual_forward_vertex_projection_residual": 3.410605131648481e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "L": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase3-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "a32c728305fe719124f4204f442d1931bcb592004388c8b4480439f06e0fdea7",
+          "bytes": 20006
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.8504859511202914,
+            -0.25640732814790496
+          ],
+          [
+            0.01915448434282807,
+            -1.1664768899828135
+          ],
+          [
+            -0.2830634038463853,
+            -1.7388180521992238
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          -508.77162905683934,
+          1105.9121134158731,
+          1969.3867002653994
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            1.1104140165830654,
+            0.348759543578698
+          ],
+          [
+            -0.1907550908601507,
+            -0.26768928117884083
+          ],
+          [
+            -0.2961458233753747,
+            -1.211710898080126
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -1290.8508170570622,
+          427.6932761945389,
+          1482.4073890149816
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 75.067087080458,
+        "minimum_Z_with_8native_hidden_thickness": 67.067087080458,
+        "maximum_actual_forward_vertex_projection_residual": 4.547473508864641e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "phase": 3
+    },
+    {
+      "R": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase4-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "d317852c933deac4d7660dbf63047f6bddb25f89ee82587285142e006789344b",
+          "bytes": 19898
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.553600441635997,
+            -0.7529116998012088
+          ],
+          [
+            0.944836131209833,
+            1.6284165301894258
+          ],
+          [
+            0.15355655743745994,
+            0.943275995687254
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          212.72868644554762,
+          -1971.4787550890762,
+          -579.9783561896313
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.9,
+            0.0
+          ],
+          [
+            -0.5230244457077885,
+            -0.2620807276861854
+          ],
+          [
+            -0.5230244457077885,
+            -1.2620807276861854
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -778.95,
+          1003.585584225692,
+          2050.585584225692
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 401.90614536761257,
+        "minimum_Z_with_8native_hidden_thickness": 393.90614536761257,
+        "maximum_actual_forward_vertex_projection_residual": 4.547473508864641e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "L": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase4-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "72959b27aa9672da89c80ec55e4a579f81387f8a201cb093ab1ca668a485153e",
+          "bytes": 19970
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.26036126222424993,
+            -1.540766842976069
+          ],
+          [
+            0.7616588149695929,
+            -0.4750090698282229
+          ],
+          [
+            -0.23441079469056852,
+            -1.439952024527778
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          1084.0244842175698,
+          -31.711818386605955,
+          1649.4218656482735
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            1.024608254591124,
+            0.08963688804612469
+          ],
+          [
+            -0.183664083129147,
+            -0.24627532585690956
+          ],
+          [
+            -0.5230244457077885,
+            -1.2620807276861854
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -1074.8809486769162,
+          519.0203976625523,
+          1715.5770324047755
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 73.01546907947203,
+        "minimum_Z_with_8native_hidden_thickness": 65.01546907947203,
+        "maximum_actual_forward_vertex_projection_residual": 3.410605131648481e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "phase": 4
+    },
+    {
+      "R": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase5-actual-common-finish-v03/R-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "762c003d8dc9e717baae743fa2c3cc2d8bcdf2f5272fcefc541481d23caf64e0",
+          "bytes": 19968
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.7620206743062223,
+            -0.5426545283754315
+          ],
+          [
+            0.23716039187867793,
+            -0.7898839026558981
+          ],
+          [
+            -0.30969486942256946,
+            -1.9024113407386407
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          -69.28289207593895,
+          585.6621320072516,
+          2212.3876504726722
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.9378241314307124,
+            0.09953539672703725
+          ],
+          [
+            -0.5404409626828913,
+            -0.3079128422952316
+          ],
+          [
+            -0.4307187086446304,
+            -1.2477245118091873
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -818.086785100631,
+          761.3161495762151,
+          1692.5136175723596
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 139.70650005750252,
+        "minimum_Z_with_8native_hidden_thickness": 131.70650005750252,
+        "maximum_actual_forward_vertex_projection_residual": 4.547473508864641e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "L": {
+        "actual_mesh": {
+          "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase5-actual-common-finish-v03/L-genuine-short-leather-tarsal-joint-actual-forward-mesh.json",
+          "sha256": "bd730766d7dae103c237786f8d14f5814a9fe5d8483d8f2f13aa1220747a3a3b",
+          "bytes": 19962
+        },
+        "proximal_calf_surface_matrix": [
+          [
+            0.2755557029099746,
+            -0.8122997655899957
+          ],
+          [
+            0.6959163334228955,
+            -1.2917500103256667
+          ],
+          [
+            -0.2545048398860048,
+            -1.5633868735854581
+          ]
+        ],
+        "proximal_calf_surface_offset": [
+          273.7853036569665,
+          720.6800017943635,
+          1830.8967722651248
+        ],
+        "distal_fixed_shoe_surface_matrix": [
+          [
+            0.854509921479185,
+            -0.23962627428257605
+          ],
+          [
+            -0.16960711810573875,
+            -0.21906494306435487
+          ],
+          [
+            -0.7734050434263937,
+            -1.247446940921767
+          ]
+        ],
+        "distal_fixed_shoe_surface_offset": [
+          -736.3503433968673,
+          410.0048174894076,
+          1953.477540901856
+        ],
+        "blend": "smoothstep(clip((source_y-944+18)/36,0,1)); actual forward triangles interpolate these shared 3D vertices",
+        "minimum_all_actual_active_mesh_vertex_Z": 118.65779633868955,
+        "minimum_Z_with_8native_hidden_thickness": 110.65779633868955,
+        "maximum_actual_forward_vertex_projection_residual": 4.547473508864641e-13,
+        "foot_A_and_calf_A_are_same_exact_joint": true
+      },
+      "phase": 5
+    }
+  ],
+  "model_scope": "Explicit compatible 2.5D actual flexible leather joint surface using actual calf and rigid original boot affine charts; fixed bone joints shared, raster target vertices exactly projected. Not unique hidden anatomy reconstruction.",
+  "actual_RGBA_changed_by_model": false,
+  "actor_approvals_added": 0
+}

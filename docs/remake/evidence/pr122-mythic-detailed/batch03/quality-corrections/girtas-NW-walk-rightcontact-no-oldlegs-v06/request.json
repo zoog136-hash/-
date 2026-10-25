@@ -1,0 +1,20 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "walk",
+  "pose": 3,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-walk-rightcontact-no-oldlegs-v06/NW-upperbody-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-NW-walk-rightcontact-no-oldlegs-v06/NEW-RIGHT-forward-LEFT-back-jointmap.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-walk-rightcontact-no-oldlegs-v06/NW-upperbody-identity-NO-OLD-LEGS.png": "862968b3f4ab32650f17aaf808bc44ee81f28c486aeeabb25e6be084965c697a",
+    "/workspace/scratch/girtas-NW-walk-rightcontact-no-oldlegs-v06/NEW-RIGHT-forward-LEFT-back-jointmap.png": "f49c60f64ba92328875126f12daf42ee833151b6d50bb79aa0e67fec3d3081f5"
+  },
+  "prompt": "Create ONE finished GIRTAS fullbody ordinary WALK frame. Image1 is exact identity/UPPER BODY/weapon reference with ALL OLD LEGS AND LOWER ROBE INTENTIONALLY REMOVED. Do NOT invent the old near-left-forward stance. Image2 is the NEW REQUIRED hip/knee/ankle leg joint chains guide. Use only its joint locations, not its colors/labels. Make exactly the two legs specified by this new guide, then redraw the matching LONG dark gold-trim robe naturally around them. This is a rear-left/NORTHWEST3/4 view, body/head/pelvis faces screenUPPERLEFT, exactly image1.\n\nNEW FOOT CONTACT: FAR anatomicalRIGHT leg starts far/right hip behind robe, travels FORWARD toward screenUPPERLEFT, bends through the far knee to a visible forward heel at screenLEFT/upperground. This farRIGHT forward shin is partly occluded by robe and by nearLEFTthigh. NEAR anatomicalLEFT leg startsnear/left hip and travels BACK toward screenLOWERRIGHT, bending to a nearLEFT boot on screenRIGHT/lowerground supported on its TOE with heelraised. The NEAR LEFT LEG MUST TRAIL TO SCREENRIGHT, not extend toscreenLEFT. The forward screenLEFT boot belongs to the FAR RIGHT leg. Two anatomically continuous legs cross inprojection under sameobliquehips, ordinarywalk natural longsplitstride. Do not swap anatomicallegnames whilekeepingtheoldpose. No bothfeetair, no running. Leftbacktoe and rightforwardheel contact consistent NWgrounddepth. Exactly2legs/2feet, no broken knees, extra feet, floating boot or legstumps.\n\nKeep exact Girtas as image1: pointed goldcrown, pale profile onlyasvisible, long flowing PALE SILVER hair, black/gold ornatearmor, thin rigidstraight GOLD RADIAL BACK RAYS (not feathers/wings), same LONG DARK ROBE with rich samegoldtrim (mustbe restored lowerbody, no pants), exactboots, ONE LONG SINUOUS GOLD/YELLOW blade. Exactly2ARMS: nearLEFTimageLEFT LOWEMPTYhand unchanged; farRIGHTimageRIGHT hand holding SAME lowoutward blade unchanged. No weapon/armhand/camera flip. Bodyhead/shoulders/hips size same. Newrobe mustopen enough to see the two NEWshin/boot connections and oppositeweightphase but remain full longrobe.\n\nONE complete crisp detailedRPGspritecentered transparent1024x1024 PNG. Crown/hair/rays/robe/boots/blade tips fullyvisible 70pxalphazero margins, opaquearmor/cloth/metal with thinAA. No referencecolors/lines/text/numbers/grid/floor/shadow/haze/particles. ActualNEW farRIGHTleading/nearLEFTtrailingwalking legs are essential, preserveupperbody identity exactly.",
+  "transparent_background": true,
+  "material_change": "All original lowerbody/legs removed from identity reference; independent new jointmap is ONLY leg placement authority. Previousfulloldpose/bootpaintoverreferences NOT passed.",
+  "requested_at": "2026-10-19T14:21:46.318157+00:00"
+}

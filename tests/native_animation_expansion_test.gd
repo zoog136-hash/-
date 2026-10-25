@@ -17,43 +17,53 @@ func check(ok: bool, label: String) -> void:
 func run() -> void:
 	var db: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CATALOG.PROFILE_PATH))
+	var transform_records: Dictionary = {}
+	for row: Dictionary in db["변신"]: transform_records[str(row.sourceId)] = row
 	var monster_records: Dictionary = {}
 	var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json"))
 	for row: Dictionary in MONSTER_DB.expand(original["몬스터"]): monster_records[str(row.name)]=row
 	var resources: Dictionary = {}
 	var global_pixels: Dictionary = {}
 	var bindings := {"transform":0,"monster":0,"class":0}
+	var overrides: Dictionary = {}
+	var preserved_sources: Dictionary = {}
 	var retained := AnimatedSprite2D.new()
 	root.add_child(retained)
 	var retained_key := ""
 	var total_cost := 0
 	for key: String in raw.profiles:
 		var setting: Dictionary = raw.profiles[key]
-		var path: String = str(setting.get("frames_path",""))
-		if not path.begins_with("res://assets/actors/eight_direction/expanded/"): continue
+		var raw_path: String = str(setting.get("frames_path",""))
 		var kind := key.get_slice(":",0)
 		var identity := key.trim_prefix(kind+":")
-		check(bindings.has(kind), "native profile belongs to a production actor kind " + key)
-		if not bindings.has(kind): continue
+		if not bindings.has(kind):
+			check(not raw_path.begins_with("res://assets/actors/eight_direction/expanded/"), "native profile belongs to a production actor kind " + key)
+			continue
 		var record := {"sourceId":identity} if kind in ["transform","class"] else {"name":identity}
+		if kind=="transform": record=transform_records.get(identity,record)
+		elif kind=="monster": record=monster_records.get(identity,record)
+		var profile: TwilightAnimationProfile = CATALOG.for_record(kind,record)
+		var path: String = profile.frames_path
+		if raw_path.begins_with("res://assets/actors/eight_direction/expanded/") and path!=raw_path:
+			# Production uses the full catalog record, whose explicit native
+			# override takes precedence over the preserved expansion fallback.
+			# Do not compare the new native canvas/poses with the old Flare proof.
+			check(str(record.get("animation_profile", {}).get("frames_path", ""))==path and ResourceLoader.exists(path) and profile.layout=="directional8", "explicit production override of preserved expansion " + key)
+			overrides[key]={"preserved":raw_path,"production":path}
+			preserved_sources[raw_path]=true
+		if not path.begins_with("res://assets/actors/eight_direction/expanded/"): continue
 		if kind=="transform":
-			var found := false
-			for row: Dictionary in db["변신"]:
-				if str(row.sourceId)==identity:
-					found=true
-					record=row
-					check(row.grade in ["영웅","전설","신화","유일"], "expanded real Hero+ ID "+key)
-			check(found,"transformation remains in DB "+key)
+			check(transform_records.has(identity),"transformation remains in DB "+key)
+			check(str(record.get("grade", "")) in ["영웅","전설","신화","유일"], "expanded real Hero+ ID "+key)
 		elif kind=="class":
 			check(identity.is_valid_int() and int(identity)>=0 and int(identity)<PLAYER_SCRIPT.CLASS_SHEETS.size(),"native base class remains in player class selection "+key)
 		else:
 			check(monster_records.has(identity),"monster remains in expanded production DB "+key)
-			record=monster_records.get(identity,record)
 		bindings[kind]+=1
-		var profile = CATALOG.for_record(kind,record)
-		check(profile.frames_path==path and profile.layout=="directional8","native production profile "+key)
+		check(profile.layout=="directional8","native production profile "+key)
 		var frames: SpriteFrames = CATALOG.frames_for_profile(profile,"")
 		check(frames!=null and CATALOG.first_texture(frames)!=null,"renderable resource "+key)
+		check(frames!=null and frames.resource_path==path,"exact effective expansion resource "+key)
 		if resources.has(path) or frames==null: continue
 		resources[path]=true
 		var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path.get_base_dir().path_join("provenance.json")))
@@ -88,6 +98,10 @@ func run() -> void:
 			retained.sprite_frames=frames
 			retained.animation="idle_0"
 			retained_key=path+":"+profile.layout
+	# The wyvern expansion is still bound to real monsters after Halpas393
+	# receives its own native pack. Preserve its full atlas/pose/contact audit.
+	for path: String in preserved_sources:
+		check(resources.has(path),"preserved expansion still audited through its production binding "+path)
 	# Make the eviction assertion independent of repeated shared-outfit bindings.
 	CATALOG.frames(retained_key.trim_suffix(":directional8"),"directional8")
 	for path: String in resources:
@@ -100,7 +114,7 @@ func run() -> void:
 		check(not CATALOG.frame_cache.has(retained_key),"old lookup entry evicted after many appearances")
 	check(retained.sprite_frames!=null and not retained.sprite_frames.get_frame_texture("idle_0",0).get_image().is_invisible(),"eviction retains live actor artwork")
 	retained.free()
-	print("NATIVE_EXPANSION_RESULT "+JSON.stringify({"assertions":assertions,"failures":failures,"bindings":bindings,"shared_outfits":resources.size(),"distinct_rgba_frames_global":global_pixels.size(),"lookup_cache_bytes":CATALOG.frame_cache_bytes}))
+	print("NATIVE_EXPANSION_RESULT "+JSON.stringify({"assertions":assertions,"failures":failures,"bindings":bindings,"profile_overrides":overrides,"shared_outfits":resources.size(),"distinct_rgba_frames_global":global_pixels.size(),"lookup_cache_bytes":CATALOG.frame_cache_bytes}))
 	quit(0 if failures.is_empty() else 1)
 
 func verify_contact(profile: TwilightAnimationProfile, frames: SpriteFrames, role: String, direction: int) -> void:

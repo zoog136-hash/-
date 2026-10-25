@@ -1,0 +1,31 @@
+{
+  "name": "zombie-lord-E-run6-support-columns-v02",
+  "direction": "E",
+  "role": "run",
+  "rows": 6,
+  "directions_axis": "phase_grid2",
+  "reference_rows": [
+    0,
+    1
+  ],
+  "playback_source_rows": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "support_columns": {
+    "left": "anatomical_RIGHT_grounded",
+    "right": "anatomical_LEFT_grounded"
+  },
+  "request": {
+    "prompt": "Use the supplied EXACT project ZOMBIE LORD reference as the only character design. A massive corpulent undead boss, pale gray-green mottled stitched skin, HUGE round exposed distended belly as the center of mass, tiny hunched neck and broad snarling head with sparse dark hair, very thick heavy arms and oversized bare feet. Preserve rusted nails/spikes in shoulder/back, heavy gold-rusted chains draped around neck/shoulders/chest and attached wrist shackles, ragged gray-brown skirt/loincloth, ornate antique gold pointed waist plate/belt. Both hands are EMPTY heavy fists/claws with connected chains; do not invent a sword, axe, shield, cape, horns or wings. Keep the SAME exceptional belly volume, broad shoulder/hip proportions, face, chain hardware and original muted palette in every pose. High-detail painted rendered mythic-tier fantasy RPG sprite, fixed elevated orthographic isometric camera. Non-graphic monster art: old mottled scar/stitch texture, no fresh blood or internal organs. Ignore unrelated tiny fragments at reference crop edges; reconstruct the complete top of head and full intact toes, never crop them.\n\nTRUE RIGHT SIDE/E facingRIGHT, matching supplied secondimage's camera and colors. NEAR leg is anatomicalRIGHT, FAR leg anatomicalLEFT. RIGHT COLUMN must deliberately change away from secondimage's repeated near-foot plant.\n\nSIX distinct poses on a PORTRAIT transparent1024x1536 sheet, exactly TWO columns THREE rows. SUPPORT COLUMNS, not row-major animation. LEFT column is RIGHT-leg stance halfcycle; RIGHT column LEFT-leg stance halfcycle. Top row trailing suspended swingfoot behindhip, middle row swingknee bends and heel raises high underhip, bottomrow swingknee/entirefoot lifts forward high. Supporting leg always stays planted flat in each column, with its hip/knee compressed under huge mass. LEFT COLUMN: NEAR/RIGHT foot fully planted, FAR/LEFT foot airborne. RIGHT COLUMN: FAR/LEFT foot fully planted under giant body, NEAR/RIGHT leg held HIGH with knee bent and the ENTIRE near bare foot at SHIN/KNEE HEIGHT, visibly far above the grounded far foot. It is crucial that NO near/right toes can touch ground in RIGHT column. Show visible gap under raised NEAR foot. Far planted foot is complete, flat grounded and load-bearing. Cannot repeat left column's near-foot plant on right. Playback reads DOWN leftcolumn then DOWN rightcolumn [0,2,4,1,3,5]. Preserve same giant belly/chains/shoulder spikes/palette/body scale; only articulated legs/hips/arms/chain secondary motion change. Do NOT mirror whole figure.\n\nCLEAN ALPHA OUTLINE AND GAPS: make each figure SMALL about240pixels tall, 210pixels wide maximum, centers roughly(256,256),(768,256),(256,768),(768,768),(256,1280),(768,1280), leaving at least160pixels pure transparent alpha0 between every bounding rectangle. Every single visible pixel belongs to its ONE opaque connected figure. No detached skin/scar flecks, no disconnected outline specks, no loose chain rings, no noise/dither, no feathered isolated edgepixels. Smooth clean continuous silhouette alpha, connected chains. Full head/feet/chains; no clipping. Pure alpha0 background, no floor/shadow/lines/text/grid/labels/particles. Same physical scale everycell, no perposefit.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/reference-project-crop.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-run6-support-columns-v01.png"
+    ]
+  }
+}

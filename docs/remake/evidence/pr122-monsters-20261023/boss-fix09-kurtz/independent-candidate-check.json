@@ -1,0 +1,260 @@
+{
+  "schema": "pr122-kurtz-r003-independent-candidate-integrity-v1",
+  "date": "2026-10-23",
+  "candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/candidate.json",
+    "sha256": "1b08547165e3e7faf1dcfcf163265e553fa679d75c3e28fdd054ed8b70fcf34c"
+  },
+  "source_checks": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/source-checks.json",
+    "sha256": "b2a659b6f6bbbd3498e3c663fd54322b9410f50ee247fc527731560cdb5217a6"
+  },
+  "result": "PASS_FOR_DECLARED_PARTIAL_CANDIDATE_INTEGRITY",
+  "native_complete": false,
+  "new_approvals": 0,
+  "full_mythic_approvals": 0,
+  "source_assets_changed": 0,
+  "method": "Read-only independent raw PNG SHA, exact cropped RGBA hashes, candidate-vs-source geometry pose membership, source/texture byte identity, profile/frames pins and excluded-track absence checks. No rendering or generation. Actual visual observations are the separately frozen first2/last2/SW-reuse review JSONs.",
+  "counts": {
+    "tracks": 17,
+    "poses": 58,
+    "new_tracks": 6,
+    "new_poses": 12,
+    "reused_tracks": 11,
+    "reused_poses": 46,
+    "selected_new_sources": 3,
+    "verified_new_source_crops": 12,
+    "missing_required_tracks": 16
+  },
+  "new_source_rows": [
+    {
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-S-idle-hit4-v01.png",
+        "sha256": "18aa6362fa7704ac1aa93de4b59df086ce77b6a725510008a69a50f6e84dc3d7"
+      },
+      "selected_direction": "S",
+      "verified_crops": [
+        {
+          "source_row": 0,
+          "region": [
+            80,
+            5,
+            516,
+            600
+          ],
+          "actual_rgba_sha256": "8943df67ca982376eb0041f7c5d06041bcb42dce8119568aa6b0541467100b22",
+          "matches_declared": true
+        },
+        {
+          "source_row": 1,
+          "region": [
+            694,
+            8,
+            496,
+            596
+          ],
+          "actual_rgba_sha256": "a723273ff35cde480fbdd901803fab7caf13cb42da898e8d640a8a16eea776fd",
+          "matches_declared": true
+        },
+        {
+          "source_row": 2,
+          "region": [
+            63,
+            650,
+            524,
+            561
+          ],
+          "actual_rgba_sha256": "e085f663eed3bb52392decc948821c48905d4972676f9c5839bc0675ca5e2659",
+          "matches_declared": true
+        },
+        {
+          "source_row": 3,
+          "region": [
+            663,
+            639,
+            573,
+            574
+          ],
+          "actual_rgba_sha256": "0c6591c5a126a89a1344daa8940c29d739b9e390e9b7b082b66aeb8e22db328f",
+          "matches_declared": true
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v01.png",
+        "sha256": "978d10177b5fba11d14d57333e97dabb72a5608664c79b3ef53a519c4b6c3769"
+      },
+      "selected_direction": "SE",
+      "verified_crops": [
+        {
+          "source_row": 0,
+          "region": [
+            65,
+            5,
+            501,
+            619
+          ],
+          "actual_rgba_sha256": "813598bd7dca8a6015354ed59ef708a8cca5e1fb7eb195f65f8fefcf92ffc8f4",
+          "matches_declared": true
+        },
+        {
+          "source_row": 1,
+          "region": [
+            679,
+            12,
+            516,
+            613
+          ],
+          "actual_rgba_sha256": "7b9b709fe5847f7e68472e80dba4dfb5f753ffef5bcab9d694322059f739417b",
+          "matches_declared": true
+        },
+        {
+          "source_row": 2,
+          "region": [
+            49,
+            653,
+            501,
+            559
+          ],
+          "actual_rgba_sha256": "c169edec69fa3467ef634ef50e12d1d6a89e7ee9da89b91b7a240136b21c9169",
+          "matches_declared": true
+        },
+        {
+          "source_row": 3,
+          "region": [
+            683,
+            655,
+            529,
+            563
+          ],
+          "actual_rgba_sha256": "f5b60b1aeb3dc3be8f6d5ae63a12b5ce24a1fb19e394d716858164831e2e1c35",
+          "matches_declared": true
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v02.png",
+        "sha256": "8ae4dad2afcbf156a0586b7f8dd0fcacfbf4b21a39356a33f5c9776ead69f061"
+      },
+      "selected_direction": "E",
+      "verified_crops": [
+        {
+          "source_row": 0,
+          "region": [
+            91,
+            5,
+            404,
+            608
+          ],
+          "actual_rgba_sha256": "7aea856f8c849a74007488993d074f29d310ae9b4dac622eef6df7c7c1744cd5",
+          "matches_declared": true
+        },
+        {
+          "source_row": 1,
+          "region": [
+            716,
+            6,
+            390,
+            607
+          ],
+          "actual_rgba_sha256": "25b20dffd28d6124e91be10c40d6d9d357df735528002247c31d91d554f6a66b",
+          "matches_declared": true
+        },
+        {
+          "source_row": 2,
+          "region": [
+            66,
+            643,
+            471,
+            579
+          ],
+          "actual_rgba_sha256": "7f11452b83ef39d1410409b44f791af2503bacb038505f9a057dd21a1267da7f",
+          "matches_declared": true
+        },
+        {
+          "source_row": 3,
+          "region": [
+            715,
+            674,
+            471,
+            551
+          ],
+          "actual_rgba_sha256": "88ee887abd06fe3d6073b6e44e2b1c43340b6e01f5b40d74106417330e90ea2e",
+          "matches_declared": true
+        }
+      ]
+    }
+  ],
+  "new_track_names": [
+    "idle_2",
+    "hit_2",
+    "idle_1",
+    "hit_1",
+    "idle_0",
+    "hit_0"
+  ],
+  "reused_track_names": [
+    "run_0",
+    "run_1",
+    "run_6",
+    "run_7",
+    "run_2",
+    "death_2",
+    "idle_6",
+    "hit_6",
+    "idle_7",
+    "hit_7",
+    "attack_3"
+  ],
+  "excluded_tracks_verified_absent": [
+    "run_3",
+    "run_4",
+    "run_5",
+    "idle_4",
+    "idle_5",
+    "hit_4",
+    "hit_5",
+    "attack_2"
+  ],
+  "missing_required_tracks": [
+    "attack_0",
+    "attack_1",
+    "attack_2",
+    "attack_4",
+    "attack_5",
+    "attack_6",
+    "attack_7",
+    "hit_3",
+    "hit_4",
+    "hit_5",
+    "idle_3",
+    "idle_4",
+    "idle_5",
+    "run_3",
+    "run_4",
+    "run_5"
+  ],
+  "all_candidate_source_textures_match": true,
+  "new_pose_membership_exact_and_unique": true,
+  "visual_review_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-first2-review.json",
+      "sha256": "2fd11bd138029f983a0d8a35b137067baac1c329c1b4b5e8c5f0928d957478ab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-last2-review.json",
+      "sha256": "fdb26b8e3103a7855d8b5eab46dcd1e4f77e74a29fb8d2532046047343a0144e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/independent-SW-reuse-review.json",
+      "sha256": "4804fda860710bfa4d2919d696c9cf534ee52a07eb09a2cdf2191509923e2f8e"
+    }
+  ],
+  "limitations": [
+    "Partial17/33 tracks intentionally remain incomplete; missing16 must not become a completed status through proxy fallback.",
+    "This integrity check does not independently validate native Godot playback, timing or final mythic quality.",
+    "No excluded wrong-direction/wrong-hand source was selected merely to fill counts."
+  ]
+}

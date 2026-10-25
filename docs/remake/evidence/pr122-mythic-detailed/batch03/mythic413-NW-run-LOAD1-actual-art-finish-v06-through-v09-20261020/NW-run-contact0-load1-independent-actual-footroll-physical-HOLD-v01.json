@@ -1,0 +1,134 @@
+{
+  "schema": "independent-private-actual-NW-run-contact-load-footroll-gate-v1",
+  "status": "PHYSICAL_HOLD_NO_OBSERVED_HEEL_ONLY_TO_FOREFOOT_LOAD_ROLL",
+  "contact0": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482"
+  },
+  "load1_static_passed": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v08/thunder_female-NW-run-load1-actual-rig-v08.png",
+    "sha256": "c2b97494baa8d1f7376f1d8ca1ab0c4d5aebad4962f3940d8a02c3f099fbb915",
+    "static_gate_proof_sha256": "da4af87e531aefd136a2dbeedbd61a76a84d6b45a0b7e3d07123cc1b013ce485"
+  },
+  "actual_markers_raw": {
+    "source0_structural_heel": [
+      583.5,
+      1191.0
+    ],
+    "source0_forefoot_structural_sole": [
+      535,
+      1164
+    ],
+    "source0_tarsal": [
+      564,
+      1075
+    ],
+    "uncertainty_heel": [
+      1.5,
+      1.5
+    ],
+    "uncertainty_forefoot": [
+      4,
+      4
+    ],
+    "uncertainty_tarsal": [
+      8,
+      8
+    ]
+  },
+  "finite_observed_invariant": {
+    "same_complete_actual_shoe_geometry_scale": 1,
+    "same_complete_actual_shoe_rotation_between_sources": 0,
+    "same_complete_actual_shoe_translation": [
+      139.19289850280273,
+      125.27360865252246
+    ],
+    "heel_planted_relative_to_clock": true,
+    "forefoot_relative_to_heel_unchanged": true,
+    "ankle_relative_to_heel_unchanged": true,
+    "finding": "The pair does not visibly articulate heel-only CONTACT to forefoot-loaded LOAD. If source0 is heel-only, source1 retains that sole pitch; if source1 is already flat, source0 has the same foot pose. Isolated source0 static intention is not absolute ground proof."
+  },
+  "minimum_finite_constructive_correction": {
+    "scope": "One declared natural-toeout rigid-3D shoe construction, not uniquely image-recovered anatomy or physical approval.",
+    "projection": "raw_x=X/.9; raw_y=Y-Z; native XYZ worldunit=.0948275862068",
+    "source_forefoot_local_XYZ": [
+      -43.65,
+      -13.0,
+      14.0
+    ],
+    "source_ankle_local_XYZ": [
+      -17.55,
+      -16.0,
+      100.0
+    ],
+    "declared_depths": {
+      "heel_Z": 0,
+      "source_forefoot_Z": 14,
+      "source_ankle_Z": 100
+    },
+    "heel_forefoot_length_native": 47.64790131789647,
+    "roll_axis_XYZ": [
+      0.2854336776850625,
+      -0.9583984639194597,
+      0.0
+    ],
+    "heel_pitch_roll_degrees": 17.086910688806988,
+    "LOAD_fixed_heel_raw": [
+      722.6928985028028,
+      1316.2736086525224
+    ],
+    "LOAD_flat_forefoot_raw": [
+      671.9532591338495,
+      1302.6732929453804
+    ],
+    "LOAD_rigid_rolled_tarsal_raw": [
+      672.9094395379984,
+      1202.8542974367783
+    ],
+    "LOAD_rigid_rolled_tarsal_Z": 89.30209541074508,
+    "LOAD_original_hip_XYZ_frozen": [
+      552.6,
+      1333.4292914636494,
+      571.4292914636495
+    ],
+    "fixed_bone_length_native": [
+      250,
+      250
+    ],
+    "closest_prior_knee_raw": [
+      582.7881766604897,
+      1004.7318237199474
+    ],
+    "closest_prior_knee_XYZ": [
+      524.5093589944407,
+      1327.807907178121,
+      323.07608345817357
+    ],
+    "recomputed_bone_lengths": [
+      250.0,
+      250.00000000000009
+    ],
+    "no_hidden_plane_search_needed": true,
+    "required_actual_work": "Articulate actual complete shoe and continuous tarsal/calf material at these finite pins; validate actual structural forefoot contact patch and heel, preserving natural toe-out and excluding ornaments from sole constraints."
+  },
+  "model_dependency": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/actual-pair-fixed-bone-and-staff-rig-proposal-v01.json",
+    "sha256": "b9fa7f5e90954824da36b3bc812ff0c3239104353357fb4ae8aec33b1b175e74",
+    "scope": "Constructive prior hip/bone depths; root/C unchanged."
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-physical-footroll-gate-frozen.json",
+    "sha256": "7ce3bf2e6f3aa9301f1dcd8aeb79d234ae4dd8858c150c030d8450387e41b05b",
+    "total_image_bytes": 5095136
+  },
+  "source_static_approval_retained": true,
+  "physical_planting_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

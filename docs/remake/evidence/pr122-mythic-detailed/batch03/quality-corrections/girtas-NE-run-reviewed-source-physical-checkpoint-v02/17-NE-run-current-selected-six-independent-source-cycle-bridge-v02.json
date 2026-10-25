@@ -1,0 +1,189 @@
+{
+  "schema": "pr122-independent-selected-native-source-cycle-bridge-v1",
+  "utc": "2026-10-20T07:10:00.727842+00:00",
+  "reviewer": "/root/girtas_ne_final_source_and_cycle_qc_fresh",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "status": "PASS_CURRENT_EXACT_SELECTED_SIX_SOURCE_AND_CANDIDATE_CYCLE",
+  "source_visual_status": "PASS",
+  "source_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "raw_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "source_manifest": {
+    "path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/selected-six-bounded-contacts-PROVISIONAL-v01.json",
+    "sha256": "30928e3c5d0cf115bc4f6060c3cd1aa55ab9fccf2f9572fb3e27a4dfe931ff35"
+  },
+  "selected_sources": [
+    {
+      "phase": 0,
+      "folder": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+      "raw_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+      "request_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/request.json",
+      "request_sha256": "52bc84db9bdcb375b25234611b6d83312d451a177ff8619c5695d09eacc80028",
+      "source_crop_proof_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/source-crop-alpha16-proof-v02.json",
+      "source_crop_proof_sha256": "036090d41d711805d7cad71411563146514fb473392e57aafb017848c034aa8d",
+      "bounded_exact_RGBA_proof_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/exact-bounded-preservation-proof-v02.json",
+      "bounded_exact_RGBA_proof_sha256": "fa11bc6577c96c01d2d501b82161814866d9fc9bd348c1ab07887ee3d5c99e8e",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "fixed_effective_C": 1936,
+      "raw_composite_resampled": false,
+      "ancestor_original_source": {
+        "path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+        "sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+        "bytes": 1227994
+      },
+      "earlier_source_identity_ownership_proof": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/NE-new-farLEFT-run0-source-ownership-independent-QC.json",
+        "sha256": "96e94ac247ee699cdf697b84af38c4b9d4b27b1987c2dbc7bc12f2790ed1fdc6",
+        "bytes": 3056
+      },
+      "source_review_status": "PASS_SOURCE_ONLY",
+      "physical_status": "HOLD_PENDING_NEW_SIX_PROJECTED_ROOT_REVIEW",
+      "actor_approval": false,
+      "new_approvals": 0,
+      "independent_source_review_path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-contact0-bounded-v02-independent-source-PASS.json",
+      "independent_source_review_sha256": "f71977cb04e446a7176b92561b65024e58fa69d2d89776f77c636a97cdd049c8"
+    },
+    {
+      "phase": 1,
+      "folder": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03",
+      "raw_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/girtas-NE-run-LEFT-compression1-complete-endpoint-v03.png",
+      "raw_sha256": "aeee4ab97376b2520e07f6ce140434930cf9400f2fe928d1fb63afa8d58d87c6",
+      "request_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/request.json",
+      "request_sha256": "59dbdf6478a5e872aaa664d31b4053eee2fbcd8c20c170aeb8bb83360c50222f",
+      "source_crop_proof_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/source-crop-alpha16-proof.json",
+      "source_crop_proof_sha256": "f0cecedded4bea0dc1afa69fdc0329b1ccad4b3ea7661c19ece24f2a271f3941",
+      "geometry_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/geometry-base2048.json",
+      "geometry_sha256": "1298d9741c29eb6dff898424e471828071023c2e4f516695d3c9c5097983a27c",
+      "independent_source_review_path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new1-2-5-source-PASS-original4-ownership-HOLD-independent-QC-v01.json",
+      "independent_source_review_sha256": "59007d18f69c2ee0348c762ecb64b332e64a3a709d511e9750d5ca8f0698bd54"
+    },
+    {
+      "phase": 2,
+      "folder": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/girtas-NE-run-RIGHT-flight2-from-run3-v01.png",
+      "raw_sha256": "2e4dd041fc58fc0faa25eb91008875e9525d3c93b842a70e00cd6f7793367177",
+      "request_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/request.json",
+      "request_sha256": "52e9ac7f6598c93029109855cfa2b918225a3d059e6e705a9480c9a974297e73",
+      "source_crop_proof_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/source-crop-alpha16-proof.json",
+      "source_crop_proof_sha256": "e480bb48ccfbe38d46184e5aa333fd2cb634ac2f1ef2cc649b2f1cfe9845af65",
+      "geometry_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/geometry-base2048.json",
+      "geometry_sha256": "f9068122702c4a28763a55e90cc06cbbbb65192f44fd04499143a916baf21425",
+      "independent_source_review_path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new1-2-5-source-PASS-original4-ownership-HOLD-independent-QC-v01.json",
+      "independent_source_review_sha256": "59007d18f69c2ee0348c762ecb64b332e64a3a709d511e9750d5ca8f0698bd54"
+    },
+    {
+      "phase": 3,
+      "folder": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-v04.png",
+      "raw_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+      "request_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/request.json",
+      "request_sha256": "06f3350e509e3b9381fd8e1de020443ec68026a7438badc8c284e0120bcd8534",
+      "source_crop_proof_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/source-crop-proof-v05-canonical-alias.json",
+      "source_crop_proof_sha256": "5972e05312e7c017ae41f9b3722fbdd3652b185a8817eda6a0bbdcd1ae7382e2",
+      "bounded_exact_RGBA_proof_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/outside-semantic-ROI-exact-RGBA-proof-v04.json",
+      "bounded_exact_RGBA_proof_sha256": "d6abe86eeb7b478b3bac0bff262ae2df3123665d63cfb4df10360d8695a32d4b",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "fixed_effective_C": 1776,
+      "raw_composite_resampled": false,
+      "ancestor_original_source": {
+        "path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+        "sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+        "bytes": 1285085
+      },
+      "earlier_source_identity_ownership_proof": {
+        "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new-contact0-HOLD-contact3-PASS-independent-source-QC-v01.json",
+        "sha256": "b01c7cab2d90930852a8033969aa29e51da950e2cc8774230e2211e27d9c0d54",
+        "bytes": 6390
+      },
+      "source_review_status": "HOLD_PENDING_FINAL_INDEPENDENT_SOURCE_REVIEW_CAPACITY_BLOCK",
+      "physical_status": "HOLD_PENDING_NEW_SIX_PROJECTED_ROOT_REVIEW",
+      "actor_approval": false,
+      "new_approvals": 0,
+      "geometry_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/geometry-base2048-v04.json",
+      "geometry_sha256": "f491e7de2697f01615d7207e81a9cf829416e45173b27ad61cdeab6e454ea0a7"
+    },
+    {
+      "phase": 4,
+      "folder": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02",
+      "raw_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02.png",
+      "raw_sha256": "c86670e35fbfb1f2a1af607130f119878b3bf089e7be5e610f55f24f5e5b2279",
+      "request_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/request.json",
+      "request_sha256": "f60b6c36b63ca653959fb5a966862fb8e604eed4c259aa8da11f436e20a65f7f",
+      "source_crop_proof_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/source-crop-alpha16-proof.json",
+      "source_crop_proof_sha256": "ee12cc0d681cfb145cf9780396957521be53e3ff15d41c9c12bd41ab1f4e0216",
+      "geometry_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/geometry-base2048.json",
+      "geometry_sha256": "bf7a79fd10658fc0b5422410fec10231284285359f6368424ad41e1a47f4ccca",
+      "independent_source_review_path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run4-repaired-nearRIGHT-load-source-ownership-PASS.json",
+      "independent_source_review_sha256": "37650a221e1bf69b1d21eb5527345f8ab48c3d0937cf6db48ee32bad1dedc719"
+    },
+    {
+      "phase": 5,
+      "folder": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/girtas-NE-run-LEFT-flight5-from-run0-v01.png",
+      "raw_sha256": "7b07b03dd9a17c1efbe56da03d9e2d18330adac5b7aec0f524f9d3e976187c31",
+      "request_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/request.json",
+      "request_sha256": "2e502849a0dcb7061f17c05de8d165c8c26461919173ce6d620d1732585539e2",
+      "source_crop_proof_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/source-crop-alpha16-proof.json",
+      "source_crop_proof_sha256": "61f03a4db0721735bdf0ef34b988056a995423793637b2edbd43f67440cac64d",
+      "geometry_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/geometry-base2048.json",
+      "geometry_sha256": "d2ecb4b2c9e997b494f082f57e03b014b2833ebfe038614215579fdb9e6e4e10",
+      "independent_source_review_path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new1-2-5-source-PASS-original4-ownership-HOLD-independent-QC-v01.json",
+      "independent_source_review_sha256": "59007d18f69c2ee0348c762ecb64b332e64a3a709d511e9750d5ca8f0698bd54"
+    }
+  ],
+  "new_bounded_contact_source_reviews": [
+    {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-contact0-bounded-v02-independent-source-PASS.json",
+      "sha256": "f71977cb04e446a7176b92561b65024e58fa69d2d89776f77c636a97cdd049c8"
+    },
+    {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/NE-run-contact3-bounded-v04-independent-source-PASS.json",
+      "sha256": "3c327d250d6770064df028f94f4ff29c6f1c3c2e5652777056d7a8769cc80afd"
+    }
+  ],
+  "unchanged_phases_exact_source_and_request_transfer": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "prior_source6_scope_review": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-selected-final-six-independent-source-cycle-bridge-v01.json",
+    "sha256": "8e99326ebfe236e3d47c9106ddf58f645aed095da1325bf77aa8b9a3c466d307"
+  },
+  "current_whole6_independent_physical_and_cycle": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/NE-run-whole6-new-contacts-v02-independent-physical-PASS.json",
+    "sha256": "1a23acdea4b402fc59dc3e58aa9d039fa4d8842384676b07f47a7577e0990139"
+  },
+  "visual_findings": [
+    "Current source0/source3 show genuine edited knee flexion and intact heel-to-forefoot shapes; the other four actual painted source poses, selected source hashes, and six accepted rigid Cs are preserved.",
+    "The new actual common-world sequence shows consistent skull, near shoulder armor and uppercore size. Idle entry to contact0 no longer has the old 26-world core jump; current foot-ground placement follows the actual edited legs.",
+    "FAR_LEFT0 lands on the heel and rolls into flexed load1; NEAR_RIGHT3 lands and rolls into flexed load4. Direct boot detail shows finite boot width, outturn and heel/forefoot roll; the full shoe perimeter cannot be equated with one heel-center lateral slice.",
+    "The finite-foot sidecar retains the old constant-lateral negative-gap diagnostics explicitly. Its conditional perimeter coordinates agree with the actual broad rolled boot shapes; they are not treated as a flat-Y floor or an automatic certificate for every silhouette point.",
+    "AIR2 and AIR5 have real alternate leading/recovery leg poses. Independently recomputed whole-boot alpha100 conservative clearances remain positive for all four boots after declared lateral intervals and adversarial 4-native-pixel X/Y error.",
+    "At actual12.5fps/.08-second pose timing, the sequence reads as a strong bounding run: compressed loads lead into genuine airborne poses, and extended-leg AIR5 descends into the new bent-knee contact0 with visible weight absorption. The23.41-world registration descent is exposed and supported by the actual changing leg pose rather than a root-only displacement.",
+    "Current contact-to-load uppercore registration drops9.77/7.49world follow the visible compression. No flat foot-Y rule, cloth-V hip surrogate, fixed idle waist height, source rescale or body-size retune was used.",
+    "The six exact reviewed source-region RGBA crops and all alpha>16 pixels are preserved in atlas3287. Raw originalPNG files remain unchanged; low-alpha pixels outside the pre-existing reviewed crop contract are recorded separately and are not falsely claimed as whole-PNG raster equality."
+  ],
+  "visual_limitations": [
+    "This is independent approval of the exact new source/physical candidate. Compiled SpriteFrames, actualPlayer frame mapping, defaultMain connection, all48 actor quality and detailed actor approval remain pending.",
+    "The observed body lift is a deliberately strong bounding gait. No physical proof of a unique hidden 3D pelvis or sole mesh is claimed from 2D source art; finite-foot roll/width/depth and authored ground projection are pinned explicitly.",
+    "The earliest18d atlas/physicalHOLD6af534 remains historical. This closure applies only to new3287 atlas and the exact candidate layout/regions/geometry/authorship pins below."
+  ],
+  "selection_manifest_status_note": "The immutable PROVISIONAL manifest records selection before final independent review. This exact new certificate closes the selected-source/candidate-cycle review for its pinned files without rewriting that history.",
+  "actual_runtime_status": "PENDING_ACTUAL_COMPILED_PLAYER_AND_DEFAULT_MAIN",
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "new_source_pose_count": 0,
+  "repository_mutations": false,
+  "images_attached_to_main_or_parent": false
+}

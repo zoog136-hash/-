@@ -1,0 +1,550 @@
+{
+  "schema": "PR122-own-SE-native-complete-arms-staff-and-core-INPUT-v1",
+  "status": "NATIVE_PARTS_INPUT_PENDING_ACTUAL_JOINT_SOURCE_QC_AND_OCCLUDED_CAPE_RETOUCH",
+  "source": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/SE-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "a322b55c6ff5a0945cb5480512007c4efe2c335ab4a690bdd57bbca18226f076",
+    "bytes": 992950
+  },
+  "once_registration": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/SE-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "7c7ab9bed7adb561762c88a39facb00815b5ab2c23cec533d0adbcf7d757f1c6",
+    "bytes": 3724
+  },
+  "C": 2816.0,
+  "bodyunit": 2.75,
+  "common_rig_root_in_unpadded_frame": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "production_storage_translation": [
+    128,
+    128
+  ],
+  "native_size": [
+    1254,
+    1254
+  ],
+  "actual_native_controls": {
+    "RIGHT_near_shoulder": [
+      620,
+      343
+    ],
+    "RIGHT_near_cuff_elbow": [
+      552,
+      459
+    ],
+    "RIGHT_near_wrist": [
+      417,
+      482
+    ],
+    "RIGHT_original_grip": [
+      382,
+      466
+    ],
+    "LEFT_far_visible_proximal_anchor": [
+      801.0,
+      491.0
+    ],
+    "LEFT_far_cuff_elbow": [
+      823.0,
+      516.0
+    ],
+    "LEFT_far_wrist": [
+      935.0,
+      584.0
+    ]
+  },
+  "parts": {
+    "RIGHT-near-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-RIGHT-near-upper-arm-native-v01.png",
+      "sha256": "a2c594148e08552bf31fdd8549e851f4aae98a21af2e3dec23267665f6d0653d",
+      "bytes": 38215
+    },
+    "RIGHT-near-complete-forearm-grip-hand": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-RIGHT-foregrip-including-all-original-fingers-v04.png",
+      "sha256": "3bc26e02ccf949cc45e6b82ced43d973e375c920517867ebb0a1d02a29519068",
+      "bytes": 46136
+    },
+    "LEFT-far-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-LEFT-far-upper-arm-native-v01.png",
+      "sha256": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "bytes": 17558
+    },
+    "LEFT-far-complete-curved-cuff-forearm-free-hand": {
+      "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/common-own-SE-native-LEFT-materials-v01/original-actual-SE-LEFT-far-complete-curved-cuff-forearm-free-hand-material-v01.png",
+      "sha256": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "bytes": 47441
+    },
+    "complete-rigid-RIGHT-near-staff": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-rigid-RIGHT-pole-full-native-contour-without-fingers-v04.png",
+      "sha256": "e78a4101b5fb0b479400725ec3be5fb0a760cb53239cc16e7eff92bcf4839ed8",
+      "bytes": 148496
+    }
+  },
+  "semantic_mattes": {
+    "RIGHT-near-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-RIGHT-near-upper-arm-semantic-matte-v01.png",
+      "sha256": "71e01e04f64756608fa713878f2e24d19b1ac08c75f796e72aae81549f0b11fc",
+      "bytes": 2735
+    },
+    "RIGHT-near-complete-forearm-grip-hand": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-RIGHT-foregrip-all-fingers-semantic-matte-v04.png",
+      "sha256": "51088510845caa56fa6e397bb3c95b6114e6c7da919501f9169cd1aeef591a67",
+      "bytes": 2410
+    },
+    "LEFT-far-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-LEFT-far-upper-arm-semantic-matte-v01.png",
+      "sha256": "d94adfd32b189487569d832a86007debcb96496a7450f5c0726121d731890eab",
+      "bytes": 2040
+    },
+    "LEFT-far-complete-curved-cuff-forearm-free-hand": {
+      "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/common-own-SE-native-LEFT-materials-v01/original-actual-SE-LEFT-complete-curved-cuff-forearm-hand-native-ownership-mask-v01.png",
+      "sha256": "593de262c0e69bf3862706e188edbd62df211127b63408d4a7fa97f8a5784a58",
+      "bytes": 3073
+    },
+    "complete-rigid-RIGHT-near-staff": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-native-RIGHT-pole-visible-source-erasure-matte-v04.png",
+      "sha256": "cb38787e49318e7e65ebb0dcffe23dfb4b297b87e3c4b95af203093df043de53",
+      "bytes": 6836
+    }
+  },
+  "fullCORE": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/actual-SE-full-old-arms-pole-erased-CORE-original-boots-and-continuous-cape-v04.png",
+    "sha256": "0ff8bdfa435b486c040aad61ef3feb09fc0ec183eba3de0c43ef6f61379ffa05",
+    "bytes": 785115
+  },
+  "complete_old_erasure_mask": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/actual-SE-complete-old-arms-and-pole-source-erasure-mask-v04.png",
+    "sha256": "38c32bb687f538661f7e1d6d5c1cf8ed29b3dcf6494e022cbbda793a2de5bd1b",
+    "bytes": 9241
+  },
+  "shared_LEFT_material": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/common-own-SE-native-LEFT-materials-v01/SE-own-native-complete-LEFT-and-old-erased-BODY-readonly-handoff-v01.json",
+    "sha256": "e5f4614e6690a0603f0216d28eb625dfe1717a839503e2ec29755ab261865d3b",
+    "bytes": 4883
+  },
+  "staff_axis_once_from_original_visible_metal": [
+    0.06918523465484805,
+    351.7229676400946
+  ],
+  "upper_pole_actual_component_alpha16_pixels": 23018,
+  "old_original_source_modified": false,
+  "C_OR_root_fitted_OR_actor_resampled": false,
+  "actor_approvals_added": 0,
+  "understaff_cape_status": "ACTUAL_NEW_CONTINUOUS_SE_CAPE_CANDIDATE_PENDING_INDEPENDENT_NATIVE_SOURCE_QC",
+  "prior_material": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-local-cape-strict-mask-v03/SE-ATTACK-own-complete-native-materials-and-actual-local-cape-provenance-v03.json",
+    "sha256": "43af4dd6e3e62802ce5b54902f7ae91374580a0b3db50f451f7dfc732cd3f9fd",
+    "bytes": 8813
+  },
+  "complete_original_lower_pole_RGBA_transferred": 4851,
+  "lower_native_pole_part_source_RGBA_difference": 0,
+  "actual_local_cape_retouch": {
+    "service_handoff": {
+      "path": "/workspace/scratch/mythic413-SE-cape-clearplate-private-retouch-continuing-20261020-v01/SE-cape-local-retouch-final-handoff-v01.json",
+      "sha256": "b1e216daba74fc07e834690bc461093e29cbebe88c66fa7bf356222dc032f317",
+      "bytes": 2911
+    },
+    "raw_unmodified": {
+      "path": "/workspace/scratch/mythic413-SE-cape-clearplate-private-retouch-continuing-20261020-v01/service-SE-cape-local-retouch-native-r001.png",
+      "sha256": "929dc8242992f1bfaccb1533b3b08108c2041bc3dd98459aa5dc43e75d049a8c",
+      "bytes": 1403251
+    },
+    "fixed_requested_crop_rect": [
+      275,
+      750,
+      525,
+      1000
+    ],
+    "raw_size": [
+      1254,
+      1254
+    ],
+    "local_native_paint": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-local-cape-strict-mask-v03/actual-local-SE-painted-cape-fixed-native250-registration-v03.png",
+      "sha256": "085dcac29157bc22f095e0429dbcf3fec8ea1e1e3e003e69df8a45e74fbfe022",
+      "bytes": 79976
+    },
+    "source_masked_only_plate": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/actual-original-SE-source-only-bounded-expanded-cape-paint-v04.png",
+      "sha256": "6a7f5affbc43c5997eeb5389e1ca113901c70e4792b0aff3ce9627e7365c0111",
+      "bytes": 987995
+    },
+    "replacement_mask": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-SE-real-cape-native-mask-250.png",
+      "sha256": "33c5104adbfa41b99d2f150583f07925d1350c9a1604257aa01bbb22795dd39b",
+      "bytes": 1052
+    },
+    "replacement_pixels": 28995,
+    "outside_replacement_source_RGBA_difference": 0,
+    "outside_replacement_CORE_RGBA_difference": 0,
+    "C_root_bodyunit_OR_actor_resampling_OR_perposefit_changed": false,
+    "local_texture_registration": "The one actual new local cloth service crop maps once from1254square to logical250square, actorbody unchanged.",
+    "expanded_actual_cape_mask": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/actual-SE-expanded-actual-cape-fold-and-gold-boundary-allowed-mask-native-v04.png",
+      "sha256": "22b364a44236ad520bd20972a94a341026e9a114122b847f94de0a3b149339a4",
+      "bytes": 3366
+    },
+    "original6583mask_preserved": true,
+    "native_mask_expansion_basis": "Only actual cape visible bluefold/gold motif/hem plus true oldpole-occluded cape; sourcebody/othergear/boots unchanged. Original visible alpha retained outside native pole/cape occlusion."
+  },
+  "actual_hand_pole_material_ownership": {
+    "original_source_skin_hand_in_foregrip_RGBA_diff": 0,
+    "native_skin_hand_original_pixels": 2926,
+    "wrong_generic_gold_predicate_corrected": true,
+    "source_hand_rect": [
+      348,
+      441,
+      417,
+      497
+    ],
+    "hand_pink_pixels_in_rigid_pole": false,
+    "exposed_real_shaft_above_below_hand_owner": "complete-rigid-RIGHT-near-staff",
+    "source_pole_contour_native_original_trace": {
+      "left": [
+        [
+          394,
+          750
+        ],
+        [
+          395,
+          775
+        ],
+        [
+          392,
+          783
+        ],
+        [
+          391,
+          789
+        ],
+        [
+          387,
+          793
+        ],
+        [
+          383,
+          798
+        ],
+        [
+          389,
+          802
+        ],
+        [
+          391,
+          806
+        ],
+        [
+          391,
+          812
+        ],
+        [
+          395,
+          818
+        ],
+        [
+          394,
+          823
+        ],
+        [
+          390,
+          830
+        ],
+        [
+          385,
+          837
+        ],
+        [
+          384,
+          842
+        ],
+        [
+          391,
+          848
+        ],
+        [
+          395,
+          854
+        ],
+        [
+          389,
+          861
+        ],
+        [
+          384,
+          866
+        ],
+        [
+          382,
+          870
+        ],
+        [
+          389,
+          878
+        ],
+        [
+          390,
+          881
+        ],
+        [
+          384,
+          884
+        ],
+        [
+          381,
+          888
+        ],
+        [
+          379,
+          895
+        ],
+        [
+          382,
+          900
+        ],
+        [
+          389,
+          906
+        ],
+        [
+          390,
+          909
+        ],
+        [
+          387,
+          913
+        ],
+        [
+          381,
+          920
+        ],
+        [
+          377,
+          928
+        ],
+        [
+          376,
+          932
+        ],
+        [
+          383,
+          939
+        ],
+        [
+          387,
+          947
+        ],
+        [
+          391,
+          955
+        ],
+        [
+          399,
+          963
+        ],
+        [
+          402,
+          968
+        ],
+        [
+          399,
+          973
+        ],
+        [
+          393,
+          978
+        ],
+        [
+          388,
+          984
+        ],
+        [
+          386,
+          990
+        ],
+        [
+          383,
+          995
+        ],
+        [
+          382,
+          1000
+        ]
+      ],
+      "right": [
+        [
+          414,
+          750
+        ],
+        [
+          416,
+          778
+        ],
+        [
+          420,
+          783
+        ],
+        [
+          423,
+          787
+        ],
+        [
+          430,
+          790
+        ],
+        [
+          429,
+          794
+        ],
+        [
+          424,
+          798
+        ],
+        [
+          421,
+          804
+        ],
+        [
+          420,
+          809
+        ],
+        [
+          422,
+          816
+        ],
+        [
+          418,
+          823
+        ],
+        [
+          419,
+          830
+        ],
+        [
+          423,
+          838
+        ],
+        [
+          429,
+          842
+        ],
+        [
+          427,
+          847
+        ],
+        [
+          422,
+          852
+        ],
+        [
+          423,
+          857
+        ],
+        [
+          428,
+          862
+        ],
+        [
+          432,
+          867
+        ],
+        [
+          430,
+          870
+        ],
+        [
+          428,
+          875
+        ],
+        [
+          432,
+          879
+        ],
+        [
+          431,
+          885
+        ],
+        [
+          436,
+          889
+        ],
+        [
+          438,
+          896
+        ],
+        [
+          433,
+          901
+        ],
+        [
+          430,
+          906
+        ],
+        [
+          431,
+          911
+        ],
+        [
+          434,
+          917
+        ],
+        [
+          441,
+          925
+        ],
+        [
+          446,
+          932
+        ],
+        [
+          446,
+          935
+        ],
+        [
+          441,
+          942
+        ],
+        [
+          434,
+          950
+        ],
+        [
+          428,
+          958
+        ],
+        [
+          424,
+          967
+        ],
+        [
+          426,
+          975
+        ],
+        [
+          432,
+          980
+        ],
+        [
+          440,
+          986
+        ],
+        [
+          449,
+          994
+        ],
+        [
+          450,
+          1000
+        ]
+      ]
+    },
+    "complete_lower_weapon_on_actual_transparent_native_background": [
+      340,
+      1000,
+      451,
+      1140
+    ],
+    "source_modified": false
+  }
+}

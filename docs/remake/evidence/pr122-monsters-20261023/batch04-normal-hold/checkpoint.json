@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "target": "monster:알비노 피쉬맨",
+  "status": "STAGED_REQUIRED_MOTIONS_PLAYBACK_PASS_QUALITY_HOLD",
+  "new_generated_PNGs": 3,
+  "new_run_poses": 32,
+  "new_S_death_poses": 3,
+  "preserved_living_poses": 80,
+  "required_clips": 33,
+  "required_poses": 91,
+  "preserved_optional_walk_clips": 8,
+  "preserved_optional_walk_poses": 24,
+  "total_clips": 41,
+  "total_poses": 115,
+  "same_source_family_adapters": [
+    "monster:에바 왕국 심해어인",
+    "monster:알비노 심해어"
+  ],
+  "adapters_additional_unique_poses": 0,
+  "newly_completed": 0,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "Godot": "4.7.2 official ed1daf0bf; all33requiredclips/91poses actual ActorMotion PASS; Sdeath fallback from8directions terminalhold PASS; 2 family profiles loading PASS",
+  "HOLD": [
+    "Existing living source anchors are preserved heuristic draft proposals; no anatomical ground review was granted",
+    "New RUN/death source-plane and actual support-foot exchange need review",
+    "Source identity/cross-role size/contact and default Main visual review not approved"
+  ],
+  "preservation": "Original living4 PNGs and foot draft provenance SHA-matched; old death rejection archives and existing runtime profiles untouched",
+  "reproduce": [
+    "python3 docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/build.py",
+    "python3 docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/build_family_adapters.py"
+  ],
+  "test_script": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/playback_test.gd"
+}

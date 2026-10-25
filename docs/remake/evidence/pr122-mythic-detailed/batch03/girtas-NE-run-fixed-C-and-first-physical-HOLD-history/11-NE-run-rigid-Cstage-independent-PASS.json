@@ -1,0 +1,58 @@
+{
+  "schema": "PR122_NE_RUN_PHYSICAL_RIGID_C_STAGE_INDEPENDENT_QC_V1",
+  "utc": "2026-10-19T17:17:12.384038+00:00",
+  "reviewer": "/root/girtas_final_actual_quality_v04",
+  "independent": true,
+  "status": "PASS_SCOPED_PROPOSED_SIX_C_RIGID_BODY_SCALE_ONLY",
+  "author_candidate": {
+    "path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/rigid-C-stage-author-candidate-v01.json",
+    "sha256": "6bcd4478dc1c76ccada4a9516d356fe28e2bd13db878ac6f28ac4ebc4201655f"
+  },
+  "source_atlas": {
+    "path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/girtas-NE-run-reviewed-composite-v01.png",
+    "sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6"
+  },
+  "source6_independent_QC": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-selected-final-six-independent-source-cycle-bridge-v01.json",
+    "sha256": "8e99326ebfe236e3d47c9106ddf58f645aed095da1325bf77aa8b9a3c466d307",
+    "status": "PASS_SELECTED_SIX_SOURCE_ART_AND_CYCLE"
+  },
+  "authored_pose_canvas_sizes": [
+    1936,
+    2240,
+    1936,
+    1776,
+    2048,
+    1936
+  ],
+  "idle_reference": {
+    "raw_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+    "C": 832,
+    "matches_current_actual_r099_idle_source_and_all6C": true
+  },
+  "all_six_raw_and_reference_and_preview_SHA_reverified": true,
+  "visual_findings": [
+    "At the authored sixC candidates, visible skull/neck, hardnearpauldron/uppercore and waist intervals give a reasonable common Girtas model scale against current exact NEidleC832. No confirmed model-size or sourcebodyratio defect warrants changing theseCs or regenerating source art.",
+    "Pose3 upright/back-core length and broader visible neararmor versus the idle stance are compatible with shoulder rotation/yaw and neck/torso pose. Loaded1/4 lean/flex and the other run stances alter vertical projected spans naturally. No headY or ornamental crest/ray/hair/robe bbox normalization was used.",
+    "The longhair obscures some neck/back/pelvis structures; scale judgment combines visible rigid cores rather than demanding exact hiddenjoint positions or identifying goldrobeV as truehip. Hairroot registration on this diagnosticpanel is a preview aid only.",
+    "This is only C/body scale acceptance. It does not yet certify actualgroundedsole contacts, AIR2/5 clearances, authoredroot/waist/headbody arc, loop/idle entry-exit or compiled runtime. Producer remains the sole candidateauthor and must supply explicit projectedground/root/actualsemanticsole evidence."
+  ],
+  "reviewed_private_preview": {
+    "path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/private-rigid-C-stage-seven-candidate-v01.jpg",
+    "sha256": "ce2f1b8d3136a281e771491280a52cc215bcfe8db9ff04846f5b87ba7aa29480",
+    "encoded_bytes": 105075,
+    "own_context_only": true
+  },
+  "physical_root_candidate_status": "PENDING_AUTHOR_CANDIDATE_AND_INDEPENDENT_QC",
+  "actual_compiled_status": "NOT_REVIEWED_NE_RUN",
+  "actor_approved": false,
+  "actor_approval_increment": 0,
+  "counts_changed": false,
+  "repository_mutations": false,
+  "main_chat_image_attachments": 0,
+  "private_image_ledger": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+    "sha256": "13cb0cc9aeb2e1a3a274be4964ae479fb92b6a940290c7323296d71f348db663",
+    "viewed_encoded_bytes": 623572
+  }
+}

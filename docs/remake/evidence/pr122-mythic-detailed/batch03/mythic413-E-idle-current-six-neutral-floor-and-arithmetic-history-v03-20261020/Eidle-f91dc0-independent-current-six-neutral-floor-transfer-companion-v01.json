@@ -1,0 +1,190 @@
+{
+  "status": "PASS_EXACT_SHARED_NEUTRAL_MODEL_TRANSFER_TO_CURRENT_E_IDLE_SIX_MATERIAL",
+  "addendum": {
+    "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/E-IDLE-original-neutral-once-sole-and-actual-six-material-floor-addendum-v02.json",
+    "sha256": "f91dc0b4bb3c5cd55b5ddd69f9d91728ad8d748e937f568a1fea19beb346f237",
+    "bytes": 9927
+  },
+  "shared_once_neutral": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-original-neutral-once-true-sole-and-HIT-six-material-floor-binding-v01.json",
+    "sha256": "d97aa4f359522c632b40eb2942e314f0ba08d0f88a85afd3b508a798a5b6e9e1",
+    "bytes": 16356
+  },
+  "independent_once_model_audit": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Ehit-d97aa4-independent-once-neutral-source-and-actual-six-floor-companion-v01.json",
+    "sha256": "822e7c39a746919fbcd180d860a9e1da513ae1c6ca9ee344d6006786ebaf0d7e",
+    "bytes": 11697
+  },
+  "actual_source_contract": {
+    "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/E-IDLE-six-actual-native-source-fixed-basis-and-loop-contract-v02.json",
+    "sha256": "5446d64343f7d629f35f0675ad34bca1081f0e5b6b98bd844fabbd2c80420f71",
+    "bytes": 16096
+  },
+  "same_shared_source_capture_planes_and_camera_null_thickness": true,
+  "guard_definition": "Centered actualnativepixel halfquads plus additive world-native Z2/8; not additionalUVpixels.",
+  "actual_six_material_checks": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-0-actual-native-breath-relax-v02.png",
+        "sha256": "e5651f59cf84bf97498ea40c4685a2f679785439c084f9119181245502593957",
+        "bytes": 979134
+      },
+      "original_sole_capture_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 12559,
+          "guarded_min_Z": 1.0000000000000009
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 13059,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "remaining_actual_material_including_fullstaff_texel_quads": 363470,
+      "remaining_worldZ_guard": 8,
+      "remaining_guarded_min_Z": 75.71501134222467,
+      "every_actual_alpha_texel_assigned_once": true
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-1-actual-native-breath-relax-v02.png",
+        "sha256": "d3d9e61c46be47beb311697ed7d6b2f89b643e7e6f14cf4f2d7cc9508ee1c197",
+        "bytes": 982508
+      },
+      "original_sole_capture_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 12559,
+          "guarded_min_Z": 1.0000000000000009
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 13059,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "remaining_actual_material_including_fullstaff_texel_quads": 363361,
+      "remaining_worldZ_guard": 8,
+      "remaining_guarded_min_Z": 75.71501134222467,
+      "every_actual_alpha_texel_assigned_once": true
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-2-actual-native-breath-relax-v02.png",
+        "sha256": "6b44c4dd7040e788053dad15b8651f8acd644e08aefd06e38102700ce2dcc5a8",
+        "bytes": 977677
+      },
+      "original_sole_capture_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 12559,
+          "guarded_min_Z": 1.0000000000000009
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 13059,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "remaining_actual_material_including_fullstaff_texel_quads": 364243,
+      "remaining_worldZ_guard": 8,
+      "remaining_guarded_min_Z": 75.71501134222467,
+      "every_actual_alpha_texel_assigned_once": true
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-3-actual-native-breath-relax-v02.png",
+        "sha256": "4af8ac15cd4841c43d32c427fb55974600ce1bf32d5e17194ec18a4dba097c47",
+        "bytes": 977158
+      },
+      "original_sole_capture_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 12559,
+          "guarded_min_Z": 1.0000000000000009
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 13059,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "remaining_actual_material_including_fullstaff_texel_quads": 364166,
+      "remaining_worldZ_guard": 8,
+      "remaining_guarded_min_Z": 75.71501134222467,
+      "every_actual_alpha_texel_assigned_once": true
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-4-actual-native-breath-relax-v02.png",
+        "sha256": "9a5983d448a37a92596f5efe56ed39bc3f01440f25d0b3ce8158e961814662c8",
+        "bytes": 981338
+      },
+      "original_sole_capture_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 12559,
+          "guarded_min_Z": 1.0000000000000009
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 13059,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "remaining_actual_material_including_fullstaff_texel_quads": 363265,
+      "remaining_worldZ_guard": 8,
+      "remaining_guarded_min_Z": 75.71501134222467,
+      "every_actual_alpha_texel_assigned_once": true
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-idle-author-20261020-v01/actual-E-IDLE6-native-breath-relax-v02/thunder_female-E-IDLE-5-actual-native-breath-relax-v02.png",
+        "sha256": "0c479ef7bdab53e0f35fc4487f23a000119016cd8b384a3834473b80544bdb38",
+        "bytes": 976837
+      },
+      "original_sole_capture_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 12559,
+          "guarded_min_Z": 1.0000000000000009
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_positive_texel_quads": 13059,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "remaining_actual_material_including_fullstaff_texel_quads": 363538,
+      "remaining_worldZ_guard": 8,
+      "remaining_guarded_min_Z": 75.71501134222467,
+      "every_actual_alpha_texel_assigned_once": true
+    }
+  ],
+  "limits": [
+    "CurrentIDLE6 source hashes, original sole paint and all remaining actual texel quad bounds are checked. The compact sole model rows transfer exactly by field mapping to the already independently auditedd97 model camera/planes/anchors/masks; camera-null support thickness stays that immutable once-model.",
+    "No source/role/loop/actor/game approval is added. VisibleSOURCE8abd remains the fresh reviewer scope; this is one declared compatible material model, not unique hidden anatomy or recovered bone/floor geometry."
+  ],
+  "new_image_views": 0,
+  "repo_writes": 0,
+  "actor_approvals_added": 0
+}

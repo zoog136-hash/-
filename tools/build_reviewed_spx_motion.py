@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Build complete reviewed body tracks from restored, pixel-verified SPX frames.
 
+Legacy compatibility path. For plaintext A3 order/ticks/markers, runL/runR,
+all four layers and36 effects use tools/l1j/build_spx_source_pack.py. That
+builder writes a separate private candidate pack and never overwrites this one.
+
 Physical sequence bases below were reviewed as six-frame motion contact sheets.
 They are not calculated from L1J logical action IDs. The two bodies remain
 optional appearances; no class or transformation identity is invented.

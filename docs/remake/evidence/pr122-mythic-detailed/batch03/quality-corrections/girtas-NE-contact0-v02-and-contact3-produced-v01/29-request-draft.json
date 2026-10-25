@@ -1,0 +1,39 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "contact3-lowerbody-v01",
+  "status": "DRAFT_AWAITING_PHYSICAL_CONSTRAINTS_NOT_CALLED",
+  "source_kind": "bounded-genuine-lowerbody-motion-edit",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    3
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a"
+  },
+  "transparent_background": true,
+  "fixed_runtime_canvas": 1776,
+  "target_uppercore_world_interval": [
+    105,
+    111
+  ],
+  "preliminary_support_shortening_native_px": [
+    80,
+    130
+  ],
+  "protected": "ALL source RGBA outside reviewed lowerbody edit mask including skull,crown,face,whitehair,spines,pauldrons,rigidcuirass,arms,hands,weapon. Other five selected source poses untouched. Current farLEFTrecovery to remain exact only if finalprojectedplaneAIRvalid.",
+  "actor_approval": false,
+  "new_approvals": 0,
+  "generation_budget": "Single real motion edit, no repeated identical failed call",
+  "notes": [
+    "Source ownership/heading/identity PASS does not imply new physical or runtime approval",
+    "No rescale/crop/mirror/pad/root compensation; contact3 must remain true nearRIGHTleading heel/forefoot landing distinct from later load4",
+    "Exact target/root and ROI pending independent reviewer and physical author"
+  ]
+}

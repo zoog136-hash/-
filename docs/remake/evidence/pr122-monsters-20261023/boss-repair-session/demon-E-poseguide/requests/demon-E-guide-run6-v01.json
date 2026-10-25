@@ -1,0 +1,38 @@
+{
+  "schema": "pr122-demon-E-joint-guide-authoring-v1",
+  "actor": "monster:알비노 데몬",
+  "direction": "E",
+  "role": "run",
+  "attempt": "v01",
+  "max_calls": 1,
+  "extra_only_if_geometry_failure": 1,
+  "guide_is_new_original_diagram": true,
+  "source_phase_order": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "references": [
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/references/albino-demon-canonical.png",
+      "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b"
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/references/demon-E-run6-joint-guide.png",
+      "sha256": "d0c11e9f8a1247282188db6b785d4e5170e4d14f76e8b600c330f7bf4acde946"
+    }
+  ],
+  "request": {
+    "prompt": "Create one new dedicated ALBINO DEMON boss SIX-POSE EAST RUN sprite sheet by faithfully rendering the supplied 2D JOINT GUIDE. Image1 supplies ONLY appearance: muscular RED demon, two BLACK swept horns, heavy black/dark iron SPIKED armor, skull belt and chains, exactly two arms and two clawed legs, attached thick tail, one large iron AXE in anatomical RIGHT hand, anatomical LEFT hand an EMPTY claw, NO WINGS. Do not recolor white from the name. Image2 supplies the MANDATORY exact camera, projected bone/joint locations and leg identity. Copy its pose mechanics and fixed pure SIDE camera with more muscular anatomy. Do NOT copy the frontal three-quarter chest camera from image1. The camera is exact EAST RIGHT-facing SIDE PROFILE: one facial profile/one visible eye, nose pointing screen RIGHT, narrow side-facing sternum/skull belt, shoulder joints overlap in projection, no front chest/both-pectoral view. Head, shoulders and pelvis stay at the guide orientation, every pose faces screen RIGHT. Two distinct swept horns may overlap naturally in side profile. The NEAR limb is always anatomical RIGHT (the guide BLUE skeleton). The FAR limb is always anatomical LEFT (the guide RED skeleton). Keep near/far muscle/armor overlap clear enough to trace each thigh through its own knee to ankle/toes. RIGHT near arm holds the AXE and LEFT far/back arm remains EMPTY in EVERY pose; never switch hands.\n\nTwo columns by three rows, exactly as image2. LEFT COLUMN top-to-bottom is RIGHT near leg support: top-left blue-guided RIGHT toeplant AHEAD of pelvis and far LEFT leg flexed behind OFF ground; middle-left RIGHT supporting foot directly BELOW pelvis, far LEFT knee visibly drives forward/up; bottom-left RIGHT TOE-OFF BEHIND pelvis with heel lifted and far LEFT knee/foot forward and off ground. RIGHT COLUMN top-to-bottom is LEFT far leg support: top-right RED-guided LEFT toeplant ahead and near RIGHT leg flexed behind OFF ground; middle-right LEFT supporting below pelvis and near RIGHT knee visibly forward/up; bottom-right LEFT toe-off behind with heel lifted and near RIGHT knee/foot forward and off ground. These six poses are different projected skeletons. Top-left and top-right MUST have opposite anatomical legs planted. Track each blue/right and red/left guide path, do not repeat the same foreground plant in both columns or swap limb ownership. The playback order will be left column top-to-bottom, then right column top-to-bottom [0,2,4,1,3,5]. The supporting foot MUST visibly move from root-front to root-under to root-behind inside each column rather than remaining at one spot. Keep the opposite swing knee high as in the guide. Heavy thigh/calf muscles must bend at those exact joints; spike armor and tail follow the stride without hiding knees, ankles or the sole contact.\n\nRender a refined original dark fantasy RPG boss sprite at mythic quality, anatomically connected muscles/armor and clear weight. The guide is a skeleton construction aid: DO NOT render colored bones, guide dots, labels, text, numbers, panels, grid, floor lines or any guide graphics. Use natural red skin and dark armor only. Keep the six complete figures small and isolated in their guide cells, fully inside central45percent width and75percent height, enormous empty transparent gutters; preserve every horn/axe/tail/claw tip. One connected silhouette per cell; disjoint full bounding rectangles. TRUE RGBA alpha0 transparent background, no visible floor/shadow/background, no particles/glow/haze or loose specks. No mirrored/squashed copies. No extra pose cells. Save PNG locally.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/references/albino-demon-canonical.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/demon-E-poseguide/references/demon-E-run6-joint-guide.png"
+    ],
+    "transparent_background": true
+  },
+  "new_approvals": 0,
+  "production_connected": false
+}

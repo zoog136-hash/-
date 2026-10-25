@@ -1,0 +1,103 @@
+{
+  "schema": "single-contact0-actual-service-attempt01-freeze-v1",
+  "status": "GEOMETRY_HOLD_PENDING_INDEPENDENT_ACTUAL_SOURCE_QC",
+  "service_attempts": 1,
+  "new_actual_service_completed": true,
+  "request_sha256": "aaea7f65f953b43cd09db2dc5872f895c9363f30010a7428a6d588054d583cc6",
+  "raw_source_sha256": "a4f96847b5a786b96087f65e1c8736b657e19e719323b5cddca51cf75c2470a8",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "requested_size": [
+    1024,
+    1024
+  ],
+  "whole_alpha16_height": 897,
+  "composition": "NOT_RUN; service density differs from native512, no resample/extraction/registration",
+  "parent_first_service_freeze_sha256": "f6692fe0e2e7cca828623d9a80e08b646b66cfec313e1cb3cf7de78c8e6cf4e0",
+  "author_self_approval": false,
+  "completed_added": 0,
+  "artifacts": [
+    {
+      "name": "N-contact0-base-padded1024.png",
+      "bytes": 173982,
+      "sha256": "182d1c6967f54a003de6a2bbd770e4cb23010e5f7763c84b311ec8ba0bc9138a"
+    },
+    {
+      "name": "N-contact0-fixedbone-overlay-padded1024.png",
+      "bytes": 144036,
+      "sha256": "7029353ecd80adf5a7014be949aa96e005a22524cca8f65c1d5ccf5303f7a8c6"
+    },
+    {
+      "name": "N-contact0-service-geometry-HOLD-preview.jpg",
+      "bytes": 32350,
+      "sha256": "eda0b9cc83a6d82a854e47013e589b2c3e574f043d70579d30c8da5b920c3f36"
+    },
+    {
+      "name": "N-contact0-service-raw1024.png",
+      "bytes": 489426,
+      "sha256": "a4f96847b5a786b96087f65e1c8736b657e19e719323b5cddca51cf75c2470a8"
+    },
+    {
+      "name": "N-contact0-source-and-target-preview.jpg",
+      "bytes": 52045,
+      "sha256": "1250433006dfd02c881b3d05b8bae487144290a40110c4caf54b0fa0b8960915"
+    },
+    {
+      "name": "N-source0-immutable-native512.png",
+      "bytes": 302048,
+      "sha256": "51c8169f86f7b79839fba9b480d2a2a29c06f9dbd27068954f47684f87028b55"
+    },
+    {
+      "name": "bounded-composition-contract.json",
+      "bytes": 863,
+      "sha256": "98c8499bf640df54b83131d7e43a73323d195a56aea19526e978adfb4643d2c3"
+    },
+    {
+      "name": "bounded-lowerbody-edit-mask.png",
+      "bytes": 905,
+      "sha256": "51bf49b163a8681fe93c0e23d37d8326f59244eb5a35c6ad99fe553a1bcaf62b"
+    },
+    {
+      "name": "immutable-coat-foreground-protection-mask.png",
+      "bytes": 589,
+      "sha256": "ee50e24571a257f4a1cb097c974684ab5df275c8beed2224479d8662344614a0"
+    },
+    {
+      "name": "private-context-ledger-contact0-freeze.json",
+      "bytes": 2945,
+      "sha256": "00b0ab8c39b3a70c214850404030d017dab816e6aa3ca498119c58ac8794520e"
+    },
+    {
+      "name": "raw-alpha-inspection.json",
+      "bytes": 291,
+      "sha256": "1c020f664e7835a1b3251443f7cd10eeff8b32eec74e702448045f5547a12881"
+    },
+    {
+      "name": "request-spec.json",
+      "bytes": 896,
+      "sha256": "4b71aba74ea069bda03de737895c4d5a2f3a40cd4b1be62d1e5974c97d33df16"
+    },
+    {
+      "name": "request.json",
+      "bytes": 4566,
+      "sha256": "aaea7f65f953b43cd09db2dc5872f895c9363f30010a7428a6d588054d583cc6"
+    },
+    {
+      "name": "response.json",
+      "bytes": 976,
+      "sha256": "1c41c69edf08f7fa3fe6b4cc3dc4866ceedb34cfcfe38e10988e016828ca571f"
+    },
+    {
+      "name": "service-result.json",
+      "bytes": 855,
+      "sha256": "ef7e5407cfbf2dc2b58e2533a48d67b164c960c700d2f25596750c5d6197d081"
+    },
+    {
+      "name": "service-status.json",
+      "bytes": 246,
+      "sha256": "b88f7ff6d62f49e2c0484f36592d2ed3433644dcb509d8317be25d59a9097537"
+    }
+  ]
+}

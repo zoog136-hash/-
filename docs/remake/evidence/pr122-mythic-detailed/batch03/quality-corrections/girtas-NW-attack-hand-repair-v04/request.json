@@ -1,0 +1,49 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NW",
+  "role": "attack",
+  "version": "v04",
+  "source_batch": "batch03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "operation": "localized_complete_arm_chain_edit",
+  "expected_poses": 2,
+  "replacement_rows": [
+    0,
+    5
+  ],
+  "untouched_source_rows": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "proven_valid_unchanged_rows": [
+    1,
+    2
+  ],
+  "additional_rows_requiring_chain_review": [
+    3,
+    4
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-target-guard0-recovery5.png",
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-correct-farRIGHT-load1-load2.png",
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-faithful-NW-idle-pose0.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-target-guard0-recovery5.png": "0404a12b4856abac0b2702ae26c8ea07c401a74a4068a6dd9594687212cf3676",
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-correct-farRIGHT-load1-load2.png": "07561f81db434bd024c5a0cae20f9168be1a00dedeb43a91c4d96a7ed6c6c9ad",
+    "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-faithful-NW-idle-pose0.png": "1ed7a661bca195b7d9d736b829f9cc2224b6c37cc666e7e41da13be4ff80e1e9"
+  },
+  "transparent_background": true,
+  "source_full_sheet": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+  "source_full_sheet_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+  "original_hold_review": "/workspace/scratch/girtas-NW-attack-repair/result.json",
+  "original_hold_review_sha256": "b84f4320fc60cbac86fff4629f3985865fe7b47ef4a9f830e3eb4ce119170850",
+  "intended_contact_frame": 3,
+  "corrective_reason": "Original NW attack v03 guard0/recovery5 definitely attach the sinuous weapon to nearLEFT rather than original farRIGHT chain. One localized TWO-pose edit rebuilds both COMPLETE arm chains using unchanged correct load1/2 and faithful NW idle. Other original rows unchanged;3/4 remain under separate chain review and are not falsely approved.",
+  "user_authorization": "Production image editing allowed; no images forwarded into main chat. Exactly one localized two-pose attempt, no whole-six regeneration.",
+  "requested_at": "2026-10-19T11:58:07.102292+00:00",
+  "prompt": "LOCALIZED EDIT OF EXACTLY TWO EXISTING POSES, not a six-frame animation sheet. REFERENCE1 contains the TWO target poses side-by-side: LEFT is existing NW attack guard/frame0, RIGHT is existing NW attack recovery/frame5. Preserve these two whole bodies, original NW camera, original equipment, scale, stance, hair, skirt and respective guard/recovery attitude. Replace their WRONG weapon/arm ownership by rebuilding the complete correct two arm chains. Do not simply erase a hand or paste a floating grip. Do not generate/edit any of the other four attack frames.\n\nREFERENCE2 contains the unchanged CORRECT FAR-RIGHT weapon-arm construction in neighboring load frames1/2: same original anatomical RIGHT shoulder behind/right of the back hair connects through a visible upper arm, elbow, forearm, wrist and weapon grip, while near LEFT arm on imageLEFT is EMPTY. Use this arm ownership, not the raised load pose. REFERENCE3 is the faithful NW idle0 model with the RIGHT/FAR weapon arm lowered on IMAGE RIGHT and the NEAR LEFT hand IMAGE LEFT EMPTY; it is the exact low-guard chain/layering authority. Keep the first reference target body poses, but use this correct arm construction. Never copy the original bad near-left weapon hand from reference1.\n\nANATOMY CORRECTION for BOTH TARGETS: the original anatomical RIGHT shoulder is the FAR shoulder, projected IMAGE RIGHT behind the long pale back hair. Its ONE continuous RIGHT chain runs shoulder -> upper arm -> elbow -> forearm -> wrist -> closed grip. Show enough unobscured contour at the right outside edge of the hair/back to prove every connection: upperarm descends from the far RIGHT shoulder, elbow bends modestly beside the right waist, forearm continues to the low right-hand grip. The SINGLE long thin sinuous orange-gold weapon starts from that RIGHT/FAR grip on IMAGE RIGHT and descends outward DOWN-RIGHT, exactly like the NW idle authority. Keep the entire long repeated-S curved contour/taper and full tip. No short broadblade, no straight rod, no second weapon.\n\nThe anatomical LEFT shoulder is the NEAR shoulder, on IMAGE LEFT, with its original large near-side gold/dark pauldron. Its ONE continuous LEFT arm runs down from that near LEFT shoulder through elbow/wrist into an EMPTY relaxed LEFT hand near the left thigh/hip. That near LEFT hand MUST NOT hold the weapon. Remove its old weapon grip/old attached blade by redrawing the COMPLETE NEAR-LEFT forearm/wrist/empty hand and the COMPLETE FAR-RIGHT shoulder/elbow/wrist/grip chain, while retaining TWO arms total. No missing forearm, severed wrist, floating glove, third arm/fist, double shoulder, extra hand or phantom stub. There must be exactly TWO connected arms/hands in each target, one farRIGHT weapon-bearing, one nearLEFT empty. Changing only the blade or deleting only a hand does not solve this edit.\n\nLEFT OUTPUT = corrected existing frame0: same NW rear-left guarded stance and neutral weight as target0, nearLEFT arm empty/down, farRIGHT arm low guard carrying original sinuous weapon down-right. RIGHT OUTPUT = corrected existing frame5: same NW rear-left recovery body and foot/skirt configuration as target5, distinct settled head/shoulder/near-left empty wrist position, same farRIGHT lowered weapon arm returning after attack. Keep two distinct guard/recovery poses rather than duplicate copies. This edit affects ONLY these two target frames; neighboring frames1/2 merely prove handedness, not new output poses. Contact frame3 is not an output or edited frame.\n\nALL heads/helmets, back shoulders, hips and boot projections remain NORTHWEST/BACK-LEFT, aimed UPPER LEFT and AWAY from viewer exactly as the target model. Show BACK of long pale hair, rear crown/armor/skirt; no full face/front chest star, no NORTHEAST/right-facing replacement, no mirror of the model. Original pale long hair, tall gold/dark head ornaments, narrow hard GOLD radial back rays, long DARK goldtrim SKIRT-LIKE armor and original boots/materials remain. No redmask, thick orange flame-feather fan or fitted pants substituted for the long dark skirt. Preserve the camera/proportions and do not redesign hidden armor.\n\nOutput exactly TWO complete full-body cutouts side-by-side on one truly transparent1024x1024PNG. One LEFT target0 and one RIGHT target5, no additional actors, no extra rows, no sequence of six. Keep SAME original body pixel proportions/scale in both, head-to-boot size comparable to reference1, comfortable transparent safety margins around ALL rays, hair, long skirt, boots and entire long curved weapon. The weapon may move from old wrong left side to correct right side, but must fit its own half without cropping or touching the neighbor. Center each complete figure in its512px-wide half, about400-450px total silhouette height with generous empty space above/below. Do not shrink gear independently or crop a ray/blade to fit. Opaque detailed dark armor and thin hard gold trim/rays; luminosity INSIDE the original solid physical weapon only. Background and gaps ALPHA0 with only1-2px edge antialiasing; no floor/castshadow, glow cloud/haze/bloom/halo/particles/blur/trails, text, labels, numbers, borders or background panels. The essential result is two faithful NW guard/recovery bodies with fully connected FAR-RIGHT weapon shoulder-to-grip chains and fully connected EMPTY NEAR-LEFT arms."
+}

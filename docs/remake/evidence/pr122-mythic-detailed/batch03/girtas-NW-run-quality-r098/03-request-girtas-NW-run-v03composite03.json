@@ -1,0 +1,2410 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NW",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03composite03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "request_kind": "LOSSLESS_REVIEWED_SIX_ACTUAL_RUN_POSE_MAP_ASSEMBLY",
+  "expected_poses": 6,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+    "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+    "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+    "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Replace unresolved oldgeneric NW RUN with six faithful actual alternating left/right landing/load/flight poses. New1 exposes realfarRIGHTrecovery under originalLONGhem; new2 preserves provenfarRIGHTleading chain and raises actualfrontknee/ankle toAIR; new3 restores originalsmallplainhilt. Exactselected0/4/5 retained. Independentwhole6 SOURCE and actualphysicalcandidate approved; actualcompiledPlayer/actor stillHOLD.",
+  "prompt": "No new image generation in this composition wrapper. PreserveexactRGBA all6 dedicated faithful NW sourcekeys, strictalpha16/ownership/completecrop and newdistinct motion. Canonical nominal2048+explicitperposeCs and explicitlyauthoredperspectivepelvis/ground/flightroot review separate fromgeometry. No source resample/mirror/recolor/cleanup orgeometryonly actorapproval.",
+  "user_authorization": "ContinueexistingPR122 actualanimationproduction, normalcheckpointpush, Unique/Mythic/Legendary/Hero order. Privateproduction authorized, no mainchatimages, no PR100/CI/newPR/merge/forcepush.",
+  "requested_at": "2026-10-19T16:41:31.895333+00:00",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+    "canvas_size": 2048,
+    "review_basis": "ExactRGBA strictownedalpha16 complete6pose composition, nominal2048 plus individually reviewed6Cs and authored support/flightground roots. Independent actualsource/gait/gear and physicalcandidate PASS; actualcompiledPlayer/actor remains HOLD.",
+    "assembly_proof": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/assembly-proof.candidate.json",
+    "assembly_proof_sha256": "f7b9cd48304da2510f240df252afcffb9e386bc5f3d177f82e9c125afed317e1",
+    "source_art_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+    "source_art_review_sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+    "physical_candidate_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+    "physical_candidate_review_sha256": "95d973980652c0eaee8751d0085bd1e7c82f4a650050fc95093b54efe81c3010",
+    "actor_approval": false
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+    "base_geometry_sha256": "0dca59dad22c112b8a655ab6419a0ee680c9f1316a06a83cb04d9026e22c02f2",
+    "direction": "NW",
+    "review_basis": "Outward-only completeownedalpha16 exact source rectangles plus transparent authoredAIRgroundroot space. No source pixels/alpha threshold/ownership relaxed. Source/physical candidate evidence is independent; no geometry-only actor approval.",
+    "regions": [
+      [
+        430,
+        413,
+        419,
+        453
+      ],
+      [
+        1351,
+        109,
+        1138,
+        1062
+      ],
+      [
+        134,
+        1352,
+        1011,
+        1262
+      ],
+      [
+        1420,
+        1354,
+        1001,
+        1132
+      ],
+      [
+        126,
+        2636,
+        1028,
+        1127
+      ],
+      [
+        1691,
+        2957,
+        457,
+        486
+      ]
+    ],
+    "nearest_owner_sha256": "b17e7c5c69af2851aefc72923ae3307da0cbb556fe0ddf86ae053243816e62a7"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "key": "transform:267",
+    "role": "run",
+    "direction": "NW",
+    "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+    "canvas_size": 2048,
+    "authored_pose_canvas_sizes": [
+      848,
+      2096,
+      2392,
+      2376,
+      2280,
+      872
+    ],
+    "source_anchors": [
+      [
+        565,
+        811
+      ],
+      [
+        1799,
+        1047
+      ],
+      [
+        540,
+        2605
+      ],
+      [
+        1817,
+        2449
+      ],
+      [
+        539,
+        3635
+      ],
+      [
+        1880,
+        3410
+      ]
+    ],
+    "review_basis": "Candidate individuallymeasured NWrigidhelmet/skull/pauldron/waist size with explicitlyauthoredposteriorwaist/pelvis/ground smallRUNarc contact245/load225/flight310; actualnear/far/foreaftfootdepth retained. SOURCEwhole6PASS butindependentphysical/floor/AIRreviewpending. No hiddenbone/PNGfloor/bboxnormalization claim. Independent exactwhole6 source/camera/gear/gait and C/body/pelvis/sole/AIR candidate PASS now pinned. Actual compiledPlayer/actor approval remains HOLD.",
+    "anchor_measurement_evidence": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/authored-ground-root-config.json",
+    "anchor_measurement_evidence_sha256": "6ece860407b2afefcb29c65263cdd66e5bf02182f0966c42c55fbee9c2d37274",
+    "runtime_validation": "INDEPENDENT_SOURCE_AND_PHYSICAL_CANDIDATE_PASS_ACTUAL_COMPILED_PLAYER_HOLD",
+    "actor_approval": false,
+    "independent_source_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+    "independent_source_review_sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+    "independent_physical_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+    "independent_physical_review_sha256": "95d973980652c0eaee8751d0085bd1e7c82f4a650050fc95093b54efe81c3010"
+  },
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "new_material_source_repairs_this_composite": [
+    1,
+    2,
+    3
+  ],
+  "selected_unchanged_authored_keys": [
+    0,
+    4,
+    5
+  ],
+  "approval": "SOURCE_AND_PHYSICAL_CANDIDATE_PASS_RUNTIME_AND_ACTOR_HOLD",
+  "source_provenance": {
+    "assembly_spec": {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/pose-map.candidate.json",
+      "sha256": "30f39dc4b9e6c54a5ddac4b2596a3d892a156312a16e04e87c61525c7cd5ea99",
+      "inline": {
+        "schema": "pr122-reviewed-pose-map-v1",
+        "key": "transform:267",
+        "direction": "NW",
+        "role": "run",
+        "poses": [
+          {
+            "path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "region": [
+              106,
+              7,
+              415,
+              449
+            ],
+            "rgba_sha256": "5a2f4da1abaab939cb910d74094b05bef46da550f1b6ef464522d6589cc43725",
+            "source_pose": 0,
+            "newly_authored": true,
+            "review_basis": "CandidateactualnearLEFTlanding withfarRIGHTrecoveringbootraised; oppositephase3needsindependentQC. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate."
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+            "source_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+            "region": [
+              84,
+              45,
+              1133,
+              1058
+            ],
+            "rgba_sha256": "a207442bec5e82e8b6fd59c00c0a4a112cd90bc31762ae5daaede56599998058",
+            "source_pose": 0,
+            "newly_authored": true,
+            "review_basis": "ActualnearLEFTdeepflatLOAD +separatefarRIGHTcurledshin/raisedwholebootunderlonghem; independentSOURCErepairPASSac46cfdc."
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+            "source_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+            "region": [
+              220,
+              24,
+              1006,
+              1130
+            ],
+            "rgba_sha256": "8567491b42f8c487e33a3cccf2371803b05c737150010194a77fbf1ee5061dc2",
+            "source_pose": 0,
+            "newly_authored": true,
+            "review_basis": "ActualfarRIGHTleadingAIR fromprovedoppositeRIGHTlanding3, leadingknee/ankleflexedraised +nearLEFTfoldedbackraisedsole preserved; independentSOURCErepairPASSac46cfdc."
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+            "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+            "region": [
+              228,
+              27,
+              996,
+              1128
+            ],
+            "rgba_sha256": "6a7253dbae5e7a0a9cac960aba9302ac94bffeccae585bfe152a0db6ff6a17fc",
+            "source_pose": 0,
+            "newly_authored": true,
+            "review_basis": "ActualfarRIGHTforwardlanding +nearLEFTfoldedbackraisedboot, faithfulsmallplaincollar/hiltrestored; independentSOURCErepairPASS2482f21b."
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+            "source_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+            "region": [
+              214,
+              24,
+              1023,
+              1123
+            ],
+            "rgba_sha256": "b0066fbbec812ae5a32142c23c5da447ed3eea598a821a36c9bb3b9e6de78990",
+            "source_pose": 0,
+            "newly_authored": true,
+            "review_basis": "NewsingleactualfarRIGHTsupportV-thigh/kneecap/shinbendwithflatRIGHTsole; nearLEFTpassingkneeHIGHforwardandbootRAISED. BodycompressioncomesfromrealbentRIGHTknee, oldstraight/occluded4notselected. IndependentSOURCE/loadownershipQCpending. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate."
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "region": [
+              560,
+              1010,
+              453,
+              482
+            ],
+            "rgba_sha256": "51934eb5dedeb8af5dfa8fb4edfadcd0d94598f0d52752ea488a4cb3e15ac685",
+            "source_pose": 5,
+            "newly_authored": true,
+            "review_basis": "CandidateactualAIRfarRIGHTtrailing/nearLEFTleading oppositephase2; bothraised/source+rootindependentQCpending. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate."
+          }
+        ]
+      }
+    },
+    "assembly_proof": {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/assembly-proof.candidate.json",
+      "sha256": "f7b9cd48304da2510f240df252afcffb9e386bc5f3d177f82e9c125afed317e1",
+      "inline": {
+        "schema": "pr122-reviewed-pose-map-v1",
+        "key": "transform:267",
+        "role": "run",
+        "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+        "direction": "NW",
+        "metadata_sha256": "30f39dc4b9e6c54a5ddac4b2596a3d892a156312a16e04e87c61525c7cd5ea99",
+        "metadata_path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/pose-map.candidate.json",
+        "metadata_hash_basis": "file_bytes",
+        "output": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/girtas-NW-run-reviewed-composite-candidate-v03.png",
+        "output_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "output_canvas": [
+          2560,
+          3840
+        ],
+        "cell_size": [
+          1280,
+          1280
+        ],
+        "virtual_canvas_size": 2048,
+        "poses": [
+          {
+            "phase": 0,
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "source_pose": 0,
+            "source_region": [
+              106,
+              7,
+              415,
+              449
+            ],
+            "rgba_sha256": "5a2f4da1abaab939cb910d74094b05bef46da550f1b6ef464522d6589cc43725",
+            "visible_pose_sha256": "590fddbec699a7dd5529bcbe6d716bf682d28a970c7e44de6155adcbe77d8a8c",
+            "newly_authored": true,
+            "review_basis": "CandidateactualnearLEFTlanding withfarRIGHTrecoveringbootraised; oppositephase3needsindependentQC. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate.",
+            "output_region": [
+              432,
+              415,
+              415,
+              449
+            ],
+            "translation": [
+              326,
+              408
+            ],
+            "source_edge_antialias_review": {
+              "strong_boundary_alpha_threshold": 100,
+              "selected_strong_boundary_pixels": 0,
+              "retained_alpha_gt16_boundary_pixels": 0,
+              "retained_boundary_max_alpha": 0,
+              "retained_boundary_pixels_xy_rgba": []
+            },
+            "alpha_gt16_pixels": 72351
+          },
+          {
+            "phase": 1,
+            "source_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+            "source_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+            "source_pose": 0,
+            "source_region": [
+              84,
+              45,
+              1133,
+              1058
+            ],
+            "rgba_sha256": "a207442bec5e82e8b6fd59c00c0a4a112cd90bc31762ae5daaede56599998058",
+            "visible_pose_sha256": "f50f89bc14c0d29340d90099f7cd51ae657d9f728766f2ce435e8fa3b8d12344",
+            "newly_authored": true,
+            "review_basis": "ActualnearLEFTdeepflatLOAD +separatefarRIGHTcurledshin/raisedwholebootunderlonghem; independentSOURCErepairPASSac46cfdc.",
+            "output_region": [
+              1353,
+              111,
+              1133,
+              1058
+            ],
+            "translation": [
+              1269,
+              66
+            ],
+            "source_edge_antialias_review": {
+              "strong_boundary_alpha_threshold": 100,
+              "selected_strong_boundary_pixels": 0,
+              "retained_alpha_gt16_boundary_pixels": 0,
+              "retained_boundary_max_alpha": 0,
+              "retained_boundary_pixels_xy_rgba": []
+            },
+            "alpha_gt16_pixels": 467205
+          },
+          {
+            "phase": 2,
+            "source_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+            "source_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+            "source_pose": 0,
+            "source_region": [
+              220,
+              24,
+              1006,
+              1130
+            ],
+            "rgba_sha256": "8567491b42f8c487e33a3cccf2371803b05c737150010194a77fbf1ee5061dc2",
+            "visible_pose_sha256": "47e4da0531c5424361a0db1bbb9270d9691be4433ed6ed4c25ca1578902ae18b",
+            "newly_authored": true,
+            "review_basis": "ActualfarRIGHTleadingAIR fromprovedoppositeRIGHTlanding3, leadingknee/ankleflexedraised +nearLEFTfoldedbackraisedsole preserved; independentSOURCErepairPASSac46cfdc.",
+            "output_region": [
+              137,
+              1355,
+              1006,
+              1130
+            ],
+            "translation": [
+              -83,
+              1331
+            ],
+            "source_edge_antialias_review": {
+              "strong_boundary_alpha_threshold": 100,
+              "selected_strong_boundary_pixels": 0,
+              "retained_alpha_gt16_boundary_pixels": 0,
+              "retained_boundary_max_alpha": 0,
+              "retained_boundary_pixels_xy_rgba": []
+            },
+            "alpha_gt16_pixels": 408707
+          },
+          {
+            "phase": 3,
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+            "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+            "source_pose": 0,
+            "source_region": [
+              228,
+              27,
+              996,
+              1128
+            ],
+            "rgba_sha256": "6a7253dbae5e7a0a9cac960aba9302ac94bffeccae585bfe152a0db6ff6a17fc",
+            "visible_pose_sha256": "89e76c08de98589fbe072750bff7ccf6214ab32283f29534c516ccf4e6cd6e36",
+            "newly_authored": true,
+            "review_basis": "ActualfarRIGHTforwardlanding +nearLEFTfoldedbackraisedboot, faithfulsmallplaincollar/hiltrestored; independentSOURCErepairPASS2482f21b.",
+            "output_region": [
+              1422,
+              1356,
+              996,
+              1128
+            ],
+            "translation": [
+              1194,
+              1329
+            ],
+            "source_edge_antialias_review": {
+              "strong_boundary_alpha_threshold": 100,
+              "selected_strong_boundary_pixels": 0,
+              "retained_alpha_gt16_boundary_pixels": 0,
+              "retained_boundary_max_alpha": 0,
+              "retained_boundary_pixels_xy_rgba": []
+            },
+            "alpha_gt16_pixels": 409713
+          },
+          {
+            "phase": 4,
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+            "source_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+            "source_pose": 0,
+            "source_region": [
+              214,
+              24,
+              1023,
+              1123
+            ],
+            "rgba_sha256": "b0066fbbec812ae5a32142c23c5da447ed3eea598a821a36c9bb3b9e6de78990",
+            "visible_pose_sha256": "884f4e0eb472417a938a4abc82330ed39c9e6bf9875eab0ee7330724e1c81392",
+            "newly_authored": true,
+            "review_basis": "NewsingleactualfarRIGHTsupportV-thigh/kneecap/shinbendwithflatRIGHTsole; nearLEFTpassingkneeHIGHforwardandbootRAISED. BodycompressioncomesfromrealbentRIGHTknee, oldstraight/occluded4notselected. IndependentSOURCE/loadownershipQCpending. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate.",
+            "output_region": [
+              128,
+              2638,
+              1023,
+              1123
+            ],
+            "translation": [
+              -86,
+              2614
+            ],
+            "source_edge_antialias_review": {
+              "strong_boundary_alpha_threshold": 100,
+              "selected_strong_boundary_pixels": 0,
+              "retained_alpha_gt16_boundary_pixels": 0,
+              "retained_boundary_max_alpha": 0,
+              "retained_boundary_pixels_xy_rgba": []
+            },
+            "alpha_gt16_pixels": 423503
+          },
+          {
+            "phase": 5,
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "source_pose": 5,
+            "source_region": [
+              560,
+              1010,
+              453,
+              482
+            ],
+            "rgba_sha256": "51934eb5dedeb8af5dfa8fb4edfadcd0d94598f0d52752ea488a4cb3e15ac685",
+            "visible_pose_sha256": "63549cb20fb3b133c480934df3c20330feefcbe584d1a7e9c402a589353d2879",
+            "newly_authored": true,
+            "review_basis": "CandidateactualAIRfarRIGHTtrailing/nearLEFTleading oppositephase2; bothraised/source+rootindependentQCpending. PriorfreshscopeSOURCEcandidatePASS recordedformal9246493e. SourceRGBAunchangedinthiscandidate.",
+            "output_region": [
+              1693,
+              2959,
+              453,
+              482
+            ],
+            "translation": [
+              1133,
+              1949
+            ],
+            "source_edge_antialias_review": {
+              "strong_boundary_alpha_threshold": 100,
+              "selected_strong_boundary_pixels": 0,
+              "retained_alpha_gt16_boundary_pixels": 0,
+              "retained_boundary_max_alpha": 0,
+              "retained_boundary_pixels_xy_rgba": []
+            },
+            "alpha_gt16_pixels": 73144
+          }
+        ],
+        "newly_authored_poses": 6,
+        "reused_poses": 0,
+        "preserved_region_rgba_exact": true,
+        "preserved_pose_alpha_gt16": true,
+        "resampled": false,
+        "mirrored": false,
+        "recolored": false,
+        "cleaned_pixels": 0,
+        "strict_importer": "PASS",
+        "geometry": {
+          "image_size": [
+            2560,
+            3840
+          ],
+          "frames": [
+            {
+              "row": 0,
+              "direction": "NW",
+              "region": [
+                430,
+                413,
+                419,
+                453
+              ],
+              "margin": [
+                814,
+                831,
+                1629,
+                1595
+              ],
+              "source_anchor": [
+                640,
+                862
+              ],
+              "rgba_sha256": "519bbfa603d5d7ad8adc7e5135cb55ce1b8b2c4253c94bdc181ef163ca915925"
+            },
+            {
+              "row": 1,
+              "direction": "NW",
+              "region": [
+                1351,
+                109,
+                1138,
+                1062
+              ],
+              "margin": [
+                455,
+                222,
+                910,
+                986
+              ],
+              "source_anchor": [
+                1920,
+                1167
+              ],
+              "rgba_sha256": "184ed69671cb604fb782e693fb239b349ecfa1f0dab5de50aad6bcddd04a6b1e"
+            },
+            {
+              "row": 2,
+              "direction": "NW",
+              "region": [
+                134,
+                1352,
+                1011,
+                1136
+              ],
+              "margin": [
+                518,
+                148,
+                1037,
+                912
+              ],
+              "source_anchor": [
+                640,
+                2484
+              ],
+              "rgba_sha256": "92d438db4ef4a8ed5e27b5455f08ee1b371ed249153b249b44bb1250faed6dc7"
+            },
+            {
+              "row": 3,
+              "direction": "NW",
+              "region": [
+                1420,
+                1354,
+                1001,
+                1132
+              ],
+              "margin": [
+                524,
+                152,
+                1047,
+                916
+              ],
+              "source_anchor": [
+                1920,
+                2482
+              ],
+              "rgba_sha256": "d1845a2e513ba2b400a3bb7361317fb52248c1d66eb2bbe0551d398141dfb2e7"
+            },
+            {
+              "row": 4,
+              "direction": "NW",
+              "region": [
+                126,
+                2636,
+                1028,
+                1127
+              ],
+              "margin": [
+                510,
+                157,
+                1020,
+                921
+              ],
+              "source_anchor": [
+                640,
+                3759
+              ],
+              "rgba_sha256": "7693558a79536389e2f8c95c87f1a89adeceafa03ce5276160ee1aff192b2a50"
+            },
+            {
+              "row": 5,
+              "direction": "NW",
+              "region": [
+                1691,
+                2957,
+                457,
+                486
+              ],
+              "margin": [
+                795,
+                798,
+                1591,
+                1562
+              ],
+              "source_anchor": [
+                1920,
+                3439
+              ],
+              "rgba_sha256": "8149ba0b85746552ec484119e7cd08520cda3a4e7062b1bd88c00382bc9ca659"
+            }
+          ],
+          "distinct_pixel_frames": 6,
+          "neutral_height": 786.5,
+          "canvas_size": [
+            2048,
+            2048
+          ],
+          "foot": [
+            1024,
+            1280
+          ]
+        },
+        "approval": false,
+        "visual_approval": "NOT_RUN",
+        "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+        "external_physical_scale_review": null,
+        "region_height_span": [
+          449,
+          1130
+        ],
+        "possible_region_height_mismatch": true,
+        "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+      }
+    },
+    "independent_full6_source_gait": {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+      "sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+      "inline": {
+        "schema": "PR122_NW_RUN_FINAL6_SELECTED_SOURCE_GAIT_INDEPENDENT_QC_V1",
+        "utc": "2026-10-19T16:09:21.464929+00:00",
+        "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+        "status": "SOURCE_WHOLE6_ALTERNATION_PASS",
+        "scope": "Finalexact selected0/1/2/3/4/5 SOURCE/gait/gear only; no physicalC/bodyroot/floor/runtime/actor approval.",
+        "actor_approval_increment": 0,
+        "atlas_pin": {
+          "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/girtas-NW-run-reviewed-composite-candidate-v03.png",
+          "sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9"
+        },
+        "pose_map_pin": {
+          "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/pose-map.candidate.json",
+          "sha256": "30f39dc4b9e6c54a5ddac4b2596a3d892a156312a16e04e87c61525c7cd5ea99"
+        },
+        "assembly_pin": {
+          "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/assembly-proof.candidate.json",
+          "sha256": "f7b9cd48304da2510f240df252afcffb9e386bc5f3d177f82e9c125afed317e1"
+        },
+        "source_pins": [
+          {
+            "phase": 0,
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "source_region": [
+              106,
+              7,
+              415,
+              449
+            ],
+            "output_region": [
+              432,
+              415,
+              415,
+              449
+            ],
+            "rgba_sha256": "5a2f4da1abaab939cb910d74094b05bef46da550f1b6ef464522d6589cc43725",
+            "exact_source_output_RGBA": true
+          },
+          {
+            "phase": 1,
+            "source_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+            "source_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+            "source_region": [
+              84,
+              45,
+              1133,
+              1058
+            ],
+            "output_region": [
+              1353,
+              111,
+              1133,
+              1058
+            ],
+            "rgba_sha256": "a207442bec5e82e8b6fd59c00c0a4a112cd90bc31762ae5daaede56599998058",
+            "exact_source_output_RGBA": true
+          },
+          {
+            "phase": 2,
+            "source_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+            "source_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+            "source_region": [
+              220,
+              24,
+              1006,
+              1130
+            ],
+            "output_region": [
+              137,
+              1355,
+              1006,
+              1130
+            ],
+            "rgba_sha256": "8567491b42f8c487e33a3cccf2371803b05c737150010194a77fbf1ee5061dc2",
+            "exact_source_output_RGBA": true
+          },
+          {
+            "phase": 3,
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+            "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+            "source_region": [
+              228,
+              27,
+              996,
+              1128
+            ],
+            "output_region": [
+              1422,
+              1356,
+              996,
+              1128
+            ],
+            "rgba_sha256": "6a7253dbae5e7a0a9cac960aba9302ac94bffeccae585bfe152a0db6ff6a17fc",
+            "exact_source_output_RGBA": true
+          },
+          {
+            "phase": 4,
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+            "source_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+            "source_region": [
+              214,
+              24,
+              1023,
+              1123
+            ],
+            "output_region": [
+              128,
+              2638,
+              1023,
+              1123
+            ],
+            "rgba_sha256": "b0066fbbec812ae5a32142c23c5da447ed3eea598a821a36c9bb3b9e6de78990",
+            "exact_source_output_RGBA": true
+          },
+          {
+            "phase": 5,
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "source_region": [
+              560,
+              1010,
+              453,
+              482
+            ],
+            "output_region": [
+              1693,
+              2959,
+              453,
+              482
+            ],
+            "rgba_sha256": "51934eb5dedeb8af5dfa8fb4edfadcd0d94598f0d52752ea488a4cb3e15ac685",
+            "exact_source_output_RGBA": true
+          }
+        ],
+        "findings": [
+          "0nearLEFT forwardlanding→1nearLEFT deepflatload with distinct farRIGHT recovery→2actualfarRIGHT leadingAIR→3farRIGHT forwardlanding→4farRIGHT load with nearLEFT passing/recovery→5nearLEFT leadingAIR→0 is genuine opposite-chain NW run progression.",
+          "Both half-cycles and5→0 retain complete boots/limbs through longrobe occlusion; no sameLEFTlead alias or missingrecoveryboot remains in selected sources.",
+          "Correct NW rear-left camera, pale hair, rigid hardgoldrays/crown/pauldrons, longdarkgoldtrimrobe and permanentRIGHT sinuousblade/smallcollar hilt are consistent.",
+          "All6 selected source-region RGBA bytearrays equal assembled output-region arrays exactly; no source rescale/mirror/recolor/alpha workaround."
+        ],
+        "remaining_HOLD": [
+          "Proposed head-basedCs are not approved. Exact rigid skull/pauldron/waist and actual hip/slit→knee→ankle proportions need commonphysical fit; source-size differences alone do not prove body mismatch.",
+          "Root/support sole projectedplane/positive two-sole AIR arc still unapproved.",
+          "ActualcompiledTRES/Godot and finalactor quality remainpending; actor2670/catalogOFF."
+        ],
+        "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+        "private_ledger_sha256": "011f8b207c73914a18a4e8bdc96e82926f698bd69070cedff3e56a214f2684af",
+        "repository_mutations": false
+      }
+    },
+    "independent_physical_candidate": {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+      "sha256": "95d973980652c0eaee8751d0085bd1e7c82f4a650050fc95093b54efe81c3010",
+      "inline": {
+        "schema": "PR122_NW_RUN_FINAL_SOURCE_BODY_C_ROOT_CONTACT_AIR_INDEPENDENT_CANDIDATE_QC_V1",
+        "utc": "2026-10-19T16:40:39.083686+00:00",
+        "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+        "status": "PASS_SCOPED_SOURCE_WHOLE6_BODY_SCALE_AUTHORED_ROOT_CONTACT_AIR_CANDIDATE",
+        "key": "transform:267",
+        "direction": "NW",
+        "role": "run",
+        "raw_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "source_visual_status": "PASS",
+        "authored_pose_canvas_sizes": [
+          848,
+          2096,
+          2392,
+          2376,
+          2280,
+          872
+        ],
+        "source_native_root_anchors": [
+          [
+            239,
+            403
+          ],
+          [
+            530,
+            981
+          ],
+          [
+            623,
+            1274
+          ],
+          [
+            623,
+            1120
+          ],
+          [
+            625,
+            1021
+          ],
+          [
+            747,
+            1461
+          ]
+        ],
+        "actor_approval": false,
+        "actor_approval_increment": 0,
+        "actual_runtime_status": "HOLD_NOT_ACTUAL_COMPILED_REVIEWED",
+        "candidate_pins": [
+          {
+            "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/authored-ground-root-config.json",
+            "sha256": "6ece860407b2afefcb29c65263cdd66e5bf02182f0966c42c55fbee9c2d37274"
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/geometry-derived.json",
+            "sha256": "abe4b4afdf4aa4a4506a0328b763788edde07facdc3c8411e50ad3fe1eef83d8"
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_runtime_layout.proposal.json",
+            "sha256": "435185dbdedbcb0ba5d81eabe194ec77e3e70fd3829246fca2c15b02f43e4755"
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_runtime_layout.validation.json",
+            "sha256": "a1e7942a08c707e365084f8d83874c692aa279940350a5f350b1c21bbc7688c5"
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_source_regions.proposal.json",
+            "sha256": "2bcab97d226b1d8d04b0babdf083630d0df772621d4832861ad1a0dcdd4a8917"
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_source_regions.validation.json",
+            "sha256": "8f11f2c025abe2a030e24763d7c06ee92f7f6dfc284da37835d77fe8f3dadc26"
+          },
+          {
+            "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/trueleg-closeup-native-ROI-proof-v01.json",
+            "sha256": "6b51fbb0f2121df40c595c8fd47f88811744559c6fecfa3d5baa91a8e2b54bfa"
+          }
+        ],
+        "baseline_profile_pin": {
+          "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/NativeMotionProfile.tres",
+          "sha256": "e5d796d2b07fc5b803c3fa2e2dc93f1208e690c5fdbaf3464569e97c027f8f7a",
+          "pixel_scale": 0.219105011732
+        },
+        "visual_findings": [
+          "Visible skull/neck/silverhairroot, nearpauldron/cuirass and posteriorwaist have a reasonable common character scale at Cs[848,2096,2392,2376,2280,872]. Narrower rear-facing2/3 core and upright0 versus relaxed/bentidle are plausible pose/yaw/flex differences, not confirmed sourcebodyratio defects. No body/art or C/root retune needed.",
+          "Enlarged trueleg/slit closeups show credible hip-origin intervals→knee/shin/ankle/boots, including longrobe occlusion. Hiddenhip exactpoints are neither established nor required; garmentV/hem is not treated as pelvis.",
+          "0nearLEFTcontact→1nearLEFTdeepflatload→2farRIGHTleadAIR→3farRIGHTcontact→4farRIGHTload→5nearLEFTleadAIR→0 is genuine readableopposite-chainrun with completeboots and retainedfaithfulNWmodel/gear.",
+          "Commonroot visualcadence drops from contact to load and rises into two explicitAIR phases, with plausible5→0 settling. Actualsupport points move in projectedfore/aft/nearfar space; no neutralflatY invariant is imposed.",
+          "Source2/5 actualcompleteboot alpha>16 lowestpoints clear the declared conservative fore/aftplanes by at least4.331world, not merely the prior last4rowscentroid estimate. Genuine recoveryboots0/1/3/4 also clear the explicitboundedprojectedplanes recordedbelow by at least4.26world. No boot is relabelledAIR to conceal penetration.",
+          "Contact supportplanes are authored at the actualsemanticallytraced bootcontact points; recoveryplanedepth accounts for nearLEFT/farRIGHT perspective and front/rearstep. These are explicit2D projectedground candidate assumptions, not hidden3D bones/floor extracted fromPNG."
+        ],
+        "supplemental_projected_ground_and_actual_boot_numeric": [
+          {
+            "phase": 0,
+            "feet": [
+              {
+                "side": "LEFT",
+                "boot_ROI_xyxy": [
+                  105,
+                  380,
+                  205,
+                  460
+                ],
+                "actual_alpha_gt16_last_nativeY": 455,
+                "actual_lowest_boot_localY_canonical": 62.79245283018868,
+                "authored_projected_floor_localY_canonical": 62.79245283018868,
+                "clearance_world": 0.0,
+                "role": "actual_support_contact"
+              },
+              {
+                "side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  295,
+                  350,
+                  385,
+                  450
+                ],
+                "actual_alpha_gt16_last_nativeY": 432,
+                "actual_lowest_boot_localY_canonical": 35.0188679245283,
+                "authored_projected_floor_localY_canonical": 60,
+                "clearance_world": 5.473491236474868,
+                "role": "AIR_or_recovery"
+              }
+            ]
+          },
+          {
+            "phase": 1,
+            "feet": [
+              {
+                "side": "LEFT",
+                "boot_ROI_xyxy": [
+                  200,
+                  950,
+                  450,
+                  1120
+                ],
+                "actual_alpha_gt16_last_nativeY": 1102,
+                "actual_lowest_boot_localY_canonical": 59.11450381679389,
+                "authored_projected_floor_localY_canonical": 59.11450381679389,
+                "clearance_world": 0.0,
+                "role": "actual_support_contact"
+              },
+              {
+                "side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  680,
+                  850,
+                  900,
+                  1080
+                ],
+                "actual_alpha_gt16_last_nativeY": 1064,
+                "actual_lowest_boot_localY_canonical": 40.54961832061068,
+                "authored_projected_floor_localY_canonical": 60,
+                "clearance_world": 4.261676106054474,
+                "role": "AIR_or_recovery"
+              }
+            ]
+          },
+          {
+            "phase": 2,
+            "feet": [
+              {
+                "side": "LEFT",
+                "boot_ROI_xyxy": [
+                  610,
+                  820,
+                  790,
+                  1050
+                ],
+                "actual_alpha_gt16_last_nativeY": 1045,
+                "actual_lowest_boot_localY_canonical": -98.03344481605352,
+                "authored_projected_floor_localY_canonical": 55,
+                "clearance_world": 33.530394721809785,
+                "role": "AIR_or_recovery"
+              },
+              {
+                "side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  235,
+                  820,
+                  400,
+                  930
+                ],
+                "actual_alpha_gt16_last_nativeY": 919,
+                "actual_lowest_boot_localY_canonical": -151.9732441471572,
+                "authored_projected_floor_localY_canonical": -55,
+                "clearance_world": 21.24732379655298,
+                "role": "AIR_or_recovery"
+              }
+            ]
+          },
+          {
+            "phase": 3,
+            "feet": [
+              {
+                "side": "LEFT",
+                "boot_ROI_xyxy": [
+                  610,
+                  840,
+                  790,
+                  1050
+                ],
+                "actual_alpha_gt16_last_nativeY": 1034,
+                "actual_lowest_boot_localY_canonical": -37.063973063973066,
+                "authored_projected_floor_localY_canonical": 55,
+                "clearance_world": 20.17167789827635,
+                "role": "AIR_or_recovery"
+              },
+              {
+                "side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  300,
+                  840,
+                  470,
+                  1010
+                ],
+                "actual_alpha_gt16_last_nativeY": 1006,
+                "actual_lowest_boot_localY_canonical": -49.13131313131313,
+                "authored_projected_floor_localY_canonical": -49.13131313131313,
+                "clearance_world": 0.0,
+                "role": "actual_support_contact"
+              }
+            ]
+          },
+          {
+            "phase": 4,
+            "feet": [
+              {
+                "side": "LEFT",
+                "boot_ROI_xyxy": [
+                  240,
+                  670,
+                  470,
+                  930
+                ],
+                "actual_alpha_gt16_last_nativeY": 909,
+                "actual_lowest_boot_localY_canonical": -50.30175438596491,
+                "authored_projected_floor_localY_canonical": -25,
+                "clearance_world": 5.543741191577024,
+                "role": "AIR_or_recovery"
+              },
+              {
+                "side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  620,
+                  1000,
+                  830,
+                  1170
+                ],
+                "actual_alpha_gt16_last_nativeY": 1146,
+                "actual_lowest_boot_localY_canonical": 56.14035087719298,
+                "authored_projected_floor_localY_canonical": 56.14035087719298,
+                "clearance_world": 0.0,
+                "role": "actual_support_contact"
+              }
+            ]
+          },
+          {
+            "phase": 5,
+            "feet": [
+              {
+                "side": "LEFT",
+                "boot_ROI_xyxy": [
+                  590,
+                  1270,
+                  735,
+                  1400
+                ],
+                "actual_alpha_gt16_last_nativeY": 1384,
+                "actual_lowest_boot_localY_canonical": -90.42201834862385,
+                "authored_projected_floor_localY_canonical": -55,
+                "clearance_world": 7.7611417458463485,
+                "role": "AIR_or_recovery"
+              },
+              {
+                "side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  800,
+                  1370,
+                  950,
+                  1495
+                ],
+                "actual_alpha_gt16_last_nativeY": 1491,
+                "actual_lowest_boot_localY_canonical": 35.22935779816514,
+                "authored_projected_floor_localY_canonical": 55,
+                "clearance_world": 4.331846791582201,
+                "role": "AIR_or_recovery"
+              }
+            ]
+          }
+        ],
+        "projection_basis": "Actorroot is authoredshared2D motionreference. SupportplaneY is perfoot actualcontact projection, not actorrootY. Recovery0/1farRIGHTrear+60,3nearLEFTrear+55,4nearLEFTfront−25 account for near-side depth and fore/aft step. Flight2/5 preserve producerconservative±55 planes. No sourcepixels/C/root changed to obtain these bounds.",
+        "minimum_any_AIR_or_recovery_clearance_world": 4.261676106054474,
+        "whole6_source_proof_pin": {
+          "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+          "sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9"
+        },
+        "remaining_HOLD": [
+          "Officiallatestfixture/prepare/canonical andactualcompiledSpriteFrames/profile/Player/Godot scopedchecks required.",
+          "Finalindependentwholeactor48rolequality/Main/defaultcatalog activation pending;actor2670/detailedCOMPLETE1of31Halpas393only."
+        ],
+        "private_preview_classification": "PIL source/C/root/projection candidate reconstruction, NOT a Godot-render screenshot.",
+        "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+        "private_ledger_sha256": "ae7b32a19bbad8b9527cf35620e95254ffedbf792b24cd1173905ebff909f8d0",
+        "repository_mutations": false
+      }
+    },
+    "physical_authorship": {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/authored-ground-root-config.json",
+      "sha256": "6ece860407b2afefcb29c65263cdd66e5bf02182f0966c42c55fbee9c2d37274",
+      "inline": {
+        "status": "AUTHORED_NW_RUN_PHYSICAL_CANDIDATE_PENDING_INDEPENDENT_QC",
+        "key": "transform:267",
+        "direction": "NW",
+        "role": "run",
+        "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "source_map_sha256": "30f39dc4b9e6c54a5ddac4b2596a3d892a156312a16e04e87c61525c7cd5ea99",
+        "assembly_sha256": "f7b9cd48304da2510f240df252afcffb9e386bc5f3d177f82e9c125afed317e1",
+        "whole6_independent_source_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-selected-whole6-independent-source-QC-v01.json",
+        "whole6_independent_source_review_sha256": "c50d4aea7a1aea76f8f39d2a3f65d06c1f41d199c69eb78a2dcd42d2eb364ad9",
+        "rigid_marker_proof": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/rigid-head-C-measurement-proposal-v01.json",
+        "rigid_marker_proof_sha256": "ed21f2824310d6fef68e4801f3efbfbc8811ab08c86c200a23480286bd4b1cfe",
+        "reference_correct_NWidle_source": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+        "reference_C": 944,
+        "reference_source_root": [
+          240,
+          456
+        ],
+        "reference_visible_posterior_waist_manual": [
+          213,
+          230
+        ],
+        "reference_inferred_pelvis_axis_manual": [
+          240,
+          251
+        ],
+        "reference_waist_ground_height_canonical": 245.15254237288136,
+        "authored_pose_canvas_sizes": [
+          848,
+          2096,
+          2392,
+          2376,
+          2280,
+          872
+        ],
+        "source_native_root_anchors": [
+          [
+            239,
+            403
+          ],
+          [
+            530,
+            981
+          ],
+          [
+            623,
+            1274
+          ],
+          [
+            623,
+            1120
+          ],
+          [
+            625,
+            1021
+          ],
+          [
+            747,
+            1461
+          ]
+        ],
+        "baseline_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/NativeMotionProfile.tres",
+        "baseline_profile_sha256": "e5d796d2b07fc5b803c3fa2e2dc93f1208e690c5fdbaf3464569e97c027f8f7a",
+        "baseline_pixel_scale": 0.219105011732,
+        "AIR_plane_authorship": "Explicit candidate NW projected floors: nearLEFTtrail+55/farRIGHTlead-55 for2; nearLEFTlead-55/farRIGHTtrail+55 for5. This combines authored forward/back projected depth and near/far leg perspective; not flatsoleY, not exact bones/floor fromPNG. Independent support/projection/cadence validation required.",
+        "authored_waist_arc_canonical": [
+          245.15254237288136,
+          225,
+          310,
+          245.15254237288136,
+          225,
+          310
+        ],
+        "authoring_basis": "Visibleposteriorcuirass/upperrobe junction +correctNWidle waist→inferredpelvis→groundcalibration. Contact245/load225/flight310 canonical are explicit small2D RUNbodyarc choices; rigidCs neverchosenfromwholebodybbox/headheight fitting. Hiddenhipaxis isauthored, notclothV tip. Actual source hip-under-slit/knee/ankle and supportforeaft must pass independentphysicalreview.",
+        "frames": [
+          {
+            "phase": 0,
+            "C": 848,
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+              215,
+              200
+            ],
+            "manual_waist_landmark_uncertainty_canonical": 12,
+            "inferred_pelvis_axis_manual_native": [
+              239,
+              218.864406779661
+            ],
+            "inferred_axis_is_authored_not_visible_bone": true,
+            "authored_waist_ground_height_canonical": 245.15254237288136,
+            "source_ground_root_native": [
+              239,
+              403
+            ],
+            "feet": [
+              {
+                "anatomical_side": "LEFT",
+                "boot_ROI_xyxy": [
+                  105,
+                  380,
+                  205,
+                  460
+                ],
+                "last4strongrows_centroid_native": [
+                  165.6346153846154,
+                  452.24038461538464
+                ],
+                "local_canonical1024": [
+                  -88.59216255442671,
+                  59.46008708272863
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              },
+              {
+                "anatomical_side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  295,
+                  350,
+                  385,
+                  450
+                ],
+                "last4strongrows_centroid_native": [
+                  350.8,
+                  430.05
+                ],
+                "local_canonical1024": [
+                  135.00377358490567,
+                  32.66415094339624
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              }
+            ]
+          },
+          {
+            "phase": 1,
+            "C": 2096,
+            "source_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+            "source_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+            "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+              470,
+              520
+            ],
+            "manual_waist_landmark_uncertainty_canonical": 12,
+            "inferred_pelvis_axis_manual_native": [
+              530,
+              566.6271186440678
+            ],
+            "inferred_axis_is_authored_not_visible_bone": true,
+            "authored_waist_ground_height_canonical": 225,
+            "source_ground_root_native": [
+              530,
+              981
+            ],
+            "feet": [
+              {
+                "anatomical_side": "LEFT",
+                "boot_ROI_xyxy": [
+                  200,
+                  950,
+                  450,
+                  1120
+                ],
+                "last4strongrows_centroid_native": [
+                  319.9156976744186,
+                  1099.0058139534883
+                ],
+                "local_canonical1024": [
+                  -102.63660571631458,
+                  57.65169536658971
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              },
+              {
+                "anatomical_side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  680,
+                  850,
+                  900,
+                  1080
+                ],
+                "last4strongrows_centroid_native": [
+                  788.1754385964912,
+                  1061.122807017544
+                ],
+                "local_canonical1024": [
+                  126.13151198607203,
+                  39.143966787197016
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              }
+            ]
+          },
+          {
+            "phase": 2,
+            "C": 2392,
+            "source_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+            "source_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+            "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+              555,
+              550
+            ],
+            "manual_waist_landmark_uncertainty_canonical": 12,
+            "inferred_pelvis_axis_manual_native": [
+              623,
+              603.2118644067797
+            ],
+            "inferred_axis_is_authored_not_visible_bone": true,
+            "authored_waist_ground_height_canonical": 310,
+            "source_ground_root_native": [
+              623,
+              1274
+            ],
+            "feet": [
+              {
+                "anatomical_side": "LEFT",
+                "boot_ROI_xyxy": [
+                  610,
+                  820,
+                  790,
+                  1050
+                ],
+                "last4strongrows_centroid_native": [
+                  693.6231884057971,
+                  1042.2173913043478
+                ],
+                "local_canonical1024": [
+                  30.233338180408133,
+                  -99.2246619165334
+                ],
+                "authored_projected_ground_plane_localY_canonical": 55,
+                "AIR_minimum_clearance_world": 33.79139635858579,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              },
+              {
+                "anatomical_side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  235,
+                  820,
+                  400,
+                  930
+                ],
+                "last4strongrows_centroid_native": [
+                  334.65306122448976,
+                  916.1632653061224
+                ],
+                "local_canonical1024": [
+                  -123.43949218483381,
+                  -153.18763224353287
+                ],
+                "authored_projected_ground_plane_localY_canonical": -55,
+                "AIR_minimum_clearance_world": 21.513402314656574,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              }
+            ]
+          },
+          {
+            "phase": 3,
+            "C": 2376,
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+            "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+            "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+              555,
+              551
+            ],
+            "manual_waist_landmark_uncertainty_canonical": 12,
+            "inferred_pelvis_axis_manual_native": [
+              623,
+              603.8559322033898
+            ],
+            "inferred_axis_is_authored_not_visible_bone": true,
+            "authored_waist_ground_height_canonical": 245.15254237288136,
+            "source_ground_root_native": [
+              623,
+              1120
+            ],
+            "feet": [
+              {
+                "anatomical_side": "LEFT",
+                "boot_ROI_xyxy": [
+                  610,
+                  840,
+                  790,
+                  1050
+                ],
+                "last4strongrows_centroid_native": [
+                  687.6666666666666,
+                  1031.2063492063492
+                ],
+                "local_canonical1024": [
+                  27.86980920314252,
+                  -38.26797071241518
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              },
+              {
+                "anatomical_side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  300,
+                  840,
+                  470,
+                  1010
+                ],
+                "last4strongrows_centroid_native": [
+                  466.1875,
+                  1003.1875
+                ],
+                "local_canonical1024": [
+                  -67.58249158249158,
+                  -50.343434343434346
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              }
+            ]
+          },
+          {
+            "phase": 4,
+            "C": 2280,
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+            "source_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+            "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+              560,
+              520
+            ],
+            "manual_waist_landmark_uncertainty_canonical": 12,
+            "inferred_pelvis_axis_manual_native": [
+              625,
+              570.7203389830509
+            ],
+            "inferred_axis_is_authored_not_visible_bone": true,
+            "authored_waist_ground_height_canonical": 225,
+            "source_ground_root_native": [
+              625,
+              1021
+            ],
+            "feet": [
+              {
+                "anatomical_side": "LEFT",
+                "boot_ROI_xyxy": [
+                  240,
+                  670,
+                  470,
+                  930
+                ],
+                "last4strongrows_centroid_native": [
+                  350.0853658536585,
+                  906.219512195122
+                ],
+                "local_canonical1024": [
+                  -123.470432178006,
+                  -51.55053487376978
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              },
+              {
+                "anatomical_side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  620,
+                  1000,
+                  830,
+                  1170
+                ],
+                "last4strongrows_centroid_native": [
+                  755.2916666666666,
+                  1143.2261904761904
+                ],
+                "local_canonical1024": [
+                  58.516959064327466,
+                  54.8945697577276
+                ],
+                "authored_projected_ground_plane_localY_canonical": null,
+                "AIR_minimum_clearance_world": null,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              }
+            ]
+          },
+          {
+            "phase": 5,
+            "C": 872,
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "visible_posterior_cuirass_upperrobe_junction_manual_native": [
+              722,
+              1197
+            ],
+            "manual_waist_landmark_uncertainty_canonical": 12,
+            "inferred_pelvis_axis_manual_native": [
+              747,
+              1216.3983050847457
+            ],
+            "inferred_axis_is_authored_not_visible_bone": true,
+            "authored_waist_ground_height_canonical": 310,
+            "source_ground_root_native": [
+              747,
+              1461
+            ],
+            "feet": [
+              {
+                "anatomical_side": "LEFT",
+                "boot_ROI_xyxy": [
+                  590,
+                  1270,
+                  735,
+                  1400
+                ],
+                "last4strongrows_centroid_native": [
+                  683.8536585365854,
+                  1381.9756097560976
+                ],
+                "local_canonical1024": [
+                  -74.15350190199148,
+                  -92.79928395614229
+                ],
+                "authored_projected_ground_plane_localY_canonical": -55,
+                "AIR_minimum_clearance_world": 8.282012554671756,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              },
+              {
+                "anatomical_side": "RIGHT",
+                "boot_ROI_xyxy": [
+                  800,
+                  1370,
+                  950,
+                  1495
+                ],
+                "last4strongrows_centroid_native": [
+                  816.6744186046511,
+                  1488.1627906976744
+                ],
+                "local_canonical1024": [
+                  81.81950074674627,
+                  31.89758907616808
+                ],
+                "authored_projected_ground_plane_localY_canonical": 55,
+                "AIR_minimum_clearance_world": 5.061854016503678,
+                "note": "ROI bottom is visible boot/sole landmark; no PNGfloor inference. Projected AIRplane is explicitly authored NW fore/aft+near/far depth, not a bone measurement."
+              }
+            ]
+          }
+        ],
+        "source_pixels_unchanged": true,
+        "actor_approval": false,
+        "new_actor_approvals": 0
+      }
+    },
+    "rigid_scale_evidence": {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/rigid-head-C-measurement-proposal-v01.json",
+      "sha256": "ed21f2824310d6fef68e4801f3efbfbc8811ab08c86c200a23480286bd4b1cfe",
+      "inline": {
+        "status": "AUTHORED_RIGID_CORE_C_PROPOSAL_PENDING_INDEPENDENT_PHYSICAL_QC",
+        "atlas_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "method": "Boundedcentralhelmetgoldcresttip tofirstconnectedpalesilverhairroot. Wholegear/bodybboxnotused. PerposeCmultiple8derivedfromcorrectNWidle0 marker79/C944, thenactualskull/pauldron/waist/limbsvisualcheckrequired.",
+        "reference_marker_canonical1024": 85.69491525423729,
+        "Cs": [
+          848,
+          2096,
+          2392,
+          2376,
+          2280,
+          872
+        ],
+        "poses": [
+          {
+            "label": "correctNWidle0 C944",
+            "source_path": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+            "source_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+            "source_region": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "pale_component_top": [
+              197,
+              95
+            ],
+            "private_head_ROI_xyxy": [
+              82,
+              0,
+              297,
+              185
+            ],
+            "native_per_private_pixel": 0.6231884057971014,
+            "C": 944,
+            "crown_ROI_xyxy": [
+              128,
+              0,
+              208,
+              95
+            ],
+            "crown_y": 16,
+            "helmet_to_pale_root_marker": 79,
+            "marker_canonical1024": 85.69491525423729
+          },
+          {
+            "label": "approvedNWwalk0 C984",
+            "source_path": "/workspace/scratch/girtas-NW-walk-author-v01/girtas-NW-walk-v03.png",
+            "source_sha256": "977dcd2d6d5b51795fb1b52854006a36caea02e791616d84f2e5f653170c7d3e",
+            "source_region": [
+              63,
+              2,
+              451,
+              492
+            ],
+            "pale_component_top": [
+              208,
+              91
+            ],
+            "private_head_ROI_xyxy": [
+              90,
+              0,
+              310,
+              183
+            ],
+            "native_per_private_pixel": 0.6376811594202899,
+            "C": 984,
+            "crown_ROI_xyxy": [
+              141,
+              0,
+              218,
+              91
+            ],
+            "crown_y": 4,
+            "helmet_to_pale_root_marker": 87,
+            "marker_canonical1024": 90.53658536585365
+          },
+          {
+            "label": "NWrun0",
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "source_region": [
+              106,
+              7,
+              415,
+              449
+            ],
+            "pale_component_top": [
+              205,
+              79
+            ],
+            "private_head_ROI_xyxy": [
+              97,
+              0,
+              299,
+              163
+            ],
+            "native_per_private_pixel": 0.5855072463768116,
+            "C": 848,
+            "crown_ROI_xyxy": [
+              144,
+              4,
+              214,
+              79
+            ],
+            "crown_y": 8,
+            "helmet_to_pale_root_marker": 71,
+            "marker_canonical1024": 85.73584905660377
+          },
+          {
+            "label": "NWrun1",
+            "source_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+            "source_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+            "source_region": [
+              84,
+              45,
+              1133,
+              1058
+            ],
+            "pale_component_top": [
+              364,
+              221
+            ],
+            "private_head_ROI_xyxy": [
+              111,
+              0,
+              584,
+              419
+            ],
+            "native_per_private_pixel": 1.3966666666666667,
+            "C": 2096,
+            "crown_ROI_xyxy": [
+              221,
+              42,
+              386,
+              221
+            ],
+            "crown_y": 46,
+            "helmet_to_pale_root_marker": 175,
+            "marker_canonical1024": 85.49618320610686
+          },
+          {
+            "label": "NWrun2",
+            "source_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+            "source_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+            "source_region": [
+              220,
+              24,
+              1006,
+              1130
+            ],
+            "pale_component_top": [
+              478,
+              227
+            ],
+            "private_head_ROI_xyxy": [
+              207,
+              0,
+              713,
+              439
+            ],
+            "native_per_private_pixel": 1.4666666666666668,
+            "C": 2392,
+            "crown_ROI_xyxy": [
+              325,
+              21,
+              502,
+              227
+            ],
+            "crown_y": 27,
+            "helmet_to_pale_root_marker": 200,
+            "marker_canonical1024": 85.61872909698997
+          },
+          {
+            "label": "NWrun3",
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+            "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+            "source_region": [
+              228,
+              27,
+              996,
+              1128
+            ],
+            "pale_component_top": [
+              476,
+              228
+            ],
+            "private_head_ROI_xyxy": [
+              206,
+              0,
+              711,
+              440
+            ],
+            "native_per_private_pixel": 1.4666666666666668,
+            "C": 2376,
+            "crown_ROI_xyxy": [
+              323,
+              24,
+              500,
+              228
+            ],
+            "crown_y": 29,
+            "helmet_to_pale_root_marker": 199,
+            "marker_canonical1024": 85.76430976430976
+          },
+          {
+            "label": "NWrun4",
+            "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+            "source_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+            "source_region": [
+              214,
+              24,
+              1023,
+              1123
+            ],
+            "pale_component_top": [
+              490,
+              217
+            ],
+            "private_head_ROI_xyxy": [
+              221,
+              0,
+              724,
+              428
+            ],
+            "native_per_private_pixel": 1.4579710144927536,
+            "C": 2280,
+            "crown_ROI_xyxy": [
+              338,
+              21,
+              513,
+              217
+            ],
+            "crown_y": 26,
+            "helmet_to_pale_root_marker": 191,
+            "marker_canonical1024": 85.78245614035087
+          },
+          {
+            "label": "NWrun5",
+            "source_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+            "source_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+            "source_region": [
+              560,
+              1010,
+              453,
+              482
+            ],
+            "pale_component_top": [
+              702,
+              1084
+            ],
+            "private_head_ROI_xyxy": [
+              587,
+              958,
+              802,
+              1174
+            ],
+            "native_per_private_pixel": 0.72,
+            "C": 872,
+            "crown_ROI_xyxy": [
+              637,
+              1007,
+              712,
+              1084
+            ],
+            "crown_y": 1011,
+            "helmet_to_pale_root_marker": 73,
+            "marker_canonical1024": 85.72477064220183
+          }
+        ],
+        "private_preview": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/private-eight-rigid-C-body-probe-v01.jpg",
+        "private_preview_bytes": 146968,
+        "private_preview_sha256": "59d0714c8e8fa5a93d8f04cdb0379581e35b2c47802d155ea957552d26dc406e",
+        "root_floor_status": "NOT_AUTHORED_YET",
+        "source_pixels_unchanged": true
+      }
+    },
+    "physical_geometry_equivalence": {
+      "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/final-wrapper-physical-candidate-equivalence.json",
+      "sha256": "c2cd78361aaf0a89019f81f707bbccd39cbf7e8cb6d029e4419e501c8b952be9",
+      "inline": {
+        "status": "PASS_EXACT_SIX_SOURCE_REGIONS_RGBA_C_ROOT_MARGIN_FOOT_EQUIVALENT",
+        "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+        "candidate_layout": {
+          "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/reviewed_runtime_layout.proposal.json",
+          "sha256": "435185dbdedbcb0ba5d81eabe194ec77e3e70fd3829246fca2c15b02f43e4755"
+        },
+        "candidate_geometry": {
+          "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/geometry-derived.json",
+          "sha256": "abe4b4afdf4aa4a4506a0328b763788edde07facdc3c8411e50ad3fe1eef83d8"
+        },
+        "final_layout": {
+          "path": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/reviewed_runtime_layout.proposal.json",
+          "sha256": "fb0eee5879a481221edabad4e149469f27a1e3b0a1a7eceba67f9133d986266c"
+        },
+        "independent_physical_review": {
+          "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+          "sha256": "95d973980652c0eaee8751d0085bd1e7c82f4a650050fc95093b54efe81c3010"
+        },
+        "all_six_geometry_fields_equal": true,
+        "source_pixels_unchanged": true,
+        "resampled": false,
+        "actor_approval_increment": 0
+      }
+    },
+    "all_original_generation_requests": [
+      {
+        "path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/request.json",
+        "sha256": "84735c1b7dcfa3cad9fe87ceb5fc562f949821ea0d58a58fe73d61a1bdd1d518",
+        "inline": {
+          "key": "transform:267",
+          "name": "기르타스",
+          "direction": "NW",
+          "role": "run",
+          "source_batch": "batch03",
+          "version": "v02rig01",
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 6,
+          "requested_poses": 6,
+          "newly_authored_poses": 6,
+          "references": [
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/SIX-actual-alternating-NW-RUN-3D-authority.png",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/SIX-actual-alternating-NW-RUN-3D-authority.png": "8ade124adf341ee0252820eeff5006698a3e1bbf4eb57f76cd9be1074caf1106",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png": "1d51c981f6ea0f8436543289381ca16c3bd9d014fe66f483949273e6f0df14d0",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png": "073692cc9c4307c3ce38c7821c5f07a2c2beee358ba7475b3db2a50fa838e738"
+          },
+          "reference_provenance": {
+            "only_character_identity": "CorrectNEWNWidle0, oldgenericredwingNWrun andbadNcameraNWidle NOTreferenced. Exactupperbodyonlysource+longrobetrimcrop.",
+            "character_parent": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+            "character_parent_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+            "3d_joint_table": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/3d-run-joint-authority.json",
+            "3d_joint_table_sha256": "7decaff306c2eb98a9463bb7c60e5b8bdc391fc8ee9ffc17dcabd824f5b4a69d",
+            "fixed_thigh_shin_lengths": [
+              0.57,
+              0.57
+            ]
+          },
+          "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-run-v01.png",
+          "corrective_reason": "CurrentNWrun genericredwing/noGirtaslonghair/sinousblade/longrobe H0LD mustbe materiallyre-authored faithfulNWrun6. Neworiginalsolid3Dfixedbone/depth/contact/AIRguide +correctNWidleidentitywithALLoldlegsremoved. Independentphaseownership/deepLOAD/bothAIRsourceart/strict6geometry/realrootarc/actualPlayerrequiredbeforeapproval.",
+          "prompt": "Dress all SIX 3D MANNEQUINS in IMAGE1 as the EXACT SAME GIRTAS from IMAGE2/3, producing six actual NORTHWEST RUNNING frames. IMAGE1 is ABSOLUTE camera, anatomical leg chain, knee bend, support and AIR-clearance authority. Copy EVERY distinct hip/knee/ankle/foot pose, including actual deep load1/4 and actual BOTH-FEET-IN-AIR2/5. BLUE=anatomicalLEFT nearleg and emptyneararm; ORANGE=anatomicalRIGHT farleg and weaponarm. Remove mannequincolors fromfinishedart. NORTHWEST UPLEFT rearLEFT3/4 camera exactlysameall6, forwardUPPERLEFT/backLOWERRIGHT. Image2 identityreference intentionallycontainsNOoldlegs; it supplies Girtasappearance ONLY, NEVERoverride3Djointpose. Image3 originalLONGrobe goldtrimdesign. DoNOTmakewalking contactposes orsixstaticidlefigures.\n\nSixframes0,1toprow;2,3middlerow;4,5bottomrow matchimage1. 0 LEFTLANDING: nearLEFT leg forward/down heel/sole plants, farRIGHT recoveryleg flexed and folded BEHINDwithbootRAISED. 1 LEFTLOAD: nearLEFT sole remainsgroundsupportunderhips, supporting knee bendsdeeplyforward, hip/body visiblycompresslower; farRIGHT recoveringknee passesforward withbootRAISED. SupportingLEFT mustbeactuallyBENT, notstiffstraightlegandonlybodytranslation. 2 AIR LEFTTO RIGHT: BOTH BOOTS CLEAR THE GROUND, nearLEFTleg TRAILSback/LOWERRIGHT withknee flexed, farRIGHT knee/boot LEADSforward/UPLEFT preparingnextlanding, hip/body rises; no toe/heelgroundcontact. 3 RIGHTLANDING: farRIGHT leg forward/down heel/sole plants, nearLEFT recoveryleg flexed/foldedBEHINDbootRAISED, actual OPPOSITElead/supportfrom0. NearLEFTrecoverylegvisibleforemost, farRIGHTsupportnaturallypartlybehindrobe/leftthigh; doNOTrelabelfirstsamelegasright. 4 RIGHTLOAD: farRIGHT sole groundsupportunderhips, RIGHTsupportknee deeplyflexed, hip/bodycompresslower, nearLEFT recoveringkneepassesforward withbootRAISED. Actual opposite supportfrom1. 5 AIR RIGHTTO LEFT: BOTH BOOTS CLEAR GROUND, farRIGHTleg TRAILSback/LOWERRIGHT flexed, nearLEFTknee/boot LEADSforward/UPLEFT preparing0, hip/bodyrises. OppositeAIRlegleadfrom2, notsameairdrawing. AIR2/5 musthave BOTH distinct boots flexed/raised, no weightbearingstraightleg, no toe contactingground. Allbones validcontinuouship->thigh->knee->shin->boot, exact2legs/2boots.\n\nExactGIRTASidentityALL6: longflowing PALE SILVERhair, pointed GOLDcrown/helmet, paleprofileonlywherevisible, ornate BLACK/GOLDlayeredpauldrons/bodyarmor, thin HARD STRAIGHT GOLD RADIAL BACK RAYS rigidmetalNOTfeathers/wings/flames, SAME LONG DARK GOLDTRIM ROBE andboots, ONE LONG SINUOUS GOLD/YELLOW BLADE. LONGrobe retainedtoankle/shin, panelsopen/trailtorevealbothrequiredknee/ankle/boots butneverreplacewithpants/shortskirt. ExactlyTWOARMS/HANDS: nearanatomicalLEFTimageLEFT/lowerleft LOWEMPTYhand; faranatomicalRIGHTimageRIGHT/upperrightpartlybehindhair continuousarmholding SAME lowsinuousblade, no raisedemptyfist/thirdarm/handflip/floatingblade. Allhead/shoulders/hips faceUPLEFTrearLEFT, no axialNback/Wside/NEflip. Samephysicalskull/armor/pelvissizeall6, genuinejointflexion/bodyload-rise notrescaling. Hair/longrobe trailsoftly, rigidmetalraysfollowbackWITHOUTflapping. LowweaponfollowsfarRIGHTwrist slightcounterbalance, noattack/afterimage.\n\nTransparent1024x1536 PNG, exact2columnsx3rows512cells, SIX completecenteredcutoutfigures only. Fullcrown/hair/rays/robe/boots/bladetips with35pxalphazeroedge/gutters, neverclip/shortenblade/rays. CrispdetailedRPGgamequality, opaquearmor/cloth/metal thinAAedge. No coloredguides/text/labels/numbers/frames/floor/shadow/glow/haze/particles/extraobjects. DeepflexedLOAD1/4 andactualBOTHFEETAIR2/5 withoppositelegs are essential.",
+          "transparent_background": true,
+          "requested_at": "2026-10-19T14:45:30.682653+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/request.json",
+        "sha256": "0230b4a086a6990c1fb85652b1cfe8af5b9049f430d2124826499e7d7668b374",
+        "inline": {
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 1,
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "references": [
+            "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-nearLEFT-load1-lossless-pose-only.png",
+            "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/same-nearLEFT-load-pose-natural-farRIGHT-hem-opening-guide.png",
+            "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-source0-farRIGHT-folded-recovery-boot-detail.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-nearLEFT-load1-lossless-pose-only.png": "f314a147a62108f696212a68f2897745a6066cc988b69db4f60cde63a0ab9533",
+            "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/same-nearLEFT-load-pose-natural-farRIGHT-hem-opening-guide.png": "2930bfed4f27d1aef07185cc7e1fba602de17d893ed5d086b643ce3e7141b40f",
+            "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/proved-source0-farRIGHT-folded-recovery-boot-detail.png": "4f5db73df7e36345ace8796e466a443009b9c932c5247daed0c01bf3bea9281e"
+          },
+          "prompt": "Edit FIRST exact faithful GIRTAS NW run LEFT-LOAD character pose to reveal its currently fully hidden FAR anatomicalRIGHT recovering shin/boot through a SMALL NATURAL opening under the existing longrobe rear/far hem. SECOND is same FIRST with mint circle only marking the natural far-right hem opening area; never output marks. THIRD is exact detail of SAME GIRTAS's anatomically correct FAR RIGHT folded-back recovery shin/boot from independently accepted LEFTlanding0, supplied ONLY for correct same boot/armor anatomy. It is NOT an extra limb.\n\nKeep FIRST's existing anatomical NEAR LEFT support leg: its knee already bends underload, shin and sole bear weight, same sourcecamera/head/torso/hips and body proportions. Do not move/re-pose that loaded LEFT leg or replace it with a straight stiff leg. The other actual FAR RIGHT leg belongs to far RIGHT hip behindrobe; let its knee advance subtly in the passing/recovery cycle and its shin fold back to a visibly RAISED gold-black RIGHT boot below/far-right behindbody, clear of floor. Reveal a small connected knee/shin/boot portion under natural robe slit/hem so independent viewers can track two real leg chains: near LEFT planted LOAD, far RIGHT recovering AIR. Match third boot's actual farRIGHT ownership and armor; no swap. Exactly TWO legs total, never three. Existing nearLEFT plantedboot remains sole groundcontact; farRIGHT boot is separate and raised.\n\nDo not shorten the original longrobe, cut a new bare-thigh slit, turn robe into pants/shortskirt, expose barethigh, alter armorbody proportions, or remove flowing long goldtrim robe panels/tail. Lift only a small existing far/rear hem naturally over the recovering boot. Full faithful correct NW rear-LEFT3/4camera preserved, nearLEFT emptyhand, farRIGHT hand continuous glowing sinuousblade via ORIGINAL SMALL plain goldcollar/hilt (NO invented flower/diamond/prongs). HARD thin goldrays, longsilverhair, crown, blackgoldarmor and longrobe unchanged. No extraarm/head/weapon/boot, no mirror/rescale/recolor/guidecolors. ONE full unlabelled transparent-background pose with generous margins, allraytips/bladelongtip/feet/robe complete; no ground/shadow/grid/text.",
+          "transparent_background": true,
+          "material_change": "preserve independently accepted actualnearLEFTbentLOAD, reveal actualotherfarRIGHTrecoveringshin/boot throughnaturalexistinglongrobehem withoutrobe redesign",
+          "base1_proof_sha256": "57f7cf445bb8d7e9fb93cefaa1ae53afa2855bbdb6d054ca5e64e64b0fa8bb74",
+          "boot_detail_source_region_xyxy": [
+            250,
+            335,
+            375,
+            450
+          ],
+          "prior_independent_HOLD_sha256": "9246493e9d73298a39ef18c455d949ea5c95f5355a1d6d919ba27b53f0ab9d52",
+          "requested_at": "2026-10-19T15:56:49.946414+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/request.json",
+        "sha256": "54d684ebb32203d442fecefb83366ef4708a093feff726c54bf32fdde2bca5e2",
+        "inline": {
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 2,
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "references": [
+            "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+            "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/proved-farRIGHT-leading-leg-ankle-flex-guide-only.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+            "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/proved-farRIGHT-leading-leg-ankle-flex-guide-only.png": "fe2eafb49b09f231fd181a9aadd2f90e536a67a266c980205282746cce27a7bc"
+          },
+          "prompt": "Edit FIRST exact GIRTAS transparent PNG from its independently accepted true NORTHWEST FAR-RIGHT-FORWARD LANDING phase3 into exactly ONE NEW OPPOSITE AIR phase2. The FIRST source is absolute authority for the already PROVEN hip/leg anatomical ownership; preserve both actual hip/thigh chains, same camera, allbody proportions, exact head/armor/rays/silverhair/longrobe, same EMPTY nearLEFT hand and faithful SMALL simple collar/hilt holding continuous sinuous blade in FAR RIGHT hand. Do NOT reconstruct newlegs from scratch or swap ownership. SECOND is the SAME character with mint circle/arrow on the FAR RIGHT leading shin/boot ONLY, showing the small localized pose edit. No mint marks in final.\n\nMake an actual AIR frame: FAR anatomicalRIGHT front leg is the existing UPPER-LEFT leading leg/boot inside mintcircle, its thigh already crosses from farRIGHThip behind robe toward the UPPERLEFT front boot. Retain that actual farRIGHThip->thigh->knee chain. Gently FLEX this same RIGHT leading knee/shin and raise the actual front RIGHT ankle/heel/toe upward by about40-65 sourcepixels so its sole is clearly AIR, softly dorsiflexed/reaching for nextlanding. The marked leading RIGHT boot must NOT touch ground. Keep its foreleg UPLEFT extent (do not retract it beneathbody or replace by nearLEFT leg).\n\nThe OTHER leg is anatomical NEAR LEFT: existing lowerRIGHT foreground leg has knee trailing behindhip and shin foldedBACK with raisedboot/heel near hip, sole visible. Keep that complete actual trailingLEFT hip/thigh/knee/shin/raisedboot geometry and foreground occlusion. Do NOT move nearLEFT knee UPLEFT into a newleading pose. Both feet airborne, no supporting toe/heel. Add only small natural airborne robe/hair followthrough while retaining original LONG dark GOLDTRIMrobe panels; do not shortenrobe or exposebarethigh.\n\nThis is one opposite RUNNING flight key, not walk/toeoff, not contact, not a newcharacter. Preserve faithful NWrearLEFT3/4heading, twoarms/twolegs, hardthin goldrays (notfeathers), longsilverhair, no extraweapon/flowercrossguard/limbs/head. Generous transparent alpha allaround everyraytip/bladelongtip/boot/robe. Exactly ONE full foreground pose without diagram/grid/labels/text/shadow/ground.",
+          "transparent_background": true,
+          "material_change": "localized correctfarRIGHTleading contact3 -> AIR byactualfrontRIGHTknee/shin/ankle flex, preserve independently proved oppositehipownership; excludes allfailedsameleadAIR references",
+          "proved_source3_independent_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-phase3-small-hilt-independent-source-QC-v01.json",
+          "proved_source3_independent_review_sha256": "2482f21b253e02f0d82d85bba47996e9b9b80ea6adbb829cd39cfd0005f13443",
+          "guide_native_roi_xyxy": [
+            300,
+            815,
+            480,
+            995
+          ],
+          "requested_at": "2026-10-19T15:53:28.358557+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/request.json",
+        "sha256": "3b531e8ad924678ad703e7fe29fad22822ae7e2b5013b576b3a24fdf994779ad",
+        "inline": {
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 3,
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "references": [
+            "/workspace/scratch/girtas-NW-run-RIGHT-landing-key-v03/girtas-NW-run-RIGHT-landing3-v03.png",
+            "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/current-NW-idle0-small-collar-hilt-exactcrop.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-NW-run-RIGHT-landing-key-v03/girtas-NW-run-RIGHT-landing3-v03.png": "19f288db198792a3b7103b351b40fa59a473c37343484f8101250f2b1b76a960",
+            "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/current-NW-idle0-small-collar-hilt-exactcrop.png": "3f3712d9deb8c0c4671e26dd20d6dd35ba026bc07edff3f563d720ccf57145fd"
+          },
+          "correct_current_idle_source": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+          "correct_current_idle_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+          "correct_current_idle_native_crop_xyxy": [
+            235,
+            210,
+            380,
+            385
+          ],
+          "prompt": "Make ONE precise localized character-art correction to FIRST transparent PNG. Preserve the exact entire GIRTAS NORTHWEST rear-left camera, SAME far anatomical RIGHT forward landing leg and near LEFT bent backward raised leg, SAME skull/face/silverhair/hardgoldrays/armor/longrobe, all poses and framing. The ONLY defect is the newly invented big FOUR-PRONG/DIAMOND/FLOWER CROSSGUARD at the far RIGHT hand where the glowing sinuous blade starts. Remove this ornamental crossguard completely. SECOND image is an exact unmodified crop from CURRENT approved correctNWidle: its RIGHT hand holds the continuous glowing sinuous blade through a SIMPLE SMALL GOLD COLLAR/short plain grip, with NO diamond/flower/star guard. Match that faithful small collar and same hand-to-blade continuity in FIRST image. Do not alter anatomy/weaponhand ownership, blade long sinuous curve, body proportions, equipment, rays, robe or stance. Empty near LEFT hand must remain empty. Do not re-pose legs, no duplicated limbs, no camera rotation, no mirroring, no recolor, no new ornaments. Keep generous transparent alpha margins and full foreground including long blade tip and all ray tips. Output exactly ONE complete unlabelled faithful character pose, no text/diagram/grid/extra frame.",
+          "transparent_background": true,
+          "material_change": "localized remove invented large diamond/four-prong hilt; preserve actual independently accepted opposite RIGHTlanding anatomy",
+          "requested_at": "2026-10-19T15:42:44.907089+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/request.json",
+        "sha256": "2b37f8fd61f7794a74783c6c0818121f2afdf64e171af8d8a0b6f1b019701dc1",
+        "inline": {
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 4,
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "references": [
+            "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/exact-3D-RIGHT-support-V-chain-highlight-guide.png",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/exact-3D-RIGHT-support-V-chain-highlight-guide.png": "449ed0a80a1cc9dbba830b9a44a0a32ee3f75e7d059bf46ba670235a98a08b4d",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png": "1d51c981f6ea0f8436543289381ca16c3bd9d014fe66f483949273e6f0df14d0",
+            "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png": "073692cc9c4307c3ce38c7821c5f07a2c2beee358ba7475b3db2a50fa838e738"
+          },
+          "prompt": "Dress image1's EXACT ONE3Dhumanbody/joints as GIRTASfromimage2/3 in a REAL FAR-RIGHT-LEG SUPPORT LOAD/RUN-COMPRESSION frame. The goldhighlightline+circles ONLYshow anatomicallycorrecthip->knee->ankle V-chain, NEVER outputguidecolors/marks/text. Image1isabsoluteanatomyleg/occlusion/cameraauthority. BLUE=anatomicalLEFTnearleg/emptyarm, ORANGE=anatomicalRIGHTfarleg/weaponarm. Image2identityONLYhasALLoldlegsremoved. REQUIREDRIGHTSUPPORT: farRIGHT hip atimageRIGHT drops/thighslants diagonallyUPLEFTto visiblyFORWARD bentRIGHTKNEE, then RIGHTSHINslants DOWNRIGHT toflatRIGHTsupportBOOTonfloor beneathhips. This V-bentKNEE mustbe visible asactualgoldarmorkneecap/thigh-to-shin bend, notstiffstraightleg/disappearedjointunderrobe. FarRIGHT supportknee bendsDEEPLYandhipsarecompressedlower, matchinghighlighted3Djointchain. EXACToppositesupportfromusualnearLEFTlanding. DoNOTdrawnearLEFTsupportandrenameitright.\n\nNEAR LEFTleg is PASSING/RECOVERING: its knee flexesHIGHFORWARD towardUPLEFT, nearLEFT shin/BOOTisraisedofffloor onimageLEFT, noLEFTgroundcontact. The farRIGHTplantedboot isimageRIGHT/lowerground, nearLEFTpassingboot isimageLEFT/raised. LongrobeopensviaNATURALRUNNINGSLIT toshow partofFARRIGHTupperthigh/visibleknee/diagonalshin while keepingfulloriginalLONGrobe panels; not pants/shortskirt. Exactlytwocontinuouslegs/boots, noextraorangeleg/phantomknee. SourceV-chaincomesfromactualfixedbone3Drig, notarbitraryjointlines. TorsohipLOWERfromrealkneebending, notsqueezing/rescalingbody. SameUPLEFT NORTHWEST REAR-LEFT3/4head/body/hipcamera, noaxialNrear/Wside/NEflip. Fullskull/armorbodyproportionsconsistent.\n\nExactGIRTAS fromimage2/3: longPALESILVERhair, pointedGOLDcrown, paleprofileonlywherevisible, ornateBLACK/GOLDpauldrons/bodyarmor, THINHARDSTRAIGHTGOLD RADIAL BACKRAYS rigidmetalNOTfeathers/wings, SAME LONG DARK GOLDTRIM ROBE andboots, ONE ORIGINAL LONG NARROW SINUOUS GOLD/YELLOWBLADE withmultiplesmoothS-curvesandoriginalsmallgrip(noextraornatecrossguard). ExactlyTWOARMS/HANDS: nearLEFTimageLEFTLOWEMPTYhand, farRIGHTimageRIGHTclosedhandholding sameLOWoutwardblade besidehip, continuousshoulder/elbow/wrist, no raisedemptyfist/thirdarm/weaponflip/floatingblade. Hair/robe trailwithrunbutraysrigidattachedbackneverflap. Noattack.\n\nONEfinishedhigh-detailRPGgamecutout transparent1024x1024 PNG, fullcrown/hair/rays/longrobe/boots/bladetipcenteredwith100pxalpha0margin. Neverclip/shortenblade/rays, opaquearmor/cloth/metal thinAAedge. No3Dguidecolors/text/labels/jointlines/grid/floor/shadow/glow/haze/particles/extraobjects. ACTUALVISIBLEFARRIGHTsupportkneeVbend +NEARLEFTpassingAIRboot essential.",
+          "transparent_background": true,
+          "material_change": "FullsixRIGHTload4supportkneelooksstraight/hiddenHOLD. NEWsingleRIGHTloadactualfixed3D IKguide with LEFTpassingankleFORWARD Y+.30 Z.35 soLEFTkneeHIGH(.57,.85) noRIGHTkneelowocclusion. RIGHTsupportVchain projectedexactly[[562,534],[476,599],[550,776]] overlayhighlightsmusttranslateintonaturalvisiblearmor/kneeslit, nooldcharacterlegs.",
+          "requested_at": "2026-10-19T15:19:53.276160+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0
+        }
+      }
+    ],
+    "all_original_saved_generation_records": [
+      {
+        "path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/result.json",
+        "sha256": "4c253cb340069d18098c7279774b4e828e36d2fc7950dabcb96ba13a2ab5ea69",
+        "inline": {
+          "status": "HOLD_REQUESTED_SIXPOSE_RUNNING_PHASES_PARTIAL_SALVAGE_CANDIDATE",
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "version": "v02rig01",
+          "raw_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+          "raw_png": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+          "raw_sha256": "23b7d787306f0aef94f42bb1a07ca4c63bc6e29dcd3500569de26e076db58a16",
+          "raw_bytes": 2261303,
+          "image_size": [
+            1024,
+            1536
+          ],
+          "original_generated_file": "/workspace/generated_images/exec-c5e2535a-deba-4888-b550-cb1a35fa4ad6.png",
+          "request_path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/request.json",
+          "request_sha256": "84735c1b7dcfa3cad9fe87ceb5fc562f949821ea0d58a58fe73d61a1bdd1d518",
+          "expected_poses": 6,
+          "requested_poses": 6,
+          "newly_authored_poses": 6,
+          "imagegen_attempts": 1,
+          "chat_image_attachments": 0,
+          "outer_edge_alpha100_count": 0,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0,
+          "source_visual_status": "HOLD",
+          "visual_findings": [
+            "FaithfulcorrectNWGirtaslonghair/hardrays/longrobe/twoarms/farRIGHTbladegeometry retainedall6.",
+            "RequestedRIGHTlanding3 repeatsnearLEFTlandingownership; AIR2/5appearbothnearLEFTlead/farRIGHTtrail, failingoppositeAIRphase. Whole6mustremainHOLD.",
+            "Potentialusable0LEFTlanding,1LEFTcompression,4RIGHTcompression,2or5AIRRIGHTtoLEFT actualownershiprequireindependentclassification. Materiallynewonephase3DguidecallsneededforfarRIGHTlanding+oppositeAIR; noidenticalretry."
+          ],
+          "geometry_validation": "GEOMETRY_PASS6_DISTINCT_COMPLETE_FRAMES"
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/result.json",
+        "sha256": "8bb3b117aa824e1234f324918999765438df82e25babc394b00d147511c0623f",
+        "inline": {
+          "status": "GENERATED_SINGLE_SOURCE_CANDIDATE_HOLD_PENDING_INDEPENDENT_QC",
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 1,
+          "expected_poses": 1,
+          "raw_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/girtas-NW-run-LEFT-load1-visible-RIGHT-recovery-v09.png",
+          "raw_sha256": "a02ca71d3328fef9786763b59ff5290acad47be139d8e4fd634bd019878d85da",
+          "raw_bytes": 1130855,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "original_generated_file": "/workspace/generated_images/exec-93821aa6-6b3e-4185-908a-94c080fd1e2b.png",
+          "request_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/request.json",
+          "request_sha256": "0230b4a086a6990c1fb85652b1cfe8af5b9049f430d2124826499e7d7668b374",
+          "geometry_path": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/geometry-base2048.json",
+          "geometry_sha256": "e017986342e114821d382541582903431c0f7d7bf9103591def14a2025d5e28e",
+          "geometry_complete": true,
+          "imagegen_attempts": 1,
+          "chat_image_attachments": 0,
+          "outer_edge_alpha100_count": 0,
+          "private_preview": "/workspace/scratch/girtas-NW-run-LEFT-load-visible-RIGHT-recovery-v09/generated-private.jpg",
+          "private_preview_bytes": 46598,
+          "source_visual_status": "HOLD_PENDING_INDEPENDENT_QC",
+          "approved_actor_change": 0
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/result.json",
+        "sha256": "57f9cbbe3d778901cbaa717b7c2e3450d3332c6b39e2633478d979a9acce27b5",
+        "inline": {
+          "status": "GENERATED_SINGLE_SOURCE_CANDIDATE_HOLD_PENDING_INDEPENDENT_QC",
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 2,
+          "expected_poses": 1,
+          "raw_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/girtas-NW-run-opposite-AIR2-from-proved-RIGHT3-v08.png",
+          "raw_sha256": "25fe89fcf411cef2e73ba057df92c6b17ad7e752b86cd409d547d5eb7ecbe8d9",
+          "raw_bytes": 1076816,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "original_generated_file": "/workspace/generated_images/exec-2f687902-eed1-4c22-b0c4-500a28fb6f60.png",
+          "request_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/request.json",
+          "request_sha256": "54d684ebb32203d442fecefb83366ef4708a093feff726c54bf32fdde2bca5e2",
+          "geometry_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/geometry-base2048.json",
+          "geometry_sha256": "b1c663312d71e3568f60a17e5719df3c306b4dc868c7655d35271c0f60e0dac2",
+          "geometry_complete": true,
+          "imagegen_attempts": 1,
+          "chat_image_attachments": 0,
+          "outer_edge_alpha100_count": 0,
+          "private_preview": "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/generated-private.jpg",
+          "private_preview_bytes": 43274,
+          "source_visual_status": "HOLD_PENDING_INDEPENDENT_QC",
+          "approved_actor_change": 0,
+          "own_source_findings": [
+            "CorrectprovedfarRIGHTleading hip/thigh chain appears retained fromcontact3, actualleadingankle/boot israisedandflexedvscontact3, existingnearLEFTbackfoldedraisedsole retained. Independentphase2gait/modelread andworldfloorstillneeded."
+          ]
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/result.json",
+        "sha256": "e219272bb9c61d9b96393c2d48dad612a7dfea5409f3a006583bbeeee248543d",
+        "inline": {
+          "status": "GENERATED_SINGLE_SOURCE_CANDIDATE_HOLD_PENDING_INDEPENDENT_QC",
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 3,
+          "expected_poses": 1,
+          "raw_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+          "raw_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+          "raw_bytes": 1055980,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "original_generated_file": "/workspace/generated_images/exec-930b171a-9b54-42d3-b605-f146c11202de.png",
+          "request_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/request.json",
+          "request_sha256": "3b531e8ad924678ad703e7fe29fad22822ae7e2b5013b576b3a24fdf994779ad",
+          "geometry_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/geometry-base2048.json",
+          "geometry_sha256": "de2f286d991112d4455dea45cd797863ae6e31d0d1689b300b6db83fcec85e9f",
+          "geometry_complete": true,
+          "imagegen_attempts": 1,
+          "chat_image_attachments": 0,
+          "outer_edge_alpha100_count": 0,
+          "private_preview": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/generated-private.jpg",
+          "private_preview_bytes": 42658,
+          "source_visual_status": "HOLD_PENDING_INDEPENDENT_QC",
+          "approved_actor_change": 0,
+          "own_source_findings": [
+            "Large diamond/four-prong crossguard is absent; small simple goldcollar/hand-to-continuoussinuousblade now resembles current correctNWidle.",
+            "ActualfarRIGHTforwardlanding and nearLEFTbackfoldedraisedboot appear retained; faithfulNWcamera/silverhair/hardgoldrays/longrobe/fullforeground intact. Independent review pending."
+          ]
+        }
+      },
+      {
+        "path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/result.json",
+        "sha256": "28ffed930401812c81fadce95cc703e2be0399f7af132cbea1e3edf84601bb18",
+        "inline": {
+          "status": "GENERATED_SINGLE_SOURCE_CANDIDATE_HOLD_PENDING_INDEPENDENT_QC",
+          "key": "transform:267",
+          "direction": "NW",
+          "role": "run",
+          "pose": 4,
+          "expected_poses": 1,
+          "raw_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/girtas-NW-run-RIGHT-load4-v05.png",
+          "raw_sha256": "a7fc66ee10a15f3a72c57d2ccdacd4429584a966c1962598d45dfdd1b5d7b087",
+          "raw_bytes": 1178718,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "original_generated_file": "/workspace/generated_images/exec-2d183cdd-77ca-453f-a945-5f892235e0aa.png",
+          "request_path": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/request.json",
+          "request_sha256": "2b37f8fd61f7794a74783c6c0818121f2afdf64e171af8d8a0b6f1b019701dc1",
+          "imagegen_attempts": 1,
+          "chat_image_attachments": 0,
+          "outer_edge_alpha100_count": 0,
+          "source_visual_status": "HOLD_PENDING_INDEPENDENT_QC",
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "private_preview": "/workspace/scratch/girtas-NW-run-RIGHT-load-key-v05/generated-private.jpg",
+          "private_preview_bytes": 63166,
+          "visual_findings": [
+            "OwnvisualcandidatefarRIGHTsupportthighslantsfromfarhiptowardvisiblegoldkneecapandshinreturnsDOWNRIGHTtoplantedflatRIGHTboot, unlikeoldstraight/occludedsource4. NearLEFTkneehighforward/bootRAISEDandemptyLEFTarm distinct; newlongrobeopensnaturallyratherthanpantsreplacement.",
+            "FaithfulcorrectNWrearLEFTGirtascamera/longsilverhair/hardstraightgoldradialrays/goldcrown/longdarkgoldrobe/oneoldsinuousblade/twoarmsretained; noextraleg/head/weapon or guidecolors.",
+            "ExactlyoneSOURCEcandidateonly. Newwhole6v02combinesactualsupport/AIRphasecandidateswithstrictgeometry/RGBAproof, independentgait/ownershipandphysicalrootstillrequired."
+          ],
+          "visual_limitations": [
+            "IndependentSOURCEreviewpending, noonekey/6pose/runtime/actorapproval. Preserveoldfull6HOLD/currentcandidatehistory, noPNGrescale/recolor/mirror/edit."
+          ],
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0
+        }
+      }
+    ],
+    "source_region_validation_inline": {
+      "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+      "source_RGBA_sha256": "5b3391ecfbf8d7ead9d2be83041ff20665400a0e37b4eb7bf07c9ebaf07a7a1d",
+      "base_geometry_sha256": "0dca59dad22c112b8a655ab6419a0ee680c9f1316a06a83cb04d9026e22c02f2",
+      "derived_geometry_sha256": "e92473ef7607561dd09d790bdfb006137d95744425ba62a1f3b9c10b51bfb15b",
+      "review_sha256": "5e8292a29162e51fc8a66016e2e0f4afec928461e2f75ed07ef8ee97e76d6ed9",
+      "review_basis": "Outward-only completeownedalpha16 exact source rectangles plus transparent authoredAIRgroundroot space. No source pixels/alpha threshold/ownership relaxed. Source/physical candidate evidence is independent; no geometry-only actor approval.",
+      "source_unchanged": true,
+      "canonical_canvas_foot_anchors_unchanged": true,
+      "all_alpha_gt16_covered_exactly_once": true,
+      "foreign_foreground_pixels": 0,
+      "alpha_gt16_pixels": 1854623,
+      "added_alpha_gt16_pixels": 0,
+      "all_alpha_positive_covered": true,
+      "expanded_regions": [
+        [
+          430,
+          413,
+          419,
+          453
+        ],
+        [
+          1351,
+          109,
+          1138,
+          1062
+        ],
+        [
+          134,
+          1352,
+          1011,
+          1262
+        ],
+        [
+          1420,
+          1354,
+          1001,
+          1132
+        ],
+        [
+          126,
+          2636,
+          1028,
+          1127
+        ],
+        [
+          1691,
+          2957,
+          457,
+          486
+        ]
+      ],
+      "default_importer_repacker_unchanged": true,
+      "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+      "nearest_owner_sha256": "b17e7c5c69af2851aefc72923ae3307da0cbb556fe0ddf86ae053243816e62a7",
+      "foreground_owner_sha256": "540022b321b36d32708fb6f1a1bccab380e6587ddfc4164ecb1af8598e1cab96",
+      "detached_pixels": 1,
+      "detached_fragments": [
+        {
+          "row": 4,
+          "pixels": 1,
+          "bbox": [
+            580,
+            3224,
+            581,
+            3225
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 818.443644975022,
+          "owner_margin_min": 816.2075769975222
+        }
+      ],
+      "minimum_required_owner_margin": 32.0
+    },
+    "runtime_layout_validation_inline": {
+      "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+      "base_geometry_sha256": "e92473ef7607561dd09d790bdfb006137d95744425ba62a1f3b9c10b51bfb15b",
+      "derived_geometry_sha256": "8901be2d9ada92926328b932c581c36b6cbe73b652e768fda56357fcd66921bb",
+      "review_sha256": "03727ef10aacd3aabc739b15ae9275c64453f7b31c7cb0e5b30bb5bfbe7567e7",
+      "review_basis": "Candidate individuallymeasured NWrigidhelmet/skull/pauldron/waist size with explicitlyauthoredposteriorwaist/pelvis/ground smallRUNarc contact245/load225/flight310; actualnear/far/foreaftfootdepth retained. SOURCEwhole6PASS butindependentphysical/floor/AIRreviewpending. No hiddenbone/PNGfloor/bboxnormalization claim. Independent exactwhole6 source/camera/gear/gait and C/body/pelvis/sole/AIR candidate PASS now pinned. Actual compiledPlayer/actor approval remains HOLD.",
+      "direction": "NW",
+      "pose_count": 6,
+      "canvas_size": [
+        2048,
+        2048
+      ],
+      "foot": [
+        1024,
+        1280
+      ],
+      "source_anchors": [
+        [
+          565,
+          811
+        ],
+        [
+          1799,
+          1047
+        ],
+        [
+          540,
+          2605
+        ],
+        [
+          1817,
+          2449
+        ],
+        [
+          539,
+          3635
+        ],
+        [
+          1880,
+          3410
+        ]
+      ],
+      "runtime_pixel_scale_ratio": [
+        1024,
+        2048
+      ],
+      "source_pixels_unchanged": true,
+      "resampled": false,
+      "approval_granted": false,
+      "source_region_review_sha256": "5e8292a29162e51fc8a66016e2e0f4afec928461e2f75ed07ef8ee97e76d6ed9",
+      "pose_canvas_sizes": [
+        848,
+        2096,
+        2392,
+        2376,
+        2280,
+        872
+      ],
+      "runtime_reference_canvas_size": 1024,
+      "per_pose_runtime_pixel_scale_ratios": [
+        [
+          1024,
+          848
+        ],
+        [
+          1024,
+          2096
+        ],
+        [
+          1024,
+          2392
+        ],
+        [
+          1024,
+          2376
+        ],
+        [
+          1024,
+          2280
+        ],
+        [
+          1024,
+          872
+        ]
+      ],
+      "pose_canvas_size_allowed_range": [
+        256,
+        4096
+      ],
+      "newly_authored_poses": 0
+    },
+    "all_failed_originals_and_prior_composites_preserved": true,
+    "actor_approval": false
+  },
+  "actor_approval": false
+}

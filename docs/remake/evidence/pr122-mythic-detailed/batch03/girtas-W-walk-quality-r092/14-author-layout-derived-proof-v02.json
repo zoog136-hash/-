@@ -1,0 +1,92 @@
+{
+  "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+  "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+  "base_geometry_sha256": "6fe7822f44830d1d4d9182d22652917ff5c3d006ba863c7ed5261c64c49f2009",
+  "derived_geometry_sha256": "6b5efac01e564acba259c206042d8b823b73ef56079d8a1e85f5cedb326348ae",
+  "review_sha256": "e73cafcb3034fd71d76a54a45e7eab11e557ea5237702dbb5342ce54a072f8e5",
+  "review_basis": "AUTHOR physical layout proposal only: normalize genuine rigid skull/neck/pauldron/belt to selected W idle, preserve authored alternating gait/longrobe/equipment. Contacts0/3 require different native-pixel Cs than smaller support/reach sources. Proposed hip-X/projected near/far support roots need fresh independent full6 confirmation before actual game integration. No bbox fitting, no lower-body affine changes, no source-pixel resampling. Geometry-only validation does NOT grant physical approval.",
+  "direction": "W",
+  "pose_count": 6,
+  "canvas_size": [
+    2048,
+    2048
+  ],
+  "foot": [
+    1024,
+    1280
+  ],
+  "source_anchors": [
+    [
+      777,
+      1328
+    ],
+    [
+      2339,
+      1179
+    ],
+    [
+      797,
+      2709
+    ],
+    [
+      2407,
+      2892
+    ],
+    [
+      802,
+      4223
+    ],
+    [
+      2328,
+      4224
+    ]
+  ],
+  "runtime_pixel_scale_ratio": [
+    1024,
+    2048
+  ],
+  "source_pixels_unchanged": true,
+  "resampled": false,
+  "approval_granted": false,
+  "source_region_review_sha256": "c5481c2cca6f06cedd3817fe18eca80f894f10da13daaea624f9b82eafa50113",
+  "pose_canvas_sizes": [
+    2560,
+    1792,
+    1792,
+    2560,
+    1728,
+    1728
+  ],
+  "runtime_reference_canvas_size": 1024,
+  "per_pose_runtime_pixel_scale_ratios": [
+    [
+      1024,
+      2560
+    ],
+    [
+      1024,
+      1792
+    ],
+    [
+      1024,
+      1792
+    ],
+    [
+      1024,
+      2560
+    ],
+    [
+      1024,
+      1728
+    ],
+    [
+      1024,
+      1728
+    ]
+  ],
+  "pose_canvas_size_allowed_range": [
+    256,
+    4096
+  ],
+  "newly_authored_poses": 0
+}

@@ -1,0 +1,35 @@
+{
+  "status": "UNEXECUTED_FIVE_UNAPPROVED_RUN_REPLACEMENT_PROPOSAL_PENDING_INDEPENDENT_CODE_REVIEW",
+  "original_helper_sha256": "1de7ddb84a69582cd2e91434126b84ead57524d98ead53e259b288d9e418c60c",
+  "new_helper_sha256": "6c94585b57f2d4681af81617f36e3c91b65e2f23c2a2985c85f7a1cfe54f93fe",
+  "changes": [
+    {
+      "old": "    require(all(slot not in manifest.get(t, {}) for t in ('selected_locomotion_sheets','selected_detailed_action_sheets')), 'Selected clip exists: never remake')\n",
+      "new": "    require(KEY == 'transform:413' and role == 'run' and direction in ('E','SE','S','SW','W'), 'Only five unapproved held RUN slots are replaceable')\n    audit_rel = 'docs/remake/evidence/pr122-mythic-detailed/batch03/mythic413-five-unapproved-run-quality-HOLD-v01-20261020/RUN-five-slot-read-only-audit-v01.json'\n    audit_sha = 'b3bec3966c234d87f37b838e10849d1f345d79f72648c72369e789aa4707cee4'\n    require(digest(actual_file(ROOT/audit_rel)) == audit_sha, 'Exact independently preserved five-slot HOLD audit required')\n    audit = strict_json(ROOT/audit_rel)\n    rows = [r for r in audit['slots'] if r['direction'] == direction]\n    require(len(rows) == 1 and rows[0]['status'] == 'HOLD_VISUAL', 'One original source visual HOLD required')\n    held = rows[0]\n    previous_source = audit['source_prefix'] + held['source']\n    require(previous_source == 'docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-'+direction+'-run-v01.png', 'Only original unapproved v01 source permitted')\n    require(manifest.get('selected_locomotion_sheets', {}).get(slot) == previous_source and slot not in manifest.get('selected_detailed_action_sheets', {}), 'Held selected RUN changed; never repeat a replacement')\n    old_records = [r for r in manifest['raw_images'] if r.get('source') == previous_source]\n    require(len(old_records) == 1 and all(old_records[0].get(k) == v for k,v in dict(key=KEY,direction=direction,role='run',version='v01',production_connected=False,detailed_completed=False,sha256=held['sha256']).items()), 'Original selected source must remain explicitly unapproved')\n    replaced_animation = 'run_'+str(advance.staging.importer.DIRECTIONS.index(direction))\n    require(replaced_animation in before_tracks and before_tracks[replaced_animation]['source'] == previous_source and before_tracks[replaced_animation]['source_sha256'] == held['sha256'], 'Exact original native RUN track required')\n    replacement_pin = dict(source=previous_source,sha256=held['sha256'],audit_path=audit_rel,audit_sha256=audit_sha,before_track_sha256=hashlib.sha256(encode(before_tracks[replaced_animation])).hexdigest())\n    require(request.get('corrective_replacement') == replacement_pin and review.get('replacement_review') == replacement_pin, 'Request and independent review must pin the same original unapproved RUN and audit')\n    for relative,expected in [(audit_rel,audit_sha),(previous_source,held['sha256']),(str(Path(previous_source).with_suffix('.geometry.json')),held['geometry_sha256']),(audit['source_prefix']+held['request'],held['request_sha256'])]:\n        require(digest(actual_file(ROOT/relative)) == expected, 'Held source, geometry, request or audit changed')\n        immutable[relative] = expected\n    preserved_tracks = {k:v for k,v in before_tracks.items() if k != replaced_animation}\n    preserved_frames = {k:v for k,v in before_frame_contract.items() if k != replaced_animation}\n    preserved_selections = {t:copy.deepcopy(manifest.get(t,{})) for t in ('selected_locomotion_sheets','selected_detailed_action_sheets')}\n    preserved_raw_records = copy.deepcopy(manifest['raw_images'])\n"
+    },
+    {
+      "old": "    expected_tracks = sorted([*copy.deepcopy(list(before_tracks.values())),new_track],key=lambda row:KEY+':'+row['direction']+':'+row['role'])",
+      "new": "    expected_tracks = sorted([*copy.deepcopy(list(preserved_tracks.values())),new_track],key=lambda row:KEY+':'+row['direction']+':'+row['role'])"
+    },
+    {
+      "old": "        require(all(current_tracks.get(k) == v for k,v in before_tracks.items()),'Prior native track geometry/pixels changed')",
+      "new": "        require(len(current_tracks) == len(before_tracks) and all(current_tracks.get(k) == v for k,v in preserved_tracks.items()),'Only the single pinned held RUN track may change')"
+    },
+    {
+      "old": "        require(all(contract.get(k) == v for k,v in before_frame_contract.items()),'Prior playback texture/region/margin/duration/loop/speed changed')",
+      "new": "        require(set(contract) == set(before_frame_contract) and all(contract.get(k) == v for k,v in preserved_frames.items()),'Other playback texture/region/margin/duration/loop/speed changed')\n        cm = strict_json(ROOT/MANIFEST)\n        require(cm['raw_images'][:len(preserved_raw_records)] == preserved_raw_records, 'Original raw source history changed')\n        for table,original in preserved_selections.items():\n            observed = cm.get(table,{})\n            require(set(observed) == set(original) and all(observed[k] == v for k,v in original.items() if k != slot), 'Another selected source changed or a slot was added')\n        require(cm['selected_locomotion_sheets'][slot] in (previous_source,source_rel.as_posix()), 'Only exact held RUN to reviewed new source replacement allowed')"
+    },
+    {
+      "old": "        require(actor['native_track_count'] == len(before_tracks)+1 and actor['native_pose_count'] == (len(before_tracks)+1)*6,'Exactly one added clip required')",
+      "new": "        require(actor['native_track_count'] == len(before_tracks) and actor['native_pose_count'] == len(before_tracks)*6,'A RUN replacement must add zero clips and zero poses to existing counts')"
+    },
+    {
+      "old": "added_clips=1,added_poses=6,approved_count=2",
+      "new": "added_clips=0,added_poses=0,replaced_clips=1,reauthored_poses=6,replaced_source=previous_source,approved_count=2"
+    }
+  ],
+  "scope": "Only actor413 original unapproved E/SE/S/SW/W RUN-v01, exactly one replacement, counts unchanged",
+  "root_changes": false,
+  "execution_or_tests": false,
+  "actor_approvals_added": 0
+}

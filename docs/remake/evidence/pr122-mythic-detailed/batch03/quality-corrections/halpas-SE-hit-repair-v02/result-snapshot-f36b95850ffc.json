@@ -1,0 +1,60 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_PEAK_RELEASE_WEAPON_OWNERSHIP_NOT_APPROVED",
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "SE",
+  "role": "hit",
+  "version": "v02",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "request_path": "/workspace/scratch/halpas-SE-hit-repair-v02/request.json",
+  "request_sha256": "0444e54b3dfa620fbce110bf798d439df0a73b11507c91ac8cafe8d1a9af9ed6",
+  "original_generated_file": "/workspace/generated_images/exec-750e7a26-b87e-4cf1-968b-026d0221bad8.png",
+  "raw_path": "/workspace/scratch/halpas-SE-hit-repair-v02/halpas-SE-hit-v02.png",
+  "raw_png": "/workspace/scratch/halpas-SE-hit-repair-v02/halpas-SE-hit-v02.png",
+  "raw_sha256": "674773fd342e76489cc7ae7e07b05bbef2e07d8feffc2d3009b2b10c393adb4c",
+  "raw_bytes": 2517903,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "private_preview": "/workspace/scratch/halpas-SE-hit-repair-v02/generated-private.jpg",
+  "private_preview_bytes": 301038,
+  "source_visual_status": "HOLD",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "chat_image_attachments": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T13:08:42.433038+00:00",
+  "geometry_validation": "LOSSLESS_ISOLATION_ALL6_STRICT_PASS_BUT_SOURCE_VISUAL_HOLD2_3_4",
+  "geometry_reason": "A pose rectangle includes another body; cannot safely crop",
+  "outer_edge_alpha100_count": 0,
+  "reviewed_at": "2026-10-19T13:09:03.812683+00:00",
+  "valid_source_phases": [
+    0,
+    1,
+    5
+  ],
+  "invalid_source_phases": [
+    2,
+    3,
+    4
+  ],
+  "visual_findings": [
+    "All six retain front-right/down-right SE body plane, same visible pink chest jewel, helmet, wings, cape and original blade.",
+    "Guard0 and settle5 show two complete original arm chains, empty imageLEFT arm down and original imageRIGHT low blade arm gripping. Phase1 correctly bends EMPTY imageLEFT arm toward upper torso while existing imageRIGHT blade hand remains low and attached. These 3 source poses are visually salvageable, pending strict isolated crop proof.",
+    "Peak2 incorrectly leaves original imageLEFT empty down arm while opposite empty forearm bends across chest and original low blade stays separate below right hip. Release3/4 similarly raise or extend empty imageRIGHT hand above separate blade. Continuous same low blade arm fails, so full6 MUST NOT integrate.",
+    "Outer source edge has zero alpha>100 clipping. Strict geometry HOLD remains for crop rectangle including another body; no repack attempted because full source has visible ownership defects. Raw PNG/request/receipt untouched."
+  ],
+  "visual_limitations": [
+    "Only visual valid poses0/1/5, no strict salvage export yet. Three key poses are not full six-frame reaction. No repeated full-six edit and no actor approval."
+  ],
+  "salvaged_good_keys_proof": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-good-keys-proof.json",
+  "salvaged_key_paths": [
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase0-lossless.png",
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase1-lossless.png",
+    "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase5-lossless.png"
+  ]
+}

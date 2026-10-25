@@ -5773,6 +5773,22 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 
 func _directional_image_path(kind: String, record: Dictionary) -> String:
 	var source_id: String = str(record.get("sourceId", ""))
+	# PR122: explicit presentation-only source sharing; combat/catalog IDs remain distinct.
+	# Mythic male Dark Elf/Gunner use their female source; both colored
+	# Lance Masters use the ordinary transform:44 source with independent tints.
+	if kind == "transform":
+		var visual_donors: Dictionary = {"138":"139", "140":"141", "179":"44", "182":"44"}
+		if visual_donors.has(source_id):
+			var donor_id: String = str(visual_donors[source_id])
+			var donor_metadata: Dictionary = directional_art.get("transform:" + donor_id, {})
+			var donor_directional: String = str(donor_metadata.get("path", ""))
+			if not donor_directional.is_empty() and ResourceLoader.exists(donor_directional):
+				return donor_directional
+			for donor_record: Dictionary in catalog_db.get("변신", []):
+				if str(donor_record.get("sourceId", "")) == donor_id:
+					var donor_path: String = str(donor_record.get("image_path", ""))
+					if ResourceLoader.exists(donor_path): return donor_path
+					break
 	var key: String = "%s:%s" % [kind, source_id]
 	var value: Variant = directional_art.get(key, {})
 	if value is Dictionary:

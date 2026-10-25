@@ -1,0 +1,210 @@
+{
+  "schema": "pr122-independent-changed-native-quality-review-v1",
+  "actor": "transform:393",
+  "direction": "NE",
+  "role": "hit",
+  "status": "PASS_SCOPED_ACTUAL_NE_HIT_SIX_PLUS_IDLE_ENTRY",
+  "revision": "r074",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/SpriteFrames.tres",
+  "selected_frames_sha256": "d6f9deee8ef393ec9abc6511fb756721ace3d7274835d483634ee939756e9012",
+  "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/NativeMotionProfile.tres",
+  "native_profile_sha256": "85ed5e96e9b1ccf424ce0c05dfc7d65918d70edbcb1a709b6c6f987a524b8618",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v04composite01.png",
+  "source_sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97",
+  "source_visual_status": "PASS_SCOPED_SIX",
+  "actual_selected_status": "PASS_SCOPED_SIX",
+  "perpose_canvas": [
+    2496,
+    2496,
+    2624,
+    2496,
+    2608,
+    2608
+  ],
+  "strict_cross_track_rgba_uniqueness": {
+    "own_distinct": 6,
+    "intersection_with_all_other_47_tracks": 0,
+    "old_v03_idle0_4_5_reuse_hold_not_overridden": true,
+    "new_dedicated_0_4_5_poses_retained": true
+  },
+  "anatomy_and_equipment": "All6 have a single consistent NE closed black/gold horned helmet and dorsal armor, coherent paired wings/cape/tail, exactly one permanent RIGHT-arm blade and opposite EMPTY LEFT guard/release chain. No former extra near hand, detached RIGHT grip, duplicate blade or frontal-back morph. Folded far flight leg may be occluded by near leg/cape; no extra leg endpoint or broken hip/knee/ankle chain appears. NE head/torso/weapon remain true back-up-right; trailing lower legs do not redefine flying heading.",
+  "physical_layout": "Actual perpose Cs[2496,2496,2624,2496,2608,2608] retain the rigid helmet/shoulder/waist physical model size of native NEidle C1024 despite new source resolution. Waist/body-root and idle0->hit0/settle5->idle0 are continuous; physical head/torso guard recoil and leg/wing/cape articulation remain. No silhouette bbox size or standing-foot clamp.",
+  "motion": "All6 dedicated and distinct:0prepare EMPTYLEFT guard,1tighter guard/start recoil,2peak LEFT forearm raised with torso/head recoil,3guard release,4lowered guarded elbow/settle,5relaxed arm/recovery. RIGHT blade remains RIGHT throughout. New0/4/5 have their own authored body/arm/cloth poses, replacing v03 exact idle reuse; all6 strictly unique from other47 tracks.",
+  "runtime_metadata_changes_required": false,
+  "actual_AtlasTexture_animationmap_sourceSHA_cropRGBA_proof": {
+    "revision": "r074",
+    "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/SpriteFrames.tres",
+    "frames_sha256": "d6f9deee8ef393ec9abc6511fb756721ace3d7274835d483634ee939756e9012",
+    "profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/NativeMotionProfile.tres",
+    "profile_sha256": "85ed5e96e9b1ccf424ce0c05dfc7d65918d70edbcb1a709b6c6f987a524b8618",
+    "basis": "Exact actual selected AtlasTexture regions/margins; equal physical canvas via per-pose C. No bbox fit. Native global1024/foot512,640.",
+    "tracks": [
+      {
+        "direction": "NE",
+        "role": "hit",
+        "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v04composite01.png",
+        "source_sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97",
+        "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/NE-hit.png",
+        "texture_sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97",
+        "poses": [
+          {
+            "phase": "idle0",
+            "C": 1024,
+            "rect": [
+              167,
+              50,
+              498,
+              415
+            ],
+            "margin": [
+              295,
+              229,
+              526,
+              609
+            ],
+            "source_anchor": [
+              384,
+              461
+            ],
+            "rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511"
+          },
+          {
+            "phase": 0,
+            "C": 2496,
+            "rect": [
+              178,
+              209,
+              1179,
+              1118
+            ],
+            "margin": [
+              717,
+              512,
+              1317,
+              1378
+            ],
+            "source_anchor": [
+              709,
+              1257
+            ],
+            "rgba_sha256": "541282e8b2c379d4b29f4c1972ef1ec749f982a9031fd17c7d674a4bcf62cfe5"
+          },
+          {
+            "phase": 1,
+            "C": 2496,
+            "rect": [
+              1707,
+              252,
+              1194,
+              1031
+            ],
+            "margin": [
+              701,
+              569,
+              1302,
+              1465
+            ],
+            "source_anchor": [
+              2254,
+              1243
+            ],
+            "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f"
+          },
+          {
+            "phase": 2,
+            "C": 2624,
+            "rect": [
+              160,
+              1751,
+              1216,
+              1105
+            ],
+            "margin": [
+              751,
+              569,
+              1408,
+              1519
+            ],
+            "source_anchor": [
+              721,
+              2822
+            ],
+            "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c"
+          },
+          {
+            "phase": 3,
+            "C": 2496,
+            "rect": [
+              1699,
+              1763,
+              1210,
+              1082
+            ],
+            "margin": [
+              683,
+              548,
+              1286,
+              1414
+            ],
+            "source_anchor": [
+              2264,
+              2775
+            ],
+            "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9"
+          },
+          {
+            "phase": 4,
+            "C": 2608,
+            "rect": [
+              164,
+              3296,
+              1207,
+              1088
+            ],
+            "margin": [
+              758,
+              571,
+              1401,
+              1520
+            ],
+            "source_anchor": [
+              710,
+              4355
+            ],
+            "rgba_sha256": "13a1b30cfc727699ea586a1077cb1e216fd3ccf15094a68d742454c9a662b473"
+          },
+          {
+            "phase": 5,
+            "C": 2608,
+            "rect": [
+              1720,
+              3282,
+              1167,
+              1115
+            ],
+            "margin": [
+              789,
+              569,
+              1441,
+              1493
+            ],
+            "source_anchor": [
+              2235,
+              4343
+            ],
+            "rgba_sha256": "3cdb4dfdb8b37f714b3a552d9396983fb7afee1f0b112fd3115cf8d7b5acfa8f"
+          }
+        ],
+        "private_panel": "/workspace/scratch/halpas-final-changed-clips-qc-20261019/r074-NE-hit-actual-normalized.jpg",
+        "private_panel_bytes": 105251
+      }
+    ]
+  },
+  "root_focused_actual_player_and_action_status": "PASS r074 resource48/288+Player16/96+action32/all6 authoritativeclock/marker3/collision. Existing savedtests reused; no repeat/fullCI byQA.",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_complete": false,
+  "default_enable_authorized": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

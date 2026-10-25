@@ -1,0 +1,530 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v07six3D",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/3D-E-exact-six-walk-support-authority.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/3D-E-exact-six-walk-support-authority.png": "c2103aa101e87dfe0ba491460c11e1a15162f5157f143d0157d8371a6497e0dc",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png": "d6650ea48f1b708be9f5fd0815fbd9907d8d31c02368bb4a48e1aed6cc2d2f13"
+  },
+  "transparent_background": true,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
+  "corrective_reason": "Materially NEW solid3D-primary exactwalking6 authority after 2D contactpairs could not establish oppositehip/thigh ownership. Actual3D occlusion/support/bootpitch perphase enforces LEFT0/1/2 thenRIGHT3/4/5 withnearRIGHTforeground/farLEFTbehind, originalLEG imagesentirelyabsent fromidentityrefs. DressfaithfulGirtas only; do not countgeometricguide asgameart, sharedmotion, orapproval.",
+  "source_pose_authority": {
+    "status": "PRODUCTION_POSE_GUIDE_ONLY_NOT_FINAL_GAME_ART",
+    "method": "Solid limb capsules+physical boot ellipsoids, true 3D occlusion under fixed pureE camera. Final art must be imagegenerated faithful Girtas; geometricguide is not completion.",
+    "camera": [
+      7,
+      0,
+      5
+    ],
+    "forward_PLUS_Y_projects": "screenRIGHT_horizontal",
+    "near_RIGHT_PLUS_X": "foreground_lowerground",
+    "far_LEFT_MINUS_X": "background_upperground",
+    "phases": [
+      {
+        "phase": 0,
+        "name": "LEFT_HEEL_CONTACT0",
+        "camera": [
+          7,
+          0,
+          5
+        ],
+        "forward": [
+          0,
+          1,
+          0
+        ],
+        "anatomicalRIGHT_near_axis": [
+          1,
+          0,
+          0
+        ],
+        "hip_center": [
+          0,
+          0,
+          1.03
+        ],
+        "legs": {
+          "RIGHT": {
+            "hip": [
+              0.18,
+              0,
+              1.03
+            ],
+            "knee": [
+              0.18,
+              -0.2208,
+              0.61
+            ],
+            "ankle": [
+              0.18,
+              -0.46,
+              0.17501062894832994
+            ],
+            "foot_center": [
+              0.18,
+              -0.38,
+              0.09501062894832994
+            ],
+            "rotationX": -0.35,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          },
+          "LEFT": {
+            "hip": [
+              -0.18,
+              0,
+              1.03
+            ],
+            "knee": [
+              -0.18,
+              0.2208,
+              0.61
+            ],
+            "ankle": [
+              -0.18,
+              0.46,
+              0.16395490479313263
+            ],
+            "foot_center": [
+              -0.18,
+              0.54,
+              0.08395490479313261
+            ],
+            "rotationX": 0.25,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          }
+        },
+        "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase0.png",
+        "render_sha256": "58f1f2e3ba738f9258a8e1fba83c7c4d167c4c084b4eeb379847c70af0a8ab38"
+      },
+      {
+        "phase": 1,
+        "name": "LEFT_MIDSTANCE1",
+        "camera": [
+          7,
+          0,
+          5
+        ],
+        "forward": [
+          0,
+          1,
+          0
+        ],
+        "anatomicalRIGHT_near_axis": [
+          1,
+          0,
+          0
+        ],
+        "hip_center": [
+          0,
+          0,
+          1.08
+        ],
+        "legs": {
+          "RIGHT": {
+            "hip": [
+              0.18,
+              0,
+              1.08
+            ],
+            "knee": [
+              0.18,
+              0.035,
+              0.65
+            ],
+            "ankle": [
+              0.18,
+              -0.12,
+              0.2724557213675098
+            ],
+            "foot_center": [
+              0.18,
+              -0.039999999999999994,
+              0.19245572136750977
+            ],
+            "rotationX": 0.1,
+            "ground_clearance": 0.12,
+            "is_support": false,
+            "ground_min_z": 0.12
+          },
+          "LEFT": {
+            "hip": [
+              -0.18,
+              0,
+              1.08
+            ],
+            "knee": [
+              -0.18,
+              0.0,
+              0.61
+            ],
+            "ankle": [
+              -0.18,
+              0,
+              0.15000000000000002
+            ],
+            "foot_center": [
+              -0.18,
+              0.08,
+              0.07
+            ],
+            "rotationX": 0,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          }
+        },
+        "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase1.png",
+        "render_sha256": "a1b48cd9f81c2b5ddb78c5ca2a824694626962d4adcfe7f0c7399ba3e41e3490"
+      },
+      {
+        "phase": 2,
+        "name": "LEFT_TOEOFF_RIGHT_REACH2",
+        "camera": [
+          7,
+          0,
+          5
+        ],
+        "forward": [
+          0,
+          1,
+          0
+        ],
+        "anatomicalRIGHT_near_axis": [
+          1,
+          0,
+          0
+        ],
+        "hip_center": [
+          0,
+          0,
+          1.06
+        ],
+        "legs": {
+          "RIGHT": {
+            "hip": [
+              0.18,
+              0,
+              1.06
+            ],
+            "knee": [
+              0.18,
+              0.21000000000000002,
+              0.67
+            ],
+            "ankle": [
+              0.18,
+              0.28,
+              0.22762094269237038
+            ],
+            "foot_center": [
+              0.18,
+              0.36000000000000004,
+              0.14762094269237036
+            ],
+            "rotationX": 0.18,
+            "ground_clearance": 0.07,
+            "is_support": false,
+            "ground_min_z": 0.07
+          },
+          "LEFT": {
+            "hip": [
+              -0.18,
+              0,
+              1.06
+            ],
+            "knee": [
+              -0.18,
+              -0.144,
+              0.61
+            ],
+            "ankle": [
+              -0.18,
+              -0.3,
+              0.17501062894832994
+            ],
+            "foot_center": [
+              -0.18,
+              -0.21999999999999997,
+              0.09501062894832994
+            ],
+            "rotationX": -0.35,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          }
+        },
+        "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase2.png",
+        "render_sha256": "ba142c0290efa19e3c61b947a999975eed7b48f29ee20f601bf269e3db4f15af"
+      },
+      {
+        "phase": 3,
+        "name": "RIGHT_HEEL_CONTACT3",
+        "camera": [
+          7,
+          0,
+          5
+        ],
+        "forward": [
+          0,
+          1,
+          0
+        ],
+        "anatomicalRIGHT_near_axis": [
+          1,
+          0,
+          0
+        ],
+        "hip_center": [
+          0,
+          0,
+          1.03
+        ],
+        "legs": {
+          "RIGHT": {
+            "hip": [
+              0.18,
+              0,
+              1.03
+            ],
+            "knee": [
+              0.18,
+              0.2208,
+              0.61
+            ],
+            "ankle": [
+              0.18,
+              0.46,
+              0.16395490479313263
+            ],
+            "foot_center": [
+              0.18,
+              0.54,
+              0.08395490479313261
+            ],
+            "rotationX": 0.25,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          },
+          "LEFT": {
+            "hip": [
+              -0.18,
+              0,
+              1.03
+            ],
+            "knee": [
+              -0.18,
+              -0.2208,
+              0.61
+            ],
+            "ankle": [
+              -0.18,
+              -0.46,
+              0.17501062894832994
+            ],
+            "foot_center": [
+              -0.18,
+              -0.38,
+              0.09501062894832994
+            ],
+            "rotationX": -0.35,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          }
+        },
+        "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase3.png",
+        "render_sha256": "c66b708fe798e705ee14cf720fc47f289625282cd4b0849ea722dbfa76166c9e"
+      },
+      {
+        "phase": 4,
+        "name": "RIGHT_MIDSTANCE4",
+        "camera": [
+          7,
+          0,
+          5
+        ],
+        "forward": [
+          0,
+          1,
+          0
+        ],
+        "anatomicalRIGHT_near_axis": [
+          1,
+          0,
+          0
+        ],
+        "hip_center": [
+          0,
+          0,
+          1.08
+        ],
+        "legs": {
+          "RIGHT": {
+            "hip": [
+              0.18,
+              0,
+              1.08
+            ],
+            "knee": [
+              0.18,
+              0.0,
+              0.61
+            ],
+            "ankle": [
+              0.18,
+              0,
+              0.15000000000000002
+            ],
+            "foot_center": [
+              0.18,
+              0.08,
+              0.07
+            ],
+            "rotationX": 0,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          },
+          "LEFT": {
+            "hip": [
+              -0.18,
+              0,
+              1.08
+            ],
+            "knee": [
+              -0.18,
+              0.035,
+              0.65
+            ],
+            "ankle": [
+              -0.18,
+              -0.12,
+              0.2724557213675098
+            ],
+            "foot_center": [
+              -0.18,
+              -0.039999999999999994,
+              0.19245572136750977
+            ],
+            "rotationX": 0.1,
+            "ground_clearance": 0.12,
+            "is_support": false,
+            "ground_min_z": 0.12
+          }
+        },
+        "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase4.png",
+        "render_sha256": "6dfbaa2549b2dbf8878c4a2a5cb8085d297b4f83369607d9663e41b4cba35327"
+      },
+      {
+        "phase": 5,
+        "name": "RIGHT_TOEOFF_LEFT_REACH5",
+        "camera": [
+          7,
+          0,
+          5
+        ],
+        "forward": [
+          0,
+          1,
+          0
+        ],
+        "anatomicalRIGHT_near_axis": [
+          1,
+          0,
+          0
+        ],
+        "hip_center": [
+          0,
+          0,
+          1.06
+        ],
+        "legs": {
+          "RIGHT": {
+            "hip": [
+              0.18,
+              0,
+              1.06
+            ],
+            "knee": [
+              0.18,
+              -0.144,
+              0.61
+            ],
+            "ankle": [
+              0.18,
+              -0.3,
+              0.17501062894832994
+            ],
+            "foot_center": [
+              0.18,
+              -0.21999999999999997,
+              0.09501062894832994
+            ],
+            "rotationX": -0.35,
+            "ground_clearance": 0,
+            "is_support": true,
+            "ground_min_z": 0
+          },
+          "LEFT": {
+            "hip": [
+              -0.18,
+              0,
+              1.06
+            ],
+            "knee": [
+              -0.18,
+              0.21000000000000002,
+              0.67
+            ],
+            "ankle": [
+              -0.18,
+              0.28,
+              0.22762094269237038
+            ],
+            "foot_center": [
+              -0.18,
+              0.36000000000000004,
+              0.14762094269237036
+            ],
+            "rotationX": 0.18,
+            "ground_clearance": 0.07,
+            "is_support": false,
+            "ground_min_z": 0.07
+          }
+        },
+        "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase5.png",
+        "render_sha256": "b132b3889e8d0219cdf2fb51f53956123700436a52ef0e4f2e7a8c0a904a42f1"
+      }
+    ],
+    "no_game_asset_or_approval": true
+  },
+  "source_pose_authority_sha256": "b1d76ad97a26415d0562dfa914547bdd312b8c9079011434abd8f993dcd36097",
+  "original_leg_pixels_NOT_REFERENCED": true,
+  "user_authorization": "ActualUnique animation production, privateimagegen/boundedJPEG allowed, no mainchatimage/binary. RootonlyGit/data/integration, strictquality/defaultOFF.",
+  "prompt": "DRESS the SIX SOLID 3D MANNEQUIN POSES in PRIMARY image1 with EXACT faithful GIRTAS character/gear from image2 upperbody, image3 LONGROBE detail, image4 LONGSINUOUSGOLD BLADE. PRIMARY IMAGE1 is the AUTHORITY for camera/hip/thigh/knee/shin/ankle/boot locations, physical support and exact SIX WALK phases. Do NOT replace those legs with generic same-leadingleg poses. Otherimages are identity/material/garment/weapon ONLY, no oldlegpose reference. Keep actual3D near/far occlusion and solid joint continuity while rendering fully detailed Girtas armor/robe/skin; guide is not final art.\n\nPURE EAST/RIGHT SIDE camera ALL6: forward+Y inmannequin maps imageRIGHT, anatomicalRIGHT ORANGE leg/arm is NEAR foreground/lowerground, anatomicalLEFT BLUE is FAR behind near thigh/upperground. Translate colors into same original blackgold armor; no colored mannequin remains. Same pale face RIGHTprofile, long PALE SILVER hair, angulargoldcrown, brightoriginalgold chest detail as visible from E side, blackgold layeredarmor, THIN STRAIGHT HARD GOLD RADIAL BACK RAYS (notfeatherwings), full LONG DARK GOLDTRIM ROBE samepanels/slits, boots, same LONG SINUOUSyellowgold blade. NoSEfrontturn, NWrear, mirror or gear/proportion redesign. Do NOT inherit front-facing torso or oldstaticlegs fromidentitycrops over primary3Dcamera.\n\nEXACT LEG PHASES left-to-right/top-to-bottom0..5:0 FAR LEFT BLUE heel contacts IN FRONT/right onUPPER ground, toesup; NEAR RIGHT ORANGE rear/left toe contacts LOWER ground, heelup (doublecontact).1 FAR LEFT supports FULLSOLE directlyunder its HIP/upperground; nearRIGHT swings passingbehind/belowhip with wholeboot offground, not anotherrightfront contact.2 FAR LEFT rear toe supports upperground, heelup; NEAR RIGHT reaches FORWARD/right inlowerlane with wholeboot slightlyAIR beforeheelstrike.3 NEAR RIGHT foreground heel contacts FRONT/right onLOWER ground, toesup; FAR LEFT rear/left toe contactsUPPER ground (trueoppositeof0).4 NEAR RIGHT supports FULLSOLEunderhip/lowerground; FAR LEFT swings passingwith wholeboot AIR overupperground, NOT same supportas1.5 NEAR RIGHT rear toe supportslowerground, heelup; FAR LEFT reaches FRONT/right overupperlane with wholeboot AIR beforeLEFTcontact0. Keep the specific jointchain/bootpitch/groundclearance of EACH3Dphase, not names alone. Always>=oneactualsupportfoot, no bothfeetflight/run/knee-highsprint. TWO connected hip/thigh/knee/shin/ankle/boots only, no swappedlimbs/pastedboots or extracalf.\n\nLONGROBE remains full-length originalgoldtrim panels, follows gait and naturallyparts through EXISTING openings to show nearRIGHTthigh/knee vs farLEFTbehind when needed. Do not shortenrobe, remove panels, replacewithpants or hide every legconnection in anopaque staticcurtain. Original nearRIGHT arm alone continuouslyholds same LOW sinuousblade backward/outward asidentity; EMPTYfarLEFT hand counterbalances subtlylow, exactlyTWOarms, no thirdarm/floatingweapon. Hardgoldrays rigid attached, hair/robe gentlylag, moderate steadywalk bodybob as3D.\n\nSIX complete crisp fullyrendered gamecutouts,1024x1536transparent PNG, TWO512cols THREE512rows matching guideorder. Keep bodyphysical head/hipsize consistent, full crown/rays/hair/robe/blade/boots within390x400 centralarea percell with generous>=45px transparentgutters. No cropped/shortened gear. Opaque detailedmaterials/thinAA, alpha0 background/gaps. NO guidecolors/graybody, ground/floor/shadows, dots/lines/text/labels/grids/panels, glow/bloom, particles, trails or extras.",
+  "requested_at": "2026-10-19T14:33:25.570610+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

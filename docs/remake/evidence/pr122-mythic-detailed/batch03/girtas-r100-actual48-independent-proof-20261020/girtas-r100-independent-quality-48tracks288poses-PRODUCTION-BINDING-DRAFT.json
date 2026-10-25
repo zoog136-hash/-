@@ -1,0 +1,2968 @@
+{
+  "schema": "pr122-native-independent-quality-v1",
+  "key": "transform:267",
+  "status": "HOLD_PENDING_EXACT_PRODUCTION_BINDING_ALL48_ACTUAL_CHECKS_PASSED",
+  "independent": true,
+  "reviewer": "Codex independent reviewers: v03 stable43, v04 Wwalk/SErun/NWrun/SWrun, and fresh NErun plus exact transfer aggregation; no reviewer authored the source/layout changes under their actual-review scope",
+  "source_selection_sha256": "e244a0d0033f77bf704bc1589857170a912833082d382ba521261fbc12da7c03",
+  "effective_profile_sha256": "2184e9c5ce74555a6687440c3ff34c13cef2bc52fe39d2e18c3f90910d7be2c1",
+  "checks": {
+    "identity_equipment": "PASS",
+    "compass8": "PASS",
+    "anatomy_continuity": "PASS",
+    "motion_specificity": "PASS",
+    "loops_transitions": "PASS",
+    "runtime_scale_footing": "PASS",
+    "attack_contact": "PASS",
+    "hit_recovery": "PASS",
+    "death_irreversibility": "PASS"
+  },
+  "tracks": [
+    {
+      "direction": "E",
+      "role": "attack",
+      "animation": "attack_0",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "606b6cdae57ac1ae7c60dc34d8e986d503b82bb901632f2c40d68bf09e8beb67",
+      "source_sha256": "af87d66cc918a9ff9c5c71014a16b0cb9333627e3a69b1fac7882bc013bef2a4",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "a106810e008a7fc99b3ef62bfa6118c1d77c22cb7a0b3f45414ff69c8ecaa3f9",
+          "bytes": 133836,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03iso01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r075/E-attack.png",
+      "frame_rgba_sha256": [
+        "fcd89c5598dc7d3ee162ddc5de91997742c8e1747a87446ec0b829b1a14679c4",
+        "007013870bd90110590b943ce7aaf8955f6a59487b6f91c8789421bfb2530c1c",
+        "1653bbdc7ca3f041d4c4e9d8750cbe3171283d6a1dd58bafbb897d2ccfc3d047",
+        "366b86c26d8a5d7acc81371b54c671e48f50acc0115b71c3750b8cdcafc7f588",
+        "0dc24fdff4fa191801728a5139c4722809276b43b286e453fe5de6d232515b74",
+        "0de4699f879d4782eecc20a1ffcc1d8e16e9b9b80d26953a9cb9b60cd9907edb"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "death",
+      "animation": "death_0",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "b9fcc1c7cc5a33e923a0febf82bce9dd719ab2d25d54673c6c31d87b02342a66",
+      "source_sha256": "b40ad2f6771ca2221fba9a128836698b9613d72927fad5bfebf19d248efa446c",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "d23f95de6e9a7370201f0dd330a07dfd9e639976456e4e3c7bc572a861b02d27",
+          "bytes": 118431,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-death-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r046/E-death.png",
+      "frame_rgba_sha256": [
+        "7545f3c08823f1475d2660de33d3bcbb4ad721c305a8ad1be73ccf3caa7dd00e",
+        "8207293c825003b66991a006c3006baf75e98f870448fad26187f6c5f7d02a64",
+        "7f397c8870356c6040c55804b1b051fdb48ad3aaaaf634ee79ba9062c885efe6",
+        "27786590790834948273d6b304643e7154ac289ad30053b791fc71c8ed7ec4b4",
+        "d7e4bd66980f0ca148cd6ff94e1288a42b9c76c79dde21dca851ef5b6d0d1ca9",
+        "e124f9420b5cc97422f2baa4075536d8ef91d300aedf33caee219f52e77469b3"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "hit",
+      "animation": "hit_0",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "bcb00f4b5ce31920cdac3bdacea2d9ae1bae1c2c0b8f4262db24bc8fc13872df",
+      "source_sha256": "b350a108cae4b520a93f7b9a6b2fbcf91eea44d745562edbc31bfabdace5e8be",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "395cd61ba10e5e6e38e604d6c12e5b25f78bef1d47b967a35b76449a25315c8c",
+          "bytes": 126099,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-hit-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r047/E-hit.png",
+      "frame_rgba_sha256": [
+        "f6d7c4cff86a90144b69395f163b50991c9c8cdafaf71ccef80eb1cadfab4aa2",
+        "e503c944591b50ece7c8a67f88d40df64b3cff5044e68f5bf83935942a79bbc3",
+        "e07d193cdb577473cd5acf25ea2507a698e1859c9343b2bdc9c587a042513a89",
+        "b972a8322987f705627abe2bb123d4a85c63d0ebcb1ecba93d1a8cf9f0e03b11",
+        "5d93fcefcfc3298a4772997ebdea098f921c3775e00ffd4b66c6cdedfa31ad4b",
+        "43425fe111d66342b11da07b757c521e5a72ca8f94e6ac11dca8fc063cb7e847"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "idle",
+      "animation": "idle_0",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "221fdbf3bc0031964b0b2b89ad91ae563f03c7d2a40aebd76a6776740dafb8c0",
+      "source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "28975b144eaaabae88c0bd963f2db18f8560d4c5b6b7ac63de212bc7af652fc0",
+          "bytes": 116747,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r049/E-idle.png",
+      "frame_rgba_sha256": [
+        "54deab291e7e39110b6dbc084e84eb98472d55acdd394f3258f4d5d058bef264",
+        "a8dd3fc67e8dc843476965360fbd2f98545a8fcf71a7db6b8f16f2f9d63e69c9",
+        "9ddba39afa17d95510594cdc9f0d6050f973784ff8fc111ddec93c57cd6dbfa9",
+        "14fb722c056db9531cff3f6394f7b42ef90e2f35ed127d7f9afd0515a8254b23",
+        "ba28ddd14e95ea4da54a4757195647647e08897605c011dc62411ca45fc13976",
+        "60d3b4c82557f754a2f6bb86d9046bc9d0f9ee37c9386fe5cb5502dbab9ee68c"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "run",
+      "animation": "run_0",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "6a5e91b5b56fae41d3adb9e83f07abb571bc6eb94c844c639fbb1595d7008797",
+      "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-run-v03composite02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "b16a08ab28f0b5262686153309c3b1a978fde93f0a4d3715b5f06721ad288a19",
+          "bytes": 143283,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-run-v03composite02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r091/E-run.png",
+      "frame_rgba_sha256": [
+        "39cc45ef3d027d76aa1bfc151de747b2d02d8fef6c25e9ff4f78ea49b8d5b167",
+        "e0386cd6c17bc3b69a18ff25527edc221387358411541639708d2f952c66de72",
+        "2d8f29e30156485ec31af481fddd1d2bdfcc9476ffa1bf3aac76d6071c677855",
+        "15db7bc82352b07bcb1dc34a70ede0400b3821fea483a243ffb543ab5452958b",
+        "ee3fc7e594b97611b23548210692ebbb463ea0b420b5a48702d0062d6984c4d5",
+        "2ba8427266cf5596bcf2b23ef9392d48d396dffe37c26cbc277f2f7a77b3af34"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "walk",
+      "animation": "walk_0",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "dacd590b3a535bf7921c02b7254d6b72d2943a92477f0afc0dc5536540278cf1",
+      "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-walk-v14six.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "11dde61946589cda055be9fa853b7c6dc961baaa530c93750a8e5709afd5f763",
+          "bytes": 142436,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-walk-v14six.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r093/E-walk.png",
+      "frame_rgba_sha256": [
+        "4a9338dadfb58b859db43d6bfc9a4d979b0c9626899a080b823b04863f7985e6",
+        "d245421d05a4cd0844e9bbf43485488829d592d6094437ea9ada4f481dad61a9",
+        "fd45d7567b519b574ecfa27c2405e657910fbc2f5968855958512561d82da162",
+        "3165754b3e0a5ffa60f8f7497b209daf13372015ad23a60f18f9dcfc5650f984",
+        "fa28a7573ba212116b7b84b6d4a7acdb48402b87a7d884e451ab32873891f44a",
+        "f9954806237763116bc027e75b29fe464a36fe21f97aadbf401f1df39eed0ce1"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Right-facing side view; attack3 reaches screen-right and death finishes head-right/feet-left.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "attack",
+      "animation": "attack_6",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "4628c7c1ad5103734e6c2ea216563b90699ec3509304e530bc909158cc2337d2",
+      "source_sha256": "99e7483f2b773740195b269395f91e0aa3f771f132904768756a650e92f48fc7",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "2d29124e7099489dee752bbc5df2651ea17cbd1bbf5ce70737eb982ce49deebe",
+          "bytes": 111073,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-attack-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r055/N-attack.png",
+      "frame_rgba_sha256": [
+        "74addf66bb90692b373532c378f31c95f848691ac658bc76f143fde4a7c36ad6",
+        "96698b42ce3a99ac88d8fcce08d2c35f64c8b26e82d468880f2973510fbc100a",
+        "634f6cc2a180c58c35a8586f2483c14504716e2d5228454836467484060b88d3",
+        "3b5c76a313146d6d1a6cfcb111e6110be9872c0da6b2f94d9e59bb1cb6c60923",
+        "e7c90ce41bb0ea55e51adce27a07211c842e967f57448ae65d91c757f78e8f4e",
+        "63064d66b665d9b2fc2960febf87a9189ba7069a720394771bda33c6b01db9e1"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "death",
+      "animation": "death_6",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "3be61fb31dbd800fe9003b1643aa2378f7fab880c0e4462ab881526a02c7ca29",
+      "source_sha256": "567eb06db63bcbb166ac1c848133e9b51a288fcfb190e0226159a207e494181d",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "72196f2ded4a81ee9360877036465ba711ba74906e7464b6f65c65f803dec9e8",
+          "bytes": 118837,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-death-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r058/N-death.png",
+      "frame_rgba_sha256": [
+        "f224c85742384ae3af2acccf1a1b88bcbb3283a99454922178ef393488e0e68b",
+        "e555a2ad36610bec5a8127bbc1441df6d5a7fef2d0eacec68c9140c43afbb7e0",
+        "f4b5a7deda204c01a8fbedc155ad05b9bce4b8db99d2779858ff03bd796d3f49",
+        "d7a3c31e6bea530c4effc2e3d16d99dbc0eecbb7a942bd577ddd653484c97420",
+        "67308532bd95572c7ab687dabc8e4c74c35d27366aee5d51585827c3a804e4ca",
+        "71a620100f8e9f13b7754acf41d41682c8a9a917ba303eaa20838ff7c5c3e6f2"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "hit",
+      "animation": "hit_6",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "8ff9cc2c09353099d62f421ddc3372d88712991969d15e1896f6c1c8f75a0606",
+      "source_sha256": "50d291ae065c0ff97ab81595bdcec245497ca230a6f3b66b60f2e5cf45c43154",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "71f7db88b90dd839d9d3483407251772e8c7e4a176fffaeadb9082b8a71df7b0",
+          "bytes": 135820,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-hit-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r054/N-hit.png",
+      "frame_rgba_sha256": [
+        "5beeb317832e7f5f398353beb2401ac91f68e34cb385c7348fc0394ab0368359",
+        "32c81385dcd7b6759867abd6ca06fd6782d67d1a10e0efce08d0c7f80223561b",
+        "2c48f1bd2718aab46ae6bffdaad65165d570d79a8f8f7e772428359a0931316f",
+        "6ed0f850a6b38c35bf87958f473761bac4376de9c7e1852836706eb9a526583a",
+        "20973eba4c3cd9f406ab52b2e247e193e5469a8e99a350031e1b972e7e46a074",
+        "a7a4be3d6b3e4f0ba69bbdd3d3a63e09cf425933aa0e13fb03223838826349ba"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "idle",
+      "animation": "idle_6",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "0ee1397580c19690feae2a9ebd34f02def3a26ad8fc77c3a260e8ee67409b196",
+      "source_sha256": "eb46f0123a45c58e2988c572ad561cd427df8e63e0850d0fe163c6f0947203f6",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "4f30c004ef5e091c26487f880831b90b0879d424bdbf860da42e48ff4359b1dd",
+          "bytes": 115890,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r057/N-idle.png",
+      "frame_rgba_sha256": [
+        "204c0254b0018d84e1ec2fc181bde7641e7f2e5f9d4e956478461fea3b31460e",
+        "67f889747e094dc0457773ca66ff73c27d15d6cfaa28d676b6f8fc9fa24d1e04",
+        "5b95c8408af27d656f46669f4a71d47fb2329993a5f64b1998ddceb4d991a9f1",
+        "f67b06004105672879cd464fda7bb2c49943b4cb2dd53c7284fcd59e9eb1eae3",
+        "9b243a1967a82e8ad315775d3cf1bfa8a641b9678930b15ecd900bf6e5eab94a",
+        "b54f02fc28e166663ff7db6b2415e6a96a9fdeb0d415ffe0ffa2c308919238a3"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "run",
+      "animation": "run_6",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "e14c0af2b252d76c0d57786e52713b8d866e8819ae0620ebdd502a789db86ed9",
+      "source_sha256": "6ec403c0ff776846189755c84db142b69a05f048d3a7e3179fe821545deddaa6",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-run-v03composite03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "90814b5e41b6c0ed9d2337dc175a0a84ab3e2e06e67004ba104d93f58790e6b8",
+          "bytes": 149040,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-run-v03composite03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/N-run.png",
+      "frame_rgba_sha256": [
+        "3826dba7c8441a97b1ef3c067ce31b0912dfe9a3e08d3651692de19172c28932",
+        "e2c6bb6cddb826456dccafdcf4254269f8c78002e81d28533549c456e06c4393",
+        "ee059f1fa646da86d0867a93028217da8cdffb77ac6d6677cfae4d9bfea0970f",
+        "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e",
+        "2dfdbe466326073637d3cdcbcc42080c4de8d4be2ec515a6956cda542f668c06",
+        "b200debd763c5816754181d87c0f5accd58c4b812200d540ce0b93d0274e9687"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "walk",
+      "animation": "walk_6",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "a07c2995a5f67c4540e90a929cadec55445aa2af73c91f0459396e55ef87a063",
+      "source_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "b70ba7b5a27562c08616c6cc550278b06f881ad36c86749efa51b5ac23f6c2fd",
+          "bytes": 137932,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r076/N-walk.png",
+      "frame_rgba_sha256": [
+        "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636",
+        "2a143f0f17c60a4870d9daa97cd0925a738ab9b25dc4daff2df57ecd58521471",
+        "e20f6ea85eee0bfe9f832d1c07daa41de05f13926f1e1b1ebfa12f4a8ae3c628",
+        "3efc58c83624ebfa814fff13a6612409bb4fd0ea43dcac56b1abe248af8f84b7",
+        "f9199b2419205ed5bd76f90619a395bb60cf4de92c92110d37232d081aa31c02",
+        "f46a585a49a061beaa3b6922c4d6ae0b10fc47115b426da3f0fe82c82f70bad5"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away-facing rear view, weapon remains anatomical RIGHT/screen-right; attack3 reaches up/away. Death ends prone/foreshortened away rather than standing.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "attack",
+      "animation": "attack_7",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "d6e8e7a07f750be0a10f2c89cf32ff781a388ce654656e6078e9ee0d6554a2e8",
+      "source_sha256": "4bd4289392f51d407f8d33acb870d1b33a13066e0fc1b8140c43d4375be1c5e9",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "18d1de5c2d64b330377a64bf7473fa4840629fd940cd8466a6b4a4ed3ccff1de",
+          "bytes": 146242,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r059/NE-attack.png",
+      "frame_rgba_sha256": [
+        "6a30d6233690423ef6b7f37db9f23a4f7eb323e3bf84da8d40c06bdc23101130",
+        "04500b777a0bae48f39f6769c8a7d538774b312d81aa04683f253d062794965b",
+        "76a25ce5720afc38e4c76c4f4d19ecd01d19d3bdc5d8563c5a305b8ad8f82267",
+        "b857a58554a8088d7df4837367994df0a128701204d72a5a22b33d290ad20368",
+        "a64352ecf51bd74f01a2a3ac99fe25b3f3201a6fea9f1d79ab7d55e01f868244",
+        "a9df2951eac7b1bd7e4f7032b5c537eb44f9fb6076f1c93e2adf32102bc46060"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "death",
+      "animation": "death_7",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "d9416f3df70400ac736d30d9b3c8cae420dde1d351c063979823267b2a14e7fa",
+      "source_sha256": "9fcdeb96092eb523c0d958fc5d60b21e5d9d5c4be1a56cfa4aed3525fa8e0b73",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "64e589bcaaa2dc6b52b801655998c61606bde84f991a47f6ff27dbfda4481aae",
+          "bytes": 119391,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-death-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r060/NE-death.png",
+      "frame_rgba_sha256": [
+        "d6baf11925fdb78b60c2ae5e5a84403f9cb3ad5e43130af98c0fbb2fd34d5452",
+        "279de7ee6aff5fd153b679bf3e4ec4031fd4e2706677886cae42eedeffec8661",
+        "97a631f714012a6a00ec8b036e6a5c0f0d1637343a1bf1eed9c399c29dda81e2",
+        "1df1afd253a322150f0b3fb261be4a1ad047272135e59ac2d3448c851e6da87a",
+        "274580793efe0ebc8202d63a1f4281a9e7c31488c7a1fa725ae50b70c00248bb",
+        "ddc65c9e4098d473ed0fe976395a2b2b48999475b27cb2ac37c1b6748680f9eb"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "hit",
+      "animation": "hit_7",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "a9a753d40756ed3dc01358de09de0b8df579b447b117b7e1034b8e7f3f723f8b",
+      "source_sha256": "74da8eb7fb0b690a11db4c769748635d1f77c4d613b16ef4ad446c9fc753d22a",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "4de6210d49467cba7cadb2caeed07b70a48bde3744547a286f2562d8b533315c",
+          "bytes": 130294,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-hit-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r056/NE-hit.png",
+      "frame_rgba_sha256": [
+        "b16d0180c9b21d163e0802e6664e19868cb6887239176598befa57c0ed5b6962",
+        "5dd464d7dd2da4842026761b72b1448c5d2d49c9df2261f0710dedb6200eeee9",
+        "b1932e216ce721bdfb70b7cf07020c02656f6fd2f8bc52fc2000e4285765f562",
+        "9d91c43ab3d6d1e7f9e13e921dcacfad529e0c7c3ba3b6bc5c280a14ab408e3f",
+        "4a69fb37b8d620f98c6c647fee07fe78366eb48a4909046a9e95eb09134697f2",
+        "4b78d6c10526d92010c801e28329a36d6abb61bf2b9df723c5cc3510906adbd3"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "idle",
+      "animation": "idle_7",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "1fa4fe32051507834a5e2a6914495097e56952309fa75423f4ac5789eb54fa16",
+      "source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "b0dfcce13b35061da167836127f1ce777b6d2949ccfd2f5741cee319fa03c12f",
+          "bytes": 122756,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r089/NE-idle.png",
+      "frame_rgba_sha256": [
+        "7b694b4ad41c913ead6b843b2294830d3155b8f3f83c5e49563a924ea36c8c52",
+        "052a675b8703e8977f8de6d2627d69c6ac10d16806b058344a711c3dfd460068",
+        "47cace2da0f54a2cd9667ed187972d496bbcae0c90da57b2be0c10ef441fe81e",
+        "94db6aa144dddc1dc7c3af0852ca528564c13f707b331557f48d31a2cfc51bd7",
+        "47887514e9a1ae35a14e2ec7df86f6c61be3327c70d7a6cff0221c6978abd8cf",
+        "35ea5e53789f8554650e3aaf104f2a2ae656a87c7fc5195c24bbf8077146e0fe"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "run",
+      "animation": "run_7",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "242d21e5e844133f310c767e8a1ffe25bedb3e09e3eaf642d1b3544d6f258025",
+      "source_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-v03composite02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_SOURCE_AND_DIRECTLY_REVIEWED_CANDIDATE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "The actualr100 NErun track uses the identical3287 atlas and exact sixRGBA crops, margins, per-poseCs andsource anchors that were directly inspected in the new independent source/physical review.",
+        "The parsed actualprofile preserves the previously approved actualr099 pixel_scale.219105011732, proportional normalization, compensated spriteoffset and all motion literal fields; actual loop timing remains12.5fps with six.08-second poses.",
+        "Actualgeometry reads as the reviewed strong bounding run: genuine alternate FAR_LEFT and NEAR_RIGHT heel-contact/load/air phases, finite boot heel-to-forefoot rolling, positive conservativeAIRclearance and visible landing compression.",
+        "The old idle-entry contact core-pop is resolved by genuine local lowerbody source edits0/3. A23.41-world AIR5-to-contact0 registration descent remains exposed and reads as weight absorption with changed knees rather than a root-only jump.",
+        "Allthree fresh resource/Player/action marker logs PASS under exactGodot4.7.2 are bound separately; the selected actor remains unapproved pending all48 aggregation and actual production/defaultMain validation."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "2770cc348ecf32630eb4a92414fb6949cd22d664e17131207882257b22c2570f",
+          "bytes": 114507,
+          "viewed": true,
+          "functionally_exact_actual_transfer": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-v03composite02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r100/NE-run.png",
+      "frame_rgba_sha256": [
+        "ca8f0b67e16e97a8a956783b0e79019a09e29e4cd052f4d562f691e8538fd75e",
+        "e7cde39b3df08dae4c7989292a776bfa4d3cb2185881c1c81493a992a37701d2",
+        "ca2379309bd31c4e7b3288dbbc08390f6afbe31d6cd34f2c1247cf283f22be16",
+        "0f52f65cdbed80692d007cbe8d300a5c4a93368dd297007aab6e641cb21493ec",
+        "e59f5a93cc2820f1a1013e293717d52718f686b01cd822e6e12dc1067317fbb1",
+        "f61f6b2a7f677f74516b046782f0d8260dda4a4821d20184ae1b6cf6decd4f83"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/girtas-r100-NErun-actual-independent-quality.json",
+        "sha256": "0888b4279e9cb9f2ef6e8620e92e91d4a3eb63ad3949131b0b2216a4793a0df7"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "The actualr100 NErun track uses the identical3287 atlas and exact sixRGBA crops, margins, per-poseCs andsource anchors that were directly inspected in the new independent source/physical review.",
+        "The parsed actualprofile preserves the previously approved actualr099 pixel_scale.219105011732, proportional normalization, compensated spriteoffset and all motion literal fields; actual loop timing remains12.5fps with six.08-second poses.",
+        "Actualgeometry reads as the reviewed strong bounding run: genuine alternate FAR_LEFT and NEAR_RIGHT heel-contact/load/air phases, finite boot heel-to-forefoot rolling, positive conservativeAIRclearance and visible landing compression.",
+        "The old idle-entry contact core-pop is resolved by genuine local lowerbody source edits0/3. A23.41-world AIR5-to-contact0 registration descent remains exposed and reads as weight absorption with changed knees rather than a root-only jump.",
+        "Allthree fresh resource/Player/action marker logs PASS under exactGodot4.7.2 are bound separately; the selected actor remains unapproved pending all48 aggregation and actual production/defaultMain validation."
+      ],
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "NE",
+      "role": "walk",
+      "animation": "walk_7",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "96e670728608ed7728c2b6988a1adc030d509c7679c9e1e60bebc9dee653c4ae",
+      "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-walk-v03composite04.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "5ea704c7b6db7eecd12bb6cad7fc6744d808a4fa1d67bb5e1b210d142d54f80f",
+          "bytes": 141909,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-walk-v03composite04.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/NE-walk.png",
+      "frame_rgba_sha256": [
+        "13b1080fb16dea8bbea2d5529c80c4ad3d958661470eccf07a9e2e1aff2a5379",
+        "c7bc03a976ed086257f18c107a97aec34024fdfdf6efd0e7d3338f2aeea2267d",
+        "c3ad9d685fd054a84b9b4fb1e7c8e969f693e195f744e7a181257db42b40917e",
+        "35b6702c85f7a711f7ba64832d95318964b2a601b2ea2ef581fd052de5a8ddfd",
+        "1f0c02e81499c0733dd7cc89aadf0e17594ae38ee7cdbd595a4df5a99d069351",
+        "526df7665f44a1b5d27f7afa0b59202a184d4d3ead13b7a7f839fa01ae90511e"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/right rear three-quarter view; weapon arm remains right; attack3 reaches up-right. Recoil includes torso/head pitch without a front/back reversal.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "attack",
+      "animation": "attack_5",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "8a18534371e7465779c24e8f40233f720ae8a4b6b9e29391a3ff5bf223b13ec2",
+      "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "56af40e1f546db2da37832bbae11880ed85e415ae4708775458d6fbfd7a1fa9d",
+          "bytes": 137559,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r083/NW-attack.png",
+      "frame_rgba_sha256": [
+        "ced6870d0c27f18201bbadda41e1e37fc1677791484eef1127114d04b6b8b87b",
+        "1537f9ee7c0368b8556e7a66c1dec2e5961339a16891b88002095ce31a915ff5",
+        "98ddd2c0a20b6b726c05cf98d54d86d6f8f8096327e63142f0b510d0ae752cd6",
+        "40f972adaf287a760b54465f8b63237d0bf4d12ec06513a6932350be15e5e3ee",
+        "d987feb863efc4d479d393e4498422760a1eb8f4a082519c78e70579578d2a4f",
+        "d37d27ceba4b87ddd6e74432500e4b68978bd1e616ebdcd3e85397086cfce806"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "death",
+      "animation": "death_5",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "82466ee8d348b02d0bac0acb3678f5ac0c9f74ec0290f2f1715a03c44ce070c0",
+      "source_sha256": "c56534b64d850a1d906004d7e951841dc3505528269a57d06f39f7546a2a5b38",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "46627c748ab36056f3f727b36d2cda87d6a6f6d70930ccca6ce6f6caba2c0c4c",
+          "bytes": 108314,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-death-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r062/NW-death.png",
+      "frame_rgba_sha256": [
+        "d0cc3756f08c79c56e96601bfb37da5b503b473bdb0a8004cad1f64355f9e44a",
+        "8659d7c27ed048acfa4d3fb41bb0fc80de974e1347dc52ff5324fab2701ce008",
+        "ea3e3b5d500c740c7318ad108fc05702d490bcaefa7c96a3a55cf28d7dd31239",
+        "a27fb38bfca5839842dada80d208f3190743c055082249dca5fa5cddc4fe6934",
+        "a7bace862b5286a63f42e90074dc2bc56cf35dbf800b5c097562619a3ef1ba3a",
+        "3d98454c45efbadb35a9cad760651cb023fba0998303b42ed4edefe0b12ddf10"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "hit",
+      "animation": "hit_5",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "a973362b11133d4ca19f9774099c26cdc0f89bd415c6932250335f4cb5777f3d",
+      "source_sha256": "b16adc9218da30f4d67495033a8a95f99c5cb5295d33a34df568e01b3568a7e4",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "d5b0e39dbf759e066f08045508b685ec915a4996745d552d3c2baaecfe7f2ed8",
+          "bytes": 125548,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-hit-v03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r069/NW-hit.png",
+      "frame_rgba_sha256": [
+        "b02747a71d7fb384d48aaceed74ec53b31bd1a4b22d344c1e85e4069b9e6ce1d",
+        "e63d38d51312d80385699a63467a5060483a5bacdaf43c228b34c1a6985541a9",
+        "1aa6611cf112ce81c8b5bb4edfb3a44cdba6387fb00908202e41a96c99b344cc",
+        "afdb0055cd0cc03aa271308615a41e205e6766452ed0662f848fd2795d11b573",
+        "cd2aed6b6ec346ca01e3ce019b5cb265b516c7b22946e29e61a62663a60bd5fb",
+        "a0899ef36bd2c3e85eb21a93d5975a0062aa6ecc6d000a711dba78dfa482d701"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "idle",
+      "animation": "idle_5",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "e9e1b7f0443a1c2cd7c794b839c080f46ec14563d22f438fabe12765bc025d53",
+      "source_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "1b64ad9b42dfc7eb759fd15c0509d710ce39269b4cba513c78df29e3a54960ed",
+          "bytes": 108839,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r085/NW-idle.png",
+      "frame_rgba_sha256": [
+        "d7482a46e3b543bb0c14191a53b7622ebde238011c65f7bacaafd5eacca101c6",
+        "bc9ff39bfb9d0de7cdd519fce01ba5251c32469bb64b34f426c5cf89f744eef5",
+        "b5596c135811738d850814908b398a497abd957c57ff35d2fdd903b3dca0fab7",
+        "e8126d8be9a53e2a2748871adc6acc0c4eda7b36a413625fbf01024f19752c3b",
+        "78b5324736ebe4c6b65a62d8d8cfc4aa80b1b6b7c683f64c68c77e95b20cb7a8",
+        "4f6156de9fe2499ebe18e8c614154127f491ad580fbe6c0bd1823216d9edd52c"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "run",
+      "animation": "run_5",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "d40d181738db2979f347f3d214b31f5d98c2cbaa0345ec3593eb50f1cddb9c0e",
+      "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-run-v03composite03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Actual NW retains rear-left/up-away heading in head/core, long white hair, black-gold armor/rays and the same single anatomical RIGHT blade. The LEFT arm stays empty and exactly two leg chains persist through the robe. Existing tiny hilt surfaces are not a model/gear defect.",
+        "0nearLEFTcontact→1deepflexed LEFT load→2farRIGHT leading AIR→3farRIGHTcontact→4RIGHT load→5nearLEFT leading AIR forms a genuine opposite-chain run. Recovery legs stay folded/advancing with coherent hip-origin intervals, knee/shin/boot ownership; no hanging cloth V is treated as a true hip.",
+        "Actual mixed C848/2096/2392/2376/2280/872 preserves a reasonable common rigid helmet/skull/pauldron/waist scale against NW idle. The head/core drops on load1/4 and rises on AIR2/5, with plausible rear-facing yaw/lean and no material model-size pop across5→0 or idle entry/exit.",
+        "Support/recovery boots use authored near/far and fore/aft projected depths. Both complete AIR2/5 boots clear their conservative declared support planes; near/far phase3 contact can sit above the root guide. Source/candidate boot ROI/clearance proof is corroborated by actual exactC/root values, not imposed flatY or idle depth.",
+        "Actual Atlas regions enclose all six alpha>16 foregrounds with at least2 source pixels padding. Board panel-edge framing of the far blade is a private preview boundary, not a runtime source/Atlas clipping defect."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "7a9cfd4ad35d94364b4549472696ea704e1786dac9176ac2dae94fb9147f18e1",
+          "bytes": 98870,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-run-v03composite03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r098/NW-run.png",
+      "frame_rgba_sha256": [
+        "519bbfa603d5d7ad8adc7e5135cb55ce1b8b2c4253c94bdc181ef163ca915925",
+        "184ed69671cb604fb782e693fb239b349ecfa1f0dab5de50aad6bcddd04a6b1e",
+        "c92a15acc66dfed7b719782b57cfc2b4fdd8a09a2b8a278bdf21eb8c55c6833e",
+        "d1845a2e513ba2b400a3bb7361317fb52248c1d66eb2bbe0551d398141dfb2e7",
+        "7693558a79536389e2f8c95c87f1a89adeceafa03ce5276160ee1aff192b2a50",
+        "8149ba0b85746552ec484119e7cd08520cda3a4e7062b1bd88c00382bc9ca659"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r098-NWrun-actual-independent-quality.json",
+        "sha256": "b08110dddffc3c20021fae825e16643840895ee80e5d70ba0e278f1fc9033abf"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Actual NW retains rear-left/up-away heading in head/core, long white hair, black-gold armor/rays and the same single anatomical RIGHT blade. The LEFT arm stays empty and exactly two leg chains persist through the robe. Existing tiny hilt surfaces are not a model/gear defect.",
+        "0nearLEFTcontact→1deepflexed LEFT load→2farRIGHT leading AIR→3farRIGHTcontact→4RIGHT load→5nearLEFT leading AIR forms a genuine opposite-chain run. Recovery legs stay folded/advancing with coherent hip-origin intervals, knee/shin/boot ownership; no hanging cloth V is treated as a true hip.",
+        "Actual mixed C848/2096/2392/2376/2280/872 preserves a reasonable common rigid helmet/skull/pauldron/waist scale against NW idle. The head/core drops on load1/4 and rises on AIR2/5, with plausible rear-facing yaw/lean and no material model-size pop across5→0 or idle entry/exit.",
+        "Support/recovery boots use authored near/far and fore/aft projected depths. Both complete AIR2/5 boots clear their conservative declared support planes; near/far phase3 contact can sit above the root guide. Source/candidate boot ROI/clearance proof is corroborated by actual exactC/root values, not imposed flatY or idle depth.",
+        "Actual Atlas regions enclose all six alpha>16 foregrounds with at least2 source pixels padding. Board panel-edge framing of the far blade is a private preview boundary, not a runtime source/Atlas clipping defect."
+      ],
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "NW",
+      "role": "walk",
+      "animation": "walk_5",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "44a1c0749ea8004bab1d43fc477e32a0a6749f47ebd977f054f84ab4d82e360f",
+      "source_sha256": "a9a52c4c8fda46ebcc0f9147327409420b0ca2f2deb94f83cf7e6ad6c37c5c07",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "c0579c34650f62f1a8f6883360fd4d658b3394e9675047291b219a64a1fb6e79",
+          "bytes": 132544,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r088/NW-walk.png",
+      "frame_rgba_sha256": [
+        "a9932dd48777e52dc460fa26bb790d47c57e889e54cf23a32477aaecfefc005c",
+        "258920bafaeeeefcc1919eb4aae841251254f9fd2e5308f144c64a9f8444e003",
+        "ce1f3fb4896cb9e03006b0939375db0e998f26b2be23f447ef5ae34c10da6e1e",
+        "69bd355bcfefc53bd71a2167a55aa281fa73bf527bf29080620e618c5aa8d468",
+        "23d847978c5b4c17fba5ce4c7c79e3f90f7c195b316ec7ec3e1d0d0779edd4e9",
+        "e7619fc41591a6a2b0d6284a032a810bdf6f23fa0f8b0f5a340ebf94a924a41d"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Away/left rear three-quarter view; near non-weapon arm and far RIGHT weapon remain consistent; attack3 reaches up-left and death ends fallen toward upper-left.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "attack",
+      "animation": "attack_2",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "f3f906f4a87afdd6a0919492bf64cb5e7b04af0aa617a6e4ae276133db92311b",
+      "source_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "f0c96ba6f32b7c9f199272d5350a69ca4d916eed553e27feaee597d7b871e24b",
+          "bytes": 136959,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/S-attack.png",
+      "frame_rgba_sha256": [
+        "b33cc95dbd13995b29255b0e993cd6432ec00d0e737924c8335305edd2679f35",
+        "923f3034556fcd9e1c363e8eee14c6f275ee9dffa083b0c16bbed544708d159b",
+        "182089a098f0516df53bfd5909f08ab54f149a4c5a58b34ee6098d1a39dfa4f7",
+        "91e3cee854f425a832cab2d57b1e1644e875d9a17df1caf5326c22d5af8c1afd",
+        "e246325b78d4b6a8f868ac475a406d943aa8cdb4a33d203ce20eef8b6aedfef6",
+        "6c1a21f4e8704cf00923eb01a9d42c35dc55589597ccd2a544862efdc94a4fbc"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "death",
+      "animation": "death_2",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "5d8e3ea371f26ddff85541bf786b5b0a8e4145252ff66e3514c4aaa7fe390231",
+      "source_sha256": "0a5002d3c69e4c8dc2004ea625e872437c90be3a50218bee61ed53c2592da44f",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "836ba14c584024539e377bc6cd20aecf68b58acd89eca2ea9e99d95b44474b8e",
+          "bytes": 135695,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-death-v02iso01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r048/S-death.png",
+      "frame_rgba_sha256": [
+        "fba9167643b86c0cbf83e170b36a02d57a092767a34a9aef95c5e722408afb19",
+        "ff9ba37c0017d1f09ee76d23890274ebf054fed8d97d5ef2b2ab4ec880d49985",
+        "5b4b12ed0f0f91ccdb2df64c166b4e0f9b14c21e4f975ba0336d9aebf6a4347a",
+        "b72f0f4f884acb6ed68459b0b8fa9b0423022454e6fcb37b44356346cfb94eb0",
+        "95ff1300fc9b3a3e2f63d5c79eb8bd63e3ffdd1b37a34ca0260a6b9f8009069f",
+        "473fc9f11c24675cfe761c6b3b1298d927a61eb663e70576758e38f298c5e98f"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "hit",
+      "animation": "hit_2",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "b01af6eb8d4321804015b6bc4464d0e944e6c2f44cd5883fe1fa95e6df9b75b4",
+      "source_sha256": "6bfdeece93c9951d5d235562657321acc30e7aa34bc930d41eb672e7f95e0c1d",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "da883dd43db1404457229c768ef12bfe10e42af2088ba995dd8b6819b835026e",
+          "bytes": 136295,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-hit-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r050/S-hit.png",
+      "frame_rgba_sha256": [
+        "46f0d7b3b0d2934f31e75a87a0454a316354fbc5435a970d3ed39125dcb5dd91",
+        "819f6db506c5149a12a6a2f3045c0ea9debd02de162e184448d9af71e0e51fc2",
+        "92b74414c3a558bf8446a81ea2211c1e616b1cb6cca60bf82e32bc6cb1e9dda9",
+        "48122b1a9844b661e8e2dc1f9f96cce8ea4dcad5a17306b65fd553f450cd7bc5",
+        "47a340a30d35f586caa64d496f344c8f4aa1f1e6c7aa75db64ca87e327e0f051",
+        "e18f6e9ebbdc2f885c6c28fddffd7f4dd3bf427668f75e62824c4a0f4941dbad"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "idle",
+      "animation": "idle_2",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "d29e88a3a68cdd8e1d0b88cf9f5897e73206cf5ffd2d7e1ab7230712c4bc0eef",
+      "source_sha256": "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "a9435557127cbba6cf4ae9776c0286c4ee7fd17c523fe8146cfa4fd63e31ee7e",
+          "bytes": 126078,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r053/S-idle.png",
+      "frame_rgba_sha256": [
+        "e9e1fbd64afc120b5f9fc016fd73c71b610ca50d587e421f893b94b8c39577a8",
+        "4ab9ebc88f8d38606024cf917dc4e73f12128c8ec05ca07f0a18ad5be76b9b02",
+        "5fb7c79c4b433a26864efc2224081e3fa8a653c91b4f267b70e95df3f92b41f1",
+        "74774249323f40088112f396fe7bfbe20b650a7778f58430461adecf5aed6496",
+        "550000ef37fa44ea80159ad26cca77b048011c04166e9d990f8ff4a3b615aec2",
+        "1df99c6ea208ab2168f8fc193555409b11ae8de51698c8676be0c1d8b2d6732b"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "run",
+      "animation": "run_2",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "61451a960ff2921fb7c94d44f2b30694609a6c2b5902ac3b8d9a13dde6c7e828",
+      "source_sha256": "d57271cba97110ffb6b09974a89620c0310915090351e4d54f5d137f649c571d",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "677e85335a3e3dc452488259fdfc3114e5c8e67eb056cea55fcd72728092ecb1",
+          "bytes": 143267,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r071/S-run.png",
+      "frame_rgba_sha256": [
+        "db05577f626ffc6e03688c4eb09982d61d64b84846f2497cad341cc18625b6b4",
+        "6f9cd3a17a443d6f226de8ec4dfd0cb26a8bd429888a1e2b4ae6221fc7dabf38",
+        "d6d244951614914deae8093b6bf87b23fd803d14e2dd3684b2039218733a693b",
+        "34bb389cd9a57ae1690c781e0d3f02212a76ba920b9b84d9cee1642666c00863",
+        "cf1ed64d029743e616480c15fbd27f0e39c78009b6d19ea618a000c8c5806841",
+        "98de0f28ee2dc624f01ce5ef69bbe6a7fa6c5e33e566c9a304b197f784164e0d"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "walk",
+      "animation": "walk_2",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "79e3e8aa74d24c98dfb6c96d10d0d665b5a5448404bbea5f56f9f17400cf93ba",
+      "source_sha256": "01f7f906efd051ab4255a68df9873301dc0846a7ccb70dfd7d48c7fb8bde4d47",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "9672d54932db4561d766f0fe98bd73ce49520bb2bf29b7e4fecc29f395480331",
+          "bytes": 137145,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r052/S-walk.png",
+      "frame_rgba_sha256": [
+        "7908972dcc15b1f5bd65b5220bbf701434c98eb3d5452f8be492f73a05035758",
+        "2dbb1dd2c95ff8c0951693d2becdd6f0ec9ee9909f85afda15a7251f3f9e5ffa",
+        "d5bf1accccd5f752156b12e29e9bd4d7a7008024c886c754783190deee62e731",
+        "50a83b46e4f79bf0dd760c808eac5d02d93651799833d0b7cdb01aa9389fecb3",
+        "d52a11deb16e23b21f7405c43fb0f4d6a079d860fb16816c5144c4d9e35c046f",
+        "67918b548daafabfae570c21b5c392c49841e500d6b59ff8a63654d686805138"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward-camera front view with exposed pale face; attack3 strikes toward lower/front and death settles face-first in foreshortened prone presentation.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "attack",
+      "animation": "attack_1",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "c0817995c79cdcfe3671188c323068638358ade31146d10af9fcc4473c38dc0b",
+      "source_sha256": "b1f11bf66bbfb23b49dc1a68b54d6d56dcebe69344a7a17abd3216ae2f833512",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "b4dd94477e2d3e7c042b3e1b6a005b929a8268eba95794d037f02e848b3ecec0",
+          "bytes": 147594,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-attack-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r064/SE-attack.png",
+      "frame_rgba_sha256": [
+        "fa229fabd9cdaa6dd664ff8d0bc0c77d53bfeba6b48a7c6fe0287e1ccde1fef6",
+        "c91d38d6d26697fe7378274ebb1ae3379b0809b22127efd39dda6ed0aff41c8d",
+        "77f39926840087465ebdab4a5816d21fabb7a49bbd254661c267012b16197e34",
+        "04db198bea6e16439aa83c0728f94370483f1c15944de133000854798fef4d19",
+        "8d7bf8de0266096d217525692e3cf4af93c0b0ae17c81b49ba79f20d64a7a108",
+        "a0eb29c7ca0e555302d5e7a701920bbc43dd1cc25814496150f921e046e19ed1"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "death",
+      "animation": "death_1",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "9c83a7611b536865ed81e73cc4c7a64b313ec2f4ecb4ed85b15fc132e4da2c4d",
+      "source_sha256": "b4d57e8259f74c45f3af9a2221e0eb6f2b299f313befb9b1d648c7007e4fcbae",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "05d0187f377d7dcad3b38193fe92f15969b64da3764adf91f0e2a7f00dc35b8d",
+          "bytes": 114975,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-death-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r065/SE-death.png",
+      "frame_rgba_sha256": [
+        "31123b02a8dddf9d3e3211e04a09fb36947c62c3ee539a0e8a18fb3a7995e576",
+        "ee85f4816a29a422f44b0dd8589639ebe9cf4abaf267dc2642c2054d7609a5d7",
+        "f325eb35184d48b5a571d7cb85c1cd7b8620ae01de3405e3532ad2011cc2c448",
+        "456fb90d12dcab40e578d93e278f22be7231c17c02440d15ab02bf026486aa1c",
+        "cdde083baa2a25795375e21746d17ab55f6c3b73267709aca759b2df92f11c34",
+        "edff696c06fa3e3b33e4dea82a13a2e38571772d553e5d33dbaf75ffde3d5da3"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "hit",
+      "animation": "hit_1",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "700c9820db681a889b3d65f3f2a72b80966bd4eb13051d1ab7583ebc8bd5b54d",
+      "source_sha256": "7577209072dfca5849d5d73e280be5e33c7dd9834211762462f9ff949dde5af1",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v02iso01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "c4f36335153f3b4e4d74b47856f45fe5e90d14929e4c017ef087c3466135d50d",
+          "bytes": 137042,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-hit-v02iso01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r066/SE-hit.png",
+      "frame_rgba_sha256": [
+        "151159cdad30e77c2887abe73de69846a2499ec058c8464af588012cfa04cc4c",
+        "cf6499913d709fa820456de56c1e5de41ab43f520c78f7602eae2f2ba4b63078",
+        "016eb8dbfa56ed414a92d6e136fd54ab55693868566de1b47ce72e8d50982069",
+        "684a06993cb27b243ae19ac8e406d64449cc93acd638790e37f2374f1ab727db",
+        "e264dfb2a87ce8244fe5162a47123b8c020374765cb01ae2e07fe39effc6480d",
+        "243da7b9690dcc96dd7d197855328285a11ffb4dfb3fab8e379792444c3cf6a3"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "idle",
+      "animation": "idle_1",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "9c1a26fadb4f8885de072a5101ec7733c1be1d6d2b9e567fff2a4ff2d3206ba7",
+      "source_sha256": "e3b15578727710866b76c6495ad1b538156b35d74820061c362713db48441071",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "b00757d2575ccda935d3adfcb4c4a0b1fac99fe75c3049859bb40b91dfe60333",
+          "bytes": 132917,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r068/SE-idle.png",
+      "frame_rgba_sha256": [
+        "89271079b5c2493c9d9f595305d1209de9885643fc779b4630b65fdf0a936e01",
+        "43b47573ee0304523605975e8817f2711a81e55f83a6f09ed2ca5c43f53c991c",
+        "2b6cc14af6ebc069c76191935ef68a7861510218e7dbb180081d787c421d5953",
+        "edffd855582473d22a3a03b791804e35cd23ba43bf483725c732ac29aaff975b",
+        "5c5b5e4f9002fa7c1d3b105fdccf42d532ed7fe2c846a584832da6763e4a8c69",
+        "0a8e0f50e35af2952b043676a36b35a3423c09d1e543468e9f6ca243d74013f8"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "animation": "run_1",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "85f5ad0458a09ac101333e1c1f2596e64e7bf0c795c6de4f69a47a0ca288e65e",
+      "source_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-run-v03composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Actual SE diagonal forward/right-facing head/core and permanent RIGHT blade match selected SE idle. The empty LEFT fist remains separate and no extra weapon/arm is visible. Existing hilt exposure during rotation is not treated as invented equipment.",
+        "The actual six-phase sequence retains farLEFT contact0→flexed load1→nearRIGHT leading AIR2→nearRIGHT contact3→flexed load4→farLEFT leading AIR5. Opposite limb chains, recoveryboots, torso lean and distinct load/flight are readable.",
+        "C2304/2304/2304/2168/2168/2304 yields a consistent rigid skull/neck/nearpauldron/core model against idle while authored head/body arc and lower compression4 remain. AIR2/5 show both complete boots clear the higher declared projected support plane; contacts0/1 and3/4 may use different projected depths. Root guide alone is not a literal sole plane.",
+        "5→0 progresses from flight toward opposite contact with coherent body/cloth/weapon continuation. Idle entry/exit preserves physical body scale and directional identity. No unsupported exact hidden-pelvis claim is made; the hanging front V is not a hip marker."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "861def01ed1cd9b06824af2f2ce5722c018bd77717491c077793f5239ef698ec",
+          "bytes": 99004,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-run-v03composite01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r097/SE-run.png",
+      "frame_rgba_sha256": [
+        "4232fafb8e4171f0862a26e2959d59726c8d09e906d35ec1710456464778120e",
+        "99abb1bc6e00e68b66050afa9c4548bc6d5d1db0da6d4e83ec5a69f885f84032",
+        "f9d2590f51808f54c282e962d6b1af8e42b24a5a65de9eaec976e433f5d5a645",
+        "0f2421d44dc6a67983864a7ad8bc90306e59f358874057eccffbe7f538f53cca",
+        "9f5bdc3121ece3c62f0928e995f6b43ed56bcacc39f9ee7128fe635faa474b37",
+        "9e6b1823be2f41504eb983c58dd62f05fdc62a6ec4f7e2dafea1748024fd2020"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r097-Wwalk-SErun-actual-independent-quality.json",
+        "sha256": "601a7a4474b89c86d94131c772316c382e533fa0cbd23fa4a84784b600ec0ed0"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Actual SE diagonal forward/right-facing head/core and permanent RIGHT blade match selected SE idle. The empty LEFT fist remains separate and no extra weapon/arm is visible. Existing hilt exposure during rotation is not treated as invented equipment.",
+        "The actual six-phase sequence retains farLEFT contact0→flexed load1→nearRIGHT leading AIR2→nearRIGHT contact3→flexed load4→farLEFT leading AIR5. Opposite limb chains, recoveryboots, torso lean and distinct load/flight are readable.",
+        "C2304/2304/2304/2168/2168/2304 yields a consistent rigid skull/neck/nearpauldron/core model against idle while authored head/body arc and lower compression4 remain. AIR2/5 show both complete boots clear the higher declared projected support plane; contacts0/1 and3/4 may use different projected depths. Root guide alone is not a literal sole plane.",
+        "5→0 progresses from flight toward opposite contact with coherent body/cloth/weapon continuation. Idle entry/exit preserves physical body scale and directional identity. No unsupported exact hidden-pelvis claim is made; the hanging front V is not a hip marker."
+      ],
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "SE",
+      "role": "walk",
+      "animation": "walk_1",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "f54db33999150c4ae4eb76290872282af001aab6eeb09c82a58ecd9e648ff079",
+      "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-walk-v03composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "931c1e435dd27aba9df4c493916e63f8d4ba695d0e855dc743304cec300856d1",
+          "bytes": 147802,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-walk-v03composite01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r086/SE-walk.png",
+      "frame_rgba_sha256": [
+        "c881fc8a43a159f792d8e4c566dc1c32b02e9693a4c20b1b17526412cf27df61",
+        "07847b361251f5e66eff9a96c6eae6b430b6ba86896fb4b922f94b72054403da",
+        "2a45435ecb6edc1307ae9f45182bc710e41dfdc6b14745bce0bb82a0c626683d",
+        "08c674437dee934151170e3d1def54ec64d14c100e8e6e750b842987e0dd39df",
+        "567b1e7ae12cd3603ae06a7673e502f189bbf9515bec8c0fd0da7d87be55afab",
+        "993459f6d4cb61a93a11c908643d378c65dce697a7a7e6b91a43b616913163af"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/right front three-quarter view; attack3 drives down-right and death settles head-right/lower-right.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "attack",
+      "animation": "attack_3",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "56c3b1045c08af7b88f27298b4b94b2a4d8973178a8e3e9b9053f1b2893e5b5a",
+      "source_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "68557ed0bf961bdb8f744629897ba43cb85f6ce468fdb4df04c80cac79183a27",
+          "bytes": 136016,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r081/SW-attack.png",
+      "frame_rgba_sha256": [
+        "6ca24f7966471174311413655d47100d8cc9bf1bd8d81456aa0e436ee1839ba8",
+        "73a2a972f993a120e6517624eb85aff1d290a85b5fd32a162061ea2200f28401",
+        "eacfddb8e6d22ab52ad59954e751136d9de0010ad8d1cd7eae368a123a3748ef",
+        "308b93722f484fa07b4ff790e6dda304f6d2c3cadf7a0822345a73ff6afcec7c",
+        "b8f780f5e3747fbf946b0edd4fff7ac37774021889ba81d8618225cc22c41490",
+        "ad49e256e3c8874be00edc2cb3a3b0e8d2ad00283b5a565f9cd29e78e0ad2726"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "death",
+      "animation": "death_3",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "d2913db8d184538f0cb153ebb82baf6172f873fc460be610ca4cd95701f98259",
+      "source_sha256": "1205f32f8dd9f551d76a789cebbdc81a0e4a957af101a67bd0852e7479826413",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v03iso01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "3888645e1dff342ab3ceee0f83fac26c577281019863fd400f23cd341d0a2292",
+          "bytes": 107473,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-death-v03iso01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r072/SW-death.png",
+      "frame_rgba_sha256": [
+        "a12bc47f62fdaa0a05b5b4680bfc491f0654ac50e7664f90168985403eb913cd",
+        "7b94dfa660c8ca0f7028108b731e7ffe34a31528487abdace207d07e0eb30bbd",
+        "4e54af5a3795dcdd5282424fdd658605ea947b996deefdfd230360272f127b73",
+        "892518c65fe862ea87a0e234ba50b9c0a87f82eeab0bc8a09802a0b153a8e49e",
+        "54352389d11df5d9ef793777035ab1d900697c527e0924d0301db85372a5ce2a",
+        "8816f1f20ce0382c91bb22ae87169c27593d8b040c9a68be6d59841c2ee12a77"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "hit",
+      "animation": "hit_3",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "82f871eaf6631817505cb286b39eb52e0f81d58491e2807d50da86074f8d73d1",
+      "source_sha256": "5efe3aea29a81e950c8f7afc856ee516224cf66f22900099c2b71ed179664eed",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "96285c1d74954cf4f932d8865158915521ce7004db37f935d6e500ba25fafaa5",
+          "bytes": 142211,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-hit-v03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r073/SW-hit.png",
+      "frame_rgba_sha256": [
+        "7190ad14310e41f9986a3c30bb09ec6bbd14f77ad0ac5bbf5c1a3fe7845ea5e0",
+        "08b937bf06c84d5e35ea88e749faeb00a4cfdb9e9ea75a0ffd68510130ba93bd",
+        "b7548bae4ada09a29edb5ac47e51408d918922933ad785d8a556fa498cd96f07",
+        "2ac7515f2cd32425cb5fa7895a0fa1381edd99af8220b21711d7318dbc89720a",
+        "33ce0d5358a7b7e2287fae920bcfed24450c4c5b46e4b7e085b37029f1a18a1e",
+        "2ba9cccc5ec8a939b2cb78f4a036f4d3aaf0d282bf064ee441accaff11549919"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "idle",
+      "animation": "idle_3",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "5675267e96a4ff72178e6702f5d16584502a9430f56739073fe5519b41ac883b",
+      "source_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "64fa165539e3729e6417ac64883bb7410df3970d45cd6ab58c3ba8df6ff7f346",
+          "bytes": 120427,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r074/SW-idle.png",
+      "frame_rgba_sha256": [
+        "68cb5c313ad3a00b0b963dddfd40aa178c06c2b1c26e7d6577378f3548f59bef",
+        "3efce659b706fb11f6d5360bf8912d71d48f6a242143ef8486568ddebdf2f65d",
+        "c9a1ba0556bd5640162c46de8e0ce94bafe42ad5bd9de944899abcfe2695ad85",
+        "51672ac888b75d898632114b51931cc872cffe09db1c90171ac42a0ef9d2507e",
+        "0173257ab008a1c100db0268df6b46e1eea125c04bfcbad0d964d96d0dcf50a9",
+        "557185e6691918e749fad762f3bf208ff1e79f3bb5873f3d958eb380f602d3e0"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "run",
+      "animation": "run_3",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "4826388ab571b19a0845d728676242f351ea73994663feb5fa551e530ddb84ba",
+      "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-v03six.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Actual SW keeps the same front-left/down-diagonal head/core and original black-gold armor, long white hair, ray crown, long robe and single anatomical RIGHT sinuous blade as SW idle. Two arms/legs and gear ownership remain coherent; no new source/Atlas clipping or invented hilt defect is established.",
+        "The actual six poses read as nearLEFT landing0→flexed flat support1→farRIGHT leading flight2→farRIGHT landing3→flexed flat support4→nearLEFT leading flight5. The separate recoveryboots stay raised with connected visible upperleg/knee/shin chains and natural longrobe occlusion.",
+        "Actual C2304 for all6 yields a reasonable shared rigid skull/face/neck, solidpauldron/core and waist scale against idle. Loads1/4 lower/flex, flights2/5 lift the body, and hair/robe spread is excluded from body sizing. No material model-size/root pop at idle entry/exit or5→0.",
+        "Actual native roots equal the independently reviewed physical candidate, including accepted phase1Y1146 only. Support points are compatible with declared sloped near/far/fore-aft projected lanes and conservative full-alpha16 AIR/recovery clearance is positive for all8 relevant boots. A lane centerline is not a universal floor boundary: supportboot pixels at different projected depths need not share flatY or idle separation.",
+        "The actual runtime phases preserve source-specific bend/lean, complete recoveryboots and authored body/head arc; no C/root or source change is needed. Still-phase PIL reconstruction certifies scoped visual continuity; root Godot Player/actions checks are separate evidence."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "3d104480e636e1fd5a26dc1e834d49f41991c5a0f03043158495e51e07c4fb40",
+          "bytes": 97247,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-v03six.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r099/SW-run.png",
+      "frame_rgba_sha256": [
+        "6d47bed71a0ad9f908b5fba3026952fe65d5d81e4e5d1ce1a485b670bfe3c8b6",
+        "50821464387f9a38453a992c2c2d92ed72cb6d91dffe941d595d5f53348ca7a9",
+        "c8e87d8b3933196426ff1b694d2fa00e88e7dea777abb4ac587d57f4cd3db6a1",
+        "8df0d3b44462e99b083af4a7c90a1227b96fb3f8aa2a77130e807372fad15c8a",
+        "6c8c4e6a9b4579003202e299bde33464eba9a6b9c0f1cec5098d7cd38185ad9d",
+        "497837997b3eb05d9d5c0d75a2a52c87f90c6f4cb26ad9e35643aed8f07d9601"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r099-SWrun-actual-independent-quality.json",
+        "sha256": "2dbaaf77b6613503648ba669fd253d111aefcc58edbf7e84eedca61657d4d849"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Actual SW keeps the same front-left/down-diagonal head/core and original black-gold armor, long white hair, ray crown, long robe and single anatomical RIGHT sinuous blade as SW idle. Two arms/legs and gear ownership remain coherent; no new source/Atlas clipping or invented hilt defect is established.",
+        "The actual six poses read as nearLEFT landing0→flexed flat support1→farRIGHT leading flight2→farRIGHT landing3→flexed flat support4→nearLEFT leading flight5. The separate recoveryboots stay raised with connected visible upperleg/knee/shin chains and natural longrobe occlusion.",
+        "Actual C2304 for all6 yields a reasonable shared rigid skull/face/neck, solidpauldron/core and waist scale against idle. Loads1/4 lower/flex, flights2/5 lift the body, and hair/robe spread is excluded from body sizing. No material model-size/root pop at idle entry/exit or5→0.",
+        "Actual native roots equal the independently reviewed physical candidate, including accepted phase1Y1146 only. Support points are compatible with declared sloped near/far/fore-aft projected lanes and conservative full-alpha16 AIR/recovery clearance is positive for all8 relevant boots. A lane centerline is not a universal floor boundary: supportboot pixels at different projected depths need not share flatY or idle separation.",
+        "The actual runtime phases preserve source-specific bend/lean, complete recoveryboots and authored body/head arc; no C/root or source change is needed. Still-phase PIL reconstruction certifies scoped visual continuity; root Godot Player/actions checks are separate evidence."
+      ],
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "SW",
+      "role": "walk",
+      "animation": "walk_3",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "71019b155c00266222b8bb5dd0216ed17b014fa237be8396a76e05c736108662",
+      "source_sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-walk-v03composite02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "25251116712db8da8ce8dfe7a812f562d688a22ccc440a355969019d2144b99c",
+          "bytes": 147812,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-walk-v03composite02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r087/SW-walk.png",
+      "frame_rgba_sha256": [
+        "c2225e752eebf2904c08bcf8613feafc5102844ecc4e42aa9acb6ad9df0b7a7d",
+        "5541eb1bd0bc73973f35bc904ba13e40391b586a64797fcdf54daa15017374ba",
+        "481ee0494f4a73059b2f056181f068136c73d42ac452b9ae7191be5f9490605f",
+        "68c7feccbf35e21240eae3f50c86618bc13d2d7377ec434f37e0e5d943289e79",
+        "9fae2e912fd921e575aa53bd671fd03900de0f75509b303eff0eb301258b9098",
+        "c1fa20a956b8b884c9f786d01fcd6bc1b505caf0206eb061649a4b43ed529797"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Toward/left front three-quarter view; attack3 drives down-left and death settles head-left/lower-left.",
+        "Contact/loading/toe-off leads into the opposite anatomical half. Both leg chains persist through longrobe occlusion; motion is a grounded walk, with projected fore/aft foot-depth allowed.5->0 and idle entry/exit preserve body/camera/root continuity."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "attack",
+      "animation": "attack_4",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "attack_contact": "PASS"
+      },
+      "not_applicable_checks": [
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "ba23901779588af15b42046cbdd3f940aeb4b5edac4dbe3f535fc72e655b351d",
+      "source_sha256": "c6026a38bacdc373aa138a1e4956c089475a4ac9dc16b56178a878c9fc4b0e3d",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 14.285714286,
+      "duration_seconds": 0.41999999999160004,
+      "visual_notes": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "d1b0cee0822b62d00169886c74cc3b0b203a9f9782d2c9f398248407a0261b1a",
+          "bytes": 121318,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v02iso01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r067/W-attack.png",
+      "frame_rgba_sha256": [
+        "c57623ef154627200698da4ca0e12bcc888cf7005004269fa313cc3ceef68dc3",
+        "4c2921eef585bab865067a7e2e5fd9919ff3ff7a12df1953537f5571424d44bc",
+        "4ad88d6e6c2849fec00c9ae0b673227a788d76ada2645ae76c9b3a198cc33703",
+        "d0ac584e3651d71aa8a5d89dd3151cc36a28686386aee66ca767a76dea96a552",
+        "1a5bdc72b0182d9825e4efba18bf92d185657684afc48061a6aa5c2b84848a57",
+        "0b39df7fb541f06548d2ba6c23b9c1b4c136c020b63bab28cf9f379a88263459"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "0 prepares,1/2 visibly raise/wind the same RIGHT-hand sinuous weapon,3 makes the direction-specific contact/reach,4 follows through,5 returns toward directional idle. No extra arm, weapon swap, or contact-direction reversal."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "death",
+      "animation": "death_4",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "death_irreversibility": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery"
+      ],
+      "immutable_source_geometry_pin": "fe74dd0071b0463ef121f25d07588b29df2044817ba0e8c64028bdc1f5dd6e1c",
+      "source_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 9.230769231,
+      "duration_seconds": 0.64999999998375,
+      "visual_notes": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "fa2bb304c66b64711e87cc8dd492274de09b292138b3f5e215870f8f5f35d1b5",
+          "bytes": 102471,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r078/W-death.png",
+      "frame_rgba_sha256": [
+        "355460261a962e3027d1905e1877a1e2875eca0e404a77d39417ce3c5b60a691",
+        "235ffdbfdd1739903a9c14c87e54945b39170ddccadbd0d2e32a24766272c452",
+        "6f49475be87b84651727d83fb10adb93b6822218aeff6844a0d69ff30d817481",
+        "45390471afefadd73634933b38973bcfc2ff62e6d74088b4a773f4d8ba0647fe",
+        "01fc931b65d9e647b35b10f123d6243f6780c78778fe023e8c29dcb0bb080677",
+        "dd45df678bf3b2382206be36d01c18dadbe3146646e3028bf0ba16b04672adc9"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "Fatal recoil/failed support progresses through lowered knees, falling torso, grounded impact4 and settled corpse5. The fallen ray array follows the body;5 does not recover to standing.4/5 are distinct RGBA poses."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "hit",
+      "animation": "hit_4",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS",
+        "hit_recovery": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "916adb8ac5a6d32fc82d12f5bc7512e60c242c583a593ed445324470fe8ed6ec",
+      "source_sha256": "49678bdfac24cc208ee4790d747b37b5a4f9e5d5655f40915448575ee4301707",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v03composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": false,
+      "fps": 27.272727273,
+      "duration_seconds": 0.21999999999779998,
+      "visual_notes": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "e338d40e4f2f413270b9575fd82e3d82effd2e912a49a9729a4f9288b2975ca0",
+          "bytes": 117486,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-hit-v03composite01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r077/W-hit.png",
+      "frame_rgba_sha256": [
+        "e6649fa758654395ed557c77eab30585181af70be876ad08c7a4e6f07f6e7eee",
+        "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+        "c72e992ff34f1e5685dc9486ca0f407c35e9b66b3cccec7bd9872c353035236f",
+        "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+        "362b16ba12795e5b55474852229dbabaa7e06b3b1bcb50588d787563557d212d",
+        "cff611872a2b9f38bced0a540e7e3ffddbe80650b45bea84a762abd0536a78d9"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "0 establishes stance,1/2 recoil with head/torso displacement,3 absorbs/rebalances,4/5 recover toward idle. It reads as impact/recovery and does not become an attack or a terminal death."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "idle",
+      "animation": "idle_4",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "3718f84325b1b0c056fbb9036557f78290c0caaa88cf1f357684c86b73361bfa",
+      "source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 5.0,
+      "duration_seconds": 1.2,
+      "visual_notes": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "e34b2695668d7b97b667b85f01256790c612acbdd714e95b729a0f797988ff1c",
+          "bytes": 100895,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r070/W-idle.png",
+      "frame_rgba_sha256": [
+        "2ab93ec9f60efba89aee09f6a1bc76e53fd5d467507749bb9f2f97c7f63e17e9",
+        "cc73dc2fa85ef4c26c03dc3a01f4d3548aeaaff3a9889c07b737036164835502",
+        "960efb5b9d57029f44ca3c0c72702f1101e3cc2fc884740c30cd745dc48704df",
+        "aafb21f5955940de5ae1765608bb95b1e0cfb6f4cd82415b34de1ba74a9ee966",
+        "bdb931898b5b499bdadc0a1c5fdf002ac377ccdc162027d86da1ff144a2c821a",
+        "5a34d9dac880577418fdbc1a16f124f1c572a9654a3016499e971aa0736a9d45"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "Six distinct breathing/hair/cloth poses hold the directional camera, stable paired stance, same body and single original weapon;5->0 returns without a stance/camera jump."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "run",
+      "animation": "run_4",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "7845ad83902d39b820755843813df274068979ffd60627351a3f0b6b0930f1ac",
+      "source_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-run-v02composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "c163a9b96a8c9c082b5c852318206f3b8a8497c3b25d56fb63d67ce4dca09a49",
+          "bytes": 140549,
+          "viewed": true
+        },
+        {
+          "sha256": "b5fad0e2091e81b6140fa53023ff8239d1fda3cf870596cca699574514693f88",
+          "bytes": 141814,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-run-v02composite01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r096/W-run.png",
+      "frame_rgba_sha256": [
+        "ad586af40e3921051e5017a5a9b3c20e61d9a2f202e21f4ffb779c2b10ae828c",
+        "9c27f4c86164bbdfafcb5c18692ff454a181f62b5a6ff8e6d0f7d5b3994f97c6",
+        "2f9650386b0ea8a55437a94a6525ccdf61e727b2db7d709fe456023fd5795379",
+        "ea8092d3ba769d47e92bcd2ad5ddef60dd8e97995708f50f417a04bc0e94a303",
+        "d35729393bf75422c1505f31c753c16dd4b95795401119ae62a2e5357627df23",
+        "6d8d68901e70568e0495f0d00d316c1f12712b34f4456af3391f7ef08afd7411"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Left-facing side view; attack3 reaches screen-left, hit recovers in the same camera and death ends head-left/feet-right.",
+        "Both alternate contact/load halves and distinct airborne phases2/5 are visible; folded contralateral recovery and forward drive distinguish run from walk.5->0 returns to the first contact coherently."
+      ],
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "walk",
+      "animation": "walk_4",
+      "status": "PASS",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "a1a5d51f7323dddb11d65fd68ada8ebc10e8582cc1c428df2430f0b4538861d0",
+      "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-walk-v02composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Actual W profile shows stable left-facing head/neck/core and consistent black-gold armor, ray array, white hair and one RIGHT-hand sinuous blade. Both leg chains remain attached through robe occlusion; no added arm/gear or clipping defect observed.",
+        "Six distinct walk poses alternate long contact, support/transfer and recovering lead foot.0/3 broad contacts and1/2/4/5 narrower support/recovery normalize to the same rigid skull/neck/pauldron/waist scale with actual mixed C2560/1792/1792/2560/1728/1728. Head bob and bent knees remain authored movement.",
+        "Foot placement reads as perspective-grounded gait; no flat imageY or idle foot-depth invariant is imposed.5→0 and idle0→walk0 / walk5→idle0 preserve plausible body scale and root-centered stance without a camera/model pop."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "405d4694304fae7d6e414f566e3dc2e148ba22b611d95c9ee1a755eb8aaa6ce8",
+          "bytes": 98266,
+          "viewed": true
+        }
+      ],
+      "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-walk-v02composite01.png",
+      "texture": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r092/W-walk.png",
+      "frame_rgba_sha256": [
+        "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4",
+        "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2",
+        "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4",
+        "867e40931c87302c3f7d558c239617d66dda07fa8ccfd3ee2971a7d2e3c4b3c0",
+        "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c",
+        "f416561152a41bdcda02cfee77ac96a019f9bd4ec0c0a16d892a281721ddc199"
+      ],
+      "independent_review_evidence": {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r097-Wwalk-SErun-actual-independent-quality.json",
+        "sha256": "601a7a4474b89c86d94131c772316c382e533fa0cbd23fa4a84784b600ec0ed0"
+      },
+      "actual_review_transferred_by_exact_equality": true,
+      "visual_findings": [
+        "Actual W profile shows stable left-facing head/neck/core and consistent black-gold armor, ray array, white hair and one RIGHT-hand sinuous blade. Both leg chains remain attached through robe occlusion; no added arm/gear or clipping defect observed.",
+        "Six distinct walk poses alternate long contact, support/transfer and recovering lead foot.0/3 broad contacts and1/2/4/5 narrower support/recovery normalize to the same rigid skull/neck/pauldron/waist scale with actual mixed C2560/1792/1792/2560/1728/1728. Head bob and bent knees remain authored movement.",
+        "Foot placement reads as perspective-grounded gait; no flat imageY or idle foot-depth invariant is imposed.5→0 and idle0→walk0 / walk5→idle0 preserve plausible body scale and root-centered stance without a camera/model pop."
+      ],
+      "baseline_unchanged_review_reused": false
+    }
+  ],
+  "coverage": {
+    "stable_actual_reviewed_tracks_transferred_exact": 43,
+    "fresh_final_actual_reviewed_tracks": 5,
+    "tracks": 48,
+    "poses": 288,
+    "nine_checks": "ALL_APPLICABLE_PASS",
+    "stable43_images_reopened_by_v04": 0,
+    "stable43_images_reopened_by_fresh": 0,
+    "pending_quality_HOLDs_on_selected48": 0
+  },
+  "reviewed_staging_frames": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r100/SpriteFrames.tres",
+    "sha256": "b95e8534a4cc710b1a8e05c5faa0487f978d58159c2e8ca7bec5dceb50493352"
+  },
+  "reviewed_staging_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r100/NativeMotionProfile.tres",
+    "sha256": "f8b2a0a47c78b516a0acb83e09c8bcabd1c7dd9c7d833f0820e873db7f8e8da4"
+  },
+  "production_functional_equivalence_proof": {
+    "status": "NOT_RUN_SEPARATE_ROOT_PRODUCTION_VALIDATION_REQUIRED"
+  },
+  "current_scoped_quality_evidence": {
+    "final_staging_functional_equivalence_proof": {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/final-r100-reviewed48-exact-functional-equivalence.json",
+      "sha256": "e4090d1d6d122d62af0d45a2bfcede3bbd35e5e3566dce4fa15bd59be4db64ae"
+    },
+    "certificates": [
+      {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v03/girtas-r096-independent-quality-reviewed43-FINAL.json",
+        "sha256": "78e2670b0a91e7ec1eb0a0917707715d845219a05ce329c8e7776b616413bb89",
+        "reviewed_tracks": 43
+      },
+      {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r097-Wwalk-SErun-actual-independent-quality.json",
+        "sha256": "601a7a4474b89c86d94131c772316c382e533fa0cbd23fa4a84784b600ec0ed0",
+        "reviewed_tracks": 2
+      },
+      {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r098-NWrun-actual-independent-quality.json",
+        "sha256": "b08110dddffc3c20021fae825e16643840895ee80e5d70ba0e278f1fc9033abf",
+        "reviewed_tracks": 1
+      },
+      {
+        "path": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r099-SWrun-actual-independent-quality.json",
+        "sha256": "2dbaaf77b6613503648ba669fd253d111aefcc58edbf7e84eedca61657d4d849",
+        "reviewed_tracks": 1
+      },
+      {
+        "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/girtas-r100-NErun-actual-independent-quality.json",
+        "sha256": "0888b4279e9cb9f2ef6e8620e92e91d4a3eb63ad3949131b0b2216a4793a0df7",
+        "reviewed_tracks": 1
+      }
+    ],
+    "target_numeric_pins": {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/actual-r100-all48-numeric-pins.json",
+      "sha256": "b0af5129a37e356485f1267969faa27434de78259586ef40ea8630b059b5fd7d"
+    },
+    "fresh_private_image_ledger": {
+      "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/private-image-ledger-through-fresh-view03.json",
+      "sha256": "0289d05af8fa973321993ea7855848cc258c58e3ee2ea6ac0dc085fbb5089a6e",
+      "viewed_encoded_bytes": 272581
+    },
+    "v04_historical_ledger_hash_resolution": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-history-immutable-index.json",
+      "sha256": "1959c9763f8a776b4bc8fc4f90a48671f53a2a24611c8ffe1b5e6dee50ae2bc4"
+    },
+    "v03_private_image_ledger": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v03/private-image-ledger.json",
+      "sha256": "db212782e27c2b4ef5a68ab58273be25c08597f2ca0cb164adcc364c30285036",
+      "viewed_total_bytes": 5886041,
+      "largest_viewed_file_bytes": 149040,
+      "prepared_but_never_viewed_Wwalk_bytes": 126220,
+      "image_generation_calls": 0,
+      "main_chat_image_attachments": 0,
+      "no_more_image_views": true
+    }
+  },
+  "quality_scope": "Independent strict unique-tier actual selected TRES/profile model/gear/direction/anatomy/motion/loop-entry-exit/contact3/hit recovery/death5/physical scale-footing review. Stable43 directly read by v03 and final4 directly read by v04 and NErun read by fresh independent reviewer; exact original sourceRGBA/region/margin/perposeC/root/sourceSHA/timing/effectiveprofile/script equality checked for every track before aggregation. Private still reconstructions use PIL actual resource data and are not Godot screenshots. No source editing, bbox fitting, forced flatbootY/idlefootdepth or impossible hiddenbone metrology. Selected revised4 source supersedes failedold4 without deleting history.",
+  "actual_default_Main_status": "Separate root actual default Main / production connection validation required; not claimed by this quality certificate.",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_completed": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

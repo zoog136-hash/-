@@ -1,0 +1,111 @@
+{
+  "schema": "pr122_runtime_normalized_profile_proof_v1",
+  "key": "transform:267",
+  "status": "PASS_SCOPED_NOT_ACTOR_APPROVAL",
+  "fix_commit": "27bdca93729345502a43cfc7b2b2599354c52a6f",
+  "r094_commit": "b0a20fb94c6dd1b92d45b2f651a3decedecd8d14",
+  "problem": "Raw source resolution incorrectly affected whole-actor display size despite reviewed per-pose virtual canvases.",
+  "method": "Median authored walk contact 0/3 visible alpha>16 bbox height normalized to the actor reference canvas; transparent padding excluded.",
+  "r093_r094_all_tracks_identical": true,
+  "r093_r094_spriteframes_byte_identical": true,
+  "spriteframes_sha256": "5ea99bd516b4906ce1c73d96ae31ecab9aca14a738905398d7aafbc205f43702",
+  "r094_measurements": {
+    "previous_profile_scale": 0.13505217925107427,
+    "runtime_reference_height": 490.0,
+    "normalized_profile_scale": 0.22448979591836735,
+    "walk_reference_samples": [
+      {
+        "direction": "E",
+        "neutral_runtime_heights": [
+          536.0567375886525,
+          514.1768707482993
+        ],
+        "reference_height": 525.1168041684759
+      },
+      {
+        "direction": "N",
+        "neutral_runtime_heights": [
+          490.0,
+          488.0
+        ],
+        "reference_height": 489.0
+      },
+      {
+        "direction": "NE",
+        "neutral_runtime_heights": [
+          394.0,
+          389.0
+        ],
+        "reference_height": 391.5
+      },
+      {
+        "direction": "NW",
+        "neutral_runtime_heights": [
+          512.0,
+          514.1694915254237
+        ],
+        "reference_height": 513.0847457627119
+      },
+      {
+        "direction": "S",
+        "neutral_runtime_heights": [
+          498.0,
+          484.0
+        ],
+        "reference_height": 491.0
+      },
+      {
+        "direction": "SE",
+        "neutral_runtime_heights": [
+          552.3478260869565,
+          516.3537414965987
+        ],
+        "reference_height": 534.3507837917775
+      },
+      {
+        "direction": "SW",
+        "neutral_runtime_heights": [
+          488.8,
+          480.4
+        ],
+        "reference_height": 484.6
+      },
+      {
+        "direction": "W",
+        "neutral_runtime_heights": [
+          468.4,
+          444.8
+        ],
+        "reference_height": 456.6
+      }
+    ]
+  },
+  "focused_tests": {
+    "runtime_sizing": 5,
+    "approved_completion_freeze": 1
+  },
+  "godot_focused_checks": {
+    "resource": {
+      "marker": "PR122_NATIVE_RESOURCE_PASS",
+      "log_sha256": "0d17c98ee3b0b091ca0ae1d91bcd19bced716b1eaa20c004203a535bc8b103a7"
+    },
+    "player": {
+      "marker": "PR122_NATIVE_PLAYER_CONNECTION_PASS",
+      "log_sha256": "d7c22d31c7ed5adcc59c871f1a4ee9f18c3ad7dbe628fabc39cd632feb22346e"
+    },
+    "action": {
+      "marker": "PR122_NATIVE_ACTION_PASS",
+      "log_sha256": "3beb10e839cebb6fd39a5771daf67b70fbc8b3da97ae50c9fc6166f7300b103c"
+    }
+  },
+  "protected_palette_profiles_unchanged": {
+    "data/combat_animation_profiles.json": "22550e0dfc48a07bfb0b69793560ae1c0a9f5719e5aa786fc16e2ea4d2867910",
+    "data/pr122_palette_finish_20261019.json": "f3d841b2da1a41cb9419eae29b74753b7e2b852439b0dea27f8a47ba3840a8c4"
+  },
+  "approved_halpas_preserved": true,
+  "r095_source_change_recomputes_reference_normally": {
+    "reference_height": 502.04237288135596,
+    "pixel_scale": 0.21910501173173982
+  },
+  "actor_approval_increment": 0
+}

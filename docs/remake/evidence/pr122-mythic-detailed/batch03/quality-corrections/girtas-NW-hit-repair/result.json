@@ -1,0 +1,74 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_NOT_APPROVED",
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "hit",
+  "version": "v02",
+  "source_batch": "batch03",
+  "request_path": "/workspace/scratch/girtas-NW-hit-repair/request.json",
+  "request_sha256": "bcdd435bc3543bf3b1efd12c1a4086384138dac560f9dcbbfda6a7e56c7ec86b",
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802",
+    "/workspace/scratch/girtas-N-hit-repair/girtas-N-hit-v02.png": "50d291ae065c0ff97ab81595bdcec245497ca230a6f3b66b60f2e5cf45c43154"
+  },
+  "original_generated_file": "/workspace/generated_images/exec-bfa95b0e-4f07-4153-a184-d12809eadbd0.png",
+  "raw_png": "/workspace/scratch/girtas-NW-hit-repair/girtas-NW-hit-v02.png",
+  "raw_sha256": "78fa92ca33648b3188333e135a0857861815ea8a7d2158cac7defcd6192fec73",
+  "raw_bytes": 2382216,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "detected_large_alpha_components": 6,
+  "component_phase_slots": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "private_preview": "/workspace/scratch/girtas-NW-hit-repair/private-preview.jpg",
+  "private_preview_bytes": 275022,
+  "private_preview_queue_total_bytes": 546801,
+  "created_at": "2026-10-19T10:40:35.688974+00:00",
+  "reviewed_at": "2026-10-19T10:41:38.227387+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "strict_geometry_status": "GEOMETRY_PASS",
+  "strict_geometry_details": {
+    "status": "GEOMETRY_PASS",
+    "frames": 6,
+    "distinct": 6
+  },
+  "visual_findings": [
+    "Identity and source geometry remain faithful: long pale hair, narrow golden radial spines, long dark gold-trimmed skirt, original boots and one sinuous weapon. Strict source geometry passes six complete distinct poses.",
+    "Compass failure: guard phases0 and5 retain a rear-RIGHT/NE-like orientation, not the requested rear-LEFT/NORTH-WEST. At native pixel scale the near boot toe and helmet/torso side agree with the already-authored NE guard rather than a new upper-left direction.",
+    "Impact/recoil phases1-4 turn the body/boots more leftward than the guards, creating mixed compass headings across one six-phase clip. Genuine arm/head/stance changes do not repair the inconsistent all-six NORTH-WEST contract.",
+    "A private source1:1 comparison of NE0 and NW0 confirmed the guard orientation problem; no mirroring, relabeling, normalization or pose replacement was attempted. This raw sheet must remain HOLD and must not replace a selected NW track.",
+    "The original single weapon remains in anatomical right hand at image right, without a mask redesign or attack slash. These preserved identity features do not override the compass failure."
+  ],
+  "visual_limitations": [
+    "Do not connect or approve this sheet as NW hit. Source request/raw/receipt/geometry are preserved after one generation attempt; no retry for the same direction was made.",
+    "Private compass comparison is /workspace/scratch/girtas-NW-hit-repair/compass-comparison.jpg (104525bytes), shown only in this worker context.",
+    "Private source review only; runtime hit timing/readability, cross-role body calibration, actual Player/SpriteFrames connection and final actor approval remain for integration. No actor/detailed completion added.",
+    "Original tiny portrait limits exact facial/hidden-landmark judgment. Faithful canonical identity is the detailed authority; tiny-guide uncertainty alone is not automatic rejection.",
+    "The generator again enlarged figures beyond the requested about300px body/330px silhouette cap. Sparse-layout discrepancy is preserved and reported; no bbox-based normalization, cropping, resampling, manual body edits or validator relaxation."
+  ],
+  "phase_contract": [
+    "brace",
+    "impact_response",
+    "maximum_head_torso_shoulder_recoil",
+    "balanced_leg_stagger",
+    "recover",
+    "guard"
+  ],
+  "all_actor_approvals": "HOLD_UNTIL_INTEGRATION_AND_FINAL_QUALITY",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "production_receipt": "/workspace/scratch/girtas-NW-hit-repair/receipt.json",
+  "production_receipt_sha256": "14f4a44ff0b9f88b45119bb87b0254bb38e69b6b7a17601fdef3ee3aa0c4016e"
+}

@@ -1,0 +1,359 @@
+{
+  "schema": "SW_RUN_SCOPED_AUTHORED_PROJECTION_INDEPENDENT_NUMERIC_V1",
+  "status": "PASS_SCOPED_CONTACT_POINTS_AND_FULL_ALPHA16_AIR_BOOT_CLEARANCE",
+  "source_atlas": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/girtas-SW-run-v03six.png",
+    "sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+    "bytes": 9138747
+  },
+  "profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r098/NativeMotionProfile.tres",
+    "sha256": "422bee5350cd55a4b8c13778dc4758e54b2e0851bd661a054d3f6eb80cf60ee5",
+    "bytes": 960
+  },
+  "pixel_scale": 0.219105011732,
+  "canonical_unit": "1024/effective pose C",
+  "Cs": [
+    2304,
+    2304,
+    2304,
+    2304,
+    2304,
+    2304
+  ],
+  "local_native_root_anchors": [
+    [
+      558,
+      1159
+    ],
+    [
+      508,
+      1146
+    ],
+    [
+      608,
+      1204
+    ],
+    [
+      528,
+      1209
+    ],
+    [
+      518,
+      1135
+    ],
+    [
+      588,
+      1219
+    ]
+  ],
+  "all_boot_rows": [
+    {
+      "phase": 0,
+      "side": "LEFT",
+      "classification": "SUPPORT",
+      "semantic_boot_ROI_XYWH": [
+        350,
+        1040,
+        240,
+        200
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": -14.196701255698144,
+      "all_alpha16_min_gap_world": -3.110568395185441,
+      "point_canonical": [
+        520.8888888888889,
+        654.6666666666666
+      ]
+    },
+    {
+      "phase": 0,
+      "side": "RIGHT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        760,
+        760,
+        100,
+        200
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 27.03216593206912,
+      "all_alpha16_min_gap_world": 5.922883033687375,
+      "point_canonical": [
+        614.6666666666666,
+        542.2222222222222
+      ]
+    },
+    {
+      "phase": 1,
+      "side": "LEFT",
+      "classification": "SUPPORT",
+      "semantic_boot_ROI_XYWH": [
+        510,
+        980,
+        250,
+        250
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": -16.216156582238,
+      "all_alpha16_min_gap_world": -3.553041178199206,
+      "point_canonical": [
+        587.5555555555555,
+        652.4444444444445
+      ]
+    },
+    {
+      "phase": 1,
+      "side": "RIGHT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        390,
+        720,
+        120,
+        220
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 109.2346131143546,
+      "all_alpha16_min_gap_world": 23.933851187961146,
+      "point_canonical": [
+        484.44444444444446,
+        536.8888888888889
+      ]
+    },
+    {
+      "phase": 2,
+      "side": "RIGHT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        330,
+        980,
+        220,
+        220
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 52.5252486928631,
+      "all_alpha16_min_gap_world": 11.508545231075988,
+      "point_canonical": [
+        448.0,
+        615.1111111111111
+      ]
+    },
+    {
+      "phase": 2,
+      "side": "LEFT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        660,
+        740,
+        160,
+        260
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 80.194643268876,
+      "all_alpha16_min_gap_world": 17.571048254270632,
+      "point_canonical": [
+        565.7777777777778,
+        533.7777777777778
+      ]
+    },
+    {
+      "phase": 3,
+      "side": "RIGHT",
+      "classification": "SUPPORT",
+      "semantic_boot_ROI_XYWH": [
+        270,
+        1030,
+        260,
+        200
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": -3.6266666222003323,
+      "all_alpha16_min_gap_world": -0.7946208328052566,
+      "point_canonical": [
+        496.44444444444446,
+        642.6666666666666
+      ]
+    },
+    {
+      "phase": 3,
+      "side": "LEFT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        805,
+        795,
+        95,
+        170
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 30.17172055398794,
+      "all_alpha16_min_gap_world": 6.610775185956153,
+      "point_canonical": [
+        659.5555555555555,
+        528.4444444444445
+      ]
+    },
+    {
+      "phase": 4,
+      "side": "RIGHT",
+      "classification": "SUPPORT",
+      "semantic_boot_ROI_XYWH": [
+        370,
+        970,
+        260,
+        240
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": -18.905231318716005,
+      "all_alpha16_min_gap_world": -4.1422309298834445,
+      "point_canonical": [
+        552.4444444444445,
+        624.8888888888889
+      ]
+    },
+    {
+      "phase": 4,
+      "side": "LEFT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        710,
+        755,
+        80,
+        150
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 51.51802410501443,
+      "all_alpha16_min_gap_world": 11.287857275938647,
+      "point_canonical": [
+        615.1111111111111,
+        533.3333333333334
+      ]
+    },
+    {
+      "phase": 5,
+      "side": "LEFT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        330,
+        1000,
+        230,
+        240
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 47.07884572031924,
+      "all_alpha16_min_gap_world": 10.315211043879565,
+      "point_canonical": [
+        460.0,
+        629.3333333333334
+      ]
+    },
+    {
+      "phase": 5,
+      "side": "RIGHT",
+      "classification": "AIR",
+      "semantic_boot_ROI_XYWH": [
+        635,
+        795,
+        55,
+        130
+      ],
+      "all_alpha16_min_gap_to_authored_lane_centerline_canonical": 102.931232152078,
+      "all_alpha16_min_gap_world": 22.552748828270264,
+      "point_canonical": [
+        549.3333333333334,
+        504.8888888888889
+      ]
+    }
+  ],
+  "support_contact_points": [
+    {
+      "phase": 0,
+      "side": "LEFT",
+      "source_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+      "ROI_XYWH": [
+        350,
+        1040,
+        240,
+        200
+      ],
+      "actual_alpha100_lastrow_point_native": [
+        471.0,
+        1224
+      ],
+      "canonical_point": [
+        473.3333333333333,
+        668.8888888888889
+      ],
+      "authored_projected_ground_Y": 668.541621321678,
+      "projected_clearance_canonical": -0.34726756721090624,
+      "classification": "ACTUAL_SUPPORT",
+      "numeric_within_hypothesis": true
+    },
+    {
+      "phase": 1,
+      "side": "LEFT",
+      "source_sha256": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55",
+      "ROI_XYWH": [
+        510,
+        980,
+        250,
+        250
+      ],
+      "actual_alpha100_lastrow_point_native": [
+        580.5,
+        1195
+      ],
+      "canonical_point": [
+        544.2222222222222,
+        661.7777777777778
+      ],
+      "authored_projected_ground_Y": 661.807600491124,
+      "projected_clearance_canonical": 0.029822713346220553,
+      "classification": "ACTUAL_SUPPORT",
+      "numeric_within_hypothesis": true
+    },
+    {
+      "phase": 3,
+      "side": "RIGHT",
+      "source_sha256": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50",
+      "ROI_XYWH": [
+        270,
+        1030,
+        260,
+        200
+      ],
+      "actual_alpha100_lastrow_point_native": [
+        480.5,
+        1215
+      ],
+      "canonical_point": [
+        490.8888888888889,
+        642.6666666666666
+      ],
+      "authored_projected_ground_Y": 642.3193990994557,
+      "projected_clearance_canonical": -0.34726756721090624,
+      "classification": "ACTUAL_SUPPORT",
+      "numeric_within_hypothesis": true
+    },
+    {
+      "phase": 4,
+      "side": "RIGHT",
+      "source_sha256": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44",
+      "ROI_XYWH": [
+        370,
+        970,
+        260,
+        240
+      ],
+      "actual_alpha100_lastrow_point_native": [
+        470.0,
+        1141
+      ],
+      "canonical_point": [
+        490.6666666666667,
+        642.6666666666666
+      ],
+      "authored_projected_ground_Y": 642.4505750616554,
+      "projected_clearance_canonical": -0.21609160501122915,
+      "classification": "ACTUAL_SUPPORT",
+      "numeric_within_hypothesis": true
+    }
+  ],
+  "min_all_AIR_alpha16_gap_world": 5.922883033687375,
+  "max_support_contact_point_rounding_residual_canonical": 0.34726756721090624,
+  "projection_model": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/common-groundprojection-hypothesis.v02.DRAFT.json",
+    "sha256": "cb0abbf5b49824e025d891e823eeb3de3fd66f80d6fdeeddb314783eec67f641",
+    "bytes": 3909
+  },
+  "interpretation": "The sloped lines encode projected constant-lateral lane centerlines and declared ground-under-foot points, not the boundary of the 3D ground plane in every image column. Some support-boot pixels extend below that centerline; they occupy differing fore/aft/lateral depths within the projected boot and these negative centerline distances do not establish vertical ground penetration. No source pixel or additional root was moved to conceal them. For AIR/recovery, the stronger conservative every-alpha16-pixel line test is positive >3world for all eight boots. Actual Player projection remains a separate check.",
+  "actor_approval_increment": 0
+}

@@ -1,0 +1,18 @@
+{
+  "scope": "Affected north-attack weapon ownership detail within the single whole visual pass",
+  "findings": [
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "N-attack-v01",
+      "cause": "anatomical_weapon_hand_swap",
+      "fix_type": "reviewed_pose_selection_or_targeted_source",
+      "phase_indexes": [
+        3
+      ],
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/N-attack-v01.png",
+      "source_sha256": "3df44d19c68aab8c3d62b4c203d039a9cad68822feae06a5c940976678f37cdd",
+      "observation": "Full-resolution phase3 puts the scythe in the left hand while the right hand opens; the other five phases preserve the right-hand grip. Review sequence [0,1,2,4,5] without changing original pixels."
+    }
+  ]
+}

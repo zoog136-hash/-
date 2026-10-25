@@ -1,0 +1,37 @@
+{
+  "status": "PASS_TWO_NEW_ACTUAL_PROXIMAL_SURFACE_CAUSAL_BINDING",
+  "actor": "transform:413",
+  "direction": "NE",
+  "role": "run",
+  "author_model_sha256": "a5a2aa216bc591e339b743a2547237aadd930c8be5263e9bdd4c6b50ec961aba",
+  "unchanged_frozen_physical_rig_sha256": "1c17170e46401d2fd7483159a77e82e5b1fd675d78ed90d13aee0b91604f21b6",
+  "rows": [
+    {
+      "phase": 2,
+      "actual_mesh_sha256": "0c685ecf398e5de620604e4f52f89f20b01ce203f8bc2843f6ee36eaf3469da9",
+      "active_quad_count": 286,
+      "actual_projected_vertex_count": 1144,
+      "max_projected_vertex_error_native": 4.547473508864641e-13,
+      "max_shared_frozen_hip_knee_ankle_error_native": 2.8421709430404007e-13,
+      "all_actual_Rleg_mesh_vertices_plus8guard_min_Z": 134.063889468762
+    },
+    {
+      "phase": 3,
+      "actual_mesh_sha256": "25c767ed957df56795b04f5b070428b5241e77ac3fb9ea527718c59568eb58b2",
+      "active_quad_count": 286,
+      "actual_projected_vertex_count": 1144,
+      "max_projected_vertex_error_native": 4.547473508864641e-13,
+      "max_shared_frozen_hip_knee_ankle_error_native": 1.7053025658242404e-13,
+      "all_actual_Rleg_mesh_vertices_plus8guard_min_Z": 138.18024787564104
+    }
+  ],
+  "limits": [
+    "One declared flexible native material surface follows pelvis then same frozen femur/calf; this is not unique hidden anatomy recovery.",
+    "The actual skin material source and whitehem/coat are preserved; source-quality/visible-cycle review and exact packed/game adoption are separate gates.",
+    "No wholesole floor3D claim is made from these mesh bounds."
+  ],
+  "images_viewed": 0,
+  "source_pixels_changed": 0,
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

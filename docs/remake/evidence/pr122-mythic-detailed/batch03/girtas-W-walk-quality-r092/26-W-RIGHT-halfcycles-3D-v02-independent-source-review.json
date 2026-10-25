@@ -1,0 +1,29 @@
+{
+  "schema": "pr122-independent-source-gait-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "walk",
+  "source_visual_status": "HOLD",
+  "status": "LEG_ART_PASS_RIGHT4_5_FULL_SOURCE_GEOMETRY_HOLD",
+  "raw_path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-v02/girtas-W-walk-3D-RIGHT-halfcycles-v02.png",
+  "raw_sha256": "cfa2e88637299dd45db9d4e0117dd30114c48b265cff323735873fee9f7b0b17",
+  "reviewed_source_phases": [
+    4,
+    5
+  ],
+  "leg_art_status": "PASS",
+  "visual_findings": [
+    "Pose4 actually plants far RIGHT flat under the body while near LEFT passes in the foreground with a bent knee and whole raised boot. The foreground near LEFT shin overlaps the farther support leg, making the side ownership distinct from the approved LEFT support1.",
+    "Pose5 retains far RIGHT rear toe support with heel raised, while near LEFT extends forward through the foreground robe slit to a dorsiflexed heel-hover/precontact boot. This is walking toe-off/reach, not two folded airborne legs.",
+    "Both maintain W profile, pale hair/HARDthinrays/longblackgoldrobe, original RIGHT far sinuousblade and EMPTYnearLEFT, two connected shin/boot chains. Source motion/identity design passes this scoped review.",
+    "WHOLE SOURCE REMAINS HOLD: known foreign body rectangle/partial repack fringe geometry failure is not waived by this leg-art judgment. A materially new clean-layout source must preserve this raw/HOLD and pass strict geometry and any necessary new-source appearance check. No trimming, alpha deletion, rescale or threshold waiver."
+  ],
+  "visual_limitations": [
+    "Scoped source/leg-art review only. Full6 authored physical C/roots/projected support and actual compiled Player/idle/loop transitions remain HOLD. No actor approval or historical status reset."
+  ],
+  "preview_budget_total_bytes": 3756085,
+  "complete_clip": false,
+  "actor_approval": false,
+  "reviewed_at": "2026-10-19T14:58:00.894302+00:00"
+}

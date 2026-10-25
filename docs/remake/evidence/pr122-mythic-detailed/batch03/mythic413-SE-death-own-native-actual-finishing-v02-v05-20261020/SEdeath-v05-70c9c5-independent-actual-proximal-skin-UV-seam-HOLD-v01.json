@@ -1,0 +1,69 @@
+{
+  "status": "HOLD_ACTUAL_PROXIMAL_THIGH_SKIN_SAMPLING_SEAM",
+  "source_visual_status": "HOLD",
+  "key": "transform:413",
+  "direction": "SE",
+  "role": "death",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/own-SE-DEATH-six-actual-native-source-contract-v05.json",
+    "sha256": "70c9c539fb01d1b1d847e92c12224a7b28a01022cf26a755bfdd5fee37b3832e",
+    "bytes": 178216
+  },
+  "bounded_native_crop_metadata": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEdeath-v05-native-new-joints-crop-metadata-v01.json",
+    "sha256": "2552aabb8942e1a457742dc3fc5fb4cd4a100d8a11746623e6c4808ca81a45af",
+    "bytes": 6284
+  },
+  "private_views_used": [
+    99,
+    100
+  ],
+  "visual_findings": [
+    "The first actual six source images show dedicated balance loss, leg buckle, knees yielding, diagonal torso collapse, grounded impact and a held supine terminal. Both complete weapon ends, original character costume and full boots remain visible and consistent.",
+    "The actual native knee leather at phases0/2/5 and both elbow/cuff joins in the same phases read as continuous articulated material. No new request to change fixed bones, root, bodyunit, staff, knees or pose progression is made.",
+    "A thin dark jagged seam crosses the bare proximal thighs at phase0 and is repeated on the supine phase5 skin. It reads as a source alpha/UV sampling boundary rather than a natural skin detail; the producer is tracing the exact source UV and ownership before a bounded premultiplied sampling repair."
+  ],
+  "hold_regions": [
+    {
+      "phase": 0,
+      "exact_inspected_stored_crop": [
+        850,
+        850,
+        1100,
+        1080
+      ],
+      "approx_visible_skin_seam_stored_bbox": [
+        850,
+        906,
+        930,
+        923
+      ]
+    },
+    {
+      "phase": 5,
+      "exact_inspected_stored_crop": [
+        1000,
+        1460,
+        1220,
+        1690
+      ],
+      "approx_visible_skin_seam_stored_bbox": [
+        1050,
+        1480,
+        1090,
+        1580
+      ]
+    }
+  ],
+  "required_next_action": "Close only the actual native proximal skin boundary with original material and consistent alpha sampling; preserve the authored3D surfaces, all parent bones/poses and source identity. Return a new immutable exact source contract with node-only changes proof and one small after-only native seam crop.",
+  "visual_limitations": [
+    "Approximate seam boxes locate the observed visual defect; they are not inferred anatomy or an alpha deletion mask.",
+    "The declared floor witness, hidden3D uniqueness and actual game outcome are separate from this appearance HOLD.",
+    "Current six-source approval is withheld until this visible native skin seam is closed; the already observed fall/held progression is retained without a repeated whole-six view."
+  ],
+  "context_private_image_bytes": 5897950,
+  "images_forwarded": 0,
+  "source_PNG_modified": false,
+  "game_tests_run": 0,
+  "actor_approvals_added": 0
+}

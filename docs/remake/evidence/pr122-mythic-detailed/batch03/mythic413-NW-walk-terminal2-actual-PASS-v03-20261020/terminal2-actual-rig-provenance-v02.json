@@ -1,0 +1,137 @@
+{
+  "status": "ACTUAL_UNIQUE_TERMINAL2_CANDIDATE_PENDING_INDEPENDENT_QC",
+  "source": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/thunder_female-NW-walk-LOAD1-rigged-retouched-v04.png",
+  "source_sha256": "396c0803145a31990f7caeff6a889aac8d41966c2efe27e3362734268670b886",
+  "output": "/workspace/scratch/mythic413-NW-walk-terminal2-author-20261020-v02/thunder_female-NW-walk-terminal2-actual-rig-v02.png",
+  "output_sha256": "156bd9dfb0181171fe9c0d4d4e14e01cf79e43f9ceb5b1a11723a7b57695ce3d",
+  "fixed_C": 2048,
+  "body_factor": 2,
+  "raw_canvas": [
+    1254,
+    1254
+  ],
+  "body_root": "COMMON_RIG_ROOT_UNCHANGED_FROM_SOURCE0; actual torso rising6px, no wholeimage/root translation",
+  "near_LEFT_support": "Terminal support/toeoff, complete shoe rotates23deg around actual sole pivot, heel rises",
+  "LEFT_forefoot1": [
+    595.0,
+    1017.5
+  ],
+  "LEFT_forefoot2": [
+    706.3543188022422,
+    1117.7188869220179
+  ],
+  "plant_delta": [
+    111.35431880224218,
+    100.21888692201796
+  ],
+  "LEFT_heel2_estimate": [
+    734.1405822690793,
+    1124.239280918441
+  ],
+  "LEFT_ankle2_estimate": [
+    719.3638717758058,
+    1036.4494486513838
+  ],
+  "far_RIGHT": "Advancing recovering swing, full rigid shoe translation only, knee flexes",
+  "RIGHT_heel2_estimate": [
+    705.77,
+    980.25
+  ],
+  "limbs": [
+    {
+      "part": "R_thigh",
+      "source_joint_pair": [
+        [
+          670.0,
+          731.0
+        ],
+        [
+          652.0,
+          844.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          670.0,
+          725.0
+        ],
+        [
+          625.0,
+          806.0
+        ]
+      ]
+    },
+    {
+      "part": "R_shin",
+      "source_joint_pair": [
+        [
+          652.0,
+          844.0
+        ],
+        [
+          721.0,
+          960.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          625.0,
+          806.0
+        ],
+        [
+          664.77,
+          880.25
+        ]
+      ]
+    },
+    {
+      "part": "L_thigh",
+      "source_joint_pair": [
+        [
+          590.0,
+          728.0
+        ],
+        [
+          579.0,
+          850.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          590.0,
+          722.0
+        ],
+        [
+          659.0,
+          906.0
+        ]
+      ]
+    },
+    {
+      "part": "L_shin",
+      "source_joint_pair": [
+        [
+          579.0,
+          850.0
+        ],
+        [
+          631.0,
+          972.0
+        ]
+      ],
+      "target_joint_pair": [
+        [
+          659.0,
+          906.0
+        ],
+        [
+          719.3638717758058,
+          1036.4494486513838
+        ]
+      ]
+    }
+  ],
+  "secondary_motion": "Torso rises6nativepx, hips6; coat lag+3x/+2y relativetorso; fararm grip pinned to fixedstaff",
+  "current_quality_scope": "Actual twoleg rig with transverse width preserved under longitudinal foreshortening; natural original LEFTforward arm for opposite leg phase; actual fullsource/plant QC pending",
+  "approval_added": 0
+}

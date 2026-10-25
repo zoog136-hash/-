@@ -1,0 +1,114 @@
+{
+  "schema": "PR122-OWN-S-SINGLE-LOCAL-CAPE-RAW-EXACT-USE-CONTRACT-V01",
+  "status": "RAW_FROZEN_ONE_SERVICE_ONLY_NO_SOURCEPASS_NO_ACTOR_APPROVAL",
+  "artist": "/root/mythic413_n_walk_load_fresh",
+  "independent_native_QA_primary": "/root/girtas_ne_final_source_and_cycle_qc_fresh",
+  "source_handoff": {
+    "path": "/workspace/scratch/mythic413-S-cape-private-local-production-fresh-20261020-v01/source-handoff-pinned-immutable-v01.json",
+    "sha256": "308cc249fe950c6fcfc749c59100e859aca66912a6e506948b01cd386edce527"
+  },
+  "source_original_immutable": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "dbfbca5fd54a9f5d4f704de59c7d61e586f2d9c410f48f07f233b14096a98e25",
+    "bytes": 919345
+  },
+  "shared_registration_immutable": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-native-one-time-body-density-C2560-root-registration-v01.json",
+    "sha256": "c9a5c8752e3daf303b4685c02fed424628aa621fe8ad05ff97ddbab838673480",
+    "bytes": 3681
+  },
+  "service_inputs_in_exact_order": [
+    {
+      "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/original-own-S-cape-and-foreground-staff-native250-crop-v01.png",
+      "sha256": "aecd1a98518feb19ba3eb9743149b60845e1e1cd50b8e3d2a25cfb20cd63036f",
+      "bytes": 80475
+    },
+    {
+      "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-S-cape-native250-mask-v01.png",
+      "sha256": "d44864f92ab65135353ec7900bbb001a22286197920875ca4f095dce83595666",
+      "bytes": 1063
+    }
+  ],
+  "raw_untouched": {
+    "status": "ONE_NEW_S_LOCAL_CAPE_RAW_PRESERVED_PENDING_BOUNDED_NATIVE_MAPPING_AND_INDEPENDENT_QA",
+    "path": "/workspace/scratch/mythic413-S-cape-private-local-production-fresh-20261020-v01/service-S-cape-local-retouch-raw-r001-untouched.png",
+    "sha256": "9311558dd606731d908d5b21627b54ed55254bfc737ac222e59e6680a12ab6ad",
+    "bytes": 1206006,
+    "actual_native_size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "logical_crop_size": [
+      250,
+      250
+    ],
+    "crop_native_rect_xyxy": [
+      240,
+      740,
+      490,
+      990
+    ],
+    "replacement_mask_pixels": 6682,
+    "raw_pixels_resampled": false,
+    "raw_original_outside_rgba_composition_performed": false,
+    "actual_service_calls": 1,
+    "retries": 0,
+    "image_or_Base64_forwarded_to_parent": false
+  },
+  "crop_native_rect_xyxy": [
+    240,
+    740,
+    490,
+    990
+  ],
+  "logical_crop_size": [
+    250,
+    250
+  ],
+  "replacement_mask_crop": {
+    "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-S-cape-native250-mask-v01.png",
+    "sha256": "d44864f92ab65135353ec7900bbb001a22286197920875ca4f095dce83595666",
+    "bytes": 1063
+  },
+  "replacement_mask_fullnative": {
+    "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-S-cape-full-native-mask-v01.png",
+    "sha256": "921fcba5fabfb5861de9778d3c31268145742b295fa757f283c0f2131d34fcdc",
+    "bytes": 2715
+  },
+  "replacement_native_pixels": 6682,
+  "replacement_native_bbox_xyxy": [
+    345,
+    778,
+    416,
+    987
+  ],
+  "critical_coordinate_warning": "RAW1254 IS AN ENLARGED LOGICAL250 FRAGMENT. It is not the full original1254 actor. Never adopt raw as full image or replace the complete original250 crop.",
+  "exact_use_contract": [
+    "Keep source native geometry1254x1254 and shared registration c9a5 unchanged. No body/C/root/scale/pose/foot fit edits.",
+    "Treat raw1254 as fixed logical250 crop. Expected fixed inverse pixel-center sample is service_u=(native_x-240+0.5)*(1254/250)-0.5 and service_v=(native_y-740+0.5)*(1254/250)-0.5. No output-driven recrop, camera fit or whole-actor transform.",
+    "Code may inverse-map this raw only to native250 and then composite only the exact original binary mask6682 pixels. Do not expand, feather outside, warp or substitute another direction texture.",
+    "Preserve byte-identical original RGBA for every fullnative pixel outside the exact mask, including original folds, motifs, cape contour, and staff beyond the cape mask. Derived output must prove changed-outside-mask pixels=0.",
+    "Retain untouched raw, exact crop/mask, source pins, request, response metadata, ledger and this contract. Any derivation has a new path and SHA; do not overwrite source/raw.",
+    "Author performs native seam/hem/motif QA after fixed mapping; independent native QA decides acceptance. If phase/motif/edge mismatch persists, HOLD and report; no regeneration or unbounded source change is authorized.",
+    "No image blocks or Base64 to parent/user; metadata paths/SHA only. No SOURCEPASS, actor approval, animation completion or final source integration is implied."
+  ],
+  "service_behavior_observed": [
+    "Returned1254x1254 RGBA instead of requested logical250x250; raw remained unresampled.",
+    "Sole private500px JPEG preview shows staff removed, royal-purple/blue folded fabric and a connected curved warm-gold rim; this is production observation only.",
+    "Service also edits outside the white mask, so complete crop/raw adoption is forbidden. Fixed masked native mapping is still unperformed."
+  ],
+  "actual_service_calls": 1,
+  "service_retries": 0,
+  "additional_service_calls_authorized": 0,
+  "artist_or_actor_approvals_added": 0,
+  "raw_resampled_or_native_composited_by_producer": false,
+  "repo_files_modified": false,
+  "git_actions": 0,
+  "images_or_Base64_forwarded": false,
+  "producer_conservative_image_cumulative_bytes": 2307329,
+  "working_limit": 6000000,
+  "hard_limit": 7000000,
+  "author_existing_capped_ledger_changed_by_metadata_handoff": false,
+  "limits": "Private production view is not independent native geometry or final source approval. No W, body, gloves or whole actor production was performed."
+}

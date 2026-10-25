@@ -1,0 +1,69 @@
+{
+  "schema": "independent-private-actual-NW-run-flight2-v04-static-source-gate-v1",
+  "status": "PASS_STATIC_ACTUAL_FLIGHT2_SOURCE_ONLY",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight2-actual-rig-v04/thunder_female-NW-run-flight2-actual-rig-v04.png",
+    "sha256": "768ccddc4b44d3baa455da7cb31501dfbab5cc76ed82dc4c5d9d4ebb56d3ae6f",
+    "bytes": 813864
+  },
+  "prior_actual_HOLD_proof_sha256": "2c7e433661112f7a2b5f5b90427d9b98ffb9f6323e4bc113c8f793a8c04d4f71",
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "storage_translation": [
+    128,
+    128
+  ],
+  "same_common_unpadded_root": [
+    669,
+    1267.95
+  ],
+  "raw_packed_root": [
+    797,
+    1395.95
+  ],
+  "independent_last_change": {
+    "changed_pixels_vs_v03": 814,
+    "bbox": [
+      615,
+      917,
+      635,
+      1016
+    ],
+    "pinned_oldbody_remnant_target630960_alpha_after": 0,
+    "native_changed_ROI_viewed": [
+      600,
+      900,
+      715,
+      1040
+    ]
+  },
+  "actual_art_findings": [
+    "Prior body old-nearleg edge sliver is completely removed without a visible new silhouette cut or joint defect.",
+    "Previously reviewed actual hip/thigh, articulated continuous legs and complete shoes remain unchanged outside the last tiny cleanup.",
+    "Trailing LEFT and driving folded RIGHT intent, rear/NW appearance, actual RIGHT-held staff and costume read coherently."
+  ],
+  "author_cleanup_proof": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight2-actual-rig-v04/old-nearleg-residual-only-removal-proof.json",
+    "sha256": "2cdf152324a9a6229aa5fc60bc1a051a3d576d5c07b3c220967d857219bc3276"
+  },
+  "physical_limits": [
+    "Both actual feet AIR and all staff/sole clearances are not established by raw foot Y or this art review.",
+    "Fixedbone/ground registration across final six poses, opposite stance and 5-to-0 remain for fresh cycle QC.",
+    "Storage padding is invertible packing only, not root/C normalization."
+  ],
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-final-frozen.json",
+    "sha256": "be602261c2d90148ad91322fcc1d2ccf8a88b47902c7761b89122dc5d357198b",
+    "total_image_bytes": 5519914,
+    "closed": true
+  },
+  "actual_static_source_phase_approved": true,
+  "both_feet_air_approved": false,
+  "full_pair_physical_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

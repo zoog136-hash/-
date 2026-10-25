@@ -1,0 +1,48 @@
+{
+  "status": "EXACT6_SOURCE_VISUAL_GEOMETRY_AND_RUNTIME_METADATA_PROPOSAL_PASS_ACTOR_HOLD",
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "version": "v03composite01",
+  "request_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/request.json",
+  "request_sha256": "d3a2638e9ad4449294efcd17294fd8d4d8b33c5a338b3fd158bd0fa3c8dade17",
+  "raw_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/halpas-NE-hit-v03composite01.png",
+  "raw_png": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/halpas-NE-hit-v03composite01.png",
+  "raw_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+  "raw_bytes": 4650316,
+  "image_size": [
+    3072,
+    4608
+  ],
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 3,
+  "reused_poses": 3,
+  "source_visual_status": "PASS",
+  "integration_ready": true,
+  "geometry_validation": "STRICT_COMPLETE6PASS_NOMINAL2048_NO_SOURCE_PIXELS_CHANGED",
+  "runtime_metadata_validation": "apply_reviewed_layout_PASS_SOURCEBYTES_REGIONS_RGBA_SAME_NOT_ACTUALPLAYER",
+  "private_normalized_source_flow_status": "PASS",
+  "visual_findings": [
+    "All six retain correct NE same-model camera, closed gold-horn helmet, black/gold segmented armor, TWO solid purple back crystal fan wings, same left-back burgundy cape and one original compact purple blade. No gear redesign, front/back mix or camera turn.",
+    "Exactly TWO arm chains in every frame. Original imageRIGHT blade arm stays continuously LOW from same pauldron through upperarm/elbow/forearm/wrist/grippinghand to same blade beside hip. Only original EMPTY imageLEFT arm changes. No third arm, extra downarm/empty right fist, disconnected wrist or floating blade.",
+    "Six actual phases: exact selected NEidle0 neutral guard; NEW low onset1 EMPTY LEFT fist below left shoulder/ribs with small head/back jerk; NEW clear peak2 LEFT fist above back-left helmet with real recoil; NEW release3 fist drops below helmet to upper ribs/shoulderbase; exact selected NEidle4 and5 used only as neutral late recovery/settle. Three newly authored+three reused poses, no failed pair peak duplication counted as onset.",
+    "ExactRGBA assembly proof preserves each reviewed full source crop and all alpha>16 foreground, with zero resizing, recolor, masks, mirrored poses or cleaned pixels. Six distinct visible fingerprints; unchanged strict six-pose complete-source geometry PASS at virtual2048. New explicit1536 packing cells retain1233px-wide source whole with generous transparent gutters.",
+    "Private metadata-normalized seven-cell comparison against actual selected directional idle0 reviewed all six for source physicalbody/camera/reaction flow. Closed helmet/pauldron/girdle scale and waist roots proposed from rigid landmarks, not whole silhouette bbox or standing-foot lock. Proposals keep head/torso/emptyarm/wing/cape response; actual Player runtime final QC still required."
+  ],
+  "visual_limitations": [
+    "Root must integrate new native immutable SpriteFrames/profile, run focused actual Player hit/action/locomotion checks and inspect actual rendered idle-entry/hit/return physicalbody scale/anchors before actor approval. Metadata-normalized private source sheet is not actual Player or full actor approval.",
+    "Existing405 approved history, detailed0/31 and selected boss finalHOLD/default-off unchanged. Failed full6/pair sources and all sourcegeneration requests/receipts remain preserved; no new actor/detailed completion counted."
+  ],
+  "reviewed_runtime_layout_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/reviewed-runtime-layout-proposal.json",
+  "physical_landmark_proposal_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/physical-landmark-proposal.json",
+  "assembly_proof_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/halpas-NE-hit-v03composite01.assembly.json",
+  "private_preview": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/physical-normalized-sixflow-private.jpg",
+  "private_preview_bytes": 191122,
+  "chat_image_attachments": 0,
+  "imagegen_attempts_at_assembly": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "reviewed_at": "2026-10-19T13:36:14.374242+00:00"
+}

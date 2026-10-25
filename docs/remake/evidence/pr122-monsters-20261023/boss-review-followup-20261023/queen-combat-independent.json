@@ -1,0 +1,86 @@
+{
+  "schema": "pr122-queen-combat-independent-source-and-native1x-review-v1",
+  "scope": "Boss-only source/native1x visual review. No normal re-review, no image generation, source editing, ledger edits or approval changes.",
+  "input_candidate_SHA256": "ab2664859c630804e816e629a317e2e8d941250d482d43ccabe01053ba3a98cc",
+  "combined_candidate_SHA256": "2794dd57de37c39a37dde81d72cf24a5a7728df0d3bab72ecd7cc5b00eaa8e3c",
+  "existing_boss_history": {
+    "bosses": 60,
+    "approved_preserved": 43,
+    "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-runtime/summary.json",
+    "quality_scope": "Prior runtime summary is resource/playback only; it does not approve mythic appearance and is not a reason to regenerate43 approved bosses."
+  },
+  "reviewed_native1x_contact_animations": [
+    "attack_0",
+    "attack_1",
+    "attack_3",
+    "attack_5",
+    "attack_7"
+  ],
+  "finding_count": 1,
+  "findings": [
+    {
+      "id": "QUEEN_FRONT_DIAGONAL_ATTACK_HEADING",
+      "severity": "HOLD_BEFORE_APPROVAL",
+      "affected_clips": [
+        {
+          "direction": "SE",
+          "animation": "attack_1",
+          "clip_contact_frame": 1,
+          "source_slot": 3,
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/raw/queen-combat-SE-v01.png",
+          "source_sha256": "057483152840b542a1c60c21d03bd3580f22a8fead172e8b94d4e13a1906b486",
+          "contact_region": [
+            556,
+            448,
+            433,
+            304
+          ],
+          "contact_margin": [
+            84,
+            70,
+            159,
+            288
+          ],
+          "combat_AtlasTexture_id": "pose_10",
+          "combined_source_and_geometry_identical": true,
+          "arena": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/game-scale-qa03/captures/attack-SE-action-attack_1-1-strike.png",
+          "observation": "During contact the face/chest/staff thrust reads EAST/right rather than the requested down-right front diagonal.",
+          "proposed_minimum_fix": "Replace only the three-pose ATTACK track in this direction using freshly drawn directional poses; preserve contact frame1, clocks, native1x scale and all original PNGs. No atlas flip/rotation or whole-source recolor."
+        },
+        {
+          "direction": "SW",
+          "animation": "attack_3",
+          "clip_contact_frame": 1,
+          "source_slot": 3,
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/raw/queen-combat-SW-v02.png",
+          "source_sha256": "54fa3896713cdbe7e6eed5407d7a21434b524fa620db0a062bb9d2c081431cf6",
+          "contact_region": [
+            500,
+            454,
+            495,
+            301
+          ],
+          "contact_margin": [
+            24,
+            68,
+            89,
+            283
+          ],
+          "combat_AtlasTexture_id": "pose_24",
+          "combined_source_and_geometry_identical": true,
+          "arena": "docs/remake/evidence/pr122-monsters-20261023/boss-fix05-queen-combat/game-scale-qa02/captures/attack-SW-action-attack_3-1-strike.png",
+          "observation": "During contact the face/chest/staff thrust reads WEST/left rather than the requested down-left front diagonal.",
+          "proposed_minimum_fix": "Replace only the three-pose ATTACK track in this direction using freshly drawn directional poses; preserve contact frame1, clocks, native1x scale and all original PNGs. No atlas flip/rotation or whole-source recolor."
+        }
+      ],
+      "minimum_new_work": "Two ATTACK3 clips =6 poses; no full25/full32 replacement required.",
+      "confidence": "Visible source-and-native1x heading mismatch. Marker distance310 is magic attack range and does not by itself prove a melee contact miss."
+    }
+  ],
+  "E_NW_NE": "E contact reads rightward, NW/NE contact vectors read upper-left/upper-right at native1x. No severe atlas cutout/empty-frame failure identified there. Exact identity/weight/contact approval remains separate.",
+  "geometry": "The two affected contacts have valid positive-size full-source AtlasTextures. Combined32 preserves their source PNG, region and margin exactly. Changing rectangles cannot correct the drawn facing. Wv02 rejected2pixel source is unused and no geometry repair is needed to the currently selected W/SW dedicated HIT2.",
+  "existing_N_HOLD": "Combat N pale-slit/covered-leg identity still swaps between neutral poses (source queen-combat-N-v03 slots0/1, idle_6 frames0/1); keep existing HOLD. RUN N authoring is independently owned; no proxy frame proposed.",
+  "root_user_image_output": false,
+  "new_approvals": 0,
+  "production_catalog_changes": 0
+}

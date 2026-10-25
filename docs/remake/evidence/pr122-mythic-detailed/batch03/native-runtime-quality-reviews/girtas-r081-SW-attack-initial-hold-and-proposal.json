@@ -1,0 +1,81 @@
+{
+  "status": "R081_ACTUAL_COMPILED_LAYOUT_HOLD_METADATA_PROPOSAL_READY",
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "attack",
+  "frames_sha256": "688a9913af2fa874c2e44b0748c5db046a30530333e553707b2cf3451a7fbe66",
+  "source_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+  "reference_idle_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+  "inspection_method": "Actual selected r081 SpriteFrames TRES ext_resource/AtlasTexture region+margin and exact texture/source/crop SHA assertions; physical-canvas reconstruction uses native_profile_basis.pixel_scale*1024/C, same normalized Player foot for idle and attack. No new engine invocation or PNG editing.",
+  "actual_r081_visual_findings": [
+    "HOLD: guard0 and recovery5 head/shoulder/torso are about20% smaller than faithful SW idle at C1024. This is uniform source layout shrink, distinct from genuine crouch in load/contact/follow.",
+    "HOLD: follow-through4 source anchorY1437 follows lower weapon tip while the last strong-alpha planted front boot pixel isY1420; feet float about4.79worldpx at current C1024.",
+    "PASS source anatomy: all6 SW front-left, same far RIGHT/image-left weapon chain, near LEFT empty, distinct lowguard/raise/load/contact3/follow/recovery. Source bytes and action order unchanged."
+  ],
+  "proposal": {
+    "path": "/workspace/scratch/girtas-r081-SW-attack-runtime-qc/reviewed-runtime-layout-proposal.json",
+    "canvas_size": 824,
+    "source_anchors": [
+      [
+        272,
+        482
+      ],
+      [
+        784,
+        482
+      ],
+      [
+        272,
+        964
+      ],
+      [
+        784,
+        965
+      ],
+      [
+        272,
+        1420
+      ],
+      [
+        784,
+        1450
+      ]
+    ],
+    "uniform_scale_factor": 1.2427184466019416,
+    "common_source_anchor_x_shift": 16,
+    "only_y_change": {
+      "row": 4,
+      "old": 1437,
+      "new": 1420
+    },
+    "proposal_visual_status": "PASS_PENDING_FRESH_ACTUAL_PLAYER",
+    "findings": [
+      "Guard0/recovery5 physical head/shoulder/torso now agree with selected idle; no entry/return size collapse.",
+      "Uniform C applies to every phase: load/contact/follow retain real crouch, articulated weight transfer and SW blade trajectory; no per-frame inflation based on total height.",
+      "CommonX+16 only shifts the complete attack relative to idle, preserving all original relative horizontal body/weapon trajectories; Yonly4corrects support plane without cancelling knee compression or forward lunge.",
+      "Candidate normalized follow4 front planted foot meets root plane; complete blade may extend below support point as authored, no source clipping."
+    ]
+  },
+  "cadence": {
+    "fps": 14.285714286,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "loop": false,
+    "total_seconds": 0.41999999999160004,
+    "attack_hit_frame_zero_based": 3,
+    "contact3_begins_seconds": 0.20999999999580002,
+    "recovery5_begins_seconds": 0.349999999993,
+    "status": "Timing/order compatible: raised phases1/2 lead to contact3, follow4 and low recovery5, nonloop420ms attack; fresh Player transition check remains required."
+  },
+  "source_pixels_unchanged": true,
+  "revised_poses": 0,
+  "newly_authored_poses": 0,
+  "actor_approval": false,
+  "next_action": "Root may apply exact pinned reviewed_runtime_layouts metadata, compile and run fresh actual Player QA; do not count actor completion from this proposal."
+}

@@ -1,0 +1,25 @@
+{
+  "actor": "monster:아크모",
+  "slug": "arcmo",
+  "clip": "SW-run-v01",
+  "role": "run",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/SW-run-v01.png",
+  "source_sha256": "c77e15488814f839d6721b318000f44c907e697674ca7c71d35ef0ee0f3a35bb",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      98490,
+      97962,
+      95450,
+      95390,
+      95156,
+      93496
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

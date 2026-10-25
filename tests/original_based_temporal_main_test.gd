@@ -26,6 +26,30 @@ var temporal_player_bounds := Rect2()
 func subject_name() -> String: return str(temporal_case.get("name", ""))
 func subject_folder() -> String: return str(temporal_case.get("folder", ""))
 
+func _pose_review_motion_clear(origin: Vector2) -> bool:
+	# A clear stationary pose can sit beside an impassable renewed-map cell.
+	# Select the location against the unchanged two-loop walk of every actual
+	# direction before playback; the endpoint and per-native draw assertions
+	# below remain mandatory. Never shorten the travel or bypass map physics.
+	var frames: SpriteFrames = normal.motion.frame_source
+	if frames == null or normal.motion.profile.movement_fps <= 0.0: return false
+	for direction: int in range(8):
+		var track := "walk_" + str(direction)
+		if not frames.has_animation(track): return false
+		var duration := float(frames.get_frame_count(track)) / (normal.motion.profile.movement_fps * 0.75) * 2.2
+		var half_travel := screen_direction(direction) * normal.motion.profile.reference_speed * 0.75 * duration * 0.5
+		var start := origin - half_travel
+		var finish := origin + half_travel
+		if not route_clear(start, 0.0) or not route_clear(finish, 0.0): return false
+		if not world.field_map.line_clear(start, finish): return false
+		for point: Vector2 in [start, origin, finish]:
+			var body := Rect2(point + Vector2(-128, -160), Vector2(256, 176))
+			if not preload("res://tests/qa_rendered_prop_clearance.gd").clear_bounds(world.field_renderer, body): return false
+			for other: Node in world.monsters_root.get_children():
+				if other == normal or not other is Node2D or not (other as Node2D).is_visible_in_tree(): continue
+				if point.distance_squared_to((other as Node2D).global_position) < 192.0 * 192.0: return false
+	return true
+
 func temporal_safe_name(value: String) -> bool:
 	if value.is_empty(): return false
 	for letter: String in value:
@@ -162,6 +186,8 @@ func temporal_capture(actor: TwilightMonster, sample: Dictionary, slug: String, 
 	check(Rect2(crop_rect).encloses(visible_rect), "complete rendered body is inside diagnostic crop " + stem)
 	var body_world: Rect2 = actor.sprite.global_transform * content_rect
 	check(not temporal_player_bounds.intersects(body_world), "QA player cannot occlude actual temporal body " + stem)
+	check(preload("res://tests/qa_rendered_prop_clearance.gd").clear_bounds(world.field_renderer, body_world),
+		"actual streamed terrain cannot occlude any native temporal body " + stem)
 	var path := directory.path_join(stem + ".png")
 	check(not FileAccess.file_exists(path), "temporal evidence does not overwrite " + stem)
 	if FileAccess.file_exists(path): return {}
@@ -458,15 +484,15 @@ func run() -> void:
 	var isolated_marker := OS.get_environment("TWILIGHT_PR100_TEMPORAL_ISOLATED") == "1"
 	var isolated_full_suite := not OS.get_environment("TWILIGHT_PR100_REPORT").is_empty()
 	check(isolated_marker or isolated_full_suite, "explicit isolated temporal invocation or existing full-suite harness")
-	var xdg_root := OS.get_environment("XDG_DATA_HOME").replace("\\", "/").trim_suffix("/").to_lower()
-	var actual_home := OS.get_user_data_dir().replace("\\", "/").to_lower()
-	var isolated_home: bool = not xdg_root.is_empty() and actual_home.begins_with(xdg_root + "/")
-	if OS.get_name() == "Windows":
-		# Godot Windows stores user:// below APPDATA, not XDG_DATA_HOME.
-		# Require every runner-supplied root to be the same fresh directory.
-		var roaming := OS.get_environment("APPDATA").replace("\\", "/").trim_suffix("/").to_lower()
-		var local := OS.get_environment("LOCALAPPDATA").replace("\\", "/").trim_suffix("/").to_lower()
-		isolated_home = not xdg_root.is_empty() and roaming == xdg_root and local == xdg_root and actual_home.begins_with(roaming + "/")
+	var xdg := OS.get_environment("XDG_DATA_HOME")
+	var windows_path := OS.has_feature("windows")
+	var isolated_home: bool = preload("res://tests/qa_isolated_user_path.gd").contains_user_directory(OS.get_user_data_dir(), xdg, windows_path)
+	if windows_path:
+		# Every Windows user-directory root must name the same isolated directory.
+		var root_path := xdg.replace("\\", "/").simplify_path().trim_suffix("/").to_lower()
+		var roaming := OS.get_environment("APPDATA").replace("\\", "/").simplify_path().trim_suffix("/").to_lower()
+		var local := OS.get_environment("LOCALAPPDATA").replace("\\", "/").simplify_path().trim_suffix("/").to_lower()
+		isolated_home = isolated_home and roaming == root_path and local == root_path
 	check(isolated_home, "temporal user directory belongs to the explicitly isolated platform-specific root")
 	check(temporal_save_files().is_empty(), "existing user saves refuse temporal test")
 	check(not FileAccess.file_exists(temporal_report_path), "temporal report does not overwrite")

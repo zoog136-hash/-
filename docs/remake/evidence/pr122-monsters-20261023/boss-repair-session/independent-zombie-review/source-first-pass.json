@@ -1,0 +1,666 @@
+{
+  "schema": "pr122-zombie-r001-independent-source-first-pass-v1",
+  "id": "monster:죽음의 좀비 로드",
+  "date": "2026-10-23",
+  "revision": "r001",
+  "frozen": true,
+  "independence": "Reviewer did not create the zombie-lord sources. Review performed separately from the source owner.",
+  "source_first_pass": "HOLD",
+  "full_mythic_approvals": 0,
+  "new_approvals": 0,
+  "prior_assets_or_approvals_changed": false,
+  "default_catalog_changed": false,
+  "scope": "Minimum source-first visual QA: reference identity, direction/role distinction, clear foot-support defects, severe anatomy collapse or clipping. Detailed timing and physical ground-plane proof are not added as prerequisites for this first pass.",
+  "candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/candidate.json",
+    "bytes": 95536,
+    "sha256": "9bae482b3c570c0ad7658ce473ca6c404d45568093ceaccb9ac537672d6b6d6a"
+  },
+  "frames": {
+    "path": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/SpriteFrames.tres",
+    "bytes": 33233,
+    "sha256": "48331e766cd57c90692a3b5b7d91858bfcb24ec7503b414878363f47a8208da8"
+  },
+  "native_profile": {
+    "path": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/NativeMotionProfile.tres",
+    "bytes": 753,
+    "sha256": "8c9ea800866467345a1d9f62ef0a2ccc0c19c8673156d1951828da37b161f323"
+  },
+  "reference": {
+    "path": "assets/monsters/original/atlas_3.png",
+    "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+    "region": [
+      656,
+      299,
+      328,
+      300
+    ],
+    "region_rgba_sha256": "b8a6658e5d03cd4bf3be640e104107660a93c7e386188a58509db581fd6b3b6e",
+    "basis": "monster_world_catalog.visual atlas/cell + art_atlases exact region",
+    "scope": "Existing project art, not verified external original game art"
+  },
+  "examined_views": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "examined_track_count": 33,
+  "examined_pose_count": 116,
+  "examined_tracks": [
+    {
+      "animation": "idle_0",
+      "direction": "E",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-core8-v01.png",
+      "source_sha256": "4a7915ff9bc42ec8f72f34bc4e0cc4b814975ba78e63d9f4d014912ffe958803",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-core8-v01.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_0",
+      "direction": "E",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-core8-v01.png",
+      "source_sha256": "4a7915ff9bc42ec8f72f34bc4e0cc4b814975ba78e63d9f4d014912ffe958803",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-core8-v01.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_0",
+      "direction": "E",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-core8-v01.png",
+      "source_sha256": "4a7915ff9bc42ec8f72f34bc4e0cc4b814975ba78e63d9f4d014912ffe958803",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-core8-v01.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "run_0",
+      "direction": "E",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-run6-v02.png",
+      "source_sha256": "5901f44fc942cd9628af3bcfbc93f07e524d71edeeb5cfdc3fbda9e9b19b0d35",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-run6-v02.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "idle_6",
+      "direction": "N",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-core8-v01.png",
+      "source_sha256": "c3e0879d95f2d1007c9ad69f23f41180219b9865e6698f70e09b805d55702742",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-core8-v01.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_6",
+      "direction": "N",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-core8-v01.png",
+      "source_sha256": "c3e0879d95f2d1007c9ad69f23f41180219b9865e6698f70e09b805d55702742",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-core8-v01.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_6",
+      "direction": "N",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-core8-v01.png",
+      "source_sha256": "c3e0879d95f2d1007c9ad69f23f41180219b9865e6698f70e09b805d55702742",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-core8-v01.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "run_6",
+      "direction": "N",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-N-run6-v02.png",
+      "source_sha256": "7635fffe2265d62f18ca669107397c03edf23ab9a37407697e3556d44de26ee3",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-run6-v02.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "idle_7",
+      "direction": "NE",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-core8-v01.png",
+      "source_sha256": "7cc1bb34d8b089bbb17cdaf7774185239719145d4769d4ce93083967c28c2ac3",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-core8-v01.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_7",
+      "direction": "NE",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-core8-v01.png",
+      "source_sha256": "7cc1bb34d8b089bbb17cdaf7774185239719145d4769d4ce93083967c28c2ac3",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-core8-v01.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_7",
+      "direction": "NE",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-core8-v01.png",
+      "source_sha256": "7cc1bb34d8b089bbb17cdaf7774185239719145d4769d4ce93083967c28c2ac3",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-core8-v01.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "run_7",
+      "direction": "NE",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NE-run6-v01.png",
+      "source_sha256": "30626163698d306d2afa91d94981ab9e4160484451c54cf53f2dc0d91c7282c2",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-run6-v01.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "idle_5",
+      "direction": "NW",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-core8-v01.png",
+      "source_sha256": "ba777efb8652abd2ad3ab0f518f9c2098b8a600efe426cca9f38826e8f8ccaef",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-core8-v01.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_5",
+      "direction": "NW",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-core8-v01.png",
+      "source_sha256": "ba777efb8652abd2ad3ab0f518f9c2098b8a600efe426cca9f38826e8f8ccaef",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-core8-v01.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_5",
+      "direction": "NW",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-core8-v01.png",
+      "source_sha256": "ba777efb8652abd2ad3ab0f518f9c2098b8a600efe426cca9f38826e8f8ccaef",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-core8-v01.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "run_5",
+      "direction": "NW",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-NW-run6-v01.png",
+      "source_sha256": "58d6dad665b932e643043de52271838fea94f5ae672152d4f724776c5f4cfea4",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-run6-v01.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "idle_2",
+      "direction": "S",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-core8-v01.png",
+      "source_sha256": "e5c625d9ab5fafb1303aff3aeeeecf90c8a3c11a8d95c96390086c0cf39fa430",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-core8-v01.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_2",
+      "direction": "S",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-core8-v01.png",
+      "source_sha256": "e5c625d9ab5fafb1303aff3aeeeecf90c8a3c11a8d95c96390086c0cf39fa430",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-core8-v01.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_2",
+      "direction": "S",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-core8-v01.png",
+      "source_sha256": "e5c625d9ab5fafb1303aff3aeeeecf90c8a3c11a8d95c96390086c0cf39fa430",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-core8-v01.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "death_2",
+      "direction": "S",
+      "role": "death",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-death4-v01.png",
+      "source_sha256": "228d48ae13305b7221c1484fc6354be7ff0231af412fbba445290fcf8804c68a",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-death4-v01.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "animation": "run_2",
+      "direction": "S",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-run6-v01.png",
+      "source_sha256": "4ae8dc49826b42ba44ec9d0ccaa5623dcd8e6faf740973fee58d61c3cd11ac86",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-run6-v01.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "idle_1",
+      "direction": "SE",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-core8-v01.png",
+      "source_sha256": "06ebbc4bde8508abb3c226f3c927472842e79268312af1edde5ebca8d2858b9a",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-core8-v01.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_1",
+      "direction": "SE",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-core8-v01.png",
+      "source_sha256": "06ebbc4bde8508abb3c226f3c927472842e79268312af1edde5ebca8d2858b9a",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-core8-v01.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_1",
+      "direction": "SE",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-core8-v01.png",
+      "source_sha256": "06ebbc4bde8508abb3c226f3c927472842e79268312af1edde5ebca8d2858b9a",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-core8-v01.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "run_1",
+      "direction": "SE",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SE-run6-v01.png",
+      "source_sha256": "0827272c426351d259dd9992fe533c7c5627247b2f0b7ba1325ea4d046a2430f",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-run6-v01.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "idle_3",
+      "direction": "SW",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-core8-v02.png",
+      "source_sha256": "77b18f73cdd1d1be4fb4d8346ef6dd83b4ac795075b583f5f9fc943e342014ac",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-core8-v02.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_3",
+      "direction": "SW",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-core8-v02.png",
+      "source_sha256": "77b18f73cdd1d1be4fb4d8346ef6dd83b4ac795075b583f5f9fc943e342014ac",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-core8-v02.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_3",
+      "direction": "SW",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-core8-v02.png",
+      "source_sha256": "77b18f73cdd1d1be4fb4d8346ef6dd83b4ac795075b583f5f9fc943e342014ac",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-core8-v02.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "run_3",
+      "direction": "SW",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-SW-run6-v02.png",
+      "source_sha256": "2cd54bb7cf5e8b20820c157cf5324cf78d7e35e5f8d91852b99e6579f0213db2",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-run6-v02.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "idle_4",
+      "direction": "W",
+      "role": "idle",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-core8-v01.png",
+      "source_sha256": "81e8e32ed597630659820a54b7a5a33c00fd6c6b082729caa62a7e7c276344b0",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-core8-v01.png",
+      "source_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "animation": "attack_4",
+      "direction": "W",
+      "role": "attack",
+      "poses": 4,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-core8-v01.png",
+      "source_sha256": "81e8e32ed597630659820a54b7a5a33c00fd6c6b082729caa62a7e7c276344b0",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-core8-v01.png",
+      "source_rows": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "animation": "hit_4",
+      "direction": "W",
+      "role": "hit",
+      "poses": 2,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-core8-v01.png",
+      "source_sha256": "81e8e32ed597630659820a54b7a5a33c00fd6c6b082729caa62a7e7c276344b0",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-core8-v01.png",
+      "source_rows": [
+        6,
+        7
+      ]
+    },
+    {
+      "animation": "run_4",
+      "direction": "W",
+      "role": "run",
+      "poses": 6,
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-W-run6-v01.png",
+      "source_sha256": "26346a44eacb66fd8ea0fbf9192d7557a872436a0b80cebe4c01a7d8d687f603",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-run6-v01.png",
+      "source_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "method": "Private actual vision of exact project reference, all 116 selected source poses via contact sheets, and direct source PNGs E-run6-v02/S-run6-v01/SW-core8-v02. Independent diagnostics were regenerated directly from the pinned candidate regions, actual profile pixel_scale=2, each source canvas normalization and source foot anchor; no source images were modified.",
+  "source_pins": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/independent-zombie-review/source-pins.json",
+    "sha256": "65d5dcfa26cc51783443db0c6b982d3910e151c77d5a2c3ab65c9fbd6fcc69da"
+  },
+  "findings": [
+    {
+      "criterion": "body_identity",
+      "result": "PASS_FIRST_PASS_SCOPE",
+      "observation": "The reference large swollen belly/open belly wound, pallid diseased flesh, huge unarmed fists, wrist/shoulder chains, ragged waist cloth and bare feet are restored. One head, two arms and two legs remain readable across views. No substitute body/weapon identity was observed."
+    },
+    {
+      "criterion": "eight_direction_camera",
+      "result": "PASS_FIRST_PASS_SCOPE",
+      "tracks": [
+        "idle_0",
+        "attack_0",
+        "hit_0",
+        "run_0",
+        "idle_6",
+        "attack_6",
+        "hit_6",
+        "run_6",
+        "idle_7",
+        "attack_7",
+        "hit_7",
+        "run_7",
+        "idle_5",
+        "attack_5",
+        "hit_5",
+        "run_5",
+        "idle_2",
+        "attack_2",
+        "hit_2",
+        "death_2",
+        "run_2",
+        "idle_1",
+        "attack_1",
+        "hit_1",
+        "run_1",
+        "idle_3",
+        "attack_3",
+        "hit_3",
+        "run_3",
+        "idle_4",
+        "attack_4",
+        "hit_4",
+        "run_4"
+      ],
+      "observation": "Front S, back N, front-right SE/front-left SW, rear-right NE/rear-left NW, right E/left W are visually distinct at this minimum pass. E-run-v02 reads right-facing profile and SW-core/run-v02 reads left-facing; the prior wrong right-facing SW presentation is absent in the selected v02. Fine consistency of elevated camera angle is deferred."
+    },
+    {
+      "criterion": "role_coverage_and_distinction",
+      "result": "PASS_FIRST_PASS_SCOPE",
+      "observation": "All33 required tracks exist: idle/run/attack/hit8dirs and Sdeath. Idle breath, raised-fist windup/forward punch/followthrough/recovery, backward hit recoil and four-stage buckle/drop/fall/inert death are distinguishable in actual frames."
+    },
+    {
+      "criterion": "severe_clipping_or_anatomy_collapse",
+      "result": "NO_OBVIOUS_DEFECT_OBSERVED",
+      "observation": "No visibly amputated head/hands/feet, extra limbs, severe body collapse, or major frame-edge truncation was observed in the selected source poses. Candidate source/texture SHA matches and all indexed rectangles are in bounds. This is an observed first-pass statement, not a general guarantee of every runtime viewport."
+    },
+    {
+      "criterion": "run_E_half_cycle_support",
+      "result": "HOLD",
+      "tracks": [
+        "run_0"
+      ],
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-run6-v02.png",
+      "source_sha256": "5901f44fc942cd9628af3bcfbc93f07e524d71edeeb5cfdc3fbda9e9b19b0d35",
+      "observation": "Direct source and independently regenerated six-phase strip show the same near-leg leading plant at phases0/3, near-leg plant with far leg raised at1/4, and similar forward near-leg extension at2/5. The cycle reads as a three-pose sequence repeated rather than opposite anatomical half cycles. Different pixel hashes do not repair this clear support-order defect."
+    },
+    {
+      "criterion": "run_S_half_cycle_support",
+      "result": "HOLD",
+      "tracks": [
+        "run_2"
+      ],
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-run6-v01.png",
+      "source_sha256": "4ae8dc49826b42ba44ec9d0ccaa5623dcd8e6faf740973fee58d61c3cd11ac86",
+      "observation": "Phases0 and3 both present SCREEN LEFT/anatomical RIGHT as the low planted support. Opposite SCREEN RIGHT/anatomical LEFT support becomes visible later around4/5, so this is not asserted to be six pixel-identical/repeated poses, but the intended balanced two half-cycle alternation is not clearly readable. The first-pass RUN support check remains HOLD."
+    },
+    {
+      "criterion": "remaining_run_views",
+      "result": "NOT_APPROVED_FOR_ALTERNATION",
+      "tracks": [
+        "run_1",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "observation": "All source poses were visually examined and directional identity is readable. This review does not grant anatomical support alternation approval to the remaining views merely from six unique frames or bbox anchors; no additional clear clipping/collapse was observed."
+    }
+  ],
+  "decision": "Keep r001 source quality HOLD and preserve the frozen assets; do not use this report as authorization to replace the current default. A new E/S support revision may be reviewed independently without changing this r001 finding.",
+  "evidence": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/independent-zombie-review/core-0.png",
+      "bytes": 1903316,
+      "sha256": "6f129f3f406866800717ccda1f5f959b0811a32d58b2f010f5c626066837f179"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/independent-zombie-review/core-1.png",
+      "bytes": 1803611,
+      "sha256": "3b1c7069a047dd98ed4f16e4e69fd058c11a7da4bfb077d675906c71b2a863ab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/independent-zombie-review/death.png",
+      "bytes": 252083,
+      "sha256": "7cc82764da57621b4e02f120bc744483c5153806743222aee79fa79c1581ba0c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/independent-zombie-review/run-0.png",
+      "bytes": 1323027,
+      "sha256": "44e978035982e40a3de7d71d9a9b2b2d49fa5055d4973d259d53c307f457027e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/independent-zombie-review/run-1.png",
+      "bytes": 1420110,
+      "sha256": "fc7d5db5f0026d3f27da4ea67f2d2645206ecedaa709c13f8e7e43752960c144"
+    }
+  ],
+  "unseen_not_reviewed": [
+    "Timed Godot rendered cycle or default-Main transitions",
+    "Attack target/hitbox contact timing",
+    "Physical collision/contact against a moving world ground plane",
+    "GPU tint/material/VFX",
+    "Full mythic-quality or final release approval"
+  ],
+  "deferred_checks_note": "These deferred checks are recorded as unreviewed scope, not invented first-pass blockers. The HOLD is supported by the actually observed E/S support-order defect."
+}

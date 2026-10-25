@@ -1,0 +1,3351 @@
+{
+  "schema": "pr122-boss-targeted-repair-multisource-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e",
+  "revision": "r003",
+  "actors": {
+    "monster:알비노 데몬": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/SpriteFrames.tres",
+      "frames_sha256": "b30bb0b5e953159862ed83f29c8869020fa17aea138979d74ee222bffd3c700a",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres",
+      "native_profile_sha256": "1869be110775546c8fe79c622b3bcdf49873fe4083c2c5a3da43ea0156987845",
+      "production_connected": false,
+      "detailed_completed": false,
+      "newly_approved": false,
+      "native_track_count": 33,
+      "native_pose_count": 107,
+      "missing_required_tracks": [],
+      "quality_review": "TARGETED E RUN batch QA PASS: side camera and opposite support repaired. Confirmed unchanged SE RUN phase0/3 same-support repetition and NW overhead contact pose remain specific motion followups. Unreviewed details are not additional batch approval gates; see review.json.",
+      "original_presentation": {
+        "visual": {
+          "atlas": 1,
+          "cell": 10,
+          "body": "demon",
+          "variant": 2,
+          "width": 1.05,
+          "weapon": "sword",
+          "crest": 0,
+          "accent": "c4aa64"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 128
+      },
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "idle",
+          "animation": "idle_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_E_v02.png",
+          "source_sha256": "cb302c6c690e5eef74866b0a34e5caf05e88843cdb059825835294aab6365fd5",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_E_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  185,
+                  65,
+                  289,
+                  260
+                ],
+                "margin": [
+                  219,
+                  179,
+                  407,
+                  436
+                ],
+                "source_anchor": [
+                  314,
+                  321
+                ],
+                "rgba_sha256": "1228acae21f344aae7fb4b3da5c0c059cc4042c82f9babc33d63a63f49ff4c25"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  756,
+                  48,
+                  309,
+                  277
+                ],
+                "margin": [
+                  164,
+                  162,
+                  387,
+                  419
+                ],
+                "source_anchor": [
+                  940,
+                  321
+                ],
+                "rgba_sha256": "ebef9d6c0f90034fbd26e56a5ed43e62aa880aaf0958f11bd9c14a124e2791ad"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 262.5,
+            "canvas_size": [
+              696,
+              696
+            ],
+            "foot": [
+              348,
+              435
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "attack",
+          "animation": "attack_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_E_v02.png",
+          "source_sha256": "cb302c6c690e5eef74866b0a34e5caf05e88843cdb059825835294aab6365fd5",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_E_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  141,
+                  343,
+                  407,
+                  295
+                ],
+                "margin": [
+                  175,
+                  144,
+                  289,
+                  401
+                ],
+                "source_anchor": [
+                  314,
+                  634
+                ],
+                "rgba_sha256": "986230298aded797f9341d9ffc969aaa23c8ba2553480d8433f4b2249a50abb2"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  717,
+                  421,
+                  497,
+                  216
+                ],
+                "margin": [
+                  125,
+                  223,
+                  199,
+                  480
+                ],
+                "source_anchor": [
+                  940,
+                  633
+                ],
+                "rgba_sha256": "432a4fd9f631c54e29e8973a9c00be197abae1fe38ccf19e891080092308f2ad"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  175,
+                  708,
+                  372,
+                  230
+                ],
+                "margin": [
+                  209,
+                  209,
+                  324,
+                  466
+                ],
+                "source_anchor": [
+                  314,
+                  934
+                ],
+                "rgba_sha256": "23d3793934fbe3cd3b93e72150521990b062ac247f2458c0b6a019a2bfcaf0d1"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 262.5,
+            "canvas_size": [
+              696,
+              696
+            ],
+            "foot": [
+              348,
+              435
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "hit",
+          "animation": "hit_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_E_v02.png",
+          "source_sha256": "cb302c6c690e5eef74866b0a34e5caf05e88843cdb059825835294aab6365fd5",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_E_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  778,
+                  688,
+                  300,
+                  244
+                ],
+                "margin": [
+                  186,
+                  195,
+                  396,
+                  452
+                ],
+                "source_anchor": [
+                  940,
+                  928
+                ],
+                "rgba_sha256": "07faa2ca65b392833ce06011147340e8b5f2c0460271ad5da191f62c85da32ef"
+              },
+              {
+                "row": 6,
+                "direction": "E",
+                "region": [
+                  186,
+                  990,
+                  330,
+                  246
+                ],
+                "margin": [
+                  220,
+                  193,
+                  366,
+                  450
+                ],
+                "source_anchor": [
+                  314,
+                  1232
+                ],
+                "rgba_sha256": "dd31c503653d9bedb5e21379ecfb5d29bdb4912b81e421ec315ef6fc638193eb"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 262.5,
+            "canvas_size": [
+              696,
+              696
+            ],
+            "foot": [
+              348,
+              435
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "idle",
+          "animation": "idle_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SE_v01.png",
+          "source_sha256": "967cd1b240e7d264c8183f74f46f697ce8a3405107c85dc3e73cba49dae0ca28",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SE_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  165,
+                  7,
+                  345,
+                  309
+                ],
+                "margin": [
+                  259,
+                  205,
+                  471,
+                  507
+                ],
+                "source_anchor": [
+                  314,
+                  312
+                ],
+                "rgba_sha256": "02190fb49ee8af9f32730045014acdf5e75d8b494924830e74c5e695e0041b03"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  742,
+                  6,
+                  328,
+                  315
+                ],
+                "margin": [
+                  210,
+                  199,
+                  488,
+                  501
+                ],
+                "source_anchor": [
+                  940,
+                  317
+                ],
+                "rgba_sha256": "2141b8e9e6e148ab2c3a612450790150d121ebe90ec5487ea4bb46c31a07bfdd"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 306.0,
+            "canvas_size": [
+              816,
+              816
+            ],
+            "foot": [
+              408,
+              510
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "attack",
+          "animation": "attack_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SE_v01.png",
+          "source_sha256": "967cd1b240e7d264c8183f74f46f697ce8a3405107c85dc3e73cba49dae0ca28",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SE_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  145,
+                  313,
+                  377,
+                  309
+                ],
+                "margin": [
+                  239,
+                  205,
+                  439,
+                  507
+                ],
+                "source_anchor": [
+                  314,
+                  618
+                ],
+                "rgba_sha256": "988d3760d2f55ac3cb675e3b0063745f13f13892c3c807084187059dbd24021d"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  727,
+                  350,
+                  495,
+                  275
+                ],
+                "margin": [
+                  195,
+                  239,
+                  321,
+                  541
+                ],
+                "source_anchor": [
+                  940,
+                  621
+                ],
+                "rgba_sha256": "38e4ed0054f5f0353992e7a753817f1278c28738a0a54559f1002cfd998a8234"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  177,
+                  647,
+                  332,
+                  280
+                ],
+                "margin": [
+                  271,
+                  234,
+                  484,
+                  536
+                ],
+                "source_anchor": [
+                  314,
+                  923
+                ],
+                "rgba_sha256": "f142428a65993eca0112eb607e6b7998223687c6174e26792ce92942546c1df2"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 306.0,
+            "canvas_size": [
+              816,
+              816
+            ],
+            "foot": [
+              408,
+              510
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "hit",
+          "animation": "hit_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SE_v01.png",
+          "source_sha256": "967cd1b240e7d264c8183f74f46f697ce8a3405107c85dc3e73cba49dae0ca28",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SE_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  790,
+                  647,
+                  296,
+                  281
+                ],
+                "margin": [
+                  258,
+                  233,
+                  520,
+                  535
+                ],
+                "source_anchor": [
+                  940,
+                  924
+                ],
+                "rgba_sha256": "9324458df441c130c5ca22840f1755c2205cc39433d1284e3c8566f1671ce5bc"
+              },
+              {
+                "row": 6,
+                "direction": "SE",
+                "region": [
+                  189,
+                  956,
+                  333,
+                  271
+                ],
+                "margin": [
+                  283,
+                  243,
+                  483,
+                  545
+                ],
+                "source_anchor": [
+                  314,
+                  1223
+                ],
+                "rgba_sha256": "a8c9d605ff231b0f49e05da35b9f4937cdb4dbb0d2cf1b10eafa1c85a89091c7"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 306.0,
+            "canvas_size": [
+              816,
+              816
+            ],
+            "foot": [
+              408,
+              510
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "idle",
+          "animation": "idle_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_S_v01.png",
+          "source_sha256": "e49bcecdc51952e4a6f39be829829302f370ba015d3dab3a4365f5ade7cca4e4",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_S_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  188,
+                  40,
+                  310,
+                  291
+                ],
+                "margin": [
+                  262,
+                  198,
+                  466,
+                  485
+                ],
+                "source_anchor": [
+                  314,
+                  327
+                ],
+                "rgba_sha256": "07282b04315270b46b4666ac979f9dda8a760583331fee7be44ef52e908a7d07"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  779,
+                  36,
+                  323,
+                  303
+                ],
+                "margin": [
+                  227,
+                  186,
+                  453,
+                  473
+                ],
+                "source_anchor": [
+                  940,
+                  335
+                ],
+                "rgba_sha256": "a54e88b9e83e4920d03e6c3d03808117d89444e70b27d4cbdd2354852afa547f"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 291.0,
+            "canvas_size": [
+              776,
+              776
+            ],
+            "foot": [
+              388,
+              485
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "attack",
+          "animation": "attack_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_S_v01.png",
+          "source_sha256": "e49bcecdc51952e4a6f39be829829302f370ba015d3dab3a4365f5ade7cca4e4",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_S_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  212,
+                  347,
+                  290,
+                  311
+                ],
+                "margin": [
+                  286,
+                  178,
+                  486,
+                  465
+                ],
+                "source_anchor": [
+                  314,
+                  654
+                ],
+                "rgba_sha256": "b5c3db0bd8bb0f57fb0cdb72b0f349b78f246ef6de34a5a2b698ab45766da242"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  782,
+                  382,
+                  334,
+                  264
+                ],
+                "margin": [
+                  230,
+                  225,
+                  442,
+                  512
+                ],
+                "source_anchor": [
+                  940,
+                  642
+                ],
+                "rgba_sha256": "158df400c3d2bc59ae3a1beaccef906ef0545a501d05f5c7655c12730f5c6941"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  173,
+                  685,
+                  361,
+                  246
+                ],
+                "margin": [
+                  247,
+                  243,
+                  415,
+                  530
+                ],
+                "source_anchor": [
+                  314,
+                  927
+                ],
+                "rgba_sha256": "919b83d9550b170b06b3b73137631a938aff37b2fe48bf3dd03e501a1f55dfc3"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 291.0,
+            "canvas_size": [
+              776,
+              776
+            ],
+            "foot": [
+              388,
+              485
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "hit",
+          "animation": "hit_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_S_v01.png",
+          "source_sha256": "e49bcecdc51952e4a6f39be829829302f370ba015d3dab3a4365f5ade7cca4e4",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_S_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  772,
+                  683,
+                  344,
+                  254
+                ],
+                "margin": [
+                  220,
+                  235,
+                  432,
+                  522
+                ],
+                "source_anchor": [
+                  940,
+                  933
+                ],
+                "rgba_sha256": "9a58469237b16e41768a374f6d6b25fa552ff5616bd36f3219198134ee2ae6a1"
+              },
+              {
+                "row": 6,
+                "direction": "S",
+                "region": [
+                  180,
+                  986,
+                  309,
+                  239
+                ],
+                "margin": [
+                  254,
+                  250,
+                  467,
+                  537
+                ],
+                "source_anchor": [
+                  314,
+                  1221
+                ],
+                "rgba_sha256": "a2f82f67d9e5085bced638bd2ac94d3ee6587aa07a27ecef21c57f670c7a05e2"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 291.0,
+            "canvas_size": [
+              776,
+              776
+            ],
+            "foot": [
+              388,
+              485
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "idle",
+          "animation": "idle_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SW_v02.png",
+          "source_sha256": "92f8047bd164b41de6a5a039ae4ca4bfa9fb4bcc0b5432afd65b22c1b051c1dd",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SW_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  84,
+                  54,
+                  450,
+                  284
+                ],
+                "margin": [
+                  138,
+                  180,
+                  286,
+                  452
+                ],
+                "source_anchor": [
+                  314,
+                  334
+                ],
+                "rgba_sha256": "5406c6b0232c63017852b5fd2ee7a54e07e8db6e1cc02532fc6cdf510eafe978"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  671,
+                  57,
+                  466,
+                  281
+                ],
+                "margin": [
+                  99,
+                  183,
+                  270,
+                  455
+                ],
+                "source_anchor": [
+                  940,
+                  334
+                ],
+                "rgba_sha256": "e40b34f21dc5d18070f9de43362e0911d3267e6f30b902e21edeec4982f0aa5b"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 276.5,
+            "canvas_size": [
+              736,
+              736
+            ],
+            "foot": [
+              368,
+              460
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "attack",
+          "animation": "attack_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SW_v02.png",
+          "source_sha256": "92f8047bd164b41de6a5a039ae4ca4bfa9fb4bcc0b5432afd65b22c1b051c1dd",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SW_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  194,
+                  351,
+                  378,
+                  315
+                ],
+                "margin": [
+                  248,
+                  149,
+                  358,
+                  421
+                ],
+                "source_anchor": [
+                  314,
+                  662
+                ],
+                "rgba_sha256": "4742aeefc5d8b6311316d7f2d32bfcc08027f8826e63ef547c5c4013a4e0958b"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  623,
+                  404,
+                  564,
+                  263
+                ],
+                "margin": [
+                  51,
+                  201,
+                  172,
+                  473
+                ],
+                "source_anchor": [
+                  940,
+                  663
+                ],
+                "rgba_sha256": "2fcb56bb61e220d9f4478de35197c60842109d17b9eb72e57fa049c1feca65a1"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  95,
+                  698,
+                  504,
+                  252
+                ],
+                "margin": [
+                  149,
+                  212,
+                  232,
+                  484
+                ],
+                "source_anchor": [
+                  314,
+                  946
+                ],
+                "rgba_sha256": "9f57a7847e92b3e037bb3ca2341f64b872f4fa8ea92b1ff119c602204a99b534"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 276.5,
+            "canvas_size": [
+              736,
+              736
+            ],
+            "foot": [
+              368,
+              460
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "hit",
+          "animation": "hit_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SW_v02.png",
+          "source_sha256": "92f8047bd164b41de6a5a039ae4ca4bfa9fb4bcc0b5432afd65b22c1b051c1dd",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SW_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  769,
+                  705,
+                  400,
+                  258
+                ],
+                "margin": [
+                  197,
+                  206,
+                  336,
+                  478
+                ],
+                "source_anchor": [
+                  940,
+                  959
+                ],
+                "rgba_sha256": "dc14741fe50e60c8229ea55bfe49e8201273f1caf979e9fbf3486f0a8688e49e"
+              },
+              {
+                "row": 6,
+                "direction": "SW",
+                "region": [
+                  92,
+                  1013,
+                  474,
+                  210
+                ],
+                "margin": [
+                  146,
+                  254,
+                  262,
+                  526
+                ],
+                "source_anchor": [
+                  314,
+                  1219
+                ],
+                "rgba_sha256": "9c71aff8de89276498b62c7f5682554cad0f08de840c6981951e6a05fde2f31e"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 276.5,
+            "canvas_size": [
+              736,
+              736
+            ],
+            "foot": [
+              368,
+              460
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "idle",
+          "animation": "idle_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_W_v01.png",
+          "source_sha256": "143afd22e1a076b9c56d3c4c473d3d220015df5fe039f983c3474c1b8ffaa17b",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_W_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  69,
+                  60,
+                  459,
+                  278
+                ],
+                "margin": [
+                  119,
+                  181,
+                  269,
+                  450
+                ],
+                "source_anchor": [
+                  314,
+                  334
+                ],
+                "rgba_sha256": "204edc92b2cdec41ee9c8d10217b29c9a77fb539dceb4e9c1668ae1d0a17868e"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  651,
+                  61,
+                  489,
+                  276
+                ],
+                "margin": [
+                  75,
+                  183,
+                  239,
+                  452
+                ],
+                "source_anchor": [
+                  940,
+                  333
+                ],
+                "rgba_sha256": "7b2fcd11c0203fe4e7b797c1e8a13aa475ba178999f9860f179059fedbc7af70"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 271.0,
+            "canvas_size": [
+              728,
+              728
+            ],
+            "foot": [
+              364,
+              455
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "attack",
+          "animation": "attack_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_W_v01.png",
+          "source_sha256": "143afd22e1a076b9c56d3c4c473d3d220015df5fe039f983c3474c1b8ffaa17b",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_W_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  169,
+                  346,
+                  384,
+                  316
+                ],
+                "margin": [
+                  219,
+                  143,
+                  344,
+                  412
+                ],
+                "source_anchor": [
+                  314,
+                  658
+                ],
+                "rgba_sha256": "1c17ba3837af5f07f5b6bec3bce7975dde08acb88e99b08f0067cd8c5ccdb514"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  603,
+                  403,
+                  581,
+                  259
+                ],
+                "margin": [
+                  27,
+                  200,
+                  147,
+                  469
+                ],
+                "source_anchor": [
+                  940,
+                  658
+                ],
+                "rgba_sha256": "55096ce78188dbdf206a62f1f56a11bec0d735280194920eb84be0dee1940e2f"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  66,
+                  715,
+                  511,
+                  236
+                ],
+                "margin": [
+                  116,
+                  223,
+                  217,
+                  492
+                ],
+                "source_anchor": [
+                  314,
+                  947
+                ],
+                "rgba_sha256": "cdae82665a63e47e2a61d3f9ad6606141d544c88834c9e543c938ba719e8897b"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 271.0,
+            "canvas_size": [
+              728,
+              728
+            ],
+            "foot": [
+              364,
+              455
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "hit",
+          "animation": "hit_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_W_v01.png",
+          "source_sha256": "143afd22e1a076b9c56d3c4c473d3d220015df5fe039f983c3474c1b8ffaa17b",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_W_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  763,
+                  704,
+                  393,
+                  260
+                ],
+                "margin": [
+                  187,
+                  199,
+                  335,
+                  468
+                ],
+                "source_anchor": [
+                  940,
+                  960
+                ],
+                "rgba_sha256": "45beec7fd245674406209e09cceaf82b33fcab9b18bfd4e936490c11f4bb5950"
+              },
+              {
+                "row": 6,
+                "direction": "W",
+                "region": [
+                  79,
+                  1005,
+                  465,
+                  212
+                ],
+                "margin": [
+                  129,
+                  247,
+                  263,
+                  516
+                ],
+                "source_anchor": [
+                  314,
+                  1213
+                ],
+                "rgba_sha256": "bc88882fd3da46a0414406e26eb62da0e77b3329d3d3bdc86550b543373739af"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 271.0,
+            "canvas_size": [
+              728,
+              728
+            ],
+            "foot": [
+              364,
+              455
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "idle",
+          "animation": "idle_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NW_v02.png",
+          "source_sha256": "ea0448e90f0dd4c775f414c343d2d77361ccc08cdfcc0562f997c39675b7e6c8",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_NW_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  191,
+                  36,
+                  341,
+                  297
+                ],
+                "margin": [
+                  269,
+                  197,
+                  443,
+                  487
+                ],
+                "source_anchor": [
+                  314,
+                  329
+                ],
+                "rgba_sha256": "8f4fd8b8d459eb9c3174ab63506afa8c2b834f6e89394913bf436734e5d5c324"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  745,
+                  33,
+                  352,
+                  304
+                ],
+                "margin": [
+                  197,
+                  190,
+                  432,
+                  480
+                ],
+                "source_anchor": [
+                  940,
+                  333
+                ],
+                "rgba_sha256": "51e27eb2c08b4deebc309c1d83f5d8cec271f285404e5edcd6751e1238e9d30a"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 294.5,
+            "canvas_size": [
+              784,
+              784
+            ],
+            "foot": [
+              392,
+              490
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "hit",
+          "animation": "hit_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NW_v02.png",
+          "source_sha256": "ea0448e90f0dd4c775f414c343d2d77361ccc08cdfcc0562f997c39675b7e6c8",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_NW_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  798,
+                  684,
+                  309,
+                  264
+                ],
+                "margin": [
+                  250,
+                  230,
+                  475,
+                  520
+                ],
+                "source_anchor": [
+                  940,
+                  944
+                ],
+                "rgba_sha256": "30959d8b2f9c839ddfb3498c867e9869ad9ca73ccb3d712a5454581ef4ff1561"
+              },
+              {
+                "row": 6,
+                "direction": "NW",
+                "region": [
+                  211,
+                  976,
+                  365,
+                  254
+                ],
+                "margin": [
+                  289,
+                  240,
+                  419,
+                  530
+                ],
+                "source_anchor": [
+                  314,
+                  1226
+                ],
+                "rgba_sha256": "89f4b4623156b3f133417fe5d9b3e57e9f08c8d73863826a8508e7f02708e2f4"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 294.5,
+            "canvas_size": [
+              784,
+              784
+            ],
+            "foot": [
+              392,
+              490
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "idle",
+          "animation": "idle_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_N_v01.png",
+          "source_sha256": "6a74cf4c0287c8b94ee290a19d3032f524d3c07c26f3e5a2a52409c36a2d8dd1",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_N_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  178,
+                  40,
+                  380,
+                  254
+                ],
+                "margin": [
+                  196,
+                  165,
+                  284,
+                  410
+                ],
+                "source_anchor": [
+                  314,
+                  290
+                ],
+                "rgba_sha256": "4470a456abc59d648bd86ee1c4dfc57817658c9d58df0b82602328cb8da1ffe1"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  761,
+                  38,
+                  366,
+                  256
+                ],
+                "margin": [
+                  153,
+                  163,
+                  298,
+                  408
+                ],
+                "source_anchor": [
+                  940,
+                  290
+                ],
+                "rgba_sha256": "56fdbeece68c7f82211d14b333079b7282923283be4b8d27f55a3d7e86790409"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 249.0,
+            "canvas_size": [
+              664,
+              664
+            ],
+            "foot": [
+              332,
+              415
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "attack",
+          "animation": "attack_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_N_v01.png",
+          "source_sha256": "6a74cf4c0287c8b94ee290a19d3032f524d3c07c26f3e5a2a52409c36a2d8dd1",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_N_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  167,
+                  323,
+                  349,
+                  299
+                ],
+                "margin": [
+                  185,
+                  120,
+                  315,
+                  365
+                ],
+                "source_anchor": [
+                  314,
+                  618
+                ],
+                "rgba_sha256": "3931e1f4effcdb735a0b4c7e7e6e5bc4425f7a84b17dbf3d56137d4d4f72d95b"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  763,
+                  375,
+                  431,
+                  247
+                ],
+                "margin": [
+                  155,
+                  172,
+                  233,
+                  417
+                ],
+                "source_anchor": [
+                  940,
+                  618
+                ],
+                "rgba_sha256": "445bb4517b59299fa7eec0083c96b9bb727e05c1fe9574b97136e5e087d02153"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  179,
+                  670,
+                  364,
+                  254
+                ],
+                "margin": [
+                  197,
+                  165,
+                  300,
+                  410
+                ],
+                "source_anchor": [
+                  314,
+                  920
+                ],
+                "rgba_sha256": "38e514413e763f17ef72f013a4c88a3db32f25d18a12aaa7df14d9bf6e8da2da"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 249.0,
+            "canvas_size": [
+              664,
+              664
+            ],
+            "foot": [
+              332,
+              415
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "hit",
+          "animation": "hit_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_N_v01.png",
+          "source_sha256": "6a74cf4c0287c8b94ee290a19d3032f524d3c07c26f3e5a2a52409c36a2d8dd1",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_N_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  796,
+                  671,
+                  312,
+                  243
+                ],
+                "margin": [
+                  188,
+                  176,
+                  352,
+                  421
+                ],
+                "source_anchor": [
+                  940,
+                  910
+                ],
+                "rgba_sha256": "3fbf0c58d3e2eada24fa4353c7bddde4fcc260e219a304de7dcbcead9b4d455a"
+              },
+              {
+                "row": 6,
+                "direction": "N",
+                "region": [
+                  178,
+                  1002,
+                  348,
+                  213
+                ],
+                "margin": [
+                  196,
+                  206,
+                  316,
+                  451
+                ],
+                "source_anchor": [
+                  314,
+                  1211
+                ],
+                "rgba_sha256": "b7a568470211acc4abd9343d0af393680451af340776ba0dfd0f8b76530d2e3e"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 249.0,
+            "canvas_size": [
+              664,
+              664
+            ],
+            "foot": [
+              332,
+              415
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "idle",
+          "animation": "idle_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NE_v01.png",
+          "source_sha256": "0327bac76ce7de2e42abd26eb262d6d2b41abe24826d0443a69c11f6b3800154",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_NE_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  194,
+                  20,
+                  346,
+                  296
+                ],
+                "margin": [
+                  260,
+                  183,
+                  414,
+                  464
+                ],
+                "source_anchor": [
+                  314,
+                  312
+                ],
+                "rgba_sha256": "40b5b37a4c5759a8be17d8e8793bfc931525cfa9cab808e898bf613ca7912c4b"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  785,
+                  32,
+                  342,
+                  288
+                ],
+                "margin": [
+                  225,
+                  191,
+                  418,
+                  472
+                ],
+                "source_anchor": [
+                  940,
+                  316
+                ],
+                "rgba_sha256": "fa76503584236dd36cbbb08b95b6db36bc174c3c7442a264e83f3cb7ffb51c4d"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 286.0,
+            "canvas_size": [
+              760,
+              760
+            ],
+            "foot": [
+              380,
+              475
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "attack",
+          "animation": "attack_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NE_v01.png",
+          "source_sha256": "0327bac76ce7de2e42abd26eb262d6d2b41abe24826d0443a69c11f6b3800154",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_NE_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  194,
+                  345,
+                  317,
+                  286
+                ],
+                "margin": [
+                  260,
+                  193,
+                  443,
+                  474
+                ],
+                "source_anchor": [
+                  314,
+                  627
+                ],
+                "rgba_sha256": "bf1b9d4c7d74096cf9f1401a813a6c9f3aa38a951de5d2c1c2178dc63c1b2d30"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  766,
+                  363,
+                  442,
+                  270
+                ],
+                "margin": [
+                  206,
+                  209,
+                  318,
+                  490
+                ],
+                "source_anchor": [
+                  940,
+                  629
+                ],
+                "rgba_sha256": "b564122ed41b53f205f27eb89e50e4882da2318aa5a8ca8aec9d9986f35beaa3"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  182,
+                  677,
+                  425,
+                  221
+                ],
+                "margin": [
+                  248,
+                  258,
+                  335,
+                  539
+                ],
+                "source_anchor": [
+                  314,
+                  894
+                ],
+                "rgba_sha256": "d9e1cbb38fd86c7aa882f8052edb45be73ff772eff5db900d5065dfca176b1b3"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 286.0,
+            "canvas_size": [
+              760,
+              760
+            ],
+            "foot": [
+              380,
+              475
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "hit",
+          "animation": "hit_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NE_v01.png",
+          "source_sha256": "0327bac76ce7de2e42abd26eb262d6d2b41abe24826d0443a69c11f6b3800154",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_NE_v01.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  807,
+                  660,
+                  274,
+                  241
+                ],
+                "margin": [
+                  247,
+                  238,
+                  486,
+                  519
+                ],
+                "source_anchor": [
+                  940,
+                  897
+                ],
+                "rgba_sha256": "591f91cdae01784162c2b9f8e26cda0fefb45e876e7d748f60519bb0ea9c5350"
+              },
+              {
+                "row": 6,
+                "direction": "NE",
+                "region": [
+                  201,
+                  970,
+                  338,
+                  234
+                ],
+                "margin": [
+                  267,
+                  245,
+                  422,
+                  526
+                ],
+                "source_anchor": [
+                  314,
+                  1200
+                ],
+                "rgba_sha256": "670449812e7785649723e7778de39068416638e14913a4f8180aecd3ff108dff"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 286.0,
+            "canvas_size": [
+              760,
+              760
+            ],
+            "foot": [
+              380,
+              475
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "attack",
+          "animation": "attack_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_attack_NW_v01.png",
+          "source_sha256": "7dfb9ef725d07b61993384ad2d6858720871a144e8957240c40f4e5e6f7a7b42",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_attack_NW_v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  231,
+                  24,
+                  479,
+                  510
+                ],
+                "margin": [
+                  423,
+                  214,
+                  673,
+                  642
+                ],
+                "source_anchor": [
+                  384,
+                  530
+                ],
+                "rgba_sha256": "a9355368b7e74ddc8b2ad1eac1e84f28e13f9672197e47f434c58ceb4e0942f1"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  959,
+                  7,
+                  448,
+                  535
+                ],
+                "margin": [
+                  383,
+                  189,
+                  704,
+                  617
+                ],
+                "source_anchor": [
+                  1152,
+                  538
+                ],
+                "rgba_sha256": "b521b13a444a4ddd966de5c75b18d34807c1e0efb2401c36da94cf56a2bc1736"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  230,
+                  568,
+                  530,
+                  439
+                ],
+                "margin": [
+                  422,
+                  285,
+                  622,
+                  713
+                ],
+                "source_anchor": [
+                  384,
+                  1003
+                ],
+                "rgba_sha256": "2a37234395e2dfda8138e9e71b706d8a279c1fff437349057098aa95aeb5411d"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 433.0,
+            "canvas_size": [
+              1152,
+              1152
+            ],
+            "foot": [
+              576,
+              720
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SE-run6-v01.png",
+          "source_sha256": "934f7e32733916a538bf5a9e79e84be9d5c55997248984b1403c595ad00bb6db",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-SE-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  24,
+                  33,
+                  504,
+                  450
+                ],
+                "margin": [
+                  360,
+                  294,
+                  680,
+                  734
+                ],
+                "source_anchor": [
+                  256,
+                  479
+                ],
+                "rgba_sha256": "dee4207be87e260bb0c4610a815e08441fa8aca40730f806618f82e68da5cd4e"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  577,
+                  31,
+                  437,
+                  445
+                ],
+                "margin": [
+                  401,
+                  299,
+                  747,
+                  739
+                ],
+                "source_anchor": [
+                  768,
+                  472
+                ],
+                "rgba_sha256": "5cd505c602fbd957e48f2511b6fa8d5c17fb7f4a314a8abfc11b153b37a9eff3"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  57,
+                  505,
+                  498,
+                  424
+                ],
+                "margin": [
+                  393,
+                  320,
+                  686,
+                  760
+                ],
+                "source_anchor": [
+                  256,
+                  925
+                ],
+                "rgba_sha256": "6c3363bd0d40f360d04b3fa5ae7486a19bd61a36f7f7f662a058ca7dea7f7127"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  571,
+                  525,
+                  448,
+                  450
+                ],
+                "margin": [
+                  395,
+                  294,
+                  736,
+                  734
+                ],
+                "source_anchor": [
+                  768,
+                  971
+                ],
+                "rgba_sha256": "1e95dc8c1e4ffafb22312945152e79544a380384ceb46d9597d01d15d0183e44"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  54,
+                  1001,
+                  492,
+                  480
+                ],
+                "margin": [
+                  390,
+                  264,
+                  692,
+                  704
+                ],
+                "source_anchor": [
+                  256,
+                  1477
+                ],
+                "rgba_sha256": "b8af48a6897141aefa18307b8dd4265c5ae63db6763b35e673e2b8e8ce7afb0c"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  566,
+                  994,
+                  450,
+                  455
+                ],
+                "margin": [
+                  390,
+                  289,
+                  734,
+                  729
+                ],
+                "source_anchor": [
+                  768,
+                  1445
+                ],
+                "rgba_sha256": "ebc02fc61e7a7d0317bf6d33cb1f2668d94b1629d1147ea306009a5ecda47800"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 444.0,
+            "canvas_size": [
+              1184,
+              1184
+            ],
+            "foot": [
+              592,
+              740
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-S-run6-v02.png",
+          "source_sha256": "93e59af435f78e38c5ae0987cba17ebb774f2b5dbdc65ecc77448acbb491283b",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-S-run6-v02.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  42,
+                  7,
+                  439,
+                  456
+                ],
+                "margin": [
+                  382,
+                  293,
+                  753,
+                  736
+                ],
+                "source_anchor": [
+                  256,
+                  459
+                ],
+                "rgba_sha256": "2d21d82349c3d307173050c3f3902293bdd9a47a5f79bcc148dc990eacb553ce"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  556,
+                  0,
+                  446,
+                  461
+                ],
+                "margin": [
+                  384,
+                  288,
+                  746,
+                  731
+                ],
+                "source_anchor": [
+                  768,
+                  457
+                ],
+                "rgba_sha256": "525e635734ac7176cf0f27cb947f5238c062a2ce09f30eeb0d02d6091d30d46d"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  34,
+                  503,
+                  481,
+                  472
+                ],
+                "margin": [
+                  374,
+                  277,
+                  711,
+                  720
+                ],
+                "source_anchor": [
+                  256,
+                  971
+                ],
+                "rgba_sha256": "b8429be882c252d299cf4ff62b81ed1c2cc9ba4fb17004343a46c69d9bc9e518"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  568,
+                  521,
+                  439,
+                  448
+                ],
+                "margin": [
+                  396,
+                  301,
+                  753,
+                  744
+                ],
+                "source_anchor": [
+                  768,
+                  965
+                ],
+                "rgba_sha256": "ac7d2008be99d4c88ac4150f13ffd84ac86f8e79ef63bc859c15a96a24e2c1f1"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  40,
+                  1024,
+                  455,
+                  467
+                ],
+                "margin": [
+                  380,
+                  282,
+                  737,
+                  725
+                ],
+                "source_anchor": [
+                  256,
+                  1487
+                ],
+                "rgba_sha256": "d13d2f20097fa77ec719daa95c22a1a1e42d1aa55bba04e54e98dfe825e45af4"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  567,
+                  1019,
+                  447,
+                  471
+                ],
+                "margin": [
+                  395,
+                  278,
+                  745,
+                  721
+                ],
+                "source_anchor": [
+                  768,
+                  1486
+                ],
+                "rgba_sha256": "165e7258181ab30e4f1cf7c4c7b368314a5fc5c7dbd3361753465ca76ec1768b"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 446.0,
+            "canvas_size": [
+              1192,
+              1192
+            ],
+            "foot": [
+              596,
+              745
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "run",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SW-run6-v02.png",
+          "source_sha256": "eaa6f064d21f210b8da96f4600701419269d5970e55fa0342052b2348399a3b1",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-SW-run6-v02.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  13,
+                  56,
+                  499,
+                  431
+                ],
+                "margin": [
+                  317,
+                  273,
+                  621,
+                  689
+                ],
+                "source_anchor": [
+                  256,
+                  483
+                ],
+                "rgba_sha256": "52d6256fd7ff05e5b46da5abfc57fe4dbd6cceba85b2bcf00a8b3b95d56aad2e"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  528,
+                  56,
+                  479,
+                  438
+                ],
+                "margin": [
+                  320,
+                  266,
+                  641,
+                  682
+                ],
+                "source_anchor": [
+                  768,
+                  490
+                ],
+                "rgba_sha256": "b3f8d3712ff8d1d1ea54a32e18c869a1201168039f61c83d0bffa1577ee38cb9"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  19,
+                  523,
+                  508,
+                  397
+                ],
+                "margin": [
+                  323,
+                  307,
+                  612,
+                  723
+                ],
+                "source_anchor": [
+                  256,
+                  916
+                ],
+                "rgba_sha256": "010d73947a3aa5def4b74e95cab55b0681eaae01d3232dbfee8e2affff182787"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  531,
+                  562,
+                  479,
+                  419
+                ],
+                "margin": [
+                  323,
+                  285,
+                  641,
+                  701
+                ],
+                "source_anchor": [
+                  768,
+                  977
+                ],
+                "rgba_sha256": "30ec31170c93037d6abee785e2be5cc22ed00b26c96b9afc047a7be882dfa07d"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  24,
+                  1042,
+                  516,
+                  436
+                ],
+                "margin": [
+                  328,
+                  268,
+                  604,
+                  684
+                ],
+                "source_anchor": [
+                  256,
+                  1474
+                ],
+                "rgba_sha256": "ac5b428e4310f9875ba5feeff0d2419821ebde58c3d01636ce59eb37b633384e"
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  539,
+                  1036,
+                  479,
+                  406
+                ],
+                "margin": [
+                  331,
+                  298,
+                  641,
+                  714
+                ],
+                "source_anchor": [
+                  768,
+                  1438
+                ],
+                "rgba_sha256": "24a927c92533ab06e93e4d7a0b78c72e07b2904e8db3b4d332e5d23c6a165a8d"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 419.0,
+            "canvas_size": [
+              1120,
+              1120
+            ],
+            "foot": [
+              560,
+              700
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "run",
+          "animation": "run_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-W-run6-v01.png",
+          "source_sha256": "7fdf8ead19fed22490aadb70b4b43a00c489ff9ffaefd1e17b4ea8679f2bd3e7",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-W-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  12,
+                  55,
+                  476,
+                  377
+                ],
+                "margin": [
+                  248,
+                  242,
+                  508,
+                  607
+                ],
+                "source_anchor": [
+                  256,
+                  428
+                ],
+                "rgba_sha256": "f61addef72e2a83a248feffd89a1c9a27a9fba73adadfae0bd977ea0780c3939"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  532,
+                  59,
+                  472,
+                  375
+                ],
+                "margin": [
+                  256,
+                  244,
+                  512,
+                  609
+                ],
+                "source_anchor": [
+                  768,
+                  430
+                ],
+                "rgba_sha256": "18ee4109a0ceca141fa2aa124e89b9bf1bab9f1b56cf19dad5a671c3430fc831"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  22,
+                  544,
+                  487,
+                  370
+                ],
+                "margin": [
+                  258,
+                  249,
+                  497,
+                  614
+                ],
+                "source_anchor": [
+                  256,
+                  910
+                ],
+                "rgba_sha256": "3c3d83bff4f00d61c4c5f04ef30dbb7e4905d13d27ae6cb098b3f757709a137c"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  537,
+                  587,
+                  468,
+                  371
+                ],
+                "margin": [
+                  261,
+                  248,
+                  516,
+                  613
+                ],
+                "source_anchor": [
+                  768,
+                  954
+                ],
+                "rgba_sha256": "18913d52b039a7d837d71fa4c49e95a071e0d368d840b86d8839e35e3f226bda"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  22,
+                  1073,
+                  484,
+                  390
+                ],
+                "margin": [
+                  258,
+                  229,
+                  500,
+                  594
+                ],
+                "source_anchor": [
+                  256,
+                  1459
+                ],
+                "rgba_sha256": "be1437458362d54335a06e8b1724e95fec3ffffd1c6c417593f4ae7fc2c87e66"
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  536,
+                  1067,
+                  477,
+                  376
+                ],
+                "margin": [
+                  260,
+                  243,
+                  507,
+                  608
+                ],
+                "source_anchor": [
+                  768,
+                  1439
+                ],
+                "rgba_sha256": "22de5a7fedceffb4de8351a5da697828a1572703f781b39761cd4aad1d35dcab"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 368.0,
+            "canvas_size": [
+              984,
+              984
+            ],
+            "foot": [
+              492,
+              615
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "run",
+          "animation": "run_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NW-run6-v03.png",
+          "source_sha256": "9bbb6c3dbddcbf14567eb6f1de8a754fbf47fa9741bd75b3b9f2e7bb8b07e58b",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-NW-run6-v03.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  87,
+                  88,
+                  386,
+                  374
+                ],
+                "margin": [
+                  327,
+                  250,
+                  606,
+                  618
+                ],
+                "source_anchor": [
+                  256,
+                  458
+                ],
+                "rgba_sha256": "04566733e5b78c9eb3de5e7ad8c6d01e252f2b0874964a021a84b548a9b9af61"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  567,
+                  88,
+                  401,
+                  390
+                ],
+                "margin": [
+                  295,
+                  234,
+                  591,
+                  602
+                ],
+                "source_anchor": [
+                  768,
+                  474
+                ],
+                "rgba_sha256": "19a156332eab3320ba60dd9a3458564310928884d1c5393e5d015c5471ac1ea7"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  72,
+                  560,
+                  417,
+                  384
+                ],
+                "margin": [
+                  312,
+                  240,
+                  575,
+                  608
+                ],
+                "source_anchor": [
+                  256,
+                  940
+                ],
+                "rgba_sha256": "4c67bd8528d5ed6bf9072648f067f77d76ff026c23a752117d67a58a0cb9cf3d"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  575,
+                  579,
+                  415,
+                  383
+                ],
+                "margin": [
+                  303,
+                  241,
+                  577,
+                  609
+                ],
+                "source_anchor": [
+                  768,
+                  958
+                ],
+                "rgba_sha256": "79aa6f65b2fb75e25d5789b36fcdb3883ed8a55771788b486e3359f705d8cf7b"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  84,
+                  1044,
+                  399,
+                  397
+                ],
+                "margin": [
+                  324,
+                  227,
+                  593,
+                  595
+                ],
+                "source_anchor": [
+                  256,
+                  1437
+                ],
+                "rgba_sha256": "eaafef0eaf56c31be0b61d33ef57a0e4bb1c70cf31ef26e86b53175e79b5871b"
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  567,
+                  1055,
+                  408,
+                  386
+                ],
+                "margin": [
+                  295,
+                  238,
+                  584,
+                  606
+                ],
+                "source_anchor": [
+                  768,
+                  1437
+                ],
+                "rgba_sha256": "d5b37c805c0baa921604ecdb380a061c7301220b1c2e6c8b2c909462d58ecd3f"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 372.5,
+            "canvas_size": [
+              992,
+              992
+            ],
+            "foot": [
+              496,
+              620
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "run",
+          "animation": "run_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-N-run6-v01.png",
+          "source_sha256": "f7626a545a32708a9da1bc1e42e05684a6808cf77c097829f246ce74c7b37e9c",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-N-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1264,
+              1244
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  132,
+                  0,
+                  461,
+                  387
+                ],
+                "margin": [
+                  324,
+                  252,
+                  555,
+                  629
+                ],
+                "source_anchor": [
+                  316,
+                  383
+                ],
+                "rgba_sha256": "bad560200819c7f27a653d26f331195a019fee6b788a46922d9c5c0f721d91c7"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  747,
+                  3,
+                  474,
+                  383
+                ],
+                "margin": [
+                  307,
+                  256,
+                  542,
+                  633
+                ],
+                "source_anchor": [
+                  948,
+                  382
+                ],
+                "rgba_sha256": "59bdcfe6d1034644fe56c3c2a0573102e22becbcbb504968a409c86253f5c3b1"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  125,
+                  403,
+                  484,
+                  380
+                ],
+                "margin": [
+                  317,
+                  259,
+                  532,
+                  636
+                ],
+                "source_anchor": [
+                  316,
+                  779
+                ],
+                "rgba_sha256": "4c81b3abe7b02f2895db8d8e415d4b308194563f2c2a0b65f4a7b01b15569b12"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  769,
+                  415,
+                  456,
+                  382
+                ],
+                "margin": [
+                  329,
+                  257,
+                  560,
+                  634
+                ],
+                "source_anchor": [
+                  948,
+                  793
+                ],
+                "rgba_sha256": "84f7e83808892f08c854206ae8cfdade736229081f3971c24e66ea75bbd88205"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  135,
+                  829,
+                  466,
+                  390
+                ],
+                "margin": [
+                  327,
+                  249,
+                  550,
+                  626
+                ],
+                "source_anchor": [
+                  316,
+                  1215
+                ],
+                "rgba_sha256": "24fe44b10a207555cd433dd0456ebec9c3e35f30460e0b4916a6927560ab222c"
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  764,
+                  809,
+                  467,
+                  408
+                ],
+                "margin": [
+                  324,
+                  231,
+                  549,
+                  608
+                ],
+                "source_anchor": [
+                  948,
+                  1213
+                ],
+                "rgba_sha256": "df8c35e18d08f6e3585efc91bfe05d15d6088bccacec4165c12156fbba75edb7"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 379.0,
+            "canvas_size": [
+              1016,
+              1016
+            ],
+            "foot": [
+              508,
+              635
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "run",
+          "animation": "run_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NE-run6-v01.png",
+          "source_sha256": "3f6b01e4ab5438a0965c45cd23d0e6e5099eeb537c88bbe591abfbbf2345a251",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-NE-run6-v01.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  69,
+                  18,
+                  450,
+                  440
+                ],
+                "margin": [
+                  393,
+                  289,
+                  710,
+                  720
+                ],
+                "source_anchor": [
+                  256,
+                  454
+                ],
+                "rgba_sha256": "1e7edbf5cd772d16264db0c37b51338e41eb3d52ec9ebcdd63210eb0d283e1c9"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  581,
+                  16,
+                  430,
+                  433
+                ],
+                "margin": [
+                  393,
+                  296,
+                  730,
+                  727
+                ],
+                "source_anchor": [
+                  768,
+                  445
+                ],
+                "rgba_sha256": "1ccb7ffb76e61ec7ac254ac786ab9e03710529b404a0dd297d622d98fe29cddf"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  55,
+                  521,
+                  505,
+                  437
+                ],
+                "margin": [
+                  379,
+                  292,
+                  655,
+                  723
+                ],
+                "source_anchor": [
+                  256,
+                  954
+                ],
+                "rgba_sha256": "379be29bb8ff6ed9d9a1afb60e2e28f8bf463d1b6b3e7898cc9ab73b7377182a"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  587,
+                  539,
+                  426,
+                  439
+                ],
+                "margin": [
+                  399,
+                  290,
+                  734,
+                  721
+                ],
+                "source_anchor": [
+                  768,
+                  974
+                ],
+                "rgba_sha256": "bc77d57e1307eecfe0b206eb6753f865f87f6d0f84d13bd6104cf2e6501ad05f"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  84,
+                  1022,
+                  449,
+                  468
+                ],
+                "margin": [
+                  408,
+                  261,
+                  711,
+                  692
+                ],
+                "source_anchor": [
+                  256,
+                  1486
+                ],
+                "rgba_sha256": "fe75ec098844e08cc72f290d94c27e5fa82c347b34a7d80cc23454cecd6a3e9b"
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  570,
+                  1031,
+                  441,
+                  443
+                ],
+                "margin": [
+                  382,
+                  286,
+                  719,
+                  717
+                ],
+                "source_anchor": [
+                  768,
+                  1470
+                ],
+                "rgba_sha256": "d8a4c461532a7e2641ffff0a28f083e5359b3eeb528580853230fb59ed9463d4"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 433.5,
+            "canvas_size": [
+              1160,
+              1160
+            ],
+            "foot": [
+              580,
+              725
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "death",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_death_S_v02.png",
+          "source_sha256": "acb4b07b58b949284a7188cb61aeafb190ef16206143512411b4e98611c2b1b3",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_death_S_v02.png",
+          "geometry": {
+            "image_size": [
+              1254,
+              1254
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  128,
+                  177,
+                  469,
+                  465
+                ],
+                "margin": [
+                  490,
+                  384,
+                  883,
+                  887
+                ],
+                "source_anchor": [
+                  314,
+                  638
+                ],
+                "rgba_sha256": "da192d91d49a7a34fa34fdba0e2c703f5a7bdcdbdf860d5fc38fb2f2339d8445"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  632,
+                  284,
+                  613,
+                  354
+                ],
+                "margin": [
+                  368,
+                  495,
+                  739,
+                  998
+                ],
+                "source_anchor": [
+                  940,
+                  634
+                ],
+                "rgba_sha256": "0d70bd8c1cb2331e0944f3e59de06bdb37ec00a232c9d0ff0c5f34b9c343b258"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  20,
+                  864,
+                  727,
+                  275
+                ],
+                "margin": [
+                  382,
+                  574,
+                  625,
+                  1077
+                ],
+                "source_anchor": [
+                  314,
+                  1135
+                ],
+                "rgba_sha256": "b7919bd871a47157da36b7ba97ab00bc6d5457312ffce35dff949d8af4054807"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 459.0,
+            "canvas_size": [
+              1352,
+              1352
+            ],
+            "foot": [
+              676,
+              845
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "multi_source": true,
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/pair-a-landing-v01.png",
+          "source_sha256": "25471d414d5e9f3dc06ebca8abb9958d2bb6718730f22c05cd446491408e8838",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/pair-a-landing-v01.png",
+          "textures": [
+            "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/pair-a-landing-v01.png",
+            "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-right-half3-v01.png",
+            "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-left-half3-v01.png"
+          ],
+          "source_sheets": [
+            {
+              "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/pair-a-landing-v01.png",
+              "sha256": "25471d414d5e9f3dc06ebca8abb9958d2bb6718730f22c05cd446491408e8838",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/pair-a-landing-v01.png",
+              "physical_canvas_size": 1568,
+              "neutral_height": 586.5,
+              "reference_rows": [
+                0,
+                1
+              ],
+              "selected_physical_to_logical_phase": {
+                "0": 0,
+                "1": 3
+              }
+            },
+            {
+              "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-right-half3-v01.png",
+              "sha256": "92aa0cb57eb8e26c76e51308242fab21dd051bd99396920e1dc357995b416ec8",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-right-half3-v01.png",
+              "physical_canvas_size": 1184,
+              "neutral_height": 444.0,
+              "reference_rows": [
+                0
+              ],
+              "selected_physical_to_logical_phase": {
+                "1": 1,
+                "2": 2
+              }
+            },
+            {
+              "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-left-half3-v01.png",
+              "sha256": "ee01c07fe86dd9f38f1354918a5c542b8e1b79fc018de0fba37b531e09b0bef1",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-left-half3-v01.png",
+              "physical_canvas_size": 1152,
+              "neutral_height": 432.0,
+              "reference_rows": [
+                0
+              ],
+              "selected_physical_to_logical_phase": {
+                "1": 4,
+                "2": 5
+              }
+            }
+          ],
+          "geometry": {
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  298,
+                  7,
+                  718,
+                  598
+                ],
+                "margin": [
+                  415,
+                  386,
+                  850,
+                  970
+                ],
+                "source_anchor": [
+                  667,
+                  601
+                ],
+                "rgba_sha256": "aab22ac8e98f831b9067bb48cdff4e42e5b1a0dc2239cfa981fca3e3b0ef6845",
+                "physical_source_row": 0,
+                "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/pair-a-landing-v01.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/pair-a-landing-v01.png",
+                "source_sha256": "25471d414d5e9f3dc06ebca8abb9958d2bb6718730f22c05cd446491408e8838",
+                "source_image_size": [
+                  1246,
+                  1263
+                ],
+                "source_canvas_size": [
+                  1568,
+                  1568
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  253,
+                  574,
+                  572,
+                  431
+                ],
+                "margin": [
+                  304,
+                  313,
+                  612,
+                  753
+                ],
+                "source_anchor": [
+                  541,
+                  1001
+                ],
+                "rgba_sha256": "fb5487961bf37c1ff0d4866285cade973beb3937f58d7cf7d99e3569cfa1dd4c",
+                "physical_source_row": 1,
+                "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-right-half3-v01.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-right-half3-v01.png",
+                "source_sha256": "92aa0cb57eb8e26c76e51308242fab21dd051bd99396920e1dc357995b416ec8",
+                "source_image_size": [
+                  1024,
+                  1536
+                ],
+                "source_canvas_size": [
+                  1184,
+                  1184
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  257,
+                  1039,
+                  572,
+                  448
+                ],
+                "margin": [
+                  308,
+                  296,
+                  612,
+                  736
+                ],
+                "source_anchor": [
+                  541,
+                  1483
+                ],
+                "rgba_sha256": "b0e5c90ce612a9b33a351ced2f490c6b81cd5fc8c83921b44abd5cf438c066c2",
+                "physical_source_row": 2,
+                "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-right-half3-v01.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-right-half3-v01.png",
+                "source_sha256": "92aa0cb57eb8e26c76e51308242fab21dd051bd99396920e1dc357995b416ec8",
+                "source_image_size": [
+                  1024,
+                  1536
+                ],
+                "source_canvas_size": [
+                  1184,
+                  1184
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  339,
+                  640,
+                  676,
+                  587
+                ],
+                "margin": [
+                  456,
+                  397,
+                  892,
+                  981
+                ],
+                "source_anchor": [
+                  667,
+                  1223
+                ],
+                "rgba_sha256": "2e6168618c1bd0d085fba77fa8e830a94090310884b51dc3c00f63d9e597e236",
+                "physical_source_row": 1,
+                "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/pair-a-landing-v01.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/pair-a-landing-v01.png",
+                "source_sha256": "25471d414d5e9f3dc06ebca8abb9958d2bb6718730f22c05cd446491408e8838",
+                "source_image_size": [
+                  1246,
+                  1263
+                ],
+                "source_canvas_size": [
+                  1568,
+                  1568
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  304,
+                  570,
+                  481,
+                  420
+                ],
+                "margin": [
+                  328,
+                  304,
+                  671,
+                  732
+                ],
+                "source_anchor": [
+                  552,
+                  986
+                ],
+                "rgba_sha256": "ed31c866a36b290d6e0e4fbdb39199e48961c85fbc0b4825c95532fa287698d2",
+                "physical_source_row": 1,
+                "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-left-half3-v01.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-left-half3-v01.png",
+                "source_sha256": "ee01c07fe86dd9f38f1354918a5c542b8e1b79fc018de0fba37b531e09b0bef1",
+                "source_image_size": [
+                  1024,
+                  1536
+                ],
+                "source_canvas_size": [
+                  1152,
+                  1152
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  297,
+                  1042,
+                  515,
+                  436
+                ],
+                "margin": [
+                  321,
+                  288,
+                  637,
+                  716
+                ],
+                "source_anchor": [
+                  552,
+                  1474
+                ],
+                "rgba_sha256": "2a276b6b43e52f08a596b40ac66d5c6163d83c4ab88b8e35748a36211fc4699c",
+                "physical_source_row": 2,
+                "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-left-half3-v01.png",
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-left-half3-v01.png",
+                "source_sha256": "ee01c07fe86dd9f38f1354918a5c542b8e1b79fc018de0fba37b531e09b0bef1",
+                "source_image_size": [
+                  1024,
+                  1536
+                ],
+                "source_canvas_size": [
+                  1152,
+                  1152
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "foot": [
+              128,
+              160
+            ],
+            "logical_canvas": true,
+            "source_canvas_policy": "Per-source constant proportional canvas; exact pixels and regional anchors preserved, no per-pose rescaling"
+          }
+        }
+      ],
+      "new_source_poses": 6,
+      "reused_source_poses": 101
+    }
+  },
+  "new_source_poses": 6,
+  "reused_source_poses": 101,
+  "selected_native_poses": 107,
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_1.png",
+    "region": [
+      631,
+      623,
+      316,
+      311
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 1,
+    "cell": 10,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "image_size": [
+      1263,
+      1246
+    ],
+    "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+  },
+  "new_sources": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/pair-a-landing-v01.png",
+      "sha256": "25471d414d5e9f3dc06ebca8abb9958d2bb6718730f22c05cd446491408e8838",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/pair-a-landing-v01.png",
+      "physical_canvas_size": 1568,
+      "neutral_height": 586.5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "selected_physical_to_logical_phase": {
+        "0": 0,
+        "1": 3
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-right-half3-v01.png",
+      "sha256": "92aa0cb57eb8e26c76e51308242fab21dd051bd99396920e1dc357995b416ec8",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-right-half3-v01.png",
+      "physical_canvas_size": 1184,
+      "neutral_height": 444.0,
+      "reference_rows": [
+        0
+      ],
+      "selected_physical_to_logical_phase": {
+        "1": 1,
+        "2": 2
+      }
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix08-demon-e/raw/demon-E-left-half3-v01.png",
+      "sha256": "ee01c07fe86dd9f38f1354918a5c542b8e1b79fc018de0fba37b531e09b0bef1",
+      "texture": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/demon-E-left-half3-v01.png",
+      "physical_canvas_size": 1152,
+      "neutral_height": 432.0,
+      "reference_rows": [
+        0
+      ],
+      "selected_physical_to_logical_phase": {
+        "1": 4,
+        "2": 5
+      }
+    }
+  ],
+  "preserved_base_candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/candidate-r002.json",
+    "sha256": "4dd450c6a85811119e2677f78ef749c7279f6a047ac1657c23f72cd455730a22"
+  },
+  "source_pixel_policy": "All old PNG bytes, frame RGBA regions/anchors, phases and timings are preserved; only proportional virtual canvas/profile registration changes for32 reused clips. E RUN uses6 new selected poses from3 source sheets.",
+  "logical_canvas": [
+    256,
+    256
+  ],
+  "native_reference_height": 96,
+  "pixel_scale": 1.3333333333333333,
+  "newly_approved": 0,
+  "default_catalog_switches": 0,
+  "multi_source_contract": "For run_0 frame.texture/source_image_size/source_canvas_size are authoritative per frame; track.texture is only the first texture. Native SpriteFrames binds each frame to its exact PNG."
+}

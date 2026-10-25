@@ -1,0 +1,122 @@
+{
+  "schema": "PR122_SW_RUN_NEW_FOUR_SOURCE_GAIT_AND_HILT_ONLY_HOLD_ADDENDUM_V1",
+  "utc": "2026-10-19T16:28:42.501792+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "ACTUAL_ROLE_GAIT_PASS_SOURCE_GEAR_HOLD_ONLY",
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "run",
+  "actor_approval_increment": 0,
+  "source_pins": [
+    {
+      "phase": 0,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+      "raw_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+      "repair_ROI_XYWH": [
+        300,
+        530,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 1,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png",
+      "raw_sha256": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55",
+      "repair_ROI_XYWH": [
+        230,
+        510,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 2,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+      "raw_sha256": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+      "repair_ROI_XYWH": [
+        340,
+        470,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 3,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png",
+      "raw_sha256": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50",
+      "repair_ROI_XYWH": null,
+      "gear_finding": "smallcollarPASS_keepUNCHANGED"
+    },
+    {
+      "phase": 4,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png",
+      "raw_sha256": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44",
+      "repair_ROI_XYWH": [
+        270,
+        550,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 5,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+      "raw_sha256": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937",
+      "repair_ROI_XYWH": [
+        300,
+        500,
+        260,
+        280
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    }
+  ],
+  "confirmed_primary_affected_phases": [
+    0,
+    1,
+    2,
+    4
+  ],
+  "additional_local_finding": "Phase5 has the same addedpointedguard; repaired3 has a smallsimplecollar and mustremainunchanged. Rootassignedindependentparallel3/5 confirmation toWproducer.",
+  "parallel3_5_confirmation_owner": "/root/halpas_final_changed_clips_qc",
+  "selected_reference": {
+    "path": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-idle0-exactRGBA.png",
+    "sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+    "exact_native_ROI_XYWH": [
+      140,
+      240,
+      95,
+      95
+    ]
+  },
+  "actual_newrole_findings": {
+    "1": "NearLEFTfrontthigh\u2192bentknee/shin\u2192completeflatloadboot; farRIGHT separate raised recoveryboot visible. Genuinecompression.",
+    "2": "FarRIGHTleadingthigh emerges far/image-left pelvisside into completefrontknee/shin/boot; nearLEFTseparaterearboot. Genuineoppositeflightchain.",
+    "4": "FarRIGHTsupportthigh exits far-sideapron to deeplybentknee/shin and completeflatboot; nearLEFTseparatefoldedbackboot. Actualopposite1support.",
+    "5": "NearLEFTleadthigh emerges near/image-right pelvisside into frontknee/shin/boot; farRIGHTseparatefoldedbackboot. Actualopposite2flightchain. Sourcealone doesnotcertifyworldfloor.",
+    "model": "SWcamera/paleface/hair/hardgoldrays/longdarkgoldtrimrobe/twoarms-twolegs/fullboots remainfaithful. Actualaddedcrossguard is the isolatedgearproblem."
+  },
+  "material_hilt_finding": "ExactselectedSWidle hand-to-blade junction is a smallsimplegoldcollar. Source0/1/2/4 andlocal5 comparison show newlyaddedpointedornatecrossguard geometry. It is not merely rotatedhand size. Phase3simplecollar passes; do notremake3.",
+  "correction": "Earlier0SOURCEPASS missed this geardetail. CurrenthiltHOLD supersedes ONLY gear scope and preservesactualcorrectbody/limbrole/crownrepairfindings.",
+  "single_minimal_fix": "Localhilt-only replacement inaffectedphases with exactselectedcollar reference; preserveoriginalfist/wrist, longbladecurve, body/gear/legs/poses and alloutsideROI exactRGBA. No whole6/bodyretry. Freshseam/collar/hand/bladecontinuity QC required.",
+  "remaining_HOLD": [
+    "Selected6 source cannot befinalPASS until actualhiltrepairs pass.",
+    "PhysicalrigidCs/root/ground/AIR,actualcompiled/Godot and finalactor quality remainpending;actor2670/catalogOFF."
+  ],
+  "private_evidence": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-SW-new1-2-4-selected-hilt-comparison-v01.jpg",
+      "sha256": "b1b79593a3cc4b6f92e503aaacf799aade2dc0607aa5a503747e91e2bae354f4"
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-SW-selected-vs-3-5-hilt-evidence-v01.jpg",
+      "sha256": "052d03fd98149f4f381b65ca21fe38398adeff09a1ff6cd825dd0ac676c6a455"
+    }
+  ],
+  "repository_mutations": false
+}

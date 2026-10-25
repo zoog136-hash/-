@@ -1,9 +1,13 @@
 extends Node2D
 class_name TwilightCombatVFX
+signal source_frame_marker(sprite_id: String, source_frame: int)
 
 ## One drawing node, bounded reusable records. No per-hit nodes, tweens or RNG.
 const CAPACITY: int = 160
 const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
+const SOURCE_SPX = preload("res://scripts/animation/source_spx_player.gd")
+var source_effects: Array[TwilightSourceSPXPlayer] = []
+var source_csb_effects: Array[Node2D] = []
 @export_range(0.0, 1.0, 0.05) var impact_intensity: float = 0.85
 var active: Array[Dictionary] = []
 var available: Array[Dictionary] = []
@@ -80,6 +84,12 @@ func ring(point: Vector2, radius: float, color: Color) -> void:
 	entry.merge({"radius":clampf(radius, 16, 150), "color":color})
 
 func clear() -> void:
+	for effect in source_effects:
+		if is_instance_valid(effect): effect.queue_free()
+	source_effects.clear()
+	for effect in source_csb_effects:
+		if is_instance_valid(effect): effect.queue_free()
+	source_csb_effects.clear()
 	for entry: Dictionary in active:
 		entry.clear()
 		available.append(entry)
@@ -87,6 +97,58 @@ func clear() -> void:
 	detailed_draws = 0
 	set_process(false)
 	queue_redraw()
+
+func source_skill_event(skill_id: String, phase: String, point: Vector2) -> bool:
+	# Only an explicit, reviewed DB ID binding can opt in. Similar names and
+	# SPX file IDs confer no identity. The private candidate manifest has none.
+	var manifest := SOURCE_SPX.read_manifest()
+	var binding: Dictionary = manifest.get("skill_bindings", {}).get(skill_id, {})
+	if not bool(binding.get("approved", false)): return false
+	var event: Dictionary = binding.get("events", {}).get(phase, {})
+	if event.is_empty(): return false
+	return play_source_effect(str(event.get("group", "")), str(event.get("action", "0")), point)
+
+func _prune_source_effects() -> void:
+	for index in range(source_effects.size()-1,-1,-1):
+		if not is_instance_valid(source_effects[index]): source_effects.remove_at(index)
+	for index in range(source_csb_effects.size()-1,-1,-1):
+		if not is_instance_valid(source_csb_effects[index]): source_csb_effects.remove_at(index)
+
+func play_source_effect(group: String, action: String, point: Vector2, preview: bool = false) -> bool:
+	_prune_source_effects()
+	if source_effects.size() >= 16: return false
+	var effect := SOURCE_SPX.new()
+	if not effect.configure(group, action, 0, preview):
+		effect.free()
+		return false
+	add_child(effect)
+	effect.global_position = point
+	effect.play_source_audio = true
+	effect.raw_source_marker.connect(func(id: String, frame: int): source_frame_marker.emit(id,frame))
+	source_effects.append(effect)
+	effect.play()
+	return true
+
+func play_source_csb(id: String, point: Vector2, preview: bool = false) -> bool:
+	_prune_source_effects()
+	var path := "res://data/external_spx/csb_effects.json"
+	if not FileAccess.file_exists(path): return false
+	var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not manifest is Dictionary: return false
+	var entry: Dictionary = manifest.get(id, {})
+	if entry.is_empty() or (not preview and not bool(entry.get("production_approved", false))): return false
+	if source_csb_effects.size() >= 8: return false
+	var resource := load(str(entry.scene)) as PackedScene
+	if resource == null: return false
+	var effect := resource.instantiate() as Node2D
+	var animation := effect.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if animation == null: effect.free(); return false
+	add_child(effect)
+	effect.global_position = point
+	animation.animation_finished.connect(func(_name: StringName): effect.queue_free(), CONNECT_ONE_SHOT)
+	source_csb_effects.append(effect)
+	animation.play("source")
+	return true
 
 func _process(delta: float) -> void:
 	for i: int in range(active.size() - 1, -1, -1):

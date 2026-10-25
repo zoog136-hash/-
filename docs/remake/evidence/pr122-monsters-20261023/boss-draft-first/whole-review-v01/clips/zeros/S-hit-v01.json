@@ -1,0 +1,268 @@
+{
+  "actor": "monster:제로스",
+  "slug": "zeros",
+  "clip": "S-hit-v01",
+  "role": "hit",
+  "direction": "S",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/S-hit-v01.png",
+  "source_sha256": "0908da456b743b642d218eaab56e1088efb3dc2c612fbb22200f50790da0863a",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      92388,
+      91923,
+      89570,
+      87678,
+      85561,
+      77993
+    ]
+  },
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "S",
+        "region": [
+          25,
+          13,
+          509,
+          487
+        ],
+        "margin": [
+          409,
+          317,
+          771,
+          793
+        ],
+        "source_anchor": [
+          256,
+          496
+        ],
+        "rgba_sha256": "b0a1fa6e6f8bd7a50053d8bb4ca77cdd6ede34ab532772df958f67b5a1599de4",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "S",
+        "region": [
+          541,
+          54,
+          433,
+          447
+        ],
+        "margin": [
+          413,
+          357,
+          847,
+          833
+        ],
+        "source_anchor": [
+          768,
+          497
+        ],
+        "rgba_sha256": "5bfe3c595be74874715c772e024554249dec067d922a690b46398b19cf68f902",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "S",
+        "region": [
+          1018,
+          130,
+          454,
+          371
+        ],
+        "margin": [
+          378,
+          433,
+          826,
+          909
+        ],
+        "source_anchor": [
+          1280,
+          497
+        ],
+        "rgba_sha256": "eddd4f42f9496683f280cffdfc8025420aa7e8ea3a6862842b99610e6b5dc485",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "S",
+        "region": [
+          31,
+          513,
+          486,
+          482
+        ],
+        "margin": [
+          415,
+          322,
+          794,
+          798
+        ],
+        "source_anchor": [
+          256,
+          991
+        ],
+        "rgba_sha256": "4c2a4d133a2a7e9195aacca1c9a6346c7c213bb556643aeb585677c3f5e000bd",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "S",
+        "region": [
+          534,
+          510,
+          469,
+          486
+        ],
+        "margin": [
+          406,
+          318,
+          811,
+          794
+        ],
+        "source_anchor": [
+          768,
+          992
+        ],
+        "rgba_sha256": "9ee13d2310de418c2374b746d577a646410b5bb05d5c343906a2a7e57d75ca74",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "S",
+        "region": [
+          1013,
+          509,
+          469,
+          491
+        ],
+        "margin": [
+          373,
+          313,
+          811,
+          789
+        ],
+        "source_anchor": [
+          1280,
+          996
+        ],
+        "rgba_sha256": "6e417f8293c6cdd96e001e6df2b3e75f5d44d72b5369e4d5c818f71f66810e14",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 478.5,
+    "canvas_size": [
+      1280,
+      1280
+    ],
+    "foot": [
+      640,
+      800
+    ],
+    "strict_source_analysis_canvas": 2048
+  },
+  "foreground_ownership": {
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "cdec5a4db89edf570407f3bcb4d271f15d599c90280f609cdcd05e8b09671689",
+    "foreground_owner_sha256": "2a3758720d3536bcf0afd7f97251a1c61b5f15844a56ffb0d71666f456eab992",
+    "detached_pixels": 4,
+    "detached_fragments": [
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          697,
+          257,
+          698,
+          258
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 167.7647161950331,
+        "owner_margin_min": 164.9362890702869
+      },
+      {
+        "row": 4,
+        "pixels": 2,
+        "bbox": [
+          787,
+          525,
+          788,
+          527
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 66.48308055437865,
+        "owner_margin_min": 63.483080554378645
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          343,
+          903,
+          344,
+          904
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 202.7732724004818,
+        "owner_margin_min": 200.537204422982
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "omitted_pixels": 2,
+    "foreign_owner_pixels": 0
+  },
+  "status": "HOLD",
+  "cause": "omitted_foreground",
+  "reason": "2 foreground alpha16 pixels outside pose regions"
+}

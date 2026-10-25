@@ -1,0 +1,307 @@
+{
+  "schema": "pr122-native-clip-expected-runtime-v1",
+  "status": "EXPECTED_CANONICAL_FIXTURE_FOR_ACTUAL_TRES_PLAYER_CHECK_NOT_APPROVAL",
+  "key": "transform:267",
+  "role": "run",
+  "direction": "SW",
+  "animation": "run_3",
+  "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-v03six.png",
+  "virtual_reference_canvas_size": 1024,
+  "pose_canvas_sizes": [
+    2304,
+    2304,
+    2304,
+    2304,
+    2304,
+    2304
+  ],
+  "source_anchors": [
+    [
+      699,
+      1300
+    ],
+    [
+      2185,
+      1287
+    ],
+    [
+      749,
+      2881
+    ],
+    [
+      2205,
+      2886
+    ],
+    [
+      659,
+      4348
+    ],
+    [
+      2265,
+      4432
+    ]
+  ],
+  "frames": [
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        141,
+        139,
+        1254,
+        1256
+      ],
+      "margin": [
+        594,
+        279,
+        1050,
+        1048
+      ],
+      "source_anchor": [
+        699,
+        1300
+      ],
+      "rgba_sha256": "6d47bed71a0ad9f908b5fba3026952fe65d5d81e4e5d1ce1a485b670bfe3c8b6",
+      "canvas_size": [
+        2304,
+        2304
+      ],
+      "foot": [
+        1152,
+        1440
+      ]
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1677,
+        140,
+        1254,
+        1255
+      ],
+      "margin": [
+        644,
+        293,
+        1050,
+        1049
+      ],
+      "source_anchor": [
+        2185,
+        1287
+      ],
+      "rgba_sha256": "50821464387f9a38453a992c2c2d92ed72cb6d91dffe941d595d5f53348ca7a9",
+      "canvas_size": [
+        2304,
+        2304
+      ],
+      "foot": [
+        1152,
+        1440
+      ]
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      "margin": [
+        544,
+        236,
+        1050,
+        1050
+      ],
+      "source_anchor": [
+        749,
+        2881
+      ],
+      "rgba_sha256": "c8e87d8b3933196426ff1b694d2fa00e88e7dea777abb4ac587d57f4cd3db6a1",
+      "canvas_size": [
+        2304,
+        2304
+      ],
+      "foot": [
+        1152,
+        1440
+      ]
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      "margin": [
+        624,
+        231,
+        1050,
+        1050
+      ],
+      "source_anchor": [
+        2205,
+        2886
+      ],
+      "rgba_sha256": "8df0d3b44462e99b083af4a7c90a1227b96fb3f8aa2a77130e807372fad15c8a",
+      "canvas_size": [
+        2304,
+        2304
+      ],
+      "foot": [
+        1152,
+        1440
+      ]
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      "margin": [
+        634,
+        305,
+        1050,
+        1050
+      ],
+      "source_anchor": [
+        659,
+        4348
+      ],
+      "rgba_sha256": "6c8c4e6a9b4579003202e299bde33464eba9a6b9c0f1cec5098d7cd38185ad9d",
+      "canvas_size": [
+        2304,
+        2304
+      ],
+      "foot": [
+        1152,
+        1440
+      ]
+    },
+    {
+      "row": 5,
+      "direction": "SW",
+      "region": [
+        1677,
+        3213,
+        1254,
+        1254
+      ],
+      "margin": [
+        564,
+        221,
+        1050,
+        1050
+      ],
+      "source_anchor": [
+        2265,
+        4432
+      ],
+      "rgba_sha256": "497837997b3eb05d9d5c0d75a2a52c87f90c6f4cb26ad9e35643aed8f07d9601",
+      "canvas_size": [
+        2304,
+        2304
+      ],
+      "foot": [
+        1152,
+        1440
+      ]
+    }
+  ],
+  "per_pose_runtime_pixel_scale_ratios": [
+    [
+      1024,
+      2304
+    ],
+    [
+      1024,
+      2304
+    ],
+    [
+      1024,
+      2304
+    ],
+    [
+      1024,
+      2304
+    ],
+    [
+      1024,
+      2304
+    ],
+    [
+      1024,
+      2304
+    ]
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+    "base_geometry_sha256": "bf481de03545ec1d95efefe2fd2fefd0458f96e41b3b0249c7db5e3b9fc446de",
+    "direction": "SW",
+    "review_basis": "Six individually strict complete source PNGs, one exact1254-square pose per1536 cell, source SHA/RGBA pinned in pose-map; include original low-alpha fringes by outward metadata only. Independent full selected source proof d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4. No resize/repack/alpha cleanup or original error deletion. Retain original automatic transparent 1-2px top padding in phases0/1 as well: each review rectangle is exact union of original base rectangle and full selected1254source rectangle. No pixel change.",
+    "regions": [
+      [
+        141,
+        139,
+        1254,
+        1256
+      ],
+      [
+        1677,
+        140,
+        1254,
+        1255
+      ],
+      [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        3213,
+        1254,
+        1254
+      ]
+    ],
+    "nearest_owner_sha256": "a1f71a5a0eae4162022fc6d03ba7bbf0533f386efb980500e279c04d87b9aa3f"
+  },
+  "independent_physical_candidate_review": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+    "sha256": "a33564495e7e16299570120510a59dfab7da96e7cb19593941b19cb6b33b16b8",
+    "status": "PASS_SOURCE_AND_AUTHORED_ROOT_PHYSICAL_CANDIDATE"
+  },
+  "required_actual_checks": [
+    "ExactunchangedPNG/source and6actualauthoredphase order",
+    "ActualAtlasTexture regions/margins/C/anchors match fixture",
+    "ActualPlayer canonical perpose scale/profilebinding",
+    "Actualcompiled idle→run0..5→0 ground-under-foot/flight/compression and head/rigidcore; no source-onlyactorapproval"
+  ]
+}

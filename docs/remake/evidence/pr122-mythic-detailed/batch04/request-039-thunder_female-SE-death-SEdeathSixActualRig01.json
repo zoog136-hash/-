@@ -1,0 +1,368 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "SE",
+  "role": "death",
+  "version": "SEdeathSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+      "packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+      "direction": "SE",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2816,
+        2816,
+        2816,
+        2816,
+        2816,
+        2816
+      ],
+      "root_float": [
+        723.7916666666666,
+        1067.2150113422247
+      ],
+      "root_integer": [
+        724,
+        1067
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          980,
+          1323
+        ],
+        [
+          3284,
+          1323
+        ],
+        [
+          980,
+          3627
+        ],
+        [
+          3284,
+          3627
+        ],
+        [
+          980,
+          5931
+        ],
+        [
+          3284,
+          5931
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "a057dfb91cb45c39e15f2548250be55e024649db41f62cedb3f35cb827703292",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "base_geometry_sha256": "06aed81b6fb916856487c06eebf59d984365215a2e965df64fe5ca5974bce41d",
+    "direction": "SE",
+    "regions": [
+      [
+        529,
+        218,
+        765,
+        1247
+      ],
+      [
+        2707,
+        145,
+        875,
+        1367
+      ],
+      [
+        227,
+        2624,
+        1132,
+        1397
+      ],
+      [
+        2667,
+        2992,
+        1244,
+        1183
+      ],
+      [
+        468,
+        5717,
+        1252,
+        913
+      ],
+      [
+        2778,
+        5743,
+        1252,
+        899
+      ]
+    ],
+    "nearest_owner_sha256": "8eacefc5028a20766f4c265dde020aff30f8e66ab648cb9798e82b8b51ba7b7b",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "direction": "SE",
+    "role": "death",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        980,
+        1323
+      ],
+      [
+        3284,
+        1323
+      ],
+      [
+        980,
+        3627
+      ],
+      [
+        3284,
+        3627
+      ],
+      [
+        980,
+        5931
+      ],
+      [
+        3284,
+        5931
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+      "packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+      "direction": "SE",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2816,
+        2816,
+        2816,
+        2816,
+        2816,
+        2816
+      ],
+      "root_float": [
+        723.7916666666666,
+        1067.2150113422247
+      ],
+      "root_integer": [
+        724,
+        1067
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ],
+        [
+          256,
+          256
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          980,
+          1323
+        ],
+        [
+          3284,
+          1323
+        ],
+        [
+          980,
+          3627
+        ],
+        [
+          3284,
+          3627
+        ],
+        [
+          980,
+          5931
+        ],
+        [
+          3284,
+          5931
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "a057dfb91cb45c39e15f2548250be55e024649db41f62cedb3f35cb827703292",
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+  "authored_common_root_float": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "common_root_integer": [
+    724,
+    1067
+  ],
+  "common_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "The first actual own-SE six-source death reads staggered loss of balance, buckled legs, knees yielding, diagonal torso collapse, grounded impact and a held face-up supine terminal. The distinct head/torso/pelvis/arm/leg poses form an irreversible fall rather than a rotated whole still or a repeated reaction.",
+      "Original own-SE identity, hair bun and complete blue ribbons, white-gold skirt, blue-gold bodice and complete directional black-gold boots remain recognizable. Native phase0/2/5 knee and ankle material reads as continuous folded leather; both upper/cuff/forearm joins remain attached and complete.",
+      "The complete original RIGHT foregrip and both weapon ends remain one rigid properSO3 material surface through collapse and rest. Hands and costume are retained, weapon ends remain visible and unclipped, and the original cape/coattails follow a connected pelvis-rooted delayed drape into the floor pose.",
+      "The original proximal skin seam was traced to insufficient parent/child source overlap and to 8bit bicubic premultiplied-channel clamp ringing at an actual alpha0 source boundary. Finalv08 preserves six-native original skin overlap, blends the child only after that source cut, and evaluates parent edge color in float before final unpremultiplication/clamp. The final after-only phase0/5 native skin inspection shows continuous original skin with the former dark/white jagged trace removed.",
+      "The actual original thigh and pelvis donor RGBA is exact wherever painted. All six final parent edge rasters independently match the float sampler and retain their prior alpha; all102 other v07 rasters are unchanged. From v05,84 source/raster surfaces remain identical and only24 proximal/pelvis/latest original shaft-edge surfaces changed. Every final108-part depth-ordered composition reproduces the final sixPNG RGBA exactly.",
+      "The declared same-source model independently satisfies fixed318.725 limb segments, proper body/head/arm rotations, fullRIGHTforegrip-pole Gram preservation, source/raster texel-quad floor guards and a held supine terminal. Minimum guarded painted height is approximately1native. The unchanged runtime death duration is .8seconds across six equal phases; the resource role_seconds .65 remains a separate literal."
+    ],
+    "visual_limitations": [
+      "This approves this exact six-source appearance, visible death progression, native joins, complete equipment and held terminal. It does not grant full actor approval, game-test evidence or final request binding.",
+      "The model is one explicit compatible authored native capture and material/depth solution. Hidden3D anatomy and body depth are not uniquely measured; flexible transverse clothing uses the fixed minimum-norm camera-plane rule rather than a perpendicular anatomical muscle section.",
+      "At the terminal, the visible face-up front material plane is at Z60 and an explicitly declared unseen back thickness60 supplies support at Z0. This finite support assumption does not become image-measured hidden anatomy.",
+      "The first actual six-source board and one native0/2/5 joint board were viewed once. Only the final after-only phase0/5 skin crop was viewed for the repair; no repeated whole-six view or new source service was used by this review.",
+      "The source/bodyunit/root and original2304 storage remain fixed. Later transparent transport, runtime adoption and unchanged legacy/scoped game checks require their own exact request receipt and parent validation. No image rescaling, per-pose root/C fitting or quality-threshold relaxation is covered.",
+      "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+      "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval.",
+      "Final packing uses one identical integer shipping translation for all6, exact reverseRGBA reconstruction, transparent padding only, and one common integer root quantization. Every original native world-space point is unchanged. No new source/image view or physical/body/profile fit was introduced."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "raw_bytes": 6728269,
+    "request_sha256": "1b19b34c7570b77333647b79fac4b30b395c5e77c8b2d68eee4e09492cd05b2b",
+    "review_sha256": "23b5e9d9598b13f8aedb1370778aced1f596ebce691cafc3d11f85dee4e8c21e"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/thunder_female-SE-death-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-qn0tpl67/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/request-SEdeathSixActualRig01.json": "1b19b34c7570b77333647b79fac4b30b395c5e77c8b2d68eee4e09492cd05b2b",
+      "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/thunder_female-SE-death-six-actual-poses-r001.png": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEdeathSixActualRig01-independent-final-source-cycle-PASS-v01.json": "23b5e9d9598b13f8aedb1370778aced1f596ebce691cafc3d11f85dee4e8c21e",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-death-SEdeathSixActualRig01.png",
+  "output_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+  "output_bytes": 6728269,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-qn0tpl67/reviewed-source.png"
+}

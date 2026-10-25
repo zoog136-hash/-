@@ -1,0 +1,25 @@
+{
+  "schema": "PR122_NE_RUN_CONTACT3_BOUNDED_REPAIR_MASK_SCOPE_QC_V1",
+  "reviewer": "/root/girtas_final_actual_quality_v04",
+  "status": "PASS_PROPOSED_MASK_SCOPE_ONLY_NOT_GENERATED_SOURCE",
+  "source_sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+  "proposed_mask": {
+    "path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/lowerbody-ROI-proposal.json",
+    "sha256": "e5054fabe2b4d8945de5bd822cc6e34ddb7048ce640162a3a76ba76f581e070f"
+  },
+  "visual_findings": [
+    "The authored polygon encloses the existing nearRIGHT thigh/knee/shin/boot and immediately attached lowercloth while visibly excluding skull/neck/solidcuirass/pauldrons/arms/rightweapon and the complete farLEFT recoveryboot.",
+    "The proposed heel moves up/right toward a genuinely more flexed/foreshortened supporting nearRIGHT leg; retain initial heel-leading/toe-up contact stage and actualhip ownership. This does not certify a generated pose or finalground/root target.",
+    "Require byte-identical originalRGBA outside the explicit polygon, and separately preserve every arm/hand/weapon plus rigiduppercore even if any future mask expands. New leg/boot must be one continuous nearRIGHT chain without a residual oldboot or hard seam."
+  ],
+  "physical_target_status": "FRESH_PHYSICAL_AUTHOR_MUST_AUTHOR_CONTACT_PLANE_TARGET; reviewer QA range105..111world only, no finalroot authored",
+  "independent_source_review_after_edit": "REQUIRED",
+  "actor_approved": false,
+  "counts_changed": false,
+  "private_image_ledger": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view09.json",
+    "sha256": "64138057361bfe49be0f4e5b323b562fc48ff689fc6f2a2f179ee2afcccd06cf",
+    "viewed_encoded_bytes": 847546
+  },
+  "main_chat_image_attachments": 0
+}

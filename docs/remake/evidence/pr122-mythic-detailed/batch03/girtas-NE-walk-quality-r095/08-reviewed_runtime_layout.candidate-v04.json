@@ -1,0 +1,47 @@
+{
+  "status": "REVIEWED_LAYOUT_PROPOSAL",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "walk",
+  "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+  "canvas_size": 2048,
+  "authored_pose_canvas_sizes": [
+    1936,
+    1552,
+    1568,
+    2432,
+    1504,
+    1936
+  ],
+  "source_anchors": [
+    [
+      682,
+      1143
+    ],
+    [
+      2258,
+      1093
+    ],
+    [
+      703,
+      2662
+    ],
+    [
+      2199,
+      2863
+    ],
+    [
+      715,
+      4153
+    ],
+    [
+      2215,
+      4219
+    ]
+  ],
+  "review_basis": "Exact6trueparallelNEforwardsource model/gait independentPASS. Rigidhelmet/palehairroot plus independent skull/pauldron/upperwaist Cstage. NEWmanualposterior-waist\u2192inferredpelvis\u2192projectedgroundroot calibratedtoselectedNEidle actualtwo-sole-root; smallauthoredload/toeoffpelvisarc, feetlocalYcontainsrealperspectivedepth notflatY0. Thiscandidatependingindependentphysical7panel; no floor/actorapproval frommetadata.",
+  "anchor_measurement_evidence": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/authored-pelvis-projected-ground-root-candidate-v04.json",
+  "anchor_measurement_evidence_sha256": "35bb342a4738760d1c300c106f696e7be12c2e8b7a7432a22188c9d3af48ec67",
+  "runtime_validation": "HOLD_PENDING_INDEPENDENT_PHYSICAL_CANDIDATE_AND_ACTUAL_PLAYER",
+  "actor_approval": false
+}

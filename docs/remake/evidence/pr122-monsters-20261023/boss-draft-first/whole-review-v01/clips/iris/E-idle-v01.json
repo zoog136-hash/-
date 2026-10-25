@@ -1,0 +1,219 @@
+{
+  "actor": "monster:잔혹한 아이리스",
+  "slug": "iris",
+  "clip": "E-idle-v01",
+  "role": "idle",
+  "direction": "E",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/E-idle-v01.png",
+  "source_sha256": "89b990aaf44154c44215f9c5edc894270b0abfb8067f98fabcaf2e2dc0688fee",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      88418,
+      86246,
+      83810,
+      83614,
+      81523,
+      81124
+    ]
+  },
+  "reused_pinned_minimum_check": true,
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "E",
+        "region": [
+          78,
+          3,
+          376,
+          509
+        ],
+        "margin": [
+          490,
+          330,
+          960,
+          827
+        ],
+        "source_anchor": [
+          256,
+          508
+        ],
+        "rgba_sha256": "a2d3e95116993a3a10c2da13c118b099bc92348f8727ba14e59d2f44ebce63a0",
+        "canvas_size": [
+          1336,
+          1336
+        ],
+        "foot": [
+          668,
+          835
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "E",
+        "region": [
+          566,
+          4,
+          383,
+          508
+        ],
+        "margin": [
+          466,
+          331,
+          953,
+          828
+        ],
+        "source_anchor": [
+          768,
+          508
+        ],
+        "rgba_sha256": "f43e0c389ed240129fc1c79ee9ec4699f48415c70890a4193e9c2b9135f3ee92",
+        "canvas_size": [
+          1336,
+          1336
+        ],
+        "foot": [
+          668,
+          835
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "E",
+        "region": [
+          1080,
+          4,
+          367,
+          508
+        ],
+        "margin": [
+          468,
+          331,
+          969,
+          828
+        ],
+        "source_anchor": [
+          1280,
+          508
+        ],
+        "rgba_sha256": "7410d0af802fa02282205abf7adc745a9e7561815e16c60211dfed041f2d33d5",
+        "canvas_size": [
+          1336,
+          1336
+        ],
+        "foot": [
+          668,
+          835
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "E",
+        "region": [
+          80,
+          515,
+          391,
+          504
+        ],
+        "margin": [
+          492,
+          335,
+          945,
+          832
+        ],
+        "source_anchor": [
+          256,
+          1015
+        ],
+        "rgba_sha256": "3600eecee04ac8f52adef6d594c1bc24b397d950f5cda978ec3720777b60f06f",
+        "canvas_size": [
+          1336,
+          1336
+        ],
+        "foot": [
+          668,
+          835
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "E",
+        "region": [
+          559,
+          515,
+          393,
+          504
+        ],
+        "margin": [
+          459,
+          335,
+          943,
+          832
+        ],
+        "source_anchor": [
+          768,
+          1015
+        ],
+        "rgba_sha256": "5e0e86d64aa270c2cf8ed31649d0db5d1ce5d92096cac8a7c3eb3c8f82ef0ebf",
+        "canvas_size": [
+          1336,
+          1336
+        ],
+        "foot": [
+          668,
+          835
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "E",
+        "region": [
+          1078,
+          515,
+          374,
+          503
+        ],
+        "margin": [
+          466,
+          336,
+          962,
+          833
+        ],
+        "source_anchor": [
+          1280,
+          1014
+        ],
+        "rgba_sha256": "57e69492bd67935365a48f9fd75271a6c0e9dcddd3378dcc0c33d86781281911",
+        "canvas_size": [
+          1336,
+          1336
+        ],
+        "foot": [
+          668,
+          835
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 500.5,
+    "canvas_size": [
+      1336,
+      1336
+    ],
+    "foot": [
+      668,
+      835
+    ],
+    "strict_source_analysis_canvas": 2048
+  },
+  "status": "HOLD",
+  "cause": "foreground_ownership",
+  "reason": "Detached foreground has ambiguous physical-body ownership"
+}

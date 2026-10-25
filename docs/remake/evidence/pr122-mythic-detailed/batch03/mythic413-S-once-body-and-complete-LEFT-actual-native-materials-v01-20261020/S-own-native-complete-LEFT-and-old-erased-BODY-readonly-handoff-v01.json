@@ -1,0 +1,183 @@
+{
+  "schema": "MYTHIC413_S_COMPLETE_LEFT_CURVED_CUFF_NATIVE_OWNERSHIP_READONLY_HANDOFF_V01",
+  "status": "NATIVE_INPUT_PENDING_ACTUAL_ARTICULATED_JOINT_QC",
+  "source": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "dbfbca5fd54a9f5d4f704de59c7d61e586f2d9c410f48f07f233b14096a98e25",
+    "bytes": 919345
+  },
+  "once_body_registration": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-native-one-time-body-density-C2560-root-registration-v01.json",
+    "sha256": "c9a5c8752e3daf303b4685c02fed424628aa621fe8ad05ff97ddbab838673480",
+    "bytes": 3681
+  },
+  "C": 2560.0,
+  "bodyunit": 2.5,
+  "common_unpadded_root": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "native_size": [
+    1254,
+    1254
+  ],
+  "parts": {
+    "LEFT-far-complete-curved-cuff-forearm-free-hand": {
+      "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/common-own-S-native-LEFT-materials-v01/original-actual-S-LEFT-far-complete-curved-cuff-forearm-free-hand-material-v01.png",
+      "sha256": "645020a1e8360ac634dc8c21bf6452154f6b6a35c4b807b458a880c053d9eec5",
+      "bytes": 49273
+    }
+  },
+  "semantic_mattes": {
+    "LEFT-far-complete-curved-cuff-forearm-free-hand": {
+      "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/common-own-S-native-LEFT-materials-v01/original-actual-S-LEFT-complete-curved-cuff-forearm-hand-native-ownership-mask-v01.png",
+      "sha256": "7b6abd238f1265faf2db812829ddebb4c71522a1691dfd86ffa81c85570fc4e7",
+      "bytes": 3120
+    }
+  },
+  "body_inputs": {
+    "LEFT-forearm-only-old-erased-BODY-with-original-RIGHT-staff-arms-and-boots": {
+      "body": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/common-own-S-native-LEFT-materials-v01/actual-S-LEFT-forearm-only-old-erased-BODY-original-RIGHT-staff-arms-and-boots-v01.png",
+        "sha256": "16a1300ac1877ecd27306f5da54363a66df0b92e7c7bcbe626a5dc1b514f138b",
+        "bytes": 881109
+      },
+      "old_forearm_erasure_support": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/common-own-S-native-LEFT-materials-v01/original-actual-S-LEFT-complete-curved-cuff-forearm-hand-native-ownership-mask-v01.png",
+        "sha256": "7b6abd238f1265faf2db812829ddebb4c71522a1691dfd86ffa81c85570fc4e7",
+        "bytes": 3120
+      }
+    }
+  },
+  "fixed_original_RIGHTgear_conservative_native_support": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/common-own-S-native-LEFT-materials-v01/original-S-RIGHT-near-foregrip-fullstaff-conservative-native-preservation-mask-v01.png",
+    "sha256": "dfe3cce78c7dc1aadc9e53bf757de82e21311bbf13a1e16882fff2d21d7debfe",
+    "bytes": 8956
+  },
+  "actual_native_controls": {
+    "LEFT_far_visible_proximal_anchor": [
+      752.0,
+      490.0
+    ],
+    "LEFT_far_cuff_elbow": [
+      772.0,
+      521.0
+    ],
+    "LEFT_far_wrist": [
+      866.0,
+      626.0
+    ]
+  },
+  "controls_scope": "Native visible proximal cuff/blue elbow cap and wrist controls, not uniquely measured hidden 3D joints. Wrist control is inside the original black cuff/skin join.",
+  "source_ownership_recipe": {
+    "proximal_and_outer_separator_polygon": [
+      [
+        766,
+        470
+      ],
+      [
+        930,
+        470
+      ],
+      [
+        930,
+        700
+      ],
+      [
+        865,
+        700
+      ],
+      [
+        850,
+        680
+      ],
+      [
+        839,
+        650
+      ],
+      [
+        831,
+        626
+      ],
+      [
+        813,
+        603
+      ],
+      [
+        795,
+        584
+      ],
+      [
+        776,
+        570
+      ],
+      [
+        758,
+        560
+      ],
+      [
+        749,
+        550
+      ],
+      [
+        741,
+        540
+      ],
+      [
+        736,
+        530
+      ],
+      [
+        728,
+        520
+      ],
+      [
+        721,
+        510
+      ],
+      [
+        715,
+        505
+      ],
+      [
+        710,
+        500
+      ],
+      [
+        716,
+        495
+      ],
+      [
+        727,
+        490
+      ],
+      [
+        737,
+        485
+      ],
+      [
+        748,
+        479
+      ],
+      [
+        760,
+        473
+      ]
+    ],
+    "native_output_source_RGBA_mismatch": 0,
+    "source_reconstruction_changed_pixels": 0,
+    "old_LEFT_material_RGBA_remaining_in_erased_BODY": 0,
+    "complete_actual_LEFT_strong_alpha100_components_ge200": [
+      10663
+    ]
+  },
+  "fixed_region_scope": "Conservative source-alpha support includes the entire RIGHT weapon/foregrip and some adjacent fixed costume. It is preservation only, not a claimed exact extracted RIGHT animation module. Dedicated RIGHT extraction is owned by the separate ATTACK author.",
+  "source_resampling": false,
+  "old_original_source_changed": false,
+  "body_gate_or_action_approval_added": false,
+  "actor_approvals_added": 0
+}

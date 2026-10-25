@@ -1,0 +1,49 @@
+{
+	"capture_root": "/workspace/runtime/batch16/Spider-Family-Temporal-QA-v01/captures",
+	"cases": [
+		{
+			"name": "검은숲 거미",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_1.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch16/Spider-Family-Temporal-QA-v01/report-cases/dark-forest-spider-batch16-project.json",
+			"report_sha256": "5692a2e30e6885ef3aff3971405ff7b70e5e3e0b4a65ac94ab81d00e85b6333b",
+			"roles": 40,
+			"slug": "dark-forest-spider-batch16-project"
+		},
+		{
+			"name": "왜곡의 타란툴라",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_1.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch16/Spider-Family-Temporal-QA-v01/report-cases/distorted-tarantula-batch16-project.json",
+			"report_sha256": "133841914120f969d93e719cf7e153ab670eab933f29d2dcd185c2628c7d1b65",
+			"roles": 40,
+			"slug": "distorted-tarantula-batch16-project"
+		}
+	],
+	"checks": 87873,
+	"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/runtime/batch16/Spider-Family-Temporal-QA-v01/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 154929148,
+	"wall_time_performance_claim": false
+}

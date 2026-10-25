@@ -1,0 +1,29 @@
+{
+  "key": "transform_267",
+  "name": "Girtas",
+  "direction": "E",
+  "role": "walk",
+  "version": "v10LEFTmidstance1",
+  "source_pose": 1,
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_batch": "batch03",
+  "status": "AUTHORING_DISTINCT_MISSING_LEFT_MIDSTANCE_KEY_NOT_ACTOR_COMPLETION",
+  "references": [
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase1.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase1.png": "a1b48cd9f81c2b5ddb78c5ca2a824694626962d4adcfe7f0c7399ba3e41e3490",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png": "d6650ea48f1b708be9f5fd0815fbd9907d8d31c02368bb4a48e1aed6cc2d2f13"
+  },
+  "transparent_background": true,
+  "prompt": "Produce ONE complete Girtas animation key, transparent background, one full character, no labels/scene/guide, generous margins. This exact phase1 is a WALK FAR LEFT MIDSTANCE: body weight rests on the FAR LEFT leg; the NEAR RIGHT leg is airborne passing behind. Not a running jump or an opposite right support.\nImage1 is the PRIMARY exact solid3D pose. Keep its actual legs/depth and dress it faithfully. Blue leg = anatomical LEFT, FAR behind, one straight supporting leg with FULL SOLE planted UNDER THE HIP on the upper/far ground lane. Orange leg = anatomical RIGHT, NEAR weapon side, actual hip beside weapon arm descends to bent thigh/knee, then shin bends BACK/imageLEFT into a rear passing boot clearly AIRBORNE above ground. Both feet belong to exactly TWO continuous hips/legs. The NEAR RIGHT thigh\u2192bent knee\u2192AIR rear boot chain must be genuinely visible in front of the robe natural side slit. Show that near upperthigh strip from the weapon-side hip, not a disconnected rear boot. The FAR LEFT support shin/boot remains behind robe edge. Only FAR LEFT supports, NEAR RIGHT foot is clearly lifted. One planted leg rules out flight.\nImage2 provides the faithful same original upperbody identity only (old legs removed): pale face in right profile, long pale gray hair, fine HARD narrow straight gold radial crown rays, ornate black/gold armor. Image3 is only original longrobe material/trim: keep ankle-length long dark cloth/gold-trim panels, part the near natural slit to reveal actual bent RIGHT thigh/knee without shortening robe or using pants. Image4 is only the exact original long sinuous dark/gold blade. Anatomical RIGHT NEAR arm continuously grips that weapon low/back to imageLEFT; LEFT FAR hand empty balancing. Exactly two arms, exactly two legs, same model. Fixed pure E side camera matching solid mannequin, head/nose RIGHT, no SE rotation. Crown/hair/blade/boots complete inside canvas. Clear different stance from LEFTcontact0 or RIGHTcontact3, physically coherent smooth walking single key.",
+  "corrective_reason": "v07 source opposite-support HOLD. New single LEFTmidstance1 with visible nearRIGHT bent passing chain and farLEFT only support. New actual phase, not full6 retry.",
+  "quality_gate": "Actual two joints chains, nearRIGHT AIR/farLEFT planted, faithful model and E camera; no PASS from guide labels."
+}

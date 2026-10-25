@@ -1,0 +1,383 @@
+{
+  "status": "ACTUAL_ALL_ALPHA_PIXEL_SURFACE_RIGID_PROJECTION_AND_PHASE2_5_AIR_PROOF_PENDING_INDEPENDENT_REVIEW",
+  "actor": "transform:413",
+  "direction": "N",
+  "motion": "run",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v08/actual-N-run-six-source-contract-v08.json",
+    "sha256": "3b508543fdd43c06112cfa6090d024a5f8d5c179f601bcfdddf12c69dd732bcb"
+  },
+  "camera": {
+    "C": 1920,
+    "bodyunit": 1.875,
+    "common_unpadded_root": [
+      662.8125,
+      917.6920531878804
+    ],
+    "projection": "screenX=X; screenY=917.6920531878804+.45*depth-height"
+  },
+  "fixed_material_plane": "For each original front/back view material, local X=u, local D=0, local Z=-v/g_capture; u,v are original native source pixel centers relative to the SAME source heel. Native source-view capture g values are fixed once, not fit per pose.",
+  "rigid_rotation": "R_x(theta): (D,Z)->(D*cos(theta)+Z*sin(theta), -D*sin(theta)+Z*cos(theta)); same theta and heel transform as the fixed-bone ankle/heel/toe model. Source L/R parity is a fixed paired-material anatomical registration before this determinant+1 rotation.",
+  "projection_identity": "projectedY=heelY+v*(cos(theta)-.45*sin(theta))/g_capture. Front CONTACT/AIR g_capture=1/1.035 gives scale1 at declared theta, LOAD theta0 gives1.035; back theta-30 gives1. Source pixels are never discarded by alpha threshold.",
+  "AIR_scope": "This is a compatible finite 2.5D projection binding of every original alpha>0 material pixel, including all painted shoe/counter/stiletto and silhouette. An additional fixed +/-8 native vertical Z thickness guard bounds unseen material depth. It is not a unique 3D boot or hidden source anatomy recovery. This proof claims full painted source AIR in phases2/5, not a measured hidden toe.",
+  "rows": [
+    {
+      "phase": 0,
+      "side": "L",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        616.5,
+        -150.42678486195655,
+        0.0
+      ],
+      "rotation_x_degrees": 3.99890216311585,
+      "pre_registered_paired_part_parity": 1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 1.1368683772161603e-13,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 0,
+      "side": "R",
+      "profile": "back",
+      "source_rgba_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+      "all_alpha_gt_zero_pixel_count": 7788,
+      "source_alpha_bounds": [
+        642,
+        880,
+        708,
+        1043
+      ],
+      "source_heel": [
+        680,
+        1032
+      ],
+      "heel_rig": [
+        726,
+        180.0,
+        234.69205318788045
+      ],
+      "rotation_x_degrees": -29.999999999999996,
+      "pre_registered_paired_part_parity": 1,
+      "fixed_capture_g": 1.0910254037844387,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 1,
+      "side": "L",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        616.5,
+        144.84594241107138,
+        0.0
+      ],
+      "rotation_x_degrees": 0.0,
+      "pre_registered_paired_part_parity": 1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.035,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 1,
+      "side": "R",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        733,
+        20.0,
+        68.69205318788045
+      ],
+      "rotation_x_degrees": 3.99890216311585,
+      "pre_registered_paired_part_parity": -1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 2,
+      "side": "L",
+      "profile": "back",
+      "source_rgba_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+      "all_alpha_gt_zero_pixel_count": 7788,
+      "source_alpha_bounds": [
+        642,
+        880,
+        708,
+        1043
+      ],
+      "source_heel": [
+        680,
+        1032
+      ],
+      "heel_rig": [
+        582,
+        180.0,
+        256.69205318788045
+      ],
+      "rotation_x_degrees": -29.999999999999996,
+      "pre_registered_paired_part_parity": -1,
+      "fixed_capture_g": 1.0910254037844387,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": true,
+      "min_all_painted_surface_Z": 248.7543333072942,
+      "max_all_painted_surface_Z": 377.3453953727916,
+      "fixed_vertical_thickness_guard_native": 8.0,
+      "min_all_painted_surface_plus_guard_Z": 240.7543333072942,
+      "entire_alpha_surface_and_guard_above_ground": true
+    },
+    {
+      "phase": 2,
+      "side": "R",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        698,
+        -100.0,
+        60.69205318788045
+      ],
+      "rotation_x_degrees": 3.99890216311585,
+      "pre_registered_paired_part_parity": -1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": true,
+      "min_all_painted_surface_Z": 57.59461266226604,
+      "max_all_painted_surface_Z": 184.58967421245677,
+      "fixed_vertical_thickness_guard_native": 8.0,
+      "min_all_painted_surface_plus_guard_Z": 49.59461266226604,
+      "entire_alpha_surface_and_guard_above_ground": true
+    },
+    {
+      "phase": 3,
+      "side": "L",
+      "profile": "back",
+      "source_rgba_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+      "all_alpha_gt_zero_pixel_count": 7788,
+      "source_alpha_bounds": [
+        642,
+        880,
+        708,
+        1043
+      ],
+      "source_heel": [
+        680,
+        1032
+      ],
+      "heel_rig": [
+        599,
+        180.0,
+        234.69205318788045
+      ],
+      "rotation_x_degrees": -29.999999999999996,
+      "pre_registered_paired_part_parity": -1,
+      "fixed_capture_g": 1.0910254037844387,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 3,
+      "side": "R",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        708.5,
+        -150.42678486195655,
+        0.0
+      ],
+      "rotation_x_degrees": 3.99890216311585,
+      "pre_registered_paired_part_parity": -1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 1.1368683772161603e-13,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 4,
+      "side": "L",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        592,
+        20.0,
+        68.69205318788045
+      ],
+      "rotation_x_degrees": 3.99890216311585,
+      "pre_registered_paired_part_parity": 1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 4,
+      "side": "R",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        708.5,
+        144.84594241107138,
+        0.0
+      ],
+      "rotation_x_degrees": 0.0,
+      "pre_registered_paired_part_parity": -1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.035,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": false
+    },
+    {
+      "phase": 5,
+      "side": "L",
+      "profile": "front",
+      "source_rgba_sha256": "9d0cc3513eba0bc8b637581cf42160327d8b08b34d7a59d5f14156a880b02b37",
+      "all_alpha_gt_zero_pixel_count": 6089,
+      "source_alpha_bounds": [
+        588,
+        730,
+        650,
+        854
+      ],
+      "source_heel": [
+        616.5,
+        850
+      ],
+      "heel_rig": [
+        627,
+        -100.0,
+        60.69205318788045
+      ],
+      "rotation_x_degrees": 3.99890216311585,
+      "pre_registered_paired_part_parity": 1,
+      "fixed_capture_g": 0.9661835748792271,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": true,
+      "min_all_painted_surface_Z": 57.59461266226604,
+      "max_all_painted_surface_Z": 184.58967421245677,
+      "fixed_vertical_thickness_guard_native": 8.0,
+      "min_all_painted_surface_plus_guard_Z": 49.59461266226604,
+      "entire_alpha_surface_and_guard_above_ground": true
+    },
+    {
+      "phase": 5,
+      "side": "R",
+      "profile": "back",
+      "source_rgba_sha256": "0db7adb0c893b96aae6244f3e9b34d5b4e36608b7a7eb871ecf96105785498d4",
+      "all_alpha_gt_zero_pixel_count": 7788,
+      "source_alpha_bounds": [
+        642,
+        880,
+        708,
+        1043
+      ],
+      "source_heel": [
+        680,
+        1032
+      ],
+      "heel_rig": [
+        744,
+        180.0,
+        256.69205318788045
+      ],
+      "rotation_x_degrees": -29.999999999999996,
+      "pre_registered_paired_part_parity": 1,
+      "fixed_capture_g": 1.0910254037844387,
+      "render_planar_pitch": 1.0,
+      "max_projection_residual_native": 0.0,
+      "is_actual_flight": true,
+      "min_all_painted_surface_Z": 248.7543333072942,
+      "max_all_painted_surface_Z": 377.3453953727916,
+      "fixed_vertical_thickness_guard_native": 8.0,
+      "min_all_painted_surface_plus_guard_Z": 240.7543333072942,
+      "entire_alpha_surface_and_guard_above_ground": true
+    }
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

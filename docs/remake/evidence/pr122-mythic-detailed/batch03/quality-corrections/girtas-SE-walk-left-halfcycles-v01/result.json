@@ -1,0 +1,49 @@
+{
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "walk",
+  "source_kind": "two_same_support_walk_halfcycle_poses",
+  "expected_poses": 2,
+  "intended_game_phases": [
+    4,
+    5
+  ],
+  "original_generated_file": "/workspace/generated_images/exec-c6cc479e-e78e-4afb-95b5-ef2b6cd04334.png",
+  "raw_path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png",
+  "raw_png": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png",
+  "raw_sha256": "5b7921d64d52fa1c9b71e5edad98e1304fd1736c30418071862da7e842ed6d40",
+  "raw_bytes": 1480988,
+  "image_size": [
+    1774,
+    887
+  ],
+  "request_path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/request.json",
+  "request_sha256": "488caf4061b35f528a4f5bccbcbefab6521581ee31ca74175d5ae47b12c1a0c0",
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "complete_clip": false,
+  "actor_approval": false,
+  "geometry_status": "PASS",
+  "geometry_path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/geometry-base2048.json",
+  "status": "HOLD_ONE_USABLE_KEY_ONE_WRONG_SUPPORT_PHASE",
+  "per_pose_review": [
+    {
+      "source_pose": 0,
+      "intended_game_phase": 4,
+      "source_visual_status": "PASS",
+      "finding": "FarLEFT long leg plants at lowerRIGHT; nearRIGHT knee bends with short boot lifted under left/central pelvis. Genuine opposite midstance to phase1."
+    },
+    {
+      "source_pose": 1,
+      "intended_game_phase": 5,
+      "source_visual_status": "HOLD",
+      "finding": "Requested farLEFT toeoff / nearRIGHT forward lowerLEFT did NOT happen. FarLEFT remains long forward planted at lowerRIGHT; nearRIGHT trails upLEFT, similar to LEFTcontact3 instead of recovering toward RIGHTcontact0."
+    }
+  ],
+  "usable_game_phases": [
+    4
+  ],
+  "integration_ready": false,
+  "new_approvals": 0,
+  "identity_camera_review": "PASS faithful original SE3/4/paleface/longpalehair/hardgoldspines/longdarkrobe/RIGHTsinuousweapon/emptyLEFT. No extra limbs or gear changes."
+}

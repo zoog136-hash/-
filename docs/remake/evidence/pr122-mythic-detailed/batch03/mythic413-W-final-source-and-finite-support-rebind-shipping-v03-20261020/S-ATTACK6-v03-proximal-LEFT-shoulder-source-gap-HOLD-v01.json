@@ -1,0 +1,67 @@
+{
+  "schema": "TWILIGHT_ACTUAL_NATIVE_SOURCE_QUALITY_HOLD_ADDENDUM_V1",
+  "reviewer": "mythic413_w_actual_quality_fresh_v01",
+  "review_utc": "2026-10-20T16:12:17.683299+00:00",
+  "actor": "Mythic413",
+  "direction": "S",
+  "action": "ATTACK",
+  "source_visual_status": "HOLD",
+  "contract_sha256": "eef9c17f3696730f5ca676f8fcabc05cb0fca7c7a85302a45fc2672554f6a760",
+  "affected_phase": 3,
+  "affected_pose_path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/actual-S-ATTACK6-own-native-articulated-rig-v03/thunder_female-S-attack-3-STRIKE3-actual-native-v03.png",
+  "affected_pose_sha256": "4b74000ad40ae8512598f504d5789311a6c05b001634941f4c8d0de29698e630",
+  "finding": "Thin vertical transparent crack through proximal LEFT shoulder/bare skin at posed humerus-body join. READY join is visually continuous; STRIKE3 introduces transparent line rather than natural skin shadow.",
+  "probe_storage": [
+    780,
+    390,
+    950,
+    590
+  ],
+  "approx_source_unpadded_joint_region": [
+    712,
+    350,
+    716,
+    385
+  ],
+  "actual_RGBA_witnesses_STRIKE3": [
+    {
+      "storage_xy": [
+        840,
+        500
+      ],
+      "RGBA": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "storage_xy": [
+        842,
+        510
+      ],
+      "RGBA": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "private_preview": {
+    "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/private-S-READY-STRIKE3-native-lossless-neck-LEFT-shoulder-join-v03.png",
+    "bytes": 99546,
+    "sha256": "191dad12af5a3f9986686a342e64edb9306d65fe95364dc225fbf9918944074c"
+  },
+  "other_observations": "All-six native LEFT shoulder/sleeve/cuff/free-hand board otherwise reads coherent; complete hand and cuff remain joined. Neck/head relationship is stable in inspected READY/STRIKE3 pair. This does not clear proximal skin crack.",
+  "next_gate": "Resolve genuine anatomical Lupper proximal overlap/underlay against torso using actual source-owned skin/garment material. Return local posed shoulder proof and new exact-six before SOURCE. Do not add thin wire or refit C/root.",
+  "prior_HOLDs_preserved": [
+    "exactmask cape/genuine hem and lowerstaff source ownership",
+    "R elbow white lobe improperly retained on Rupper"
+  ],
+  "actor_approvals_added": 0,
+  "detailed_actor_approval_count": "2/31",
+  "numeric_floor_OR_flow_OR_game_approval": false,
+  "image_ledger_cumulative_bytes_at_view": 1439232
+}

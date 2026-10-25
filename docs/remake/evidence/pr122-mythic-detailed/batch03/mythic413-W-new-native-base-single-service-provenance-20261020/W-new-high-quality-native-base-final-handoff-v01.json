@@ -1,0 +1,137 @@
+{
+  "status": "NEW_W_NATIVE_SOURCE_CANDIDATE_PRESERVED_INDEPENDENT_SOURCE_AND_BODY_GATE_PENDING",
+  "actor": "transform:413",
+  "direction": "W",
+  "source_original": {
+    "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/service-W-fullbody-base-native-r001.png",
+    "sha256": "fc440f258979b615d3375f4a288f767d69649de2b46495bc93be652998bb076e",
+    "bytes": 856782,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "native_untouched": true
+  },
+  "actual_service_calls": 1,
+  "source_reference_pixels_unchanged": true,
+  "visible_first_preview_findings": [
+    "One new native full-body W candidate; face/nose and both boot toes visibly point screen-left.",
+    "Staff is visibly complete with both pointed gold/turquoise ends and uninterrupted shaft outside cape, held by apparent far RIGHT arm; near LEFT hand is free.",
+    "Blond bun, blue bow/ribbons, blue/gold corset, white pleated mini, split blue/gold coat, black/gold complete heels retained.",
+    "No visible FX, contact/cast shadow, scenery or text; alpha>=8 and alpha>=100 border pixels are both zero."
+  ],
+  "HOLD_or_review_notes": [
+    "Requested32px/64px top safety margin was not achieved: alpha>=8 top is18px, alpha>=100 top20px. Complete upper tip is visible; no original padding/resizing applied. Independent author may use explicit transparent storage padding without deleting original.",
+    "Weak low-alpha disconnected/dust components are preserved in original. Original strong foreground and independent AA cleanup, if needed, must be separately gated.",
+    "Torso has some front-facing chest exposure despite left-facing head and boots; exact W heading and far/near shoulder/hand semantics remain independent SOURCE checks.",
+    "Producer first-preview observations are not independent SOURCE approval, body C/root registration, animated clip/game completion or full-actor approval."
+  ],
+  "source_alpha_stats": {
+    "1": {
+      "bbox": [
+        25,
+        17,
+        1234,
+        1220
+      ],
+      "foreground_pixels": 315019,
+      "border_pixels": 0,
+      "component_count": 812,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 313284
+    },
+    "8": {
+      "bbox": [
+        338,
+        18,
+        1009,
+        1187
+      ],
+      "foreground_pixels": 281636,
+      "border_pixels": 0,
+      "component_count": 221,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 281362
+    },
+    "100": {
+      "bbox": [
+        339,
+        20,
+        1008,
+        1186
+      ],
+      "foreground_pixels": 273242,
+      "border_pixels": 0,
+      "component_count": 12,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 273219
+    }
+  },
+  "private_preview": {
+    "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-produced-W-base-quality-v01.jpg",
+    "sha256": "da8541e7c3bf21571614dbe6348344607a3d2ef65ed9c5ad91bfd5fc5ad71a49",
+    "bytes": 62155,
+    "size": [
+      760,
+      760
+    ]
+  },
+  "actual_input_board": {
+    "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-three-reference-W-board-v01.jpg",
+    "sha256": "48b3d70010b2f473610a125ad78ea723653dd4dc1548d032b915569fc0f877e4",
+    "bytes": 57231,
+    "size": [
+      1080,
+      650
+    ]
+  },
+  "source_external_references": [
+    {
+      "label": "Canonical 413 identity",
+      "path": "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+      "sha256": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+      "bytes": 24057,
+      "size": [
+        108,
+        132
+      ],
+      "charged_bytes_conservatively": true,
+      "original_modified": false
+    },
+    {
+      "label": "Own S front wardrobe",
+      "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/service-S-fullbody-base-native-r001.png",
+      "sha256": "5f0c143a3ee3c26b4a745b8f58c1e4b435dff354cd613e544f08348edd42fb3a",
+      "bytes": 996497,
+      "size": [
+        1254,
+        1254
+      ],
+      "charged_bytes_conservatively": true,
+      "original_modified": false
+    },
+    {
+      "label": "Own SW material and far RIGHT staff",
+      "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/service-SW-fullbody-base-native-r001.png",
+      "sha256": "1e5de9a93d8755783a2405733eddb21f7f59b3141acb9f5204332228a7a263ee",
+      "bytes": 950319,
+      "size": [
+        1254,
+        1254
+      ],
+      "charged_bytes_conservatively": true,
+      "original_modified": false
+    }
+  ],
+  "private_image_ledger_total_bytes": 3066427,
+  "source_resampled": false,
+  "source_mirrored": false,
+  "C_or_root_registered": false,
+  "game_connected": false,
+  "actor_approvals_added": 0,
+  "ci_runs": 0,
+  "git_mutations": 0,
+  "source_owner": "mythic413_nw_run_load_fresh",
+  "image_or_base64_forwarded_to_parent": false
+}

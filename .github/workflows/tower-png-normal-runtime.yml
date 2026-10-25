@@ -29,7 +29,8 @@ jobs:
       - name: Official Godot 4.7.2 and software display
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri python3-numpy python3-pil
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri python3-numpy python3-pil ripgrep
+          command -v rg >/dev/null
           base=https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable
           curl -fL --retry 3 "$base/Godot_v4.7.2-stable_linux.x86_64.zip" -o /tmp/godot.zip
           curl -fL --retry 3 "$base/SHA512-SUMS.txt" -o /tmp/sums.txt
@@ -51,24 +52,24 @@ jobs:
           export XDG_DATA_HOME="$RUNNER_TEMP/aden-units"
           godot=/tmp/Godot_v4.7.2-stable_linux.x86_64
           "$godot" --headless --editor --path . --import > tower-evidence/import.log 2>&1
-          ! grep -E 'SCRIPT ERROR:|ERROR:' tower-evidence/import.log
+          ! rg 'SCRIPT ERROR:|ERROR:' tower-evidence/import.log
           "$godot" --headless --path . --script res://tests/aden_png_scale_migration_test.gd 2>&1 | tee tower-evidence/scale.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|ADEN_SCALE_FAIL' tower-evidence/scale.log
-          grep -E 'ADEN_SCALE_RESULT.*"failures":\[\]' tower-evidence/scale.log
+          ! rg 'SCRIPT ERROR:|ERROR:|ADEN_SCALE_FAIL' tower-evidence/scale.log
+          rg 'ADEN_SCALE_RESULT.*"failures":\[\]' tower-evidence/scale.log
           "$godot" --headless --path . --script res://tests/native_png_layer_ownership_test.gd 2>&1 | tee tower-evidence/ownership.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:' tower-evidence/ownership.log
-          grep -E 'NATIVE_PNG_OWNERSHIP_RESULT.*"failures":\[\]' tower-evidence/ownership.log
+          ! rg 'SCRIPT ERROR:|ERROR:' tower-evidence/ownership.log
+          rg 'NATIVE_PNG_OWNERSHIP_RESULT.*"failures":\[\]' tower-evidence/ownership.log
           "$godot" --headless --path . --script res://tests/github_update_autoload_maps_test.gd 2>&1 | tee tower-evidence/github-autoload.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|GITHUB_MAP_AUTOLOAD_FAIL' tower-evidence/github-autoload.log
-          grep -E 'GITHUB_MAP_AUTOLOAD_RESULT.*"failures":\[\]' tower-evidence/github-autoload.log
+          ! rg 'SCRIPT ERROR:|ERROR:|GITHUB_MAP_AUTOLOAD_FAIL' tower-evidence/github-autoload.log
+          rg 'GITHUB_MAP_AUTOLOAD_RESULT.*"failures":\[\]' tower-evidence/github-autoload.log
       - name: Required ordinary tower PNG gameplay from Git checkout
         run: |
           set -o pipefail
           export XDG_DATA_HOME="$RUNNER_TEMP/tower-normal"
           LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/tower_png_normal_runtime_test.gd -- --output="$GITHUB_WORKSPACE/tower-evidence/runtime" 2>&1 | tee tower-evidence/tower.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|TOWER_PNG_FAIL' tower-evidence/tower.log
-          ! grep -E 'TOWER_PNG_SKIP:' tower-evidence/tower.log
-          grep -E 'TOWER_PNG_RESULT.*"failures":\[\]' tower-evidence/tower.log
+          ! rg 'SCRIPT ERROR:|ERROR:|TOWER_PNG_FAIL' tower-evidence/tower.log
+          ! rg 'TOWER_PNG_SKIP:' tower-evidence/tower.log
+          rg 'TOWER_PNG_RESULT.*"failures":\[\]' tower-evidence/tower.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:

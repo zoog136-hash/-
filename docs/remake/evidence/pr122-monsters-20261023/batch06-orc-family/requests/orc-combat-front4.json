@@ -1,0 +1,37 @@
+{
+  "name": "orc-combat-front4",
+  "request": {
+    "prompt": "Original detailed hand-painted rendered isometric dark fantasy RPG NORMAL monster ORC CAPTAIN, one canonical stocky muscular orc commander: olive-brown skin, broad tusked jaw, blunt short ears, heavy dark RUSSET/RED-brown iron chest and shoulder armor, leather belt and short armored skirt, bracers, sturdy boots. Compact dark steel helmet with low crest and face visible. Exactly ONE short broad iron SWORD gripped firmly in anatomical RIGHT hand, anatomical LEFT hand empty clenched/guarding. No shield, no cape or loose banners, no detached pieces. Same consistent adult anatomy, physical scale, armor design and natural palette throughout. Keep readable 86px-game-size silhouette. This is newly authored source from a textual production brief; not recovered original game art. Fixed elevated orthographic isometric camera, truly different compass views, no mirrored frames. EXACTLY TWENTY-EIGHT complete connected figures, FOUR columns SEVEN rows on a spacious PORTRAIT sprite sheet. Column1 EAST muzzle/toes screen RIGHT profile; column2 SOUTHEAST muzzle/toes lower RIGHT front three-quarter; column3 SOUTH face/chest/toes toward image BOTTOM front; column4 SOUTHWEST muzzle/toes lower LEFT front three-quarter. Seven action rows: row1 IDLE0 grounded ready; row2 IDLE1 breathing chest expands and shoulders subtly rise; row3 ATTACK0 WINDUP right elbow bends and sword pulls back, knees load; row4 ATTACK1 CONTACT short sword blade extends far FORWARD in the actual column-facing direction IN FRONT OF MUZZLE at enemy torso height, right elbow extends, front boot planted, torso lunges, left guarding fist stays close; row5 ATTACK2 RECOVERY sword lowers back to ready and elbow bends, stance settles; row6 HIT0 torso and head recoil BACK from incoming impact, knees brace, sword remains gripped; row7 HIT1 regain balanced guarded crouch distinctly from idle/attack recovery. Seven independently articulated poses, not translated stills. Whole sword solidly attached to actual right hand in every phase. CRITICAL SOURCE GEOMETRY: entire complete figure INCLUDING helmet, ears, sword and boots fits inside CENTRAL FORTY PERCENT of its own equal cell, VERY SMALL whole figures with enormous pure transparent gutters. Full bounding rectangles of all figures must be wholly disjoint. ONE solid connected silhouette in every cell, no loose metal glints/hair/specks/ornaments anywhere, no cut-off parts. No floor, ground shadow, text, labels, grid, haze, glow, blood, particles or background. Pure true alpha ZERO everywhere outside connected figures. Save local PNG.",
+    "transparent_background": true
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW"
+  ],
+  "rows": 7,
+  "axis": "columns",
+  "reference_rows": [
+    0,
+    1
+  ],
+  "roles": {
+    "idle": [
+      0,
+      1
+    ],
+    "attack": [
+      2,
+      3,
+      4
+    ],
+    "hit": [
+      5,
+      6
+    ]
+  },
+  "image_path": "/workspace/generated_images/exec-4c33e451-9a8b-4f31-aa07-c6eab59655e0.png",
+  "preserved_path": "docs/remake/evidence/pr122-monsters-20261023/batch06-orc-family/raw/orc-combat-front4.png",
+  "sha256": "6f7c828f83079c60ca89565ec419b8843555ce4bb8b1c79065338b56f023ce7f"
+}

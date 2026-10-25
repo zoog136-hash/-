@@ -1,0 +1,53 @@
+{
+  "schema": "mythic413-N-walk-author-request-v1",
+  "scope": {
+    "key": "transform:413",
+    "direction": "N",
+    "direction_index": 6,
+    "animation": "walk_6",
+    "poses": 6
+  },
+  "production_status": "REQUEST_READY",
+  "canvas": {
+    "raw_atlas": [
+      1024,
+      1536
+    ],
+    "columns": 2,
+    "rows": 3,
+    "raw_cell": [
+      512,
+      512
+    ],
+    "virtual_logical_canvas": [
+      1024,
+      1024
+    ],
+    "logical_foot": [
+      512,
+      640
+    ],
+    "target_neutral_alpha16_whole_height": 464,
+    "intended_source_anchor": [
+      256,
+      480
+    ],
+    "resampling": "FORBIDDEN"
+  },
+  "identity": {
+    "weapon_hand": "anatomical RIGHT screen RIGHT",
+    "view": "pure back N, no eyes/front chest"
+  },
+  "preserve": {
+    "existing_clips": 10,
+    "existing_poses": 60,
+    "profile_pixel_scale": 0.237068965517,
+    "no_repo_mutations": true
+  },
+  "guide": "N-walk-fixedbone-guide-v03.json",
+  "approval": {
+    "author_self_approval": false,
+    "independent_review": "REQUIRED",
+    "completed_added": 0
+  }
+}

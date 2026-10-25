@@ -1,0 +1,171 @@
+{
+  "jobs": [
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:테베 호루스",
+      "slug": "thebes_horus",
+      "clip": "W-hit-v02",
+      "direction": "W",
+      "role": "hit",
+      "corrects": "W-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_horus/W-hit-v02.json"
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_osiris/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:테베 오시리스",
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/thebes_osiris/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "NE-idle-v02",
+      "direction": "NE",
+      "role": "idle",
+      "corrects": "NE-idle-v01",
+      "causes": [
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/NE-idle-v02.json"
+    }
+  ],
+  "source_pins": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/SW-hit-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-a131133f-9c6a-4b21-acd6-13cda5e1bb4a.png",
+      "sha256": "1688549cfddf752507c516fe82811bdecaf016fbc161723831d1eaed9d5567d2",
+      "bytes": 2232038,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1105096,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/W-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-4e3de199-5b20-4fc6-aac7-af591879b99a.png",
+      "sha256": "045b5f562c59dc4f294975dde9cd139de8c171c876627dddadf26d5381268c7d",
+      "bytes": 2080424,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1177065,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/W-hit-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-0af5bef3-8d40-4633-8ac5-45303e1d5103.png",
+      "sha256": "9c44837d9761675328885b9df0e608bdfd11a9ef573e275beb954b0da3544e98",
+      "bytes": 2129348,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1127223,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/SW-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-90508676-6296-489b-a68a-c81756c5cd56.png",
+      "sha256": "674d3ad6c921fa30fb47dc1c585c616958b5809eda858b906bfe5d329d31bfe9",
+      "bytes": 2101494,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1154004,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/SW-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-41f8d5bf-5e8a-42e7-8bc5-4c4e50036fa4.png",
+      "sha256": "caf9841e2eecb096c4e894b904d138241fe37e960dfa69fa8048ed01d89c29c0",
+      "bytes": 2450334,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 999199,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/NE-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-74e40650-3d08-4d50-846f-51a13e41c004.png",
+      "sha256": "b418ba05ecb8650d5a9cc5d3be1e5cafc9c8e7f2b58d240d6bc626e2246df6d8",
+      "bytes": 2454342,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 955910,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    }
+  ],
+  "normal_art_changes": 0,
+  "whole_quality_review": "TARGETED_CORRECTIONS_ONLY"
+}

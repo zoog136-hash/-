@@ -1,0 +1,321 @@
+{
+  "schema": "existing-native-visible-body-landmarks-approx-v1",
+  "status": "MEASUREMENT_AID_NOT_3D_BONE_OR_DETAIL_APPROVAL",
+  "method": "private manual observation of exact raw512 phase0 W/E preview with50px grid; no source edits or new assets",
+  "coordinates": "raw512cell pixels, not normalized; virtualC1024 means factor1 for oldnative",
+  "limitations": [
+    "skirt hides exact pelvis/hip joint centers; not fabricated",
+    "armor/boots obscure actual knee and ankle joint pivots; estimates retain uncertainty",
+    "camera headings differ, so raw 2D projected limb lengths are not equal invariant 3D lengths",
+    "cannot derive acceptance from wholealpha height or two estimated points alone"
+  ],
+  "W": {
+    "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-walk-v01.png",
+    "source_sha256": "42c2e494e28144342f9648ef4584debe74c50ec8d149e04fc43ce3e2dcd365f9",
+    "phase": 0,
+    "raw_cell": [
+      512,
+      512
+    ],
+    "virtual_canvas": [
+      1024,
+      1024
+    ],
+    "native_source_anchor": [
+      256,
+      480
+    ],
+    "visible_high_bun_crown": {
+      "xy": [
+        274,
+        83
+      ],
+      "uncertainty": 3
+    },
+    "visible_head_center": {
+      "xy": [
+        251,
+        138
+      ],
+      "uncertainty": 4
+    },
+    "visible_neck_base": {
+      "xy": [
+        271,
+        169
+      ],
+      "uncertainty": 4
+    },
+    "visible_shoulder_centers": [
+      {
+        "xy": [
+          262,
+          182
+        ],
+        "uncertainty": 6,
+        "anatomical_side": "not independently resolved"
+      },
+      {
+        "xy": [
+          298,
+          185
+        ],
+        "uncertainty": 6,
+        "anatomical_side": "not independently resolved"
+      }
+    ],
+    "visible_waist_belt_center": {
+      "xy": [
+        272,
+        254
+      ],
+      "uncertainty": 4
+    },
+    "pelvis_joint_center": null,
+    "pelvis_visibility": "occluded by fitted skirt; not inferred as a precise joint",
+    "visible_skirt_hem_center": {
+      "xy": [
+        273,
+        291
+      ],
+      "uncertainty": 4
+    },
+    "visible_upper_thigh_roots": [
+      {
+        "xy": [
+          254,
+          304
+        ],
+        "uncertainty": 7
+      },
+      {
+        "xy": [
+          283,
+          307
+        ],
+        "uncertainty": 7
+      }
+    ],
+    "visible_knee_centers": [
+      {
+        "leg": "screenleft_forward",
+        "xy": [
+          225,
+          358
+        ],
+        "uncertainty": 8
+      },
+      {
+        "leg": "screenright_trailing",
+        "xy": [
+          327,
+          359
+        ],
+        "uncertainty": 8
+      }
+    ],
+    "visible_ankle_centers": [
+      {
+        "leg": "screenleft_forward",
+        "xy": [
+          197,
+          439
+        ],
+        "uncertainty": 6
+      },
+      {
+        "leg": "screenright_trailing",
+        "xy": [
+          377,
+          420
+        ],
+        "uncertainty": 6
+      }
+    ],
+    "foot_visible_landmarks": [
+      {
+        "leg": "screenleft_forward",
+        "heel_xy": [
+          205,
+          476
+        ],
+        "toe_xy": [
+          160,
+          471
+        ],
+        "uncertainty": 7,
+        "floor_contact": "not inferred"
+      },
+      {
+        "leg": "screenright_trailing",
+        "heel_xy": [
+          393,
+          448
+        ],
+        "toe_xy": [
+          357,
+          468
+        ],
+        "uncertainty": 7,
+        "floor_contact": "not inferred"
+      }
+    ]
+  },
+  "E": {
+    "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png",
+    "source_sha256": "b0a2188b66d2c59d216ec2b0ddcd2d133f26b093aaaeb1e17adfdc0d232fd7c8",
+    "phase": 0,
+    "raw_cell": [
+      512,
+      512
+    ],
+    "virtual_canvas": [
+      1024,
+      1024
+    ],
+    "native_source_anchor": [
+      256,
+      453
+    ],
+    "visible_high_bun_crown": {
+      "xy": [
+        282,
+        98
+      ],
+      "uncertainty": 3
+    },
+    "visible_head_center": {
+      "xy": [
+        299,
+        145
+      ],
+      "uncertainty": 4
+    },
+    "visible_neck_base": {
+      "xy": [
+        296,
+        171
+      ],
+      "uncertainty": 4
+    },
+    "visible_shoulder_centers": [
+      {
+        "xy": [
+          271,
+          187
+        ],
+        "uncertainty": 6,
+        "anatomical_side": "not independently resolved"
+      },
+      {
+        "xy": [
+          311,
+          185
+        ],
+        "uncertainty": 6,
+        "anatomical_side": "not independently resolved"
+      }
+    ],
+    "visible_waist_belt_center": {
+      "xy": [
+        296,
+        254
+      ],
+      "uncertainty": 4
+    },
+    "pelvis_joint_center": null,
+    "pelvis_visibility": "occluded by fitted skirt; not inferred as a precise joint",
+    "visible_skirt_hem_center": {
+      "xy": [
+        293,
+        284
+      ],
+      "uncertainty": 4
+    },
+    "visible_upper_thigh_roots": [
+      {
+        "xy": [
+          279,
+          295
+        ],
+        "uncertainty": 7
+      },
+      {
+        "xy": [
+          307,
+          296
+        ],
+        "uncertainty": 7
+      }
+    ],
+    "visible_knee_centers": [
+      {
+        "leg": "screenright_forward",
+        "xy": [
+          323,
+          350
+        ],
+        "uncertainty": 8
+      },
+      {
+        "leg": "screenleft_trailing",
+        "xy": [
+          262,
+          351
+        ],
+        "uncertainty": 8
+      }
+    ],
+    "visible_ankle_centers": [
+      {
+        "leg": "screenright_forward",
+        "xy": [
+          350,
+          424
+        ],
+        "uncertainty": 6
+      },
+      {
+        "leg": "screenleft_trailing",
+        "xy": [
+          221,
+          399
+        ],
+        "uncertainty": 6
+      }
+    ],
+    "foot_visible_landmarks": [
+      {
+        "leg": "screenright_forward",
+        "heel_xy": [
+          340,
+          443
+        ],
+        "toe_xy": [
+          379,
+          439
+        ],
+        "uncertainty": 7,
+        "floor_contact": "not inferred"
+      },
+      {
+        "leg": "screenleft_trailing",
+        "heel_xy": [
+          216,
+          421
+        ],
+        "toe_xy": [
+          238,
+          426
+        ],
+        "uncertainty": 7,
+        "floor_contact": "not inferred"
+      }
+    ]
+  },
+  "torso_neck_to_waist_projected_lengths": {
+    "W": 85.00588214941364,
+    "E": 83.0
+  },
+  "no_repo_or_art_mutation": true
+}

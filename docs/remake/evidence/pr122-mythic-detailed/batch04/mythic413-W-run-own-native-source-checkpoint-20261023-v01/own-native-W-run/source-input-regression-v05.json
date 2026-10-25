@@ -1,0 +1,23 @@
+{
+  "status": "SOURCE_INPUT_GUARDS_PASS_BEFORE_POSE_RENDER",
+  "ownership": {
+    "original_visible_texels": 109922,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "minimum_owned_Jacobian": 0.21403100001710285,
+  "support_order": [
+    "L-near",
+    "R-far"
+  ],
+  "source_original_pixels_recovered_from_hidden_overlap": 641,
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actor_approvals_added": 0,
+  "known_defect_cases_rejected": [
+    "real_641_original_pixels_hidden_by_generated_fill",
+    "real_922_original_pixels_owned_by_body_and_calf",
+    "actual_previous_linear_knee_fold",
+    "same_leg_support_halfcycle",
+    "wrong_direction_configuration"
+  ]
+}

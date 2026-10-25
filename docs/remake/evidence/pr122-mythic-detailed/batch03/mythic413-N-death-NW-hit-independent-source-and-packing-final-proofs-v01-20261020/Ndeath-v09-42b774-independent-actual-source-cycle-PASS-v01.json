@@ -1,0 +1,145 @@
+{
+  "schema": "PR122-independent-actual-death-six-source-cycle-prepacking-v1",
+  "status": "PASS_ACTUAL_N_DEATH_SIX_SOURCE_FALL_AND_HELD_TERMINAL_PREPACKING",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "death",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/actual-N-death-six-source-contract-v09.json",
+    "sha256": "42b774b1adc02f62ea2e95fece8862fcd51e755afb9e20815780f830e14cb65a",
+    "bytes": 22181
+  },
+  "all_six_independent_binding": [
+    {
+      "phase": 0,
+      "name": "STAGGER-loss-of-balance",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/N-death-phase0-actual-native-v09.png",
+        "sha256": "5b51c868fdf222d4486a21bc8abf9e08f1f6a5f65cac9f16bafa788501522843",
+        "bytes": 450050
+      },
+      "rgba_sha256": "8df290826b1ddff26a8e6d052e7450b36f60d8e307323ac13137eca0278bed34",
+      "strong_alpha100_4connected_components": [
+        151494
+      ],
+      "changes_outside_actual_old_new_leg_semantics": 0,
+      "first3_exact_v08": true
+    },
+    {
+      "phase": 1,
+      "name": "BUCKLE-hips-drop",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/N-death-phase1-actual-native-v09.png",
+        "sha256": "002c26dd5021bf7f7ec863ba5523c914068cc7f7cd9bb7789fcf536902a2bddb",
+        "bytes": 454382
+      },
+      "rgba_sha256": "a0582161200bc71622fcf85c92ff0a01e556fab194ef8d5241877caeb7678d50",
+      "strong_alpha100_4connected_components": [
+        150408
+      ],
+      "changes_outside_actual_old_new_leg_semantics": 0,
+      "first3_exact_v08": true
+    },
+    {
+      "phase": 2,
+      "name": "KNEES-contact-catch",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/N-death-phase2-actual-native-v09.png",
+        "sha256": "368de5f873361f091b48813da68fb37bdc5077eaf4e6ca11c5e23eccb4f62b55",
+        "bytes": 419777
+      },
+      "rgba_sha256": "b4154cfad0c5beb0c5a02df7a8bac274aa074d2598bec911444a08013289fba0",
+      "strong_alpha100_4connected_components": [
+        138055
+      ],
+      "changes_outside_actual_old_new_leg_semantics": 0,
+      "first3_exact_v08": true
+    },
+    {
+      "phase": 3,
+      "name": "TORSO-forward-collapse",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/N-death-phase3-actual-native-v09.png",
+        "sha256": "729c11f5c6a89ee71ae2fd05cec28b433ad0d543e80a16e0b0aa0f443121f62b",
+        "bytes": 366705
+      },
+      "rgba_sha256": "17486d6ea7826e138a6a845449c240f3a36bc26220d7d4acdfc089dd2bae51c9",
+      "strong_alpha100_4connected_components": [
+        119324
+      ],
+      "changes_outside_actual_old_new_leg_semantics": 0,
+      "first3_exact_v08": false
+    },
+    {
+      "phase": 4,
+      "name": "PRONE-impact-settle",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/N-death-phase4-actual-native-v09.png",
+        "sha256": "9485ce5aa74c0004c512cff93dd8ff09fe3b603a246795232751ec65e1273b84",
+        "bytes": 238751
+      },
+      "rgba_sha256": "e9f21c46f907a411aff09e8be1622726d38629ca09487c94d6d4a22879f81c54",
+      "strong_alpha100_4connected_components": [
+        75960
+      ],
+      "changes_outside_actual_old_new_leg_semantics": 0,
+      "first3_exact_v08": false
+    },
+    {
+      "phase": 5,
+      "name": "DEAD-terminal-held",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/actual-N-death-six-native-v09/N-death-phase5-actual-native-v09.png",
+        "sha256": "e5d7450333d79d86639eb56738d490e9cf100ec6c79a49127bee5e0de9ed6dad",
+        "bytes": 219256
+      },
+      "rgba_sha256": "db721b83b427e91b5681e40fbc1f6f1d17b878739c9f11a97cbbec66032b07cd",
+      "strong_alpha100_4connected_components": [
+        69634
+      ],
+      "changes_outside_actual_old_new_leg_semantics": 0,
+      "first3_exact_v08": false
+    }
+  ],
+  "C_fixed": 1920,
+  "common_rig_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "loop": false,
+  "terminal_frame": 5,
+  "terminal_pose_held": true,
+  "retained_runtime_death_seconds": 0.8,
+  "equal_weight_phase_seconds": 0.13333333333333333,
+  "resource_role_seconds": 0.65,
+  "visual_findings": [
+    "Six dedicated stagger, buckle, knee-catch, forward collapse, prone settle and held-dead poses articulate the actual pelvis, torso, head, arms, staff and complete boots. The sequence continues down into an irreversible dead terminal.",
+    "The actual RIGHT-held full double-ended staff/grip and the original blue/gold costume, white skirt, bun and ribbon remain coherent through the fall.",
+    "The old rigid upper-boot shaft was reassigned to its real calf node; native rounded leather/counter overlaps now close the previous rectangular cut in late collapse/terminal poses without shortening the complete boot/heel.",
+    "The first3 final sources, all fixed bones/body/head/grip controls, and the full original body/staff/cloth surfaces transfer exactly from the reviewed fall. Changes3..5 are confined to actual old/new leg semantics.",
+    "The complete shoe/staff source/raster surfaces, the reassigned leather and rounded joints, and terminal torso/cloth contacts satisfy the explicit finite floor model with positive guards and fixed bone lengths."
+  ],
+  "visual_limitations": [
+    "This approves actual source appearance, visible six-phase death progression and the explicit finite surface/floor model. Final atlas/request binding and actual Godot/Player/death-terminal checks remain pending.",
+    "Hidden anatomical depth and the unseen toe are declared constructive controls, not uniquely recovered image measurements. The35native torso hull and guards are stated assumptions.",
+    "Actual runtime uses retained death_duration .8s, distinct from the retained resource role specification .65s. Equal six weights give .133333s phases; actual runtime/fade/corpse behavior requires the integrated test.",
+    "Only this new N DEATH source is approved here; detailed actor completion count is unchanged."
+  ],
+  "finite_surface_floor_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Ndeath-v09-independent-finite-surfaces-bones-floor-binding-PASS-v01.json",
+    "sha256": "f7a14160d27b2c4f7570a245e2b035fc029e8c0c4bbc2785ed7ccd2de21db8b0",
+    "bytes": 15418
+  },
+  "private_ledger_snapshot": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-Ndeath-final-v09-source-view73-frozen.json",
+    "sha256": "362744c263ea26cab9dde616b063b186b86d392f747c1c1d173d77aab3f32f0a",
+    "bytes": 35865
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

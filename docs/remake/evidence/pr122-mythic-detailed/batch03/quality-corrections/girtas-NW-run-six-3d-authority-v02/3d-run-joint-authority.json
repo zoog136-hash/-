@@ -1,0 +1,372 @@
+{
+  "schema": "pr122-private-3d-run-authoring-guide-v1",
+  "camera": [
+    -5,
+    -7,
+    5
+  ],
+  "forward_world_axis": "+Y projectsNWupperLEFT",
+  "anatomical_RIGHT": "+Xfar/imageRIGHTorange",
+  "anatomical_LEFT": "-Xnear/imageLEFTblue",
+  "bone_lengths": {
+    "thigh": 0.57,
+    "shin": 0.57
+  },
+  "poses": [
+    {
+      "pose": 0,
+      "phase": "LEFT_LANDING",
+      "hipZ": 1.0,
+      "joints": {
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.0
+          ],
+          "knee": [
+            -0.18,
+            0.4215589476899834,
+            0.6163490471502595
+          ],
+          "ankle": [
+            -0.18,
+            0.6,
+            0.075
+          ],
+          "foot": [
+            -0.18,
+            0.6799999999999999,
+            0.063
+          ],
+          "support": "landing",
+          "thigh_length": 0.5700000011293511,
+          "shin_length": 0.5700000011293511,
+          "minimum_foot_clearance_lower_bound": 0
+        },
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.0
+          ],
+          "knee": [
+            0.18,
+            0.10748069786764483,
+            0.44022513491057486
+          ],
+          "ankle": [
+            0.18,
+            -0.43,
+            0.63
+          ],
+          "foot": [
+            0.18,
+            -0.35,
+            0.618
+          ],
+          "support": "recovery",
+          "thigh_length": 0.5700000052140993,
+          "shin_length": 0.5700000043971497,
+          "minimum_foot_clearance_lower_bound": 0.518
+        }
+      }
+    },
+    {
+      "pose": 1,
+      "phase": "LEFT_LOAD_RIGHT_PASS",
+      "hipZ": 0.88,
+      "joints": {
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            0.88
+          ],
+          "knee": [
+            -0.18,
+            0.43137113902602187,
+            0.507415861293865
+          ],
+          "ankle": [
+            -0.18,
+            0.06,
+            0.075
+          ],
+          "foot": [
+            -0.18,
+            0.14,
+            0.063
+          ],
+          "support": "load",
+          "thigh_length": 0.569999988058157,
+          "shin_length": 0.5700000403429318,
+          "minimum_foot_clearance_lower_bound": 0
+        },
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            0.88
+          ],
+          "knee": [
+            0.18,
+            0.3282963501566117,
+            0.41403701169100626
+          ],
+          "ankle": [
+            0.18,
+            -0.24,
+            0.37
+          ],
+          "foot": [
+            0.18,
+            -0.15999999999999998,
+            0.358
+          ],
+          "support": "pass",
+          "thigh_length": 0.5700000011293511,
+          "shin_length": 0.5700000200213109,
+          "minimum_foot_clearance_lower_bound": 0.258
+        }
+      }
+    },
+    {
+      "pose": 2,
+      "phase": "AIR_LEFT_TO_RIGHT",
+      "hipZ": 1.1,
+      "joints": {
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.1
+          ],
+          "knee": [
+            -0.18,
+            0.08880048068328755,
+            0.53695961545337
+          ],
+          "ankle": [
+            -0.18,
+            -0.48,
+            0.5
+          ],
+          "foot": [
+            -0.18,
+            -0.39999999999999997,
+            0.488
+          ],
+          "support": "air_trailing",
+          "thigh_length": 0.5700000624005698,
+          "shin_length": 0.5699999679407717,
+          "minimum_foot_clearance_lower_bound": 0.388
+        },
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.1
+          ],
+          "knee": [
+            0.18,
+            0.5389719787174972,
+            0.9145028136133984
+          ],
+          "ankle": [
+            0.18,
+            0.46,
+            0.35
+          ],
+          "foot": [
+            0.18,
+            0.54,
+            0.33799999999999997
+          ],
+          "support": "air_leading",
+          "thigh_length": 0.5699999978615526,
+          "shin_length": 0.5700000150174946,
+          "minimum_foot_clearance_lower_bound": 0.238
+        }
+      }
+    },
+    {
+      "pose": 3,
+      "phase": "RIGHT_LANDING",
+      "hipZ": 1.0,
+      "joints": {
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.0
+          ],
+          "knee": [
+            -0.18,
+            0.10748069786764483,
+            0.44022513491057486
+          ],
+          "ankle": [
+            -0.18,
+            -0.43,
+            0.63
+          ],
+          "foot": [
+            -0.18,
+            -0.35,
+            0.618
+          ],
+          "support": "recovery",
+          "thigh_length": 0.5700000052140993,
+          "shin_length": 0.5700000043971497,
+          "minimum_foot_clearance_lower_bound": 0.518
+        },
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.0
+          ],
+          "knee": [
+            0.18,
+            0.4215589476899834,
+            0.6163490471502595
+          ],
+          "ankle": [
+            0.18,
+            0.6,
+            0.075
+          ],
+          "foot": [
+            0.18,
+            0.6799999999999999,
+            0.063
+          ],
+          "support": "landing",
+          "thigh_length": 0.5700000011293511,
+          "shin_length": 0.5700000011293511,
+          "minimum_foot_clearance_lower_bound": 0
+        }
+      }
+    },
+    {
+      "pose": 4,
+      "phase": "RIGHT_LOAD_LEFT_PASS",
+      "hipZ": 0.88,
+      "joints": {
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            0.88
+          ],
+          "knee": [
+            -0.18,
+            0.3282963501566117,
+            0.41403701169100626
+          ],
+          "ankle": [
+            -0.18,
+            -0.24,
+            0.37
+          ],
+          "foot": [
+            -0.18,
+            -0.15999999999999998,
+            0.358
+          ],
+          "support": "pass",
+          "thigh_length": 0.5700000011293511,
+          "shin_length": 0.5700000200213109,
+          "minimum_foot_clearance_lower_bound": 0.258
+        },
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            0.88
+          ],
+          "knee": [
+            0.18,
+            0.43137113902602187,
+            0.507415861293865
+          ],
+          "ankle": [
+            0.18,
+            0.06,
+            0.075
+          ],
+          "foot": [
+            0.18,
+            0.14,
+            0.063
+          ],
+          "support": "load",
+          "thigh_length": 0.569999988058157,
+          "shin_length": 0.5700000403429318,
+          "minimum_foot_clearance_lower_bound": 0
+        }
+      }
+    },
+    {
+      "pose": 5,
+      "phase": "AIR_RIGHT_TO_LEFT",
+      "hipZ": 1.1,
+      "joints": {
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.1
+          ],
+          "knee": [
+            -0.18,
+            0.5389719787174972,
+            0.9145028136133984
+          ],
+          "ankle": [
+            -0.18,
+            0.46,
+            0.35
+          ],
+          "foot": [
+            -0.18,
+            0.54,
+            0.33799999999999997
+          ],
+          "support": "air_leading",
+          "thigh_length": 0.5699999978615526,
+          "shin_length": 0.5700000150174946,
+          "minimum_foot_clearance_lower_bound": 0.238
+        },
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.1
+          ],
+          "knee": [
+            0.18,
+            0.08880048068328755,
+            0.53695961545337
+          ],
+          "ankle": [
+            0.18,
+            -0.48,
+            0.5
+          ],
+          "foot": [
+            0.18,
+            -0.39999999999999997,
+            0.488
+          ],
+          "support": "air_trailing",
+          "thigh_length": 0.5700000624005698,
+          "shin_length": 0.5699999679407717,
+          "minimum_foot_clearance_lower_bound": 0.388
+        }
+      }
+    }
+  ],
+  "actor_approval_added": 0
+}

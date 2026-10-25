@@ -1,0 +1,24 @@
+{
+  "slug": "thebes_anubis",
+  "actor": "monster:테베 아누비스",
+  "clip": "SW-hit-v02",
+  "direction": "SW",
+  "role": "hit",
+  "layout": "phase_grid2",
+  "phase_count": 6,
+  "reference_sha256": "6499d64020b62e8c59e57a3412befcaa482cf43b753e68d02890ad31eb4a7fe7",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A tall black JACKAL-headed Egyptian death guardian, long pointed ears and narrow muzzle, turquoise/gold nemes striped headdress, black-gold segmented cuirass, broad lapis collar, gold bracers, ivory linen kilt with jackal medallion, digitigrade black jackal feet. One broad gold khopesh sword in anatomical RIGHT hand, LEFT hand empty. No wings or human helmet.\nFixed camera throughout this sheet: SOUTHWEST front three-quarter facing DOWN-LEFT. Anatomical RIGHT weapon arm is far/screenLEFT, LEFT empty hand near/screenRIGHT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nCORRECTION: The FIRST reference establishes identity ONLY and may face the wrong side. The SECOND reference establishes a reviewed same-character camera direction. Adopt the required camera below consistently for ALL SIX poses; never copy the first reference camera automatically.\nThe nose/beak/muzzle/helmet front MUST point toward SCREEN LEFT in EVERY ready, loading, contact, recoil, and restored pose. Hips, knees, feet and torso must face LEFT too. Front LEFT three-quarter: show front chest AND leftward profile; viewer sees near LEFT side; not front-right.\nExactly ONE anatomical RIGHT-held weapon throughout if the character uses one; never hand swap or duplicate. Left hand stays free. Natural head recoil is fine without changing the overall facing.\nLayout EXACTLY SIX COMPLETE distinct animation poses in TWO COLUMNS and THREE ROWS (2x3), read row-major 0,1 / 2,3 / 4,5, WIDE LANDSCAPE transparent canvas. Keep each figure body about200px high with identical scale. Each full silhouette including extended wings, scythe, axe, staff, sword, tail and cape must fit comfortably inside its own large cell with generous empty alpha gutters and outside margins. No pose or weapon intersects another; no anatomy reaches canvas edge. No floor/shadow/effects/text. Preserve character identity and action sequence. Not flipped, no mirrored anatomy.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/canonical-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/W-run-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "corrects": "SW-hit-v01",
+  "confirmed_causes": [
+    "authored_camera_facing_mismatch"
+  ],
+  "secondary_camera_reference": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/W-run-v01.png",
+  "secondary_reference_sha256": "66864fe68a5604e2808240abf722d235f8911e7988c4f14bda7dd0a4630a1c5b"
+}

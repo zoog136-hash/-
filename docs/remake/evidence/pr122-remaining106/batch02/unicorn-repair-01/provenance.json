@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "status": "HOLD_REPAIR_NOT_ACCEPTED",
+  "completed_added": 0,
+  "original_file": "/workspace/scratch/pr100-authoring-restored-20261016/albino-unicorn-authoring/recovery/W-contactA-single-attempt1.png",
+  "original_sha256": "b5e121880b149e46465030016c75a9a26d8106ba9df3d15839e2613307a94ae7",
+  "new_file": "W-walk0-rejected-edit01.png",
+  "new_sha256": "d793781e0a6aa0f6854415118d3141c8583dceb9e0d76044e01051d9a2250ece",
+  "tool": "image_gen.imagegen",
+  "transparent_background": true,
+  "reference_paths": [
+    "/workspace/scratch/pr100-authoring-restored-20261016/albino-unicorn-authoring/recovery/W-contactA-single-attempt1.png"
+  ],
+  "requested_operation": "Remove only eight disconnected speckle components (11 pixels); preserve main foreground RGBA, pose, canvas and all other approved frames.",
+  "requested_locations": [
+    [
+      473,
+      92,
+      1,
+      1
+    ],
+    [
+      284,
+      152,
+      2,
+      4
+    ],
+    [
+      687,
+      219,
+      1,
+      1
+    ],
+    [
+      721,
+      260,
+      1,
+      1
+    ],
+    [
+      723,
+      261,
+      1,
+      1
+    ],
+    [
+      725,
+      261,
+      1,
+      1
+    ],
+    [
+      1097,
+      360,
+      1,
+      1
+    ],
+    [
+      595,
+      626,
+      1,
+      1
+    ]
+  ],
+  "rejected_reason": "Main foreground was redrawn (450171 main-body pixels changed); strict visible connected components worsened 9 to 35. No production application or quality threshold changes.",
+  "next_action": "Do not repeat identical failed prompt. Eight defective standalones and two missing approved PNGs remain HOLD."
+}

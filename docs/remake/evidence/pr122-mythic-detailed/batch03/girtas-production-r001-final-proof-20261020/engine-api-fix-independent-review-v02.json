@@ -1,0 +1,144 @@
+{
+  "status": "PASS_INDEPENDENT_EXACT_ENGINE_API_FIX_AND_GUARDS_REVIEW",
+  "scope": "Read-only independent review; no Godot, images, Git or repository mutations. Scratch proof and new versioned finalizer only.",
+  "old_test": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v02-engine-api/pr122_girtas_native_default_main_connection_test.before-engine-api-fix.gd",
+    "sha256": "ededa259eddbbfbea7eb6c8223a849639479b8c2d3ef188bf10704ba8aa61e1b",
+    "bytes": 20028
+  },
+  "new_test": {
+    "path": "/workspace/twilight/tests/pr122_girtas_native_default_main_connection_test.gd",
+    "sha256": "5f81531dfffbd8900b4eadb8a54e04c0f1d4d23b9dbc1248a2a89a1dc5f76b87",
+    "bytes": 20337
+  },
+  "exact_change_scope": "Only Engine API canonical identifier extraction and additional full 40-character official engine commit equality; all remaining bytes including behavior criteria unchanged.",
+  "required_engine_unchanged": "4.7.2.stable.official.ed1daf0bf",
+  "full_engine_commit_required": "ed1daf0bf001b61586d9930840f2f1394092c079",
+  "api_fixture": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v02-engine-api/actual-official-engine-api-version.json",
+    "sha256": "b7bf748dd58161589c799d4739c1138ea77feb794ca379288d03f44125ee80d8",
+    "bytes": 218
+  },
+  "fixture_passes": true,
+  "negative_cases": [
+    {
+      "field": "major",
+      "replacement": 3,
+      "rejected": true
+    },
+    {
+      "field": "minor",
+      "replacement": 6,
+      "rejected": true
+    },
+    {
+      "field": "patch",
+      "replacement": 1,
+      "rejected": true
+    },
+    {
+      "field": "status",
+      "replacement": "rc",
+      "rejected": true
+    },
+    {
+      "field": "build",
+      "replacement": "custom",
+      "rejected": true
+    },
+    {
+      "field": "hash",
+      "replacement": "ed1daf0bf0000000000000000000000000000000",
+      "rejected": true
+    },
+    {
+      "field": "hash",
+      "replacement": "",
+      "rejected": true
+    },
+    {
+      "missing": "major",
+      "rejected": true
+    },
+    {
+      "missing": "minor",
+      "rejected": true
+    },
+    {
+      "missing": "patch",
+      "rejected": true
+    },
+    {
+      "missing": "status",
+      "rejected": true
+    },
+    {
+      "missing": "build",
+      "rejected": true
+    },
+    {
+      "missing": "hash",
+      "rejected": true
+    }
+  ],
+  "protected_original_files": [
+    {
+      "path": "/workspace/twilight/tests/pr122_native_default_main_connection_test.gd",
+      "sha256": "7a87758f959adb8d205fb0f32294ce1423524b4eec11e084c180b407fc5f3b7b",
+      "bytes": 13934
+    },
+    {
+      "path": "/workspace/twilight/tools/pr122_native_production_approvals.py",
+      "sha256": "2d0305cf49b3d944a2994111855046d37675ba72efa8180862ad5b78291f7706",
+      "bytes": 20341
+    }
+  ],
+  "guard_variants": {
+    "approve-girtas-production-r001.py": {
+      "old": {
+        "path": "/workspace/scratch/pr122-girtas-production-reviewed/approve-girtas-production-r001.py",
+        "sha256": "0bbf5326fd1e79fbacc0e8f632c1df8b1c5b28d8962c2d9c96e16e82952b943c",
+        "bytes": 12967
+      },
+      "new": {
+        "path": "/workspace/scratch/pr122-girtas-production-reviewed-v02-engine-api/approve-girtas-production-r001.py",
+        "sha256": "275d9996feba462495eaea2823be6ce76dd2bd15467d3dfd3c829f2e249c0e61",
+        "bytes": 12967
+      },
+      "only_exact_test_sha_pin_changed": true
+    },
+    "commit-girtas-production-r001.py": {
+      "old": {
+        "path": "/workspace/scratch/pr122-girtas-production-reviewed/commit-girtas-production-r001.py",
+        "sha256": "5fb04a9923ce8b18d9b210953ac31fa6e9ce6aef205c146a4ee4ae7aac578461",
+        "bytes": 10540
+      },
+      "new": {
+        "path": "/workspace/scratch/pr122-girtas-production-reviewed-v02-engine-api/commit-girtas-production-r001.py",
+        "sha256": "6394942f05fede12b62fbece17ccba4e9ee86c0d2bebc91bfdfb25a3a60977b5",
+        "bytes": 10540
+      },
+      "only_exact_test_sha_pin_changed": true
+    }
+  },
+  "identical_guard": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v02-engine-api/girtas_review_guard.py",
+    "sha256": "c45becf1e68e927bf6eb908c5f8304fc1ffeaa64b2be5daaf2fefb187465655f",
+    "bytes": 3685
+  },
+  "frozen_finalizer_unchanged": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/finalize_official_quality_fresh.py",
+    "sha256": "6f34552b1ee1a91f60379985f0c23a6d6bd169073b935539ea56b7b3051b81f2",
+    "bytes": 7838
+  },
+  "new_finalizer": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/finalize_official_quality_fresh_v02_engine_api.py",
+    "sha256": "e9c19750eaafaa10a271422704b44921d8b3347aace7cddd548aa5c9be870b08",
+    "bytes": 7838
+  },
+  "new_finalizer_only_change": "Exact independently reviewed new additive test SHA pin",
+  "actual_Main_status": "NOT_REVIEWED_PENDING_REAL_RUN",
+  "official_final_quality_issued": false,
+  "actor_approved": false,
+  "counts_changed": false
+}

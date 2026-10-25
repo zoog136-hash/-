@@ -1,0 +1,1544 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "N",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v03composite01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "request_kind": "LOSSLESS_REVIEWED_POSE_MAP_ASSEMBLY",
+  "references": [
+    "/workspace/scratch/girtas-N-walk-repair/girtas-N-walk-v02.png",
+    "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+    "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/girtas-N-walk-phase4-single-edit-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-N-walk-repair/girtas-N-walk-v02.png": "399a95205c10e7bd8aacb5f061bb0d5446ec889595fb3a1088485d605ef0a85c",
+    "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+    "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/girtas-N-walk-phase4-single-edit-v01.png": "4df1a528e6b0e180db3f2ce97c7a6c517a88aa111a15ea69c22d7576185b395e"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Replace same-leg N walk with reviewed LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Reuse two exact valid contacts plus newfour rows0/1/3 and one localized opposite passing pose. Preserve all full-source HOLD decisions and unusedrow2.",
+  "prompt": "No new generation for composite. ExactRGBA assembly[existing0,newfour0,newfour1,existing2,newphase4,newfour3]. Four newly authored selected poses and two reused contacts, no resize/mirror/recolor/cleanup.",
+  "user_authorization": "Continue existing PR122 animation production; private source processing authorized, no main-chat images.",
+  "requested_at": "2026-10-19T11:35:55.452603+00:00",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+    "canvas_size": 2048,
+    "review_basis": "Exact6-pose reviewed assembly, 4new+2reused; source pixels and complete gear/AA unchanged. Existing strict importer passed six distinct complete frames at allowed2048 virtual canvas; phase4 native1078pxheight retained at full source resolution. Physical runtime scale/anchor/seam approval separate.",
+    "assembly_proof": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/girtas-N-walk-reviewed-composite-v02.assembly.json",
+    "source_art_review": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json",
+    "actor_approval": false
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+    "canvas_size": 2048,
+    "direction": "N",
+    "key": "transform:267",
+    "role": "walk",
+    "authored_pose_canvas_sizes": [
+      1024,
+      1256,
+      1256,
+      1024,
+      2256,
+      1256
+    ],
+    "source_anchors": [
+      [
+        605,
+        882
+      ],
+      [
+        1878,
+        940
+      ],
+      [
+        599,
+        2220
+      ],
+      [
+        1888,
+        2162
+      ],
+      [
+        563,
+        3735
+      ],
+      [
+        1889,
+        3501
+      ]
+    ],
+    "review_basis": "Individual sources privately reviewed at common physical scale. Anchors use measured central back-waist/pelvis axis and LEFT support soles0/1/2 or RIGHT soles3/4/5, not cell centers or weapon/body bbox. Original RGBA unchanged. Effective canvases1024/1256/1256/1024/2256/1256 follow actual head/torso/hip/boot proportions; final runtime ground/hip/scale/seam tests remain required.",
+    "anchor_measurement_evidence": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/physical-anchor-numeric-evidence.json",
+    "anchor_measurement_evidence_sha256": "be99e85c423215918eaea360d3337fcc6f93edd6f31d8f124b5a7141e1862e48",
+    "anchor_derivation": [
+      {
+        "phase": 0,
+        "measured_crop_anchor": [
+          207,
+          489
+        ],
+        "assembled_source_anchor": [
+          605,
+          882
+        ],
+        "output_region": [
+          398,
+          393,
+          483,
+          493
+        ],
+        "support_side": "LEFT",
+        "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+        "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+        "native_x_uncertainty": 3,
+        "evidence_phase": {
+          "game_phase": 0,
+          "crop_size": [
+            483,
+            493
+          ],
+          "head_peak_x": 205.0,
+          "waist_run_midline_median_x": 207.25,
+          "waist_centers_range": [
+            206.0,
+            211.5
+          ],
+          "waist_run_edge_medians": [
+            151.0,
+            264.0
+          ],
+          "waist_band_y": [
+            237,
+            294
+          ],
+          "support_side": "LEFT",
+          "support_sole_bottom_pixel": [
+            187.0,
+            489
+          ],
+          "proposed_ground_anchor_y": 490,
+          "previous_importer_crop_anchor": [
+            216,
+            489
+          ]
+        }
+      },
+      {
+        "phase": 1,
+        "measured_crop_anchor": [
+          240,
+          604
+        ],
+        "assembled_source_anchor": [
+          1878,
+          940
+        ],
+        "output_region": [
+          1638,
+          336,
+          564,
+          608
+        ],
+        "support_side": "LEFT",
+        "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+        "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+        "native_x_uncertainty": 3,
+        "evidence_phase": {
+          "game_phase": 1,
+          "crop_size": [
+            564,
+            608
+          ],
+          "head_peak_x": 240.0,
+          "waist_run_midline_median_x": 239.5,
+          "waist_centers_range": [
+            236.0,
+            242.0
+          ],
+          "waist_run_edge_medians": [
+            167.0,
+            311.0
+          ],
+          "waist_band_y": [
+            292,
+            363
+          ],
+          "support_side": "LEFT",
+          "support_sole_bottom_pixel": [
+            201.5,
+            604
+          ],
+          "proposed_ground_anchor_y": 605,
+          "previous_importer_crop_anchor": [
+            246,
+            604
+          ]
+        }
+      },
+      {
+        "phase": 2,
+        "measured_crop_anchor": [
+          235,
+          605
+        ],
+        "assembled_source_anchor": [
+          599,
+          2220
+        ],
+        "output_region": [
+          364,
+          1615,
+          552,
+          609
+        ],
+        "support_side": "LEFT",
+        "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+        "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+        "native_x_uncertainty": 3,
+        "evidence_phase": {
+          "game_phase": 2,
+          "crop_size": [
+            552,
+            609
+          ],
+          "head_peak_x": 237.0,
+          "waist_run_midline_median_x": 235.0,
+          "waist_centers_range": [
+            232.5,
+            238.0
+          ],
+          "waist_run_edge_medians": [
+            161.0,
+            309.5
+          ],
+          "waist_band_y": [
+            292,
+            363
+          ],
+          "support_side": "LEFT",
+          "support_sole_bottom_pixel": [
+            213.5,
+            605
+          ],
+          "proposed_ground_anchor_y": 606,
+          "previous_importer_crop_anchor": [
+            238,
+            605
+          ]
+        }
+      },
+      {
+        "phase": 3,
+        "measured_crop_anchor": [
+          208,
+          489
+        ],
+        "assembled_source_anchor": [
+          1888,
+          2162
+        ],
+        "output_region": [
+          1680,
+          1673,
+          479,
+          493
+        ],
+        "support_side": "RIGHT",
+        "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+        "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+        "native_x_uncertainty": 3,
+        "evidence_phase": {
+          "game_phase": 3,
+          "crop_size": [
+            479,
+            493
+          ],
+          "head_peak_x": 203.0,
+          "waist_run_midline_median_x": 208.0,
+          "waist_centers_range": [
+            205.5,
+            212.5
+          ],
+          "waist_run_edge_medians": [
+            149.0,
+            268.0
+          ],
+          "waist_band_y": [
+            237,
+            294
+          ],
+          "support_side": "RIGHT",
+          "support_sole_bottom_pixel": [
+            246.0,
+            489
+          ],
+          "proposed_ground_anchor_y": 490,
+          "previous_importer_crop_anchor": [
+            216,
+            489
+          ]
+        }
+      },
+      {
+        "phase": 4,
+        "measured_crop_anchor": [
+          464,
+          1074
+        ],
+        "assembled_source_anchor": [
+          563,
+          3735
+        ],
+        "output_region": [
+          99,
+          2661,
+          1081,
+          1078
+        ],
+        "support_side": "RIGHT",
+        "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+        "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+        "native_x_uncertainty": 7,
+        "evidence_phase": {
+          "game_phase": 4,
+          "crop_size": [
+            1081,
+            1078
+          ],
+          "head_peak_x": 456.0,
+          "waist_run_midline_median_x": 463.5,
+          "waist_centers_range": [
+            458.5,
+            473.0
+          ],
+          "waist_run_edge_medians": [
+            330.0,
+            601.5
+          ],
+          "waist_band_y": [
+            518,
+            645
+          ],
+          "support_side": "RIGHT",
+          "support_sole_bottom_pixel": [
+            552.5,
+            1074
+          ],
+          "proposed_ground_anchor_y": 1075,
+          "previous_importer_crop_anchor": [
+            540,
+            1074
+          ]
+        }
+      },
+      {
+        "phase": 5,
+        "measured_crop_anchor": [
+          244,
+          607
+        ],
+        "assembled_source_anchor": [
+          1889,
+          3501
+        ],
+        "output_region": [
+          1645,
+          2894,
+          549,
+          611
+        ],
+        "support_side": "RIGHT",
+        "x_basis": "actual central back-waist/pelvis opaque-run midline checked against helmet/body axis; excludes weapon envelope",
+        "y_basis": "actual support-boot sole last strong pixel, same convention as importer",
+        "native_x_uncertainty": 3,
+        "evidence_phase": {
+          "game_phase": 5,
+          "crop_size": [
+            549,
+            611
+          ],
+          "head_peak_x": 239.0,
+          "waist_run_midline_median_x": 244.0,
+          "waist_centers_range": [
+            238.5,
+            250.0
+          ],
+          "waist_run_edge_medians": [
+            167.0,
+            318.0
+          ],
+          "waist_band_y": [
+            293,
+            365
+          ],
+          "support_side": "RIGHT",
+          "support_sole_bottom_pixel": [
+            283.0,
+            607
+          ],
+          "proposed_ground_anchor_y": 608,
+          "previous_importer_crop_anchor": [
+            235,
+            607
+          ]
+        }
+      }
+    ],
+    "runtime_validation": "NOT_RUN",
+    "actor_approval": false,
+    "new_actor_approvals": 0
+  },
+  "newly_authored_poses": 4,
+  "reused_poses": 2,
+  "approval": false,
+  "source_provenance": {
+    "assembly_spec": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:267",
+      "role": "walk",
+      "direction": "N",
+      "poses": [
+        {
+          "path": "/workspace/scratch/girtas-N-walk-repair/girtas-N-walk-v02.png",
+          "source_sha256": "399a95205c10e7bd8aacb5f061bb0d5446ec889595fb3a1088485d605ef0a85c",
+          "region": [
+            40,
+            12,
+            483,
+            493
+          ],
+          "rgba_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636",
+          "source_pose": 0,
+          "newly_authored": false,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 0 LEFT_support_RIGHT_short SOURCE_ART_PASS, full loop runtime pending",
+          "origin": "existingNwalk0",
+          "reviewed_lossless_crop_path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+          "reviewed_lossless_crop_sha256": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+          "review_crop_source_anchor": [
+            216,
+            489
+          ]
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+          "source_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+          "region": [
+            68,
+            0,
+            564,
+            608
+          ],
+          "rgba_sha256": "2a143f0f17c60a4870d9daa97cd0925a738ab9b25dc4daff2df57ecd58521471",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 1 LEFT_support_RIGHT_passing SOURCE_ART_PASS, full loop runtime pending",
+          "origin": "new4source_row0",
+          "reviewed_lossless_crop_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/source-row0-lossless.png",
+          "reviewed_lossless_crop_sha256": "befc5dbfc47ac3b9717d05ee8d0b9c5f0c1bc8a4a0d97e4499567b3fef7fc35b",
+          "review_crop_source_anchor": [
+            246,
+            604
+          ]
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+          "source_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+          "region": [
+            702,
+            0,
+            552,
+            609
+          ],
+          "rgba_sha256": "8cb901adb4028a419a48b8a71d3a1f4bfc6a274220f54c8a8742dd2e5117b3cd",
+          "source_pose": 1,
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 2 LEFT_support_RIGHT_advance SOURCE_ART_PASS, full loop runtime pending",
+          "origin": "new4source_row1",
+          "reviewed_lossless_crop_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/source-row1-lossless.png",
+          "reviewed_lossless_crop_sha256": "e3604c1afede90506e2a30cac6d2e2e252388bf18d5dc904bf8f602f90c28494",
+          "review_crop_source_anchor": [
+            238,
+            605
+          ]
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-walk-repair/girtas-N-walk-v02.png",
+          "source_sha256": "399a95205c10e7bd8aacb5f061bb0d5446ec889595fb3a1088485d605ef0a85c",
+          "region": [
+            40,
+            518,
+            479,
+            493
+          ],
+          "rgba_sha256": "3efc58c83624ebfa814fff13a6612409bb4fd0ea43dcac56b1abe248af8f84b7",
+          "source_pose": 2,
+          "newly_authored": false,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 3 RIGHT_support_LEFT_short SOURCE_ART_PASS, full loop runtime pending",
+          "origin": "existingNwalk2_reused_oppositecontact",
+          "reviewed_lossless_crop_path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_phase2-opposite-contact-lossless.png",
+          "reviewed_lossless_crop_sha256": "4b2df7477c66483f91ecada8c09156adec5405fa1495a7a79e06317abd569c54",
+          "review_crop_source_anchor": [
+            216,
+            489
+          ]
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/girtas-N-walk-phase4-single-edit-v01.png",
+          "source_sha256": "4df1a528e6b0e180db3f2ce97c7a6c517a88aa111a15ea69c22d7576185b395e",
+          "region": [
+            146,
+            128,
+            1081,
+            1078
+          ],
+          "rgba_sha256": "f9199b2419205ed5bd76f90619a395bb60cf4de92c92110d37232d081aa31c02",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 4 RIGHT_support_LEFT_passing SOURCE_ART_PASS, full loop runtime pending",
+          "origin": "newlocalized_phase4",
+          "reviewed_lossless_crop_path": "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/phase4-lossless-region.png",
+          "reviewed_lossless_crop_sha256": "6e6466d3b0afb23be4f0d35fc2558915bac999c8ac6a5806490a8cc20f8c15bc",
+          "review_crop_source_anchor": [
+            540,
+            1074
+          ]
+        },
+        {
+          "path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+          "source_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+          "region": [
+            705,
+            610,
+            549,
+            611
+          ],
+          "rgba_sha256": "95fbb29d3f6f9f8bd1d239e7e271f37c0e6e416d122a7711e177bc34ebb9f68a",
+          "source_pose": 3,
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 5 RIGHT_support_LEFT_advance SOURCE_ART_PASS, full loop runtime pending",
+          "origin": "new4source_row3",
+          "reviewed_lossless_crop_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/source-row3-lossless.png",
+          "reviewed_lossless_crop_sha256": "497c2535fd68ca72f6b9841aa6eae1c8d5c0fd7bb7d11c9dc7c9b387af9f818d",
+          "review_crop_source_anchor": [
+            235,
+            607
+          ]
+        }
+      ],
+      "source_review_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json",
+      "source_review_sha256": "1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7",
+      "source_visual_status": "PASS_INDIVIDUAL_POSES_ONLY_RUNTIME_LAYOUT_HOLD",
+      "physical_scale_review": {
+        "status": "PRIVATE_COMMON_PHYSICAL_SCALE_REVIEW_PASS_RUNTIME_TEST_PENDING",
+        "basis": [
+          "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
+          "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
+          "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization."
+        ],
+        "suggested_pose_canvases": [
+          1024,
+          1256,
+          1256,
+          1024,
+          2256,
+          1256
+        ]
+      },
+      "approval": false,
+      "new_actor_approvals": 0
+    },
+    "assembly_spec_sha256": "0dbd1c310e6b476c1eedab6fe4a8dfb2726ded56277f24234da2049c78237ad1",
+    "assembly_proof": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:267",
+      "role": "walk",
+      "assembler_sha256": "cb3357b0029a55321fd07832c31889fde954517cb8a6f9b7e7d1333f9922f6c0",
+      "direction": "N",
+      "metadata_sha256": "0dbd1c310e6b476c1eedab6fe4a8dfb2726ded56277f24234da2049c78237ad1",
+      "metadata_path": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/spec.json",
+      "metadata_hash_basis": "file_bytes",
+      "output": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/girtas-N-walk-reviewed-composite-v02.png",
+      "output_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+      "output_canvas": [
+        2560,
+        3840
+      ],
+      "cell_size": [
+        1280,
+        1280
+      ],
+      "virtual_canvas_size": 2048,
+      "poses": [
+        {
+          "phase": 0,
+          "source_path": "/workspace/scratch/girtas-N-walk-repair/girtas-N-walk-v02.png",
+          "source_sha256": "399a95205c10e7bd8aacb5f061bb0d5446ec889595fb3a1088485d605ef0a85c",
+          "source_pose": 0,
+          "source_region": [
+            40,
+            12,
+            483,
+            493
+          ],
+          "rgba_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636",
+          "visible_pose_sha256": "be6b3a562f455ba22386a8cae6ca702a15938471bc6090179b179c42aeb0e0eb",
+          "newly_authored": false,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 0 LEFT_support_RIGHT_short SOURCE_ART_PASS, full loop runtime pending",
+          "output_region": [
+            398,
+            393,
+            483,
+            493
+          ],
+          "translation": [
+            358,
+            381
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 76966
+        },
+        {
+          "phase": 1,
+          "source_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+          "source_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+          "source_pose": 0,
+          "source_region": [
+            68,
+            0,
+            564,
+            608
+          ],
+          "rgba_sha256": "2a143f0f17c60a4870d9daa97cd0925a738ab9b25dc4daff2df57ecd58521471",
+          "visible_pose_sha256": "90e3ed7d429b9327089e06a10c15a84a9ce1780424db2cca9554db0dc94cae3d",
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 1 LEFT_support_RIGHT_passing SOURCE_ART_PASS, full loop runtime pending",
+          "output_region": [
+            1638,
+            336,
+            564,
+            608
+          ],
+          "translation": [
+            1570,
+            336
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 118032
+        },
+        {
+          "phase": 2,
+          "source_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+          "source_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+          "source_pose": 1,
+          "source_region": [
+            702,
+            0,
+            552,
+            609
+          ],
+          "rgba_sha256": "8cb901adb4028a419a48b8a71d3a1f4bfc6a274220f54c8a8742dd2e5117b3cd",
+          "visible_pose_sha256": "35409f0f6f7ec421d12f93ce882b87d2007c2e2a0ba57ff0450c2df7506114b6",
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 2 LEFT_support_RIGHT_advance SOURCE_ART_PASS, full loop runtime pending",
+          "output_region": [
+            364,
+            1615,
+            552,
+            609
+          ],
+          "translation": [
+            -338,
+            1615
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 3,
+            "retained_boundary_max_alpha": 61,
+            "retained_boundary_pixels_xy_rgba": [
+              {
+                "xy": [
+                  1253,
+                  574
+                ],
+                "rgba": [
+                  230,
+                  85,
+                  12,
+                  21
+                ]
+              },
+              {
+                "xy": [
+                  1253,
+                  575
+                ],
+                "rgba": [
+                  229,
+                  79,
+                  8,
+                  61
+                ]
+              },
+              {
+                "xy": [
+                  1253,
+                  576
+                ],
+                "rgba": [
+                  211,
+                  74,
+                  6,
+                  41
+                ]
+              }
+            ]
+          },
+          "alpha_gt16_pixels": 119086
+        },
+        {
+          "phase": 3,
+          "source_path": "/workspace/scratch/girtas-N-walk-repair/girtas-N-walk-v02.png",
+          "source_sha256": "399a95205c10e7bd8aacb5f061bb0d5446ec889595fb3a1088485d605ef0a85c",
+          "source_pose": 2,
+          "source_region": [
+            40,
+            518,
+            479,
+            493
+          ],
+          "rgba_sha256": "3efc58c83624ebfa814fff13a6612409bb4fd0ea43dcac56b1abe248af8f84b7",
+          "visible_pose_sha256": "303a8e77e22d9cfdc5bdd488a36231031b8969675e7168f51d64a01400a3870f",
+          "newly_authored": false,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 3 RIGHT_support_LEFT_short SOURCE_ART_PASS, full loop runtime pending",
+          "output_region": [
+            1680,
+            1673,
+            479,
+            493
+          ],
+          "translation": [
+            1640,
+            1155
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 78476
+        },
+        {
+          "phase": 4,
+          "source_path": "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/girtas-N-walk-phase4-single-edit-v01.png",
+          "source_sha256": "4df1a528e6b0e180db3f2ce97c7a6c517a88aa111a15ea69c22d7576185b395e",
+          "source_pose": 0,
+          "source_region": [
+            146,
+            128,
+            1081,
+            1078
+          ],
+          "rgba_sha256": "f9199b2419205ed5bd76f90619a395bb60cf4de92c92110d37232d081aa31c02",
+          "visible_pose_sha256": "98d4fbc747f56e89e0edb24fac9f46607e031b2c07da2659d0ee727aec93b89a",
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 4 RIGHT_support_LEFT_passing SOURCE_ART_PASS, full loop runtime pending",
+          "output_region": [
+            99,
+            2661,
+            1081,
+            1078
+          ],
+          "translation": [
+            -47,
+            2533
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 370936
+        },
+        {
+          "phase": 5,
+          "source_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+          "source_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+          "source_pose": 3,
+          "source_region": [
+            705,
+            610,
+            549,
+            611
+          ],
+          "rgba_sha256": "95fbb29d3f6f9f8bd1d239e7e271f37c0e6e416d122a7711e177bc34ebb9f68a",
+          "visible_pose_sha256": "3259c1331e6aafe180be8636b2210f2ccab9bd5a43460bcf1691f24b9f2d4eb4",
+          "newly_authored": true,
+          "review_basis": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/six-source-assembly-review.json SHA256 1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7; individual pose 5 RIGHT_support_LEFT_advance SOURCE_ART_PASS, full loop runtime pending",
+          "output_region": [
+            1645,
+            2894,
+            549,
+            611
+          ],
+          "translation": [
+            940,
+            2284
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 123133
+        }
+      ],
+      "newly_authored_poses": 4,
+      "reused_poses": 2,
+      "preserved_region_rgba_exact": true,
+      "preserved_pose_alpha_gt16": true,
+      "resampled": false,
+      "mirrored": false,
+      "recolored": false,
+      "cleaned_pixels": 0,
+      "strict_importer": "PASS",
+      "geometry": {
+        "image_size": [
+          2560,
+          3840
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "N",
+            "region": [
+              398,
+              393,
+              483,
+              493
+            ],
+            "margin": [
+              782,
+              791,
+              1565,
+              1555
+            ],
+            "source_anchor": [
+              640,
+              882
+            ],
+            "rgba_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636"
+          },
+          {
+            "row": 1,
+            "direction": "N",
+            "region": [
+              1638,
+              336,
+              564,
+              608
+            ],
+            "margin": [
+              742,
+              676,
+              1484,
+              1440
+            ],
+            "source_anchor": [
+              1920,
+              940
+            ],
+            "rgba_sha256": "2a143f0f17c60a4870d9daa97cd0925a738ab9b25dc4daff2df57ecd58521471"
+          },
+          {
+            "row": 2,
+            "direction": "N",
+            "region": [
+              364,
+              1614,
+              554,
+              610
+            ],
+            "margin": [
+              748,
+              674,
+              1494,
+              1438
+            ],
+            "source_anchor": [
+              640,
+              2220
+            ],
+            "rgba_sha256": "e20f6ea85eee0bfe9f832d1c07daa41de05f13926f1e1b1ebfa12f4a8ae3c628"
+          },
+          {
+            "row": 3,
+            "direction": "N",
+            "region": [
+              1680,
+              1673,
+              479,
+              493
+            ],
+            "margin": [
+              784,
+              791,
+              1569,
+              1555
+            ],
+            "source_anchor": [
+              1920,
+              2162
+            ],
+            "rgba_sha256": "3efc58c83624ebfa814fff13a6612409bb4fd0ea43dcac56b1abe248af8f84b7"
+          },
+          {
+            "row": 4,
+            "direction": "N",
+            "region": [
+              99,
+              2661,
+              1081,
+              1078
+            ],
+            "margin": [
+              483,
+              206,
+              967,
+              970
+            ],
+            "source_anchor": [
+              640,
+              3735
+            ],
+            "rgba_sha256": "f9199b2419205ed5bd76f90619a395bb60cf4de92c92110d37232d081aa31c02"
+          },
+          {
+            "row": 5,
+            "direction": "N",
+            "region": [
+              1645,
+              2894,
+              550,
+              611
+            ],
+            "margin": [
+              749,
+              673,
+              1498,
+              1437
+            ],
+            "source_anchor": [
+              1920,
+              3501
+            ],
+            "rgba_sha256": "f46a585a49a061beaa3b6922c4d6ae0b10fc47115b426da3f0fe82c82f70bad5"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 487.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "approval": false,
+      "visual_approval": "NOT_RUN",
+      "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+      "external_physical_scale_review": {
+        "status": "PRIVATE_COMMON_PHYSICAL_SCALE_REVIEW_PASS_RUNTIME_TEST_PENDING",
+        "basis": [
+          "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
+          "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
+          "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization."
+        ],
+        "suggested_pose_canvases": [
+          1024,
+          1256,
+          1256,
+          1024,
+          2256,
+          1256
+        ]
+      },
+      "region_height_span": [
+        493,
+        1078
+      ],
+      "possible_region_height_mismatch": true,
+      "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+    },
+    "assembly_proof_sha256": "6761db5a8bbf80031cf6cdf7ddb67c5369c46e986bd674a0a44b020902bee549",
+    "individual_six_source_art_review": {
+      "schema": 1,
+      "key": "transform:267",
+      "direction": "N",
+      "role": "walk",
+      "asset_type": "six_source_assembly_review",
+      "status": "SOURCE_ART_PASS_RUNTIME_LAYOUT_HOLD",
+      "source_visual_status": "PASS",
+      "native_pose_sources": 6,
+      "reused_existing_keyposes": 2,
+      "new_valid_pose_sources": 4,
+      "poses": [
+        {
+          "game_phase": 0,
+          "lossless_crop_path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+          "crop_png_sha256": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+          "origin": "existingNwalk0",
+          "anatomical_role": "LEFT_support_RIGHT_short",
+          "original_source_geometry_frame": {
+            "row": 0,
+            "direction": "N",
+            "region": [
+              40,
+              12,
+              483,
+              493
+            ],
+            "margin": [
+              296,
+              151,
+              541,
+              531
+            ],
+            "source_anchor": [
+              256,
+              501
+            ],
+            "rgba_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636"
+          },
+          "crop_source_anchor": [
+            216,
+            489
+          ],
+          "strict_base_canvas": 1024,
+          "suggested_runtime_effective_canvas": 1024,
+          "effective_canvas_review_status": "PRIVATE_VISUAL_PASS_RUNTIME_TEST_PENDING",
+          "source_visual_status": "PASS",
+          "pixel_resampling": false
+        },
+        {
+          "game_phase": 1,
+          "lossless_crop_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/source-row0-lossless.png",
+          "crop_png_sha256": "befc5dbfc47ac3b9717d05ee8d0b9c5f0c1bc8a4a0d97e4499567b3fef7fc35b",
+          "origin": "new4source_row0",
+          "anatomical_role": "LEFT_support_RIGHT_passing",
+          "original_source_geometry_frame": {
+            "row": 0,
+            "direction": "N",
+            "region": [
+              68,
+              0,
+              564,
+              608
+            ],
+            "margin": [
+              266,
+              36,
+              460,
+              416
+            ],
+            "source_anchor": [
+              314,
+              604
+            ],
+            "rgba_sha256": "2a143f0f17c60a4870d9daa97cd0925a738ab9b25dc4daff2df57ecd58521471"
+          },
+          "crop_source_anchor": [
+            246,
+            604
+          ],
+          "strict_base_canvas": 1024,
+          "suggested_runtime_effective_canvas": 1256,
+          "effective_canvas_review_status": "PRIVATE_VISUAL_PASS_RUNTIME_TEST_PENDING",
+          "source_visual_status": "PASS",
+          "pixel_resampling": false
+        },
+        {
+          "game_phase": 2,
+          "lossless_crop_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/source-row1-lossless.png",
+          "crop_png_sha256": "e3604c1afede90506e2a30cac6d2e2e252388bf18d5dc904bf8f602f90c28494",
+          "origin": "new4source_row1",
+          "anatomical_role": "LEFT_support_RIGHT_advance",
+          "original_source_geometry_frame": {
+            "row": 1,
+            "direction": "N",
+            "region": [
+              702,
+              0,
+              552,
+              609
+            ],
+            "margin": [
+              274,
+              35,
+              472,
+              415
+            ],
+            "source_anchor": [
+              940,
+              605
+            ],
+            "rgba_sha256": "8cb901adb4028a419a48b8a71d3a1f4bfc6a274220f54c8a8742dd2e5117b3cd"
+          },
+          "crop_source_anchor": [
+            238,
+            605
+          ],
+          "strict_base_canvas": 1024,
+          "suggested_runtime_effective_canvas": 1256,
+          "effective_canvas_review_status": "PRIVATE_VISUAL_PASS_RUNTIME_TEST_PENDING",
+          "source_visual_status": "PASS",
+          "pixel_resampling": false
+        },
+        {
+          "game_phase": 3,
+          "lossless_crop_path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_phase2-opposite-contact-lossless.png",
+          "crop_png_sha256": "4b2df7477c66483f91ecada8c09156adec5405fa1495a7a79e06317abd569c54",
+          "origin": "existingNwalk2_reused_oppositecontact",
+          "anatomical_role": "RIGHT_support_LEFT_short",
+          "original_source_geometry_frame": {
+            "row": 2,
+            "direction": "N",
+            "region": [
+              40,
+              518,
+              479,
+              493
+            ],
+            "margin": [
+              296,
+              151,
+              545,
+              531
+            ],
+            "source_anchor": [
+              256,
+              1007
+            ],
+            "rgba_sha256": "3efc58c83624ebfa814fff13a6612409bb4fd0ea43dcac56b1abe248af8f84b7"
+          },
+          "crop_source_anchor": [
+            216,
+            489
+          ],
+          "strict_base_canvas": 1024,
+          "suggested_runtime_effective_canvas": 1024,
+          "effective_canvas_review_status": "PRIVATE_VISUAL_PASS_RUNTIME_TEST_PENDING",
+          "source_visual_status": "PASS",
+          "pixel_resampling": false
+        },
+        {
+          "game_phase": 4,
+          "lossless_crop_path": "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/phase4-lossless-region.png",
+          "crop_png_sha256": "6e6466d3b0afb23be4f0d35fc2558915bac999c8ac6a5806490a8cc20f8c15bc",
+          "origin": "newlocalized_phase4",
+          "anatomical_role": "RIGHT_support_LEFT_passing",
+          "original_source_geometry_frame": {
+            "row": 0,
+            "direction": "N",
+            "region": [
+              146,
+              128,
+              1081,
+              1078
+            ],
+            "margin": [
+              484,
+              206,
+              967,
+              970
+            ],
+            "source_anchor": [
+              686,
+              1202
+            ],
+            "rgba_sha256": "f9199b2419205ed5bd76f90619a395bb60cf4de92c92110d37232d081aa31c02"
+          },
+          "crop_source_anchor": [
+            540,
+            1074
+          ],
+          "strict_base_canvas": 2048,
+          "suggested_runtime_effective_canvas": 2256,
+          "effective_canvas_review_status": "PRIVATE_VISUAL_PASS_RUNTIME_TEST_PENDING",
+          "source_visual_status": "PASS",
+          "pixel_resampling": false
+        },
+        {
+          "game_phase": 5,
+          "lossless_crop_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/source-row3-lossless.png",
+          "crop_png_sha256": "497c2535fd68ca72f6b9841aa6eae1c8d5c0fd7bb7d11c9dc7c9b387af9f818d",
+          "origin": "new4source_row3",
+          "anatomical_role": "RIGHT_support_LEFT_advance",
+          "original_source_geometry_frame": {
+            "row": 3,
+            "direction": "N",
+            "region": [
+              705,
+              610,
+              549,
+              611
+            ],
+            "margin": [
+              277,
+              33,
+              475,
+              413
+            ],
+            "source_anchor": [
+              940,
+              1217
+            ],
+            "rgba_sha256": "95fbb29d3f6f9f8bd1d239e7e271f37c0e6e416d122a7711e177bc34ebb9f68a"
+          },
+          "crop_source_anchor": [
+            235,
+            607
+          ],
+          "strict_base_canvas": 1024,
+          "suggested_runtime_effective_canvas": 1256,
+          "effective_canvas_review_status": "PRIVATE_VISUAL_PASS_RUNTIME_TEST_PENDING",
+          "source_visual_status": "PASS",
+          "pixel_resampling": false
+        }
+      ],
+      "unused_new_source_row2_status": "HOLD_REDUNDANT_WRONG_HALF_PRESERVED",
+      "visual_findings": [
+        "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
+        "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
+        "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization."
+      ],
+      "visual_limitations": [
+        "Source-art static comparison is not headless runtime assembly or final motion approval. Source3newrows need effective canvas~1256; phase4 nativebase2048 and effective~2256; correct footanchor/scale normalization must be implemented/tested without resampling originalPNG.",
+        "Exact stride timing, planted support drift,5->0 seam and real game connection/approval remain pending.",
+        "Pose4 output ignored localized/nativepad placement and enlarged wholebody; all original/raw/initial layoutHOLD lineage remains preserved, subsequently assessed on actual physical quality."
+      ],
+      "original_4source_result_preserved": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/result.json",
+      "phase4_review": "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/result.json",
+      "reused_keys_review": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/reused-contact-key-result.json",
+      "private_final_comparison_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/private-final-six-candidate-qc.jpg",
+      "new_approvals": 0,
+      "repo_mutations": false,
+      "main_chat_images_shared": false
+    },
+    "individual_six_source_art_review_sha256": "1e2ce420717415230b5e6a2bb63f591bd3bb3e37c449d0b1429d3dd235c32fc7",
+    "physical_anchor_numeric_evidence": [
+      {
+        "game_phase": 0,
+        "crop_size": [
+          483,
+          493
+        ],
+        "head_peak_x": 205.0,
+        "waist_run_midline_median_x": 207.25,
+        "waist_centers_range": [
+          206.0,
+          211.5
+        ],
+        "waist_run_edge_medians": [
+          151.0,
+          264.0
+        ],
+        "waist_band_y": [
+          237,
+          294
+        ],
+        "support_side": "LEFT",
+        "support_sole_bottom_pixel": [
+          187.0,
+          489
+        ],
+        "proposed_ground_anchor_y": 490,
+        "previous_importer_crop_anchor": [
+          216,
+          489
+        ]
+      },
+      {
+        "game_phase": 1,
+        "crop_size": [
+          564,
+          608
+        ],
+        "head_peak_x": 240.0,
+        "waist_run_midline_median_x": 239.5,
+        "waist_centers_range": [
+          236.0,
+          242.0
+        ],
+        "waist_run_edge_medians": [
+          167.0,
+          311.0
+        ],
+        "waist_band_y": [
+          292,
+          363
+        ],
+        "support_side": "LEFT",
+        "support_sole_bottom_pixel": [
+          201.5,
+          604
+        ],
+        "proposed_ground_anchor_y": 605,
+        "previous_importer_crop_anchor": [
+          246,
+          604
+        ]
+      },
+      {
+        "game_phase": 2,
+        "crop_size": [
+          552,
+          609
+        ],
+        "head_peak_x": 237.0,
+        "waist_run_midline_median_x": 235.0,
+        "waist_centers_range": [
+          232.5,
+          238.0
+        ],
+        "waist_run_edge_medians": [
+          161.0,
+          309.5
+        ],
+        "waist_band_y": [
+          292,
+          363
+        ],
+        "support_side": "LEFT",
+        "support_sole_bottom_pixel": [
+          213.5,
+          605
+        ],
+        "proposed_ground_anchor_y": 606,
+        "previous_importer_crop_anchor": [
+          238,
+          605
+        ]
+      },
+      {
+        "game_phase": 3,
+        "crop_size": [
+          479,
+          493
+        ],
+        "head_peak_x": 203.0,
+        "waist_run_midline_median_x": 208.0,
+        "waist_centers_range": [
+          205.5,
+          212.5
+        ],
+        "waist_run_edge_medians": [
+          149.0,
+          268.0
+        ],
+        "waist_band_y": [
+          237,
+          294
+        ],
+        "support_side": "RIGHT",
+        "support_sole_bottom_pixel": [
+          246.0,
+          489
+        ],
+        "proposed_ground_anchor_y": 490,
+        "previous_importer_crop_anchor": [
+          216,
+          489
+        ]
+      },
+      {
+        "game_phase": 4,
+        "crop_size": [
+          1081,
+          1078
+        ],
+        "head_peak_x": 456.0,
+        "waist_run_midline_median_x": 463.5,
+        "waist_centers_range": [
+          458.5,
+          473.0
+        ],
+        "waist_run_edge_medians": [
+          330.0,
+          601.5
+        ],
+        "waist_band_y": [
+          518,
+          645
+        ],
+        "support_side": "RIGHT",
+        "support_sole_bottom_pixel": [
+          552.5,
+          1074
+        ],
+        "proposed_ground_anchor_y": 1075,
+        "previous_importer_crop_anchor": [
+          540,
+          1074
+        ]
+      },
+      {
+        "game_phase": 5,
+        "crop_size": [
+          549,
+          611
+        ],
+        "head_peak_x": 239.0,
+        "waist_run_midline_median_x": 244.0,
+        "waist_centers_range": [
+          238.5,
+          250.0
+        ],
+        "waist_run_edge_medians": [
+          167.0,
+          318.0
+        ],
+        "waist_band_y": [
+          293,
+          365
+        ],
+        "support_side": "RIGHT",
+        "support_sole_bottom_pixel": [
+          283.0,
+          607
+        ],
+        "proposed_ground_anchor_y": 608,
+        "previous_importer_crop_anchor": [
+          235,
+          607
+        ]
+      }
+    ],
+    "physical_anchor_numeric_evidence_sha256": "be99e85c423215918eaea360d3337fcc6f93edd6f31d8f124b5a7141e1862e48",
+    "boundary_alpha_evidence": {
+      "source": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+      "source_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+      "selected_game_phase": 2,
+      "original_source_pose": 1,
+      "reviewed_region": [
+        702,
+        0,
+        552,
+        609
+      ],
+      "selected_strong_alpha_gt100_bbox_xyxy": [
+        705,
+        2,
+        1253,
+        606
+      ],
+      "strong_pixels_at_source_edge": 0,
+      "selected_edge_alpha_gt16_count": 3,
+      "selected_edge_max_alpha": 61,
+      "selected_edge_pixels": [
+        {
+          "xy": [
+            1253,
+            574
+          ],
+          "rgba": [
+            230,
+            85,
+            12,
+            21
+          ],
+          "distance_to_selected_alpha_gt100": 1.0
+        },
+        {
+          "xy": [
+            1253,
+            575
+          ],
+          "rgba": [
+            229,
+            79,
+            8,
+            61
+          ],
+          "distance_to_selected_alpha_gt100": 1.0
+        },
+        {
+          "xy": [
+            1253,
+            576
+          ],
+          "rgba": [
+            211,
+            74,
+            6,
+            41
+          ],
+          "distance_to_selected_alpha_gt100": 1.4142135623730951
+        }
+      ],
+      "source_all_edge_max_alpha": 61,
+      "review": "Source-art judgement pending; all exact RGBA to be retained. No padding/removal/resampling."
+    },
+    "boundary_source_art_confirmation": {
+      "status": "SOURCE_ART_COMPLETE_WEAPON_ENDPOINT_PASS",
+      "reviewer": "/root/girtas_private_visual_quality",
+      "reviewed_at": "2026-10-19T11:30:56.243883+00:00",
+      "basis": "Existing whole-source QC plus4043byte tiny endpoint detail: smooth sharp complete weapon tip, no flat cut. Last-column alpha21/61/41 is terminal AA beside strong interior endpoint; no alpha>100 boundary pixel. Every original RGBA retained.",
+      "limits": "Source-art judgment only. Runtime footlock/seam/scale/integration pending; actorapproval0."
+    }
+  },
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-N-walk-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Privately reviewed all6 at common physical display scale. Helmet/head, shoulders/back torso, waist/hips, right/left boot size, original robe and weapon/spine proportions coherent across6; same pureBACK/N camera and original right-hand equipment.",
+      "Actual sequential roles match LEFT-support RIGHT-short/passing/advance then RIGHT-support LEFT-short/passing/advance. Phase4 adds the previously missing visibly bent/lifted LEFT passing knee/boot without arm/gear/anatomy defect.",
+      "2->3 and5->0 are matched opposite support handoffs. No opposite heading, face, handedness, extra limbs or gross body scale jump after reviewed uniform display normalization.",
+      "Six selected regions retain exact original RGBA/provenance. Public strict6pose importer and complete coverage passed at2048. Three terminal alpha21/61/41 pixels retainedexact; full sharp blade tip privately confirmed, no strong foreground boundary clip.",
+      "Runtime proposal uses measured pelvis-axis/supportsole anchors, not old cell-center/bbox anchors."
+    ],
+    "visual_limitations": [
+      "Actual Player/resource/action playback, footlock/hip drift/scale,2->3handoff,5->0seam and Main connection remain pending.",
+      "Per-pose canvases and anchors remain proposals. No final runtime/actor PASS. Native hipX uncertainty~3pixels,phase4~7pixels at enlargedresolution.",
+      "Original full failed Nwalk/newfour remain HOLD; only individually reviewed poses reused. Unused newfour row2 staysHOLD."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+    "raw_bytes": 3025328,
+    "request_sha256": "72382b1cbfebc9db2fe4dc57171a7c7d6aa36d9606d9facab8370005ad22c7f7",
+    "review_sha256": "9cd76ebad71c3fdfd3eff0cee02673a75753c5044f12a54186c1c05bb0c72205"
+  },
+  "available_repository_reference_sources": {
+    "399a95205c10e7bd8aacb5f061bb0d5446ec889595fb3a1088485d605ef0a85c": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-N-walk-repair/girtas-N-walk-v02.png",
+    "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+    "4df1a528e6b0e180db3f2ce97c7a6c517a88aa111a15ea69c22d7576185b395e": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-N-walk-phase4-single-edit-v01/girtas-N-walk-phase4-single-edit-v01.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
+  "output_sha256": "29dda19e238c6b1f7a8d241e8228186538cea5f22d538441a236003fbb4babe1",
+  "output_bytes": 3025328,
+  "original_generated_file": "/workspace/scratch/girtas-N-walk-reviewed-composite-v02/girtas-N-walk-reviewed-composite-v02.png"
+}

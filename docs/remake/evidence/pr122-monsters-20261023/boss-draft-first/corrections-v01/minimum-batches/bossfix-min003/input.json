@@ -1,0 +1,170 @@
+{
+  "jobs": [
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "SE-attack-v02",
+      "direction": "SE",
+      "role": "attack",
+      "corrects": "SE-attack-v01",
+      "causes": [
+        "physical_component_count"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/SE-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "SW-attack-v02",
+      "direction": "SW",
+      "role": "attack",
+      "corrects": "SW-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/SW-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:공포의 뱀파이어",
+      "slug": "dread_vampire",
+      "clip": "W-run-v02",
+      "direction": "W",
+      "role": "run",
+      "corrects": "W-run-v01",
+      "causes": [
+        "physical_component_count"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/dread_vampire/W-run-v02.json"
+    },
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "E-idle-v02",
+      "direction": "E",
+      "role": "idle",
+      "corrects": "E-idle-v01",
+      "causes": [
+        "foreign_body_rectangle"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/E-idle-v02.json"
+    }
+  ],
+  "source_pins": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/SE-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-dc302487-2252-4ca0-b6a6-79e7056df1ea.png",
+      "sha256": "a14cacc0af860d8186417d8d17365f48657c8cf6a0851ae12892a544bec6b6d5",
+      "bytes": 2239449,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1047160,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/SW-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-1fd3eced-a442-4630-973d-20fa4ef08446.png",
+      "sha256": "02ae713074a940be567030f863721b3aaea4c9eb4e84933fef8dffacc46a1e1d",
+      "bytes": 2268644,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1039946,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/SW-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-75e9e5d7-e71e-4d60-a29d-2893a951a2dc.png",
+      "sha256": "698be13996330b5e2faddc033959836249d2e044660c0dfa1895d9f16b6ec704",
+      "bytes": 2138436,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1105901,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/W-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-36d16afd-267d-4c4f-a151-fd764d52f7db.png",
+      "sha256": "089cb6724ad745acbd239266974c57a5947c5ca032b5ff615da03777cd9b864c",
+      "bytes": 2105466,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1109702,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/W-run-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-ef1c3e18-4a6a-4e9a-b8fe-685262546d38.png",
+      "sha256": "ad0e537443188ad05f57d832160eaf62c468c340ded112b5370208150c3a19e6",
+      "bytes": 2233197,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1035035,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/E-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-1d1c48fa-320b-4e6a-ace4-b0055d96ad7f.png",
+      "sha256": "d1b82483bdeaa8b02fa91bcf911a423861a30378537e500ecfdb5933555a6e6c",
+      "bytes": 2250112,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1039930,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    }
+  ],
+  "normal_art_changes": 0,
+  "whole_quality_review": "TARGETED_CORRECTIONS_ONLY"
+}

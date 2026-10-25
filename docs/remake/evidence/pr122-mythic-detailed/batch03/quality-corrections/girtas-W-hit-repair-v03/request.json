@@ -1,0 +1,83 @@
+{
+  "key": "transform:267",
+  "name": "지배자 기르타스",
+  "direction": "W",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "references": [
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-S-hit-repair/girtas-S-hit-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png": "81a80c77b05148b2fa5e6b173135b8253fe5e0e3a232a3a1d559ab08ee58c10b",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-S-hit-repair/girtas-S-hit-v02.png": "6bfdeece93c9951d5d235562657321acc30e7aa34bc930d41eb672e7f95e0c1d"
+  },
+  "reference_roles": [
+    "lossless_ONE_pose_W_master_compass_and_model",
+    "original_identity",
+    "faithful_S_hit_reaction_ONLY_NOT_heading_or_layout"
+  ],
+  "single_pose_master_proof": {
+    "status": "LOSSLESS_SINGLE_POSE_CROP",
+    "source": "/workspace/scratch/girtas-W-idle-repair/girtas-W-idle-v02.png",
+    "source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+    "source_bytes": 2317850,
+    "source_visual_result": "/workspace/scratch/girtas-W-idle-repair/result.json",
+    "geometry": "/workspace/scratch/girtas-W-idle-repair/geometry-girtas-W-idle-v02.json",
+    "geometry_sha256": "fcde3e60fc3cbe9d1351da15225ffaa2e0fb1d545f99560d9c1197fabf035dd9",
+    "phase": 0,
+    "direction": "W",
+    "source_region": [
+      17,
+      12,
+      492,
+      472
+    ],
+    "source_anchor": [
+      256,
+      480
+    ],
+    "crop": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png",
+    "crop_size": [
+      492,
+      472
+    ],
+    "crop_sha256": "81a80c77b05148b2fa5e6b173135b8253fe5e0e3a232a3a1d559ab08ee58c10b",
+    "crop_bytes": 354494,
+    "crop_rgba_sha256": "2ab93ec9f60efba89aee09f6a1bc76e53fd5d467507749bb9f2f97c7f63e17e9",
+    "saved_geometry_rgba_sha256": "2ab93ec9f60efba89aee09f6a1bc76e53fd5d467507749bb9f2f97c7f63e17e9",
+    "operations": [
+      "Exact rectangular region crop only",
+      "RGBA pixel bytes identical to source region",
+      "No resize, alpha edit, recolor, rotation, mirroring, pose joining or generated content"
+    ]
+  },
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "corrective_reason": "Meaningfully new geometry/layout conditioning: one lossless W pose instead of six-figure W sheet, miniaturized complete model with220-240px body/full<=320px silhouettes and hard opaque weapon; rejected v02 raw/repacker HOLD preserved unchanged.",
+  "new_conditioning_evidence": [
+    "ONE_pose_lossless_Widle0_crop_with_source_region_RGBA_proof",
+    "single_model_instead_of_six_figure_W_layout",
+    "new_sparser220_240_body_and_hard_opaque_weapon_alpha_contract"
+  ],
+  "prior_hold_protection": {
+    "/workspace/scratch/girtas-W-hit-repair/request.json": "a248eb8fd639f0fc76887e216114bd61cebfd3abcd30498f754b10d2ae04ac95",
+    "/workspace/scratch/girtas-W-hit-repair/result.json": "19cef271c92d9f289640a2812fa2b04957221b2c80f6205ff984f32f99e3adf5",
+    "/workspace/scratch/girtas-W-hit-repair/girtas-W-hit-v02.png": "3a34d02f13d0f0001d1641af3fb3ddf689aebbad176b22b9aa048b3fe4c92ff6"
+  },
+  "phase_contract": [
+    "west_brace",
+    "impact",
+    "maximum_LEFT_head_torso_recoil",
+    "coherent_W_leg_stagger",
+    "recover",
+    "west_guard"
+  ],
+  "requested_poses": 6,
+  "prompt": "Create ONE NEW production isometric RPG HIT-REACTION atlas of original Girtas from the FIRST reference's SINGLE LEFT-facing character. The FIRST image is an exact lossless ONE-POSE crop from the faithful PASS WEST idle master, not a six-figure sheet. Preserve that exact true horizontal LEFT/W heading, side-view pale face, full long pale hair, thin hard-gold radial spines, LONG DARK GOLD-TRIMMED SKIRT, original body/equipment ratios and ONE original LONG SINUOUS WEAPON in its anatomical RIGHT/FAR hand. The near anatomical LEFT hand stays EMPTY. Reference2 tiny original is design identity authority only. Reference3 straight-S HIT sheet supplies actual recoil/body mechanics only, NOT its front-facing direction, scale or full-page layout. Do not copy its facing or large figures.\n\nTHE NEW ART MUST BE MINIATURE AND SPARSE. Draw every new whole figure at a uniform SMALL authoring scale: actual helmet-to-boot BODY height220-240pixels, about HALF the source master crop's pixel height. Preserve long weapon and spines in their full original RELATIVE proportions by drawing the ENTIRE figure/equipment smaller together. DO NOT SHORTEN THE WEAPON, omit spikes, clip tips, shrink only the limbs, or alter model proportions. Entire complete silhouette INCLUDING the full sinuous blade, every radial spike, hair/skirt and both boots MUST fit inside a320x320pixel square. Aim for a280-300px whole-figure footprint, never larger320. Do NOT zoom into the miniature to fill empty space.\n\nExact atlas1024x1536 pixels, EXACTLY TWO COLUMNS and THREE ROWS, SIX512x512 cells. Each complete figure is centered within the central320x320 square of its cell: leave at least96pixels of ABSOLUTE ALPHA0 EMPTY TRANSPARENCY on EVERY edge. The top-left figure's entire visible pixels must stay inside x96..415,y96..415; the other five use identical local cell bounds. More than75percent of the sheet remains empty. No bounding rectangle overlaps another cell/body. No cross-cell pixels, blur or glow. The EMPTY GUTTERS are part of the technical deliverable, not a background to paint over. Uniform source head/torso/feet pixel size across all6 even when torso pitches.\n\nABSOLUTE WEST: all six faces, helmet/head, chest axis, hips and toes point strictly horizontally LEFT, matching reference1, not SW/down-left, frontal S, north or right. Same elevated orthographic isometric camera. Head/torso pitch during the hit but body YAW stays LEFT; pale nose stays left-facing even when chin lifts. Preserve original layering: anatomical RIGHT FAR arm holds the single long sinuous weapon low left of the torso; anatomical LEFT NEAR arm/hand is foreground/camera side and remains empty. Do not mirror an east model or swap the weapon into the near left hand. Keep original weapon grip, full curve and tip readable in every phase.\n\nSix genuinely different articulated HIT phases in temporal order left-to-right then down:0 LEFT brace;1 impact arriving from LEFT pitches head/shoulders/chest back to the RIGHT with knee flexion, still left-facing;2 maximum real head/neck/torso recoil with coherent spine/hip pitch, bent knees and free near-left elbow counterbalance, pale hair/skirt lag;3 original-foot counterstep and braced bent-knee stagger while retaining left-facing head/hips/boots;4 recover torso over supporting feet;5 settle into recovered LEFT guard with distinct arm/stance/hair placement. Actual neck/shoulder/elbow/hip/knee/ankle movement, not cloned poses, global translation/rotation, tint/opacity, camera changes, offensive weapon slash, death or bow. Weapon follows passive wrist inertia low and never becomes an attack.\n\nCRITICAL ALPHA / WEAPON MATERIAL: the original thin sinuous luminous weapon must be a HARD OPAQUE SOLID SHAPE with light drawn INSIDE its real blade boundary. NO outer glow, faded alpha halo, bloom, aura, blur, stray ember, haze or anti-alias bridge beyond the silhouette. Only1pixel edge antialiasing; all other outside pixels exactly alpha0. Gaps between spines/limbs alpha0. All dark armor/skirt fully opaque. Gold radial spikes are hard physical attached needles, not light rays or broad wings. No floor, shadows, background, fog, dust, trails, grid, text, labels, detached parts or extra figures. The decisive deliverable is SIX small faithful complete LEFT-facing HIT poses, full original long weapon/spines, body220-240px and WHOLE silhouette<=320px with96px transparent gutters in every512cell.",
+  "requested_at": "2026-10-19T11:01:50.161568+00:00"
+}

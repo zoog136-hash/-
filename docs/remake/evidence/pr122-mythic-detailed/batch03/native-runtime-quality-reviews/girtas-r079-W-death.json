@@ -1,0 +1,100 @@
+{
+  "status": "PASS_SCOPED_COMPILED_CLIP_VISUAL_QA",
+  "actor": "transform:267",
+  "direction": "W",
+  "role": "death",
+  "actual_frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/SpriteFrames.tres",
+  "actual_frames_sha256": "f063517084ce148d9b937714129a5d7ad131459c9d13bf810ea29cdd02b0660b",
+  "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r079/NativeMotionProfile.tres",
+  "track": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
+    "source_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+    "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r078/W-death.png",
+    "geometry_sha256": "79057b0510c6cd1b826f154c9c4141e638f3cc43adb22d95e9d95bb929cb72b9",
+    "frame_RGBA_sha256": [
+      "355460261a962e3027d1905e1877a1e2875eca0e404a77d39417ce3c5b60a691",
+      "235ffdbfdd1739903a9c14c87e54945b39170ddccadbd0d2e32a24766272c452",
+      "6f49475be87b84651727d83fb10adb93b6822218aeff6844a0d69ff30d817481",
+      "45390471afefadd73634933b38973bcfc2ff62e6d74088b4a773f4d8ba0647fe",
+      "01fc931b65d9e647b35b10f123d6243f6780c78778fe023e8c29dcb0bb080677",
+      "dd45df678bf3b2382206be36d01c18dadbe3146646e3028bf0ba16b04672adc9"
+    ],
+    "source_authored_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "fps": 9.230769231,
+    "loop": false,
+    "durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "actual_TRES_region_margin_canvas_and_crop_SHA": "PASS"
+  },
+  "idle_reference": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+    "source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+    "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r070/W-idle.png",
+    "geometry_sha256": "15b5e4928b13ac69f3cf661a23f450359ca35a39d2c4673932f42fcdf973ae43",
+    "frame_RGBA_sha256": [
+      "2ab93ec9f60efba89aee09f6a1bc76e53fd5d467507749bb9f2f97c7f63e17e9",
+      "cc73dc2fa85ef4c26c03dc3a01f4d3548aeaaff3a9889c07b737036164835502",
+      "960efb5b9d57029f44ca3c0c72702f1101e3cc2fc884740c30cd745dc48704df",
+      "aafb21f5955940de5ae1765608bb95b1e0cfb6f4cd82415b34de1ba74a9ee966",
+      "bdb931898b5b499bdadc0a1c5fdf002ac377ccdc162027d86da1ff144a2c821a",
+      "5a34d9dac880577418fdbc1a16f124f1c572a9654a3016499e971aa0736a9d45"
+    ],
+    "source_authored_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "fps": 5.0,
+    "loop": true,
+    "durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "actual_TRES_region_margin_canvas_and_crop_SHA": "PASS"
+  },
+  "runtime_reference_canvas": [
+    1024,
+    1024
+  ],
+  "private_preview": "/workspace/scratch/girtas-corrected-core-runtime-qa-20261019/W-death-actual-compiled-private.jpg",
+  "private_preview_bytes": 43993,
+  "actor_approval_change": 0,
+  "repository_mutated": false,
+  "source_pixels_changed": false,
+  "reviewed_at": "2026-10-19T11:57:45.107226+00:00",
+  "scope": "Only this corrected selected six-pose clip and same-heading faithful idle transition; not whole-actor visual approval, production catalog enablement or detailed completion.",
+  "phase_count": 6,
+  "source_pixel_preservation": "PASS exact selected PNG bytes and all six frame RGBA crops; TRES regions/margins/virtual sizes match register.",
+  "source_order": "PASS authored phases0..5 retained; no core phase reordering or duplicate expansion.",
+  "private_detail_preview": "/workspace/scratch/girtas-corrected-core-runtime-qa-20261019/W-death-compiled-detail-private.jpg",
+  "private_detail_preview_bytes": 83320,
+  "actor_approval": "HOLD_FINAL_ACTOR_QUALITY_REVIEW",
+  "detailed_completion_change": 0,
+  "full_CI_or_tests_run": false,
+  "heading_and_model": "PASS same W/left-facing pale face, long hair, gold crown/thin rigid rays, long dark skirt and original black/gold body. Death0 lowers/leans the head from the faithful idle with comparable head/torso scale; the posture change is not a blanket model shrink.",
+  "motion_and_transition": "PASS six coherent stages: standing loss of balance -> bend -> knee/hand brace -> torso fall -> lower settling -> prone phase5. The head/torso continue toward screenLEFT; legs/skirt trail right. No return to a standing boot position in later collapse.",
+  "arms_and_weapon": "PASS two distinct arm chains remain plausible; near/free hand moves to brace while the far weapon hand retains the sinuous weapon. Final prone arm/hair overlap is natural occlusion, with no observed arm morph or hand swap.",
+  "floor_and_corpse": "PASS natural collapse onto the shared visible floor region. Death5 remains a low left-facing corpse with gold rays/hair/long skirt and weapon intact. No standing-foot lock imposed after the fall.",
+  "timing_scope": "Actual TRES has six1.0-weight frames, loop=false, fps9.230769231 (~0.65s). Root already validated Player/action stage; no repeated runtime test performed.",
+  "concrete_visual_defects": []
+}

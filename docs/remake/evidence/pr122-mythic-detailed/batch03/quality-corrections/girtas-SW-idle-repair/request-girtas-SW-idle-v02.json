@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "SW",
+  "role": "idle",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "prompt": "Create one faithful six-phase SW IDLE native animation sheet of the original UNIQUE boss Girtas. Reference1 exact original tiny portrait is the absolute identity authority, reference2 is its faithful enlargement draft for the same original visible face/material/equipment.  No other character design or prior generic animation art is allowed.\n\nFIXED ABSOLUTE HEADING FOR ALL6: SOUTHWEST: true FRONT-LEFT three-quarter view toward DOWN-LEFT. Pale face front/left and front chest visible; torso/pelvis/boots all aim DOWNLEFT, not pure WEST side profile and not rearNW. Original weapon remains anatomicalRIGHT arm, which is the far side in this view, projecting on upper/left side of torso. Near/camera-side anatomicalLEFT hand is EMPTY. Do not mirror SE and swap right-hand weapon into LEFT hand; show coherent far right shoulder/elbow/grip and complete weapon with natural offset. Keep this exact heading for head, shoulders/torso, pelvis and boots throughout every phase. A breathing pose must not turn into another direction.\n\nOutput transparent1024x1536, exactly TWO COLUMNS x THREE ROWS of512x512 cells, one complete full-body figure per cell, phases0..5 row-major. Same physical model, anatomical ratios, camera and pixel scale in all6. CROWN/HELMET-to-BOOT CORE BODY height about300-330px: top helmet localy105, soles near localy435. Do NOT enlarge characters to fill all512px; leave generous visible transparent margins. Entire combined equipment/body/spines/long weapon must fit within localx45..467,y45..467 and never overlap neighboring cells or clip. Preserve correct core-body/equipment ratios, not a resized body with huge new gear.\n\nORIGINAL IDENTITY: pale VISIBLE human face only if actual heading permits seeing face; long pale white/silver hair, original tall black/gold head ornaments; narrow LONG HARD GOLD RADIAL SPINES physically attached behind original back/shoulder structure; original long DARK skirt/coat-like lower armor with GOLD EDGE TRIM, original dark boots and black/gold armor. Original LONG THIN SINUOUS orange/gold weapon with repeated flowing curves and pointed tip stays the SAME length/curve identity and SAME ANATOMICALRIGHT hand in every frame. Conservatively rotate existing structures to requested heading without inventing back badges, machinery, new spikes, extra ornaments or extra weapons. NO closed redV mask, NO broad orange flame-feather fan, NO generic muscular demon, NO short broad sword, NO fitted segmented-leg armor replacing long dark skirt. Rigid gold spines are actual material, not wings, floating rays or animated flames.\n\nA true restrained planted-foot IDLE: both boot soles, pelvis anchor and ground stance IDENTICAL throughout6.0 relaxed neutral baseline;1 local inhale starts, slight ribcage expansion and connected shoulder/elbow response;2 inhale peak chest/back lifts subtly through joints;3 exhale begins shoulders relax;4 exhale completes with small hair/robe/wrist settling lag;5 returns near baseline0 for clean loop. Six actual distinct connected local chest/back/shoulder/forearm/hair/cloth articulations, not six identical copies, global translation/rotation/resizing or tint cycling. No walk, no lifted knee/heel, no attack or weapon swing. Existing pale hair and dark goldtrim robe respond gently; rigid gold spine geometry remains attached. Weapon only follows tiny breathing wrist response, never morphs/changes hand.\n\nAll head/boots/robe and every thin spine plus ENTIRE long curved blade/tip fully visible each cell. Fine opaque dark/gold armor, alpha0 outside physical silhouette and between connected thin spikes. No floor, cast shadow, backdrop, diffuse glow cloud, fog, detached sparkles, text, grid, labels, borders or extra figures. Accurate game animation source, not poster art. Heading and original anatomicalRIGHT weapon hand are non-negotiable.",
+  "transparent_background": true,
+  "expected_poses": 6,
+  "phase_contract": [
+    "neutral_baseline",
+    "inhale_begin",
+    "inhale_peak",
+    "exhale_begin",
+    "exhale_settle",
+    "return_to_baseline"
+  ],
+  "corrective_reason": "Replace unapproved generic redesigned SW idle with original-faithful pale-face/hair/thin-gold-radial-spines/long-dark-goldtrim-skirt/long-sinuous-right-hand-weapon, exactSW compass and genuine locally articulated planted-foot breathing.",
+  "user_authorization": "Actual remaining unique production queue, exactlyone generation per new direction, private bounded previews only, no repo/index changes or approval inflation.",
+  "canonical_uncertainty": "Original108x132 clipped tips/fine unseen details conservatively inferred; no invented major gear and no stopping only for uncertain fine pixels.",
+  "repo_mutations": false
+}

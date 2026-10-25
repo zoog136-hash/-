@@ -1,0 +1,41 @@
+{
+  "scope": "One existing transform412 E walk2 metadata crop fix; original14 locomotion task remains incomplete",
+  "baseline_commit": "dcb21f0b165eef1d1ca53efe9fbc07e40cf99ca2",
+  "counts": {
+    "qualified_completed": 392,
+    "runtime_connected": 394,
+    "new_completed": 0,
+    "other_HOLD": 16,
+    "pending_CI_APK": 2,
+    "not_authored_or_not_connected": 88
+  },
+  "source_pixels_changed": 0,
+  "restored_alpha_gt100_pixels": 53,
+  "retained_other_frames": 103,
+  "source_PNG_sha256": "6e24057fb07dfd0a09a64e23af379d1546fffa1905760a09b32da143e284263c",
+  "source_anchor": [
+    78,
+    775
+  ],
+  "canvas": [
+    256,
+    256
+  ],
+  "Main_OpenGL": {
+    "checks": 67638,
+    "failures": [],
+    "native_phases": 104,
+    "rendered_native_phases": 104,
+    "actual_input_and_contact_directions": 8,
+    "AI_directions": 8,
+    "manual_pickup": true
+  },
+  "independent_resource_audit": "40tracks/8directions/Pixels and source SHA PASS",
+  "source_frame_guard": "336checks PASS",
+  "prop_guard": "8checks PASS",
+  "full14_walk_run_fix": false,
+  "walk_frames_per_direction": 3,
+  "run_frames_per_direction": 0,
+  "CI": "Latest commit must be dispatched separately; prior dcb runs not promoted",
+  "Android_real_device": "NOT_RUN"
+}

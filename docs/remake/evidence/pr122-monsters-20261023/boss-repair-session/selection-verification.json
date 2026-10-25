@@ -1,0 +1,37 @@
+{
+  "schema": "pr122-boss-repair-selection-verification-v1",
+  "source_commit": "88516cfcb303b9c8f288abf72d1cc477aed62ebf",
+  "normal_258_scope_rows_exactly_preserved": true,
+  "selected_bosses": 4,
+  "selected_clips": 117,
+  "selected_unique_new_RGBA_poses": 401,
+  "selected_required_missing_slots": 15,
+  "queen_rejected_N_does_not_fall_through_to_legacy_source": true,
+  "old_asset_modifications_deletions_or_renames": [],
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "production_counts": {
+    "normal": {
+      "total": 258,
+      "completed_preserved": 221,
+      "remaining": 37,
+      "statuses": {
+        "VERIFIED_COMPLETED": 221,
+        "SOURCE_HOLD": 9,
+        "IN_PROGRESS": 9,
+        "NOT_AUTHORED": 19
+      }
+    },
+    "boss": {
+      "total": 60,
+      "completed_preserved": 43,
+      "remaining": 17,
+      "statuses": {
+        "VERIFIED_COMPLETED": 43,
+        "NOT_AUTHORED": 14,
+        "IN_PROGRESS": 2,
+        "SOURCE_HOLD": 1
+      }
+    }
+  }
+}

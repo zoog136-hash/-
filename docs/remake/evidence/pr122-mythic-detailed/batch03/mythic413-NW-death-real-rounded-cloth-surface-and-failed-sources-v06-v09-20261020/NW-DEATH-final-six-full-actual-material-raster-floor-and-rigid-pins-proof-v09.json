@@ -1,0 +1,801 @@
+{
+  "status": "SCOPED_EXACT_SIX_MATERIAL_FLOOR_AND_VALIDATED_OPERATOR_CHECK_PENDING_FINAL_ACTUAL_QC",
+  "source_contract_sha256": "8be80b4476950f4e2130ed42c78732d093abc7b5a9c7ea69190b8436948411fa",
+  "fixed_C": 2048,
+  "body_unit": 2,
+  "root": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "phase2_exact_validated_source_reproduced": true,
+  "all_existing_opaque_RGBA_preserved": true,
+  "records": [
+    {
+      "phase": 0,
+      "source_sha256": "3314141e3e88959e3075ee553d3c6e778d59af0ff9512ef88dfe124482345a31",
+      "actual_material_floor_parts": [
+        {
+          "part": "pelvis_skirt",
+          "minimum_raster_guard_Z": 327.89084850218416,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "torso_corset",
+          "minimum_raster_guard_Z": 444.2453618012877,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "minimum_raster_guard_Z": 618.8442761484706,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "minimum_raster_guard_Z": 1.718886922017873,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_thigh",
+          "minimum_raster_guard_Z": 153.36186302504473,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 70.30719000352659,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "minimum_raster_guard_Z": 156.1874693301332,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "minimum_raster_guard_Z": 60.80256949141262,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 1.718886922017873,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "minimum_raster_guard_Z": 2.038886922018037,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "minimum_raster_guard_Z": 133.5419945261379,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 46.554672999206105,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "minimum_raster_guard_Z": 139.38722337904485,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "minimum_raster_guard_Z": 40.122950928585794,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 2.038886922018037,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 550.1792862009264,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "minimum_raster_guard_Z": 534.960326045088,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "minimum_raster_guard_Z": 270.14478723653684,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 563.1388587594636,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "minimum_raster_guard_Z": 387.8216607275456,
+          "rule": "Whole3pxpadded native UV mesh domain; every emitted triangle Z>=vertexmin; semantic UV transparent outside"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "minimum_raster_guard_Z": 132.73627208281061,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_original_white_fabric_volumetric_inner_elbow",
+          "minimum_raster_guard_Z": 481.4052851962552,
+          "rule": "Observed35pxcross-section geometricbound including .75native coverage; exactoriginalopaque sourceart restored"
+        }
+      ],
+      "min_guard_Z": 1.718886922017873,
+      "RIGHTfore_and_full_staff_rigid_basis_error": 4.264213772807208e-19,
+      "leg_length_error": 2.842170943040401e-14,
+      "existing_opaque_RGBA_changes": 0,
+      "changed_bbox": [
+        653,
+        675,
+        688,
+        695
+      ],
+      "strong_bodies": 1
+    },
+    {
+      "phase": 1,
+      "source_sha256": "fa89d420a98c98bfbc9e106f34bec485fb11f742f47160603124dadc13474f8c",
+      "actual_material_floor_parts": [
+        {
+          "part": "pelvis_skirt",
+          "minimum_raster_guard_Z": 253.2820179836896,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "torso_corset",
+          "minimum_raster_guard_Z": 366.33395953318745,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "minimum_raster_guard_Z": 527.7683814914835,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "minimum_raster_guard_Z": 1.7188869220178726,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_thigh",
+          "minimum_raster_guard_Z": 65.72238241060963,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 77.64988345585222,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "minimum_raster_guard_Z": 83.82633044510737,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "minimum_raster_guard_Z": 76.96631808780303,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 1.7188869220178726,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "minimum_raster_guard_Z": 2.0388869220180363,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "minimum_raster_guard_Z": 65.15052624439546,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 50.061006803075465,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "minimum_raster_guard_Z": 77.58698837645403,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "minimum_raster_guard_Z": 48.153922892565596,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 2.0388869220180363,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 470.66972571209766,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "minimum_raster_guard_Z": 460.62131361345206,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "minimum_raster_guard_Z": 229.0130868965815,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 475.1050045222045,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "minimum_raster_guard_Z": 268.5443222908598,
+          "rule": "Whole3pxpadded native UV mesh domain; every emitted triangle Z>=vertexmin; semantic UV transparent outside"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "minimum_raster_guard_Z": 66.6711654060411,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_original_white_fabric_volumetric_inner_elbow",
+          "minimum_raster_guard_Z": 399.2135997791629,
+          "rule": "Observed35pxcross-section geometricbound including .75native coverage; exactoriginalopaque sourceart restored"
+        }
+      ],
+      "min_guard_Z": 1.7188869220178726,
+      "RIGHTfore_and_full_staff_rigid_basis_error": 2.220446049250313e-16,
+      "leg_length_error": 5.684341886080802e-14,
+      "existing_opaque_RGBA_changes": 0,
+      "changed_bbox": [
+        634,
+        741,
+        641,
+        753
+      ],
+      "strong_bodies": 1
+    },
+    {
+      "phase": 2,
+      "source_sha256": "60a489704e824c786ad982e3b016dc195b83dc718f8f957f7fbed76df5ca1897",
+      "actual_material_floor_parts": [
+        {
+          "part": "pelvis_skirt",
+          "minimum_raster_guard_Z": 155.118729771594,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "torso_corset",
+          "minimum_raster_guard_Z": 264.28283866428706,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "minimum_raster_guard_Z": 379.39543609687286,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "minimum_raster_guard_Z": 1.7188869220178726,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_thigh",
+          "minimum_raster_guard_Z": 7.866269351233877,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 19.798252053973712,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "minimum_raster_guard_Z": 15.198833172483454,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "minimum_raster_guard_Z": 68.07365398704171,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 1.7188869220178726,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "minimum_raster_guard_Z": 2.0388869220180363,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "minimum_raster_guard_Z": 11.166562784815506,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 22.7185723498837,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "minimum_raster_guard_Z": 21.279406249700624,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "minimum_raster_guard_Z": 48.31249059657324,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 2.0388869220180363,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 348.51848643255374,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "minimum_raster_guard_Z": 329.890594979966,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "minimum_raster_guard_Z": 167.5993629018654,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 340.77411808188276,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "minimum_raster_guard_Z": 120.90944334884236,
+          "rule": "Whole3pxpadded native UV mesh domain; every emitted triangle Z>=vertexmin; semantic UV transparent outside"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "minimum_raster_guard_Z": 8.204805256094582,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "minimum_raster_guard_Z": 10.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_original_white_fabric_volumetric_inner_elbow",
+          "minimum_raster_guard_Z": 270.5628583315344,
+          "rule": "Observed35pxcross-section geometricbound including .75native coverage; exactoriginalopaque sourceart restored"
+        }
+      ],
+      "min_guard_Z": 1.7188869220178726,
+      "RIGHTfore_and_full_staff_rigid_basis_error": 1.1102230246251565e-16,
+      "leg_length_error": 2.842170943040401e-14,
+      "existing_opaque_RGBA_changes": 0,
+      "changed_bbox": [
+        589,
+        780,
+        625,
+        791
+      ],
+      "strong_bodies": 1
+    },
+    {
+      "phase": 3,
+      "source_sha256": "22cdd81c70acc0b59a0f6889f88ba9bae1b77cdd429c92beadf5d56d12bb22bc",
+      "actual_material_floor_parts": [
+        {
+          "part": "pelvis_skirt",
+          "minimum_raster_guard_Z": 133.19464092007883,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "torso_corset",
+          "minimum_raster_guard_Z": 202.01443502802186,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "minimum_raster_guard_Z": 244.80733906558365,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "minimum_raster_guard_Z": 27.544454417115155,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_thigh",
+          "minimum_raster_guard_Z": 11.611975699844807,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 20.324902228756347,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "minimum_raster_guard_Z": 16.301977889287876,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "minimum_raster_guard_Z": 62.54942981325787,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 27.544454417115155,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "minimum_raster_guard_Z": 32.72799887674758,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "minimum_raster_guard_Z": 14.275933558648905,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 22.27274660291045,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "minimum_raster_guard_Z": 20.332875448037413,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "minimum_raster_guard_Z": 56.77112989627444,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 32.72799887674758,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 235.92504347402553,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "minimum_raster_guard_Z": 204.7005491742914,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "minimum_raster_guard_Z": 129.06788578779992,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 231.74144749064976,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "minimum_raster_guard_Z": 52.77812261173787,
+          "rule": "Whole3pxpadded native UV mesh domain; every emitted triangle Z>=vertexmin; semantic UV transparent outside"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "minimum_raster_guard_Z": 8.102090351164248,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "minimum_raster_guard_Z": 10.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_original_white_fabric_volumetric_inner_elbow",
+          "minimum_raster_guard_Z": 144.46777559529497,
+          "rule": "Observed35pxcross-section geometricbound including .75native coverage; exactoriginalopaque sourceart restored"
+        }
+      ],
+      "min_guard_Z": 8.102090351164248,
+      "RIGHTfore_and_full_staff_rigid_basis_error": 5.294647780783667e-17,
+      "leg_length_error": 2.842170943040401e-14,
+      "existing_opaque_RGBA_changes": 0,
+      "changed_bbox": [
+        547,
+        863,
+        583,
+        886
+      ],
+      "strong_bodies": 1
+    },
+    {
+      "phase": 4,
+      "source_sha256": "71f30ed0ca5b6c6f59dc4c31bdba21c10423397ce9a1f1a791ada62275e97a5c",
+      "actual_material_floor_parts": [
+        {
+          "part": "pelvis_skirt",
+          "minimum_raster_guard_Z": 33.97046484727621,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "torso_corset",
+          "minimum_raster_guard_Z": 38.367801431791364,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "minimum_raster_guard_Z": 43.032620200549445,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "minimum_raster_guard_Z": 23.626876409901758,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_thigh",
+          "minimum_raster_guard_Z": 22.900859039437723,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 23.512217519608654,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "minimum_raster_guard_Z": 22.978269272547838,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "minimum_raster_guard_Z": 29.116526868785844,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 23.626876409901758,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "minimum_raster_guard_Z": 23.654766247581023,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "minimum_raster_guard_Z": 23.156151992769562,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 23.81531733725656,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "minimum_raster_guard_Z": 23.607901001665716,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "minimum_raster_guard_Z": 27.503978941684743,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 23.654766247581023,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 41.857751102041476,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "minimum_raster_guard_Z": 14.501061144532178,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "minimum_raster_guard_Z": 19.99999999999998,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 42.5557410360915,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "minimum_raster_guard_Z": 14.745875386728818,
+          "rule": "Whole3pxpadded native UV mesh domain; every emitted triangle Z>=vertexmin; semantic UV transparent outside"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "minimum_raster_guard_Z": 9.420787199270531,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "minimum_raster_guard_Z": 10.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_original_white_fabric_volumetric_inner_elbow",
+          "minimum_raster_guard_Z": 6.070686070686072,
+          "rule": "Observed35pxcross-section geometricbound including .75native coverage; exactoriginalopaque sourceart restored"
+        }
+      ],
+      "min_guard_Z": 6.070686070686072,
+      "RIGHTfore_and_full_staff_rigid_basis_error": 2.220446049250313e-16,
+      "leg_length_error": 5.684341886080802e-14,
+      "existing_opaque_RGBA_changes": 0,
+      "changed_bbox": [
+        494,
+        968,
+        530,
+        973
+      ],
+      "strong_bodies": 1
+    },
+    {
+      "phase": 5,
+      "source_sha256": "9806988d9ee9816e7734764cb303299ff13e3540a0787d9c8f98f36acb551f09",
+      "actual_material_floor_parts": [
+        {
+          "part": "pelvis_skirt",
+          "minimum_raster_guard_Z": 29.999999999999993,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "torso_corset",
+          "minimum_raster_guard_Z": 30.000000000000025,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "head_bun_ribbon",
+          "minimum_raster_guard_Z": 30.00000000000006,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_complete_foot",
+          "minimum_raster_guard_Z": 20.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_thigh",
+          "minimum_raster_guard_Z": 23.40046856696603,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 19.659995451444185,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_kneecap",
+          "minimum_raster_guard_Z": 23.350693654764616,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_anklecap",
+          "minimum_raster_guard_Z": 19.251535137593834,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 20.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_complete_foot",
+          "minimum_raster_guard_Z": 20.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_thigh",
+          "minimum_raster_guard_Z": 23.524637531603116,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_calf_shaft",
+          "minimum_raster_guard_Z": 19.795394891972574,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_kneecap",
+          "minimum_raster_guard_Z": 23.60622931703542,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_actual_anklecap",
+          "minimum_raster_guard_Z": 19.53136866648519,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_counter_stiletto_foreground",
+          "minimum_raster_guard_Z": 20.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 30.000000000000046,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_upper_arm",
+          "minimum_raster_guard_Z": 17.57892396620719,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "RIGHT_forearm_full_rigid_staff",
+          "minimum_raster_guard_Z": 19.99999999999998,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_real_proximal_shoulderpad",
+          "minimum_raster_guard_Z": 30.00000000000005,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "minimum_raster_guard_Z": 17.77885947400398,
+          "rule": "Whole3pxpadded native UV mesh domain; every emitted triangle Z>=vertexmin; semantic UV transparent outside"
+        },
+        {
+          "part": "far_blue_gold_coat_hanging",
+          "minimum_raster_guard_Z": 9.307781328797057,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "far_blue_gold_coat_floor_drape",
+          "minimum_raster_guard_Z": 10.0,
+          "rule": "Every actual nonzero material texel plus2.5sourcepixel PILbicubic support"
+        },
+        {
+          "part": "LEFT_actual_original_white_fabric_volumetric_inner_elbow",
+          "minimum_raster_guard_Z": 6.070686070686072,
+          "rule": "Observed35pxcross-section geometricbound including .75native coverage; exactoriginalopaque sourceart restored"
+        }
+      ],
+      "min_guard_Z": 6.070686070686072,
+      "RIGHTfore_and_full_staff_rigid_basis_error": 2.220446049250313e-16,
+      "leg_length_error": 5.684341886080802e-14,
+      "existing_opaque_RGBA_changes": 0,
+      "changed_bbox": [
+        487,
+        969,
+        491,
+        972
+      ],
+      "strong_bodies": 1
+    }
+  ],
+  "actor_approval_added": 0
+}

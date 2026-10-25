@@ -1,0 +1,296 @@
+{
+  "state": "PRESERVED_BOTH_HISTORIES",
+  "merge_method": "Normal non-rebase merge of same PR122 branch; no main/other PR changed, no force push",
+  "local_parent": "a641caf0443eed740b4e07fdd335ad4e0b9be370",
+  "remote_parent": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
+  "shared_base": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
+  "local_changed_profiles": [
+    "transform:269",
+    "monster:검은숲 거미",
+    "monster:알비노 변이된 골렘",
+    "monster:알비노 디어",
+    "monster:스파이더",
+    "monster:왜곡의 타란툴라"
+  ],
+  "remote_changed_profiles": [
+    "transform:242",
+    "transform:140",
+    "transform:138",
+    "transform:176",
+    "transform:407",
+    "transform:352",
+    "transform:351",
+    "transform:349",
+    "transform:260",
+    "transform:198",
+    "transform:182",
+    "transform:179",
+    "transform:167",
+    "transform:110",
+    "transform:11",
+    "transform:7",
+    "transform:2",
+    "monster:테베 아누비스",
+    "monster:테베 호루스",
+    "monster:테베 오시리스",
+    "monster:아크모",
+    "monster:제로스",
+    "monster:검은숲 늑대",
+    "monster:검은숲 거미",
+    "monster:에바 왕국 심해어인",
+    "monster:오만의 탑 공포의 악마",
+    "monster:지룡의 둥지 대지수호자",
+    "monster:테베라스 아누비스 수호자",
+    "monster:테베라스 호루스 수호자",
+    "monster:아틀란티스 심해창병",
+    "monster:아틀란티스 심연수인",
+    "monster:마계 악마전사",
+    "monster:천상계 천사궁수",
+    "monster:알비노 피쉬맨",
+    "monster:가디언",
+    "monster:공포의 레서 데몬",
+    "monster:공포의 켈베로스",
+    "monster:교만의 제노사이더",
+    "monster:교만의 킬 하운드",
+    "monster:그리미",
+    "monster:분노의 데스 도그",
+    "monster:분노의 데스 라이더",
+    "monster:분노의 데스 서번트",
+    "monster:스파이더",
+    "monster:알비노 데몬",
+    "monster:오만한 플레임 팽",
+    "monster:왜곡의 타란툴라",
+    "monster:커스번",
+    "monster:탐욕의 코아쿡",
+    "monster:알비노 심해어",
+    "monster:알비노 드라이어드",
+    "monster:알비노 변이된 골렘",
+    "monster:탐욕의 엔트키아",
+    "monster:공포의 뱀파이어"
+  ],
+  "overlapping_profiles_kept_native": {
+    "monster:검은숲 거미": {
+      "preserved_native": {
+        "prior_visual_profile": {
+          "name": "검은숲 거미",
+          "layout": "still",
+          "motion_style": "crawl",
+          "floating": false
+        },
+        "name": "검은숲 거미",
+        "frames_path": "res://assets/actors/eight_direction/original_based/dark_forest_spider_batch16_project/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.863469,
+        "color_tint": [
+          1.0072141176470588,
+          0.9979,
+          0.9728235294117648,
+          1.0
+        ],
+        "sprite_offset": [
+          0.0,
+          -27.631008
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 7.446808510638298,
+        "authoring_reference": "res://assets/monsters/original/atlas_1.png",
+        "native_width_ratio": 0.8550185873605948,
+        "movement_cadence_width_ratio": 0.8550185873605948
+      },
+      "superseded_proxy": {
+        "name": "검은숲 거미",
+        "layout": "directional8",
+        "motion_style": "crawl",
+        "floating": false,
+        "frames_path": "res://assets/actors/eight_direction/original_based/distorted_ungoliant/SpriteFrames.tres",
+        "pixel_scale": 0.914062,
+        "sprite_offset": [
+          0,
+          -29.249984
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "color_tint": "84a78c",
+        "shared_visual_source": "monster:왜곡의 웅골리언트",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "shared_existing_fallback_atlas_cell"
+      }
+    },
+    "monster:알비노 변이된 골렘": {
+      "preserved_native": {
+        "prior_visual_profile": null,
+        "name": "알비노 변이된 골렘",
+        "frames_path": "res://assets/actors/eight_direction/original_based/albino_mutated_golem_batch16_authored/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.640835,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -20.50672
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 16.666666666666668,
+        "authoring_reference": "res://assets/monsters/original/atlas_2.png"
+      },
+      "superseded_proxy": {
+        "name": "알비노 변이된 골렘",
+        "frames_path": "res://assets/actors/eight_direction/original_based/iron_golem/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.761062,
+        "sprite_offset": [
+          0,
+          -24.353984
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "color_tint": "d8e8fc",
+        "shared_visual_source": "monster:아이언 골렘",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "golem_species_proxy"
+      }
+    },
+    "monster:스파이더": {
+      "preserved_native": {
+        "prior_visual_profile": null,
+        "name": "스파이더",
+        "frames_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.863469,
+        "color_tint": "ffffff",
+        "sprite_offset": [
+          0,
+          -27.631008
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 12.5,
+        "authoring_reference": "res://assets/monsters/original/atlas_1.png"
+      },
+      "superseded_proxy": {
+        "name": "스파이더",
+        "frames_path": "res://assets/actors/eight_direction/original_based/distorted_ungoliant/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.914062,
+        "sprite_offset": [
+          0,
+          -29.249984
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "color_tint": "9da6c4",
+        "shared_visual_source": "monster:왜곡의 웅골리언트",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "shared_existing_fallback_atlas_cell"
+      }
+    },
+    "monster:왜곡의 타란툴라": {
+      "preserved_native": {
+        "prior_visual_profile": null,
+        "name": "왜곡의 타란툴라",
+        "frames_path": "res://assets/actors/eight_direction/original_based/distorted_tarantula_batch16_project/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.863469,
+        "color_tint": [
+          0.9863217647058824,
+          0.9977,
+          0.979259411764706,
+          1.0
+        ],
+        "sprite_offset": [
+          0.0,
+          -27.631008
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "hit_recoil": 0,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "movement_fps": 12.5,
+        "authoring_reference": "res://assets/monsters/original/atlas_1.png",
+        "native_width_ratio": 0.9516728624535316,
+        "movement_cadence_width_ratio": 0.9516728624535316
+      },
+      "superseded_proxy": {
+        "name": "왜곡의 타란툴라",
+        "frames_path": "res://assets/actors/eight_direction/original_based/distorted_ungoliant/SpriteFrames.tres",
+        "layout": "directional8",
+        "pixel_scale": 0.914062,
+        "sprite_offset": [
+          0,
+          -29.249984
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0,
+        "movement_fps": 6.25,
+        "action_hit_frames": {
+          "attack": 1
+        },
+        "attack_hit_frame": 1,
+        "death_duration": 0.65,
+        "hit_recoil": 0,
+        "color_tint": "b8a0d9",
+        "shared_visual_source": "monster:왜곡의 웅골리언트",
+        "shared_visual_policy": "tinted_in_project_proxy_preserve_source_and_approval_status",
+        "shared_visual_basis": "shared_existing_fallback_atlas_cell"
+      }
+    }
+  },
+  "remote_nonoverlapping_profiles_preserved": 50,
+  "approved_total_unchanged": 405,
+  "mutually_exclusive_approval_states": {
+    "VERIFIED_COMPLETED": 391,
+    "FRAME_INSUFFICIENT": 14,
+    "SOURCE_HOLD": 16,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 76
+  },
+  "new_completions_from_remote_proxy_links": 0,
+  "runtime_binding_count_all_profiles": 450,
+  "final_full498_runtime_audit": "PENDING_AFTER_MERGE; last all498-after-spider-family audit is pre-merge approval snapshot, not current integrated Main evidence",
+  "integrated_Main_and_CI": "NOT_RUN_USER_REQUESTED_SAVE",
+  "Android_real_device": "NOT_RUN"
+}

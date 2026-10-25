@@ -1,0 +1,43 @@
+{
+  "schema": "pr122-413-retained-profile-integration-proposal-v1",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "key": "transform:413",
+  "approved_count": 2,
+  "approved_keys": [
+    "transform:393",
+    "transform:267"
+  ],
+  "canonical_profile": {
+    "path": "assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/NativeMotionProfile.tres",
+    "sha256": "8b2e9d17e95b3b369840a84c053015150528ec7e4ae6c2a09e15c389da03b281",
+    "frames_path": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/SpriteFrames.tres"
+  },
+  "canonical_profile_basis": {
+    "display_height": 110.0,
+    "source_reference_height": 464.0,
+    "pixel_scale": 0.23706896551724138,
+    "foot_offset_y": -30.344827586206897,
+    "sizing_review": "HOLD; native staging only",
+    "production_catalog_replaced": false
+  },
+  "tool_pins": {
+    "advance_pr122_native_locomotion.py": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e",
+    "stage_pr122_native_locomotion.py": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701",
+    "bind_pr122_native_locomotion_profiles.py": "ddc4643a78d01d5cbc0529ee31262e73095ff1e989ce71c6d70264c5eb448a62",
+    "checkpoint_pr122_native_clip.py": "23f0f7b75b90b7af4368214e11feea43fa8c5899a08cb1a2797fd2dc489559ca",
+    "integrate_pr122_corrective_clip.py": "5271739c9e02d0a743856d4a6338b67dbb1b1fb3630f747fde5dd8690723d9cd",
+    "pr122_native_production_approvals.py": "e10c66e9241969c11678f24f056350ed5f1daab2ce1e6136dd117d5b8f6e4234",
+    "pr122_reviewed_runtime_layout.py": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2",
+    "pr122_reviewed_source_regions.py": "8d2745e5cae9412438c282811323dc4d0e80496fe73c4cc69dfed38078db8857",
+    "pr122_transform_motion_scope.py": "06001b834a7ee0b10c95124a6a9ae6c263bb905026e0f14c497d989b0d58bb42"
+  },
+  "scope_contract_pins": {
+    "data/pr122_transform_motion_scope.json": "770ae33ff628f37b71cef0f071914578d132e00439c1820f931c8e5eb12b2758",
+    "scripts/animation/actor_motion.gd": "e9403a24e93b9fadfa266ab8f56178f8e26a5f2cbdc2259635f6e44d43305d65",
+    "scripts/animation/transformation_movement_scope.gd": "bde780fc18bab522c907337fb73a94d3a9f1ff5407ee6dd628241692bf854f56",
+    "tests/pr122_native_player_connection_test.gd": "ff03a36d5046efc53ba74633109b04ecde1ae12adb4836b31e7db027c74f4b5c",
+    "tests/pr122_native_motion_smoke.gd": "bf13e021e8a26737914994f8fc47cefc4ae4e655f4138bda47c24e05bfed8c6c",
+    "tests/pr122_native_action_test.gd": "b879c2d382f0654749f957eff5e01940598f67d4ceccbb9da019ae74992df149"
+  },
+  "user_scope": "2026-10-20: Mythic and lower transformations omit WALK; UNIQUE and BOSSES retain WALK. No implicit approvals."
+}

@@ -1,0 +1,3435 @@
+{
+  "schema": "pr122-monster-staging-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/batch01",
+  "actors": {
+    "monster:놀": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "frames_sha256": "3381ec73e0887e3fa24c297230259f585f00c1b2dfa3f832706362f0e1dae406",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/NativeMotionProfile.tres",
+      "native_profile_sha256": "b8e705a6ab87c7b58b809932028e665804bb2b5c55c25b925b59dd472f705359",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 2,
+      "native_pose_count": 9,
+      "missing_required_tracks": [
+        "hit_0",
+        "idle_0",
+        "attack_6",
+        "hit_6",
+        "idle_6",
+        "run_6",
+        "attack_7",
+        "hit_7",
+        "idle_7",
+        "run_7",
+        "attack_5",
+        "hit_5",
+        "idle_5",
+        "run_5",
+        "attack_2",
+        "death_2",
+        "hit_2",
+        "idle_2",
+        "run_2",
+        "attack_1",
+        "hit_1",
+        "idle_1",
+        "run_1",
+        "attack_3",
+        "hit_3",
+        "idle_3",
+        "run_3",
+        "attack_4",
+        "hit_4",
+        "idle_4",
+        "run_4"
+      ],
+      "quality_review": "HOLD: new textual-brief art has not had identity/support/contact or Main visual approval",
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/gnoll-E-run6.png",
+          "texture": "assets/actors/eight_direction/monster_staging/gnoll/r002/E-run.png",
+          "source_sha256": "eb57d8cf64ec6f0abf84a230d7ca10e045c1fbbe237861db9b11ae2e8123a5c3",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  40,
+                  78,
+                  480,
+                  378
+                ],
+                "margin": [
+                  520,
+                  546,
+                  992,
+                  1094
+                ],
+                "source_anchor": [
+                  256,
+                  452
+                ],
+                "rgba_sha256": "f0e45c3a129b8eac0df0dd76d6a9dfdc525d12b5a2c7dc37ac2033621ece768b"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  540,
+                  76,
+                  408,
+                  383
+                ],
+                "margin": [
+                  508,
+                  541,
+                  1064,
+                  1089
+                ],
+                "source_anchor": [
+                  768,
+                  455
+                ],
+                "rgba_sha256": "2db50e0ae5aebdccd3a712cba9cd63f28d9cd44b8aa100332f541aba3ba64bc4"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  1023,
+                  70,
+                  485,
+                  355
+                ],
+                "margin": [
+                  479,
+                  569,
+                  987,
+                  1117
+                ],
+                "source_anchor": [
+                  1280,
+                  421
+                ],
+                "rgba_sha256": "fc970dbaa4f623d6c8cfa1846fa8d5d7733d74fbae3c5f76c33db73ac90bd6e4"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  30,
+                  565,
+                  505,
+                  372
+                ],
+                "margin": [
+                  510,
+                  552,
+                  967,
+                  1100
+                ],
+                "source_anchor": [
+                  256,
+                  933
+                ],
+                "rgba_sha256": "55cf78a3f2c388a83a13fce3a5e54209e761bde01437da0da3f79aa6bcda7c18"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  573,
+                  569,
+                  402,
+                  383
+                ],
+                "margin": [
+                  541,
+                  541,
+                  1070,
+                  1089
+                ],
+                "source_anchor": [
+                  768,
+                  948
+                ],
+                "rgba_sha256": "809a8c1265b939d3e5e78875c6725535e74a9ba4e580c95aff963b87f3d8f383"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  1042,
+                  570,
+                  467,
+                  362
+                ],
+                "margin": [
+                  498,
+                  562,
+                  1005,
+                  1110
+                ],
+                "source_anchor": [
+                  1280,
+                  928
+                ],
+                "rgba_sha256": "e414e303cf9ec07c234eff973438b58d159cc9c27dfd0c334f5d186cef9dc0de"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 369.0,
+            "canvas_size": [
+              1472,
+              1472
+            ],
+            "foot": [
+              736,
+              920
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "attack",
+          "animation": "attack_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/gnoll-E-attack3-v2.png",
+          "texture": "assets/actors/eight_direction/monster_staging/gnoll/r002/E-attack.png",
+          "source_sha256": "7ca790ef791bc8465da149d7e0e4d22a81d487bae42a008c315410f0b071cae0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  96,
+                  11,
+                  501,
+                  528
+                ],
+                "margin": [
+                  432,
+                  546,
+                  1211,
+                  1184
+                ],
+                "source_anchor": [
+                  520,
+                  535
+                ],
+                "rgba_sha256": "e70d9442b87c012bd8afbf4aaf451497074c1b0112ea7ff615c46638a2600989"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  120,
+                  618,
+                  886,
+                  401
+                ],
+                "margin": [
+                  456,
+                  673,
+                  826,
+                  1311
+                ],
+                "source_anchor": [
+                  520,
+                  1015
+                ],
+                "rgba_sha256": "13378d9f68448416ff71b579222b1267d6512768b97106eaf8bbf1c89f02ea8d"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  148,
+                  1069,
+                  744,
+                  434
+                ],
+                "margin": [
+                  484,
+                  640,
+                  968,
+                  1278
+                ],
+                "source_anchor": [
+                  520,
+                  1499
+                ],
+                "rgba_sha256": "56138c12093c40db8f7ecc3a5e2d6c5ddfcb66e557f5a0c55910d5a528f1f036"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 428.0,
+            "canvas_size": [
+              1712,
+              1712
+            ],
+            "foot": [
+              856,
+              1070
+            ]
+          }
+        }
+      ]
+    },
+    "monster:얼음 여왕": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "frames_sha256": "35613dcf25fde5343783d87c40c0f8eab04d6c60695ba9f7219ff6765ee32413",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/NativeMotionProfile.tres",
+      "native_profile_sha256": "04ee8d89f9b02f7150fbf73bc06b8ca381dde6f83995286afac3c2da229e7723",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 2,
+      "native_pose_count": 12,
+      "missing_required_tracks": [
+        "attack_0",
+        "hit_0",
+        "idle_0",
+        "attack_6",
+        "hit_6",
+        "idle_6",
+        "run_6",
+        "attack_7",
+        "hit_7",
+        "idle_7",
+        "run_7",
+        "attack_5",
+        "hit_5",
+        "idle_5",
+        "run_5",
+        "attack_2",
+        "death_2",
+        "hit_2",
+        "idle_2",
+        "attack_1",
+        "hit_1",
+        "idle_1",
+        "run_1",
+        "attack_3",
+        "hit_3",
+        "idle_3",
+        "run_3",
+        "attack_4",
+        "hit_4",
+        "idle_4",
+        "run_4"
+      ],
+      "quality_review": "HOLD: new textual-brief art has not had identity/support/contact or Main visual approval",
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-E-run6.png",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/E-run.png",
+          "source_sha256": "85577468992a1b7406f84159452baec3113c79950d43ddd4dea1a478ee7e0cdb",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  285,
+                  9,
+                  305,
+                  304
+                ],
+                "margin": [
+                  173,
+                  40,
+                  239,
+                  240
+                ],
+                "source_anchor": [
+                  384,
+                  309
+                ],
+                "rgba_sha256": "0ffe7cfd1c94007e7bd3d1bf27e8eac04251bcd543f579d4e971df6b78eabdee"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  945,
+                  8,
+                  305,
+                  305
+                ],
+                "margin": [
+                  65,
+                  39,
+                  239,
+                  239
+                ],
+                "source_anchor": [
+                  1152,
+                  309
+                ],
+                "rgba_sha256": "4b9ac985502cc3b0dabf4a48e3fcb0609733b56c70afc8c36e487a20b293aa9a"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  281,
+                  347,
+                  307,
+                  302
+                ],
+                "margin": [
+                  169,
+                  42,
+                  237,
+                  242
+                ],
+                "source_anchor": [
+                  384,
+                  645
+                ],
+                "rgba_sha256": "679c59bb19afd2525a6480dbcf24c635de31aba9f849d314af2f4fbc12aeaba8"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  946,
+                  347,
+                  304,
+                  307
+                ],
+                "margin": [
+                  66,
+                  37,
+                  240,
+                  237
+                ],
+                "source_anchor": [
+                  1152,
+                  650
+                ],
+                "rgba_sha256": "d3288c2cb38d17d311ede265ac2adc43848fe03f2f5568c1890b1745df6615e8"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  282,
+                  685,
+                  307,
+                  308
+                ],
+                "margin": [
+                  170,
+                  36,
+                  237,
+                  236
+                ],
+                "source_anchor": [
+                  384,
+                  989
+                ],
+                "rgba_sha256": "b6bd1b1062dc80081f335d266c3520bab4d33f807c41351c25adbf1cfb2996df"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  947,
+                  686,
+                  308,
+                  307
+                ],
+                "margin": [
+                  67,
+                  37,
+                  236,
+                  237
+                ],
+                "source_anchor": [
+                  1152,
+                  989
+                ],
+                "rgba_sha256": "5fe83ac6f877818e747671996085091acedccd0cec43d15553c040078f496e0d"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 299.5,
+            "canvas_size": [
+              544,
+              544
+            ],
+            "foot": [
+              272,
+              340
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-S-run6.png",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/S-run.png",
+          "source_sha256": "ab9c86f29fb2f24901bb4a2e61306d25f45ebdf2ec9d1c8ac37ef2d08ed44133",
+          "geometry": {
+            "image_size": [
+              1448,
+              1086
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  263,
+                  11,
+                  248,
+                  348
+                ],
+                "margin": [
+                  213,
+                  46,
+                  376,
+                  276
+                ],
+                "source_anchor": [
+                  362,
+                  355
+                ],
+                "rgba_sha256": "6980c6fbffced100aee16e5b3992eaca60d861b3e99e96335f789b35054604d5"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  934,
+                  11,
+                  254,
+                  348
+                ],
+                "margin": [
+                  160,
+                  46,
+                  370,
+                  276
+                ],
+                "source_anchor": [
+                  1086,
+                  355
+                ],
+                "rgba_sha256": "64e859606aeb28e2a97329d4a196475eaa46e312c0f77b48420ac4d6d62d9dd3"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  217,
+                  365,
+                  308,
+                  329
+                ],
+                "margin": [
+                  167,
+                  65,
+                  316,
+                  295
+                ],
+                "source_anchor": [
+                  362,
+                  690
+                ],
+                "rgba_sha256": "45bf94526483b793da0857a1cc0842d75105dea742f7b00804e36d2b86ee7600"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  927,
+                  366,
+                  268,
+                  349
+                ],
+                "margin": [
+                  153,
+                  45,
+                  356,
+                  275
+                ],
+                "source_anchor": [
+                  1086,
+                  711
+                ],
+                "rgba_sha256": "f78f7bc0c66dc212cdbaa05544e511bedd6412efee7049ac43b5fa791eba2bd6"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  244,
+                  714,
+                  275,
+                  354
+                ],
+                "margin": [
+                  194,
+                  40,
+                  349,
+                  270
+                ],
+                "source_anchor": [
+                  362,
+                  1064
+                ],
+                "rgba_sha256": "dc648e0231fe3e073b99aa2b5e106ce9f8eba4bc81ec168943d4c27550eac11c"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  912,
+                  719,
+                  301,
+                  331
+                ],
+                "margin": [
+                  138,
+                  63,
+                  323,
+                  293
+                ],
+                "source_anchor": [
+                  1086,
+                  1046
+                ],
+                "rgba_sha256": "79c67793e35e5f62887dd987ddeb85c157da7e0d02bae8bb8d5cb8ed0a44d20d"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 342.5,
+            "canvas_size": [
+              624,
+              624
+            ],
+            "foot": [
+              312,
+              390
+            ]
+          }
+        }
+      ]
+    },
+    "monster:사라만다": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/salamander/r001/SpriteFrames.tres",
+      "frames_sha256": "07a178bb14170c801243cfaa8de4a3625617039379d3782ed10c0834be2d882b",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/salamander/r001/NativeMotionProfile.tres",
+      "native_profile_sha256": "d097c2210e1f48f6bafd407a2b1ec92253040b6736aaa3035c158223ad169891",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 33,
+      "native_pose_count": 91,
+      "missing_required_tracks": [],
+      "quality_review": "HOLD: text-brief identity against existing reference, support/contact/source-plane anchors and default Main review pending",
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_front4.png",
+          "source_sha256": "be025da5ec939d0d90c470611ce5af1984bee8c3b7a3f7eb8d5bb71561c27089",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_front4.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  18,
+                  53,
+                  351,
+                  146
+                ],
+                "margin": [
+                  214,
+                  343,
+                  425,
+                  630
+                ],
+                "source_anchor": [
+                  192,
+                  195
+                ],
+                "rgba_sha256": "e15b3eaa69771ead061b084689523f64ebdd4baf6d11f76cafef099cf55d5f75"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  403,
+                  57,
+                  351,
+                  141
+                ],
+                "margin": [
+                  215,
+                  348,
+                  425,
+                  635
+                ],
+                "source_anchor": [
+                  576,
+                  194
+                ],
+                "rgba_sha256": "c286c7fac8b62d85d6458961d7effd4cafe4aacc5fce82f2d4fc1b4bb5fd5845"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  787,
+                  55,
+                  351,
+                  151
+                ],
+                "margin": [
+                  215,
+                  338,
+                  425,
+                  625
+                ],
+                "source_anchor": [
+                  960,
+                  202
+                ],
+                "rgba_sha256": "788724b2daae3ea613febd07b9a6feeabe9e63a80929f09dc93d72bbd6ab57d7"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  1171,
+                  57,
+                  350,
+                  148
+                ],
+                "margin": [
+                  215,
+                  341,
+                  426,
+                  628
+                ],
+                "source_anchor": [
+                  1344,
+                  201
+                ],
+                "rgba_sha256": "2e41d875fbf648d4d80aba82abf6f17c57de413b3cc2f4bdea5e0ab22aa53aa0"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 194.5,
+            "canvas_size": [
+              776,
+              776
+            ],
+            "foot": [
+              388,
+              485
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_front4.png",
+          "source_sha256": "be025da5ec939d0d90c470611ce5af1984bee8c3b7a3f7eb8d5bb71561c27089",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_front4.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  43,
+                  276,
+                  308,
+                  211
+                ],
+                "margin": [
+                  239,
+                  278,
+                  468,
+                  565
+                ],
+                "source_anchor": [
+                  192,
+                  483
+                ],
+                "rgba_sha256": "6f4b322dd2c975e37b920f5ea19734912a9879dcd075cbe01d0d22f9e0250cca"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  428,
+                  272,
+                  310,
+                  221
+                ],
+                "margin": [
+                  240,
+                  268,
+                  466,
+                  555
+                ],
+                "source_anchor": [
+                  576,
+                  489
+                ],
+                "rgba_sha256": "3f83fd0bce49ad86342ed67c36ede7f099f38178891c391683e82090eb5c8944"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  812,
+                  273,
+                  313,
+                  223
+                ],
+                "margin": [
+                  240,
+                  266,
+                  463,
+                  553
+                ],
+                "source_anchor": [
+                  960,
+                  492
+                ],
+                "rgba_sha256": "99ee5a8e913c82240d7a091b0ad13efc3abe087b9adf69603053f0c3c2fabd3d"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  1194,
+                  272,
+                  307,
+                  217
+                ],
+                "margin": [
+                  238,
+                  272,
+                  469,
+                  559
+                ],
+                "source_anchor": [
+                  1344,
+                  485
+                ],
+                "rgba_sha256": "6f81759e75e2c8f7bc63157c9bbb2e0703fd25706bbe6e8b7d82094ebcae6827"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 194.5,
+            "canvas_size": [
+              776,
+              776
+            ],
+            "foot": [
+              388,
+              485
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_front4.png",
+          "source_sha256": "be025da5ec939d0d90c470611ce5af1984bee8c3b7a3f7eb8d5bb71561c27089",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_front4.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  77,
+                  542,
+                  206,
+                  208
+                ],
+                "margin": [
+                  273,
+                  281,
+                  570,
+                  568
+                ],
+                "source_anchor": [
+                  192,
+                  746
+                ],
+                "rgba_sha256": "5d25744683cc32bbab68b34e18090e43bc0303c93daae23f8ee2e080c9a916bb"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  471,
+                  544,
+                  211,
+                  204
+                ],
+                "margin": [
+                  283,
+                  285,
+                  565,
+                  572
+                ],
+                "source_anchor": [
+                  576,
+                  744
+                ],
+                "rgba_sha256": "af0fa3df2201148dc5880e6b04929acb603367f3d4e30dd78cf3dc2add133a8a"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  854,
+                  544,
+                  198,
+                  215
+                ],
+                "margin": [
+                  282,
+                  274,
+                  578,
+                  561
+                ],
+                "source_anchor": [
+                  960,
+                  755
+                ],
+                "rgba_sha256": "c8102aff4dd08a980d90b4c28283a55a566e4af9c49e80950a3fd68ffd65ca91"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  1240,
+                  545,
+                  201,
+                  201
+                ],
+                "margin": [
+                  284,
+                  288,
+                  575,
+                  575
+                ],
+                "source_anchor": [
+                  1344,
+                  742
+                ],
+                "rgba_sha256": "154369a66a5444ce0b8cf8b74ac0436329ecde13ed62981ec66d83364b472dcc"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 194.5,
+            "canvas_size": [
+              776,
+              776
+            ],
+            "foot": [
+              388,
+              485
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "run",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_front4.png",
+          "source_sha256": "be025da5ec939d0d90c470611ce5af1984bee8c3b7a3f7eb8d5bb71561c27089",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_front4.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  35,
+                  788,
+                  322,
+                  193
+                ],
+                "margin": [
+                  231,
+                  296,
+                  454,
+                  583
+                ],
+                "source_anchor": [
+                  192,
+                  977
+                ],
+                "rgba_sha256": "58ee56bf8a7be041bf099bf42c24b110cbf0e1ea3d905699b83e4291e86f6a23"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  421,
+                  784,
+                  317,
+                  183
+                ],
+                "margin": [
+                  233,
+                  306,
+                  459,
+                  593
+                ],
+                "source_anchor": [
+                  576,
+                  963
+                ],
+                "rgba_sha256": "67db1fa6d6d0706570011221d8ecc435a8378bb520fb50a70688c67d01e877a3"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  803,
+                  787,
+                  324,
+                  193
+                ],
+                "margin": [
+                  231,
+                  296,
+                  452,
+                  583
+                ],
+                "source_anchor": [
+                  960,
+                  976
+                ],
+                "rgba_sha256": "8dcf46e6f6cd6fcc29cd795e1fee1a7bfbc42b03d9cd0d2794a56338c9f3e2ff"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  1189,
+                  786,
+                  319,
+                  193
+                ],
+                "margin": [
+                  233,
+                  296,
+                  457,
+                  583
+                ],
+                "source_anchor": [
+                  1344,
+                  975
+                ],
+                "rgba_sha256": "2d635dc4b24aea74387ddc27c59d978104372ae6dd2b20870d537b1296c74d0c"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 194.5,
+            "canvas_size": [
+              776,
+              776
+            ],
+            "foot": [
+              388,
+              485
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "run",
+          "animation": "run_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_back4.png",
+          "source_sha256": "aba0e0e7f60a9affd9883a8899e903ec0f065b3c66e1786c94f0207cea9c9a86",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_back4.png",
+          "geometry": {
+            "image_size": [
+              1443,
+              1090
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  33,
+                  80,
+                  316,
+                  142
+                ],
+                "margin": [
+                  221,
+                  322,
+                  420,
+                  594
+                ],
+                "source_anchor": [
+                  180,
+                  218
+                ],
+                "rgba_sha256": "385d1248244ae7e0fc72c4eee02542433fedaa6b616aaaedbbb77a4e308d4915"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  393,
+                  79,
+                  314,
+                  149
+                ],
+                "margin": [
+                  220,
+                  315,
+                  422,
+                  587
+                ],
+                "source_anchor": [
+                  541,
+                  224
+                ],
+                "rgba_sha256": "81f71111de1326e754c23b61aae188f7271a184262d2d9d44b074d43dfe2a0c4"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  746,
+                  81,
+                  302,
+                  148
+                ],
+                "margin": [
+                  212,
+                  316,
+                  434,
+                  588
+                ],
+                "source_anchor": [
+                  902,
+                  225
+                ],
+                "rgba_sha256": "faea7f60d4edf20b95564b18374bd7cbaf8d326183cd96848fe95402264f541e"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  1096,
+                  83,
+                  312,
+                  148
+                ],
+                "margin": [
+                  201,
+                  316,
+                  424,
+                  588
+                ],
+                "source_anchor": [
+                  1263,
+                  227
+                ],
+                "rgba_sha256": "c611b2ef4bb915f189290d5de9294f13b3cc8b3bc36c2b7a0e04a730a0dc13db"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 183.5,
+            "canvas_size": [
+              736,
+              736
+            ],
+            "foot": [
+              368,
+              460
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "run",
+          "animation": "run_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_back4.png",
+          "source_sha256": "aba0e0e7f60a9affd9883a8899e903ec0f065b3c66e1786c94f0207cea9c9a86",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_back4.png",
+          "geometry": {
+            "image_size": [
+              1443,
+              1090
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  58,
+                  293,
+                  267,
+                  191
+                ],
+                "margin": [
+                  246,
+                  273,
+                  469,
+                  545
+                ],
+                "source_anchor": [
+                  180,
+                  480
+                ],
+                "rgba_sha256": "9fac49de1848cb890fb6edf1d25e1f071fa1e7e50c54dcf4dd0bca060d7ae6f9"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  401,
+                  294,
+                  298,
+                  193
+                ],
+                "margin": [
+                  228,
+                  271,
+                  438,
+                  543
+                ],
+                "source_anchor": [
+                  541,
+                  483
+                ],
+                "rgba_sha256": "e73a86c1c61d9f8792df25e3731845823c09d43cbdc262edd7f672ca0fcdd9cf"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  757,
+                  289,
+                  280,
+                  203
+                ],
+                "margin": [
+                  223,
+                  261,
+                  456,
+                  533
+                ],
+                "source_anchor": [
+                  902,
+                  488
+                ],
+                "rgba_sha256": "98b102fbb2516f2a8982ae67f547179e14b776974949865f88423651fc224de7"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  1118,
+                  288,
+                  274,
+                  202
+                ],
+                "margin": [
+                  223,
+                  262,
+                  462,
+                  534
+                ],
+                "source_anchor": [
+                  1263,
+                  486
+                ],
+                "rgba_sha256": "f01d562e949b90abb8e7c4e81e99ee7a0ebb4ae335389d43fbaa2d16e5af2511"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 183.5,
+            "canvas_size": [
+              736,
+              736
+            ],
+            "foot": [
+              368,
+              460
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "run",
+          "animation": "run_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_back4.png",
+          "source_sha256": "aba0e0e7f60a9affd9883a8899e903ec0f065b3c66e1786c94f0207cea9c9a86",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_back4.png",
+          "geometry": {
+            "image_size": [
+              1443,
+              1090
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  110,
+                  534,
+                  141,
+                  227
+                ],
+                "margin": [
+                  298,
+                  237,
+                  595,
+                  509
+                ],
+                "source_anchor": [
+                  180,
+                  757
+                ],
+                "rgba_sha256": "f76078eb2ae356e6bfbab68087620cee4567bb9e586d1fd6b83bd663df0a4001"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  480,
+                  534,
+                  162,
+                  229
+                ],
+                "margin": [
+                  307,
+                  235,
+                  574,
+                  507
+                ],
+                "source_anchor": [
+                  541,
+                  759
+                ],
+                "rgba_sha256": "43a325ff232a7911867a7447f20962077c7002b922008d80072c80ca40e62103"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  825,
+                  531,
+                  142,
+                  232
+                ],
+                "margin": [
+                  291,
+                  232,
+                  594,
+                  504
+                ],
+                "source_anchor": [
+                  902,
+                  759
+                ],
+                "rgba_sha256": "50f90ef2c18f9fe28d08bc1565410e7ccff0275a74baa0c875baf99c9721d14e"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  1194,
+                  535,
+                  164,
+                  227
+                ],
+                "margin": [
+                  299,
+                  237,
+                  572,
+                  509
+                ],
+                "source_anchor": [
+                  1263,
+                  758
+                ],
+                "rgba_sha256": "f50049247fc247f62ecc124e3d01b34c07ca408843affce34297b3d8c8cdcb0a"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 183.5,
+            "canvas_size": [
+              736,
+              736
+            ],
+            "foot": [
+              368,
+              460
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "run",
+          "animation": "run_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_run_back4.png",
+          "source_sha256": "aba0e0e7f60a9affd9883a8899e903ec0f065b3c66e1786c94f0207cea9c9a86",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_run_back4.png",
+          "geometry": {
+            "image_size": [
+              1443,
+              1090
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  48,
+                  807,
+                  279,
+                  188
+                ],
+                "margin": [
+                  236,
+                  276,
+                  457,
+                  548
+                ],
+                "source_anchor": [
+                  180,
+                  991
+                ],
+                "rgba_sha256": "61ee3e1781435b77c978aaf984ca836675e0bd0951bc947d336994eefa7ffc74"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  386,
+                  806,
+                  295,
+                  183
+                ],
+                "margin": [
+                  213,
+                  281,
+                  441,
+                  553
+                ],
+                "source_anchor": [
+                  541,
+                  985
+                ],
+                "rgba_sha256": "833524ea6cf276fa10aa323d40f5dbd910d6a7c31430a89716df7ae6a0f0a550"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  738,
+                  803,
+                  288,
+                  187
+                ],
+                "margin": [
+                  204,
+                  277,
+                  448,
+                  549
+                ],
+                "source_anchor": [
+                  902,
+                  986
+                ],
+                "rgba_sha256": "959f7a0e6ac7b93b42a38d6c9e4bb732bea014ccd5de99b0223c8bec372121d0"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  1113,
+                  805,
+                  287,
+                  185
+                ],
+                "margin": [
+                  218,
+                  279,
+                  449,
+                  551
+                ],
+                "source_anchor": [
+                  1263,
+                  986
+                ],
+                "rgba_sha256": "afe9091716db9f77832a710a82806eb03d3a67b8d67f78f04610d1f7fa5256d0"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 183.5,
+            "canvas_size": [
+              736,
+              736
+            ],
+            "foot": [
+              368,
+              460
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "idle",
+          "animation": "idle_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  53,
+                  95,
+                  193,
+                  94
+                ],
+                "margin": [
+                  102,
+                  160,
+                  207,
+                  306
+                ],
+                "source_anchor": [
+                  151,
+                  185
+                ],
+                "rgba_sha256": "73a5527e35b62b789bb83574ccdf88c3f9a94a82f5f46b038c3be14dd4f3b59c"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  54,
+                  280,
+                  198,
+                  107
+                ],
+                "margin": [
+                  103,
+                  147,
+                  202,
+                  293
+                ],
+                "source_anchor": [
+                  151,
+                  383
+                ],
+                "rgba_sha256": "8810ac4b5851e2bc6c7c7829f55ebd43670dc282a315d0f8442006d01cb99116"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "idle",
+          "animation": "idle_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  338,
+                  92,
+                  163,
+                  100
+                ],
+                "margin": [
+                  118,
+                  154,
+                  237,
+                  300
+                ],
+                "source_anchor": [
+                  420,
+                  188
+                ],
+                "rgba_sha256": "1acafe4c632d0fde26292366fd6720e7d3da1526faf6bf59014a72f5861d8319"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  338,
+                  277,
+                  166,
+                  111
+                ],
+                "margin": [
+                  118,
+                  143,
+                  234,
+                  289
+                ],
+                "source_anchor": [
+                  420,
+                  384
+                ],
+                "rgba_sha256": "d7aa24b4e8fe311ca1f3e61d7fe5179bd2f24850d9034b3e49d4c6895b0cb29a"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "idle",
+          "animation": "idle_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  611,
+                  87,
+                  125,
+                  105
+                ],
+                "margin": [
+                  137,
+                  149,
+                  275,
+                  295
+                ],
+                "source_anchor": [
+                  674,
+                  188
+                ],
+                "rgba_sha256": "ad849aa9c2ae281b7c7a7ad5cfccfce629fb2c9d8f75e70098e666c91084cd57"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  611,
+                  280,
+                  126,
+                  108
+                ],
+                "margin": [
+                  137,
+                  146,
+                  274,
+                  292
+                ],
+                "source_anchor": [
+                  674,
+                  384
+                ],
+                "rgba_sha256": "0a009078d2a760b9853671b7a37219ee32159bea21bc9b7d47e57584dfc45769"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "idle",
+          "animation": "idle_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  864,
+                  92,
+                  166,
+                  100
+                ],
+                "margin": [
+                  118,
+                  154,
+                  234,
+                  300
+                ],
+                "source_anchor": [
+                  946,
+                  188
+                ],
+                "rgba_sha256": "522d2d5d1d46ab59df78cc6e84e22892897a517cb1a41af86503cc7123af7eba"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  861,
+                  278,
+                  170,
+                  110
+                ],
+                "margin": [
+                  115,
+                  144,
+                  230,
+                  290
+                ],
+                "source_anchor": [
+                  946,
+                  384
+                ],
+                "rgba_sha256": "7429a9e1799bbceda4b3462ebfc8c000064907dd90121eacb25a0956db39534e"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "attack",
+          "animation": "attack_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  56,
+                  486,
+                  202,
+                  99
+                ],
+                "margin": [
+                  105,
+                  155,
+                  198,
+                  301
+                ],
+                "source_anchor": [
+                  151,
+                  581
+                ],
+                "rgba_sha256": "475e4b0f7e038c13814b1051c641dae906e14e580ecb26f75f04beae9839b31c"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  49,
+                  668,
+                  238,
+                  111
+                ],
+                "margin": [
+                  98,
+                  143,
+                  162,
+                  289
+                ],
+                "source_anchor": [
+                  151,
+                  775
+                ],
+                "rgba_sha256": "90f4bb80a491ec649e1e5ba1568ab544568afed91f7978c63f40fdfe677b8ba4"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  56,
+                  864,
+                  195,
+                  102
+                ],
+                "margin": [
+                  105,
+                  152,
+                  205,
+                  298
+                ],
+                "source_anchor": [
+                  151,
+                  962
+                ],
+                "rgba_sha256": "ee6c21e6eb2e17ec46dcc61795d91b6f9bfd9d6ac762e42492be9986a2895613"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "attack",
+          "animation": "attack_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  344,
+                  482,
+                  172,
+                  104
+                ],
+                "margin": [
+                  124,
+                  150,
+                  228,
+                  296
+                ],
+                "source_anchor": [
+                  420,
+                  582
+                ],
+                "rgba_sha256": "45c685d28d75a686722d6e4a1f6164f2b5913f7d41561bf9bfd3ad6b4d2cfaf1"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  325,
+                  670,
+                  225,
+                  113
+                ],
+                "margin": [
+                  105,
+                  141,
+                  175,
+                  287
+                ],
+                "source_anchor": [
+                  420,
+                  779
+                ],
+                "rgba_sha256": "001dec89b8844b525652b32c904261c777fd8c347177ec775ffe192e54a9d784"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  340,
+                  861,
+                  170,
+                  105
+                ],
+                "margin": [
+                  120,
+                  149,
+                  230,
+                  295
+                ],
+                "source_anchor": [
+                  420,
+                  962
+                ],
+                "rgba_sha256": "584bccdc9a729fb345d42b6068c2ce65bab91058b7ff17080b19869ec48e87ed"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "attack",
+          "animation": "attack_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  609,
+                  474,
+                  127,
+                  111
+                ],
+                "margin": [
+                  135,
+                  143,
+                  273,
+                  289
+                ],
+                "source_anchor": [
+                  674,
+                  581
+                ],
+                "rgba_sha256": "0d9e6ff1617d57fc13c7a6f09ef1f2c462b8bc0c33fb5de023ff80267069bdb8"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  604,
+                  669,
+                  143,
+                  118
+                ],
+                "margin": [
+                  130,
+                  136,
+                  257,
+                  282
+                ],
+                "source_anchor": [
+                  674,
+                  783
+                ],
+                "rgba_sha256": "4ec80f599eb3a279d815b2aafcd1ae49d13dbbe31d9013b27da08f6326722975"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  613,
+                  857,
+                  122,
+                  108
+                ],
+                "margin": [
+                  139,
+                  146,
+                  278,
+                  292
+                ],
+                "source_anchor": [
+                  674,
+                  961
+                ],
+                "rgba_sha256": "b5e5e7ef86ca08337261ba9ffe1d6258f367e9cbc94f5e42db0440fa1f43a9f3"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "attack",
+          "animation": "attack_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  848,
+                  480,
+                  171,
+                  106
+                ],
+                "margin": [
+                  102,
+                  148,
+                  229,
+                  294
+                ],
+                "source_anchor": [
+                  946,
+                  582
+                ],
+                "rgba_sha256": "cd8bbbfe911929487c7b78197a68104fceaec1373825b5a52e4706aca8d3688e"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  813,
+                  669,
+                  224,
+                  112
+                ],
+                "margin": [
+                  67,
+                  142,
+                  176,
+                  288
+                ],
+                "source_anchor": [
+                  946,
+                  777
+                ],
+                "rgba_sha256": "5a1299496dbfe37ac3fc373626db8571b410642cf80d27a4778343ecea7697bd"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  847,
+                  863,
+                  179,
+                  104
+                ],
+                "margin": [
+                  101,
+                  150,
+                  221,
+                  296
+                ],
+                "source_anchor": [
+                  946,
+                  963
+                ],
+                "rgba_sha256": "af1e69f8a00d7b89400cb5ee30578c1510de2c8810ac7182f43e5a2e26c12d1c"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "hit",
+          "animation": "hit_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  55,
+                  1038,
+                  173,
+                  135
+                ],
+                "margin": [
+                  104,
+                  119,
+                  227,
+                  265
+                ],
+                "source_anchor": [
+                  151,
+                  1169
+                ],
+                "rgba_sha256": "d2551ab4a6051bf5defaeceb99652b5a4f370cd3dce03d9b3252b6cdbd65feb0"
+              },
+              {
+                "row": 6,
+                "direction": "E",
+                "region": [
+                  55,
+                  1252,
+                  191,
+                  108
+                ],
+                "margin": [
+                  104,
+                  146,
+                  209,
+                  292
+                ],
+                "source_anchor": [
+                  151,
+                  1356
+                ],
+                "rgba_sha256": "e166ef3d8b7a2539b58f8b78278aa6f2dfef90026791a63088f51a1556f39163"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "hit",
+          "animation": "hit_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  349,
+                  1037,
+                  156,
+                  137
+                ],
+                "margin": [
+                  129,
+                  117,
+                  244,
+                  263
+                ],
+                "source_anchor": [
+                  420,
+                  1170
+                ],
+                "rgba_sha256": "cb6a6035e0dc3081a2e3540399f0e1f738c6da0bc8be09d9e19207f594070a9e"
+              },
+              {
+                "row": 6,
+                "direction": "SE",
+                "region": [
+                  340,
+                  1247,
+                  173,
+                  113
+                ],
+                "margin": [
+                  120,
+                  141,
+                  227,
+                  287
+                ],
+                "source_anchor": [
+                  420,
+                  1356
+                ],
+                "rgba_sha256": "c2affccfd179a45ba04ef523066a1e3e7602a696fd18d23c435201a191f6da47"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "hit",
+          "animation": "hit_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  613,
+                  1044,
+                  120,
+                  129
+                ],
+                "margin": [
+                  139,
+                  125,
+                  280,
+                  271
+                ],
+                "source_anchor": [
+                  674,
+                  1169
+                ],
+                "rgba_sha256": "f3a7c43b04029d54e9a07a7d11c75d4914569b0c610224db80a7ba0c6a0602ca"
+              },
+              {
+                "row": 6,
+                "direction": "S",
+                "region": [
+                  612,
+                  1248,
+                  124,
+                  111
+                ],
+                "margin": [
+                  138,
+                  143,
+                  276,
+                  289
+                ],
+                "source_anchor": [
+                  674,
+                  1355
+                ],
+                "rgba_sha256": "b7e221e4346180644298088299ef567c527e94ff266da936990a855d41edb1d8"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "hit",
+          "animation": "hit_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_front4_v2.png",
+          "source_sha256": "a449fa71cc3b25d4adac063b146000c2d7f5011b036befe73c5a0e24d78721c4",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_front4_v2.png",
+          "geometry": {
+            "image_size": [
+              1086,
+              1448
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  858,
+                  1040,
+                  173,
+                  133
+                ],
+                "margin": [
+                  112,
+                  121,
+                  227,
+                  267
+                ],
+                "source_anchor": [
+                  946,
+                  1169
+                ],
+                "rgba_sha256": "fe084cb5260c5d85e28aa9b02856cd67336171edf246df380aa095eeec82efc9"
+              },
+              {
+                "row": 6,
+                "direction": "SW",
+                "region": [
+                  851,
+                  1250,
+                  179,
+                  110
+                ],
+                "margin": [
+                  105,
+                  144,
+                  221,
+                  290
+                ],
+                "source_anchor": [
+                  946,
+                  1356
+                ],
+                "rgba_sha256": "bfdbc14443a3f8a8dacbbbf5a0bc48012cc4b0dcce5cbcec738ede4f159760c4"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 100.0,
+            "canvas_size": [
+              400,
+              400
+            ],
+            "foot": [
+              200,
+              250
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "idle",
+          "animation": "idle_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  13,
+                  66,
+                  218,
+                  136
+                ],
+                "margin": [
+                  239,
+                  298,
+                  470,
+                  552
+                ],
+                "source_anchor": [
+                  118,
+                  198
+                ],
+                "rgba_sha256": "7672115b8359d9b29fcc42f874ac4806c8f8a8583765395d5e15803a2a28e83f"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  241,
+                  58,
+                  221,
+                  144
+                ],
+                "margin": [
+                  229,
+                  290,
+                  467,
+                  544
+                ],
+                "source_anchor": [
+                  356,
+                  198
+                ],
+                "rgba_sha256": "d8badfa3bc29098b20c9a1e1796b37c30c740f3078acb34c1f0c591df6e41673"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "idle",
+          "animation": "idle_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  34,
+                  262,
+                  189,
+                  172
+                ],
+                "margin": [
+                  260,
+                  262,
+                  499,
+                  516
+                ],
+                "source_anchor": [
+                  118,
+                  430
+                ],
+                "rgba_sha256": "7b6fc1305ca634e5c261372c22b9a10f6313d4d1dc0f957c981fed97017d78e4"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  268,
+                  256,
+                  191,
+                  179
+                ],
+                "margin": [
+                  256,
+                  255,
+                  497,
+                  509
+                ],
+                "source_anchor": [
+                  356,
+                  431
+                ],
+                "rgba_sha256": "d2ff0b1ed82a5bea8b6d37edc683da64489b45cd1ddd1eb3682f8f27396254aa"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "idle",
+          "animation": "idle_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  43,
+                  475,
+                  159,
+                  201
+                ],
+                "margin": [
+                  269,
+                  233,
+                  529,
+                  487
+                ],
+                "source_anchor": [
+                  118,
+                  672
+                ],
+                "rgba_sha256": "0232e535ed5f4b8d3b73a782c67cd9cd4d9323cf622fe1e923b8554c77afbb92"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  276,
+                  472,
+                  157,
+                  203
+                ],
+                "margin": [
+                  264,
+                  231,
+                  531,
+                  485
+                ],
+                "source_anchor": [
+                  356,
+                  671
+                ],
+                "rgba_sha256": "7b7a91cd9aba6db31dd1576a1dcdc404847689f7544c83e91c8a26193151b305"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "idle",
+          "animation": "idle_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  29,
+                  716,
+                  184,
+                  179
+                ],
+                "margin": [
+                  255,
+                  255,
+                  504,
+                  509
+                ],
+                "source_anchor": [
+                  118,
+                  891
+                ],
+                "rgba_sha256": "5873214242456c12cefaa55029829de2861a0e1d7d1908a0301c413d10a54c39"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  263,
+                  717,
+                  183,
+                  178
+                ],
+                "margin": [
+                  251,
+                  256,
+                  505,
+                  510
+                ],
+                "source_anchor": [
+                  356,
+                  891
+                ],
+                "rgba_sha256": "006f6a252a5484cf637d8854f2c1a3fd431b281a22e5e35721b620e6b5e5d841"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "attack",
+          "animation": "attack_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  469,
+                  72,
+                  225,
+                  133
+                ],
+                "margin": [
+                  221,
+                  301,
+                  463,
+                  555
+                ],
+                "source_anchor": [
+                  592,
+                  201
+                ],
+                "rgba_sha256": "2cce54d5f09f1c4bccd15ce2d96969a51c8aa0afb305b7e8333013a840d06301"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  705,
+                  78,
+                  245,
+                  128
+                ],
+                "margin": [
+                  219,
+                  306,
+                  443,
+                  560
+                ],
+                "source_anchor": [
+                  830,
+                  202
+                ],
+                "rgba_sha256": "414911b723be65d1710c226162c8f61c7ac9b0ad7591624190e22866324158ba"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  958,
+                  67,
+                  230,
+                  135
+                ],
+                "margin": [
+                  236,
+                  299,
+                  458,
+                  553
+                ],
+                "source_anchor": [
+                  1066,
+                  198
+                ],
+                "rgba_sha256": "d452bdf0e1441e7ad1636f4bf3afa61cfa7932f73afecb09e6a2a63c4f6dac29"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "attack",
+          "animation": "attack_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  504,
+                  260,
+                  188,
+                  176
+                ],
+                "margin": [
+                  256,
+                  258,
+                  500,
+                  512
+                ],
+                "source_anchor": [
+                  592,
+                  432
+                ],
+                "rgba_sha256": "4b97ee4a908e1dc0dc6a6de77abde458cb89cb4c551d1c57485c09938bbff6ce"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  706,
+                  262,
+                  242,
+                  173
+                ],
+                "margin": [
+                  220,
+                  261,
+                  446,
+                  515
+                ],
+                "source_anchor": [
+                  830,
+                  431
+                ],
+                "rgba_sha256": "edd54038eb1d7ec3865f7204dafe0fb18882db7a6ef907bff1e99065b572ea71"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  978,
+                  258,
+                  195,
+                  176
+                ],
+                "margin": [
+                  256,
+                  258,
+                  493,
+                  512
+                ],
+                "source_anchor": [
+                  1066,
+                  430
+                ],
+                "rgba_sha256": "d4ad8d499cb76853d78c0a397e096e11db573d3933798e9d5932060601add14b"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "attack",
+          "animation": "attack_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  514,
+                  475,
+                  159,
+                  203
+                ],
+                "margin": [
+                  266,
+                  231,
+                  529,
+                  485
+                ],
+                "source_anchor": [
+                  592,
+                  674
+                ],
+                "rgba_sha256": "61038ac02466804a085d063ec159962d9e6a2aee373b3a3089b15512c4d0c8f6"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  747,
+                  461,
+                  169,
+                  216
+                ],
+                "margin": [
+                  261,
+                  218,
+                  519,
+                  472
+                ],
+                "source_anchor": [
+                  830,
+                  673
+                ],
+                "rgba_sha256": "ca81021feb234120e3a454f5023271a69bbb88e2c67a3cf908fbae289d793914"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  989,
+                  475,
+                  169,
+                  204
+                ],
+                "margin": [
+                  267,
+                  230,
+                  519,
+                  484
+                ],
+                "source_anchor": [
+                  1066,
+                  675
+                ],
+                "rgba_sha256": "b9a0ccc23d7e3ce626768d279a25ca7b9fbdbfb90c5e55d2b5c88712406ec04e"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "attack",
+          "animation": "attack_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  487,
+                  715,
+                  198,
+                  175
+                ],
+                "margin": [
+                  239,
+                  259,
+                  490,
+                  513
+                ],
+                "source_anchor": [
+                  592,
+                  886
+                ],
+                "rgba_sha256": "2fb6b2076c85b9d5a789cf5fb2fb9429ddfb6d7ac5d78d5d50abc82b5d7365ca"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  707,
+                  716,
+                  244,
+                  173
+                ],
+                "margin": [
+                  221,
+                  261,
+                  444,
+                  515
+                ],
+                "source_anchor": [
+                  830,
+                  885
+                ],
+                "rgba_sha256": "fc90487ffc377d6dc67c221fe5bc1887f395dd3c5e5a509d1cc734d991dfaf2e"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  966,
+                  716,
+                  197,
+                  177
+                ],
+                "margin": [
+                  244,
+                  257,
+                  491,
+                  511
+                ],
+                "source_anchor": [
+                  1066,
+                  889
+                ],
+                "rgba_sha256": "3f34a5a2f5155348f63a0721d75dec703ab8b97c778da8fe9dff6b8ca69f86f8"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "hit",
+          "animation": "hit_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  1213,
+                  62,
+                  205,
+                  142
+                ],
+                "margin": [
+                  253,
+                  292,
+                  483,
+                  546
+                ],
+                "source_anchor": [
+                  1304,
+                  200
+                ],
+                "rgba_sha256": "4b96e673e93acb319337a4172388c54ea749a4c7bc1b3779f0616edb97bd0aae"
+              },
+              {
+                "row": 6,
+                "direction": "W",
+                "region": [
+                  1428,
+                  67,
+                  219,
+                  136
+                ],
+                "margin": [
+                  232,
+                  298,
+                  469,
+                  552
+                ],
+                "source_anchor": [
+                  1540,
+                  199
+                ],
+                "rgba_sha256": "918696d6349c3eb5e24aa78c8cbdc6fdf550b8d97bd48eb2ed21cde354c56872"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "hit",
+          "animation": "hit_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1219,
+                  261,
+                  188,
+                  176
+                ],
+                "margin": [
+                  259,
+                  258,
+                  500,
+                  512
+                ],
+                "source_anchor": [
+                  1304,
+                  433
+                ],
+                "rgba_sha256": "f728246ebe2b742a360f9ac0ae8798d42836c2547ba3f016fdece1da19e7eb33"
+              },
+              {
+                "row": 6,
+                "direction": "NW",
+                "region": [
+                  1445,
+                  256,
+                  192,
+                  179
+                ],
+                "margin": [
+                  249,
+                  255,
+                  496,
+                  509
+                ],
+                "source_anchor": [
+                  1540,
+                  431
+                ],
+                "rgba_sha256": "1f9d1c03c1692513df6fc3570b45fd3dee8d583e859050e5dcf5d233c41a4c9c"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "hit",
+          "animation": "hit_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1231,
+                  477,
+                  157,
+                  197
+                ],
+                "margin": [
+                  271,
+                  237,
+                  531,
+                  491
+                ],
+                "source_anchor": [
+                  1304,
+                  670
+                ],
+                "rgba_sha256": "c6beb280a1238ed64f18164aea90032fa82d4763b3625c900bfc28ca399e094e"
+              },
+              {
+                "row": 6,
+                "direction": "N",
+                "region": [
+                  1460,
+                  477,
+                  158,
+                  196
+                ],
+                "margin": [
+                  264,
+                  238,
+                  530,
+                  492
+                ],
+                "source_anchor": [
+                  1540,
+                  669
+                ],
+                "rgba_sha256": "382c66328b8618d7c1c6908eb57ab65075afef609c03ba2b284c7ce58ba7065f"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "hit",
+          "animation": "hit_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_combat_back4.png",
+          "source_sha256": "e47af2f454bd3ae95c4fb78d17b49822bc2230196ff43617a447e739519b5270",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_combat_back4.png",
+          "geometry": {
+            "image_size": [
+              1659,
+              948
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  1196,
+                  716,
+                  190,
+                  181
+                ],
+                "margin": [
+                  236,
+                  253,
+                  498,
+                  507
+                ],
+                "source_anchor": [
+                  1304,
+                  893
+                ],
+                "rgba_sha256": "96d70a47f88a69720d945b151a5bc45a0c4d2366ecfa70b5aee029e5cf86bfa9"
+              },
+              {
+                "row": 6,
+                "direction": "NE",
+                "region": [
+                  1435,
+                  720,
+                  197,
+                  173
+                ],
+                "margin": [
+                  239,
+                  261,
+                  491,
+                  515
+                ],
+                "source_anchor": [
+                  1540,
+                  889
+                ],
+                "rgba_sha256": "df2f0ae5736fce9b2a79068dbeffca09cdb4fadeaaeecacade59a1d48cb8558a"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 172.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "death",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch02-salamander/raw/salamander_death_s3.png",
+          "source_sha256": "7d1686e0dd7913700ae5d85a96225a22195c8ab7b82cbff9efa0cab98d83d706",
+          "texture": "assets/actors/eight_direction/monster_staging/salamander/r001/salamander_death_s3.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  253,
+                  52,
+                  548,
+                  445
+                ],
+                "margin": [
+                  606,
+                  659,
+                  1212,
+                  1315
+                ],
+                "source_anchor": [
+                  527,
+                  493
+                ],
+                "rgba_sha256": "87007bba6e84849f430ad6afe12b6699a8a2d0193fe9f06dc5004fa2ec143d45"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  186,
+                  694,
+                  658,
+                  303
+                ],
+                "margin": [
+                  539,
+                  801,
+                  1102,
+                  1457
+                ],
+                "source_anchor": [
+                  527,
+                  993
+                ],
+                "rgba_sha256": "cc94a540f260ec14f4c260eb524ab60e48247d936b1ccb7b2a69c789005d082e"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  143,
+                  1177,
+                  732,
+                  287
+                ],
+                "margin": [
+                  496,
+                  817,
+                  1028,
+                  1473
+                ],
+                "source_anchor": [
+                  527,
+                  1460
+                ],
+                "rgba_sha256": "93075066ec2d756f115a9e4fabfd1d69353765eb8e2a4f826f1befc46a72e87c"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 439.0,
+            "canvas_size": [
+              1760,
+              1760
+            ],
+            "foot": [
+              880,
+              1100
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "preservation": "Previous approved art, shared proxies, WALK and multiview DEATH remain byte-identical."
+}

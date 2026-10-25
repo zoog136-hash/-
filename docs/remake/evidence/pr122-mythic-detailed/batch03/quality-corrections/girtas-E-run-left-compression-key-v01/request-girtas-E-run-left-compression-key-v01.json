@@ -1,0 +1,87 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_run_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 1,
+  "intended_anatomical_support": "LEFT_far_loaded",
+  "references": [
+    "/workspace/scratch/girtas-E-run-left-landing-key-v02/girtas-E-run-left-landing-key-v02.png",
+    "/workspace/scratch/girtas-E-run-left-compression-key-v01/E-run-LEFT-load-material-knee-bend-guide.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-run-left-landing-key-v02/girtas-E-run-left-landing-key-v02.png": "22efb7bf18a10018e0b053a4ddb5cb14786b83d68c2cac554dd9d9438c87d35d",
+    "/workspace/scratch/girtas-E-run-left-compression-key-v01/E-run-LEFT-load-material-knee-bend-guide.png": "8f6e324f8f792a0d059ed31f565b03b4769fcbb551cbe43c47145023ca032273",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Author genuinely missing LEFT loaded run compression from independently valid opposite LEFT forward landing22ef; fixed forward support boot plus material pelvis drop and actual bent knee, never prior terminal-push-off source.",
+  "prompt": "EDIT the independently valid FAR LEFT landing character in reference1 into exactly ONE genuine GIRTAS E RUN phase1 FAR LEFT COMPRESSION/LOAD, transparent full-body original-quality RGBA. Reference2 is the MATERIAL knee-change guide, not final art. Keep same FAR LEFT planted forward heel/toe boot and its higher projected support plane; LOWER pelvis/core about110 native pixels while bending the anatomical FAR LEFT support knee visibly FORWARD toward RIGHT. Blue LEFT hip900,720 -> knee1120,920 -> ankle1018,1138 -> flat heel/toe965..1145 at1208. Shin must angle BACK down LEFT from forward knee to ankle, actual knee flex about70-80 degrees, not straight locked landing. Keep the LEFT boot planted IN FRONT of the pelvis, never sweep it behind into heel-up terminal push-off. Show actual coherent thigh/kneecap/shin/ankle through opened original long-robe panels, not a drawn crease implying a nonexistent joint. Near anatomical RIGHT knee continues high drive, magenta hip818,725 -> knee1015,765 -> ankle820,940 -> complete raised boot920,990; entire RIGHT boot clear of both guide support projections, no second support. Exactly two legs. Head/shoulders/chest/waist lower TOGETHER into compressed body, preserving original rigid skull/helmet/shoulder/hip SIZES and camera, no head scaling or torso stretching. Same E face/nose/pelvis/travel RIGHT with established slight chest visibility, not SE or rear. Permanent anatomical RIGHT/near weapon hand retains original LONG SINUOUS gold-orange blade streaming LEFT; LEFT hand empty, no hand swap. Pale visible human face, long pale hair, thin HARD GOLD radial rays, ornate black-gold armor, LONG DARK gold-trim ROBE/SKIRT split for boots; no redmask/flamefeatherfan/pants/shortbroadblade. Complete all body/weapon tip/rays/hair/robe with alpha gutters>=45px on native canvas; move whole figure if needed to fit, do not crop/shorten or alter relative body proportions. No text, skeleton, diagram, floor, shadow, haze, extra figure. The decisive new pose is genuinely bent FAR LEFT loaded support and high NEAR RIGHT drive, preserving correct opposite support to RIGHT compression.",
+  "requested_at": "2026-10-19T14:33:32.514269+00:00",
+  "user_authorization": "Private production images authorized, main-chat images banned; one distinct missing compression request.",
+  "pose_guide_proof": {
+    "purpose": "PRODUCTION_REFERENCE_ONLY_NOT_GAME_ART",
+    "source": "/workspace/scratch/girtas-E-run-left-landing-key-v02/girtas-E-run-left-landing-key-v02.png",
+    "source_sha256": "22efb7bf18a10018e0b053a4ddb5cb14786b83d68c2cac554dd9d9438c87d35d",
+    "source_independent_review": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-left-key-v02-independent-review.json",
+    "source_independent_review_sha256": "442c8858f47bd55652ee033a68546d0051c841d8d0bba558ec04d1872cd450c2",
+    "guide_sha256": "8f6e324f8f792a0d059ed31f565b03b4769fcbb551cbe43c47145023ca032273",
+    "target_joint_coordinates": {
+      "old_far_LEFT_hip": [
+        900,
+        610
+      ],
+      "far_LEFT_loaded_hip": [
+        900,
+        720
+      ],
+      "LEFT_knee": [
+        1120,
+        920
+      ],
+      "LEFT_ankle": [
+        1018,
+        1138
+      ],
+      "LEFT_heelsole": [
+        965,
+        1208
+      ],
+      "LEFT_toesole": [
+        1145,
+        1208
+      ],
+      "near_RIGHT_hip": [
+        818,
+        725
+      ],
+      "RIGHT_drive_knee": [
+        1015,
+        765
+      ],
+      "RIGHT_ankle": [
+        820,
+        940
+      ],
+      "RIGHT_boottoe": [
+        920,
+        990
+      ]
+    },
+    "source_joint_estimates_uncertainty_px": 30,
+    "source_sole_estimate_uncertainty_px": 12,
+    "guide_not_output_evidence": true
+  },
+  "pose_guide_proof_sha256": "d6b32e49e8dd2740f7c10ed8c6547ea0ef58c01448940f2ae84e7306b4a01d1c",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false
+}

@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "E",
+  "role": "idle",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "prompt": "Produce a faithful native SIX-PHASE EAST IDLE animation sheet for the UNIQUE boss Girtas. The first exact tiny original portrait is the absolute identity authority. The second faithful enlarged draft provides readable versions of the same original face/materials/equipment. Preserve this character, do not redesign it and do not use any other identity.\n\nOutput1024x1536 transparent sprite sheet, exactly2columns x3rows of512cells, row-major phases0..5. Exactly one complete full-body boss per cell, all facing EAST/screenRIGHT in the SAME side-on elevated game camera. Same anatomical model, proportions, camera and body pixel scale in every cell. Stable E profile, no turn toward camera/front/back/west. The same anatomicalRIGHT near-camera hand holds the original long thin sinuous glowing weapon low and controlled, its whole curved tip visible, while the far free left hand rests naturally near waist. No hand swap and no new weapon.\n\nORIGINAL IDENTITY CONTRACT: visible pale human face with long pale silver/white hair; original tall dark/gold head ornaments; long THIN hard GOLD RADIAL SPINES physically attached behind shoulder/back, not thick wings, feathers or floating light rays. Keep original long DARK skirt/coat silhouette with gold edge trim, original gold/dark armor and dark boots. Preserve the original LONG THIN SINUOUS orange/gold weapon, same grip, length, curve sequence and pointed tip; no short broad sword. NO closed redV mask, NO orange flame-feather fan, NO muscular demon or segmented fitted-leg redesign. Conservative hidden-side details, same count/attachment of existing equipment. Fine armor opaque.\n\nActual IDLE means planted feet, a live articulated breathing cycle and restrained secondary hair/cloth response, never walking, attacking or rigid sprite translation. Keep both boot soles, ankle positions and pelvis anchor IDENTICAL in all6. Do not move/resize/rotate the entire character and do not change tint. Six distinct states of the same breathing cycle:0 relaxed baseline,1 inhale begins with a small local ribcage expansion and slight shoulder/elbow response,2 inhale peaks with chest lifted subtly and shoulder armor following real joints,3 exhale begins as ribs/shoulders relax,4 exhale completes with slight hand/forearm and cloth/hair settling,5 return toward exact baseline0 for a clean loop. Local chest/shoulder/arm articulation should be visible at sprite scale but restrained and anatomically connected. Existing long hair and robe hem move in small physically coherent lags across the cycle, returning near baseline; rigid gold back spines remain attached and keep their original shape. Weapon follows the breathing wrist by only a small coherent angle; never changes its contour/length/hand, never attacks. No stomp, raised knee, floating foot or repeated walk pose.\n\nFull original body and ALL thin spines, head ornaments, boots, hair, robe and ENTIRE weapon visible in every cell. Frame at same conservative scale inside local x45..467,y45..467 with generous transparent gutters, boots baseline aroundy440. Do not overlap neighboring cells or crop outer spikes/blade tips. Gold/dark surfaces high-quality opaque material with alpha0 outside physical silhouette and between thin connected spines. No floor, shadow, background, fog, bloom cloud, detached sparkles, grid, labels, text, border or extra characters. Render a genuine faithful game idle cycle, not six frozen pose copies and not poster art.",
+  "transparent_background": true,
+  "expected_poses": 6,
+  "phase_contract": [
+    "relaxed_baseline",
+    "inhale_begin",
+    "inhale_peak",
+    "exhale_begin",
+    "exhale_complete_secondary_settle",
+    "return_to_baseline"
+  ],
+  "corrective_reason": "Replace prior unapproved generic redmask/flamefeather/shortblade identity with exact original pale-face/thin-radial-spine/long-skirt/sinuous-weapon identity and real locally articulated idle breathing; no approval inflation.",
+  "user_authorization": "Production imagegen allowed; one faithful E idle attempt, private previews only, no repo/index edits or chat images.",
+  "repo_mutations": false,
+  "canonical_uncertainty": "Clipped original equipment endpoints/hidden-side detail are conservatively inferred and documented, not a reason to stop source production.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Exact original/canonical major identity retained: pale visible face and long pale hair, tall gold/black head ornaments, narrow rigid gold radial spikes, long dark goldtrim skirt, long thin sinuous orange/gold weapon in anatomical right/near hand. No redmask/flamefeather/shortblade redesign.",
+      "All6 consistently lookE/right at matching camera and maintain model/equipment scale and silhouette. Entire body, every spike, boots and weapon tip visibly preserved.",
+      "Both boots remain planted in matching staggered stance; no walk step, raised knee or attack. Pelvis stays stable while subtle chest/shoulder/head posture follows inhale/peak/exhale/settle cycle.",
+      "Local hair strands, robe hem, right wrist and shoulder/forearm shape respond across breathing phases rather than a simple global translation/tint. Phase2 reads as the lifted inhale state and later phases settle toward0.",
+      "Weapon remains the same long curved contour and low grip, with small coherent wrist response, not a material/shape replacement. Rigid spike attachments remain stable.",
+      "Strict original analyzer rows6/phase_grid2/canvas1024/reference_rows0/3 passes with6 distinct pixel frames."
+    ],
+    "visual_limitations": [
+      "Static contacts support source-art quality only; runtime playback must still validate subtle breathing readability, exact foot lock and seam5->0.",
+      "Exact original108x132 fine engraving, hidden-side detail and clipped outer ray/weapon endpoints remain conservatively inferred documented uncertainty.",
+      "This source PASS is not actor completion, approval count change or Main/game integration approval. Existing unapproved source revisions remain preserved."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+    "raw_bytes": 2507857,
+    "request_sha256": "ba9286883e9e083d7505f0d04df1645cfa99fabda116c7fa5aefe78150e4a5bb",
+    "review_sha256": "564b772476020739685da9b2f8699fddb8d9ca9ea2e3ee454b0335fb09d9dbc7"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v02.png",
+  "output_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+  "output_bytes": 2507857,
+  "original_generated_file": "/workspace/scratch/girtas-E-idle-repair/girtas-E-idle-v02.png"
+}

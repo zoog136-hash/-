@@ -1,0 +1,41 @@
+{
+  "schema": "PR122_SW_RUN_OPPOSITE_LANDING_GUIDE_ONLY_QC_V1",
+  "utc": "2026-10-19T15:52:36.128895+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "GUIDE_USABLE_FOR_TWO_NEW_CONTACT_SOURCES",
+  "scope": "3D guide-only camera/constant bones/opposite heel-landing/weapon direction; no source-art or actor approval.",
+  "actor_approval_increment": 0,
+  "authority_pin": {
+    "path": "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/constantbone-joint-and-ground-authority.json",
+    "sha256": "7acd0d93a614e20264c50811847289602bd61ac4a286b10b3d80eb410679add4"
+  },
+  "render_pins": [
+    {
+      "path": "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing0-fixedbone.png",
+      "sha256": "2dfe43a9001e2a5d489a2139dd6a534b70285da19ab6b8b39da79d2c46d1e6e5"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing3-fixedbone.png",
+      "sha256": "69796407b4046532123b3bf291a76ae9b35be0597cf28fd7e674f3ffd4ae90c5"
+    }
+  ],
+  "measured_max_bone_length_error": 1.6653345369377348e-16,
+  "findings": [
+    "Correct SW front/down-left camera, nearLEFT blue empty hand and farRIGHT orange permanent weapon hand.",
+    "LEFT0 and RIGHT3 are true opposite lead/support chains with forward ankle and toe-up heel contact; other chain is folded rear with authored0.27 world boot clearance.",
+    "FarRIGHT low wrist/weapon is oriented forward/down-left as selected SWidentity requires.",
+    "Guide0 farRIGHT folded recovery foot is tucked behind nearLEFT leg in projection; actual art MUST reveal a complete separate recovery boot through cloth/armor framing. An unreadable or fully hidden generated boot will HOLD."
+  ],
+  "limitations": [
+    "Guide .52/.52 and .32/.27 constants are not certified exact Girtas physical proportions.",
+    "Actual source0/3 human head, pauldron, belt/hip-to-knee/shin/boot ratios and full endpoint visibility require fresh independent art inspection.",
+    "Whole6/physical roots/AIR/actualcompiledTRES/Godot/actor remain pending."
+  ],
+  "reference_legless_proof_pin": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-selected-reference-legless-crops-independent-QC-v01.json",
+    "sha256": "64504bf296863f951b3db9afbf89a5fa320dee146e976707678581fb357dc72c"
+  },
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "78e1324a0d952f7cbe670af99662c99341e34013b31e69ddc84926f535424561",
+  "repository_mutations": false
+}

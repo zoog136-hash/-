@@ -1,0 +1,39 @@
+{
+  "schema": "pr122-native-source-authoring-request-v1",
+  "status": "REQUESTED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-contacts01",
+  "source_batch": "batch03",
+  "expected_poses": 2,
+  "game_phases": [
+    0,
+    3
+  ],
+  "newly_authored_poses": 2,
+  "operation": "AUTHOR_NEW_OPPOSITE_WALK_CONTACT_KEYS",
+  "corrective_reason": "Current Wwalk retains wrong original Girtas redesign and lacks faithful strict alternating-foot W walk. Author dedicated opposite LEFT/RIGHT contact keys, preserving all old raws/HOLDs.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-repair-v02/reference-current-W-idle0-native1024.png",
+    "/workspace/scratch/girtas-W-walk-repair-v02/reference-current-W-attack0-native1024.png",
+    "/workspace/scratch/girtas-W-walk-contacts-v02/reference-W-contact0-3-leg-guide-v02.png"
+  ],
+  "reference_sha256": [
+    "a05e76923d2ea196e752eb63fc12e909547b34fab0f2a1defc91e18f47db0f36",
+    "651ef098297cd745ed3483ebbce77725d8f2ead4406be4962c9008067fca505e",
+    "956135e884abcc97b3c41a17d086301847adeabb9eb855f56442d49bcbb4dd9a"
+  ],
+  "reference_roles": [
+    "PRIMARY current selected faithful W idle0 exactRGBA native1024",
+    "EQUIPMENT exact current selected faithful W attack guard0",
+    "ANATOMICAL DEPTH/SUPPORT GUIDE ONLY; no guide marks/colors in output"
+  ],
+  "prompt": "Create TWO NEW precise game animation key poses of the SAME existing GIRTAS character from the first two character references. This is a faithful new WALK animation, NOT a redesign. First character reference is PRIMARY for exact WEST/LEFT side camera, anatomy, pale visible profile face, long pale silver hair, hard narrow gold radial back spines, original dark long gold-trimmed split robe, boots and crown. Second character reference confirms original equipment and continuous RIGHT weapon hand. The third image is ONLY an anatomical leg support/depth guide for the two walk contacts; NEVER render its lines, labels or colors.\n\nOutput a single transparent RGBA landscape atlas, 1536x1024, exactly TWO figures side by side in TWO 768x1024 cells. Left cell is game phase0 LEFT-foot front contact. Right cell is game phase3 RIGHT-foot front contact. Same body size and camera in both. Keep each WHOLE complete figure including every needle-thin hard gold spine, all pale hair/robe/boots and the entire long sinuous weapon inside its own cell with at least60 transparent pixels on every side and a broad entirely transparent gutter. No figure may touch/overlap the other. No background, floor, cast shadow, lettering, grid, colored markers, motion smear, trails, detached sparkles or surrounding glow bridges. Sharp faithful painted game art with the original fine gold details.\n\nABSOLUTE MODEL/COMPASS RULES: both are true W LEFT-facing side views, nose/profile/head/chest/knees/boot axes face screen LEFT, never SW frontal or NW rear. Keep the same pale profile face, visible silver-white long hair, dark ankle-length GOLD-TRIMMED ROBE PANELS (do not replace with segmented pants), thin HARD straight GOLD RADIAL SPINES projecting behind to image RIGHT (not feathers, not broad flame wings), pointed dark/gold boots. Exactly ONE head, TWO arms, TWO legs. ONE original LONG SINUOUS GOLD/ORANGE BLADE, long wavering ribbon-like solid blade of the reference, held permanently in anatomical RIGHT hand, far/upstage side of this W view. Keep a coherent attached right shoulder-upperarm-elbow-forearm-wrist-to-grip chain with natural torso occlusion only. Anatomical LEFT is the near/downstage arm and stays visibly EMPTY, relaxed gentle walk counter-swing. Never switch the weapon, duplicate an arm/blade, shorten the blade or give a broad straight sword.\n\nWALK, NOT RUN: body mostly upright with only gentle walk lean; NO airborne frame or jumping, no high knee sprint, no combat lunge. Preserve a real heel/toe support chain with one front support heel and opposite rear support toe. Robe folds and hem reveal the relevant two boots without turning into trousers. Modest weight transfer, natural gentle hair/robe lag, rigid gold spines remain attached and hard.\n\nANATOMICAL LEG OWNERSHIP IS CRITICAL. In this LEFT-facing W camera, anatomical LEFT leg is the NEAR leg projected on a slightly LOWER screen floor-depth lane. Anatomical RIGHT leg is FAR leg projected on a slightly HIGHER screen floor-depth lane. Both legs always point toward image LEFT. Do not merely copy the same leg arrangement into both poses and do not mirror the character.\n\nLEFT CELL / game0: LEFT NEAR leg extends FORWARD toward screen LEFT, its FRONT HEEL rests on its lower-depth floor, toes ahead slightly lifted for genuine heel strike. RIGHT FAR leg extends BEHIND toward screen RIGHT, rear TOE rests on upper-depth floor and its HEEL is lifted. Both legs connect naturally to their own hips and knees through the split robe. This is LEFT support, RIGHT trailing toe-off.\n\nRIGHT CELL / game3: SWAP actual joint/support ownership. RIGHT FAR leg now extends FORWARD toward screen LEFT on the UPPER depth lane; RIGHT FRONT HEEL grounded, toes ahead slightly raised. LEFT NEAR leg extends BEHIND toward screen RIGHT on the LOWER depth lane; LEFT REAR TOE grounded with heel up. This is RIGHT support, LEFT trailing toe-off. LEFT and RIGHT boot floor-depth relationship must remain unchanged: near LEFT lower, far RIGHT higher. Third reference shows exactly this exchange. Keep the same upper-body camera, same RIGHT-hand sinuous blade and EMPTY LEFT arm; only articulate the real hips/knees/ankles, body weight and robe for the two opposite walk contact phases.\n\nThese two are complementary contact keys0 and3 only; do not add extra figures or invent the other walk phases. Preserve the source character's unique quality, equipment, original gold/silver/black color design, exact hard radial spines and long robe.",
+  "transparent_background": true,
+  "attempt_policy": "One generation then strict anatomy/actual support ownership review. No identical retries or fake full-cycle completion.",
+  "actor_approval": false,
+  "image_chat_attachment": false,
+  "user_authorization": "Production image tools privately allowed; never attach images/binary to main chat. Root-only Git/data."
+}

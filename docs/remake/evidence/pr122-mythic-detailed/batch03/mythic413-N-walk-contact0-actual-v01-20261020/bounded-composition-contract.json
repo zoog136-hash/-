@@ -1,0 +1,19 @@
+{
+  "schema": "exact-bounded-lowerbody-composition-contract-v1",
+  "status": "BEFORE_SERVICE",
+  "native_source_sha256": "51c8169f86f7b79839fba9b480d2a2a29c06f9dbd27068954f47684f87028b55",
+  "editable_rectangle": [
+    204,
+    271,
+    105,
+    229
+  ],
+  "editable_pixels": 23267,
+  "immutable_pixels": 238877,
+  "immutable_rgba_bytes_sha256": "623b0ef78b1172f2940e5e83901732d3a72a270a8af4001c23a8b545696f93c3",
+  "mask_sha256": "51bf49b163a8681fe93c0e23d37d8326f59244eb5a35c6ad99fe553a1bcaf62b",
+  "upper_y0_to270": "all exact RGBA immutable",
+  "right_staff_and_arms": "outside editable mask, exact RGBA immutable",
+  "coat_protection": "original bluecoat foreground in bounded area +5pixel surrounding source patch immutable",
+  "composition": "copy original512; replace exactRGBA only where binaryeditmask255; extract servicecentral512 without transform"
+}

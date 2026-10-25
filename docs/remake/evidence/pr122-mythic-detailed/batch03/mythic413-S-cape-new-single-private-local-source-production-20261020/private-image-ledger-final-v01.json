@@ -1,0 +1,73 @@
+{
+  "schema": "PRIVATE_S_SINGLE_LOCAL_RETOUCH_IMAGE_LEDGER_V01",
+  "agent": "/root/mythic413_s_cape_private_local_production_fresh_v01",
+  "prior_cumulative_bytes": 0,
+  "entries": [
+    {
+      "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/original-own-S-cape-and-foreground-staff-native250-crop-v01.png",
+      "sha256": "aecd1a98518feb19ba3eb9743149b60845e1e1cd50b8e3d2a25cfb20cd63036f",
+      "bytes": 80475,
+      "actual_service_input": true,
+      "private_view": true
+    },
+    {
+      "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-S-cape-native250-mask-v01.png",
+      "sha256": "d44864f92ab65135353ec7900bbb001a22286197920875ca4f095dce83595666",
+      "bytes": 1063,
+      "actual_service_input": true,
+      "private_view": true
+    },
+    {
+      "path": "/workspace/scratch/mythic413-S-cape-private-local-production-fresh-20261020-v01/service-S-cape-local-retouch-raw-r001-untouched.png",
+      "sha256": "9311558dd606731d908d5b21627b54ed55254bfc737ac222e59e6680a12ab6ad",
+      "bytes": 1206006,
+      "actual_generated_raw_counted_even_unviewed": true
+    },
+    {
+      "path": "/workspace/scratch/mythic413-S-cape-private-local-production-fresh-20261020-v01/private-S-returned-cape-sole-preview-v01.jpg",
+      "sha256": "f62f08567ca21240771d595c30135788fc39d262497d41e7ca31cfa0eb3f6c2c",
+      "bytes": 32936,
+      "private_view": true,
+      "pre_view_stat_pass": true,
+      "max_preview_bytes": 150000
+    },
+    {
+      "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-high-quality-native-background-AA-clean-v01.png",
+      "sha256": "dbfbca5fd54a9f5d4f704de59c7d61e586f2d9c410f48f07f233b14096a98e25",
+      "bytes": 919345,
+      "actual_service_input": false,
+      "private_view": false,
+      "metadata_or_pixel_validation_read_only": true,
+      "conservatively_counted_local_image_input": true
+    },
+    {
+      "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-S-cape-full-native-mask-v01.png",
+      "sha256": "921fcba5fabfb5861de9778d3c31268145742b295fa757f283c0f2131d34fcdc",
+      "bytes": 2715,
+      "actual_service_input": false,
+      "private_view": false,
+      "metadata_or_pixel_validation_read_only": true,
+      "conservatively_counted_local_image_input": true
+    },
+    {
+      "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/S-cape-native-foreground-pole-local-retouch-handoff-v01/protected-original-S-cape-outside-local-replacement-mask-native250-v01.png",
+      "sha256": "7a3af21375e40654f204693190a0c7527d57a11ccaa47a88524407b8cafc07c8",
+      "bytes": 64789,
+      "actual_service_input": false,
+      "private_view": false,
+      "metadata_or_pixel_validation_read_only": true,
+      "conservatively_counted_local_image_input": true
+    }
+  ],
+  "cumulative_bytes": 2307329,
+  "working_limit": 6000000,
+  "hard_limit": 7000000,
+  "all_actual_inputs_and_raw_returned_counted_even_unviewed": true,
+  "image_or_base64_forwarded_to_parent": false,
+  "service_calls": 1,
+  "retries": 0,
+  "source_input_view_count": 2,
+  "returned_preview_view_count": 1,
+  "additional_service_calls_authorized": 0,
+  "all_image_inputs_including_readonly_validation_counted_conservatively": true
+}

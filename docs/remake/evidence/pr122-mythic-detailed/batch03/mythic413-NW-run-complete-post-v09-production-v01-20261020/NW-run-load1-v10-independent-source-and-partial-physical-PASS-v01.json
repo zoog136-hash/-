@@ -1,0 +1,123 @@
+{
+  "schema": "independent-private-actual-NW-run-load1-v10-source-and-partial-physical-gate-v1",
+  "status": "PASS_STATIC_SOURCE_AND_OBSERVED_FOOTROLL_WITH_MODEL_COMPATIBLE_PARTIAL_PHYSICAL",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v10/thunder_female-NW-run-load1-actual-rig-v10.png",
+    "sha256": "cd86f447f8126f018c7fc7a68d6dc803d9d9e15738dfbf932248760bfc39ba5d",
+    "bytes": 785643
+  },
+  "source0_sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+  "supersedes_specific_physical_HOLD_sha256": "e97babdf39eb0f080ff0d41f73eb180bed3d8906b77ce1e2ee2f61a07b5506ae",
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "common_unpadded_root": [
+    669,
+    1267.95
+  ],
+  "actual_art_findings": [
+    "Whole actual shoe visibly rolls relative to planted heel; CONTACT-to-LOAD forefoot articulation now differs from the prior translation-only pair.",
+    "Calf/tarsal actual leather surface follows rolled shoe with continuous ankle silhouette; no prior missing wedge or FAR stub.",
+    "Original costume, RIGHT recovery and body remain coherent; natural toe-out retained."
+  ],
+  "independent_actual_texture_check": {
+    "source_complete_shoe": {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/clean-actual-stiletto-modules-v01/LEFT-actual-complete-stiletto-native.png",
+      "sha256": "c4f8a1e010051d4b5fc18d420cf75b7f08c4d7c5cae3df64533144654fafca73"
+    },
+    "actual_rolled_layer": {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v10/actual-complete-Lshoe-rigid3D-heel-pinned-rolled.png",
+      "sha256": "76825f0816c7d33d1e22bf6eb138e1dc96c8f4d6aa3212dbee1cb58f0abcd6dd"
+    },
+    "independently_recomputed_BICUBIC_affine_vs_actual_layer_changed_pixels": 0,
+    "H_F_A_projection_residual_raw_max": 0.0,
+    "actual_alpha16_structural_heelcap_bottom_bbox": [
+      716,
+      1317,
+      723,
+      1318
+    ],
+    "heelcap_extent_note": "Extremal cap edge differs from the center pivot under rotation; within finite structural marker/cap extent, not a new clock translation."
+  },
+  "finite_partial_physical": {
+    "true_structural_markers_order": [
+      "heel",
+      "forefoot sole",
+      "tarsal"
+    ],
+    "source0_raw_markers": [
+      [
+        583.5,
+        1191.0
+      ],
+      [
+        535.0,
+        1164.0
+      ],
+      [
+        564.0,
+        1075.0
+      ]
+    ],
+    "load1_raw_markers": [
+      [
+        722.6928985028028,
+        1316.2736086525224
+      ],
+      [
+        671.9532591338495,
+        1302.6732929453804
+      ],
+      [
+        672.9094395379984,
+        1202.8542974367783
+      ]
+    ],
+    "source0_forefoot_Z_declared": 14,
+    "load1_forefoot_Z_declared": -6.661338147750939e-16,
+    "same_heel_clock_delta_raw": [
+      139.19289850280273,
+      125.27360865252246
+    ],
+    "rigid3D_rotation_degrees": 17.086910688806995,
+    "true_heel_forefoot_length_native_before_after": [
+      47.64790131789645,
+      47.64790131789639
+    ],
+    "rotation_orthogonality_max_error": 3.615197858476358e-18,
+    "fixed_existing_hip_XYZ": [
+      552.6,
+      1333.4292914636494,
+      571.4292914636495
+    ],
+    "new_actual_knee_raw": [
+      582.7881766604897,
+      1004.7318237199474
+    ],
+    "fixed_bone_length_native_recomputed": [
+      250.0,
+      250.00000000000009
+    ],
+    "scope": "Visible footroll, actual texture placement, heel clock and one consistent fixed-bone natural-toeout construction; the selected Z depths are declared authoring choices, not uniquely image-recovered anatomy.",
+    "full_sole_limit": "Structural heel and actual forefoot patch are assessed with marker uncertainty. Full 3D sole surface and all support vertices are not independently recovered; no canonical .9 slope is imposed on natural shoe yaw or gold ornaments."
+  },
+  "author_contract": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/actual-load1-rigid3D-heel-pinned-footroll-contract-v01.json",
+    "sha256": "dae173e85e054de9c5a508ac6549a7381585c99273b79b77d30cf3d1d0bcb07a"
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-load1-v10-frozen.json",
+    "sha256": "129d95c2953fe9b4a9d48f9b81af46d6ff28a64485cdf5ec5d1ebc4bbc34735e",
+    "total_image_bytes": 5494702
+  },
+  "actual_static_source_phase_approved": true,
+  "observed_heelclock_and_footroll_approved": true,
+  "declared_model_arithmetic_approved": true,
+  "full_pair_physical_approved": false,
+  "both_feet_air_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

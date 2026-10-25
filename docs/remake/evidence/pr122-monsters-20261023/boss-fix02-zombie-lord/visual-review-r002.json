@@ -1,0 +1,107 @@
+{
+  "actor": "monster:죽음의 좀비 로드",
+  "kind": "boss",
+  "quality_tier": "mythic_transform",
+  "status": "HOLD",
+  "approval_preserved": true,
+  "new_approval": false,
+  "approval_mutated": false,
+  "reference_pin": {
+    "path": "assets/monsters/original/atlas_3.png",
+    "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+    "region": [
+      656,
+      299,
+      328,
+      300
+    ],
+    "region_rgba_sha256": "b8a6658e5d03cd4bf3be640e104107660a93c7e386188a58509db581fd6b3b6e",
+    "basis": "monster_world_catalog.visual atlas/cell + art_atlases exact region",
+    "scope": "Existing project art, not verified external original game art"
+  },
+  "reference_scope": "Exact existing-project atlas crop; external original-game authenticity not established",
+  "actual_examined_views": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "actual_examined_roles": [
+    "idle",
+    "run",
+    "attack",
+    "hit",
+    "death_S"
+  ],
+  "identity_observations": [
+    "Great exposed distended belly and broad torso/oversized bare feet restored versus thin legacy proxy.",
+    "Heavy attached chains, rusted shoulder/back spikes, ragged skirt and gold waist plate persist across the viewed poses.",
+    "Exact project reference has empty fists; DB fallback weapon=axe is not visibly supported, so no axe was invented."
+  ],
+  "role_observations": [
+    "Idle breathing/shoulder settle differs from run.",
+    "Four attack keyframes show windup, extended-fist candidate contact, lowered follow-through and elbow recovery.",
+    "Hit torso/head/belly recoil differs from idle and recovers over a second source frame.",
+    "S death progresses buckle/drop/side-fall to an inert horizontal corpse, retaining attached complete limbs/chains."
+  ],
+  "strict_source_geometry": "PASS for selected 116 poses: true RGBA, nonempty, complete connected-body ownership, bounding regions, no clipped image boundary, no repeated visible pose hashes.",
+  "math_anchor_vs_actual_support": "Godot virtual bottom-anchor/region invariants passed. Those invariants do not prove anatomical support, source-plane stability, real weight or target contact.",
+  "unseen_not_reviewed": [
+    "Actual default Main scene and gameplay target/ground contact.",
+    "Frame-interpolated belly/chain dynamics and authored impact weight in game.",
+    "External original-game design authenticity and human mythic-tier approval."
+  ],
+  "source_pixel_edits": 0,
+  "horizontal_mirror_operations": 0,
+  "duplicated_source_poses": 0,
+  "new_walk_sources": 0,
+  "existing_multidirection_death_and_walk_preserved": true,
+  "revision": "r002",
+  "candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/candidate-r002.json",
+    "bytes": 96375,
+    "sha256": "b8369dc32069356b65238fde87b20995115ae4eacec8da912b5da9c8c8b77550"
+  },
+  "actual_examined_pose_count": 116,
+  "new_examined_source_poses": 6,
+  "reused_previously_examined_source_poses": 110,
+  "source_plane_evidence": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/qa-r002-S-run6-private.png",
+      "bytes": 465560,
+      "sha256": "c27884712741048b06682b4c8d7794db6c8d5c79ed74299fc03a24f50ffd6250"
+    }
+  ],
+  "observed_S_support_sequence": [
+    "RIGHT",
+    "RIGHT",
+    "RIGHT",
+    "LEFT",
+    "LEFT",
+    "LEFT"
+  ],
+  "source_phase_order": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "S_support_before_after": "r001 phases0/3 same screenLEFT plant -> r002 phases0/3 opposite screenLEFT/RIGHT full-sole plant, with opposite bare foot visibly airborne.",
+  "major_holds": [
+    "Only S RUN support exchange is corrected in source plane; E support-column trials remain semantically invalid.",
+    "Other r001 RUN stance repetition/occluded anatomical ownership remains unresolved.",
+    "Full in-game weight, source-plane pivot stability and target contact remain unreviewed."
+  ],
+  "runtime_switch_recommendation": "HOLD: dedicated comparison candidate; root review required for any runtime change, no new approval.",
+  "godot_playback": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/godot-playback-r002.json",
+    "bytes": 560,
+    "sha256": "8dcfa9adb8bcf3ffead07366f58d785cf6123d05c51592fb67bf9881190acb35"
+  }
+}

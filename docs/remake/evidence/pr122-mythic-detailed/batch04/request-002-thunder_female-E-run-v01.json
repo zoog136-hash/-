@@ -1,0 +1,41 @@
+{
+  "key": "transform:413",
+  "name": "신화-뇌신(여)",
+  "grade": "신화",
+  "direction": "E",
+  "role": "run",
+  "version": "v01",
+  "source_stem": "thunder_female",
+  "source_batch": "batch04",
+  "planned_output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-run-v01.png",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png"
+  ],
+  "prompt": "Author SIX independently drawn high-detail isometric RPG RUN sprites of EXACTLY 신화-뇌신(여) (신화) from the attached ORIGINAL PORTRAIT. Preserve the precise face, hair, actual clothing/armor, colors, body proportions, equipment and exact existing weapon design and anatomical weapon hand. The portrait determines whether any item or anatomy exists: do not invent wings, horns, a helmet, demon anatomy, dark armor, or a different weapon. Preserve identity and detailed craftsmanship throughout all six poses.\n\nTechnical sprite atlas: 1024x1536 pixels, EXACTLY TWO COLUMNS and THREE ROWS, six512x512 cells, temporal order left-to-right then down. ONE whole character in each cell. Keep every complete silhouette, including all actual equipment tips, inside its central320x320 area; at least96pixels of empty transparent gutter on every cell edge. More than70percent of the sheet remains empty. No pair of character bounding rectangles overlaps. Use the SAME head and torso scale in every phase and direction; articulate or re-angle the existing equipment, never shrink an individual pose, omit a part, or crop tips to fit.\n\nAll SIX figures face EAST, screen right; the right-facing side view, with the same elevated orthographic isometric camera and local light. Head, torso, hips, toes, and equipment all agree with that heading. Rear views show the actual back surfaces; do not turn a rear-facing head toward the viewer. Render the true new perspective and occlusion, with anatomically consistent handedness; do not mirror another direction. Author SIX dedicated RUN phases: 0 LEFT forefoot lands; 1 left compression with right knee driving; 2 airborne flight after left push-off; 3 RIGHT forefoot lands; 4 right compression with left knee driving; 5 airborne flight after right push-off. BOTH feet must visibly clear the ground in phases2 and5 only. Opposite support feet visibly alternate in0 and3. Stronger knee drive, longer stride, deeper compression, faster arm counter-swing, and more forward lean than walk, with coordinated torso and equipment response. Draw new sprint articulation, never reuse or accelerate the walk poses.\n\nAll six poses must be independently drawn, with visible limb and joint changes; never translate, rotate, recolor, mirror, or repeat one pose. Preserve the same physical character and rigid equipment rather than changing the model between frames. Crisp hard-edged cutout sprites, rich material shading INSIDE the body. All body and dark materials fully opaque; alpha0 everywhere outside the exact silhouette, antialiasing only1-2pixels at its edge. No shadows, floor, diffuse aura, bloom, halo, lightning trails, background, scenery, labels, grids, text, extra figures, detached ornaments or spare weapons. Keep any portrait-specific inset emissive details contained in their real equipment surfaces.\n\nReference 1 is the ORIGINAL PORTRAIT and the sole design/identity authority.\nReference 2 is saved native E walk: use its identity/body scale and articulation as a guide, never copy its existing poses or facing.",
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png": "b0a2188b66d2c59d216ec2b0ddcd2d133f26b093aaaeb1e17adfdc0d232fd7c8"
+  },
+  "transparent_background": true,
+  "phase_contract": [
+    "left_forefoot_contact",
+    "left_leg_compression_right_knee_drive",
+    "airborne_flight_left_push_off",
+    "right_forefoot_contact",
+    "right_leg_compression_left_knee_drive",
+    "airborne_flight_right_push_off"
+  ],
+  "requested_poses": 6,
+  "source_of_identity": "res://assets/catalog/e82707989c7744b45919684b.png",
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "production_connected": false,
+  "detailed_completed": false,
+  "completed_added": 0,
+  "approval_rule": "Source/geometry/shared motion do not approve a detailed character; existing approved genericFlare and all production catalogs remain unchanged.",
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-run-v01.png",
+  "output_sha256": "f7a5f2fe81945a314f8e17dff332c0f403f3a7387ad3a134bf973adc558d0b42",
+  "output_bytes": 1939153,
+  "original_generated_file": "/workspace/generated_images/exec-84e106cf-4f37-48ce-9cd8-1a94c1e0589c.png"
+}

@@ -1,0 +1,2801 @@
+{
+	"boss": [],
+	"checks": 1801,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792336391.31315,
+				"expires_at": 1792336991.31315,
+				"grade": "일반",
+				"hunt_batch": "2720d9287dfc5583aecd6ba126095839",
+				"id": "ad81752c572e2b0cc6c6590079799d37",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 671,
+		"manual_pickup": true,
+		"player_hp": 1877,
+		"weapon_attempts": 28
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(90.0, 0.0)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(63.63281, 63.63281)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 90.0)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-63.63281, 63.63281)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-90.0, 0.0)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-63.63281, -63.63281)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -90.0)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(63.63281, -63.63281)",
+			"name": "에바 왕국 상어전사",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 73,
+			"facing": 0,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		},
+		{
+			"damage": 73,
+			"facing": 1,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		},
+		{
+			"damage": 73,
+			"facing": 2,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		},
+		{
+			"damage": 73,
+			"facing": 3,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		},
+		{
+			"damage": 73,
+			"facing": 4,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		},
+		{
+			"damage": 73,
+			"facing": 5,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		},
+		{
+			"damage": 73,
+			"facing": 6,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		},
+		{
+			"damage": 73,
+			"facing": 7,
+			"kind": "melee",
+			"name": "에바 왕국 상어전사"
+		}
+	],
+	"physics_ticks": 1594,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25333.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "17428f51b2e4a2f4d7c09de72fdd3d9e0add03209adc1aebffdaf417774c1976",
+			"visible_body_viewport": [
+				499.567321777344,
+				235.582107543945,
+				211.11865234375,
+				208.420211791992
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25333.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "17428f51b2e4a2f4d7c09de72fdd3d9e0add03209adc1aebffdaf417774c1976",
+			"visible_body_viewport": [
+				499.567321777344,
+				235.582107543945,
+				211.11865234375,
+				208.420211791992
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25349.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-walk-native-1.png",
+			"physics_tick": 35,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "82eb8aec90d8180fc817a051e62a12fe9d816c1f1bab7e800e5dd6b73f0bce8e",
+			"visible_body_viewport": [
+				459.64892578125,
+				206.668334960938,
+				260.199645996094,
+				237.333984375
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25366.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-walk-native-2.png",
+			"physics_tick": 53,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "cc5a94c08fe082eaf600fca4ec5cc4afd558f4277b0ef61d692c531136ff7f0a",
+			"visible_body_viewport": [
+				467.860412597656,
+				213.495193481445,
+				260.904113769531,
+				230.507125854492
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25383.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-walk-native-3.png",
+			"physics_tick": 71,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "1abc3cee4c60a575855a9ea427dc02c4bc45ad324dd05b2b0a164dbf2f86910a",
+			"visible_body_viewport": [
+				488.764831542969,
+				207.069900512695,
+				235.072082519531,
+				236.932418823242
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25422.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-attack-0.png",
+			"physics_tick": 112,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "d4c0306cc01732c9e1badb6af2e7852da8f6b1c654389f0515df24ab61ac75ac",
+			"visible_body_viewport": [
+				529.347412109375,
+				245.039627075195,
+				181.226257324219,
+				201.139389038086
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25422.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-attack-1.png",
+			"physics_tick": 130,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "2a541368aae7b3a72f2eafe72728506ab52fb22b1a929046ef07615f29cd044b",
+			"visible_body_viewport": [
+				535.446411132812,
+				301.656616210938,
+				316.274658203125,
+				144.522369384766
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25422.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-E-contact.png",
+			"physics_tick": 130,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "2a541368aae7b3a72f2eafe72728506ab52fb22b1a929046ef07615f29cd044b",
+			"visible_body_viewport": [
+				535.446411132812,
+				301.656616210938,
+				316.274658203125,
+				144.522369384766
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25373.712890625,
+				22745.712890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-walk.png",
+			"physics_tick": 143,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "bb449dad771f8b6bed4c3566e4e6084a56104b944c16bd59ae3d10c7420eeb35",
+			"visible_body_viewport": [
+				494.87060546875,
+				196.829605102539,
+				257.146728515625,
+				247.172714233398
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25373.712890625,
+				22745.712890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-walk-native-1.png",
+			"physics_tick": 143,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "bb449dad771f8b6bed4c3566e4e6084a56104b944c16bd59ae3d10c7420eeb35",
+			"visible_body_viewport": [
+				494.87060546875,
+				196.829605102539,
+				257.146728515625,
+				247.172714233398
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25380.076171875,
+				22752.076171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-walk-native-2.png",
+			"physics_tick": 153,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "0c8797ec29926485a0eb7ea360538ce41348ace1dc14a905032940256e5f5088",
+			"visible_body_viewport": [
+				465.515930175781,
+				203.054107666016,
+				263.252502441406,
+				240.948211669922
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25391.388671875,
+				22763.388671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-walk-native-3.png",
+			"physics_tick": 170,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "baea53e9e675b78307338354bfcc9d2858d1d6699f2c44e4256d00fb63064af5",
+			"visible_body_viewport": [
+				440.627105712891,
+				194.420120239258,
+				264.896392822266,
+				249.58219909668
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25401.994140625,
+				22773.994140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-walk-native-0.png",
+			"physics_tick": 186,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "688ef3e3317d6091b3bb046cebf073634a09d9b0b601d001aa17cf3c45e44bed",
+			"visible_body_viewport": [
+				472.7958984375,
+				196.743545532227,
+				266.506713867188,
+				247.373519897461
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25436.638671875,
+				22808.638671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-attack-0.png",
+			"physics_tick": 237,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "d4a7f6c7f537bba4b5fc2fefad3b04f904ca9932052ad4391a291fe8838ec013",
+			"visible_body_viewport": [
+				545.030456542969,
+				256.958984375,
+				180.35498046875,
+				189.220031738281
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25436.638671875,
+				22808.638671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-attack-1.png",
+			"physics_tick": 255,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "c90a20f1d71e71fb4b0007aaebc6887928d316ffcccf2bba25d7a0958500f22a",
+			"visible_body_viewport": [
+				543.287902832031,
+				297.931823730469,
+				269.225524902344,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25436.638671875,
+				22808.638671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SE-contact.png",
+			"physics_tick": 255,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "c90a20f1d71e71fb4b0007aaebc6887928d316ffcccf2bba25d7a0958500f22a",
+			"visible_body_viewport": [
+				543.287902832031,
+				297.931823730469,
+				269.225524902344,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22705.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-walk.png",
+			"physics_tick": 268,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "567d8e2c744127e6c85c680b4b82bd1a2b73387c056af5c3e28e05086eaa2ca2",
+			"visible_body_viewport": [
+				502.702728271484,
+				221.613632202148,
+				220.163055419922,
+				226.447891235352
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22705.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-walk-native-3.png",
+			"physics_tick": 268,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "567d8e2c744127e6c85c680b4b82bd1a2b73387c056af5c3e28e05086eaa2ca2",
+			"visible_body_viewport": [
+				502.702728271484,
+				221.613632202148,
+				220.163055419922,
+				226.447891235352
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22716.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-walk-native-0.png",
+			"physics_tick": 280,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "7e85d9d9ae32ccb4d43f091110b35815e9757f780302328fa78a9bd3ce4ed932",
+			"visible_body_viewport": [
+				529.512268066406,
+				225.086761474609,
+				219.350646972656,
+				222.974761962891
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22730.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-walk-native-1.png",
+			"physics_tick": 295,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "4dc5f526d292f7e7e28f9af1eed9f60053d25204f42729782e37a9233f3a0796",
+			"visible_body_viewport": [
+				543.3232421875,
+				220.919006347656,
+				221.787902832031,
+				227.142517089844
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22745.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-walk-native-2.png",
+			"physics_tick": 311,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "82fbc333d77ab1b5fef8a7aa4abfcb95412144b85521e232b390de63f077f548",
+			"visible_body_viewport": [
+				498.640686035156,
+				225.086761474609,
+				221.787902832031,
+				223.669403076172
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22794.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-attack-0.png",
+			"physics_tick": 362,
+			"player_hp": 1762,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "7c5c46a5ab06197db56a76863b015f892223d1d8c03cefbb20477f72fd956eda",
+			"visible_body_viewport": [
+				545.030456542969,
+				250.999313354492,
+				173.384704589844,
+				195.92463684082
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22794.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-attack-1.png",
+			"physics_tick": 380,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "9fe25eced8e157809631f592f20ae9d3ab96b96aadcc685c491fd5de1ed31883",
+			"visible_body_viewport": [
+				548.515625,
+				293.462066650391,
+				172.513427734375,
+				168.361114501953
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22794.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-S-contact.png",
+			"physics_tick": 380,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "9fe25eced8e157809631f592f20ae9d3ab96b96aadcc685c491fd5de1ed31883",
+			"visible_body_viewport": [
+				548.515625,
+				293.462066650391,
+				172.513427734375,
+				168.361114501953
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25570.287109375,
+				22745.712890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-walk.png",
+			"physics_tick": 393,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "1dc39dfb256dd774455dc2837ba9bb568136f30346fed7d397e071726f640f31",
+			"visible_body_viewport": [
+				564.1689453125,
+				240.510589599609,
+				262.334533691406,
+				207.361511230469
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25570.287109375,
+				22745.712890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-walk-native-1.png",
+			"physics_tick": 393,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "1dc39dfb256dd774455dc2837ba9bb568136f30346fed7d397e071726f640f31",
+			"visible_body_viewport": [
+				564.1689453125,
+				240.510589599609,
+				262.334533691406,
+				207.361511230469
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25564.630859375,
+				22751.369140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-walk-native-2.png",
+			"physics_tick": 402,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "2b08781171ef52ae922c4c067c9efd85250e39b5a39f153a31ae44135b5582d2",
+			"visible_body_viewport": [
+				537.525573730469,
+				258.618225097656,
+				264.383972167969,
+				188.669769287109
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25554.025390625,
+				22761.974609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-walk-native-3.png",
+			"physics_tick": 418,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "35d39a26434c909b297f4920ac26e92db5289678e65612da85aca654bedf4b43",
+			"visible_body_viewport": [
+				477.407257080078,
+				242.847061157227,
+				259.601898193359,
+				207.94563293457
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25542.712890625,
+				22773.287109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-walk-native-0.png",
+			"physics_tick": 435,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "7e2c19f25ab0482d1c585ad59d478a4b8c73bd4790fff360204eb393b97e352b",
+			"visible_body_viewport": [
+				515.672180175781,
+				257.449981689453,
+				263.700866699219,
+				189.837982177734
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25507.361328125,
+				22808.638671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-attack-0.png",
+			"physics_tick": 487,
+			"player_hp": 1692,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "3089291e14f018b679c873140fb2be91385f315aee5fea54b6bbed9149623152",
+			"visible_body_viewport": [
+				565.077758789062,
+				252.489227294922,
+				194.295471191406,
+				193.689788818359
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25507.361328125,
+				22808.638671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-attack-1.png",
+			"physics_tick": 505,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "b3efcccb1de15575d87744d6852df108b011e4d74af18b4a6113be5a02072c7b",
+			"visible_body_viewport": [
+				467.494354248047,
+				297.931823730469,
+				276.195770263672,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25507.361328125,
+				22808.638671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-SW-contact.png",
+			"physics_tick": 505,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "b3efcccb1de15575d87744d6852df108b011e4d74af18b4a6113be5a02072c7b",
+			"visible_body_viewport": [
+				467.494354248047,
+				297.931823730469,
+				276.195770263672,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25611.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-walk.png",
+			"physics_tick": 518,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "e41fa7a51d1909d048584cf0af3569059d5fff41a7c2cf3644442e367da56181",
+			"visible_body_viewport": [
+				559.410339355469,
+				202.361724853516,
+				260.426330566406,
+				241.723663330078
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25611.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-walk-native-3.png",
+			"physics_tick": 518,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "e41fa7a51d1909d048584cf0af3569059d5fff41a7c2cf3644442e367da56181",
+			"visible_body_viewport": [
+				559.410339355469,
+				202.361724853516,
+				260.426330566406,
+				241.723663330078
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25599.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-walk-native-0.png",
+			"physics_tick": 531,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "0c2a1e181ed1e856463773dc17677e8f708d148c331291c518a39971b658cd19",
+			"visible_body_viewport": [
+				563.443054199219,
+				207.270690917969,
+				232.723693847656,
+				236.731628417969
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25583.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-walk-native-1.png",
+			"physics_tick": 548,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "b5fc10168ef3ac76525d1a20e11bd4aa5c7c8ec033bae02102f1de7e75fef5ca",
+			"visible_body_viewport": [
+				549.587646484375,
+				202.652526855469,
+				226.383056640625,
+				241.349792480469
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25566.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-walk-native-2.png",
+			"physics_tick": 566,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "e432e6879bd3f323cc63472bb8d8ed73ff4504d36e72f66de251c730f8a9ff25",
+			"visible_body_viewport": [
+				554.921813964844,
+				214.642562866211,
+				237.789489746094,
+				229.474502563477
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25522.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-attack-0.png",
+			"physics_tick": 612,
+			"player_hp": 1622,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "e0c5b5f672c96d504d8539a75937fd6a90ce47fda521e44d5e2d13536b5dc451",
+			"visible_body_viewport": [
+				561.935913085938,
+				226.849227905273,
+				243.165161132812,
+				219.418716430664
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25522.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-attack-1.png",
+			"physics_tick": 630,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "64f0e5d32cf8f9d0f88be86ba6f32a30ce2d49e499080020948b845698a53ab4",
+			"visible_body_viewport": [
+				421.061614990234,
+				292.828308105469,
+				376.861114501953,
+				153.439666748047
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25522.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-W-contact.png",
+			"physics_tick": 630,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "64f0e5d32cf8f9d0f88be86ba6f32a30ce2d49e499080020948b845698a53ab4",
+			"visible_body_viewport": [
+				421.061614990234,
+				292.828308105469,
+				376.861114501953,
+				153.439666748047
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25570.287109375,
+				22942.287109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-walk.png",
+			"physics_tick": 643,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "f4431a92ffeda92ae1b9c96216b371fbf573e2de28895d96aba88963745be778",
+			"visible_body_viewport": [
+				534.55810546875,
+				207.069900512695,
+				271.706665039062,
+				236.932418823242
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25570.287109375,
+				22942.287109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-walk-native-0.png",
+			"physics_tick": 643,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "f4431a92ffeda92ae1b9c96216b371fbf573e2de28895d96aba88963745be778",
+			"visible_body_viewport": [
+				534.55810546875,
+				207.069900512695,
+				271.706665039062,
+				236.932418823242
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25566.751953125,
+				22938.751953125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-walk-native-1.png",
+			"physics_tick": 649,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "6897fccbc14415b176bdda94aab3e9dd273586000667e75ff7842825c807bf1e",
+			"visible_body_viewport": [
+				514.127258300781,
+				206.869110107422,
+				251.510681152344,
+				237.133209228516
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25556.146484375,
+				22928.146484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-walk-native-2.png",
+			"physics_tick": 665,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "2aebc1951d9b5dfabafa2a772a5a1761f59282d3f9014465670f6ef8b891138f",
+			"visible_body_viewport": [
+				529.156799316406,
+				212.577285766602,
+				263.822814941406,
+				231.539779663086
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25544.833984375,
+				22916.833984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-walk-native-3.png",
+			"physics_tick": 682,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "385f49f2777f1f0517b1ee7b7bea5490c1aa9c39d728f5756c54500cab2bc67a",
+			"visible_body_viewport": [
+				550.292175292969,
+				207.676177978516,
+				268.653747558594,
+				236.330047607422
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25507.361328125,
+				22879.361328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-attack-0.png",
+			"physics_tick": 737,
+			"player_hp": 1552,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "0f7389e127415b82bb2433c982aba433eedb59efcd92c52ca5c1a66967d4f00f",
+			"visible_body_viewport": [
+				573.608459472656,
+				229.918029785156,
+				213.554626464844,
+				219.418701171875
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25507.361328125,
+				22879.361328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-attack-1.png",
+			"physics_tick": 755,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "1f4d41a86fa9d8c85920e55c1b4824ae584d4f23f4206d9821b596d1c0a47f7b",
+			"visible_body_viewport": [
+				521.565734863281,
+				228.383636474609,
+				274.570251464844,
+				219.418731689453
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25507.361328125,
+				22879.361328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NW-contact.png",
+			"physics_tick": 755,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "1f4d41a86fa9d8c85920e55c1b4824ae584d4f23f4206d9821b596d1c0a47f7b",
+			"visible_body_viewport": [
+				521.565734863281,
+				228.383636474609,
+				274.570251464844,
+				219.418731689453
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22983.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-walk.png",
+			"physics_tick": 768,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "cf3a45fc4c99273cdc9b2c553461b8dfbd2af72777f999375bb32165d1d5b7fe",
+			"visible_body_viewport": [
+				561.244995117188,
+				266.379211425781,
+				208.610595703125,
+				180.93603515625
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22983.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-walk-native-2.png",
+			"physics_tick": 768,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "cf3a45fc4c99273cdc9b2c553461b8dfbd2af72777f999375bb32165d1d5b7fe",
+			"visible_body_viewport": [
+				561.244995117188,
+				266.379211425781,
+				208.610595703125,
+				180.93603515625
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22976.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-walk-native-3.png",
+			"physics_tick": 776,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "052f5dcea3558a75cdbb080d4112ea8ba4cc1938b89e7816bed7835b416a2431",
+			"visible_body_viewport": [
+				581.685241699219,
+				249.926559448242,
+				199.592834472656,
+				197.384780883789
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22961.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-walk-native-0.png",
+			"physics_tick": 792,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "d72c8eba6981587e90f5c7ee98b3447c5ff0ccdf6be4c45c61a6fd142a49449d",
+			"visible_body_viewport": [
+				526.376342773438,
+				259.692993164062,
+				192.979858398438,
+				187.618347167969
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22947.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-walk-native-1.png",
+			"physics_tick": 807,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "960dc607d2d163702019c5338e894680c3685fb5407f2feabb7cfbc2a81ca450",
+			"visible_body_viewport": [
+				495.716003417969,
+				255.066787719727,
+				200.194030761719,
+				191.730514526367
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22894.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-attack-0.png",
+			"physics_tick": 862,
+			"player_hp": 1482,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "f40de83b1f4bb6ad54f5228478d108d93fab617dc5411c777d9eef32d9a9f48f",
+			"visible_body_viewport": [
+				552.963012695312,
+				232.219619750977,
+				174.073974609375,
+				220.185897827148
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22894.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-attack-1.png",
+			"physics_tick": 880,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "d3c55a1160b922df5305e8f83c067b59948f44545035db9a62d4089c83b9a355",
+			"visible_body_viewport": [
+				552.963012695312,
+				202.298889160156,
+				169.587524414062,
+				264.683410644531
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25472.0,
+				22894.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-N-contact.png",
+			"physics_tick": 880,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "d3c55a1160b922df5305e8f83c067b59948f44545035db9a62d4089c83b9a355",
+			"visible_body_viewport": [
+				552.963012695312,
+				202.298889160156,
+				169.587524414062,
+				264.683410644531
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25373.712890625,
+				22942.287109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-walk.png",
+			"physics_tick": 893,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "ccb046e053fc5c83308a26cdae8d92357950f9e8c3b8f7bd17ebbeba5d7766f9",
+			"visible_body_viewport": [
+				485.242279052734,
+				205.865173339844,
+				249.162261962891,
+				238.137145996094
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25373.712890625,
+				22942.287109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-walk-native-0.png",
+			"physics_tick": 893,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "ccb046e053fc5c83308a26cdae8d92357950f9e8c3b8f7bd17ebbeba5d7766f9",
+			"visible_body_viewport": [
+				485.242279052734,
+				205.865173339844,
+				249.162261962891,
+				238.137145996094
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25375.833984375,
+				22940.166015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-walk-native-1.png",
+			"physics_tick": 897,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "aaeaa6b5dcd7e62f6d4139a6e38a535949d3260804357bc8fcc909e55446fb2c",
+			"visible_body_viewport": [
+				461.993408203125,
+				203.455688476562,
+				238.359741210938,
+				240.546630859375
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25387.146484375,
+				22928.853515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-walk-native-2.png",
+			"physics_tick": 914,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "bd4a654c5be6125c612e1113fc38e1b55eab4dbfd219f2329a734e9392d0c856",
+			"visible_body_viewport": [
+				470.447509765625,
+				196.428024291992,
+				246.34423828125,
+				247.574295043945
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25397.751953125,
+				22918.248046875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-3",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-walk-native-3.png",
+			"physics_tick": 930,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "5aee7b81b8109150f6397052ff33ef0e87d752b9667e471c8308f24c692750ae",
+			"visible_body_viewport": [
+				487.829406738281,
+				204.861221313477,
+				242.351989746094,
+				239.141098022461
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25436.638671875,
+				22879.361328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-attack-0.png",
+			"physics_tick": 987,
+			"player_hp": 1412,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "f3e2752014079aa39c62b2143978cb051dc7d8aeba967c601403e320b03e34d1",
+			"visible_body_viewport": [
+				476.693481445312,
+				226.849227905273,
+				227.911254882812,
+				220.185928344727
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25436.638671875,
+				22879.361328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-attack-1.png",
+			"physics_tick": 1005,
+			"player_hp": 1342,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "4c08850a3198454bd9585d45cc0e7ed361e5dbe662bc0062a84e387499c7121f",
+			"visible_body_viewport": [
+				463.234191894531,
+				236.055618286133,
+				351.737060546875,
+				210.979537963867
+			]
+		},
+		{
+			"actor_hp": 671,
+			"actor_world": [
+				25436.638671875,
+				22879.361328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/ai-NE-contact.png",
+			"physics_tick": 1005,
+			"player_hp": 1342,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "4c08850a3198454bd9585d45cc0e7ed361e5dbe662bc0062a84e387499c7121f",
+			"visible_body_viewport": [
+				463.234191894531,
+				236.055618286133,
+				351.737060546875,
+				210.979537963867
+			]
+		},
+		{
+			"actor_hp": 618,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/lifecycle-hit.png",
+			"physics_tick": 1027,
+			"player_hp": 1342,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "53c49786c08e3cd37e5a1a7bd9c8fc906e1f839c27f29256c3ea99c43dd2bb5f",
+			"visible_body_viewport": [
+				515.519714355469,
+				258.150939941406,
+				231.278747558594,
+				187.467163085938
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/lifecycle-ground-drop.png",
+			"physics_tick": 1491,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "e262aab9b223eaece49e880c316f463e7dc7c574494c7243a41d78c2481a4f2e",
+			"visible_body_viewport": [
+				536.2958984375,
+				214.458984375,
+				205.15380859375,
+				231.310302734375
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/lifecycle-death-0.png",
+			"physics_tick": 1493,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "2c40e0b44ce4e2349ffe36dc7debd261a1628e6cbb1a3fefee704867ca04c437",
+			"visible_body_viewport": [
+				503.496032714844,
+				270.245574951172,
+				263.813415527344,
+				176.582000732422
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/lifecycle-manual-pickup.png",
+			"physics_tick": 1504,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "cc03e963ee35448dd0c90507a62e4d4e20cb560f2bebd875b03e97f72c301549",
+			"visible_body_viewport": [
+				503.496032714844,
+				270.245574951172,
+				263.813415527344,
+				176.582000732422
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/lifecycle-death-1.png",
+			"physics_tick": 1507,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "de78f2d7ddd433a55f9d70e93bf78d7025d6641a2c4129b12d21c470350c6312",
+			"visible_body_viewport": [
+				511.276062011719,
+				362.769714355469,
+				308.371643066406,
+				107.642456054688
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/qa/family-main02/captures/eva-sharkwarrior/lifecycle-death-2.png",
+			"physics_tick": 1521,
+			"player_hp": 1877,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "9d988be3c3caaad089dee3e982777dc356eb9e0311adc541df588844fbe25c30",
+			"visible_body_viewport": [
+				507.032409667969,
+				378.492767333984,
+				345.857238769531,
+				91.3146667480469
+			]
+		}
+	],
+	"scope": "original-based eva_sharkwarrior_project_source, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-walk-native-3.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-3.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-3.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-3.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-3.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-3.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-3.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-3.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"map": "aden_world",
+		"normal": "에바 왕국 상어전사",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_2.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

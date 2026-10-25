@@ -1,0 +1,72 @@
+{
+  "label": "bossfix-min008",
+  "checked_new_sheets": 6,
+  "safe_played_clips": 1,
+  "held": [
+    {
+      "slug": "isabelle",
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "W-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-run-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "prince_deus",
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "prince_deus",
+      "clip": "SW-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [
+    "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/bossfix-min008/candidate.json"
+  ],
+  "runtime": "/workspace/runtime/bossfix-min008",
+  "source_pins": [
+    {
+      "slug": "isabelle",
+      "clip": "SW-attack-v02",
+      "sha256": "9dd0ded58a8694e8efddaeb3bc0933207f2f6bb6785b228ad6560013f33fa0d8"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "W-attack-v02",
+      "sha256": "e2d6d527362dafadce8a22096bd51077446b047b693082c937ac7702f01b670d"
+    },
+    {
+      "slug": "isabelle",
+      "clip": "W-hit-v02",
+      "sha256": "9ea255808dd88d9ee0091a1dcc76fd7a47935439f47e6d1d65a22f70faa6a767"
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-run-v02",
+      "sha256": "cb7f18a2904f4fd60c3df63c58223091fe27b655a5c6bdd007d6f3cc78455bcd"
+    },
+    {
+      "slug": "prince_deus",
+      "clip": "SW-attack-v02",
+      "sha256": "9d2afbce8f99cfa8c8b59c72040ceadf944b97ab4a3c4fe1b46b2667be70a6c2"
+    },
+    {
+      "slug": "prince_deus",
+      "clip": "SW-hit-v02",
+      "sha256": "1a2b27cde7f449ecbb7de063ee77f17d0dcfc3465103a1fd5b87a2e741bf3ef4"
+    }
+  ]
+}

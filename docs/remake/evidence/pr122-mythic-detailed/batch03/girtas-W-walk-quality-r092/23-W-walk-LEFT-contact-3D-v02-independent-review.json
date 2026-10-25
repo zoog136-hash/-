@@ -1,0 +1,37 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "walk",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_EXPOSED_NEAR_LEFT_FORWARD_HEEL_CONTACT_KEY",
+  "raw_path": "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+  "raw_sha256": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+  "reference_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+  "reference_source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+  "candidate_game_phase": 0,
+  "actual_leading_leg": "anatomical_LEFT_near",
+  "checks": {
+    "faithful_W_identity_camera_and_far_RIGHT_weapon": true,
+    "near_LEFT_hip_forward_thigh_knee_chain_visibly_exposed": true,
+    "far_RIGHT_trails_with_rear_toe_contact": true,
+    "long_dark_gold_trim_robe_remains_not_replacement_pants": true,
+    "two_arm_two_leg_chains": true
+  },
+  "findings": [
+    "Unlike the old ambiguous 2D sources, the new foreground near LEFT hip-to-upper-thigh chain is visible through the moving robe slit. It advances diagonally to the forward knee and imageLEFT heel-contact boot, while the far RIGHT chain trails behind to its imageRIGHT toe support. This makes the actual near LEFT lead independently identifiable rather than inferred only from sole depth.",
+    "The forward heel is lowered with toes rolled upward, and the trailing far RIGHT toe touches with heel lifted. This reads walking double support, not a running flight key. The exposed near LEFT lead is distinct from the old plausible far RIGHT row1 candidate, whose proximal chain remained covered.",
+    "The source keeps true W left-facing profile/chest camera, pale face/long pale hair, HARD narrow gold rays, original far RIGHT long sinuous blade and empty near LEFT hand. The long dark robe and hard gold-trim hanging panels still run from waist past the knee and stream behind.",
+    "Exposed fore-shin has black hard greave/boot armor with articulated gold edges; it does not replace the robe with segmented trousers or expose a new bare limb. The visible knee/greave articulation follows the new extended step. Motif and original long-robe equipment identity remain coherent at source-review level."
+  ],
+  "visual_limitations": [
+    "One near LEFT contact key is approved as source anatomy only. Full opposite-pair/full6 root, rigid skull/shoulder physical size, all leg chains in later phases and actual runtime remain HOLD.",
+    "The new region width1220 is to be preserved exactly; use existing explicit1536-cell assembly where required, without trimming/resizing/alpha cleanup. Old ambiguous source/HOLD history remains untouched."
+  ],
+  "preview_budget_total_bytes": 1783485,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_or_gameplay_claim": false,
+  "reviewed_at": "2026-10-19T14:38:29.199559+00:00"
+}

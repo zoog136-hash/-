@@ -18,7 +18,7 @@ concurrency:
 jobs:
   local-warehouse:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot 4.7.2

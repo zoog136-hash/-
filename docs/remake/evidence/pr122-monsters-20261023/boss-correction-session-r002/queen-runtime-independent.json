@@ -1,0 +1,174 @@
+{
+  "schema": "pr122-queen-r002-independent-native1x-visual-review-v1",
+  "review_scope": "Existing root-rendered PNGs only: N RUN6, SE/SW ATTACK3 each, pre/post idle and N idle reference. No generation/render/resource/ledger/Git mutation.",
+  "key": "monster:얼음 여왕",
+  "correction_scope_result": "PASS",
+  "reviewed_PNG_count": 18,
+  "new_confirmed_blocking_defects_in_reviewed_corrections": [],
+  "runtime_capture_root": "/workspace/runtime/boss-correction-r002-queen/queen/captures",
+  "capture_pins": [
+    {
+      "file": "idle-N-action-idle_6-0.png",
+      "bytes": 44128,
+      "sha256": "91d9956a620a2a0c4c32f1aec7c9e77f32387b40dd87b78ae3cc7652d9f7ac90"
+    },
+    {
+      "file": "run-N-action-run_6-0.png",
+      "bytes": 46288,
+      "sha256": "6597e99c3d84038cb7051be5e6bd24131d3bcb468afb74b96f080158a5872568"
+    },
+    {
+      "file": "run-N-action-run_6-1.png",
+      "bytes": 45991,
+      "sha256": "543581e1a6db190b9e33b24b79533390e5e8694ececcc1fe6442c420f4b67adc"
+    },
+    {
+      "file": "run-N-action-run_6-2.png",
+      "bytes": 46250,
+      "sha256": "b7adf5ab4a071b768d6519812feefeb545b93e54e6e71e321e36668c6f20809c"
+    },
+    {
+      "file": "run-N-action-run_6-3.png",
+      "bytes": 45820,
+      "sha256": "e8ea58dda3e7ed86be683b39a9e9914386ab989a7822563c360bbcef48005022"
+    },
+    {
+      "file": "run-N-action-run_6-4.png",
+      "bytes": 45689,
+      "sha256": "5a37481bbde2a087301e0312651f2899166396922ad81c2cb11b8438face840d"
+    },
+    {
+      "file": "run-N-action-run_6-5.png",
+      "bytes": 44857,
+      "sha256": "8d8a08c7886fa4515c851dfb9aaa8d0e5d6d078f531d68564244fb1e494bd024"
+    },
+    {
+      "file": "attack-SE-pre-idle-idle_1-0.png",
+      "bytes": 45049,
+      "sha256": "b4564c3be370abf1a4425c855c2a54779e205983e0948875e4b9108c8f690847"
+    },
+    {
+      "file": "attack-SE-action-attack_1-0.png",
+      "bytes": 50664,
+      "sha256": "33d9243f3e4f3f2cabc62ca83bd1bdb0d3459171433317828c94fb680385be1b"
+    },
+    {
+      "file": "attack-SE-action-attack_1-1-strike.png",
+      "bytes": 52126,
+      "sha256": "09973658a73eedd98a043b82c30c8953e3145a5b080f177b8e2a0f56dce5cb89"
+    },
+    {
+      "file": "attack-SE-action-attack_1-2.png",
+      "bytes": 49155,
+      "sha256": "9575b3c0b62b7b5cac0b7a9ecabcc5b0461d4d641fd6f6270e78875c8bbf8f77"
+    },
+    {
+      "file": "attack-SE-action-idle_1-0.png",
+      "bytes": 45067,
+      "sha256": "6c42f11fd2ad6cc3279cc448e7358b7c004cfc1342d389368563e67ee1f5dcf4"
+    },
+    {
+      "file": "attack-SW-pre-idle-idle_3-0.png",
+      "bytes": 46013,
+      "sha256": "a5dc2b93a9b2daeb842213b453fc35adbf4f544dedbcfb8e9fbdc9131e72bb7d"
+    },
+    {
+      "file": "attack-SW-action-attack_3-0.png",
+      "bytes": 49019,
+      "sha256": "4d19f48b78f526563e005b6a35d4328449441bd2da5054300900b26c3b659135"
+    },
+    {
+      "file": "attack-SW-action-attack_3-1-strike.png",
+      "bytes": 50793,
+      "sha256": "d5b2739d09960c24a9a3da59900d53a50a549af3fe64c4e5388815d5044d8a86"
+    },
+    {
+      "file": "attack-SW-action-attack_3-2.png",
+      "bytes": 48433,
+      "sha256": "ed585abf817443f83afce70aab40eb35d6f7da7d58cb31ee0982d6b1be75aa7b"
+    },
+    {
+      "file": "attack-SW-action-idle_3-0.png",
+      "bytes": 45986,
+      "sha256": "83f6c74b5d83ecae7d5b40764f5ee4c8870f578196496dbc04435b6d51afd438"
+    },
+    {
+      "file": "idle-N-action-idle_6-1.png",
+      "bytes": 45111,
+      "sha256": "c4576ffa67f6b1bfa301e88932827fad19de58d7981cd3aa025512f5b886162b"
+    }
+  ],
+  "input_profile": {
+    "path": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres",
+    "sha256": "1e982278ba664a05c0f8cfc5facfeb4334a9ed886b9aaa80b4a575de5d9e6000"
+  },
+  "input_frames": {
+    "path": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/SpriteFrames.tres",
+    "sha256": "a1482c63a3e8d85b1d616a1cbd93c68a8e0fe6b4c42f7ec7f3133c50eb463306"
+  },
+  "runtime": {
+    "engine": "4.7.2-stable (official)",
+    "display_server": "X11",
+    "video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "speed_scale": 1.0,
+    "camera_zoom": 1.0,
+    "simulation_dt": 0.0166666666666667,
+    "resource": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/SpriteFrames.tres",
+    "actual_Monster_reference_speed": 66.0
+  },
+  "checks": {
+    "N_RUN6": {
+      "result": "PASS",
+      "observed": "All six frames keep north/back heading, silver back hair and two violet wing masses. Staff remains on anatomical LEFT/screen-left. Right pale slit leg remains on screen-right within the six RUN poses. Bent/lifted leg and skirt silhouettes change through the cycle; no obvious severe frame cropping or scale pop.",
+      "against_idle": "Crown/body height remains in the same game-size range as N idle; wider/flaring wing/cloth outline reads as motion rather than a full-body rescale."
+    },
+    "SE_ATTACK3": {
+      "result": "PASS",
+      "observed": "Windup/contact/recovery retain front-diagonal presentation; corrected contact sends staff down-right toward the foreground. LEFT staff ownership remains consistent with the separately inspected source. Recovery returns to the original idle_1 and no wrong clip is selected.",
+      "size": "Wing/cloth width expands with the attack stance; no obvious full-body growth/shrink discontinuity."
+    },
+    "SW_ATTACK3": {
+      "result": "PASS",
+      "observed": "Corrected contact sends the staff down-left. Staff is held by anatomical LEFT arm while RIGHT hand is open by the face. Mixed-source contact remains the same approximate body size as windup/recovery; no obvious normalization jump. The original idle_3 returns after attack.",
+      "size": "Different wing spread is visible between idle and attack, with crown/boot body extent remaining coherent."
+    },
+    "release_frames": [
+      {
+        "segment": "attack-SE",
+        "clip": "attack_1",
+        "frame": 1,
+        "attack_elapsed": 0.816666666666668
+      },
+      {
+        "segment": "attack-SW",
+        "clip": "attack_3",
+        "frame": 1,
+        "attack_elapsed": 0.816666666666668
+      }
+    ],
+    "visible_ground_region": "Observed boots/hem remain near the ground origin through the inspected frames. No new severe hovering/cutoff was identified within this visual scope."
+  },
+  "existing_known_issue_separate_from_new_corrections": [
+    {
+      "id": "PREEXISTING_N_COMBAT_IDLE_SLIT_SIDE_SWAP",
+      "clips": "idle_6 frames0/1",
+      "images": [
+        "idle-N-action-idle_6-0.png",
+        "idle-N-action-idle_6-1.png"
+      ],
+      "observation": "Pale slit leg changes visible screen side between the preserved N idle poses. This was already recorded for combat-r001 and remains visible; the newly authored N RUN6 does not repeat this switch.",
+      "new_regression": false,
+      "belongs_to": "Preserved combat N idle source, not new run_6 or SE/SW replacement attack tracks",
+      "effect_on_current_targeted_correction_result": "Does not reject these three corrections; keep the existing issue separate for owner decision."
+    }
+  ],
+  "unreviewed_informational": [
+    "Actual Main projectile arrival/target damage and detailed target contact were outside this review. This is not an added approval gate.",
+    "Other directions/roles and approved bosses were not visually re-reviewed."
+  ],
+  "production_catalog_changes": 0,
+  "approval_changes": 0,
+  "new_source_images_generated": 0,
+  "new_renders": 0,
+  "user_or_root_images_forwarded": false
+}

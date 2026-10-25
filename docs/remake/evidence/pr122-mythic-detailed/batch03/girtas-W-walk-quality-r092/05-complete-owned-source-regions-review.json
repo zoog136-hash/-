@@ -1,0 +1,131 @@
+{
+  "schema": "pr122-explicit-complete-owned-source-crop-review-v1",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "walk",
+  "basis": "Source importer nominal boxes can omit faint actual alpha>16 ownership. Expand only outward to ALL exact owned foreground, unchangedsourceRGBA. Unchanged assembler verifies onebody, noforeign, completecomponents, no strongouterclip; no threshold changes, trimming, resampling or masking.",
+  "poses": [
+    {
+      "phase": 0,
+      "source_sha256": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+      "old_region": [
+        16,
+        8,
+        1220,
+        1176
+      ],
+      "new_region": [
+        16,
+        8,
+        1220,
+        1176
+      ],
+      "old_RGBA_sha256": "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4",
+      "new_RGBA_sha256": "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4",
+      "added_owned_alpha_gt16_pixels": 0,
+      "unchanged_assembler_crop_guard": "PASS"
+    },
+    {
+      "phase": 1,
+      "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+      "old_region": [
+        5,
+        63,
+        759,
+        843
+      ],
+      "new_region": [
+        5,
+        63,
+        759,
+        843
+      ],
+      "old_RGBA_sha256": "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2",
+      "new_RGBA_sha256": "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2",
+      "added_owned_alpha_gt16_pixels": 0,
+      "unchanged_assembler_crop_guard": "PASS"
+    },
+    {
+      "phase": 2,
+      "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+      "old_region": [
+        763,
+        62,
+        759,
+        844
+      ],
+      "new_region": [
+        763,
+        62,
+        759,
+        844
+      ],
+      "old_RGBA_sha256": "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4",
+      "new_RGBA_sha256": "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4",
+      "added_owned_alpha_gt16_pixels": 0,
+      "unchanged_assembler_crop_guard": "PASS"
+    },
+    {
+      "phase": 3,
+      "source_sha256": "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b",
+      "old_region": [
+        22,
+        19,
+        1197,
+        1116
+      ],
+      "new_region": [
+        22,
+        19,
+        1198,
+        1116
+      ],
+      "old_RGBA_sha256": "64946bb35b4ef5031231ce821293573836764d5ad35933668a99f0ffbc6efcd3",
+      "new_RGBA_sha256": "135ba522ba967e2fac2eb6e50bfbd5f6feb10b99b4c37f3ec5bd2c3a40b2b04c",
+      "added_owned_alpha_gt16_pixels": 2,
+      "unchanged_assembler_crop_guard": "PASS"
+    },
+    {
+      "phase": 4,
+      "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+      "old_region": [
+        23,
+        126,
+        681,
+        780
+      ],
+      "new_region": [
+        23,
+        126,
+        681,
+        780
+      ],
+      "old_RGBA_sha256": "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c",
+      "new_RGBA_sha256": "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c",
+      "added_owned_alpha_gt16_pixels": 0,
+      "unchanged_assembler_crop_guard": "PASS"
+    },
+    {
+      "phase": 5,
+      "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+      "old_region": [
+        792,
+        129,
+        688,
+        768
+      ],
+      "new_region": [
+        792,
+        128,
+        688,
+        769
+      ],
+      "old_RGBA_sha256": "6af3212ab99294fe4193dc76dc67bc391bd72f9e3ddae6820a4d9f5ecaf25c06",
+      "new_RGBA_sha256": "6d0e06b35be990ca689d7c550eea30d2dfc62d3ad7db196e732ada706d6648dc",
+      "added_owned_alpha_gt16_pixels": 2,
+      "unchanged_assembler_crop_guard": "PASS"
+    }
+  ],
+  "actor_approval": false,
+  "status": "PASS_SOURCE_CROPS_NOT_CLIP_APPROVAL"
+}

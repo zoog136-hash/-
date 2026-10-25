@@ -1,0 +1,301 @@
+{
+  "schema": "pr122-independent-whole6-provisional-physical-byte-check-v1",
+  "utc": "2026-10-20T07:06:36.472784+00:00",
+  "key": "transform:267",
+  "source_atlas_path": "/workspace/scratch/girtas-NE-run-reviewed-composite-v02/girtas-NE-run-reviewed-composite-v02.png",
+  "source_atlas_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "all6_reviewed_source_crop_RGBA_exact_in_atlas": true,
+  "raw_PNG_files_unmodified_and_pinned": true,
+  "crops": [
+    {
+      "phase": 0,
+      "source_region": [
+        59,
+        53,
+        1186,
+        1002
+      ],
+      "output_region": [
+        175,
+        267,
+        1186,
+        1002
+      ],
+      "exact_region_rgba_sha256": "bb213638f3d5cfd5e0aa755a46ed765af9fa85219628cca17239d72a483539ae",
+      "raw_alpha_gt16_outside_reviewed_crop": 0,
+      "raw_alpha1to16_outside_reviewed_crop": 976
+    },
+    {
+      "phase": 1,
+      "source_region": [
+        106,
+        166,
+        1225,
+        1075
+      ],
+      "output_region": [
+        1691,
+        230,
+        1225,
+        1075
+      ],
+      "exact_region_rgba_sha256": "f44f8cd28b3338c9754a0d49660be029d73211f075f5bcd791170c6ba55ba7d3",
+      "raw_alpha_gt16_outside_reviewed_crop": 0,
+      "raw_alpha1to16_outside_reviewed_crop": 139
+    },
+    {
+      "phase": 2,
+      "source_region": [
+        42,
+        51,
+        1210,
+        1107
+      ],
+      "output_region": [
+        163,
+        1750,
+        1210,
+        1107
+      ],
+      "exact_region_rgba_sha256": "0485d7df805a907406c3991a7d8ef0eb543f8ceeb1d668e910c15b5178733261",
+      "raw_alpha_gt16_outside_reviewed_crop": 0,
+      "raw_alpha1to16_outside_reviewed_crop": 226
+    },
+    {
+      "phase": 3,
+      "source_region": [
+        36,
+        17,
+        1214,
+        1052
+      ],
+      "output_region": [
+        1697,
+        1778,
+        1214,
+        1052
+      ],
+      "exact_region_rgba_sha256": "0f52f65cdbed80692d007cbe8d300a5c4a93368dd297007aab6e641cb21493ec",
+      "raw_alpha_gt16_outside_reviewed_crop": 0,
+      "raw_alpha1to16_outside_reviewed_crop": 594
+    },
+    {
+      "phase": 4,
+      "source_region": [
+        21,
+        49,
+        1232,
+        1154
+      ],
+      "output_region": [
+        152,
+        3263,
+        1232,
+        1154
+      ],
+      "exact_region_rgba_sha256": "d90b5603e9363e79628c4a3d4578f7df3d4834bff9f3bd37ca04c50ef8b63d28",
+      "raw_alpha_gt16_outside_reviewed_crop": 0,
+      "raw_alpha1to16_outside_reviewed_crop": 569
+    },
+    {
+      "phase": 5,
+      "source_region": [
+        34,
+        55,
+        1214,
+        1088
+      ],
+      "output_region": [
+        1697,
+        3296,
+        1214,
+        1088
+      ],
+      "exact_region_rgba_sha256": "ea34df9defba4006f8b23c7a9c1c56472704620e41d326cef308a1b67faa1b5c",
+      "raw_alpha_gt16_outside_reviewed_crop": 0,
+      "raw_alpha1to16_outside_reviewed_crop": 944
+    }
+  ],
+  "poseCs": [
+    1936,
+    2240,
+    1936,
+    1776,
+    2048,
+    1936
+  ],
+  "native_roots": [
+    [
+      730,
+      1049
+    ],
+    [
+      779,
+      1215
+    ],
+    [
+      720,
+      1254
+    ],
+    [
+      717,
+      1023
+    ],
+    [
+      758,
+      1128
+    ],
+    [
+      805,
+      1259
+    ]
+  ],
+  "actual_derived_geometry_all6_source_anchor_C_frameRGBA_exact": true,
+  "supports": [
+    {
+      "phase": 0,
+      "foot": "FAR_LEFT",
+      "actual_contact": [
+        637,
+        1021
+      ],
+      "required_heel_or_load_lane_canonical": -49.18489402884973,
+      "declared_interval": [
+        -58,
+        -42
+      ]
+    },
+    {
+      "phase": 1,
+      "foot": "FAR_LEFT",
+      "actual_contact": [
+        597,
+        1238
+      ],
+      "required_heel_or_load_lane_canonical": -43.29745088910172,
+      "declared_interval": [
+        -58,
+        -42
+      ]
+    },
+    {
+      "phase": 3,
+      "foot": "NEAR_RIGHT",
+      "actual_contact": [
+        934,
+        1018
+      ],
+      "required_heel_or_load_lane_canonical": 79.61393567745138,
+      "declared_interval": [
+        71,
+        87
+      ]
+    },
+    {
+      "phase": 4,
+      "foot": "NEAR_RIGHT",
+      "actual_contact": [
+        906,
+        1191
+      ],
+      "required_heel_or_load_lane_canonical": 84.33524784123958,
+      "declared_interval": [
+        71,
+        87
+      ]
+    }
+  ],
+  "all4_AIR_boot_ROI_alpha100_conservative_results": [
+    {
+      "phase": 2,
+      "foot": "NEAR_RIGHT",
+      "roi": [
+        720,
+        780,
+        900,
+        1080
+      ],
+      "alpha100_pixels": 24089,
+      "minimum_conservative_clearance_world": 29.23997887973508,
+      "worst_source_xy": [
+        835,
+        1037
+      ],
+      "lateral_interval": [
+        65,
+        87
+      ],
+      "native_XY_error": 4
+    },
+    {
+      "phase": 2,
+      "foot": "FAR_LEFT",
+      "roi": [
+        220,
+        900,
+        440,
+        1180
+      ],
+      "alpha100_pixels": 22294,
+      "minimum_conservative_clearance_world": 28.50981843530393,
+      "worst_source_xy": [
+        306,
+        1155
+      ],
+      "lateral_interval": [
+        -54,
+        -44
+      ],
+      "native_XY_error": 4
+    },
+    {
+      "phase": 5,
+      "foot": "FAR_LEFT",
+      "roi": [
+        610,
+        930,
+        840,
+        1170
+      ],
+      "alpha100_pixels": 20757,
+      "minimum_conservative_clearance_world": 1.3964208646162608,
+      "worst_source_xy": [
+        828,
+        1136
+      ],
+      "lateral_interval": [
+        -54,
+        -44
+      ],
+      "native_XY_error": 4
+    },
+    {
+      "phase": 5,
+      "foot": "NEAR_RIGHT",
+      "roi": [
+        690,
+        690,
+        870,
+        900
+      ],
+      "alpha100_pixels": 17000,
+      "minimum_conservative_clearance_world": 59.35075157422096,
+      "worst_source_xy": [
+        778,
+        866
+      ],
+      "lateral_interval": [
+        65,
+        87
+      ],
+      "native_XY_error": 4
+    }
+  ],
+  "projection_m": -0.5902918298980975,
+  "projection_K": 0.8914611308665146,
+  "runtime_pixel_scale": 0.21910501173173982,
+  "frame_duration_seconds": 0.08,
+  "cycle_seconds": 0.48,
+  "source_pixel_rescale_or_mirror": false,
+  "actor_approval_added": 0
+}

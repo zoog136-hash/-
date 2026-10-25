@@ -1,0 +1,44 @@
+{
+  "schema": "pr122-queen-run-correction-request-v1",
+  "actor": "monster:얼음 여왕",
+  "direction": "N",
+  "role": "run",
+  "revision": "r001",
+  "pose_count": 6,
+  "source_grid": [
+    2,
+    3
+  ],
+  "playback_source_slots": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "neutral_contact_source_slots": [
+    0,
+    1
+  ],
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v03.png"
+  ],
+  "reference_sha256": "aafad119248fd8d5e0e08877fbd874afc00ccfd20148a8129615e3555f69d5a9",
+  "request": {
+    "prompt": "Edit the supplied SIX-POSE NORTH/BACK RUN sheet of the same ice queen. Keep the two columns by three rows, six complete connected separated figures, transparent background, crown, white hair, black/gold armor, purple dress, TWO attached purple wings, and single LEFT-hand staff on viewer LEFT. Keep all figures strictly straight BACK view, faces/chests hidden. Preserve the top and bottom row identity and positions. REPAINT THE MIDDLE TWO CELLS to fix an anatomical wardrobe/support error: in straight BACK view anatomical RIGHT is always on VIEWER RIGHT, and this RIGHT thigh is PALE BARE through the slit. Anatomical LEFT is always on VIEWER LEFT and that LEFT thigh is DARK COVERED with cloth/stocking. Never put bare skin on viewer LEFT in any cell. MIDDLE-LEFT cell must show planted supporting PALE RIGHT leg and boot on VIEWER RIGHT, with the DARK COVERED LEFT knee/boot raised off ground on VIEWER LEFT. MIDDLE-RIGHT cell must show planted supporting DARK LEFT leg/boot on VIEWER LEFT, with PALE RIGHT knee/boot raised off ground on VIEWER RIGHT. These are genuinely opposite support poses, not costume colors swapping between the same leg. The top-left contacts RIGHT on viewer right; top-right contacts LEFT on viewer left. The bottom-left has LEFT forward in flight; bottom-right has RIGHT forward in flight. Trace two continuous correct legs from pelvis through knee to each boot, no third legs. Keep left-hand staff at viewer LEFT in all six figures. Retain generous transparent gaps so every whole figure rectangle is disjoint from its neighbors. No floor/shadow/text/grid/effects or detached pixels. Preserve full crown, staff tips, wings and boots without clipping. True RGBA transparency. Save PNG locally.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v03.png"
+    ],
+    "transparent_background": true
+  },
+  "preserve_all_results": true,
+  "production_connected": false,
+  "new_approvals": 0,
+  "attempt": "v04",
+  "reference_E_sha256": "036614afe3bb8bc9cf661900cbf9e27b22131635cfd1d99a8d47ee06899a111f",
+  "spacing_repair": true,
+  "secondary_reference_sha256": "29bc814ee18e51c6fb087fc03f8a100bd7d18155fb2e149fd4c0d737bcee6c21",
+  "visual_error_repair": "REPAIR THE SUPPLIED NORTH/BACK RUN SHEET ANATOMICAL LEFT/RIGHT COSTUME. Every figure remains straight NORTH BACK view with face and chest hidden. In BACK view, anatomical RIGHT is on VIEWER RIGHT, so the BARE RIGHT THIGH AND DRESS SLIT MUST BE ON VIEWER RIGHT. Anatomical LEFT is on VIEWER LEFT, so LEFT leg is DARK-COVERED and LEFT hand STAFF is on VIEWER LEFT. The existing back sheet wrongly exposes the viewer-left thigh: explicitly move that slit/bare upper thigh to viewer RIGHT and cover viewer-left thigh. This is a fresh anatomical repaint, not a horizontal mirror: the staff must stay viewer LEFT and crown/hair/feathers must retain their detail. In both top cells, the two contact boots alternate while viewer-RIGHT bare leg stays anatomically RIGHT. Six back-view poses only. ",
+  "targeted_repair": "N middle-row RIGHT/LEFT support and slit continuity"
+}

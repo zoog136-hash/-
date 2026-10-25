@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/pr122-author-six-pose-atlas-v02.py", line 123, in <module>
+    main()
+  File "/workspace/scratch/pr122-author-six-pose-atlas-v02.py", line 101, in main
+    require(len({item[1] for item in ready}) == 6, "Six distinct completed authored poses required")
+  File "/workspace/scratch/pr122-author-six-pose-atlas-v02.py", line 13, in require
+    raise ValueError(message)
+ValueError: Six distinct completed authored poses required

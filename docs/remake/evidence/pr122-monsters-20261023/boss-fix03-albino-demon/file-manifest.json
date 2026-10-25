@@ -1,0 +1,775 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "frozen": true,
+  "files": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/assemble.py",
+      "bytes": 9944,
+      "sha256": "c7fbad86b15e2d03fc0f32092e443498a2eded834df93b29521064f84a78f19f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/candidate-r002.json",
+      "bytes": 103853,
+      "sha256": "4dd450c6a85811119e2677f78ef749c7279f6a047ac1657c23f72cd455730a22"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/candidate.json",
+      "bytes": 100039,
+      "sha256": "8a43938487dd65970503a2a93ff8add918228028ca48433877dd9af4d571656e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/check_combat_source.py",
+      "bytes": 1957,
+      "sha256": "1009320154167bb60867c91a3574e6b9102771f53fade32d5006ffc9e31aaee6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checkpoint.json",
+      "bytes": 1271,
+      "sha256": "e42f81539a9c0d944bbea2bd2c122ceee4202c1eef430a478400cc551ecb6e0c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_attack_NW_v01.json",
+      "bytes": 1815,
+      "sha256": "37a2bf41766f4fd174c571c505ac0777855a023365b290728a565abfd51c5cbf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_E_v01.json",
+      "bytes": 432,
+      "sha256": "d500002cef4cb992d7ab3af4735425f1bd7172f4386f64a93091cdc4a9008112"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_E_v02.json",
+      "bytes": 3422,
+      "sha256": "3f2b2c8f15768e64a85fcc0347146fb0874ad6ce369981ae50de2c724f8f2900"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_NE_v01.json",
+      "bytes": 3430,
+      "sha256": "1b85624f621e4cb5d51281946b5cf7f3cb986a54a92f35dad6bfb0fd175e8bd6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_NW_v01.json",
+      "bytes": 3432,
+      "sha256": "7159aa65ea9d0a691026f2d2cd6c93644589603a89a8e583c56ea3dcbb82a0e9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_NW_v02.json",
+      "bytes": 3429,
+      "sha256": "05ab360c4aa9a26f63008c8e3253a90df1b3ff1eecfbc7bc419cd3bb03f7dfd7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_N_v01.json",
+      "bytes": 3423,
+      "sha256": "4701f991f331ee6fa7b15141fd6d67262b71b57850c76be4506a05e355034318"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_SE_v01.json",
+      "bytes": 3428,
+      "sha256": "6028490ebd3c0e8ff2b8726c4f14e707963f93bd9b71981e78f50f7675d920f0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_SW_v01.json",
+      "bytes": 3430,
+      "sha256": "d3e939d332df326e110bf56e4088d9828f3cfbbe1c4167e87c79d60034435346"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_SW_v02.json",
+      "bytes": 3430,
+      "sha256": "d5762d601593bfbfe7b01a734f3299b805937fe4bc672a5636db97f3f9e824b9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_S_v01.json",
+      "bytes": 3420,
+      "sha256": "c794ca9336edada79253f7f65f88ecfe8903edd1d76d2e9d4f5c2c663d5aa608"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_combat_W_v01.json",
+      "bytes": 3420,
+      "sha256": "aaa5a84639c377e141d0e83000b234e26987a225298c2003729e09fac9c8c173"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_death_S_v01.json",
+      "bytes": 1801,
+      "sha256": "dd7ddb56b61d66ce88d9232ce6b9fca0963065e0373c568119b54409437e2769"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/checks/albino_death_S_v02.json",
+      "bytes": 1809,
+      "sha256": "cd3feadeac49e5d89d2b3dddd8a57bcd69122e08ac4a9c12ec4f1b74db038758"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/freeze.py",
+      "bytes": 12033,
+      "sha256": "b2b350585d9059a6148ebfa1fe0b60b31174bb0a97b06ac3728bb52a3206bc3d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/godot-playback-r002.json",
+      "bytes": 7590,
+      "sha256": "1001957378fbcd143fefccee53a8d90348be2ed38d4ea516f8864119ed76b155"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/godot-playback.json",
+      "bytes": 7646,
+      "sha256": "62e5af250e15c5a843ecaa70c5af83f07fc5e0528561514cd0f8e81a66d0f3da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/playback.gd",
+      "bytes": 5609,
+      "sha256": "481e561e70b4b69f4d0d1601f7cdf7b27b0c8c070d2395b9704de8c33c1b519e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_attack_NW_v01.png",
+      "bytes": 1807395,
+      "sha256": "7dfb9ef725d07b61993384ad2d6858720871a144e8957240c40f4e5e6f7a7b42"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_E_v01.png",
+      "bytes": 945176,
+      "sha256": "9b5a2a5a3c1228cb10d3554642a93c1a728c781ad25a5b4b4b50af7245fac6ef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_E_v02.png",
+      "bytes": 1143588,
+      "sha256": "cb302c6c690e5eef74866b0a34e5caf05e88843cdb059825835294aab6365fd5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NE_v01.png",
+      "bytes": 1021306,
+      "sha256": "0327bac76ce7de2e42abd26eb262d6d2b41abe24826d0443a69c11f6b3800154"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NW_v01.png",
+      "bytes": 995865,
+      "sha256": "3a62d078f2383d1bc356f1eee375f6ea908146e12f6cd3918272c3865f8f00ca"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_NW_v02.png",
+      "bytes": 1223699,
+      "sha256": "ea0448e90f0dd4c775f414c343d2d77361ccc08cdfcc0562f997c39675b7e6c8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_N_v01.png",
+      "bytes": 1055914,
+      "sha256": "6a74cf4c0287c8b94ee290a19d3032f524d3c07c26f3e5a2a52409c36a2d8dd1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SE_v01.png",
+      "bytes": 1320018,
+      "sha256": "967cd1b240e7d264c8183f74f46f697ce8a3405107c85dc3e73cba49dae0ca28"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SW_v01.png",
+      "bytes": 1256658,
+      "sha256": "7494f9f17eba343e4178eef2f99142875ef9a09200fb923007c510bcd337bac7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_SW_v02.png",
+      "bytes": 1381089,
+      "sha256": "92f8047bd164b41de6a5a039ae4ca4bfa9fb4bcc0b5432afd65b22c1b051c1dd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_S_v01.png",
+      "bytes": 1151995,
+      "sha256": "e49bcecdc51952e4a6f39be829829302f370ba015d3dab3a4365f5ade7cca4e4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_combat_W_v01.png",
+      "bytes": 1347905,
+      "sha256": "143afd22e1a076b9c56d3c4c473d3d220015df5fe039f983c3474c1b8ffaa17b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_death_S_v01.png",
+      "bytes": 1634813,
+      "sha256": "62756eb0552798475068fda4670a4ecfd17901cae4a66a0027a635145fd0fbb0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/raw/albino_death_S_v02.png",
+      "bytes": 1210154,
+      "sha256": "acb4b07b58b949284a7188cb61aeafb190ef16206143512411b4e98611c2b1b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/reference-crop.png",
+      "bytes": 196146,
+      "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_attack_NW_v01.json",
+      "bytes": 3441,
+      "sha256": "0bb347466efe5f0d2880375953680dccf34884e53d2b3fbae1a8da31ea94f28a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_E_v01.json",
+      "bytes": 3635,
+      "sha256": "b3817c16c8041b0b3e3863d228d71df1795311b0d5ba2bca072da24673f03d32"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_E_v02.json",
+      "bytes": 4098,
+      "sha256": "0ac70cf9c26ee6e4a660ee35f3a521f51cc8df96163e917e701c63b0ecc06717"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_NE_v01.json",
+      "bytes": 4659,
+      "sha256": "a6803c41f94fda2aa62087adb36baf2dadb4896e5039ea19aa9a4c607b0d7b3f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_NW_v01.json",
+      "bytes": 4731,
+      "sha256": "6ccc0b27ecea3a773a6d8f93faa0b7af12f6ee6ca9f69ca5b0a0b908a766034d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_NW_v02.json",
+      "bytes": 5815,
+      "sha256": "c84db942e8a1e9245dc6c4f654a6cca5772f34225d867c954de4c9db571e83e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_N_v01.json",
+      "bytes": 4700,
+      "sha256": "4c2c965ffdc1a7ed0bc0fba180fff43b6ff0e740d987899a7b307574b412192a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_SE_v01.json",
+      "bytes": 4120,
+      "sha256": "1218c54c561be2ff2cd600b3717c934bde1271e80f8e6fe44fe860d467ce96fd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_SW_v01.json",
+      "bytes": 4141,
+      "sha256": "cd525a55ccda2e009f2cdae966299a019e514c52ebf9c47fcf741444cbd78a5b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_SW_v02.json",
+      "bytes": 5081,
+      "sha256": "221bfab0b1989c3d5a323e7889872b8d1f674d7ad8a502aa85ce4124095236b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_S_v01.json",
+      "bytes": 4255,
+      "sha256": "ee756c4a3bd8a1efb439893960027967f012d8e890142aa9bcc37a1e414d487f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_combat_W_v01.json",
+      "bytes": 4177,
+      "sha256": "182e88f6648dee7146f43c52df1c8db025e18e0c962efac4dd0fd44eeddf69e8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_death_S_v01.json",
+      "bytes": 3390,
+      "sha256": "bd32142d06f0401a7db021ab1ae8fe662eac889bb8d3734553f122a83579db24"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/requests/albino_death_S_v02.json",
+      "bytes": 3716,
+      "sha256": "954b7cb5a5131915b88b94be448b079297bc1660bfc89ff720c37606b3a08fb6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/all-source-checks.json",
+      "bytes": 38234,
+      "sha256": "42fb7de96dfedc1ac4778837cb480688d43056db7aeaed3e75e23a01f22255ee"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-E-run6-v01.json",
+      "bytes": 438,
+      "sha256": "a9b29a17ca0d8477456a8ddfeb1511bb359446a440de48e1c8938a84e8bc98c0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-E-run6-v02.json",
+      "bytes": 3026,
+      "sha256": "aa1923851b755c0a6ffaa8e954ca936c5f074f1ebe4f69a16dd50270e62968ef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-N-run6-v01.json",
+      "bytes": 3024,
+      "sha256": "3cbaf92140b9af197e50903ccaa9f2f72b899f65e0cb6e60c1372e83ead29106"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-NE-run6-v01.json",
+      "bytes": 3034,
+      "sha256": "e56eaa258bd2a2932f551a0c66193bc9f8507c3025826208a6e5d9e34748699b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-NW-run6-v01.json",
+      "bytes": 3034,
+      "sha256": "3fe108ab747436acc989e32aadbeecb5023073e02904e4952e338880f18fbb7e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-NW-run6-v02.json",
+      "bytes": 445,
+      "sha256": "8d0057cf0e507de33d8b30008d1fc797d70d0043b5e9d4caf452c87cfeceb873"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-NW-run6-v03.json",
+      "bytes": 3034,
+      "sha256": "83aa990bdc31f4df2c006b8175f0ade305e3ade7459fad9350f765716c44402b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-S-run6-v01.json",
+      "bytes": 3025,
+      "sha256": "c59cd8df70d1e626225e0f3490e21603182de17da5d46bdf985d7f2c24528612"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-S-run6-v02.json",
+      "bytes": 3023,
+      "sha256": "5f005eaa6d9a6595f13a5f520dab574a8fa375fb2be3d4d7c34d8edac2de6fd7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-SE-run6-v01.json",
+      "bytes": 3033,
+      "sha256": "2d230148d0e21340033fd9369fb5feae943227fb3cd5600b5a1c11fa38ba83a0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-SW-run6-v01.json",
+      "bytes": 3034,
+      "sha256": "e5389ee12530cfe067afb5f065566d7db5fb6063d4c1e6748f078a112f2d9d36"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-SW-run6-v02.json",
+      "bytes": 3034,
+      "sha256": "4fdd040293dfff0a57ab6173981e29101080d438e370061b1761ec11ba0f517c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/checks/albino-demon-W-run6-v01.json",
+      "bytes": 3025,
+      "sha256": "1366d0e81186aebe87e39a01cbbd650b23076161c1f107444a1d5558b452e4f3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/file-manifest.json",
+      "bytes": 14559,
+      "sha256": "02870d9991e249a9b2b373c07e464c74378fe1b3f4114bb55681ea9c48515e5d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/quality-review.json",
+      "bytes": 10004,
+      "sha256": "038cb5baa4de8153e4b86a9ec1b46ea65b3db4f9aa4f1f6c3a9f94d7211fa022"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-E-run6-v01.png",
+      "bytes": 1877140,
+      "sha256": "7949016a9f3fb6ed780503e504d842852a892b7ee184a56e36cae5ced9c35b17"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-E-run6-v02.png",
+      "bytes": 2210284,
+      "sha256": "5f692ea863d6db111f605d318820ab5415dbc68e94b46fb903431bbc02fb31b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-N-run6-v01.png",
+      "bytes": 1484506,
+      "sha256": "f7626a545a32708a9da1bc1e42e05684a6808cf77c097829f246ce74c7b37e9c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NE-run6-v01.png",
+      "bytes": 2536953,
+      "sha256": "3f6b01e4ab5438a0965c45cd23d0e6e5099eeb537c88bbe591abfbbf2345a251"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NW-run6-v01.png",
+      "bytes": 2366553,
+      "sha256": "47fdfd2aba5a0bfc1ecfeeedc9f7e1a692f39e162695b3bc68b05cf43049d6c2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NW-run6-v02.png",
+      "bytes": 1574715,
+      "sha256": "65694c4b0d304c8712cc72d90f364fc7993f7186a70e8b52c598c8686cb05772"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-NW-run6-v03.png",
+      "bytes": 2203935,
+      "sha256": "9bbb6c3dbddcbf14567eb6f1de8a754fbf47fa9741bd75b3b9f2e7bb8b07e58b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-S-run6-v01.png",
+      "bytes": 2574232,
+      "sha256": "86b9a852efef77e3e45a27c3c5044c295c0623258f60a8b93fc7337c9897fe74"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-S-run6-v02.png",
+      "bytes": 2675345,
+      "sha256": "93e59af435f78e38c5ae0987cba17ebb774f2b5dbdc65ecc77448acbb491283b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SE-run6-v01.png",
+      "bytes": 2633045,
+      "sha256": "934f7e32733916a538bf5a9e79e84be9d5c55997248984b1403c595ad00bb6db"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SW-run6-v01.png",
+      "bytes": 2711704,
+      "sha256": "6d7745162a4fbc6479ee3600c9c238bc4ef98f14e6748c49daf9410c7acc3c0c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-SW-run6-v02.png",
+      "bytes": 2531614,
+      "sha256": "eaa6f064d21f210b8da96f4600701419269d5970e55fa0342052b2348399a3b1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/raw/albino-demon-W-run6-v01.png",
+      "bytes": 2319951,
+      "sha256": "7fdf8ead19fed22490aadb70b4b43a00c489ff9ffaefd1e17b4ea8679f2bd3e7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/record_source.py",
+      "bytes": 1890,
+      "sha256": "27571fff346c0f10eb1523ddac2f009dd7aeb9f0b03c9b1ebde57b1076836bc8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-E-run6-v01-request.json",
+      "bytes": 2896,
+      "sha256": "268b2dfcca59e95b6e27fe12bd65916a93c7bd41df777a86e14c07f6a53cd183"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-E-run6-v01.json",
+      "bytes": 3208,
+      "sha256": "67f1a3446738566b63a22b5ad65f1fed1edd790cf6d7c06f5cf29d31de8557dd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-E-run6-v02-request.json",
+      "bytes": 2768,
+      "sha256": "df2532475a9a1868f15a6fa8d7110e2dbeef810bd30ff05b7e8adee9e0d8e2a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-E-run6-v02.json",
+      "bytes": 3080,
+      "sha256": "724ce8634b13c1e650523bd6e56885e8ce03850b1804e2676d491a50e7863279"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-N-run6-v01-request.json",
+      "bytes": 2870,
+      "sha256": "cedb372997afd1c68dc29b763e2cc1d48cd78f0701ae4069725aefab9ee6b9fd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-N-run6-v01.json",
+      "bytes": 3182,
+      "sha256": "4a662c95a4b991af352a5c204bb80b34551946e708f1fa571e2c6287c0ee7640"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NE-run6-v01-request.json",
+      "bytes": 2866,
+      "sha256": "df6190bc268eae3947a571d12f4910f17f4c8c276e07eec15259bb82838e940c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NE-run6-v01.json",
+      "bytes": 3179,
+      "sha256": "df6c7a94db0210114628afe07fd1245573a7d3cea8ee508d0bd28578daf02310"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NW-run6-v01-request.json",
+      "bytes": 2865,
+      "sha256": "9248ca909039fca80cbc60cb5133059a01a9e34052577c46ca068e8d9437e2d4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NW-run6-v01.json",
+      "bytes": 3178,
+      "sha256": "719e535a0c1d6a13054e25562f8098a2a2a8273ac57ade4ebea9cd7d050bc50b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NW-run6-v02-request.json",
+      "bytes": 3507,
+      "sha256": "b87a71bdb18c78999ab80f03eb074fbfe6879289ef1c9385531653ba18be577f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NW-run6-v02.json",
+      "bytes": 3820,
+      "sha256": "e8118467bca16f9af926c386d731139b15aa4252bb83cdca6101694f9e13109d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NW-run6-v03-request.json",
+      "bytes": 2420,
+      "sha256": "e5916e9379992b5347f0616ae893fe13a2fbe2261d9e0b765f4f36efaf37008e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-NW-run6-v03.json",
+      "bytes": 2733,
+      "sha256": "c4d79df3b27cfd9afc73ae8ada777fdf22486786973bb74798b88d343212e519"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-S-run6-v01-request.json",
+      "bytes": 2733,
+      "sha256": "a98e4d4cef195bc5da79f0245e5510323631b6fa39d426236f79e3cc427e1e43"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-S-run6-v01.json",
+      "bytes": 3045,
+      "sha256": "5610889e898dfa71ad088cb69493782148e4adb332560d4f183ccecca9909120"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-S-run6-v02-request.json",
+      "bytes": 3272,
+      "sha256": "263bf4ed68e3c59416822a4c1661753bc670a142767554da16757df173aa0a54"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-S-run6-v02.json",
+      "bytes": 3584,
+      "sha256": "bceb22c140d3c2a472233c4137e1a63ae17b91a2e7bd789882ae0999d71af30b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-SE-run6-v01-request.json",
+      "bytes": 2746,
+      "sha256": "59a07349e82c80c47dafd82656cda2cc24faa350c545bc61255261996289a2e7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-SE-run6-v01.json",
+      "bytes": 3059,
+      "sha256": "d3a5a1e8300b36ae8529211160aa593e62a7f0199f2de960ad83550a0ba19ef2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-SW-run6-v01-request.json",
+      "bytes": 2819,
+      "sha256": "e2c78d26332a43c692951f9aec90c023d91d3dccc8a77cb471a5ff16726e5189"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-SW-run6-v01.json",
+      "bytes": 3132,
+      "sha256": "ad5ea80aac9d6210841cd52ee96020e29450e746e624bfda556d2f1c9beaad97"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-SW-run6-v02-request.json",
+      "bytes": 3283,
+      "sha256": "0e5ad19fb41a4c6d7806f7f67e52166d165f1443784887e7d834bcb63b1fa2d8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-SW-run6-v02.json",
+      "bytes": 3596,
+      "sha256": "a524560dd3ab0d3bf02d87bc0452bc8c4ba78c8083cdc65fb702bf8291cf5a8d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-W-run6-v01-request.json",
+      "bytes": 2832,
+      "sha256": "20f56ac401515a0025aa75e139aa8f7a4afde6a4d924c55202648d21d8ec827e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/requests/albino-demon-W-run6-v01.json",
+      "bytes": 3144,
+      "sha256": "0297011a8f8190b9444c7f3531ca83f460f82acaf47976ec6c2aad00dbfff810"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/source-checks.json",
+      "bytes": 28404,
+      "sha256": "c66362f2bb8ca937e1ee58e72f163934ab53663170cf699d7738c97f5e033954"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/source-inventory.json",
+      "bytes": 17711,
+      "sha256": "ecd4870142896f9121c1c291b425b656a34cd2ff5bf7fadc99e4e90d405f8480"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/source-selection-r002.json",
+      "bytes": 11505,
+      "sha256": "7d44ea0b8f959ab0f704eee360a33da318fabe0e65773d11aae71fb80c355ebe"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/source-selection.json",
+      "bytes": 8512,
+      "sha256": "132587fa24f34bf44e6b67f7b3a06f6ee8a1d037f919ca192dc6ca6a7fddbccc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/visual-review.json",
+      "bytes": 10298,
+      "sha256": "73ae3086e771e7305ef255d415f30cc35a8a8e250f47602a96ae9327f9915e61"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/NativeMotionProfile.tres",
+      "bytes": 840,
+      "sha256": "46538620613d83d577681e19d7dbc568184da9bd3ec2a010a4eed108821f0cf7"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/SpriteFrames.tres",
+      "bytes": 31207,
+      "sha256": "c67e379a420e28a003b7626a8ada46569a7ebba4f64a33163826acdb37574665"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-E-run6-v02.png",
+      "bytes": 2210284,
+      "sha256": "5f692ea863d6db111f605d318820ab5415dbc68e94b46fb903431bbc02fb31b3"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-N-run6-v01.png",
+      "bytes": 1484506,
+      "sha256": "f7626a545a32708a9da1bc1e42e05684a6808cf77c097829f246ce74c7b37e9c"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-NE-run6-v01.png",
+      "bytes": 2536953,
+      "sha256": "3f6b01e4ab5438a0965c45cd23d0e6e5099eeb537c88bbe591abfbbf2345a251"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-NW-run6-v03.png",
+      "bytes": 2203935,
+      "sha256": "9bbb6c3dbddcbf14567eb6f1de8a754fbf47fa9741bd75b3b9f2e7bb8b07e58b"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-S-run6-v02.png",
+      "bytes": 2675345,
+      "sha256": "93e59af435f78e38c5ae0987cba17ebb774f2b5dbdc65ecc77448acbb491283b"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-SE-run6-v01.png",
+      "bytes": 2633045,
+      "sha256": "934f7e32733916a538bf5a9e79e84be9d5c55997248984b1403c595ad00bb6db"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-SW-run6-v02.png",
+      "bytes": 2531614,
+      "sha256": "eaa6f064d21f210b8da96f4600701419269d5970e55fa0342052b2348399a3b1"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino-demon-W-run6-v01.png",
+      "bytes": 2319951,
+      "sha256": "7fdf8ead19fed22490aadb70b4b43a00c489ff9ffaefd1e17b4ea8679f2bd3e7"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_E_v02.png",
+      "bytes": 1143588,
+      "sha256": "cb302c6c690e5eef74866b0a34e5caf05e88843cdb059825835294aab6365fd5"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_NE_v01.png",
+      "bytes": 1021306,
+      "sha256": "0327bac76ce7de2e42abd26eb262d6d2b41abe24826d0443a69c11f6b3800154"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_NW_v01.png",
+      "bytes": 995865,
+      "sha256": "3a62d078f2383d1bc356f1eee375f6ea908146e12f6cd3918272c3865f8f00ca"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_N_v01.png",
+      "bytes": 1055914,
+      "sha256": "6a74cf4c0287c8b94ee290a19d3032f524d3c07c26f3e5a2a52409c36a2d8dd1"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_SE_v01.png",
+      "bytes": 1320018,
+      "sha256": "967cd1b240e7d264c8183f74f46f697ce8a3405107c85dc3e73cba49dae0ca28"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_SW_v02.png",
+      "bytes": 1381089,
+      "sha256": "92f8047bd164b41de6a5a039ae4ca4bfa9fb4bcc0b5432afd65b22c1b051c1dd"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_S_v01.png",
+      "bytes": 1151995,
+      "sha256": "e49bcecdc51952e4a6f39be829829302f370ba015d3dab3a4365f5ade7cca4e4"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_combat_W_v01.png",
+      "bytes": 1347905,
+      "sha256": "143afd22e1a076b9c56d3c4c473d3d220015df5fe039f983c3474c1b8ffaa17b"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r001/albino_death_S_v02.png",
+      "bytes": 1210154,
+      "sha256": "acb4b07b58b949284a7188cb61aeafb190ef16206143512411b4e98611c2b1b3"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/NativeMotionProfile.tres",
+      "bytes": 840,
+      "sha256": "1e6386126f17300dcdcc7d9c703c9832e3a2cd26127024b5cbcd8c2a64232710"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/SpriteFrames.tres",
+      "bytes": 31210,
+      "sha256": "256be5143504a4af4eb0eaa8a74fa53ee2c03d20e38862a3f72560fc56b11cee"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-E-run6-v02.png",
+      "bytes": 2210284,
+      "sha256": "5f692ea863d6db111f605d318820ab5415dbc68e94b46fb903431bbc02fb31b3"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-N-run6-v01.png",
+      "bytes": 1484506,
+      "sha256": "f7626a545a32708a9da1bc1e42e05684a6808cf77c097829f246ce74c7b37e9c"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-NE-run6-v01.png",
+      "bytes": 2536953,
+      "sha256": "3f6b01e4ab5438a0965c45cd23d0e6e5099eeb537c88bbe591abfbbf2345a251"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-NW-run6-v03.png",
+      "bytes": 2203935,
+      "sha256": "9bbb6c3dbddcbf14567eb6f1de8a754fbf47fa9741bd75b3b9f2e7bb8b07e58b"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-S-run6-v02.png",
+      "bytes": 2675345,
+      "sha256": "93e59af435f78e38c5ae0987cba17ebb774f2b5dbdc65ecc77448acbb491283b"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-SE-run6-v01.png",
+      "bytes": 2633045,
+      "sha256": "934f7e32733916a538bf5a9e79e84be9d5c55997248984b1403c595ad00bb6db"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-SW-run6-v02.png",
+      "bytes": 2531614,
+      "sha256": "eaa6f064d21f210b8da96f4600701419269d5970e55fa0342052b2348399a3b1"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino-demon-W-run6-v01.png",
+      "bytes": 2319951,
+      "sha256": "7fdf8ead19fed22490aadb70b4b43a00c489ff9ffaefd1e17b4ea8679f2bd3e7"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_attack_NW_v01.png",
+      "bytes": 1807395,
+      "sha256": "7dfb9ef725d07b61993384ad2d6858720871a144e8957240c40f4e5e6f7a7b42"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_E_v02.png",
+      "bytes": 1143588,
+      "sha256": "cb302c6c690e5eef74866b0a34e5caf05e88843cdb059825835294aab6365fd5"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_NE_v01.png",
+      "bytes": 1021306,
+      "sha256": "0327bac76ce7de2e42abd26eb262d6d2b41abe24826d0443a69c11f6b3800154"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_NW_v02.png",
+      "bytes": 1223699,
+      "sha256": "ea0448e90f0dd4c775f414c343d2d77361ccc08cdfcc0562f997c39675b7e6c8"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_N_v01.png",
+      "bytes": 1055914,
+      "sha256": "6a74cf4c0287c8b94ee290a19d3032f524d3c07c26f3e5a2a52409c36a2d8dd1"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SE_v01.png",
+      "bytes": 1320018,
+      "sha256": "967cd1b240e7d264c8183f74f46f697ce8a3405107c85dc3e73cba49dae0ca28"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_SW_v02.png",
+      "bytes": 1381089,
+      "sha256": "92f8047bd164b41de6a5a039ae4ca4bfa9fb4bcc0b5432afd65b22c1b051c1dd"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_S_v01.png",
+      "bytes": 1151995,
+      "sha256": "e49bcecdc51952e4a6f39be829829302f370ba015d3dab3a4365f5ade7cca4e4"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_combat_W_v01.png",
+      "bytes": 1347905,
+      "sha256": "143afd22e1a076b9c56d3c4c473d3d220015df5fe039f983c3474c1b8ffaa17b"
+    },
+    {
+      "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/albino_death_S_v02.png",
+      "bytes": 1210154,
+      "sha256": "acb4b07b58b949284a7188cb61aeafb190ef16206143512411b4e98611c2b1b3"
+    }
+  ],
+  "file_count": 152,
+  "total_bytes": 108543123,
+  "tracked_files_at_snapshot": 82,
+  "snapshot_HEAD": "d4488fbe6de79020c09e0a6bffb857f940529a43",
+  "existing_approved_assets_modified": 0,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "delivery_note": "All immutable generated PNG/request bytes are local and hash-pinned. Parent agent handles Git delivery; local generation/playback alone is not committed delivery."
+}

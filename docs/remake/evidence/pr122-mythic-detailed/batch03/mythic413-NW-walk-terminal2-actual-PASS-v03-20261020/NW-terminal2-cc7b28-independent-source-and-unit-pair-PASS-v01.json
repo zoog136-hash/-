@@ -1,0 +1,127 @@
+{
+  "schema": "pr122-413-NW-terminal2-independent-source-and-unit-pair-quality-v1",
+  "actor": "transform:413",
+  "action": "walk",
+  "direction": "NW",
+  "scope": "actual terminal2 source and LOAD1-to-terminal2 unit pair only; all6/wholecycle/realbinding pending",
+  "source1": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/thunder_female-NW-walk-LOAD1-rigged-retouched-v04.png",
+    "sha256": "396c0803145a31990f7caeff6a889aac8d41966c2efe27e3362734268670b886",
+    "bytes": 517801
+  },
+  "terminal2": {
+    "path": "/workspace/scratch/mythic413-NW-walk-terminal2-author-20261020-v02/thunder_female-NW-walk-terminal2-finished-local-rig-v03.png",
+    "sha256": "cc7b28ba8631428b56eea0b0eb6cfaaf757d80ae773a47ace99ab622465ca319",
+    "bytes": 555090
+  },
+  "actual_new_joint_material": {
+    "path": "/workspace/scratch/mythic413-NW-walk-terminal2-author-20261020-v02/thunder_female-NW-walk-terminal2-joint-retouch-v01-service.png",
+    "sha256": "7f2b497fb617d7db1205c2d4693df2cc1ae70c3130d21bc0140bb43d75c47ecb",
+    "bytes": 590495
+  },
+  "declared_body_bob_base": {
+    "path": "/workspace/scratch/mythic413-NW-walk-terminal2-author-20261020-v02/thunder_female-NW-walk-terminal2-actual-rig-v02.png",
+    "sha256": "156bd9dfb0181171fe9c0d4d4e14e01cf79e43f9ceb5b1a11723a7b57695ce3d",
+    "bytes": 528407
+  },
+  "author_finish_proof": {
+    "path": "/workspace/scratch/mythic413-NW-walk-terminal2-author-20261020-v02/terminal2-finished-local-rig-proof-v03.json",
+    "sha256": "4064478ea5eec0f9dfba00e869a772a43f4fe136299ee30a61994ad2493e03e0",
+    "bytes": 2025
+  },
+  "private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NW-terminalv03-view22-frozen.json",
+    "sha256": "0be2fdb2c5c63a47e0a372d0ae523b1fc04b437191d24dea3800de5c11e0765f",
+    "bytes": 10795
+  },
+  "status": "SOURCE_QUALITY_AND_UNIT_PAIR_PASS",
+  "fixed_C": 2048,
+  "constant_body_factor": 2,
+  "native_root": "Same common source0 root; physical upperbody bob minus6px and coat lag, not root/whole-image translation",
+  "independent_preservation_checks": {
+    "upperbody_y_lt708_final_vs_body_bob_base_changed_RGBA": 0,
+    "RIGHT_rigid_staff_mask_final_vs_base_changed_RGBA": 0,
+    "all_final_vs_base_changed_RGBA": 49825
+  },
+  "actual_quality": [
+    "True NW rear body, anatomical RIGHT doubleended staff and gold-blue costume retained with complete endpoints.",
+    "Free LEFT arm now progresses forward against terminal LEFT support leg moving rearward; shoulder/elbow/glove remain joined.",
+    "Actual dedicated leg painting plus local shin articulation produces complete natural knees/ankles/shoes and coherent toeoff.",
+    "No duplicated hem/hard missing shoe or wire controls; slight unique native skin texture is not treated as a missing joint."
+  ],
+  "actual_pair": {
+    "required_same_forefoot_delta_source": [
+      111.35431880224218,
+      100.21888692201796
+    ],
+    "source1_forefoot_reference": [
+      595,
+      1017.5
+    ],
+    "terminal2_forefoot_target": [
+      706.3543188022422,
+      1117.7188869220179
+    ],
+    "target_NW_groundline_y_minus_0p9x": 482.0,
+    "actual_alpha100_forefoot_tangent_max_y_minus_0p9x": 481.79999999999995,
+    "actual_forefoot_tangent_pixels_within1px": [
+      [
+        703,
+        1114
+      ],
+      [
+        704,
+        1115
+      ],
+      [
+        705,
+        1116
+      ],
+      [
+        706,
+        1117
+      ],
+      [
+        707,
+        1118
+      ],
+      [
+        708,
+        1118
+      ],
+      [
+        708,
+        1119
+      ],
+      [
+        709,
+        1119
+      ],
+      [
+        710,
+        1120
+      ]
+    ],
+    "actual_heel_bottom_alpha16_xrange": [
+      746,
+      749
+    ],
+    "actual_heel_bottom_alpha16_y": 1133,
+    "heel_clearance_above_same_forefoot_supportline_source_px_approx": 21.75,
+    "RIGHT_AIR_boot_ROI": [
+      580,
+      900,
+      655,
+      1010
+    ],
+    "RIGHT_AIR_all_alpha100_min_groundline_gap_source_px": 39.499999999999886,
+    "RIGHT_AIR_min_groundline_gap_Player_world": 4.682112068960737,
+    "conditions": "Finite boot width/yaw and final body-ground plane remain in complete-cycle binding scope. Current source and unit pair agree with explicit same NW supportline; not hidden3D full skeleton proof."
+  },
+  "next": "Actual opposite RIGHT contact3/load4/terminal5, inspect real six-phase loop then bind staging.",
+  "whole_cycle_APPROVED": false,
+  "staging_APPROVED": false,
+  "actor_APPROVED": false,
+  "completed_added": 0,
+  "images_forwarded": 0
+}

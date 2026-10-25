@@ -1,0 +1,16 @@
+{
+  "status": "ACTUAL_PRIVATE_TOOL_IO_USED_NO_IMAGE_OR_BASE64_FORWARDED",
+  "tool": "image_gen__imagegen",
+  "functions_orchestration": "Result kept only in isolated functions.store; image_url data-URL payload passed to echo-disabled local Python stdin in49152-character chunks.",
+  "actual_service_calls": 1,
+  "writer": "/workspace/scratch/mythic413-SE-private-base-generation-fresh-20261020-v01/save-private-base64-payload-stdin-v02.py",
+  "writer_sha256": "b53df21208a35f6cae806c12bf95076dffce336d858ad96ca67abe5deb3ea0c6",
+  "chunk_chars": 49152,
+  "chunks": 29,
+  "payload_characters": 1412540,
+  "private_stdout_allowed": "Only readiness plus path/SHA/byte metadata, never payload.",
+  "source_native_raw_preserved_without_resampling": true,
+  "reference_board_is_downscaled_input_derivative": true,
+  "generatedImage_forwarded": false,
+  "image_forwarded_to_parent": false
+}

@@ -1,0 +1,137 @@
+{
+  "schema": "pr122-immutable-next-source-preparation-v1",
+  "status": "ACTUAL_PRODUCTION_RELEASED_BY_ROOT_267_APPROVED_2OF31",
+  "scope": {
+    "key": "transform:413",
+    "name": "신화-뇌신(여)",
+    "grade": "신화",
+    "direction": "NW",
+    "direction_index": 5,
+    "role": "walk",
+    "animation": "walk_5",
+    "version": "v01",
+    "source_stem": "thunder_female",
+    "source_batch": "batch04",
+    "requested_poses": 6
+  },
+  "planned_output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-walk-v01.png",
+  "references": [
+    {
+      "path": "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+      "sha256": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+      "authority": "sole identity/design/colors/actual equipment"
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-walk-v01.png",
+      "sha256": "42c2e494e28144342f9648ef4584debe74c50ec8d149e04fc43ce3e2dcd365f9",
+      "authority": "existing body scale/articulation only; never copy or mirror poses"
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png",
+      "sha256": "b0a2188b66d2c59d216ec2b0ddcd2d133f26b093aaaeb1e17adfdc0d232fd7c8",
+      "authority": "existing body scale/articulation only; never copy or mirror poses"
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-run-v01.png",
+      "sha256": "f7a5f2fe81945a314f8e17dff332c0f403f3a7387ad3a134bf973adc558d0b42",
+      "authority": "existing body scale/articulation only; never copy or mirror poses"
+    }
+  ],
+  "reference_visual_inspection_this_turn": true,
+  "transparent_background": true,
+  "atlas": {
+    "width": 1024,
+    "height": 1536,
+    "columns": 2,
+    "rows": 3,
+    "cell": [
+      512,
+      512
+    ],
+    "order": "left-to-right then down",
+    "exactly_one_complete_body_per_cell": true,
+    "central_silhouette_area": [
+      320,
+      320
+    ],
+    "empty_gutter_minimum": 96
+  },
+  "phase_contract": [
+    "left_support_right_forward_contact",
+    "left_support_midstance_right_passage",
+    "left_to_right_support_transfer",
+    "right_support_left_forward_contact",
+    "right_support_midstance_left_passage",
+    "right_to_left_support_transfer"
+  ],
+  "prompt": "Author SIX independently drawn high-detail isometric RPG WALK sprites of EXACTLY 신화-뇌신(여) (신화) from the attached ORIGINAL PORTRAIT. Preserve the precise face, hair, actual clothing/armor, colors, body proportions, equipment and exact existing weapon design and anatomical weapon hand. The portrait determines whether any item or anatomy exists: do not invent wings, horns, a helmet, demon anatomy, dark armor, or a different weapon. Preserve identity and detailed craftsmanship throughout all six poses.\n\nTechnical sprite atlas: 1024x1536 pixels, EXACTLY TWO COLUMNS and THREE ROWS, six512x512 cells, temporal order left-to-right then down. ONE whole character in each cell. Keep every complete silhouette, including all actual equipment tips, inside its central320x320 area; at least96pixels of empty transparent gutter on every cell edge. More than70percent of the sheet remains empty. No pair of character bounding rectangles overlaps. Use the SAME head and torso scale in every phase and direction; articulate or re-angle the existing equipment, never shrink an individual pose, omit a part, or crop tips to fit.\n\nAll SIX figures face NORTHWEST, screen upper-left and away from the camera; true rear three-quarter view, with the same elevated orthographic isometric camera and local light. Head, torso, hips, toes, and equipment all agree with that heading. Rear views show the actual back surfaces; do not turn a rear-facing head toward the viewer. Render the true new perspective and occlusion, with anatomically consistent handedness; do not mirror another direction. Author SIX true WALK phases: 0 anatomical LEFT foot bears weight while RIGHT foot contacts forward; 1 left support with right leg passing; 2 right foot takes support as left pushes off; 3 RIGHT support with LEFT forward contact; 4 right support with left leg passing; 5 left foot takes support as right pushes off. Clearly alternate the actual anatomical support limbs and show toe-off, heel contact, knee/hip articulation, and passage. Maintain grounded, readable weight transfer; a frozen support foot with cosmetic leg changes is invalid.\n\nAll six poses must be independently drawn, with visible limb and joint changes; never translate, rotate, recolor, mirror, or repeat one pose. Preserve the same physical character and rigid equipment rather than changing the model between frames. Crisp hard-edged cutout sprites, rich material shading INSIDE the body. All body and dark materials fully opaque; alpha0 everywhere outside the exact silhouette, antialiasing only1-2pixels at its edge. No shadows, floor, diffuse aura, bloom, halo, lightning trails, background, scenery, labels, grids, text, extra figures, detached ornaments or spare weapons. Keep any portrait-specific inset emissive details contained in their real equipment surfaces.\n\nReference 1 is the ORIGINAL PORTRAIT and sole identity, palette, material and equipment authority. Reference 2 is saved native W walk; references 3 and 4 are saved native E walk and run. These existing native sources preserve body scale and identity only. Author a new literal NW perspective; never mirror them. Anatomical LEFT is the near side for this NW back-three-quarter camera; anatomical RIGHT is far. Near/far is camera depth, not a screen-left/right label, and anatomical sides never swap over the six phases. Do not turn the head toward the viewer.\n\nExactly ONE existing portrait weapon with its invariant actual shape, blade/head/shaft/hilt/guard/pommel or other real topology, original grip and original anatomical carrying hand; only rigid articulation and perspective occlusion may change. Do not invent a second weapon, shield, straps, attachment, or unseen ornament. Preserve every existing armor/clothing/hair silhouette and original colors; no palette correction counts as character completion. Grip hand and any unseen back surfaces require portrait/native-source verification after authoring release; unresolved fields stay HOLD, never guess.\n\nAny later bone guide is a motion-only scaffold. It cannot authorize a body silhouette, palette, missing anatomy, weapon hand, new equipment, or a geometry/motion/detail approval. Its provisional ratios must be calibrated to the saved character scale after visual review. Six phase labels are preserved from the saved request contract; real weight transfer, ground contact chronology and loop timing must be checked on actual authored source before approval.\n\nResolved observed identity: Golden-blonde female human with ornate high bun and curled ponytail tied by rich blue ribbons; royal blue fitted armored bodice with gold trim, white pleated short skirt and longer split blue trailing coat/cape with gold motifs, black thigh-high legwear and pointed gold heeled boots. ONE slender GOLD double-ended spear/staff in anatomical RIGHT hand, with an openwork pointed gold upper spearhead above a CYAN diamond-shaped gem, long fine gold shaft, and lower CYAN gem with gold pointed counterweight. Preserve this exact staff topology, grip and rigid length. NW is a genuine back-three-quarter view looking upper-left: show her actual back and rear hair, anatomical LEFT near and RIGHT far. Carry the staff with FAR RIGHT arm; it remains attached to actual hand. Left free arm swings slightly opposite stepping legs. Blue coat tails and ribbon respond subtly to gait, never cover the leg contact demonstration. Six separate physically coherent WALK drawings, grounded support, measured graceful steps, not run or lunge. Use the last fixed-bone diagram only for distinct anatomical leg phases, never draw its labels or skeleton. Keep upper body natural with tiny gait bob, no impossible neck twist. Original portrait supplies identity, existing W/E sources supply quality/material level, not pose mirroring. There is no floor, ground line, cast shadow, lightning aura or detached particle. Transparent alpha outside clean silhouette. All six complete staff tips remain safely inside each512 cell, never crossing gutters.",
+  "guide_recipe": {
+    "path": "/workspace/scratch/mythic413-NW-walk-prep-20261019-r001/fixedboneguide.py",
+    "sha256": "b85846e7397220aec967cccbe61da4c8f317ee4c183fe4673cca478c430e8058",
+    "execution_this_turn": "NOT_RUN; no PNG/SVG/geometry files emitted",
+    "coordinate_system": "+X screen right, +Y away, +Z up; orthographic camera from world south at elevation 35.264389682754654 degrees",
+    "heading_world": [
+      -0.7071067811865476,
+      0.7071067811865476,
+      0
+    ],
+    "anatomical_near": "LEFT",
+    "anatomical_far": "RIGHT",
+    "bone_lengths": "constant 3D limbs, exact two-bone IK; never scale to fit a pose",
+    "ratios": "PROVISIONAL_UNCALIBRATED_HOLD",
+    "weapon": "HOLD; no generic weapon guide or hand assignment"
+  },
+  "holds": [
+    "ROOT has not released 267 all 48 tracks + actual default Main PASS / 2 of 31; existing authoring pause must remain",
+    "No image was viewed; portrait-specific weapon topology, exact anatomical weapon hand, back surfaces and palette are unresolved until next authorized production turn",
+    "Inherited six phase contract is fixed; temporal contact continuity and timing require actual visual motion review; recipe is pose-guide only"
+  ],
+  "release_precondition": "Begin actual production only on a subsequent followup after ROOT reports 267 all 48 tracks and actual default Main complete, detailed 2/31, and authoring pause is cleared. Then inspect reference images and derive a new resolved request; this frozen spec stays unchanged.",
+  "preservation": {
+    "repository": "/workspace/twilight",
+    "branch_as_instructed": "feature/twilight-remaining106-20261016",
+    "PR": 122,
+    "commit_marker": "[skip ci]",
+    "existing_413_native_clips": 10,
+    "existing_413_native_poses": 60,
+    "no_reauthor_existing_sources": true,
+    "shared": 54,
+    "combat": 1490,
+    "original_colors": true,
+    "approved_history_unchanged": true,
+    "PR100_read_or_reauthor": false,
+    "repo_access": "READ_ONLY_THIS_TURN",
+    "forbidden_this_turn": [
+      "new PNG or any image generation",
+      "imagegen",
+      "private image view",
+      "image scan",
+      "game integration or boot",
+      "Git",
+      "CI",
+      "network work"
+    ]
+  },
+  "approval": {
+    "production_connected": false,
+    "detailed_completed": false,
+    "completed_added": 0,
+    "author_self_approval": false,
+    "status": "NEW_SOURCE_UNREVIEWED"
+  },
+  "resolved_identity": {
+    "hair": "golden blonde high bun with curled ponytail and blue ribbon streamer",
+    "clothing": "blue and gold fitted armored bodice, white pleated short skirt, blue outer split coat/cape with gold motifs, black thigh-high stockings and pointed gold heeled boots",
+    "weapon": "ONE long gold double-ended spear/staff; narrow openwork gold spearhead above cyan diamond gem, long slender gold shaft, lower cyan diamond and pointed gold counterweight; actual reference topology",
+    "anatomical_weapon_hand": "RIGHT (front original screen-left hand; invariant across directions)",
+    "NW_depth": "rear three-quarter upper-left heading, anatomical LEFT near/RIGHT far; right carrying hand and staff partly farther side occluded correctly",
+    "face": "rear head, golden bun/ribbon and back armor visible; do not turn head to show full face"
+  },
+  "actual_generation_references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+    "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref1-private.jpg",
+    "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref2-private.jpg",
+    "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref3-private.jpg",
+    "/workspace/scratch/mythic413-nw-walk-guides-20261020-v01/NW-walk-fixedboneguide.png"
+  ]
+}

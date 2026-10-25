@@ -1,0 +1,334 @@
+{
+  "status": "FINITE_CONSISTENT_RIG_CONSTRUCTION_PENDING_INDEPENDENT_NUMERIC_AND_ACTUAL_ART_REVIEW",
+  "actual_source0_path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+  "actual_source0_sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+  "actual_load1_path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v04/thunder_female-NW-run-load1-actual-rig-v04.png",
+  "actual_load1_sha256": "abdf295f681b5fd15849988bc13b730fd4367bc28763037803a262116c3f0cde",
+  "actual_placement_proof_sha256": "1ea685e6ec09f4e481ec0074400b4228a8111e77e4f9c8f9142b13b70cb9781c",
+  "projection": "source_x=Xnative/.9, source_y=Ynative-Znative; nativeXYZworldunit=.0948275862068; all raw markers are UNPADDED art coords",
+  "common_rig_root_raw": [
+    669,
+    1267.95
+  ],
+  "same_native_C": 2560,
+  "same_3D_bones_all_sides_and_frames": [
+    250.0,
+    250.0
+  ],
+  "body_whole_node_translation_native3D": [
+    3.6,
+    56.15382097240774,
+    -13.846179027592257
+  ],
+  "body_projected_translation": [
+    4,
+    70
+  ],
+  "body_projection_note": "70 rawY is actual rig bob+ground-depth recoil, NOT a changed packing/root; this is one consistent construction, not uniquely recovered original anatomy",
+  "foot_L_actual_complete_module": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/clean-actual-stiletto-modules-v01/LEFT-actual-complete-stiletto-native.png",
+    "sha256": "c4f8a1e010051d4b5fc18d420cf75b7f08c4d7c5cae3df64533144654fafca73"
+  },
+  "actual_highheel_ankle_height_native": 100.0,
+  "foot_R_local_heel_and_forefoot_height_from_ankle": [
+    -90,
+    -150
+  ],
+  "shoe_local_vertex_heights_model_not_unique": true,
+  "heel_and_forefoot_both_ground_z": 0,
+  "marker_uncertainty_native": {
+    "tarsals": [
+      8,
+      8
+    ],
+    "forefoot": [
+      4,
+      4
+    ],
+    "heel": [
+      1.5,
+      1.5
+    ],
+    "staff_tip": [
+      5,
+      5
+    ]
+  },
+  "frames": [
+    {
+      "phase": 0,
+      "raw_markers": {
+        "Lhip": [
+          610,
+          692
+        ],
+        "Lknee": [
+          566,
+          900
+        ],
+        "Lankle": [
+          564,
+          1075
+        ],
+        "Rhip": [
+          705,
+          705
+        ],
+        "Rknee": [
+          642,
+          785
+        ],
+        "Rankle": [
+          750,
+          858
+        ],
+        "heel": [
+          583.5,
+          1191
+        ],
+        "forefoot": [
+          535,
+          1164
+        ],
+        "body_raw": [
+          0,
+          0
+        ]
+      },
+      "Lchain": [
+        [
+          549.0,
+          1277.2754704912418,
+          585.2754704912418
+        ],
+        [
+          509.40000000000003,
+          1241.0972981533205,
+          341.09729815332037
+        ],
+        [
+          507.6,
+          1175.0,
+          100.0
+        ]
+      ],
+      "Rchain": [
+        [
+          634.5,
+          1290.2754704912418,
+          585.2754704912418
+        ],
+        [
+          577.8000000000001,
+          1162.8163560782007,
+          377.81635607820067
+        ],
+        [
+          675.0,
+          1358.0419998790685,
+          500.0419998790686
+        ]
+      ],
+      "bones": [
+        {
+          "side": "L",
+          "segment": 0,
+          "length": 249.99999999999994,
+          "target": 250.0
+        },
+        {
+          "side": "L",
+          "segment": 1,
+          "length": 250.0,
+          "target": 250.0
+        },
+        {
+          "side": "R",
+          "segment": 0,
+          "length": 249.99999999999994,
+          "target": 250.0
+        },
+        {
+          "side": "R",
+          "segment": 1,
+          "length": 249.99999999999991,
+          "target": 250.0
+        }
+      ],
+      "Lheel": [
+        525.15,
+        1191.0,
+        0.0
+      ],
+      "Lforefoot": [
+        481.5,
+        1164.0,
+        0.0
+      ],
+      "Rheel_z": 410.0419998790686,
+      "Rforefoot_z": 350.0419998790686,
+      "staff": {
+        "top": [
+          806.4,
+          1200.0,
+          1186.0
+        ],
+        "grip": [
+          815.4,
+          1200.0,
+          767.0
+        ],
+        "lower_tip": [
+          833.4,
+          1200.0,
+          90.0
+        ]
+      },
+      "staff_length": 1096.332522549614,
+      "staff_tip_clearance_native": 90.0
+    },
+    {
+      "phase": 1,
+      "raw_markers": {
+        "Lhip": [
+          614,
+          762
+        ],
+        "Lknee": [
+          581.8575128393684,
+          1004.8824005956969
+        ],
+        "Lankle": [
+          703.1928985028028,
+          1200.2736086525224
+        ],
+        "Rhip": [
+          709,
+          775
+        ],
+        "Rknee": [
+          528.668751101061,
+          872.4968751835102
+        ],
+        "Rankle": [
+          669,
+          1015
+        ],
+        "heel": [
+          722.6928985028028,
+          1316.2736086525224
+        ],
+        "forefoot": [
+          674.1928985028028,
+          1289.2736086525224
+        ],
+        "body_raw": [
+          4,
+          70
+        ]
+      },
+      "Lchain": [
+        [
+          552.6,
+          1333.4292914636494,
+          571.4292914636495
+        ],
+        [
+          523.6717615554315,
+          1328.049305122731,
+          323.1669045270342
+        ],
+        [
+          632.8736086525225,
+          1300.2736086525224,
+          100.0
+        ]
+      ],
+      "Rchain": [
+        [
+          638.1,
+          1346.4292914636494,
+          571.4292914636495
+        ],
+        [
+          475.80187599095495,
+          1269.8651227305218,
+          397.36824754701155
+        ],
+        [
+          602.1,
+          1476.0151906541425,
+          461.0151906541426
+        ]
+      ],
+      "bones": [
+        {
+          "side": "L",
+          "segment": 0,
+          "length": 249.99999999999994,
+          "target": 250.0
+        },
+        {
+          "side": "L",
+          "segment": 1,
+          "length": 250.0,
+          "target": 250.0
+        },
+        {
+          "side": "R",
+          "segment": 0,
+          "length": 249.99999999999997,
+          "target": 250.0
+        },
+        {
+          "side": "R",
+          "segment": 1,
+          "length": 249.99999999999991,
+          "target": 250.0
+        }
+      ],
+      "Lheel": [
+        650.4236086525225,
+        1316.2736086525224,
+        0.0
+      ],
+      "Lforefoot": [
+        606.7736086525225,
+        1289.2736086525224,
+        0.0
+      ],
+      "Rheel_z": 371.0151906541426,
+      "Rforefoot_z": 311.0151906541426,
+      "staff": {
+        "top": [
+          810.0,
+          1256.1538209724076,
+          1172.1538209724076
+        ],
+        "grip": [
+          819.0,
+          1256.1538209724076,
+          753.1538209724077
+        ],
+        "lower_tip": [
+          837.0,
+          1256.1538209724076,
+          76.15382097240774
+        ]
+      },
+      "staff_length": 1096.332522549614,
+      "staff_tip_clearance_native": 76.15382097240774
+    }
+  ],
+  "maximum_bone_error": 8.526512829121202e-14,
+  "maximum_staff_length_error": 0.0,
+  "plant_step_world_xy": [
+    11.879393923934002,
+    11.879393923934
+  ],
+  "plant_step_world_length": 16.800000000000004,
+  "source_visual_gate": false,
+  "physical_pair_approved": false,
+  "cycle_approved": false,
+  "actor_approvals_added": 0
+}

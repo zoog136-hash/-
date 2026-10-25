@@ -1,0 +1,180 @@
+{
+  "status": "PASS_INDEPENDENT_POSE_CANVAS_TEST_FIX_AND_GUARDS_REVIEW",
+  "scope": "No resource defect; wrong old additive test expectations corrected against immutable reviewed per-pose geometry. No Godot/images/Git/repo mutations in this review.",
+  "before_test": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v03-pose-canvas/pr122_girtas_native_default_main_connection_test.before-pose-canvas-fix.gd",
+    "sha256": "5f81531dfffbd8900b4eadb8a54e04c0f1d4d23b9dbc1248a2a89a1dc5f76b87",
+    "bytes": 20337
+  },
+  "new_test": {
+    "path": "/workspace/twilight/tests/pr122_girtas_native_default_main_connection_test.gd",
+    "sha256": "8e30c985d52c02337faf501688d8b881632d737fbbbd3dd75c00296fe6bb6be3",
+    "bytes": 20477
+  },
+  "only_changes": [
+    "Expected canvas now geometry.frames[pose].canvas_size with base canvas fallback if absent",
+    "Present authored_pose_canvas_sizes length6 and equal exact expected per-pose canvas; no expected canvas override"
+  ],
+  "all_other_test_bytes_identical": true,
+  "register": {
+    "path": "/workspace/twilight/data/pr122_native_locomotion_staging.json",
+    "sha256": "dc3cb8d172a9d52b112afbbdd83cdacf382864045b964d23021e9eabcbbaaeb5",
+    "bytes": 1764659
+  },
+  "production_numeric": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/actual-production-r001-all48-numeric-pins.json",
+    "sha256": "6bd38f73f9cb086499069fdc9173433d9e31c86b2b5a9488f8b810a41ac23f09",
+    "bytes": 300307
+  },
+  "actual_tracks": 48,
+  "actual_poses": 288,
+  "explicit_pose_canvas_count": 114,
+  "base_canvas_fallback_count": 174,
+  "all288_effective_pose_canvas_equal_actual_texture": true,
+  "wrong_previous_test_expectations": 112,
+  "authored_array_tracks": 0,
+  "all_present_authored_arrays_equal_exact_pose_canvas": true,
+  "comparison_rows_sha256": "b7caa5301e33c6192612b48e86b769f87f02d1cf9841be1f9f941abf74a76973",
+  "mismatched_old_tracks": [
+    {
+      "direction": "E",
+      "role": "run",
+      "wrong_old_test_poses": 5
+    },
+    {
+      "direction": "E",
+      "role": "walk",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "N",
+      "role": "run",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "N",
+      "role": "walk",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "NE",
+      "role": "attack",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "NE",
+      "role": "idle",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "NE",
+      "role": "run",
+      "wrong_old_test_poses": 5
+    },
+    {
+      "direction": "NE",
+      "role": "walk",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "NW",
+      "role": "attack",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "NW",
+      "role": "idle",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "NW",
+      "role": "run",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "NW",
+      "role": "walk",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "SE",
+      "role": "walk",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "SW",
+      "role": "run",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "SW",
+      "role": "walk",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "W",
+      "role": "hit",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "W",
+      "role": "run",
+      "wrong_old_test_poses": 6
+    },
+    {
+      "direction": "W",
+      "role": "walk",
+      "wrong_old_test_poses": 6
+    }
+  ],
+  "other_canvas_assumptions_review": "All canvas references in new test occur in this single expected-size block; no other canvas assumptions.",
+  "original_393_and_official_gate_unchanged": [
+    {
+      "path": "/workspace/twilight/tests/pr122_native_default_main_connection_test.gd",
+      "sha256": "7a87758f959adb8d205fb0f32294ce1423524b4eec11e084c180b407fc5f3b7b",
+      "bytes": 13934
+    },
+    {
+      "path": "/workspace/twilight/tools/pr122_native_production_approvals.py",
+      "sha256": "2d0305cf49b3d944a2994111855046d37675ba72efa8180862ad5b78291f7706",
+      "bytes": 20341
+    }
+  ],
+  "guard_variants_only_test_pin_changed": [
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed-v03-pose-canvas/approve-girtas-production-r001.py",
+      "sha256": "a7141d166d6d7d558f1c110b8ffa230df64c1b1145e314f6de16dac804b6bd57",
+      "bytes": 12967
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed-v03-pose-canvas/commit-girtas-production-r001.py",
+      "sha256": "711007b906aea282da4c65b64185da93807802d82014e3d4826d56404a34a34f",
+      "bytes": 10540
+    }
+  ],
+  "unchanged_guard": {
+    "path": "/workspace/scratch/pr122-girtas-production-reviewed-v03-pose-canvas/girtas_review_guard.py",
+    "sha256": "c45becf1e68e927bf6eb908c5f8304fc1ffeaa64b2be5daaf2fefb187465655f",
+    "bytes": 3685
+  },
+  "frozen_v02_finalizer_unchanged": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/finalize_official_quality_fresh_v02_engine_api.py",
+    "sha256": "e9c19750eaafaa10a271422704b44921d8b3347aace7cddd548aa5c9be870b08",
+    "bytes": 7838
+  },
+  "new_v03_finalizer": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/finalize_official_quality_fresh_v03_pose_canvas.py",
+    "sha256": "9f2a9a30eeb20bf06fff1404b6241410004a0bfa84ba866708c3a7cb6e8aefa0",
+    "bytes": 7838
+  },
+  "new_finalizer_only_test_pin_changed": true,
+  "actual_Main_status": "PENDING_REAL_RUN",
+  "official_final_quality_issued": false,
+  "actor_approved": false,
+  "counts_changed": false
+}

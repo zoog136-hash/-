@@ -1,0 +1,767 @@
+{
+  "originals_preserved": true,
+  "max_island": 3,
+  "max_total": 11,
+  "threshold_unchanged": 100,
+  "connectivity_unchanged": 8,
+  "candidate_count": 3,
+  "changed_pixels_total": 13,
+  "new_approved": 0,
+  "independent_motion_pose_count": 0,
+  "reports": [
+    {
+      "status": "REFUSED",
+      "original_sha256": "a086dbe123ebf2d1451e11185c5cff560d5b7b809f37536100c6a6819af24bd0",
+      "image_size": [
+        1312,
+        1199
+      ],
+      "visible_components_before": 15,
+      "component_sizes": [
+        711211,
+        3,
+        3,
+        3,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 711211,
+      "detached_visible_pixels": 23,
+      "detached_coordinates_xy": [
+        [
+          653,
+          196
+        ],
+        [
+          653,
+          197
+        ],
+        [
+          630,
+          199
+        ],
+        [
+          630,
+          200
+        ],
+        [
+          1028,
+          293
+        ],
+        [
+          1028,
+          294
+        ],
+        [
+          1028,
+          295
+        ],
+        [
+          1054,
+          324
+        ],
+        [
+          1054,
+          325
+        ],
+        [
+          1054,
+          326
+        ],
+        [
+          1072,
+          359
+        ],
+        [
+          425,
+          372
+        ],
+        [
+          1165,
+          623
+        ],
+        [
+          214,
+          705
+        ],
+        [
+          1011,
+          802
+        ],
+        [
+          107,
+          901
+        ],
+        [
+          364,
+          929
+        ],
+        [
+          634,
+          929
+        ],
+        [
+          362,
+          930
+        ],
+        [
+          363,
+          930
+        ],
+        [
+          1285,
+          979
+        ],
+        [
+          758,
+          1000
+        ],
+        [
+          758,
+          1001
+        ]
+      ],
+      "reason": "Disconnected detail exceeds pinned microrepair budget; reauthor, do not erase",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-idle-E-0/standalone-idle-E-0.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN"
+    },
+    {
+      "status": "UNAPPROVED_ALPHA_MICROCANDIDATE",
+      "original_sha256": "fa4ec26a99cfd8d3a71f1a968bd25b42b975291a6195ba60c75a78e0508640e6",
+      "image_size": [
+        1312,
+        1199
+      ],
+      "visible_components_before": 7,
+      "component_sizes": [
+        767852,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 767852,
+      "detached_visible_pixels": 8,
+      "detached_coordinates_xy": [
+        [
+          827,
+          151
+        ],
+        [
+          339,
+          430
+        ],
+        [
+          326,
+          458
+        ],
+        [
+          325,
+          460
+        ],
+        [
+          924,
+          714
+        ],
+        [
+          258,
+          963
+        ],
+        [
+          259,
+          963
+        ],
+        [
+          258,
+          964
+        ]
+      ],
+      "visible_components_after": 1,
+      "changed_pixels": 8,
+      "main_body_rgba_exact": true,
+      "output_sha256": "c4be767ffc5de44f98b47d26bdc7e6a3079ac0b6afc80cb6d0951e8a2fc63d71",
+      "note": "Isolated high-alpha pixels only; alpha<=100 halo and visual identity need human review",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-idle-E-1/standalone-idle-E-1.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN",
+      "candidate_file": "docs/remake/evidence/pr122-remaining106/batch11/strict-alpha-microrepair/standalone-idle-E-1/standalone-idle-E-1-microcandidate.png"
+    },
+    {
+      "status": "UNAPPROVED_ALPHA_MICROCANDIDATE",
+      "original_sha256": "f77cd7ccfa86932b9251f573092faca6b72b9dc9635bd92e4a96154ec5f69598",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "visible_components_before": 4,
+      "component_sizes": [
+        603065,
+        1,
+        1,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 603065,
+      "detached_visible_pixels": 3,
+      "detached_coordinates_xy": [
+        [
+          371,
+          573
+        ],
+        [
+          1186,
+          805
+        ],
+        [
+          461,
+          815
+        ]
+      ],
+      "visible_components_after": 1,
+      "changed_pixels": 3,
+      "main_body_rgba_exact": true,
+      "output_sha256": "0f7688ee577a95632cf4a133ed885053fa8d06f8e31cbe7f697f18b6590de72f",
+      "note": "Isolated high-alpha pixels only; alpha<=100 halo and visual identity need human review",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-walk-E-0/standalone-walk-E-0.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN",
+      "candidate_file": "docs/remake/evidence/pr122-remaining106/batch11/strict-alpha-microrepair/standalone-walk-E-0/standalone-walk-E-0-microcandidate.png"
+    },
+    {
+      "status": "REFUSED",
+      "original_sha256": "e788e44fb9b31c9b0c9a75a711a62968405c17e069b9f6e5a64b09eb6d2a0536",
+      "image_size": [
+        1312,
+        1199
+      ],
+      "visible_components_before": 20,
+      "component_sizes": [
+        592015,
+        5,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 592015,
+      "detached_visible_pixels": 26,
+      "detached_coordinates_xy": [
+        [
+          907,
+          230
+        ],
+        [
+          553,
+          281
+        ],
+        [
+          533,
+          297
+        ],
+        [
+          1033,
+          331
+        ],
+        [
+          1064,
+          432
+        ],
+        [
+          1243,
+          714
+        ],
+        [
+          1243,
+          715
+        ],
+        [
+          251,
+          716
+        ],
+        [
+          251,
+          717
+        ],
+        [
+          1251,
+          729
+        ],
+        [
+          858,
+          744
+        ],
+        [
+          859,
+          745
+        ],
+        [
+          1070,
+          814
+        ],
+        [
+          541,
+          815
+        ],
+        [
+          1278,
+          815
+        ],
+        [
+          541,
+          816
+        ],
+        [
+          540,
+          817
+        ],
+        [
+          541,
+          817
+        ],
+        [
+          540,
+          818
+        ],
+        [
+          149,
+          827
+        ],
+        [
+          905,
+          855
+        ],
+        [
+          906,
+          858
+        ],
+        [
+          239,
+          912
+        ],
+        [
+          91,
+          928
+        ],
+        [
+          209,
+          941
+        ],
+        [
+          706,
+          1016
+        ]
+      ],
+      "reason": "Disconnected detail exceeds pinned microrepair budget; reauthor, do not erase",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-walk-E-1/standalone-walk-E-1.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN"
+    },
+    {
+      "status": "REFUSED",
+      "original_sha256": "b6958e8130d4d15c72279f4f232e1c31e28d6a321c3dd35153e7e311bc365e86",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "visible_components_before": 17,
+      "component_sizes": [
+        524868,
+        3,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 524868,
+      "detached_visible_pixels": 19,
+      "detached_coordinates_xy": [
+        [
+          962,
+          109
+        ],
+        [
+          741,
+          127
+        ],
+        [
+          743,
+          128
+        ],
+        [
+          673,
+          165
+        ],
+        [
+          674,
+          165
+        ],
+        [
+          675,
+          165
+        ],
+        [
+          517,
+          310
+        ],
+        [
+          1259,
+          506
+        ],
+        [
+          938,
+          519
+        ],
+        [
+          1056,
+          559
+        ],
+        [
+          405,
+          573
+        ],
+        [
+          355,
+          582
+        ],
+        [
+          356,
+          582
+        ],
+        [
+          1392,
+          668
+        ],
+        [
+          463,
+          750
+        ],
+        [
+          209,
+          769
+        ],
+        [
+          681,
+          773
+        ],
+        [
+          710,
+          829
+        ],
+        [
+          711,
+          845
+        ]
+      ],
+      "reason": "Disconnected detail exceeds pinned microrepair budget; reauthor, do not erase",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-walk-E-2/standalone-walk-E-2.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN"
+    },
+    {
+      "status": "REFUSED",
+      "original_sha256": "20384c66e381d0989e6a16f04ce9c1ab45a333ce606b126c2195eaf5ef1a2754",
+      "image_size": [
+        1312,
+        1199
+      ],
+      "visible_components_before": 5,
+      "component_sizes": [
+        524368,
+        4,
+        2,
+        2,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 524368,
+      "detached_visible_pixels": 9,
+      "detached_coordinates_xy": [
+        [
+          194,
+          685
+        ],
+        [
+          194,
+          686
+        ],
+        [
+          813,
+          846
+        ],
+        [
+          1236,
+          863
+        ],
+        [
+          1237,
+          863
+        ],
+        [
+          698,
+          944
+        ],
+        [
+          698,
+          945
+        ],
+        [
+          698,
+          946
+        ],
+        [
+          699,
+          946
+        ]
+      ],
+      "reason": "Disconnected detail exceeds pinned microrepair budget; reauthor, do not erase",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-walk-E-3/standalone-walk-E-3.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN"
+    },
+    {
+      "status": "UNAPPROVED_ALPHA_MICROCANDIDATE",
+      "original_sha256": "4f20576ed6c3a6e66f6039fd1cd299e53e64e5087084d652014f7a18f2b3904f",
+      "image_size": [
+        1312,
+        1199
+      ],
+      "visible_components_before": 3,
+      "component_sizes": [
+        510691,
+        1,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 510691,
+      "detached_visible_pixels": 2,
+      "detached_coordinates_xy": [
+        [
+          1218,
+          850
+        ],
+        [
+          487,
+          882
+        ]
+      ],
+      "visible_components_after": 1,
+      "changed_pixels": 2,
+      "main_body_rgba_exact": true,
+      "output_sha256": "f85270eae3bbf6ba5b5f83bdea98c8fa6eeda85e17cf0bf6393898e84b096156",
+      "note": "Isolated high-alpha pixels only; alpha<=100 halo and visual identity need human review",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-walk-E-4/standalone-walk-E-4.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN",
+      "candidate_file": "docs/remake/evidence/pr122-remaining106/batch11/strict-alpha-microrepair/standalone-walk-E-4/standalone-walk-E-4-microcandidate.png"
+    },
+    {
+      "status": "REFUSED",
+      "original_sha256": "5f5d99351c4f60c7075baa0766ba73699cda619267fcb8811a6c3d6c9db9d5ee",
+      "image_size": [
+        1312,
+        1199
+      ],
+      "visible_components_before": 8,
+      "component_sizes": [
+        511065,
+        8,
+        5,
+        3,
+        2,
+        1,
+        1,
+        1
+      ],
+      "alpha_threshold_unchanged": 100,
+      "connectivity_unchanged": 8,
+      "approved": false,
+      "production_applied": false,
+      "completed_added": 0,
+      "main_visible_pixels": 511065,
+      "detached_visible_pixels": 21,
+      "detached_coordinates_xy": [
+        [
+          1063,
+          564
+        ],
+        [
+          320,
+          601
+        ],
+        [
+          1144,
+          694
+        ],
+        [
+          1145,
+          694
+        ],
+        [
+          1146,
+          694
+        ],
+        [
+          1149,
+          694
+        ],
+        [
+          1145,
+          695
+        ],
+        [
+          1146,
+          695
+        ],
+        [
+          1147,
+          695
+        ],
+        [
+          1146,
+          696
+        ],
+        [
+          1147,
+          696
+        ],
+        [
+          1175,
+          743
+        ],
+        [
+          1176,
+          743
+        ],
+        [
+          1176,
+          744
+        ],
+        [
+          1177,
+          744
+        ],
+        [
+          1177,
+          745
+        ],
+        [
+          401,
+          879
+        ],
+        [
+          400,
+          880
+        ],
+        [
+          399,
+          881
+        ],
+        [
+          140,
+          889
+        ],
+        [
+          139,
+          890
+        ]
+      ],
+      "reason": "Disconnected detail exceeds pinned microrepair budget; reauthor, do not erase",
+      "actor": "monster:알비노 몽크",
+      "original_file": "docs/remake/evidence/pr122-remaining106/batch11/standalone-walk-E-5/standalone-walk-E-5.png",
+      "source_unchanged": true,
+      "visual_quality": "HOLD: model/gait and complete128 matrix not approved",
+      "independent_motion_pose_count": 0,
+      "Android_real_device": "NOT_RUN"
+    }
+  ]
+}

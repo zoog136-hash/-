@@ -1,0 +1,114 @@
+{
+  "status": "REASSESSED_SOURCE_ANATOMY_UNRESOLVED_RUNTIME_LAYOUT_HOLD",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "hit",
+  "version": "v04",
+  "source_phase": 2,
+  "raw_png": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png",
+  "raw_sha256": "1fd52bd6e54cdceeb27e055173bcf479e3df3d12dfcd3d394d2c40c2c1640b52",
+  "raw_bytes": 698259,
+  "source_visual_status": "HOLD_ANATOMICAL_CONNECTION_UNRESOLVED",
+  "source_proportion_status": "PASS_AT_UNIFORM_DISPLAY_NORMALIZATION",
+  "runtime_layout_status": "HOLD_PENDING_PER_POSE_REF_CANVAS_AND_FOOT_ANCHOR_PROOF",
+  "initial_HOLD_path": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/result.json",
+  "initial_HOLD_sha256": "e733cf7de12853198874ccfe69545dacb3537c15d06e56323e5c48349a92cafe",
+  "initial_HOLD_immutable": true,
+  "layout_objection_retracted": "Raw1254canvas and about1.95x source pixels alone are not an art defect. Uniform runtime ref_canvas normalization and reviewed foot anchors can preserve the original PNG losslessly. No source rejection solely for implementation canvas/resolution.",
+  "display_reassessment": {
+    "method": "DISPLAY ONLY: no source pixels changed",
+    "edited_source": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png",
+    "edited_source_sha256": "1fd52bd6e54cdceeb27e055173bcf479e3df3d12dfcd3d394d2c40c2c1640b52",
+    "uniform_QC_display_scale": 0.511,
+    "QC_display_translation": [
+      195,
+      124
+    ],
+    "retained_frame_display_scale": 1.0,
+    "virtual_canvas": [
+      1024,
+      1024
+    ],
+    "common_display_crop": [
+      240,
+      225,
+      800,
+      705
+    ],
+    "initial_HOLD_sha256": "e733cf7de12853198874ccfe69545dacb3537c15d06e56323e5c48349a92cafe",
+    "preview": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/normalization-reassessment-comparison.jpg",
+    "preview_bytes": 224924
+  },
+  "comparison_findings": [
+    "At0.511 uniform DISPLAY-ONLY scale with foot-baseline registration, edited phase2 matches the source phase2 and retained neighboring phases1/3 in head/torso/hip/boots ratios, armor silhouette, original long weapon/spine proportions, camera and LEFT-facing maximal recoil. No conspicuous body-ratio or model redesign appears after this legitimate multi-resolution comparison.",
+    "The third lowered empty fist is gone. Two hand endpoints remain: raised empty hand upper/image-left and original weapon grip low/image-left. LEFT compass and original pale face/hair, armor, long skirt and sinuous blade are preserved.",
+    "Concrete remaining connection concern: the visible near/image-right pauldron continues into stacked gold-edged dark armor ending in a pointed lowered upper-arm-like lobe around rawx814,y573. The raised empty forearm joins the front/image-left chest around rawx650,y538. A continuous near-LEFT shoulder-to-elbow connection between these visible structures cannot be traced in the render.",
+    "This may include overlapping shoulder armor and breastplate occlusion rather than a third full arm, so the reassessment does not falsely assert three remaining hands or a certain exposed stump. It also cannot certify both required arm chains as coherent from the available view. Clear connection judgment remains unresolved independently of resolution.",
+    "The original far RIGHT weapon grip and wrist/forearm can be followed to the armored limb along the front-left waist, with the far shoulder naturally occluded by torso. The raised LEFT forearm is connected through its wrist, but its shoulder/upper-arm route is the unresolved part."
+  ],
+  "arm_chain_landmarks_approx_raw_pixels": {
+    "LEFT_raised_unarmed": {
+      "hand": [
+        568,
+        478
+      ],
+      "wrist": [
+        594,
+        506
+      ],
+      "visible_forearm": [
+        620,
+        523
+      ],
+      "front_chest_entry_or_elbow": [
+        651,
+        538
+      ],
+      "near_shoulder_pauldron": [
+        798,
+        475
+      ],
+      "lowered_armored_point": [
+        814,
+        573
+      ],
+      "connection": "shoulder-to-front-chest elbow route not clearly traceable; possible occlusion/remaining upper-arm-like lobe"
+    },
+    "RIGHT_weapon_bearing": {
+      "grip": [
+        558,
+        650
+      ],
+      "wrist": [
+        575,
+        630
+      ],
+      "forearm": [
+        590,
+        607
+      ],
+      "armored_upper_route": [
+        617,
+        583
+      ],
+      "far_shoulder": "occluded by torso; same original weapon grip maintained"
+    }
+  },
+  "visual_limitations": [
+    "Do not label resolution/layout difference itself as unusable source art. Per-pose virtual canvas/anchor calibration can address it without PNG resampling.",
+    "Source remains unapproved because the near raised-arm shoulder connection is not certified, not because source pixels are larger. A separate private anatomy reviewer was asked to assess whether the pointed lobe is valid shoulder ornament/occlusion or residual arm structure.",
+    "QC thumbnails use uniform display resampling only. Source PNG, initial HOLD, original six-pose sheet and five retained phase hashes remain unchanged. No runtime source layout or lossless assembly was changed here."
+  ],
+  "newly_authored_pose_count": 1,
+  "reused_existing_pose_count": 5,
+  "prior_whole_sheet_unchanged": true,
+  "new_generation_attempts": 0,
+  "source_PNG_mutations": 0,
+  "repository_mutations": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "reviewed_at": "2026-10-19T11:17:35.570604+00:00",
+  "private_detail": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/arm-chain-reassessment-detail.jpg",
+  "private_detail_bytes": 111677
+}

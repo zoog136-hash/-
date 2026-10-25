@@ -1,0 +1,44 @@
+{
+  "tool": "image_gen.imagegen",
+  "prompt": "Create production game animation art, NOT a preview. SIX independently drawn high-detail isometric RPG WALK sprites of EXACTLY the original gold-haired female thunder goddess in reference1. The other character sheets establish the same materials and body proportions; final stick diagram establishes six distinct leg-phase intentions ONLY, not art. Save final transparent sprite atlas 1024x1536 pixels, EXACTLY TWO COLUMNS and THREE ROWS, six512x512 cells, temporal left-to-right then down. One COMPLETE character per cell, all equipment tips included, each silhouette inside central320x320area with at least96pixels transparent gutter at every cell edge. Same torso/head size across all6, never shrink individual pose. Hard opaque bodies, antialias1-2pixels at silhouette, alpha0 outside. No ground/shadow/background/lightning haze/labels/grid/text/spare figures. No collage of repeated pose.\n\nIdentity fixed by portrait: golden-blonde female human with ornate high bun and curled ponytail tied with rich blue ribbon streamers; royal BLUE fitted armored bodice and gold trims; WHITE pleated short skirt; long split BLUE trailing coat/cape with gold motifs; black thigh-high legwear and pointed GOLD heeled boots. ONE slender GOLD DOUBLE-ENDED SPEAR/STAFF in anatomical RIGHT hand. Its exact rigid topology is an openwork pointed gold upper spearhead above a CYAN diamond-shaped gem, long thin gold shaft, lower CYAN gem above gold pointed counterweight. Do not invent shield, second weapon, horns, helmet, wings, cape ornaments, new colors or ghost trails. Grip hand remains RIGHT in every frame.\n\nAll6 face literal NORTHWEST screen upper-left and away from camera. True rear-three-quarter elevated orthographic isometric camera. Show BACK of head, golden bun/ribbon and back armor, not a face twisted to viewer. Head, torso, hips, toes and equipment agree NW. Anatomical LEFT is near the camera; anatomical RIGHT is far. Staff attached to FAR RIGHT hand with correct perspective occlusion. Do not mirror other directions. Left free arm swings naturally opposite legs, tiny gait bodybob; cloth and ribbon respond subtly without hiding supporting legs. Staff is carried rigidly with same length and existinghand.\n\nSix genuine WALK phases:0 LEFT foot bears weight as RIGHT foot contacts forward;1 LEFT support while RIGHT knee passes forward, foot slightly raised;2 RIGHT foot takes support as LEFT pushes off behind;3 RIGHT support as LEFT contacts forward;4 RIGHT support while LEFT knee passes forward, foot slightly raised;5 LEFT foot takes support as RIGHT pushes off behind. Clearly alternate ANATOMICAL support legs; bend knees/hips, heel contact, toe-off and passage. One support leg grounded at every phase, no run flight or static leg recolors. No abrupt limb-length changes or impossible knees. SIX individually drawn poses with clear leg-phase differences and grounded graceful walk. Preserve existing high-detail game style, original equipment surface highlights and original colors.",
+  "transparent_background": true,
+  "referenced_image_paths": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+    "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref1-private.jpg",
+    "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref2-private.jpg",
+    "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref3-private.jpg",
+    "/workspace/scratch/mythic413-nw-walk-guides-20261020-v01/NW-walk-fixedboneguide.png"
+  ],
+  "num_last_images_to_include": null,
+  "calls": 1,
+  "result_image_path": "/workspace/generated_images/exec-07e999df-67dc-478d-a130-782ca23792dc.png",
+  "raw_sha256": "7ac68d64aa3525f27e20ef5550b66a0641fa8e401687454b40657413790b2aab",
+  "binary_data_not_serialized": true,
+  "reference_pins": [
+    {
+      "path": "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+      "sha256": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+      "bytes": 24057
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref1-private.jpg",
+      "sha256": "93d3dd302bb32d7825cd241a31096d681f01467881ee6f6133a998932f71b276",
+      "bytes": 48698
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref2-private.jpg",
+      "sha256": "a398f5d94b2101107f871e32cb4607cf5b88c6e4fecc847faf1084df7cd91962",
+      "bytes": 36550
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-walk-author-20261020-v01/ref3-private.jpg",
+      "sha256": "ba621ac08c9a6e829d47610a40b5b45bb742cdc8ec940b87ccd3c47af5268c67",
+      "bytes": 45100
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-walk-guides-20261020-v01/NW-walk-fixedboneguide.png",
+      "sha256": "0baf0702d8150ddf00f27c4f94cd4d860b0fe839c45a22d4617ac2c970d3de8d",
+      "bytes": 24483
+    }
+  ]
+}

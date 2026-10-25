@@ -1,0 +1,448 @@
+{
+  "status": "INDEPENDENT_ACTUAL_COMPILED_TWO_SOLE_CENTROID_MEASUREMENT",
+  "method": "Boot ROIs independently chosen from actualTRES fixed-scale montage. Compute source alpha>100 last2row means; bothfeetaverage used only to assess bodyroot continuity, not to alter genuine stance/crouch/advance.",
+  "frames_sha256": "ca84f940496719b327a02232f8e50680dfd66c030febba4edd3c6d7ae6fe8d16",
+  "samples": [
+    {
+      "animation": "idle_5",
+      "phase": 0,
+      "virtual_canvas": 1024,
+      "soles": [
+        {
+          "source_ROI": [
+            144,
+            445,
+            72,
+            49
+          ],
+          "manual_actual_view_ROI": [
+            162,
+            430,
+            40,
+            27
+          ],
+          "source_solid_sole_contact": [
+            185.9074074074074,
+            488.4074074074074
+          ],
+          "normalized_relative_root_1024": [
+            -70.09259259259261,
+            -1.5925925925926094
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        },
+        {
+          "source_ROI": [
+            273,
+            445,
+            65,
+            51
+          ],
+          "manual_actual_view_ROI": [
+            235,
+            430,
+            36,
+            28
+          ],
+          "source_solid_sole_contact": [
+            301.5,
+            489.3333333333333
+          ],
+          "normalized_relative_root_1024": [
+            45.5,
+            -0.6666666666666856
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        }
+      ],
+      "two_sole_centroid_normalized1024": [
+        -12.296296296296305,
+        -1.1296296296296475
+      ],
+      "centroid_delta_from_actual_NW_idle0_normalized1024": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "animation": "attack_5",
+      "phase": 0,
+      "virtual_canvas": 1696,
+      "soles": [
+        {
+          "source_ROI": [
+            347,
+            972,
+            145,
+            83
+          ],
+          "manual_actual_view_ROI": [
+            592,
+            432,
+            49,
+            28
+          ],
+          "source_solid_sole_contact": [
+            435.71875,
+            1046.28125
+          ],
+          "normalized_relative_root_1024": [
+            -94.35849056603773,
+            3.792452830188679
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        },
+        {
+          "source_ROI": [
+            653,
+            972,
+            119,
+            83
+          ],
+          "manual_actual_view_ROI": [
+            696,
+            432,
+            40,
+            28
+          ],
+          "source_solid_sole_contact": [
+            713.9183673469388,
+            1032.3877551020407
+          ],
+          "normalized_relative_root_1024": [
+            73.61108971890644,
+            -4.596072391220693
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        }
+      ],
+      "two_sole_centroid_normalized1024": [
+        -10.373700423565644,
+        -0.4018097805160068
+      ],
+      "centroid_delta_from_actual_NW_idle0_normalized1024": [
+        1.9225958727306605,
+        0.7278198491136407
+      ]
+    },
+    {
+      "animation": "attack_5",
+      "phase": 1,
+      "virtual_canvas": 832,
+      "soles": [
+        {
+          "source_ROI": [
+            1768,
+            827,
+            84,
+            50
+          ],
+          "manual_actual_view_ROI": [
+            999,
+            425,
+            58,
+            34
+          ],
+          "source_solid_sole_contact": [
+            1831.121951219512,
+            866.4146341463414
+          ],
+          "normalized_relative_root_1024": [
+            -146.3114446529082,
+            -5.643527204502859
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        },
+        {
+          "source_ROI": [
+            1988,
+            837,
+            79,
+            50
+          ],
+          "manual_actual_view_ROI": [
+            1152,
+            432,
+            54,
+            34
+          ],
+          "source_solid_sole_contact": [
+            2043.8064516129032,
+            876.3870967741935
+          ],
+          "normalized_relative_root_1024": [
+            115.4540942928039,
+            6.630272952853584
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        }
+      ],
+      "two_sole_centroid_normalized1024": [
+        -15.428675180052146,
+        0.4933728741753627
+      ],
+      "centroid_delta_from_actual_NW_idle0_normalized1024": [
+        -3.132378883755841,
+        1.6230025038050102
+      ]
+    },
+    {
+      "animation": "attack_5",
+      "phase": 2,
+      "virtual_canvas": 832,
+      "soles": [
+        {
+          "source_ROI": [
+            502,
+            2084,
+            74,
+            46
+          ],
+          "manual_actual_view_ROI": [
+            1458,
+            425,
+            51,
+            31
+          ],
+          "source_solid_sole_contact": [
+            566.64,
+            2121.28
+          ],
+          "normalized_relative_root_1024": [
+            -128.44307692307694,
+            -8.270769230768984
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        },
+        {
+          "source_ROI": [
+            721,
+            2091,
+            77,
+            50
+          ],
+          "manual_actual_view_ROI": [
+            1610,
+            430,
+            53,
+            34
+          ],
+          "source_solid_sole_contact": [
+            770.3076923076923,
+            2129.4102564102564
+          ],
+          "normalized_relative_root_1024": [
+            122.22485207100587,
+            1.735700197238587
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        }
+      ],
+      "two_sole_centroid_normalized1024": [
+        -3.109112426035537,
+        -3.2675345167651986
+      ],
+      "centroid_delta_from_actual_NW_idle0_normalized1024": [
+        9.187183870260768,
+        -2.137904887135551
+      ]
+    },
+    {
+      "animation": "attack_5",
+      "phase": 3,
+      "virtual_canvas": 1472,
+      "soles": [
+        {
+          "source_ROI": [
+            1882,
+            2197,
+            144,
+            85
+          ],
+          "manual_actual_view_ROI": [
+            113,
+            916,
+            56,
+            33
+          ],
+          "source_solid_sole_contact": [
+            1961.566037735849,
+            2263.132075471698
+          ],
+          "normalized_relative_root_1024": [
+            -143.60623461853982,
+            -23.560295324036144
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        },
+        {
+          "source_ROI": [
+            2211,
+            2256,
+            121,
+            90
+          ],
+          "manual_actual_view_ROI": [
+            242,
+            939,
+            47,
+            35
+          ],
+          "source_solid_sole_contact": [
+            2279.8571428571427,
+            2331.4285714285716
+          ],
+          "normalized_relative_root_1024": [
+            77.81366459627316,
+            23.9503105590063
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        }
+      ],
+      "two_sole_centroid_normalized1024": [
+        -32.89628501113333,
+        0.19500761748507855
+      ],
+      "centroid_delta_from_actual_NW_idle0_normalized1024": [
+        -20.599988714837025,
+        1.324637247114726
+      ]
+    },
+    {
+      "animation": "attack_5",
+      "phase": 4,
+      "virtual_canvas": 1472,
+      "soles": [
+        {
+          "source_ROI": [
+            604,
+            3484,
+            146,
+            85
+          ],
+          "manual_actual_view_ROI": [
+            565,
+            916,
+            57,
+            33
+          ],
+          "source_solid_sole_contact": [
+            691.156862745098,
+            3561.3137254901962
+          ],
+          "normalized_relative_root_1024": [
+            -134.84739982949705,
+            -15.781756180733044
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        },
+        {
+          "source_ROI": [
+            925,
+            3543,
+            126,
+            93
+          ],
+          "manual_actual_view_ROI": [
+            691,
+            939,
+            49,
+            36
+          ],
+          "source_solid_sole_contact": [
+            969.6944444444445,
+            3617.3055555555557
+          ],
+          "normalized_relative_root_1024": [
+            58.917874396135275,
+            23.169082125603936
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        }
+      ],
+      "two_sole_centroid_normalized1024": [
+        -37.96476271668089,
+        3.6936629724354457
+      ],
+      "centroid_delta_from_actual_NW_idle0_normalized1024": [
+        -25.668466420384583,
+        4.823292602065093
+      ]
+    },
+    {
+      "animation": "attack_5",
+      "phase": 5,
+      "virtual_canvas": 2264,
+      "soles": [
+        {
+          "source_ROI": [
+            1430,
+            3606,
+            221,
+            138
+          ],
+          "manual_actual_view_ROI": [
+            1025,
+            925,
+            56,
+            35
+          ],
+          "source_solid_sole_contact": [
+            1599.5,
+            3734.318181818182
+          ],
+          "normalized_relative_root_1024": [
+            -101.08833922261483,
+            4.666880822357929
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        },
+        {
+          "source_ROI": [
+            1874,
+            3606,
+            165,
+            130
+          ],
+          "manual_actual_view_ROI": [
+            1138,
+            925,
+            42,
+            33
+          ],
+          "source_solid_sole_contact": [
+            1954.295081967213,
+            3715.409836065574
+          ],
+          "normalized_relative_root_1024": [
+            59.38434802757339,
+            -3.885303828998365
+          ],
+          "alpha_threshold": 100,
+          "method": "Last two solid rows inside independently visually located actual compiled boot ROI, preserving front/rear foot depth. No single-foot clamp."
+        }
+      ],
+      "two_sole_centroid_normalized1024": [
+        -20.851995597520723,
+        0.3907884966797821
+      ],
+      "centroid_delta_from_actual_NW_idle0_normalized1024": [
+        -8.555699301224418,
+        1.5204181263094296
+      ]
+    }
+  ]
+}

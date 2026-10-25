@@ -1,0 +1,2546 @@
+{
+	"boss": [],
+	"checks": 1451,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792332305.4515,
+				"expires_at": 1792332905.4515,
+				"grade": "일반",
+				"hunt_batch": "eabaa8eba2198928b7587d338ba0a469",
+				"id": "add329dce6220104b9c22f0711e39ade",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1960,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 28
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(84.0, 0.0)",
+			"name": "질투의 아타바크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(59.39062, 59.39062)",
+			"name": "질투의 아타바크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 84.0)",
+			"name": "질투의 아타바크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-59.39062, 59.39062)",
+			"name": "질투의 아타바크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-84.0, 0.0)",
+			"name": "질투의 아타바크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-59.39062, -59.39062)",
+			"name": "질투의 아타바크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -84.0)",
+			"name": "질투의 아타바크",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(59.39062, -59.39062)",
+			"name": "질투의 아타바크",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 36,
+			"facing": 0,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		},
+		{
+			"damage": 36,
+			"facing": 1,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		},
+		{
+			"damage": 36,
+			"facing": 2,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		},
+		{
+			"damage": 36,
+			"facing": 3,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		},
+		{
+			"damage": 36,
+			"facing": 4,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		},
+		{
+			"damage": 36,
+			"facing": 5,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		},
+		{
+			"damage": 36,
+			"facing": 6,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		},
+		{
+			"damage": 36,
+			"facing": 7,
+			"kind": "melee",
+			"name": "질투의 아타바크"
+		}
+	],
+	"physics_ticks": 1277,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25333.5,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "7a76b847f464870a92ffc81ae5cfd9bf784c3341895dcb16a7eaaa14e52e5046",
+			"visible_body_viewport": [
+				532.396057128906,
+				258.298675537109,
+				229.872741699219,
+				190.633392333984
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25333.5,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "7a76b847f464870a92ffc81ae5cfd9bf784c3341895dcb16a7eaaa14e52e5046",
+			"visible_body_viewport": [
+				532.396057128906,
+				258.298675537109,
+				229.872741699219,
+				190.633392333984
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25347.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-E-walk-native-1.png",
+			"physics_tick": 28,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "f95818b03c39f08d3d1a3e76c2824aad8ac7b205c686b618284546825ecccf56",
+			"visible_body_viewport": [
+				532.399963378906,
+				261.165344238281,
+				216.830322265625,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25362.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-E-walk-native-2.png",
+			"physics_tick": 39,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "dd60f09286c18aa64f41676d0338187e6213dbb761aeb5945dbcd53b29a74ab6",
+			"visible_body_viewport": [
+				529.139404296875,
+				261.165344238281,
+				220.090942382812,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25416.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-E-attack-0.png",
+			"physics_tick": 77,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "2b651cb5a65700072b496d793e9d1e497618b47bcb4af30911d9dce86c231126",
+			"visible_body_viewport": [
+				565.002136230469,
+				236.79866027832,
+				197.266662597656,
+				212.133377075195
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25416.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-E-attack-1.png",
+			"physics_tick": 95,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "94b15ecd6395cc7080ac10cdeed365b8135d39a3ca631149898f5c2476da3b7d",
+			"visible_body_viewport": [
+				537.286987304688,
+				278.365356445312,
+				251.066711425781,
+				170.566711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25416.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-E-contact.png",
+			"physics_tick": 95,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "94b15ecd6395cc7080ac10cdeed365b8135d39a3ca631149898f5c2476da3b7d",
+			"visible_body_viewport": [
+				537.286987304688,
+				278.365356445312,
+				251.066711425781,
+				170.566711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25374.06640625,
+				22746.06640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SE-walk.png",
+			"physics_tick": 108,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "c58d973f6a326ec2a7e08762cebdd35b7b25602a33c691706adc7f74118fd27b",
+			"visible_body_viewport": [
+				537.290893554688,
+				256.869262695312,
+				200.527282714844,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25374.06640625,
+				22746.06640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SE-walk-native-2.png",
+			"physics_tick": 108,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "c58d973f6a326ec2a7e08762cebdd35b7b25602a33c691706adc7f74118fd27b",
+			"visible_body_viewport": [
+				537.290893554688,
+				256.869262695312,
+				200.527282714844,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25375.126953125,
+				22747.126953125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SE-walk-native-0.png",
+			"physics_tick": 110,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "52184c32fd0006ff1fa5dbc55c2faa420c06355a2dd69c825d7cd42143c4b14c",
+			"visible_body_viewport": [
+				538.921203613281,
+				262.602569580078,
+				198.897033691406,
+				186.333374023438
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25385.732421875,
+				22757.732421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SE-walk-native-1.png",
+			"physics_tick": 121,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "0efe72a68ce6b82af1204e1b9f02622dedede2cbb2381e1adf0b16bb62a7ecd4",
+			"visible_body_viewport": [
+				542.177917480469,
+				255.435913085938,
+				208.678833007812,
+				193.500061035156
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25432.396484375,
+				22804.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SE-attack-0.png",
+			"physics_tick": 167,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "f256fbd87667d613bddaf8b6d1d7f4e2250e743d3d085c9b5ee325e818f5107c",
+			"visible_body_viewport": [
+				542.181823730469,
+				266.898681640625,
+				180.963684082031,
+				182.033386230469
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25432.396484375,
+				22804.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SE-attack-1.png",
+			"physics_tick": 185,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "93ea5dbf9736729bfc8d2d6934793bd9a200c49657f06e242e12653457dd8a48",
+			"visible_body_viewport": [
+				543.812133789062,
+				285.532012939453,
+				231.503051757812,
+				163.400054931641
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25432.396484375,
+				22804.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SE-contact.png",
+			"physics_tick": 185,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "93ea5dbf9736729bfc8d2d6934793bd9a200c49657f06e242e12653457dd8a48",
+			"visible_body_viewport": [
+				543.812133789062,
+				285.532012939453,
+				231.503051757812,
+				163.400054931641
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22705.5
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-S-walk.png",
+			"physics_tick": 198,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "c674b7d647b22584050e401566525fbeb73d8b5bf7223efc09de3a27dd62b2cb",
+			"visible_body_viewport": [
+				550.333312988281,
+				259.735900878906,
+				194.006103515625,
+				189.200042724609
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22705.5
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-S-walk-native-2.png",
+			"physics_tick": 198,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "c674b7d647b22584050e401566525fbeb73d8b5bf7223efc09de3a27dd62b2cb",
+			"visible_body_viewport": [
+				550.333312988281,
+				259.735900878906,
+				194.006103515625,
+				189.200042724609
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22710.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-S-walk-native-0.png",
+			"physics_tick": 202,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "9c8c2087e74cdc7db038592da5a01eed1bba0bf3e88f26de91e3addc64cfec9d",
+			"visible_body_viewport": [
+				543.812133789062,
+				255.432006835938,
+				197.266723632812,
+				193.500061035156
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22723.5
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-S-walk-native-1.png",
+			"physics_tick": 212,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "dcf2de264c83c7ec977c25c34201939e7c95a045f854e4b5c1b2aba1cf525ced",
+			"visible_body_viewport": [
+				543.812133789062,
+				251.13200378418,
+				194.006103515625,
+				197.800064086914
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22788.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-S-attack-0.png",
+			"physics_tick": 257,
+			"player_hp": 1799,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "414dd217afa5f9b8e84d3eee902918ab3b9273233b3b373c10467c39c1905376",
+			"visible_body_viewport": [
+				548.703002929688,
+				238.235900878906,
+				163.030334472656,
+				210.700042724609
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22788.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-S-attack-1.png",
+			"physics_tick": 275,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "78e51ec5f32857ca8955d8a5716c012ded0df22e54e2c1e0099d6d28426cd4b6",
+			"visible_body_viewport": [
+				534.0302734375,
+				304.169250488281,
+				234.763671875,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22788.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-S-contact.png",
+			"physics_tick": 275,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "78e51ec5f32857ca8955d8a5716c012ded0df22e54e2c1e0099d6d28426cd4b6",
+			"visible_body_viewport": [
+				534.0302734375,
+				304.169250488281,
+				234.763671875,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25569.93359375,
+				22746.06640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SW-walk.png",
+			"physics_tick": 288,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "36dd8191c2b77a50ee1486cd1a784996b8cf05063b085556332a1611a517ad5b",
+			"visible_body_viewport": [
+				537.298706054688,
+				256.869262695312,
+				208.678833007812,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25569.93359375,
+				22746.06640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SW-walk-native-2.png",
+			"physics_tick": 288,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "36dd8191c2b77a50ee1486cd1a784996b8cf05063b085556332a1611a517ad5b",
+			"visible_body_viewport": [
+				537.298706054688,
+				256.869262695312,
+				208.678833007812,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25565.69140625,
+				22750.30859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SW-walk-native-0.png",
+			"physics_tick": 293,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "43838fcbd27519f2e0a432b516b9276feddb2b6a2412ac5d0921f2e94319ab0b",
+			"visible_body_viewport": [
+				530.769653320312,
+				261.165344238281,
+				205.418212890625,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25555.0859375,
+				22760.9140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SW-walk-native-1.png",
+			"physics_tick": 304,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "dab93ba6ed31f3ed9009ffb2f36fce879ca5cc4055e2f5828e03ebcfe8394406",
+			"visible_body_viewport": [
+				534.0302734375,
+				255.432006835938,
+				207.048522949219,
+				193.500061035156
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25511.603515625,
+				22804.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SW-attack-0.png",
+			"physics_tick": 347,
+			"player_hp": 1766,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "941f124a24710fc2b2181f0ada42cf8896ad769039f4331ac9eb0aac2e9fce98",
+			"visible_body_viewport": [
+				535.660583496094,
+				261.165344238281,
+				192.375793457031,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25511.603515625,
+				22804.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SW-attack-1.png",
+			"physics_tick": 365,
+			"player_hp": 1733,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "62ea852e1e7e1755eef8db83cc5b51aaba88c8aec90e218779503470bbccb4d6",
+			"visible_body_viewport": [
+				514.466674804688,
+				299.865356445312,
+				220.090942382812,
+				149.066711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25511.603515625,
+				22804.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-SW-contact.png",
+			"physics_tick": 365,
+			"player_hp": 1733,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "62ea852e1e7e1755eef8db83cc5b51aaba88c8aec90e218779503470bbccb4d6",
+			"visible_body_viewport": [
+				514.466674804688,
+				299.865356445312,
+				220.090942382812,
+				149.066711425781
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25610.5,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-W-walk.png",
+			"physics_tick": 378,
+			"player_hp": 1733,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "a73c1a155eb5964b6d53b14c84580b4cc2be4fc208b3e36f04df7217f1204a3d",
+			"visible_body_viewport": [
+				543.812133789062,
+				253.998672485352,
+				192.375793457031,
+				194.933395385742
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25610.5,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-W-walk-native-2.png",
+			"physics_tick": 378,
+			"player_hp": 1733,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "a73c1a155eb5964b6d53b14c84580b4cc2be4fc208b3e36f04df7217f1204a3d",
+			"visible_body_viewport": [
+				543.812133789062,
+				253.998672485352,
+				192.375793457031,
+				194.933395385742
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25601.5,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-W-walk-native-0.png",
+			"physics_tick": 385,
+			"player_hp": 1733,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "a1aa88c1674fae683ed6e13e8d1654bcec317ee876777d07b79071533c148c58",
+			"visible_body_viewport": [
+				534.0302734375,
+				258.298675537109,
+				203.787902832031,
+				190.633392333984
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25586.5,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-W-walk-native-1.png",
+			"physics_tick": 396,
+			"player_hp": 1733,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "c4ef025657b96220f71d5457ddfd6e55dffaf29959255f2e2b8f2921d86c34e2",
+			"visible_body_viewport": [
+				534.0302734375,
+				271.198669433594,
+				207.048522949219,
+				177.733367919922
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25528.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-W-attack-0.png",
+			"physics_tick": 437,
+			"player_hp": 1733,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "48a0083d7c2fb248962edd33d8fcfc4adc1db3772c1706a8c26a227f59891fc0",
+			"visible_body_viewport": [
+				565.006042480469,
+				231.065322875977,
+				163.030334472656,
+				217.866714477539
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25528.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-W-attack-1.png",
+			"physics_tick": 455,
+			"player_hp": 1700,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "ee7b890af2cb9e8e3d392d3fa3d2a73e20b6821bcdff5bf67801018866c69aee",
+			"visible_body_viewport": [
+				490.012084960938,
+				284.098663330078,
+				249.436401367188,
+				164.833374023438
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25528.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-W-contact.png",
+			"physics_tick": 455,
+			"player_hp": 1700,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "ee7b890af2cb9e8e3d392d3fa3d2a73e20b6821bcdff5bf67801018866c69aee",
+			"visible_body_viewport": [
+				490.012084960938,
+				284.098663330078,
+				249.436401367188,
+				164.833374023438
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25569.93359375,
+				22941.93359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NW-walk.png",
+			"physics_tick": 468,
+			"player_hp": 1700,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "315bb53f912cc90bdef3480eb72bbbe3af558a4ee4643fc9012d175ac9e44101",
+			"visible_body_viewport": [
+				553.601745605469,
+				264.031982421875,
+				179.333374023438,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25569.93359375,
+				22941.93359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NW-walk-native-2.png",
+			"physics_tick": 468,
+			"player_hp": 1700,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "315bb53f912cc90bdef3480eb72bbbe3af558a4ee4643fc9012d175ac9e44101",
+			"visible_body_viewport": [
+				553.601745605469,
+				264.031982421875,
+				179.333374023438,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25561.44921875,
+				22933.44921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NW-walk-native-0.png",
+			"physics_tick": 477,
+			"player_hp": 1700,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "7647d11964e5b4de515619ea63189769329a19a028e899cca9aa30168fd50981",
+			"visible_body_viewport": [
+				548.703002929688,
+				264.035888671875,
+				184.224243164062,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25551.904296875,
+				22923.904296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NW-walk-native-1.png",
+			"physics_tick": 487,
+			"player_hp": 1700,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "2f6b1db526d6c76cc938319756cd490d00f8febeca380d840cc447bbf5010864",
+			"visible_body_viewport": [
+				537.290893554688,
+				254.002578735352,
+				189.115173339844,
+				194.933395385742
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25511.603515625,
+				22883.603515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NW-attack-0.png",
+			"physics_tick": 527,
+			"player_hp": 1700,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "2e8b01d37ccff7a1dcd35388b8af6f15d79582f0a6f055f44b95bb04186de396",
+			"visible_body_viewport": [
+				561.745422363281,
+				248.265335083008,
+				159.769714355469,
+				200.666702270508
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25511.603515625,
+				22883.603515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NW-attack-1.png",
+			"physics_tick": 545,
+			"player_hp": 1667,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "ba7b501183fb3d976e764c7fcdf5bd8d9260a18e83121933a4a909b40d2c6e5e",
+			"visible_body_viewport": [
+				503.054504394531,
+				291.265350341797,
+				231.503051757812,
+				157.666717529297
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25511.603515625,
+				22883.603515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NW-contact.png",
+			"physics_tick": 545,
+			"player_hp": 1667,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "ba7b501183fb3d976e764c7fcdf5bd8d9260a18e83121933a4a909b40d2c6e5e",
+			"visible_body_viewport": [
+				503.054504394531,
+				291.265350341797,
+				231.503051757812,
+				157.666717529297
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22982.5
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-N-walk.png",
+			"physics_tick": 558,
+			"player_hp": 1667,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "315d270f85a6af4e89a8d1c72e2c13ca10e8fc50a4264211c7b086e373118bc8",
+			"visible_body_viewport": [
+				563.375732421875,
+				264.031982421875,
+				154.878784179688,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22982.5
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-N-walk-native-2.png",
+			"physics_tick": 558,
+			"player_hp": 1667,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "315d270f85a6af4e89a8d1c72e2c13ca10e8fc50a4264211c7b086e373118bc8",
+			"visible_body_viewport": [
+				563.375732421875,
+				264.031982421875,
+				154.878784179688,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22969.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-N-walk-native-0.png",
+			"physics_tick": 568,
+			"player_hp": 1667,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "5f52565f033ceb084cd4c0466a5d54465ff646503bc3ac8cf6566b4bd088bfe4",
+			"visible_body_viewport": [
+				563.375732421875,
+				252.565338134766,
+				140.2060546875,
+				196.366729736328
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22954.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-N-walk-native-1.png",
+			"physics_tick": 579,
+			"player_hp": 1667,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "bea06dc0729a451e570af9e7bcbb4947128bc125c46d24798bd4499dde4042cc",
+			"visible_body_viewport": [
+				566.636352539062,
+				248.265335083008,
+				151.618225097656,
+				200.666702270508
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22900.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-N-attack-0.png",
+			"physics_tick": 617,
+			"player_hp": 1667,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "272e19833f2c5829ab7a90a77734c60ea4920d71ef4c9998586b1a0a0e584814",
+			"visible_body_viewport": [
+				565.006042480469,
+				225.332000732422,
+				154.878845214844,
+				223.600067138672
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22900.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-N-attack-1.png",
+			"physics_tick": 635,
+			"player_hp": 1634,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "ef2c902766280b5be5bf11c27a4583b0489a2b8430f0cf80b96db3e0b986075c",
+			"visible_body_viewport": [
+				553.593933105469,
+				275.498657226562,
+				174.442443847656,
+				173.433349609375
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25472.0,
+				22900.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-N-contact.png",
+			"physics_tick": 635,
+			"player_hp": 1634,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "ef2c902766280b5be5bf11c27a4583b0489a2b8430f0cf80b96db3e0b986075c",
+			"visible_body_viewport": [
+				553.593933105469,
+				275.498657226562,
+				174.442443847656,
+				173.433349609375
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25374.06640625,
+				22941.93359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NE-walk.png",
+			"physics_tick": 648,
+			"player_hp": 1634,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "415b257a210a5912a126e701bad0329453f3f4383a30ebf20bbfc05744e31ce0",
+			"visible_body_viewport": [
+				538.921203613281,
+				261.165344238281,
+				200.527282714844,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25374.06640625,
+				22941.93359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NE-walk-native-1.png",
+			"physics_tick": 648,
+			"player_hp": 1634,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "415b257a210a5912a126e701bad0329453f3f4383a30ebf20bbfc05744e31ce0",
+			"visible_body_viewport": [
+				538.921203613281,
+				261.165344238281,
+				200.527282714844,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25375.126953125,
+				22940.873046875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NE-walk-native-2.png",
+			"physics_tick": 650,
+			"player_hp": 1634,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "ba623692c79fd4d23dd1e9dd2205e66a3319a953624689889f70f7465dc9279c",
+			"visible_body_viewport": [
+				538.921203613281,
+				268.332000732422,
+				194.006103515625,
+				180.600036621094
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25385.732421875,
+				22930.267578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NE-walk-native-0.png",
+			"physics_tick": 661,
+			"player_hp": 1634,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "7f5f7d0e3b4a6c654742864631a71abc6f1b4d28ddcc2c1c3d4c9499e5fe4612",
+			"visible_body_viewport": [
+				547.068786621094,
+				264.031982421875,
+				184.224304199219,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25432.396484375,
+				22883.603515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NE-attack-0.png",
+			"physics_tick": 707,
+			"player_hp": 1634,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "f275579acfea504808fb70e1728bf6d2788cee3e496d70b0353f2129744ad3fc",
+			"visible_body_viewport": [
+				551.963623046875,
+				228.198669433594,
+				171.181823730469,
+				220.7333984375
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25432.396484375,
+				22883.603515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NE-attack-1.png",
+			"physics_tick": 725,
+			"player_hp": 1601,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "15e372390706fba42ce6490cb861ba71f99dd08d9802e32a857bfe93ef6aaa1f",
+			"visible_body_viewport": [
+				535.660583496094,
+				304.165344238281,
+				223.3515625,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 1960,
+			"actor_world": [
+				25432.396484375,
+				22883.603515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/runtime/family-main01/captures/atabark/ai-NE-contact.png",
+			"physics_tick": 725,
+			"player_hp": 1601,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "15e372390706fba42ce6490cb861ba71f99dd08d9802e32a857bfe93ef6aaa1f",
+			"visible_body_viewport": [
+				535.660583496094,
+				304.165344238281,
+				223.3515625,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 1766,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/runtime/family-main01/captures/atabark/lifecycle-hit.png",
+			"physics_tick": 748,
+			"player_hp": 1601,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "c8075a6c9406ab28f1ecc42fe11dc3c71601879e25fc8d2a7a3929104baa7933",
+			"visible_body_viewport": [
+				539.573303222656,
+				270.052001953125,
+				182.593933105469,
+				177.733367919922
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/runtime/family-main01/captures/atabark/lifecycle-ground-drop.png",
+			"physics_tick": 1174,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "cd2f9d0cd2416cebc3ba62634e0e4c585b7dc3dc2db71c534b0f5353df1f5596",
+			"visible_body_viewport": [
+				545.4423828125,
+				278.365356445312,
+				185.854553222656,
+				170.566711425781
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/runtime/family-main01/captures/atabark/lifecycle-death-0.png",
+			"physics_tick": 1176,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "c365017fefe8d3031f8fb6362980312fc4e597959c775152843c65275933c92e",
+			"visible_body_viewport": [
+				539.573303222656,
+				284.958679199219,
+				223.025451660156,
+				162.826690673828
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/runtime/family-main01/captures/atabark/lifecycle-manual-pickup.png",
+			"physics_tick": 1187,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "7aef4666385c1631b04e99d49c88223d5a8eb17a1b9c3ada8cce84d6a10c09c2",
+			"visible_body_viewport": [
+				539.573303222656,
+				284.958679199219,
+				223.025451660156,
+				162.826690673828
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/runtime/family-main01/captures/atabark/lifecycle-death-1.png",
+			"physics_tick": 1190,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "fd2867441885926dece183462afd8ff59d9ff366bc11a1fda82f3cdcbc5b79dc",
+			"visible_body_viewport": [
+				521.313903808594,
+				345.732025146484,
+				242.589111328125,
+				102.053344726562
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/runtime/family-main01/captures/atabark/lifecycle-death-2.png",
+			"physics_tick": 1204,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "11a9b9988e6adb44b4e079b16f461bb89e1108b5adbb1beb957d20845f627f12",
+			"visible_body_viewport": [
+				497.837554931641,
+				374.398681640625,
+				256.935760498047,
+				73.3866882324219
+			]
+		}
+	],
+	"scope": "original-based atabark_project_source, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "질투의 아타바크",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_3.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_3.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

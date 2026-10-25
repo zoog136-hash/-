@@ -1,0 +1,2263 @@
+{
+  "status": "PASS_FINITE_DECLARED_MODEL_AND_EXACT_CURRENT_114_PART_BINDING",
+  "contract": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-NE-DEATH-six-source-contract-v13.json",
+    "sha256": "f48f6769e20de2f3bf12171ff59d2e27fceed66e5c57801632707854a5ef8a43",
+    "bytes": 114666
+  },
+  "physical_model": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v13-whole-actual-source-raster-floor-and-exact-editable-parts-binding-v01.json",
+    "sha256": "71d47d43a0dd47b0bebe80c69fe1d346838239346615591e2c9693521a1b6cfe",
+    "bytes": 223725
+  },
+  "exact_source_function_map": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v13-exact114-raster-to-original-source-and-defining-UV-functions-v01.json",
+    "sha256": "5478c4a875c624242174858eb982c89ae1943c00a607a2b2cba49e6d6cfcc0e3",
+    "bytes": 113163
+  },
+  "independent_script": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/audit-NEdeath-v13-exact114-and-finite-material-surfaces.py",
+    "sha256": "6544ccc3e3ac62d879da09ed884d9bf5a742e4c758512846db4cd87530602a38",
+    "bytes": 16941
+  },
+  "verified_files": [
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/author-NE-DEATH-dedicated-native-six-v11.py",
+      "sha256": "f90942c19561a5c90efe72f334c959724623354b916c3a485627b5a65bd86453",
+      "bytes": 19354
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/render-NE-DEATH-actual-native-rounded-joint-material-v01.py",
+      "sha256": "ffde91a13861a5abd400cad54c19a3b70cae6a0a99451ffe78d9baedfcf35c1f",
+      "bytes": 7299
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/render-NE-DEATH-actual-continuous-knee-native-UV-v01.py",
+      "sha256": "704fdd6720deb961bfc6f8856baca1be438be9ffc3d6725ddedbd3f20cddd3d1",
+      "bytes": 5742
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/bind-NE-DEATH-v11-whole-actual-source-raster-floor-and-editable-parts-v01.py",
+      "sha256": "7c7d71288cd9c5441e99dc195e6d39225e20ca11ceaeaff73ea423963e0d5815",
+      "bytes": 13680
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/bind-NE-DEATH-v11-recover-existing-exact-parts-floor-serialization-v02.py",
+      "sha256": "1abcf0e3e7ce2e49f8d4021a239eca18c7a5c8147d754ae77d9fdced43874092",
+      "bytes": 15141
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/author-NE-DEATH-source-semantic-ribbon-and-LEFTcuff-closure-v13.py",
+      "sha256": "28338526afb87272b7f0510dec6b1846c257bb2a08d5616386ebbb0359cef401",
+      "bytes": 8816
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-RIGHT-complete-native-thigh.png",
+      "sha256": "3903a4d0145247ac84fa857aba0dbd8f3a3a9fcb28e05a8e584eadbd138ce8ba",
+      "bytes": 24425
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-01-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "f6eeec7b5b12ce26ac247436e8d356263c6a28ec570422066078ef4ad563c1dc",
+      "bytes": 53838
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-RIGHT-complete-native-calf.png",
+      "sha256": "963813201760061da50467bf85b3271d6615c921b07b387f4ade3683e4f24650",
+      "bytes": 25070
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-02-bone-RIGHT-complete-native-calf.png",
+      "sha256": "6e9dc1f7113f5db5abd12dd9a13bdd556a1de5610185e06e1ee3187b9afec623",
+      "bytes": 27656
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-RIGHT-original-native-continuous-knee-strip.png",
+      "sha256": "7fc2f6ade345988a249d5f9bab957bd6b9ebafadd8b0625d33c4a1017488ad6f",
+      "bytes": 13630
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-03-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "96a125e105c78b3329fff7023069fd280e219f03b0aa1f56ce13c9d6b8c33f2e",
+      "bytes": 31382
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/NE-contact0-actual-native-background-AA-clean-r002.png",
+      "sha256": "99ffa7da2332144f3d449e9e23881bbaa130ace3027e837518148b705d92c127",
+      "bytes": 761279
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/actual-native-ankle-leather-donor-semantic-matte-v11.png",
+      "sha256": "c43c7ccd07b7ab8ee9a3c004867c915869dfcbe1f01cad87460bdb3c5a208daa",
+      "bytes": 1690
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-04-native-joint-small-ankle-interface.png",
+      "sha256": "638ab32e52810a41fb848c25701374f20c9bff19e43148cd02aa5f6e9830f8cb",
+      "bytes": 26175
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "40a4aa2c9693c7af863ec710aa3fbaad8f527d5453af390e2c4014f2c62d1cb6",
+      "bytes": 24407
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-05-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "1aae6db90df9359cac7d7901c62e501d93b350008e478378daf5e8df75fd3e71",
+      "bytes": 38996
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-06-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "910ca762be825e5f11258a6d5c8a1a84c5388cb3fa43aa32e51ff9111b5165e6",
+      "bytes": 66920
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-07-bone-RIGHT-complete-native-calf.png",
+      "sha256": "35510edf0623499bf7ba459157f887b8c5036408b29afc18d277f7880f69c6d5",
+      "bytes": 54103
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-08-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "c8df9a2929c78a485755116194dbceafd7901788da0b81cb329c123067ba19c3",
+      "bytes": 39170
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-09-native-joint-small-ankle-interface.png",
+      "sha256": "ef491fb45e3dcbe0a0923b3d792aa8faf4f0e59431657ac0c1cf639a3aa71004",
+      "bytes": 26057
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-10-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "8847b2b9ea05f5f3890fee62b268a9c59d161c1cfbb66f5f83311f36112548fb",
+      "bytes": 38910
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-pelvis-pleated-skirt-and-original-proximal-skin-cap.png",
+      "sha256": "234f4926432668e546d4ea9f5140585ebe2c0336693b1eb8c21acd663bf0733f",
+      "bytes": 48422
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-11-plane-pelvis-pleated-skirt-and-original-proximal-skin-cap.png",
+      "sha256": "1ca49696ae326e30a79c4206c81616afd21f968f849c18bed792d8f31ea5e3ce",
+      "bytes": 61686
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/native-torso-native-bluegold-bodice-complete-semantic-owner-v13.png",
+      "sha256": "0509bac09b9cde3e00b6628c4f7b6d7e11c089db3de8472e580d42cdc303b243",
+      "bytes": 103653
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase0-torso-native-bluegold-bodice-exact-updated-owner-v13.png",
+      "sha256": "056313820b93dbeb4ce632d70da9e2298490af08fe6177965ae04ef5425598b1",
+      "bytes": 117973
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/native-head-face-bun-and-original-hair-complete-semantic-owner-v13.png",
+      "sha256": "6a581deaffafad2d1d367e527ea95bf612b0d81c51beede9f65484994841297d",
+      "bytes": 147763
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase0-head-face-bun-and-original-hair-exact-updated-owner-v13.png",
+      "sha256": "3881e296b496d6e17fe9cbc21a908b74380f1ebe9c6e46a8b853da1f343b719a",
+      "bytes": 165861
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-RIGHT-upperarm-native.png",
+      "sha256": "54f3073d67e0a738c24b0ea0406ddd0a6421eedfcb586dea2fb0cf497277f02e",
+      "bytes": 35653
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-14-plane-RIGHT-upperarm-native.png",
+      "sha256": "bff04189aaa88ded6ab73f26a4f351b1103cbec18be72ab935dba35f0bfd4aa0",
+      "bytes": 49388
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/actual-RIGHT-proximal-white-gold-flex-sleeve-material-v11.png",
+      "sha256": "8c549be7094d6d5ef9ae73ce1613c72cbfc3dafced48d9982149539df3bba572",
+      "bytes": 23172
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-15-native-joint-complete-curved-white-gold-RIGHT-sleeve.png",
+      "sha256": "bc04ac874aaafd3d23f359c76e42d98e71cd9b8374c8a7e92a2d00b84b010d68",
+      "bytes": 37929
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-RIGHT-complete-forearm-grip-staff-both-ends-native.png",
+      "sha256": "7e4ced1124ffeec595fbab65bd02a3be25cb14bdd2b6a43cada9200fe1a4aadf",
+      "bytes": 160799
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-16-plane-RIGHT-complete-forearm-grip-staff-both-ends-native.png",
+      "sha256": "2af6bee4079a7b8ae0bb2a44dafc432e9678c5759e3be9fc24b9b9e237194f3a",
+      "bytes": 178211
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-LEFT-upperarm-native.png",
+      "sha256": "5fa4ce7633a2600a2129321bf65f2f8565797b022b8525598aeb0a626df63e63",
+      "bytes": 13693
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-17-plane-LEFT-upperarm-native.png",
+      "sha256": "a7f7d587f9b01ac6236cde7a6ee7b49d5c08bc4f122986215061ca11130aef3c",
+      "bytes": 28285
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/native-LEFT-complete-cuff-forearm-hand-native-complete-semantic-owner-v13.png",
+      "sha256": "530e64529ba65639dea061b53ce44ecba8eac962941d1ec0875c33dafc29e191",
+      "bytes": 43396
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase0-LEFT-complete-cuff-forearm-hand-native-exact-updated-owner-v13.png",
+      "sha256": "4396556750c883ac505aef8974de1821e3856a31a605fc3c2a02435b309c2c78",
+      "bytes": 55827
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-ALL-original-bluegold-coattails-complete-bluegold-coattail.png",
+      "sha256": "f3a14df45bbaec5bbd3bf6398551b924be4ca28d21890bd6756d11cd14681f53",
+      "bytes": 194157
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase0-19-cloth-ALL-original-bluegold-coattails.png",
+      "sha256": "4db1d9b94b0a95b374e504f37a3cc5c5e24308af2cada0b718b9f6d7f10f1ecb",
+      "bytes": 211994
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-01-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "e2943d49b7beb31f99d6475a20093f9a609eb527d795a90e716f6f84e8c090c5",
+      "bytes": 67592
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-02-bone-RIGHT-complete-native-calf.png",
+      "sha256": "bc5c2517442e2a5cca9ead8fc92ab08e4d141f87b09dafa882491260d92936f2",
+      "bytes": 47388
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-03-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "d2d7e0109e0ef510c6910ee813ff2955aeba5b286376a5e8262c1ae01c277531",
+      "bytes": 33693
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-04-native-joint-small-ankle-interface.png",
+      "sha256": "30eab10278508ffe07ac5d80bb15c329972f70abf0bae34f0be0af521ca42715",
+      "bytes": 26105
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-05-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "eda668e62aee9afd7ed7adb1969f0931da4648ad5e4b84070286c2d38e4f97ec",
+      "bytes": 39024
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-06-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "d6573f8b3c0b56c152b55015ce4a6e41256f5a8e0967b214a3c5c1e1ed6ab794",
+      "bytes": 76227
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-07-bone-RIGHT-complete-native-calf.png",
+      "sha256": "47c25da7d8eb10ac23b1ed4e013c8030be9776a654fb89efca731aceb4335233",
+      "bytes": 53499
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-08-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "d26bb5f30b2a3a90c777827a700f135ea0e997c0b9e137e8059cf27fa3a75129",
+      "bytes": 41325
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-09-native-joint-small-ankle-interface.png",
+      "sha256": "2f59b04722f5ddde493ff077a485b5b2c5590ceac932ddeac7f1392f668fa5ab",
+      "bytes": 26025
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-10-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "d7ccded3f7362e7b50b809f6b260f4d5e6b195c7ec3eba99431d51899d16c49c",
+      "bytes": 38971
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-11-plane-pelvis-pleated-skirt-and-original-proximal-skin-cap.png",
+      "sha256": "1e1032da2673fa0b0c6f1bdc0044ae1de475ac5f36210391cb0ed53eca382d1c",
+      "bytes": 68967
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase1-torso-native-bluegold-bodice-exact-updated-owner-v13.png",
+      "sha256": "7f4af61ef58d5b31d13c02968a4f67f3531f250ca2c1f97b6f0f967934a12adc",
+      "bytes": 133755
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase1-head-face-bun-and-original-hair-exact-updated-owner-v13.png",
+      "sha256": "6917370b45df8958aa10d6cff3b96fed465a567901d980ecd9e414717476991b",
+      "bytes": 178513
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-14-plane-RIGHT-upperarm-native.png",
+      "sha256": "6a06ff7a2932642479aa73a4404879db86cfc3e902247c8446bee6ad44b809ba",
+      "bytes": 51920
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-15-native-joint-complete-curved-white-gold-RIGHT-sleeve.png",
+      "sha256": "8d54d9859081cf6fdaaf6dc23012e1bd04f67e4134141424108130f31c797463",
+      "bytes": 40248
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-16-plane-RIGHT-complete-forearm-grip-staff-both-ends-native.png",
+      "sha256": "c1f055027a3c6b7cfd1e4a22f450d0fbe6c8057c2c8c3d3fafb45ad6b5d330cb",
+      "bytes": 207384
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-17-plane-LEFT-upperarm-native.png",
+      "sha256": "160fcac0de64701d9d0290219034aa80651381cd59ab40e774be1f499dd5d83d",
+      "bytes": 29542
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase1-LEFT-complete-cuff-forearm-hand-native-exact-updated-owner-v13.png",
+      "sha256": "b88a623d4275aed6f1527892d41a352a525e5be63a383619fa398157ba8eb1ba",
+      "bytes": 62628
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase1-19-cloth-ALL-original-bluegold-coattails.png",
+      "sha256": "ab81f8d5485a1e8df2c1e505dcd268f291a1d51cc731f553885dcca12474dd99",
+      "bytes": 243191
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-01-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "ab940275552689718a570416aa775f90ba1e1fd0da61ff171f5ca07933d401bc",
+      "bytes": 77636
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-02-bone-RIGHT-complete-native-calf.png",
+      "sha256": "cab7b4b350cf2b3b09ddad362aaa7677a9990cb8c6b63d9a3470b9a9a4d5a609",
+      "bytes": 71778
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-03-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "87b758a32f10da7a72b5bda3d48758cddd098bebfa62bdc0b540181497bdb9b5",
+      "bytes": 35006
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-04-native-joint-small-ankle-interface.png",
+      "sha256": "4d97befa21f2e3c17f6ab72bfd7af23c942bd4dc807161baa1a07bd8a689e634",
+      "bytes": 27106
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-05-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "168438e282e0c27ad0f887a7aafd94d2617a2b14c9060c4c508516f9fac936e9",
+      "bytes": 45568
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-06-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "16116fae8d098e76a52d41f5277ae5a14c491581872a8b98ec9ed6a7a6d3d642",
+      "bytes": 69450
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-07-bone-RIGHT-complete-native-calf.png",
+      "sha256": "aaf19238e882ce7059bdc642c879b2f5ae89750b159fe51407565eaa6f42ac00",
+      "bytes": 55753
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-08-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "ec2fe98d89f4e28cbf23aecdc04458de8649a09a425e6ba50f284650b78494cc",
+      "bytes": 39076
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-09-native-joint-small-ankle-interface.png",
+      "sha256": "208654562028a265cd306e5a7c86a90879d7cdc107a85fb383c1dd8df58a0bde",
+      "bytes": 25568
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-10-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "2849dedfa53ac46d5eb1d8063223520a0b8a6850d13f74897439a7e8c559f56d",
+      "bytes": 39329
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-11-plane-pelvis-pleated-skirt-and-original-proximal-skin-cap.png",
+      "sha256": "8d534b3106a93c9e45a071e0085d23bcae8f600e41971d6f5dd491a9018de784",
+      "bytes": 77469
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase2-torso-native-bluegold-bodice-exact-updated-owner-v13.png",
+      "sha256": "74e63e10d6d85a5027b9d9a919ed4046d586f8fb24afd18e87c42e35af3ec634",
+      "bytes": 147793
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase2-head-face-bun-and-original-hair-exact-updated-owner-v13.png",
+      "sha256": "212de3c1757f94e12168e60a2178608c19e96736f755626ea186073316bb7230",
+      "bytes": 210530
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-14-plane-RIGHT-upperarm-native.png",
+      "sha256": "7d68881158a088f0c962d3dba83f97187a5b8005a1514719a415b0ec1270ff0a",
+      "bytes": 56969
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-15-native-joint-complete-curved-white-gold-RIGHT-sleeve.png",
+      "sha256": "4b03340c27cd7347bd966e48622681420c5608de4eb14caa9031f4b85b5ce301",
+      "bytes": 43027
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-16-plane-RIGHT-complete-forearm-grip-staff-both-ends-native.png",
+      "sha256": "1e53884161408f7ee135f78a2c373d06d0daddb4db82e7060cd73cb4e218fd1e",
+      "bytes": 239874
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-17-plane-LEFT-upperarm-native.png",
+      "sha256": "9d024c0069ec3dbec6c1859e98637c4f751ec8c029b4504d83229d875083a543",
+      "bytes": 30664
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase2-LEFT-complete-cuff-forearm-hand-native-exact-updated-owner-v13.png",
+      "sha256": "b545fb524d4979a6d4ec590230a4845d72a3bf0d3026c7fd797c4d4175512c53",
+      "bytes": 65337
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase2-19-cloth-ALL-original-bluegold-coattails.png",
+      "sha256": "fc6ea12a08c77b6a5fd62c8353a28b821d28c7287520f18923853c99c6bbf837",
+      "bytes": 260917
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-01-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "be9440483897b0e598ae9b48ee5cc167d856458d5510644a84b50123dbc01d94",
+      "bytes": 56506
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-02-bone-RIGHT-complete-native-calf.png",
+      "sha256": "941f9bf2f77e9ad3c121b819f0faf16a4a35629ed8b580c099964a85239aba1f",
+      "bytes": 53673
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-03-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "ded861415ad62998f33470e0742ecd54f462610e51eb6e2c64edf4ea2b313237",
+      "bytes": 35124
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-04-native-joint-small-ankle-interface.png",
+      "sha256": "b86449ef6151e6a5b2648aab255f06c9debb23e9b2687834f7a0298d7c8bbd9d",
+      "bytes": 28578
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-05-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "615505204f4e74c75a5c36095b488efa0fb5d96d652b28d7ce88abcf3fc50c2c",
+      "bytes": 52390
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-06-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "e3e22896e566f8f7a197bfd94ccf61904e4d1bbc00eba6683d5f2d53bb30a9f8",
+      "bytes": 86980
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-07-bone-RIGHT-complete-native-calf.png",
+      "sha256": "d3f0166771398e2baae494cc5e413cac9c65d015ca6189ad367113ba1d75ee0f",
+      "bytes": 67846
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-08-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "14e7b37520bd8143e38e393749c6a5b76584ca8e1c95076f274ef200e281ec8c",
+      "bytes": 40672
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-09-native-joint-small-ankle-interface.png",
+      "sha256": "2e2aba3602e545dbc8fe0190ac36421840e824e49c7e63ce060f6a3facdcf8f5",
+      "bytes": 24236
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-10-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "18a2e300905ebe80752045355516627296bc128c74b88cf7584cbd5d53aaddce",
+      "bytes": 24239
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-11-plane-pelvis-pleated-skirt-and-original-proximal-skin-cap.png",
+      "sha256": "3ada4ce59ffe54f87d80cbbda4a2dd25d3589d43043dd71fb463b67819a8d20c",
+      "bytes": 77965
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase3-torso-native-bluegold-bodice-exact-updated-owner-v13.png",
+      "sha256": "648938744c310e56164b0e45a3fcded15754c979df8d735a8e171b0c531e2849",
+      "bytes": 142305
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase3-head-face-bun-and-original-hair-exact-updated-owner-v13.png",
+      "sha256": "4d57dbebb7d8c471f2a76d493e4225d48c31ead8b0ba9c9a13a54fce8fdf26bf",
+      "bytes": 190150
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-14-plane-RIGHT-upperarm-native.png",
+      "sha256": "e92808f6a835cfed15c472906a30a6faab130d889ec31899a460e1e6189c62b9",
+      "bytes": 58628
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-15-native-joint-complete-curved-white-gold-RIGHT-sleeve.png",
+      "sha256": "45e6faaf3d0d8baf00662bc60434b6aded20554e732cc73c56571821ea95e7ef",
+      "bytes": 41236
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-16-plane-RIGHT-complete-forearm-grip-staff-both-ends-native.png",
+      "sha256": "863795486ba7c1cee8513ff93b689c4c028f3d536fa88fcf803d33259257a447",
+      "bytes": 198491
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-17-plane-LEFT-upperarm-native.png",
+      "sha256": "65fab2be44ba2fe736516930ce0eed56f9ae9c334fc79a34e3986be0772420c3",
+      "bytes": 30983
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase3-LEFT-complete-cuff-forearm-hand-native-exact-updated-owner-v13.png",
+      "sha256": "d98025cd4c45e4f5bc4a01ebd8276e2f9b8b77a73f079d0e4169050181a6885b",
+      "bytes": 63430
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase3-19-cloth-ALL-original-bluegold-coattails.png",
+      "sha256": "24fb7f6bbbeaa29f91dc7651c8e3d7c4109590460fe5fba74bc09ffb890be8f3",
+      "bytes": 210063
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-01-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "9f4d3f820de329260458687a0f8716338a819c644fc5f9505fb62b48f38c2960",
+      "bytes": 70173
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-02-bone-RIGHT-complete-native-calf.png",
+      "sha256": "eac218328352248a86ed33c3bb5f7a06dba9916f87647d394a0f1149b3fa4d1e",
+      "bytes": 67410
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-03-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "eb599b499d79a670e373838db80f9c7680c8d349b3223f703e8545b9caa6975a",
+      "bytes": 40868
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-04-native-joint-small-ankle-interface.png",
+      "sha256": "6d46775509c72b5ed73a45694cb204e8687c56c882946acf34790ed892876051",
+      "bytes": 27016
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-05-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "c5b37155119ad8acb584c086eed65e7e818164c4ffc4ee07529826285a882f31",
+      "bytes": 47185
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-06-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "a261a1d7bca53129210cea284952d4a4cfda5114047510f8df5393b6e214ee4a",
+      "bytes": 78570
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-07-bone-RIGHT-complete-native-calf.png",
+      "sha256": "497cf8f3a2a0e3680c1e94ed5bc862c3b580d00030423f10ef557caf740b824b",
+      "bytes": 61929
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-08-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "8894be97109a3cceb677332b118ade48cc7b5ba47d73e7a044f7514bfd7690f2",
+      "bytes": 42774
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-09-native-joint-small-ankle-interface.png",
+      "sha256": "04b7a833ef1111767b7d35d7d825e8cb6480dd3e98d1e71bab6e3f84c9daa7f3",
+      "bytes": 26174
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-10-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "b2e38ab8e127e57525cd19332a37cb1ffe3903f00d79f6d97d49ca80cf799dfe",
+      "bytes": 44961
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-11-plane-pelvis-pleated-skirt-and-original-proximal-skin-cap.png",
+      "sha256": "65a5bdfc6963ce8d94c21445cc948fae86452a8cd38e2d1f3ca43899dc3d550b",
+      "bytes": 69604
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase4-torso-native-bluegold-bodice-exact-updated-owner-v13.png",
+      "sha256": "2a2d870e1dde6573ba140cfb709f654a906ee008c3f37266da63f6e317bb6d85",
+      "bytes": 123621
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase4-head-face-bun-and-original-hair-exact-updated-owner-v13.png",
+      "sha256": "3062bb97bd224009c1bfc9a49217d0610e34c7a33897cdb67014c2f66bb4822b",
+      "bytes": 167767
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-14-plane-RIGHT-upperarm-native.png",
+      "sha256": "fdb8926252bad7ec433bed9499df8c8ef0d7f0db0919450ccc66d6772051eaae",
+      "bytes": 54021
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-15-native-joint-complete-curved-white-gold-RIGHT-sleeve.png",
+      "sha256": "c27983f2abb2698ed2deab1d7c677d29df0ddf77da9401245c71bc026c05f4c7",
+      "bytes": 39514
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-16-plane-RIGHT-complete-forearm-grip-staff-both-ends-native.png",
+      "sha256": "d2a719b2a69d4dd13f5b839fa26427a0d002e482e11120731e5cf5c0eaf73d09",
+      "bytes": 171938
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-17-plane-LEFT-upperarm-native.png",
+      "sha256": "0580b944728335b78c90dfe66494c28392a02d289f0a65854d3ef04754e1d657",
+      "bytes": 29829
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase4-LEFT-complete-cuff-forearm-hand-native-exact-updated-owner-v13.png",
+      "sha256": "4b79e92d5c013875d5b60b335c9110fe3e97217da47cfc5c16fc50adeb67fdcf",
+      "bytes": 58516
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase4-19-cloth-ALL-original-bluegold-coattails.png",
+      "sha256": "ac1904ea3da92c8a1239492a9334bf2c34f2988a23582b2023d8430a4710ab8e",
+      "bytes": 138502
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-01-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "99d774c2ff586ae2a43d5f0d8d44f539887a6e2bda2ec56956c30e97feb19883",
+      "bytes": 76875
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-02-bone-RIGHT-complete-native-calf.png",
+      "sha256": "67e173f62eb3c3a879489565624e0a101b990574b2fa4b1f9fac5d3e904c3d74",
+      "bytes": 68718
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-03-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "aec9b436a8b792550521d26f4d51800301174f47030047860c835dbb1ec9b6c3",
+      "bytes": 42867
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-04-native-joint-small-ankle-interface.png",
+      "sha256": "0cd03df9200613e7e8115ff50ccca579d6a66d77a924ea05fc94f251561421d1",
+      "bytes": 26541
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-05-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "e31798cf093e0bc2f0bd1bb3b3a2e5b46dff26cef9a7d04d9ac19bfc965f866c",
+      "bytes": 45646
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-06-bone-RIGHT-complete-native-thigh.png",
+      "sha256": "5e526ac8832501ea96022049fbb910d49004ea036f365b493ea8290a179d52c7",
+      "bytes": 79826
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-07-bone-RIGHT-complete-native-calf.png",
+      "sha256": "14fb9293cb0dc769826fecf2d74d39fa7a3c930a789a0d4d9ec03edffd1b910c",
+      "bytes": 54963
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-08-native-joint-original-black-gold-knee-strip.png",
+      "sha256": "46b7964330dbc0193081516cb5c1355a412cb619fa7baaeabb24c8990011819d",
+      "bytes": 42959
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-09-native-joint-small-ankle-interface.png",
+      "sha256": "b360840c34a0722e727a9347c70a04056e1ad9862b6f48e4053fa78dae558939",
+      "bytes": 26531
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-10-plane-RIGHT-complete-counter-stiletto-rounded-native-interface.png",
+      "sha256": "dae26fe0e6d7ec2703677377d6d007ae42429db66107636fe8143bbcefb7bdf9",
+      "bytes": 45314
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-11-plane-pelvis-pleated-skirt-and-original-proximal-skin-cap.png",
+      "sha256": "80604da27d9a453079b83d835c1644186125a66f8b668671e91d1425238e76fd",
+      "bytes": 67979
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase5-torso-native-bluegold-bodice-exact-updated-owner-v13.png",
+      "sha256": "c446be873f93a7da83d15aae6b8d90bbd96dca5a85203a6f13dea2c21251b533",
+      "bytes": 123619
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase5-head-face-bun-and-original-hair-exact-updated-owner-v13.png",
+      "sha256": "8f8f882da2a9e53f42b70aa9ee5a04c355207a6eaee48c8ab487845d9d0d8ce3",
+      "bytes": 171132
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-14-plane-RIGHT-upperarm-native.png",
+      "sha256": "1380249cfaf95a94e7d4a3cd9ea868023cc20d6a5c9a523aadfd4a578b906c62",
+      "bytes": 53953
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-15-native-joint-complete-curved-white-gold-RIGHT-sleeve.png",
+      "sha256": "6ba85ee293f49db468bec56993619fecee881eb24a018376d028e1701b178c27",
+      "bytes": 39432
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-16-plane-RIGHT-complete-forearm-grip-staff-both-ends-native.png",
+      "sha256": "44b5ad9eff6c8213024e424f2532d24c5e124aff2a0c4cb753a491e809180b59",
+      "bytes": 171891
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-17-plane-LEFT-upperarm-native.png",
+      "sha256": "22ed0845197cf9b22cc75f5b03e24148aff2d04559df1d9623b644ee420e6184",
+      "bytes": 29856
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/phase5-LEFT-complete-cuff-forearm-hand-native-exact-updated-owner-v13.png",
+      "sha256": "af37d91e828c8645809acca8ac9b78cec56b913364cccc758f7ef5ea9b8d3834",
+      "bytes": 58369
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-exact-bound-editable-parts-and-floor-v01/phase5-19-cloth-ALL-original-bluegold-coattails.png",
+      "sha256": "b04dbe0a288a0ba744cf0625897c14065a1b6c587185bfddb2b4eec5e2f6f0a5",
+      "bytes": 120504
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase0-actual-native-v13.png",
+      "sha256": "5cf510e279bc63e04e302a8ed9d4f3fff82890b716686edf070a10f05c552bb2",
+      "bytes": 799555
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase1-actual-native-v13.png",
+      "sha256": "96d7db05d92951cb055e7b7ed73d014a438abf2cf43ac909b81f6a9224468223",
+      "bytes": 881737
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase2-actual-native-v13.png",
+      "sha256": "b9b761f6ff390b7a9eda2c57b69902fa55014258fe513f2a8ed4a977e468b816",
+      "bytes": 955972
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase3-actual-native-v13.png",
+      "sha256": "bb8eb102ea47325e1360040319836debd4a6d6dd12e8e36db08ae0e87805bfd1",
+      "bytes": 845598
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase4-actual-native-v13.png",
+      "sha256": "467ab5f545ee3d84d599a74e5fa0512f1f5cb0a16044e4732dba761e3a53415b",
+      "bytes": 763289
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase5-actual-native-v13.png",
+      "sha256": "af3c0fcd7a70ffa01e4104ab2e0c56795f53b6f849bfa5c23f82eb3a067c9b90",
+      "bytes": 768032
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/NE-death-phase0-actual-native-v11.png",
+      "sha256": "40266d6ff6bf894eca05b3418b7fc0ab27c3b11ba089c22c18c99c2a1736e367",
+      "bytes": 799595
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/NE-death-phase1-actual-native-v11.png",
+      "sha256": "98b651d599d2478878cb4702198307a3977c3a762d1aad0baab5595a48999b7f",
+      "bytes": 882162
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/NE-death-phase2-actual-native-v11.png",
+      "sha256": "85ca8eafc531dcc0ebeb5b6f8693c56b50733bd40b68a53c522f4e510d5f86e2",
+      "bytes": 956034
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/NE-death-phase3-actual-native-v11.png",
+      "sha256": "d7581d5efc6643c030c9cb7f55d5f5904a32a376badf21f996974bcb349baa4e",
+      "bytes": 845771
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/NE-death-phase4-actual-native-v11.png",
+      "sha256": "0eb92de167288b8fed0ee413a26d53c0ff5491b3c927b8c245fa5fe473b7dc6c",
+      "bytes": 763598
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/NE-death-phase5-actual-native-v11.png",
+      "sha256": "939dfcd29a904c5511c19912b556b522e24c95029300c6bbaafaf8c778abf9e8",
+      "bytes": 768100
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-blue-hair-ribbon-distal-tip-original-native-RGBA-preserved-v13.png",
+      "sha256": "4536349d9b4c554b14824c997de690265808ee54314c138c4bd814b41a014522",
+      "bytes": 7059
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-blue-hair-ribbon-distal-tip-actual-semantic-owner-transfer-matte-v13.png",
+      "sha256": "4381b3ec8b6ea19616b8a41552de8473a3915b37b9fd07f23f84caf6f8aa79a4",
+      "bytes": 1769
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v11/native-torso-native-bluegold-bodice.png",
+      "sha256": "022a2b9723c5621029c143565d462bccab8a863bfc3187c998fa3cf322898b07",
+      "bytes": 104562
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-white-LEFT-cuff-outer-fringe-original-native-RGBA-preserved-v13.png",
+      "sha256": "c8186f704a914c8d37f1de7a799c30d0ba03e73c826b7e5f0a7e45fe8a8b1845",
+      "bytes": 6740
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-white-LEFT-cuff-outer-fringe-actual-semantic-owner-transfer-matte-v13.png",
+      "sha256": "3ee50a4a14323020c9d7f44fd46c2ebef942dc8ce312a8fef444dc5d95260b36",
+      "bytes": 1729
+    }
+  ],
+  "fixed_C": 2432,
+  "bodyunit": 2.375,
+  "root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "storage_canvas": [
+    2304,
+    2304
+  ],
+  "frames": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase0-actual-native-v13.png",
+        "sha256": "5cf510e279bc63e04e302a8ed9d4f3fff82890b716686edf070a10f05c552bb2",
+        "bytes": 799555
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase1-actual-native-v13.png",
+        "sha256": "96d7db05d92951cb055e7b7ed73d014a438abf2cf43ac909b81f6a9224468223",
+        "bytes": 881737
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase2-actual-native-v13.png",
+        "sha256": "b9b761f6ff390b7a9eda2c57b69902fa55014258fe513f2a8ed4a977e468b816",
+        "bytes": 955972
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase3-actual-native-v13.png",
+        "sha256": "bb8eb102ea47325e1360040319836debd4a6d6dd12e8e36db08ae0e87805bfd1",
+        "bytes": 845598
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase4-actual-native-v13.png",
+        "sha256": "467ab5f545ee3d84d599a74e5fa0512f1f5cb0a16044e4732dba761e3a53415b",
+        "bytes": 763289
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase5-actual-native-v13.png",
+        "sha256": "af3c0fcd7a70ffa01e4104ab2e0c56795f53b6f849bfa5c23f82eb3a067c9b90",
+        "bytes": 768032
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    }
+  ],
+  "records": [
+    {
+      "phase": 0,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 328.67360557883825,
+      "actual_raster_min_Z": 326.8038311915316,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 13458
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 112.21280804984318,
+      "actual_raster_min_Z": 112.13131920438198,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 2123
+      }
+    },
+    {
+      "phase": 0,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 268.24929430372765,
+      "actual_raster_min_Z": 268.24929430372765,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 4011,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 273.6268644803808
+      }
+    },
+    {
+      "phase": 0,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 81.2591234646967,
+      "actual_raster_min_Z": 81.2591234646967,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 1.1040363843092686,
+      "actual_raster_min_Z": 1.1040363843093033,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 5362
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 318.806885039524,
+      "actual_raster_min_Z": 315.128363205577,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 19887
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 107.26419144237587,
+      "actual_raster_min_Z": 105.3102534573061,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 12627
+      }
+    },
+    {
+      "phase": 0,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 250.39598186758647,
+      "actual_raster_min_Z": 254.8434179837572,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 7329,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 253.39598186758647
+      }
+    },
+    {
+      "phase": 0,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 81.2591234646967,
+      "actual_raster_min_Z": 81.2591234646967,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 1.1040363843092686,
+      "actual_raster_min_Z": 0.5810119386015664,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 5362
+      }
+    },
+    {
+      "phase": 0,
+      "name": "pelvis-pleated-skirt-and-original-proximal-skin-cap",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 464.26659881312025,
+      "actual_raster_min_Z": 464.47788722919586,
+      "detail": {
+        "source_count": 15014,
+        "actual_raster_count": 15198
+      }
+    },
+    {
+      "phase": 0,
+      "name": "torso-native-bluegold-bodice",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 614.075109451418,
+      "actual_raster_min_Z": 614.0736319100469,
+      "detail": {
+        "source_count": 32280,
+        "actual_raster_count": 32381
+      }
+    },
+    {
+      "phase": 0,
+      "name": "head-face-bun-and-original-hair",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 742.3091520046095,
+      "actual_raster_min_Z": 742.3076744632384,
+      "detail": {
+        "source_count": 50015,
+        "actual_raster_count": 49949
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 744.5857477492904,
+      "actual_raster_min_Z": 744.5842702079192,
+      "detail": {
+        "source_count": 9586,
+        "actual_raster_count": 9647
+      }
+    },
+    {
+      "phase": 0,
+      "name": "actual-complete-curved-white-gold-RIGHT-proximal-sleeve",
+      "kind": "CONTINUOUS_ORIGINAL_NATIVE_PADDED_SLEEVE_UV",
+      "source_min_Z": 701.6495775365245,
+      "actual_raster_min_Z": 701.6480999951533,
+      "detail": {
+        "source_count": 5237,
+        "actual_raster_count": 5316,
+        "all_actual_corner_inverse_residual": 1.191086668529821e-13,
+        "source_quad_interior_bound": 703.6495775365245
+      }
+    },
+    {
+      "phase": 0,
+      "name": "RIGHT-complete-forearm-grip-staff-both-ends-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 213.54319455780106,
+      "actual_raster_min_Z": 213.75448297387666,
+      "detail": {
+        "source_count": 52521,
+        "actual_raster_count": 51981
+      }
+    },
+    {
+      "phase": 0,
+      "name": "LEFT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 735.883620089716,
+      "actual_raster_min_Z": 735.8821425483447,
+      "detail": {
+        "source_count": 2294,
+        "actual_raster_count": 2339
+      }
+    },
+    {
+      "phase": 0,
+      "name": "LEFT-complete-cuff-forearm-hand-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 550.0538328556735,
+      "actual_raster_min_Z": 550.4778872291959,
+      "detail": {
+        "source_count": 11000,
+        "actual_raster_count": 10964
+      }
+    },
+    {
+      "phase": 0,
+      "name": "ALL-original-bluegold-coattails",
+      "kind": "exact_native_2D_transverse_and_longitudinal_arclength_floor_surface",
+      "source_min_Z": 222.58574774929048,
+      "actual_raster_min_Z": 222.5842702079192,
+      "detail": {
+        "source_count": 81253,
+        "actual_raster_count": 81663,
+        "piecewise_arclength_floor": 10.0
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 206.61510533449058,
+      "actual_raster_min_Z": 202.06307701697548,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 21430
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 112.68941227113469,
+      "actual_raster_min_Z": 111.75001292526856,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 10405
+      }
+    },
+    {
+      "phase": 1,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 177.77477231013927,
+      "actual_raster_min_Z": 177.77477231013927,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 4575,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 181.07780294665852
+      }
+    },
+    {
+      "phase": 1,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 83.2591234646967,
+      "actual_raster_min_Z": 83.2591234646967,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 3.1040363843092686,
+      "actual_raster_min_Z": 3.018885861845468,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 5271
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 223.20691304366142,
+      "actual_raster_min_Z": 219.51410821404733,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 21162
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 102.47307639410796,
+      "actual_raster_min_Z": 101.823622239061,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 15585
+      }
+    },
+    {
+      "phase": 1,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 165.22188629375037,
+      "actual_raster_min_Z": 172.04545304769056,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 7670,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 168.22188629375037
+      }
+    },
+    {
+      "phase": 1,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 83.2591234646967,
+      "actual_raster_min_Z": 83.2591234646967,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 3.1040363843092686,
+      "actual_raster_min_Z": 2.4944085704552013,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 5271
+      }
+    },
+    {
+      "phase": 1,
+      "name": "pelvis-pleated-skirt-and-original-proximal-skin-cap",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 357.90102105306295,
+      "actual_raster_min_Z": 357.60859005549224,
+      "detail": {
+        "source_count": 15014,
+        "actual_raster_count": 16480
+      }
+    },
+    {
+      "phase": 1,
+      "name": "torso-native-bluegold-bodice",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 517.7479163077238,
+      "actual_raster_min_Z": 516.600064250788,
+      "detail": {
+        "source_count": 32280,
+        "actual_raster_count": 37022
+      }
+    },
+    {
+      "phase": 1,
+      "name": "head-face-bun-and-original-hair",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 642.892129365888,
+      "actual_raster_min_Z": 641.3557837921691,
+      "detail": {
+        "source_count": 50015,
+        "actual_raster_count": 53707
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 624.9807976859692,
+      "actual_raster_min_Z": 624.2709258377638,
+      "detail": {
+        "source_count": 9586,
+        "actual_raster_count": 10302
+      }
+    },
+    {
+      "phase": 1,
+      "name": "actual-complete-curved-white-gold-RIGHT-proximal-sleeve",
+      "kind": "CONTINUOUS_ORIGINAL_NATIVE_PADDED_SLEEVE_UV",
+      "source_min_Z": 578.4380501465263,
+      "actual_raster_min_Z": 578.1515402352807,
+      "detail": {
+        "source_count": 5237,
+        "actual_raster_count": 6163,
+        "all_actual_corner_inverse_residual": 1.7763568394002505e-13,
+        "source_quad_interior_bound": 580.4380501465263
+      }
+    },
+    {
+      "phase": 1,
+      "name": "RIGHT-complete-forearm-grip-staff-both-ends-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 97.56211561316091,
+      "actual_raster_min_Z": 97.20443338260613,
+      "detail": {
+        "source_count": 52521,
+        "actual_raster_count": 60195
+      }
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 633.1363001488227,
+      "actual_raster_min_Z": 631.3942321440622,
+      "detail": {
+        "source_count": 2294,
+        "actual_raster_count": 2496
+      }
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-complete-cuff-forearm-hand-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 463.2692925033494,
+      "actual_raster_min_Z": 463.1964491403329,
+      "detail": {
+        "source_count": 11000,
+        "actual_raster_count": 12909
+      }
+    },
+    {
+      "phase": 1,
+      "name": "ALL-original-bluegold-coattails",
+      "kind": "exact_native_2D_transverse_and_longitudinal_arclength_floor_surface",
+      "source_min_Z": 139.6703408208711,
+      "actual_raster_min_Z": 139.36212896763163,
+      "detail": {
+        "source_count": 81253,
+        "actual_raster_count": 101824,
+        "piecewise_arclength_floor": 10.0
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 52.023712517885315,
+      "actual_raster_min_Z": 50.766030662761786,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 19648
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 28.40659075813194,
+      "actual_raster_min_Z": 29.113407350115438,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 18896
+      }
+    },
+    {
+      "phase": 2,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 4.650728150050874,
+      "actual_raster_min_Z": 4.650728150050874,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 4712,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 19.891769634423543
+      }
+    },
+    {
+      "phase": 2,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 91.41937060778159,
+      "actual_raster_min_Z": 91.41937060778159,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 4.479391615446392,
+      "actual_raster_min_Z": 4.79202998721867,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 7494
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 77.5864083927659,
+      "actual_raster_min_Z": 75.84047098504708,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 17628
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 58.94779685167657,
+      "actual_raster_min_Z": 59.23489170940789,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 16949
+      }
+    },
+    {
+      "phase": 2,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 51.28521228692666,
+      "actual_raster_min_Z": 58.0394811776562,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 6297,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 54.28521228692666
+      }
+    },
+    {
+      "phase": 2,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 76.82514784229772,
+      "actual_raster_min_Z": 76.82514784229772,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 3.2882472091187447,
+      "actual_raster_min_Z": 3.1644608881382617,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 5252
+      }
+    },
+    {
+      "phase": 2,
+      "name": "pelvis-pleated-skirt-and-original-proximal-skin-cap",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 173.4760541029629,
+      "actual_raster_min_Z": 172.44502054843502,
+      "detail": {
+        "source_count": 15014,
+        "actual_raster_count": 19474
+      }
+    },
+    {
+      "phase": 2,
+      "name": "torso-native-bluegold-bodice",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 321.33321670962493,
+      "actual_raster_min_Z": 320.533016384225,
+      "detail": {
+        "source_count": 32280,
+        "actual_raster_count": 42906
+      }
+    },
+    {
+      "phase": 2,
+      "name": "head-face-bun-and-original-hair",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 435.61453871148785,
+      "actual_raster_min_Z": 434.4606115594641,
+      "detail": {
+        "source_count": 50015,
+        "actual_raster_count": 67145
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 379.46908668328905,
+      "actual_raster_min_Z": 378.5713863785625,
+      "detail": {
+        "source_count": 9586,
+        "actual_raster_count": 11712
+      }
+    },
+    {
+      "phase": 2,
+      "name": "actual-complete-curved-white-gold-RIGHT-proximal-sleeve",
+      "kind": "CONTINUOUS_ORIGINAL_NATIVE_PADDED_SLEEVE_UV",
+      "source_min_Z": 348.11925137267895,
+      "actual_raster_min_Z": 349.42932064887316,
+      "detail": {
+        "source_count": 5237,
+        "actual_raster_count": 7163,
+        "all_actual_corner_inverse_residual": 1.7086299886288783e-13,
+        "source_quad_interior_bound": 350.11925137267895
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-complete-forearm-grip-staff-both-ends-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 84.12112729649539,
+      "actual_raster_min_Z": 83.84663811316274,
+      "detail": {
+        "source_count": 52521,
+        "actual_raster_count": 68121
+      }
+    },
+    {
+      "phase": 2,
+      "name": "LEFT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 412.96567178535736,
+      "actual_raster_min_Z": 411.33854761068375,
+      "detail": {
+        "source_count": 2294,
+        "actual_raster_count": 2920
+      }
+    },
+    {
+      "phase": 2,
+      "name": "LEFT-complete-cuff-forearm-hand-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 283.67005355799915,
+      "actual_raster_min_Z": 282.97030009452243,
+      "detail": {
+        "source_count": 11000,
+        "actual_raster_count": 14175
+      }
+    },
+    {
+      "phase": 2,
+      "name": "ALL-original-bluegold-coattails",
+      "kind": "exact_native_2D_transverse_and_longitudinal_arclength_floor_surface",
+      "source_min_Z": 52.45720527313671,
+      "actual_raster_min_Z": 51.95697122715512,
+      "detail": {
+        "source_count": 81253,
+        "actual_raster_count": 112636,
+        "piecewise_arclength_floor": 10.0
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 45.581130764242985,
+      "actual_raster_min_Z": 45.20831683133146,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 12709
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 41.74377097748538,
+      "actual_raster_min_Z": 42.20509197607419,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 16550
+      }
+    },
+    {
+      "phase": 3,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 37.175910377745566,
+      "actual_raster_min_Z": 40.41434442614792,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 4958,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 40.175910377745566
+      }
+    },
+    {
+      "phase": 3,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 75.33482634326944,
+      "actual_raster_min_Z": 75.33482634326944,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 4.0532933096477475,
+      "actual_raster_min_Z": 4.095444920595424,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 10418
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 48.393065360531615,
+      "actual_raster_min_Z": 47.642335692188844,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 25443
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 42.18923634024506,
+      "actual_raster_min_Z": 42.22632459937825,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 17754
+      }
+    },
+    {
+      "phase": 3,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 34.18021393651165,
+      "actual_raster_min_Z": 35.75100699859063,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 7311,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 37.18021393651165
+      }
+    },
+    {
+      "phase": 3,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 49.33047058110334,
+      "actual_raster_min_Z": 49.33047058110334,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 15.16055169311754,
+      "actual_raster_min_Z": 17.429764333494976,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 690
+      }
+    },
+    {
+      "phase": 3,
+      "name": "pelvis-pleated-skirt-and-original-proximal-skin-cap",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 127.67469668851098,
+      "actual_raster_min_Z": 127.07233630828168,
+      "detail": {
+        "source_count": 15014,
+        "actual_raster_count": 20386
+      }
+    },
+    {
+      "phase": 3,
+      "name": "torso-native-bluegold-bodice",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 203.50262223046548,
+      "actual_raster_min_Z": 203.16126028730312,
+      "detail": {
+        "source_count": 32280,
+        "actual_raster_count": 40938
+      }
+    },
+    {
+      "phase": 3,
+      "name": "head-face-bun-and-original-hair",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 279.34581853175126,
+      "actual_raster_min_Z": 278.8626564959828,
+      "detail": {
+        "source_count": 50015,
+        "actual_raster_count": 60317
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 202.19018251634895,
+      "actual_raster_min_Z": 201.51693385067802,
+      "detail": {
+        "source_count": 9586,
+        "actual_raster_count": 12011
+      }
+    },
+    {
+      "phase": 3,
+      "name": "actual-complete-curved-white-gold-RIGHT-proximal-sleeve",
+      "kind": "CONTINUOUS_ORIGINAL_NATIVE_PADDED_SLEEVE_UV",
+      "source_min_Z": 186.32699691114553,
+      "actual_raster_min_Z": 188.32903385902594,
+      "detail": {
+        "source_count": 5237,
+        "actual_raster_count": 6301,
+        "all_actual_corner_inverse_residual": 1.5732545808677777e-13,
+        "source_quad_interior_bound": 188.32699691114553
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-complete-forearm-grip-staff-both-ends-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 113.93998390275556,
+      "actual_raster_min_Z": 113.84875703000417,
+      "detail": {
+        "source_count": 52521,
+        "actual_raster_count": 58828
+      }
+    },
+    {
+      "phase": 3,
+      "name": "LEFT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 247.2796217001918,
+      "actual_raster_min_Z": 246.2519897622675,
+      "detail": {
+        "source_count": 2294,
+        "actual_raster_count": 3074
+      }
+    },
+    {
+      "phase": 3,
+      "name": "LEFT-complete-cuff-forearm-hand-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 182.51505209526914,
+      "actual_raster_min_Z": 181.9475319454534,
+      "detail": {
+        "source_count": 11000,
+        "actual_raster_count": 13827
+      }
+    },
+    {
+      "phase": 3,
+      "name": "ALL-original-bluegold-coattails",
+      "kind": "exact_native_2D_transverse_and_longitudinal_arclength_floor_surface",
+      "source_min_Z": 37.935634717682234,
+      "actual_raster_min_Z": 37.87369336478321,
+      "detail": {
+        "source_count": 81253,
+        "actual_raster_count": 85332,
+        "piecewise_arclength_floor": 10.0
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 42.330168803437026,
+      "actual_raster_min_Z": 41.86099903753686,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 17815
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 24.102961534264573,
+      "actual_raster_min_Z": 24.03256930202102,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 17158
+      }
+    },
+    {
+      "phase": 4,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 37.388088220907996,
+      "actual_raster_min_Z": 37.388088220907996,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 7301,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 40.4029941067993
+      }
+    },
+    {
+      "phase": 4,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 12.66969280229225,
+      "actual_raster_min_Z": 12.66969280229225,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 14.950188804708176,
+      "actual_raster_min_Z": 14.942843276848357,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 8074
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 45.281480801584756,
+      "actual_raster_min_Z": 44.84140530946284,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 21214
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 14.95542592592055,
+      "actual_raster_min_Z": 15.01371028479845,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 16226
+      }
+    },
+    {
+      "phase": 4,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 22.12519622778257,
+      "actual_raster_min_Z": 25.71332564527867,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 8058,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 25.12519622778257
+      }
+    },
+    {
+      "phase": 4,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 6.488543826289659,
+      "actual_raster_min_Z": 6.488543826289659,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 16.56054523489876,
+      "actual_raster_min_Z": 16.5563692434862,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 7028
+      }
+    },
+    {
+      "phase": 4,
+      "name": "pelvis-pleated-skirt-and-original-proximal-skin-cap",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 66.80663338471193,
+      "actual_raster_min_Z": 66.67821098231926,
+      "detail": {
+        "source_count": 15014,
+        "actual_raster_count": 16511
+      }
+    },
+    {
+      "phase": 4,
+      "name": "torso-native-bluegold-bodice",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 74.73393817089597,
+      "actual_raster_min_Z": 74.73393817089597,
+      "detail": {
+        "source_count": 32280,
+        "actual_raster_count": 33510
+      }
+    },
+    {
+      "phase": 4,
+      "name": "head-face-bun-and-original-hair",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 63.07962641839174,
+      "actual_raster_min_Z": 63.09316319412875,
+      "detail": {
+        "source_count": 50015,
+        "actual_raster_count": 50005
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 28.195937365164244,
+      "actual_raster_min_Z": 27.45074527555,
+      "detail": {
+        "source_count": 9586,
+        "actual_raster_count": 10898
+      }
+    },
+    {
+      "phase": 4,
+      "name": "actual-complete-curved-white-gold-RIGHT-proximal-sleeve",
+      "kind": "CONTINUOUS_ORIGINAL_NATIVE_PADDED_SLEEVE_UV",
+      "source_min_Z": 20.237747388926056,
+      "actual_raster_min_Z": 21.876219497937946,
+      "detail": {
+        "source_count": 5237,
+        "actual_raster_count": 5634,
+        "all_actual_corner_inverse_residual": 1.5668232628627226e-13,
+        "source_quad_interior_bound": 22.237747388926056
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-complete-forearm-grip-staff-both-ends-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 24.322038924816958,
+      "actual_raster_min_Z": 24.322038924816958,
+      "detail": {
+        "source_count": 52521,
+        "actual_raster_count": 53124
+      }
+    },
+    {
+      "phase": 4,
+      "name": "LEFT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 64.97149741041088,
+      "actual_raster_min_Z": 64.5643578017218,
+      "detail": {
+        "source_count": 2294,
+        "actual_raster_count": 2652
+      }
+    },
+    {
+      "phase": 4,
+      "name": "LEFT-complete-cuff-forearm-hand-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 27.709350814965998,
+      "actual_raster_min_Z": 27.455938888140366,
+      "detail": {
+        "source_count": 11000,
+        "actual_raster_count": 12053
+      }
+    },
+    {
+      "phase": 4,
+      "name": "ALL-original-bluegold-coattails",
+      "kind": "exact_native_2D_transverse_and_longitudinal_arclength_floor_surface",
+      "source_min_Z": 8.0,
+      "actual_raster_min_Z": 8.0,
+      "detail": {
+        "source_count": 81253,
+        "actual_raster_count": 48343,
+        "piecewise_arclength_floor": 10.0
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 40.875679267068676,
+      "actual_raster_min_Z": 40.64587362878962,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 19357
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 16.67843465883251,
+      "actual_raster_min_Z": 16.56491984171102,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 17505
+      }
+    },
+    {
+      "phase": 5,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 36.254633589898994,
+      "actual_raster_min_Z": 36.27342093615404,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 7983,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 39.254633589898994
+      }
+    },
+    {
+      "phase": 5,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 4.899999999999986,
+      "actual_raster_min_Z": 4.899999999999986,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 17.999999999999975,
+      "actual_raster_min_Z": 17.999999999999975,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 7438
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-complete-native-thigh",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 39.93950698870647,
+      "actual_raster_min_Z": 40.79330450205478,
+      "detail": {
+        "source_count": 6357,
+        "actual_raster_count": 20866
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-complete-native-calf",
+      "kind": "exact_fixed_bone_flexible_native_material_surface",
+      "source_min_Z": 10.451669210535856,
+      "actual_raster_min_Z": 11.110852669526041,
+      "detail": {
+        "source_count": 7514,
+        "actual_raster_count": 17009
+      }
+    },
+    {
+      "phase": 5,
+      "name": "original-actual-continuous-black-gold-knee-strip",
+      "kind": "ORIGINAL_ACTUAL_KNEE_STRIP_CONTINUOUS_NATIVE_UV_ON_EXISTING_FEMUR_CALF_SURFACES",
+      "source_min_Z": 13.925474931970342,
+      "actual_raster_min_Z": 19.31789198125092,
+      "detail": {
+        "source_count": 2637,
+        "actual_raster_count": 8353,
+        "independent_actual_RGBA_triangle_reproduction_mismatch": 0,
+        "continuous_quartic_bound": 16.925474931970342
+      }
+    },
+    {
+      "phase": 5,
+      "name": "actual-native-leather-small-ankle-interface",
+      "kind": "FINITE_NATIVE_LEATHER_ELLIPSOID_ACTUAL_TEXTURE_SURFACE",
+      "source_min_Z": 4.899999999999984,
+      "actual_raster_min_Z": 4.899999999999984,
+      "detail": {
+        "method": "analytic enclosing ellipsoid Z-support, enlarged1.1 and additive Zguard2",
+        "expanded_radii": [
+          27.1,
+          27.1,
+          13.1
+        ]
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-complete-counter-stiletto-rounded-native-interface",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 17.999999999999968,
+      "actual_raster_min_Z": 17.999999999999968,
+      "detail": {
+        "source_count": 5362,
+        "actual_raster_count": 7431
+      }
+    },
+    {
+      "phase": 5,
+      "name": "pelvis-pleated-skirt-and-original-proximal-skin-cap",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 57.999999999999964,
+      "actual_raster_min_Z": 57.999999999999964,
+      "detail": {
+        "source_count": 15014,
+        "actual_raster_count": 15810
+      }
+    },
+    {
+      "phase": 5,
+      "name": "torso-native-bluegold-bodice",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 57.99999999999994,
+      "actual_raster_min_Z": 57.99999999999994,
+      "detail": {
+        "source_count": 32280,
+        "actual_raster_count": 33495
+      }
+    },
+    {
+      "phase": 5,
+      "name": "head-face-bun-and-original-hair",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 57.99999999999994,
+      "actual_raster_min_Z": 57.99999999999994,
+      "detail": {
+        "source_count": 50015,
+        "actual_raster_count": 51258
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 10.003839381234515,
+      "actual_raster_min_Z": 9.225085281101025,
+      "detail": {
+        "source_count": 9586,
+        "actual_raster_count": 10885
+      }
+    },
+    {
+      "phase": 5,
+      "name": "actual-complete-curved-white-gold-RIGHT-proximal-sleeve",
+      "kind": "CONTINUOUS_ORIGINAL_NATIVE_PADDED_SLEEVE_UV",
+      "source_min_Z": 1.7962980661565018,
+      "actual_raster_min_Z": 3.486074675445167,
+      "detail": {
+        "source_count": 5237,
+        "actual_raster_count": 5632,
+        "all_actual_corner_inverse_residual": 1.4785436552731435e-13,
+        "source_quad_interior_bound": 3.796298066156502
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT-complete-forearm-grip-staff-both-ends-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 6.196557379046135,
+      "actual_raster_min_Z": 6.196557379046135,
+      "detail": {
+        "source_count": 52521,
+        "actual_raster_count": 53145
+      }
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-upperarm-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 49.11556536265905,
+      "actual_raster_min_Z": 48.78943986487196,
+      "detail": {
+        "source_count": 2294,
+        "actual_raster_count": 2641
+      }
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-complete-cuff-forearm-hand-native",
+      "kind": "exact_3D_material_plane",
+      "source_min_Z": 9.384529478817685,
+      "actual_raster_min_Z": 9.098988118865629,
+      "detail": {
+        "source_count": 11000,
+        "actual_raster_count": 12084
+      }
+    },
+    {
+      "phase": 5,
+      "name": "ALL-original-bluegold-coattails",
+      "kind": "exact_native_2D_transverse_and_longitudinal_arclength_floor_surface",
+      "source_min_Z": 57.99999999999992,
+      "actual_raster_min_Z": 57.99999999999992,
+      "detail": {
+        "source_count": 81253,
+        "actual_raster_count": 39111,
+        "piecewise_arclength_floor": 10.0
+      }
+    }
+  ],
+  "actual_minimum_guarded_Z": 0.5810119386015664,
+  "actual_114_parts_recompose_all6_full_RGBA_exact": true,
+  "all12_fixed_femur_tibia_length_residual": 5.684341886080802e-14,
+  "whole_RIGHT_grip_staff_source_Gram_residual": 6.661338147750939e-16,
+  "v05_original_pose_bone_parent_SO3_staff_controls_unchanged": true,
+  "v11_to_v13_genuine_owner_RGBA_transfer": [
+    {
+      "phase": 0,
+      "actual_changed_pixels": 113,
+      "outside_declared_owner_bounds": 0
+    },
+    {
+      "phase": 1,
+      "actual_changed_pixels": 478,
+      "outside_declared_owner_bounds": 0
+    },
+    {
+      "phase": 2,
+      "actual_changed_pixels": 549,
+      "outside_declared_owner_bounds": 0
+    },
+    {
+      "phase": 3,
+      "actual_changed_pixels": 642,
+      "outside_declared_owner_bounds": 0
+    },
+    {
+      "phase": 4,
+      "actual_changed_pixels": 474,
+      "outside_declared_owner_bounds": 0
+    },
+    {
+      "phase": 5,
+      "actual_changed_pixels": 308,
+      "outside_declared_owner_bounds": 0
+    }
+  ],
+  "runtime_death_seconds": 0.8,
+  "resource_role_seconds": 0.65,
+  "phase_seconds": 0.13333333333333333,
+  "loop": false,
+  "terminal_held": true,
+  "terminal_support_hull": {
+    "declared_hidden_front_thickness": 60,
+    "terminal_visible_back_plane_height": 60,
+    "front_support_Z": 0
+  },
+  "limitations": [
+    "This verifies one authored finite material/depth/skeleton model. Hidden depth, foot yaw, body thickness, and supporting hull are declared choices, not unique measurements recovered from the bitmap.",
+    "Actual source appearance/fall/held-terminal judgement is separate and uses the immutable private-view ledger. No game, full actor, or approval-count assertion is made.",
+    "The ankle material is bounded by the complete enlarged finite ellipsoid, including all source/raster quad edges; it is not a claim that an invisible anatomical joint is uniquely known."
+  ],
+  "actor_approvals_added": 0,
+  "images_viewed": 0,
+  "repository_changes": 0,
+  "game_tests_run": 0
+}

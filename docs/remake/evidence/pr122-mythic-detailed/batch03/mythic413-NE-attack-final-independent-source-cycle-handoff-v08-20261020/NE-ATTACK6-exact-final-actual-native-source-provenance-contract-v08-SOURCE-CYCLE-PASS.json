@@ -1,0 +1,845 @@
+{
+  "schema": "PR122-actual-NE-attack-six-native-source-provenance-v1",
+  "status": "PASS_ACTUAL_NE_ATTACK_SIX_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE_PREPACKING",
+  "actor": "413",
+  "direction": "NE",
+  "role": "attack",
+  "C": 2432,
+  "bodyunit": 2.375,
+  "common_rig_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "native_size": [
+    1536,
+    1536
+  ],
+  "frames": [
+    {
+      "phase": 0,
+      "name": "READY",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-0-READY-actual-native-v06.png",
+      "sha256": "7c0a1c2d4e928e2e34e5e60ade6a5e68d850ca329157308116c97842535ddac5",
+      "native_size": [
+        1536,
+        1536
+      ],
+      "source_native_size": [
+        1254,
+        1254
+      ],
+      "transparent_extension_right_bottom_only": [
+        282,
+        282
+      ],
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "actual_rig_nodes": {
+        "name": "READY",
+        "ang": 0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          807,
+          552
+        ],
+        "rw": [
+          903,
+          552
+        ],
+        "le": [
+          559,
+          550
+        ],
+        "lw": [
+          481,
+          645
+        ],
+        "staff": 0,
+        "cloth": 0
+      },
+      "RIGHT_hip_target": [
+        774.0,
+        724.0
+      ],
+      "RIGHT_knee_control": [
+        790.0,
+        815.0
+      ],
+      "LEFT_actual_calf_attachment": [
+        595.0,
+        950.0
+      ],
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v04/phase0-actual-LEFT-brace-leg-node.png",
+          "sha256": "14a6c16ff9c6da8eb87c9ed0f7f84408bec43afc66b8ad1a2ad88a07f3a94ce7",
+          "bytes": 57962
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v03/phase0-actual-RIGHT-weightshift-leg-node.png",
+          "sha256": "76c2759acad027828d63b2fd7512570842755bff22d83081a51eb68afb56e854",
+          "bytes": 66360
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase0-actual-LEFT-upper-arm-node.png",
+          "sha256": "e3f70d19b09e244a322d1739aa17533e550f847e9cae0c95ed192f146ddad46c",
+          "bytes": 25219
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase0-actual-LEFT-complete-forearm-hand-node.png",
+          "sha256": "4f06b88c01683488d09e1022780a81ef9fe124c7600dedbc8415eddd07e58227",
+          "bytes": 45664
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase0-actual-head-torso-coat-node.png",
+          "sha256": "f0d9cf65d13ba6a7df66152be2b0cb0a929872b7d6b508b6e4af06e353bd7935",
+          "bytes": 451612
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/phase0-actual-RIGHT-upper-arm-node.png",
+          "sha256": "c962a798cacb9af78ccb7da6021eb011df4d8027de700fd8935afe308eed7017",
+          "bytes": 45921
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase0-actual-complete-RIGHT-staff-node.png",
+          "sha256": "09981e0b20a0078b6115184c7f6e0cf9ea472a8c7615de561ccaa4bd0cbd8571",
+          "bytes": 146575
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase0-actual-RIGHT-complete-forearm-hand-node.png",
+          "sha256": "5799fd6bd3f50238e4d2230c806f8b3a4e6817fccf26d200b8bfa5178d30c044",
+          "bytes": 47263
+        }
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        944.0,
+        536.0
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "source_status": "PASS_ACTUAL_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE",
+      "strong_alpha100_components_ge200": [
+        273856
+      ],
+      "detached_alpha100_components_ge3": [],
+      "v05_native_RGBA_changed": 128
+    },
+    {
+      "phase": 1,
+      "name": "WINDUP",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-1-WINDUP-actual-native-v06.png",
+      "sha256": "33102b2db1212701ca60e1659ef551a55b4ffb3a033d0896ea4bfbfe98b46780",
+      "native_size": [
+        1536,
+        1536
+      ],
+      "source_native_size": [
+        1254,
+        1254
+      ],
+      "transparent_extension_right_bottom_only": [
+        282,
+        282
+      ],
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "actual_rig_nodes": {
+        "name": "WINDUP",
+        "ang": -3,
+        "delta": [
+          -6,
+          7
+        ],
+        "re": [
+          748,
+          564
+        ],
+        "rw": [
+          828,
+          510
+        ],
+        "le": [
+          551,
+          561
+        ],
+        "lw": [
+          555,
+          685
+        ],
+        "staff": -23,
+        "cloth": 7
+      },
+      "RIGHT_hip_target": [
+        768.9152102493332,
+        727.9504693548852
+      ],
+      "RIGHT_knee_control": [
+        779.0,
+        829.0
+      ],
+      "LEFT_actual_calf_attachment": [
+        601.9884496391699,
+        963.0088803769058
+      ],
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v04/phase1-actual-LEFT-brace-leg-node.png",
+          "sha256": "60e977c734a4578abcbd0e91fafee238c53daea3dddaa28d2ae338391a832863",
+          "bytes": 56697
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v03/phase1-actual-RIGHT-weightshift-leg-node.png",
+          "sha256": "38446a7a17a6f2909925dc050c6e9c24fbe89916107093884e67ed3ce6d9a82b",
+          "bytes": 65855
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase1-actual-LEFT-upper-arm-node.png",
+          "sha256": "f895a4ba9a0876abe14e86ced56bb13093eaea8abed468a4714e870bf4ee986b",
+          "bytes": 25717
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase1-actual-LEFT-complete-forearm-hand-node.png",
+          "sha256": "c6818e2b80c54757ccbd13433bb639914553ea438003230a436cf99ca966db18",
+          "bytes": 45312
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase1-actual-head-torso-coat-node.png",
+          "sha256": "25cf25fc510577c5c4fe821a880b125392b2a22b5f58993c24e6e1eadd2641d0",
+          "bytes": 449985
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/phase1-actual-RIGHT-upper-arm-node.png",
+          "sha256": "42c3820bb548ca4c30d759e67f58d2a4a1a5205e0d2207ac780d9155dead4d88",
+          "bytes": 46389
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase1-actual-complete-RIGHT-staff-node.png",
+          "sha256": "821378cf2164d9ff80420a16990be728bda9b957148308be6826f04be0c92a51",
+          "bytes": 158286
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase1-actual-RIGHT-complete-forearm-hand-node.png",
+          "sha256": "73cac7b6dc2f1ee833ab069e2c0e7b48e863e6aeb17e2ffd2b6c6c60e17d8d8c",
+          "bytes": 48449
+        }
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        853.2151009866498,
+        473.67592121478964
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9205048534524404,
+          0.39073112848927377
+        ],
+        [
+          -0.39073112848927377,
+          0.9205048534524404
+        ]
+      ],
+      "source_status": "PASS_ACTUAL_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE",
+      "strong_alpha100_components_ge200": [
+        264731
+      ],
+      "detached_alpha100_components_ge3": [],
+      "v05_native_RGBA_changed": 222
+    },
+    {
+      "phase": 2,
+      "name": "COIL",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-2-COIL-actual-native-v06.png",
+      "sha256": "26f26a7f566b47b5c29a5cbad5c2cd9ec4d0ebd8da64044a46149102328852e8",
+      "native_size": [
+        1536,
+        1536
+      ],
+      "source_native_size": [
+        1254,
+        1254
+      ],
+      "transparent_extension_right_bottom_only": [
+        282,
+        282
+      ],
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "actual_rig_nodes": {
+        "name": "COIL",
+        "ang": -6,
+        "delta": [
+          -10,
+          13
+        ],
+        "re": [
+          731,
+          571
+        ],
+        "rw": [
+          810,
+          516
+        ],
+        "le": [
+          551,
+          572
+        ],
+        "lw": [
+          576,
+          693
+        ],
+        "staff": -30,
+        "cloth": 13
+      },
+      "RIGHT_hip_target": [
+        765.6695661324234,
+        730.8572195819721
+      ],
+      "RIGHT_knee_control": [
+        776.0,
+        838.0
+      ],
+      "LEFT_actual_calf_attachment": [
+        611.2735795599922,
+        974.3297628601118
+      ],
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v04/phase2-actual-LEFT-brace-leg-node.png",
+          "sha256": "8127823af3a52501b3263fcf033bfbaaea976bafdd2b935b195b9364b29cef7b",
+          "bytes": 55303
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v03/phase2-actual-RIGHT-weightshift-leg-node.png",
+          "sha256": "dd490643dea07538722bca91d2517a0331d5bc17e46678ec61b1562088b7acf9",
+          "bytes": 65684
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase2-actual-LEFT-upper-arm-node.png",
+          "sha256": "8595471be81b248887a523e66d2dfc34d939c2a37e94fa3533306e2171c69c1e",
+          "bytes": 24160
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase2-actual-LEFT-complete-forearm-hand-node.png",
+          "sha256": "20d64bc899b4321971c24575bf015c143a51309f28f447f610a0990fd9d90c4e",
+          "bytes": 45303
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase2-actual-head-torso-coat-node.png",
+          "sha256": "89ec309b43e78f8c4edfa1f63df62a928f0c836909ac87de06eb43e8f642e8b1",
+          "bytes": 448808
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/phase2-actual-RIGHT-upper-arm-node.png",
+          "sha256": "3dab2e57a49b5f82562f3cf6d1153aead975fa645a6abf0253957576cf0f48de",
+          "bytes": 46866
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase2-actual-complete-RIGHT-staff-node.png",
+          "sha256": "0d8ed9c56d0905ff9c3e32e31f90c70f68bad21f879b295bc7efd162cedcd795",
+          "bytes": 161196
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase2-actual-RIGHT-complete-forearm-hand-node.png",
+          "sha256": "f2c255e82b7d3e8da3010587c669d5ce3dd5d929dce766eca1bd73ef3fa7fe9e",
+          "bytes": 48390
+        }
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        834.5976821160003,
+        479.3793221908612
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.8660254037844387,
+          0.49999999999999994
+        ],
+        [
+          -0.49999999999999994,
+          0.8660254037844387
+        ]
+      ],
+      "source_status": "PASS_ACTUAL_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE",
+      "strong_alpha100_components_ge200": [
+        259681
+      ],
+      "detached_alpha100_components_ge3": [],
+      "v05_native_RGBA_changed": 219
+    },
+    {
+      "phase": 3,
+      "name": "STRIKE3",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-3-STRIKE3-actual-native-v06.png",
+      "sha256": "ec413d2a2ab3cd15eb27159effe6f72a3ad216ff078180811f5ec02709bf14fd",
+      "native_size": [
+        1536,
+        1536
+      ],
+      "source_native_size": [
+        1254,
+        1254
+      ],
+      "transparent_extension_right_bottom_only": [
+        282,
+        282
+      ],
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "actual_rig_nodes": {
+        "name": "STRIKE3",
+        "ang": 6,
+        "delta": [
+          17,
+          -10
+        ],
+        "re": [
+          901,
+          418
+        ],
+        "rw": [
+          994,
+          393
+        ],
+        "le": [
+          585,
+          530
+        ],
+        "lw": [
+          503,
+          618
+        ],
+        "staff": 65,
+        "cloth": -8
+      },
+      "RIGHT_hip_target": [
+        788.6974845282525,
+        719.9346124420223
+      ],
+      "RIGHT_knee_control": [
+        811.0,
+        801.0
+      ],
+      "LEFT_actual_calf_attachment": [
+        587.054632558842,
+        925.985965870342
+      ],
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v04/phase3-actual-LEFT-brace-leg-node.png",
+          "sha256": "30bed61795fd73aec6393f3eaa90147f9fcf4cb02f6a7b6a74f2ca26b2de1d0e",
+          "bytes": 60814
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v03/phase3-actual-RIGHT-weightshift-leg-node.png",
+          "sha256": "094e04ae10e70c898a15aa4d0d0a124330cf6b204882aef07ffaecfaf88a7723",
+          "bytes": 66047
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase3-actual-LEFT-upper-arm-node.png",
+          "sha256": "a4b3c80796ef2065aa983eb5a93b80f5c9a715516f17d02945fe3b6e2eaebd6e",
+          "bytes": 28647
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase3-actual-LEFT-complete-forearm-hand-node.png",
+          "sha256": "f0f64eff56e3d446523a201f3ab431ac1cfc791c7a2a96961f7988e8ce8ee617",
+          "bytes": 45521
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase3-actual-head-torso-coat-node.png",
+          "sha256": "5928051209af9d3d5d6d12084996347e42c770b40c07525e5f187a29666ae8ba",
+          "bytes": 455114
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/phase3-actual-RIGHT-upper-arm-node.png",
+          "sha256": "2037e71eeddcadeddb5953ca2c399fb69f526acc7aeb6783882f84ae2181d1d6",
+          "bytes": 44040
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase3-actual-complete-RIGHT-staff-node.png",
+          "sha256": "700072bc6b2d2d01285d88c6ae922ffab8af826b7479f2ae33a5afbe15270187",
+          "bytes": 151035
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase3-actual-RIGHT-complete-forearm-hand-node.png",
+          "sha256": "1d0210d689237e70ba34a233263c4756e7ae22508a4c919eeaff8bf06aeb559b",
+          "bytes": 48767
+        }
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        1029.5651330260932,
+        366.8714615237336
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.42261826174069944,
+          -0.9063077870366499
+        ],
+        [
+          0.9063077870366499,
+          0.42261826174069944
+        ]
+      ],
+      "source_status": "PASS_ACTUAL_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE",
+      "strong_alpha100_components_ge200": [
+        262780
+      ],
+      "detached_alpha100_components_ge3": [],
+      "v05_native_RGBA_changed": 192
+    },
+    {
+      "phase": 4,
+      "name": "FOLLOW",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-4-FOLLOW-actual-native-v06.png",
+      "sha256": "72fbb4b030e74f3ab3f015e3fd4f8406d2491108f5e7ddb097d8d4801741dac9",
+      "native_size": [
+        1536,
+        1536
+      ],
+      "source_native_size": [
+        1254,
+        1254
+      ],
+      "transparent_extension_right_bottom_only": [
+        282,
+        282
+      ],
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "actual_rig_nodes": {
+        "name": "FOLLOW",
+        "ang": 8,
+        "delta": [
+          26,
+          -3
+        ],
+        "re": [
+          909,
+          443
+        ],
+        "rw": [
+          1006,
+          440
+        ],
+        "le": [
+          595,
+          533
+        ],
+        "lw": [
+          510,
+          621
+        ],
+        "staff": 82,
+        "cloth": -17
+      },
+      "RIGHT_hip_target": [
+        796.7934893030165,
+        728.8552393261369
+      ],
+      "RIGHT_knee_control": [
+        817.0,
+        807.0
+      ],
+      "LEFT_actual_calf_attachment": [
+        588.0823841813007,
+        927.7438377898801
+      ],
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v04/phase4-actual-LEFT-brace-leg-node.png",
+          "sha256": "c61093ec2eb0145c6f23c298289c51a044e478fe468792dc057690a4ff113b00",
+          "bytes": 60559
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v03/phase4-actual-RIGHT-weightshift-leg-node.png",
+          "sha256": "10326430833a5f4d282405e12ca7a8d2f2586e7b9dc4eb4d195508fd3c839e3b",
+          "bytes": 64929
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase4-actual-LEFT-upper-arm-node.png",
+          "sha256": "0d61ad64a7a8e66db047f1d4c8f62b6164d0bbe237434e2aa39ba26f3e83f5af",
+          "bytes": 29688
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase4-actual-LEFT-complete-forearm-hand-node.png",
+          "sha256": "ded684fcf75676cd68c95a5098ed2e98345c3e537a67a72cb2a74d3d6cb21677",
+          "bytes": 45924
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase4-actual-head-torso-coat-node.png",
+          "sha256": "27c830e089b1c9696053390ea59ec64899a79400ea7f3d7ba7dd2481979d7016",
+          "bytes": 457869
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/phase4-actual-RIGHT-upper-arm-node.png",
+          "sha256": "27eec2291bd0ebd1799403bb31ef071b92fb3c938f79a9a57a4c6da0e92f453c",
+          "bytes": 40826
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase4-actual-complete-RIGHT-staff-node.png",
+          "sha256": "7c1fbef24d661428a9a3f1f8f9f62ad8ab7c4dbc96f4d63d911c054211ec5bff",
+          "bytes": 139501
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase4-actual-RIGHT-complete-forearm-hand-node.png",
+          "sha256": "3aab664a83dd66047ff744c15396cbc5ad74336205d9aac94235d5558f00f906",
+          "bytes": 48357
+        }
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        1046.932474470318,
+        422.72639676251094
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.13917310096006547,
+          -0.9902680687415704
+        ],
+        [
+          0.9902680687415704,
+          0.13917310096006547
+        ]
+      ],
+      "source_status": "PASS_ACTUAL_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE",
+      "strong_alpha100_components_ge200": [
+        265147
+      ],
+      "detached_alpha100_components_ge3": [],
+      "v05_native_RGBA_changed": 161
+    },
+    {
+      "phase": 5,
+      "name": "RECOVER",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-5-RECOVER-actual-native-v06.png",
+      "sha256": "87974e828153d149d4bf225fb2ebff3eba472ba30146b70d97915ab0077e1c23",
+      "native_size": [
+        1536,
+        1536
+      ],
+      "source_native_size": [
+        1254,
+        1254
+      ],
+      "transparent_extension_right_bottom_only": [
+        282,
+        282
+      ],
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "actual_rig_nodes": {
+        "name": "RECOVER",
+        "ang": 0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          809,
+          551
+        ],
+        "rw": [
+          905,
+          552
+        ],
+        "le": [
+          560,
+          551
+        ],
+        "lw": [
+          483,
+          646
+        ],
+        "staff": 3,
+        "cloth": -3
+      },
+      "RIGHT_hip_target": [
+        774.0,
+        724.0
+      ],
+      "RIGHT_knee_control": [
+        791.0,
+        816.0
+      ],
+      "LEFT_actual_calf_attachment": [
+        595.0,
+        950.0
+      ],
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v04/phase5-actual-LEFT-brace-leg-node.png",
+          "sha256": "14a6c16ff9c6da8eb87c9ed0f7f84408bec43afc66b8ad1a2ad88a07f3a94ce7",
+          "bytes": 57962
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v03/phase5-actual-RIGHT-weightshift-leg-node.png",
+          "sha256": "c5ab26e4b9f8764be29e8ebfc675522585891bf8037675894dd9b0f571d3939f",
+          "bytes": 65418
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase5-actual-LEFT-upper-arm-node.png",
+          "sha256": "120063ee71bc38ba935a043bc5bf2a8eff210aac56c61a11be62417e1ecc0ed3",
+          "bytes": 26792
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase5-actual-LEFT-complete-forearm-hand-node.png",
+          "sha256": "2d9ec14c0a8d80ee95a0d605a5822a956a97521eb6a5fe4aa98d25a1cbfd96f5",
+          "bytes": 45476
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/phase5-actual-head-torso-coat-node.png",
+          "sha256": "5ace83908f89a9429f914c27760c532bfe62f4f1d75a657b91ed61667dc00b72",
+          "bytes": 447420
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/phase5-actual-RIGHT-upper-arm-node.png",
+          "sha256": "2297dd51786d9c0907800b245c19b1df136012431f2ee2294057de26e6cf988b",
+          "bytes": 46807
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase5-actual-complete-RIGHT-staff-node.png",
+          "sha256": "9942d37c31182cd0fa723004fdfa61b757ee2b63d2b7d2c424f6e705b56dea1c",
+          "bytes": 149978
+        },
+        {
+          "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/phase5-actual-RIGHT-complete-forearm-hand-node.png",
+          "sha256": "87b343213ab2de78a20f49a64c659c73e0f4299b58c6611052d1c8ad114e10a0",
+          "bytes": 47685
+        }
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        946.1666576251571,
+        536.4279513182528
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9986295347545738,
+          -0.052335956242943835
+        ],
+        [
+          0.052335956242943835,
+          0.9986295347545738
+        ]
+      ],
+      "source_status": "PASS_ACTUAL_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE",
+      "strong_alpha100_components_ge200": [
+        274123
+      ],
+      "detached_alpha100_components_ge3": [],
+      "v05_native_RGBA_changed": 177
+    }
+  ],
+  "one_shot": true,
+  "fps": 14.285714285714286,
+  "role_seconds_preserved": 0.42,
+  "intended_contact_frame": 3,
+  "production_contract": {
+    "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/NE-ATTACK6-actual-complete-native-fixed-sole-weightshift-contract-v05.json",
+    "sha256": "1b126abfb1f3436b0a54400a3cdd361ba296b1070909f959aed288220a7cc3ce",
+    "bytes": 31694
+  },
+  "final_actual_node_and_fixedsole_proof": {
+    "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/NE-ATTACK6-v06-exact-native-final-node-and-fixed-support-proof-v02.json",
+    "sha256": "d2ff4202c71f8718d73024f69330620f50f4c678013385ee722f6239237b30d3",
+    "bytes": 9604
+  },
+  "physical_limitations": [
+    "Surrounding image rectangles may change due to real weapon occlusion and edge AA; actual whole boot nodes and five visible support material pixels are invariant.",
+    "Original native two-boot stationary registration preserved once; no unique occluded 3D floor reconstruction claimed.",
+    "No actor/game approval from source or numeric checks."
+  ],
+  "whole_actor_mirrored_or_perpose_C_root_foot_fit": false,
+  "new_walk_production_or_existing_clip_modified": false,
+  "actor_approvals_added": 0,
+  "prior_final_actual_source_contract": {
+    "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v05/NE-ATTACK6-exact-final-actual-native-source-provenance-contract-v06.json",
+    "sha256": "175c768d896a5d47f059780a543ccedb6e01066eb05974c630f01bedc8016441",
+    "bytes": 26576
+  },
+  "actual_original_proximal_garment_and_hair_rim_completeness": {
+    "native_strong_source_pixels_completed": 56,
+    "hair_RGBA_pixels_with_AA": 83,
+    "upper_cuff_RGBA_pixels_with_AA": 0,
+    "forearm_cuff_RGBA_pixels_with_AA": 108,
+    "actual_same_original_source_RGBA": true,
+    "complete_strong_original_READY_LEFT_proximal_alpha_preserved": true,
+    "RIGHT_chain_both_legs_and_full_fixed_boot_nodes_changed": 0,
+    "actor_approvals_added": 0
+  },
+  "source_visual_status": "PASS",
+  "actual_six_source_and_visual_cycle_status": "PASS",
+  "independent_QC": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEattack-v06-42d0cd-independent-actual-source-cycle-PASS-v01.json",
+    "sha256": "df4a2edf1844d62d74cb3ddccccbb0fb6e8942e9f00977e78511bf338d3db3bd",
+    "bytes": 6192
+  },
+  "prior_provenance_contract_before_metadata_only_repin": {
+    "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/NE-ATTACK6-exact-final-actual-native-source-provenance-contract-v07.json",
+    "sha256": "42d0cdd6fc986e08baabcbec8c9ed958daa016d8c93783b1de5205173df762c2",
+    "bytes": 28245
+  },
+  "metadata_only_repin_changes": [
+    "Bind actual final v06 proof d2ff4202 instead of historical v05 proof7bb0.",
+    "Attach independent final v06 source/cycle PASS; six actual PNG/node/source coordinates unchanged."
+  ],
+  "actual_game_binding_status": "PENDING_ROOT_EXACT_PACK_AND_GAME"
+}

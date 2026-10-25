@@ -1,0 +1,126 @@
+{
+  "status": "INDEPENDENT_SOURCE_SIX_ROOT_CANDIDATE_PASS_ACTUAL_RUNTIME_HOLD",
+  "atlas_path": "/workspace/scratch/girtas-E-run-reviewed-composite-v02/girtas-E-run-v03composite02.png",
+  "atlas_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+  "official_assembly_proof": "/workspace/scratch/girtas-E-run-reviewed-composite-v02/girtas-E-run-v03composite02.assembly.json",
+  "official_assembly_proof_sha256": "3b620a7bb625d88caa6fa5b961ffcd584a31df74ea01c39e309ebfc2b14a2f94",
+  "authored_pose_canvas_sizes": [
+    2664,
+    2560,
+    2560,
+    2256,
+    2256,
+    2048
+  ],
+  "source_native_root_anchors": [
+    [
+      679,
+      1273
+    ],
+    [
+      683,
+      1267
+    ],
+    [
+      704,
+      1310
+    ],
+    [
+      687,
+      1200
+    ],
+    [
+      755,
+      1157
+    ],
+    [
+      686,
+      1185
+    ]
+  ],
+  "baseline_pixel_scale": 0.227155394941,
+  "baseline_runtime_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r089/NativeMotionProfile.tres",
+  "baseline_runtime_profile_sha256": "88bf375090b25eea7abecfa1cc5ce7af54930c26d4ccf792a710d97d1933b785",
+  "idle_path": "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png",
+  "idle_source_anchor": [
+    210,
+    491
+  ],
+  "near_far_projection_canonical": 20,
+  "source_brow_points_native": [
+    [
+      885,
+      220
+    ],
+    [
+      970,
+      330
+    ],
+    [
+      1005,
+      319
+    ],
+    [
+      1000,
+      252
+    ],
+    [
+      1050,
+      337
+    ],
+    [
+      950,
+      350
+    ]
+  ],
+  "source_front_belt_crest_points_native": [
+    [
+      924,
+      605
+    ],
+    [
+      918,
+      735
+    ],
+    [
+      939,
+      650
+    ],
+    [
+      894,
+      666
+    ],
+    [
+      962,
+      711
+    ],
+    [
+      874,
+      657
+    ]
+  ],
+  "idle_front_belt_crest_native": [
+    304,
+    253
+  ],
+  "front_belt_crest_is_not_hidden_hip_center": true,
+  "rigid_scale_status": "INDEPENDENT_COMMON_PHYSICAL_SIX_VS_SELECTED_IDLE_PASS; actual compiled Player and future profile worldscale require fresh QC",
+  "review_basis": "Fresh independent full-six source animation/rigid commonphysical/actual alternating support-load-flight/5to0 and source endpoints PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-six-rigid-and-authored-root-independent-candidate-review.json SHA 5c8f31a0528c0d20b1fa3b7fdffed4b0739e134c96269121fa2fef9173650049. Approved C/native roots unchanged. Current r089 worldscale updated numerically only; actual new Player resource/action/cadence/defaultcatalog and actor approval remain HOLD.",
+  "minimum_air_boot_clearance_world": 3.0,
+  "new_actor_approvals": 0,
+  "actor_approval": false,
+  "independent_source_review": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-six-rigid-and-authored-root-independent-candidate-review.json",
+  "independent_source_review_sha256": "5c8f31a0528c0d20b1fa3b7fdffed4b0739e134c96269121fa2fef9173650049",
+  "worldscale_revision": {
+    "previous_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/NativeMotionProfile.tres",
+    "previous_profile_sha256": "f34f1e3a637f7d6bb0644f1aa49ce81ab703f25ce25fa490b6d596180d8f4a88",
+    "previous_pixel_scale": 0.281509916827,
+    "new_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r089/NativeMotionProfile.tres",
+    "new_profile_sha256": "88bf375090b25eea7abecfa1cc5ce7af54930c26d4ccf792a710d97d1933b785",
+    "new_pixel_scale": 0.227155394941,
+    "ratio": 0.8069179143006774,
+    "source_Cs_and_native_roots_unchanged": true,
+    "new_image_or_artwork": false,
+    "reason": "Native profile pixel_scale recomputes110/median(walk neutral_height); all tracks share latest profile. Relative source physical review remains valid under uniform world rescale. Recompute from actual new staged profile before final runtime approval."
+  }
+}

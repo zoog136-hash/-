@@ -1,0 +1,154 @@
+{
+  "schema": "INDEPENDENT_NEW_SOURCE_ROLE_QC_V1",
+  "utc": "2026-10-19T17:01:55.282724+00:00",
+  "reviewer": "girtas_remaining_run_source_runtime_qc_v02",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "status": "PASS_SELECTED_NEW_SOURCES_1_2_5_HOLD_OLD_SOURCE4",
+  "source_visual_status": "HOLD_WHOLE6_PENDING_MATERIAL_SOURCE4_REPAIR",
+  "scope": "Actual source-art gait/camera/model for new1/2/5 and independent whole-board ownership concern on original4. New0 critical judgment and successful3 inherited by exact pins. No C/root/absolute floor/compiled runtime approval.",
+  "source_manifest": {
+    "path": "/workspace/scratch/girtas-NE-run-production-v01/new-six-NE-run-source-cycle-v01.json",
+    "sha256": "93acc6514d3b60985d2abbc5022afcd834eb092f1d329aece3d98b84db3214f9",
+    "bytes": 4277
+  },
+  "original_new_source_pins": [
+    {
+      "phase": 1,
+      "folder": "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/girtas-NE-run-LEFT-compression1-from-run0-v01.png",
+      "raw_sha256": "d5bb5467d4681f3145ebc0823e9d643384c3a49673fc4a9fa9aac9b12a625904",
+      "request_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/request.json",
+      "request_sha256": "32181ebfa6a76f5990f1b5f7d8b1b8a3d2fbb6ba680f47041b146dd00bc879af",
+      "geometry_status": "HOLD_CLIPPED_SOURCE_BOUNDARY",
+      "expected_poses": 1,
+      "source_visual_status": "HOLD_PENDING_CLIPPING_AND_ACTUAL_POSE_REVIEW"
+    },
+    {
+      "phase": 2,
+      "folder": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/girtas-NE-run-RIGHT-flight2-from-run3-v01.png",
+      "raw_sha256": "2e4dd041fc58fc0faa25eb91008875e9525d3c93b842a70e00cd6f7793367177",
+      "request_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/request.json",
+      "request_sha256": "52e9ac7f6598c93029109855cfa2b918225a3d059e6e705a9480c9a974297e73",
+      "geometry_status": "PASS",
+      "expected_poses": 1,
+      "source_visual_status": "HOLD_PENDING_FRESH_ACTUAL_SOURCE_QC"
+    },
+    {
+      "phase": 4,
+      "folder": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-from-run3-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-from-run3-v01/girtas-NE-run-RIGHT-compression4-from-run3-v01.png",
+      "raw_sha256": "c95a815b08262cfb5176ff303c2a7ae292defa6b6d36da8f3954c9c5275e2f40",
+      "request_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-from-run3-v01/request.json",
+      "request_sha256": "aa903068f747599e6b17fc1f07e6cb49dc5a365184259476c74e8debd6463338",
+      "geometry_status": "PASS",
+      "expected_poses": 1,
+      "source_visual_status": "HOLD_PENDING_FRESH_ACTUAL_SOURCE_QC"
+    },
+    {
+      "phase": 5,
+      "folder": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01",
+      "raw_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/girtas-NE-run-LEFT-flight5-from-run0-v01.png",
+      "raw_sha256": "7b07b03dd9a17c1efbe56da03d9e2d18330adac5b7aec0f524f9d3e976187c31",
+      "request_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/request.json",
+      "request_sha256": "2e502849a0dcb7061f17c05de8d165c8c26461919173ce6d620d1732585539e2",
+      "geometry_status": "PASS",
+      "expected_poses": 1,
+      "source_visual_status": "HOLD_PENDING_FRESH_ACTUAL_SOURCE_QC"
+    }
+  ],
+  "selected_source1_endpoint": {
+    "raw": {
+      "path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/girtas-NE-run-LEFT-compression1-complete-endpoint-v03.png",
+      "sha256": "aeee4ab97376b2520e07f6ce140434930cf9400f2fe928d1fb63afa8d58d87c6",
+      "bytes": 1198910
+    },
+    "request": {
+      "path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/request.json",
+      "sha256": "59dbdf6478a5e872aaa664d31b4053eee2fbcd8c20c170aeb8bb83360c50222f",
+      "bytes": 2332
+    },
+    "geometry": {
+      "path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/geometry-base2048.json",
+      "sha256": "1298d9741c29eb6dff898424e471828071023c2e4f516695d3c9c5097983a27c",
+      "bytes": 560
+    },
+    "production_outside_ROI_proof": {
+      "path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/actual-endpoint-composite-outside-ROI-proof.json",
+      "sha256": "2af428bf96b0b01771784a1cbe3f57d335c5a2f36933e2581b29bfaaad3cce64",
+      "bytes": 2653
+    },
+    "independent_numeric_recalculation": {
+      "parent_translation": [
+        64,
+        64
+      ],
+      "endpoint_ROI_XYXY": [
+        1292,
+        1044,
+        1356,
+        1140
+      ],
+      "outside_ROI_changed_pixels": 0,
+      "inside_ROI_changed_pixels": 1031,
+      "new_alpha100_pixels_beyond_parent_right_boundary": 87,
+      "original_body_not_resampled": true
+    },
+    "visual_finding": "Complete curved terminal taper now closes continuously with no separate fragment or new flare. Actual body/legs/arms/hilt/weapon-base transfer exactly from independently judged original1. Old source-boundary and padding-only HOLDs remain preserved."
+  },
+  "selected_phase_status": {
+    "0": "INHERITED_PASS_96e94ac",
+    "1": "PASS_SOURCE_GAIT_AND_ACTUAL_COMPLETED_ENDPOINT",
+    "2": "PASS_SOURCE_NEARRIGHT_LEADING_FLIGHT_POSE",
+    "3": "INHERITED_PASS_b01c7c",
+    "4": "HOLD_ORIGINAL_c95a815_ONLY_NEW_REPAIR_PENDING_SEPARATE_FRESH_QC",
+    "5": "PASS_SOURCE_FARLEFT_LEADING_FLIGHT_POSE"
+  },
+  "visual_findings": [
+    "Source1 retains the corrected farLEFT supporting chain from new0, now flexed under the robe with a flat support boot, while the separate nearRIGHT chain folds to a raised recovery boot. It is a genuine loaded pose rather than another straight heel contact.",
+    "Source2 actual nearRIGHT upperleg/knee continues into the extended leading shin/boot, while farLEFT folds behind. Both distinct boots are drawn in a flexed flight pose. This source-only judgment does not infer a transparent-PNG world floor.",
+    "Source5 reverses the actual leg ownership of2: farLEFT leads and nearRIGHT trails folded. Both boots remain separate and complete. These two sources are not the same-leading-leg alias.",
+    "Across new1/2/5 the selected NE camera, hard gold rays, pale hair, dark long gold-trim robe, two arms and sinuous anatomicalRIGHT weapon remain coherent with the selected0/3 identity. Gear is judged from the visible same-direction original structure; hidden backside absence is not inferred.",
+    "Original4 contradicts the requested nearRIGHT support: the exposed nearRIGHT outerhip/thigh runs into the raised bent-knee/recovery-sole chain, leaving the low flat boot on the other inner/far chain. Root lowering or shin-screen-X relabeling cannot repair this. The independent narrow native-chain second opinion agrees."
+  ],
+  "original_source4_narrow_second_opinion": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run4-narrow-source-ownership-second-opinion-HOLD.json",
+    "sha256": "3d5605fadc635969cd85a7994a463b1efa6fe3dc11b7fc44a8d5dae4bf2dcf5e",
+    "bytes": 4517
+  },
+  "inherited_passes": [
+    {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v03/NE-new-farLEFT-run0-source-ownership-independent-QC.json",
+      "sha256": "96e94ac247ee699cdf697b84af38c4b9d4b27b1987c2dbc7bc12f2790ed1fdc6",
+      "bytes": 3056
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/NE-run-new-contact0-HOLD-contact3-PASS-independent-source-QC-v01.json",
+      "sha256": "b01c7cab2d90930852a8033969aa29e51da950e2cc8774230e2211e27d9c0d54",
+      "bytes": 6390
+    }
+  ],
+  "reviewed_private_previews": [
+    {
+      "path": "/workspace/scratch/girtas-NE-run-production-v01/private-new-six-NE-run-source-cycle-v01.jpg",
+      "bytes": 141989,
+      "sha256": "a440c253f31e376783ebc96c719e10fd0042d590a3087cdc3267f3e58be60302",
+      "scope": "Actual full-board new1/2/4/5 and whole-source continuity, inherited0/3 not reapproved"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/private-original-vs-new-complete-endpoint.jpg",
+      "bytes": 28017,
+      "sha256": "892bf0f89a7cf8ae5e0fdf38e0d99fc541e6ebe1ba8c9761ff0e1f09d5770329",
+      "scope": "Endpoint only"
+    }
+  ],
+  "single_material_fix": "Replace only original4 with an actual same-nearRIGHT flexed flat supporting chain following passed3, plus a separate high farLEFT folded recovery boot. Preserve other five and old HOLD. Repaired4 c866 candidate is routed to fresh native-chain reviewer v04; no claim here.",
+  "actual_runtime_status": "HOLD_NOT_REVIEWED",
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "repository_mutations": false,
+  "images_attached_to_main_or_parent": false
+}

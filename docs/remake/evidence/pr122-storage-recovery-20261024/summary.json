@@ -1,0 +1,20 @@
+{
+  "status": "VERIFIED_DUPLICATES_ONLY_REMOVED",
+  "animation_work": "PAUSED_BY_USER",
+  "production_source_checkpoint": "164a2f9177b85d7a55cfaed7e0f14fb1e618bc8a",
+  "production_checkpoint_remote_verified": "ea5b7c5643b7feaf911fc9f7be57464448011944",
+  "bytes_removed": 2702041346,
+  "GiB_removed": 2.516,
+  "duplicate_loose_Git_objects_removed": 4538,
+  "duplicate_generation_outputs_removed": 649,
+  "unique_generation_outputs_preserved": 236,
+  "unique_recovery_objects_preserved": 4602,
+  "incomplete_history_backup_preserved": true,
+  "all_indexed_Git_packs_preserved": true,
+  "HEAD_and_index_preserved_during_cleanup": true,
+  "unique_source_or_uncommitted_data_deleted": 0,
+  "recovered_unreviewed_render_outputs": 2,
+  "disk_free_GiB_before_final_commit": 2.522,
+  "future_network_fetch_storage": "Temporary object transport directory; promote commit/tree metadata and required materialized files after verified normal push. Never force-push or prune history.",
+  "lookup": "Use verified-generation-output-removals.jsonl and generated-output-duplicate-removals.json to find exact retained original bytes; do not regenerate unchanged sources."
+}

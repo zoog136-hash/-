@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "SW",
+  "role": "idle",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "HOLD",
+  "source_visual_status": "HOLD",
+  "geometry_status": "PASS",
+  "raw_path": "/workspace/scratch/girtas-SW-idle-repair/girtas-SW-idle-v02.png",
+  "raw_sha256": "09db80efb3bcee225a624360981e90b8eb19a71e2f0eabd0ce358c7086203424",
+  "raw_bytes": 2643552,
+  "request_path": "/workspace/scratch/girtas-SW-idle-repair/request-girtas-SW-idle-v02.json",
+  "request_sha256": "27682f90e238bce688837ac028c7fc39b3469c0e85cce9e50eb3acc21e7e2c4a",
+  "generation_attempts": 1,
+  "expected_poses": 6,
+  "visual_findings": [
+    "MAJOR HEADING FAIL all6: actual pale nose/face, front torso/pelvis and boot toe perspective remain FRONT-RIGHT/SE, not requested FRONT-LEFT/SW. Right-side visible boot points screenRIGHT rather than DOWNLEFT.",
+    "Actual arm layering likewise remains nearRIGHT weapon arm/imageLEFT and raised farLEFT empty hand of SE-like canonical pose; expected farRIGHT weapon arm/nearLEFT empty arm for SW is not established.",
+    "Original pale face/hair, thin hard gold radial spikes, long dark goldtrim skirt and long thin sinuous weapon identity are preserved, but identity fidelity cannot override wrong compass.",
+    "Planted stance/local chest/shoulder/hair/robe idle changes are present; geometry has6 distinct complete poses, but wrong heading blocks source approval/integration as SW.",
+    "Raw and exact immutable authoring request are preserved. No source mirroring/hand swapping or repeated same-slot generation was performed."
+  ],
+  "visual_limitations": [
+    "HOLD is decisive for all6 SW poses, not a minor stylistic issue. Do not import these under SW, relabel them as newly completed SE, or increase approval/source slot counts.",
+    "Canonical front-right bias appears to have overridden explicit textual front-left pose instructions; no further attempt in this queue.",
+    "Source-art review only; actual runtime breathing readability, exact foot lock,5->0 seam and final Main integration remain separate checks.",
+    "Tiny108x132 original clips some equipment endpoints and does not establish all hidden-side engraving; these are documented conservative inferences, not final character approval.",
+    "Generated source uses more of512cell height than requested300-330px target; internally coherent anatomy/equipment must be normalized by stable body landmarks at runtime, never by spike/weapon bbox.",
+    "No actor completion, approval count change or replacement of original approved assets is claimed."
+  ],
+  "private_preview_bytes": 268558,
+  "main_chat_images_shared": false,
+  "repo_mutations": false,
+  "new_approvals": 0,
+  "geometry_path": "/workspace/scratch/girtas-SW-idle-repair/geometry-girtas-SW-idle-v02.json"
+}

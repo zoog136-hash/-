@@ -1,0 +1,39 @@
+{
+  "schema": "pr122-native-production-certificate-v1",
+  "key": "transform:267",
+  "status": "APPROVED",
+  "approved_history_preserved": 405,
+  "pins": {
+    "default_catalog": {
+      "path": "data/catalog_v19.json",
+      "group": "변신",
+      "source_id": "267",
+      "record_sha256": "6c4a1b67a97710dea583483509967787cac3ff676ab1067e7f78fee8703371f6",
+      "inline_profile_sha256": "6f0318edc8b97467a22c7c845fb8c7fa39fe9c091093c4d707d884a418ef3f8f"
+    },
+    "profile_catalog": {
+      "path": "data/combat_animation_profiles.json",
+      "key": "transform:267",
+      "record_sha256": "c25c3a756c953b4c24b5a74d0118b2b25eddb4768c62cf13fd139199233587cb"
+    },
+    "effective_profile_sha256": "5fd4997e5e169da60ed2606088b222aaac3d673fd8b361dce0b8a05cbe1396e9",
+    "production_frames": {
+      "path": "res://assets/actors/eight_direction/native_production/girtas_267/r001/SpriteFrames.tres",
+      "sha256": "437f4f3e8657a0ea39d4f5ab2f7236bd2b64052580bca9d7baa234c0ee893291"
+    },
+    "production_profile": {
+      "path": "res://assets/actors/eight_direction/native_production/girtas_267/r001/NativeMotionProfile.tres",
+      "sha256": "573eb9ccb979c2a3c8d928433395f4a3cf9999095ee7783bec554ed7ea9aaa71"
+    },
+    "source_selection_sha256": "100da1c7cc76c4a1799068adb51730af39fd138ffef9b40755a23d4305b2616c",
+    "actor_record_sha256": "6176711a3894dc7e7cfa5e9c9fd8b7f8b5ec705b3b7dbe5a3aa3b1fa61a2b4a3"
+  },
+  "quality_evidence": {
+    "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-independent-quality-FINAL.json",
+    "sha256": "04de53a3b521b9577c4d7d16b9038a37252ec0c08c383dec10d97091e2eba4cc"
+  },
+  "default_main_evidence": {
+    "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-default-main-evidence.json",
+    "sha256": "48bfdad8a0a216914bb180ec803beac8d6aad1193c826a1e89e8e36ff125059a"
+  }
+}

@@ -1,0 +1,307 @@
+{
+  "schema": "pr122-queen-mixed-source-SW-attack-replacement-v1",
+  "actors": {
+    "monster:얼음 여왕": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/NativeMotionProfile.tres",
+      "native_profile_sha256": "1a4fbc030fc70923b8e38f27b93ba0f92fb8401e9c5d20da7c8f98ffd9b68b6c",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/SpriteFrames.tres",
+      "frames_sha256": "b945bac0a560f47041fba5be0cee03e2c114f474cdd459c2a87150cb241d6dcb",
+      "native_track_count": 1,
+      "native_pose_count": 3,
+      "tracks": [
+        {
+          "role": "attack",
+          "direction": "SW",
+          "animation": "attack_3",
+          "frame_count": 3,
+          "contact_index": 1,
+          "animation_fps": 8.0,
+          "loop": false,
+          "frame_durations": [
+            1,
+            1,
+            1
+          ],
+          "mixed_source": true,
+          "frame_sources": [
+            {
+              "frame_index": 0,
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/raw/queen-SW-attack3-v01.png",
+              "source_sha256": "6e51c07d0cdd9b31ec21e0873ceaa325beef5ff789007d439b4b466ccf31a919",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/queen-SW-windup-recovery-source.png",
+              "source_geometry_frame": {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  61,
+                  18,
+                  672,
+                  664
+                ],
+                "margin": [
+                  263,
+                  45,
+                  456,
+                  464
+                ],
+                "source_anchor": [
+                  362,
+                  678
+                ],
+                "rgba_sha256": "d7e101b7f597e65e918b6fd1bc169df5283baec8ae306e6fc83bd5fcfa21d2ed"
+              },
+              "source_canvas": [
+                1128,
+                1128
+              ],
+              "source_slot": 0
+            },
+            {
+              "frame_index": 1,
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/sw-contact-final/raw/queen-SW-contact1-left-hand-v01.png",
+              "source_sha256": "de44e387e0c3fefa103c006708ef015a35db3d2f8541b877cef2ef2cae747619",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/queen-SW-contact1-left-hand-v01.png",
+              "source_geometry_frame": {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  79,
+                  153,
+                  1118,
+                  1002
+                ],
+                "margin": [
+                  328,
+                  97,
+                  634,
+                  750
+                ],
+                "source_anchor": [
+                  627,
+                  1151
+                ],
+                "rgba_sha256": "5c8a59efd9c8041d5cf56b4a94d825b776f4e8fb251b1ccb8be4a88215700a26"
+              },
+              "source_canvas": [
+                1752,
+                1752
+              ],
+              "source_slot": 0
+            },
+            {
+              "frame_index": 2,
+              "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/raw/queen-SW-attack3-v01.png",
+              "source_sha256": "6e51c07d0cdd9b31ec21e0873ceaa325beef5ff789007d439b4b466ccf31a919",
+              "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/queen-SW-windup-recovery-source.png",
+              "source_geometry_frame": {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  1496,
+                  56,
+                  636,
+                  637
+                ],
+                "margin": [
+                  250,
+                  72,
+                  492,
+                  491
+                ],
+                "source_anchor": [
+                  1810,
+                  689
+                ],
+                "rgba_sha256": "9a2b54b978cdb0045effc7785e03d1959e723deb073afa987c3e31e8dc3faac3"
+              },
+              "source_canvas": [
+                1128,
+                1128
+              ],
+              "source_slot": 2
+            }
+          ]
+        }
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "pixel_scale": 0.6142857142857143,
+      "sprite_offset": [
+        0,
+        -19.65714285714286
+      ],
+      "confirmed_source_defects": [],
+      "unreviewed": [
+        "Detailed Main projectile/target contact"
+      ],
+      "unreviewed_is_rejection": false,
+      "correction_precheck": "PASS_SOURCE_GEOMETRY_DIRECTION_LEFT_STAFF_NATIVE1X",
+      "native1x_test": {
+        "engine": "Godot4.7.2",
+        "renderer": "llvmpipe/X11",
+        "speed_scale": 1,
+        "reference_speed": 66,
+        "attack_interval": 1.56,
+        "all3source_frames_seen": true,
+        "captures": 5,
+        "authoritative_release_frame": 1,
+        "source_direction": "down-left/front-diagonal",
+        "left_staff_identity": "LEFT hand always grips; RIGHT empty at contact"
+      }
+    }
+  },
+  "replacement_only": true,
+  "replace_animations": [
+    "attack_3"
+  ],
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "newly_generated_contact_poses": 1,
+  "reused_correct_new_SW_windup_recovery_poses": 2,
+  "excluded_wrong_contact_source_slot": 1,
+  "normalization": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/raw/queen-SW-attack3-v01.png",
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SW",
+            "region": [
+              61,
+              18,
+              672,
+              664
+            ],
+            "margin": [
+              263,
+              45,
+              456,
+              464
+            ],
+            "source_anchor": [
+              362,
+              678
+            ],
+            "rgba_sha256": "d7e101b7f597e65e918b6fd1bc169df5283baec8ae306e6fc83bd5fcfa21d2ed"
+          },
+          {
+            "row": 1,
+            "direction": "SW",
+            "region": [
+              756,
+              47,
+              701,
+              647
+            ],
+            "margin": [
+              234,
+              62,
+              427,
+              481
+            ],
+            "source_anchor": [
+              1086,
+              690
+            ],
+            "rgba_sha256": "3dc76fd22b4e3f80529463c3ff60ebd14670f408c2c5b490b99d02b093cc3fa1"
+          },
+          {
+            "row": 2,
+            "direction": "SW",
+            "region": [
+              1496,
+              56,
+              636,
+              637
+            ],
+            "margin": [
+              250,
+              72,
+              492,
+              491
+            ],
+            "source_anchor": [
+              1810,
+              689
+            ],
+            "rgba_sha256": "9a2b54b978cdb0045effc7785e03d1959e723deb073afa987c3e31e8dc3faac3"
+          }
+        ],
+        "distinct_pixel_frames": 3,
+        "neutral_height": 644.5,
+        "canvas_size": [
+          1128,
+          1128
+        ],
+        "foot": [
+          564,
+          705
+        ]
+      },
+      "scale": {
+        "strict_canvas": 2048,
+        "body_height": 615.5,
+        "desired_canvas": 1128,
+        "minimum_complete_canvas": 1056,
+        "source_canvas": 1128
+      }
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/sw-contact-final/raw/queen-SW-contact1-left-hand-v01.png",
+      "geometry": {
+        "image_size": [
+          1254,
+          1254
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SW",
+            "region": [
+              79,
+              153,
+              1118,
+              1002
+            ],
+            "margin": [
+              328,
+              97,
+              634,
+              750
+            ],
+            "source_anchor": [
+              627,
+              1151
+            ],
+            "rgba_sha256": "5c8a59efd9c8041d5cf56b4a94d825b776f4e8fb251b1ccb8be4a88215700a26"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 996.0,
+        "canvas_size": [
+          1752,
+          1752
+        ],
+        "foot": [
+          876,
+          1095
+        ]
+      },
+      "scale": {
+        "strict_canvas": 2048,
+        "body_height": 956,
+        "desired_canvas": 1752,
+        "minimum_complete_canvas": 1600,
+        "source_canvas": 1752
+      }
+    }
+  ],
+  "composition_note": "Two unchanged original PNGs; per-AtlasTexture source/region/margin must be preserved. Do not feed mixed track into one-texture frames_bytes. No resampling/mirror/rotation/cleaning; no invalid contact selected."
+}

@@ -1,0 +1,1360 @@
+{
+  "schema": "pr122-monster-recheck-summary-v1",
+  "review_date": "2026-10-23",
+  "reviewed_source_commit": "a6e8a8dec7aa5882e15eef72a238f1406a6626a6",
+  "include_previously_approved": true,
+  "normal": {
+    "review": "frame_integrity_only",
+    "art_quality_review_performed": false,
+    "runtime": {
+      "entries": 258,
+      "approved_preserved": 221,
+      "required_role_direction_requests": 8514,
+      "missing_required_direction_clips": 0,
+      "frame_data_failed_entries": 0,
+      "complete_frame_availability_entries": 258,
+      "partial_not_authored_entries": 0,
+      "existing_run_to_walk_fallback_requests": 2064
+    },
+    "staging": {
+      "entries": 12,
+      "approved_preserved": 0,
+      "required_role_direction_requests": 396,
+      "missing_required_direction_clips": 63,
+      "frame_data_failed_entries": 0,
+      "complete_frame_availability_entries": 10,
+      "partial_not_authored_entries": 2,
+      "existing_run_to_walk_fallback_requests": 0
+    },
+    "staging_partial_candidates": [
+      {
+        "key": "monster:놀",
+        "missing_required_clips": 31,
+        "classification": "NOT_AUTHORED_PARTIAL_CANDIDATE"
+      },
+      {
+        "key": "monster:알비노 몽크",
+        "missing_required_clips": 32,
+        "classification": "NOT_AUTHORED_PARTIAL_CANDIDATE"
+      }
+    ],
+    "runtime_WALK_to_RUN_reuse_included": true,
+    "runtime_frame_availability_is_dedicated_source_completion": false,
+    "invalid_frame_occurrences": 0,
+    "failed_PNG_sources": [],
+    "details": "docs/remake/evidence/pr122-monsters-20261023/review-normal-frames/results.json"
+  },
+  "boss": {
+    "reviewed": 60,
+    "previously_approved_included": 43,
+    "current_visual_screen_counts": {
+      "REWORK_CANDIDATE": 48,
+      "HOLD": 9,
+      "PASS": 3
+    },
+    "previously_approved_current_visual_screen_counts": {
+      "REWORK_CANDIDATE": 31,
+      "HOLD": 9,
+      "PASS": 3
+    },
+    "PASS_meaning": "Source-frame visual screening only; no new production/release approval. Actual Main target contact/timing not signed off.",
+    "coverage_limits": [
+      "Group A: 12 packs, all eight views and role overviews; full movement/attack phases in all eight directions for six packs, E/S/N for six packs. Other intermediate phases unreviewed.",
+      "Group B: all source-frame role/view sheets and enlarged selected locomotion; actual Main timing/contact/physical support not approved.",
+      "Group C: all existing role/view source phases in eight packs; actual Main target timing, flight altitude and weight transfer not approved."
+    ],
+    "actors": [
+      {
+        "id": "monster:개미굴의 지배자",
+        "name": "개미굴의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "원형은 구리색의 둥근 분절 복부, 길고 가는 6개 다리가 두드러진 거대 개미다. runtime은 연두색의 낮고 작은 개미귀신형 곤충으로, 원형의 큰 분절 복부와 금속질 머리/흉부 실루엣이 보존되지 않았다. 색 차이 외에 복부 비율과 다리/몸통 형상이 다르다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:거대 드레이크",
+        "name": "거대 드레이크",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "원형 드레이크는 붉은 비늘의 굵은 목/머리, 네 다리와 별도 날개를 가진 육중한 용이고 그라디움 원형은 검정/금색의 두꺼운 갑주형 용이다. 공통 runtime은 회청색의 가는 목/작은 머리, 큰 박쥐날개와 두 뒷다리를 가진 가벼운 와이번이다. 체형·사지 수·종별 갑주가 유지되지 않는다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:검은숲의 지배자",
+        "name": "검은숲의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "지배자 계열 로컬 원형은 큰 가시 견갑, 각진 폐쇄형 투구, 긴 붉은 찢긴 망토와 넓고 큰 장검을 가진 중갑 기사다. runtime은 둥근 단순 투구, 작은 검, 큰 방패와 짧은 평범한 망토의 병사다. 원형의 무게감/갑주 외곽/무기 비율이 사라졌으며 원형에 없는 방패가 주요 실루엣을 차지한다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:공포의 뱀파이어",
+        "name": "공포의 뱀파이어",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "뱀파이어 원형의 창백한 귀족 얼굴, 높은 붉은 옷깃, 길고 찢긴 붉은 망토와 가느다란 검이 runtime에서 사라졌다. runtime은 얼굴을 가린 사슬 두건 병사와 방패/단검형 실루엣이다. 보라 tint로 원형 정체성을 대체할 수 없다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:교만의 왕자 데우스",
+        "name": "교만의 왕자 데우스",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "데우스 원형은 큰 흰 깃털 날개, 백/금색 갑주, 청/백색 긴 로브와 긴 금색 지팡이를 가진 왕자다. 공유 runtime은 날개·로브·지팡이가 없는 작은 검/큰 방패 병사다. 원형의 가장 큰 정체성 부위 세 가지가 모두 없다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:그라디움",
+        "name": "그라디움",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "원형 드레이크는 붉은 비늘의 굵은 목/머리, 네 다리와 별도 날개를 가진 육중한 용이고 그라디움 원형은 검정/금색의 두꺼운 갑주형 용이다. 공통 runtime은 회청색의 가는 목/작은 머리, 큰 박쥐날개와 두 뒷다리를 가진 가벼운 와이번이다. 체형·사지 수·종별 갑주가 유지되지 않는다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:그림 리퍼",
+        "name": "그림 리퍼",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "원형은 노출된 해골/갈비뼈, 검은 후드와 긴 누더기 로브, 어두운 낫의 사신이다. runtime은 푸른 긴 깃털/머리, 검정/금색 전신 판금, 청색 발광 장식 낫의 무장 전사다. 낫이라는 부위 외에 머리·몸통·의복 종족 정체성이 바뀌었다.",
+          "8방향 개요의 HIT는 IDLE보다 어깨와 몸통이 두껍고 덩치가 커 보여 역할 전환 시 실루엣 변화 검토가 필요하다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:글루디오 던전의 지배자",
+        "name": "글루디오 던전의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "지배자 계열 로컬 원형은 큰 가시 견갑, 각진 폐쇄형 투구, 긴 붉은 찢긴 망토와 넓고 큰 장검을 가진 중갑 기사다. runtime은 둥근 단순 투구, 작은 검, 큰 방패와 짧은 평범한 망토의 병사다. 원형의 무게감/갑주 외곽/무기 비율이 사라졌으며 원형에 없는 방패가 주요 실루엣을 차지한다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:기란 평원의 지배자",
+        "name": "기란 평원의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "지배자 계열 로컬 원형은 큰 가시 견갑, 각진 폐쇄형 투구, 긴 붉은 찢긴 망토와 넓고 큰 장검을 가진 중갑 기사다. runtime은 둥근 단순 투구, 작은 검, 큰 방패와 짧은 평범한 망토의 병사다. 원형의 무게감/갑주 외곽/무기 비율이 사라졌으며 원형에 없는 방패가 주요 실루엣을 차지한다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:네크로맨서",
+        "name": "네크로맨서",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "네크로맨서의 로컬 원형은 긴 검정/금색 로브, 큰 왕관, 큰 해골 머리 장식의 긴 지팡이를 가진 리치다. runtime은 노출된 가는 해골 사지, 짧은 검은 두건/등 천, 짧은 파란 끝 막대다. 로브의 질량과 왕관/긴 해골 지팡이가 유지되지 않았다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:데스나이트",
+        "name": "데스나이트",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "데스나이트 원형의 육중한 검은 가시 중갑, 폐쇄형 투구, 긴 붉은 누더기 망토, 넓은 대검이 runtime에서 유지되지 않았다. runtime은 갈비뼈가 노출된 해골, 붉은 깃 투구, 붉은 둥근 방패와 양 끝에 칼날이 달린 긴 무기다. 의복 질량과 주요 무기 실루엣이 다르다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:듀페리온",
+        "name": "듀페리온",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "듀페리온 로컬 원형의 큰 뿔/가시 투구와 거대 견갑, 몸통 갑주 덩어리, 긴 붉은 망토가 runtime의 단순 둥근 투구/작은 갑주/짧은 망토 병사에서 사라졌다. DB 무기 분류는 도끼이지만 로컬 원형 그림은 큰 톱니 장검으로 보여 무기 기준에는 원형/DB 충돌도 있다. 판정 근거는 단순 색상보다 갑주와 질량 차이다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:드레이크",
+        "name": "드레이크",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "원형 드레이크는 붉은 비늘의 굵은 목/머리, 네 다리와 별도 날개를 가진 육중한 용이고 그라디움 원형은 검정/금색의 두꺼운 갑주형 용이다. 공통 runtime은 회청색의 가는 목/작은 머리, 큰 박쥐날개와 두 뒷다리를 가진 가벼운 와이번이다. 체형·사지 수·종별 갑주가 유지되지 않는다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:라스타바드의 지배자",
+        "name": "라스타바드의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "지배자 계열 로컬 원형은 큰 가시 견갑, 각진 폐쇄형 투구, 긴 붉은 찢긴 망토와 넓고 큰 장검을 가진 중갑 기사다. runtime은 둥근 단순 투구, 작은 검, 큰 방패와 짧은 평범한 망토의 병사다. 원형의 무게감/갑주 외곽/무기 비율이 사라졌으며 원형에 없는 방패가 주요 실루엣을 차지한다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:마계의 지배자",
+        "name": "마계의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "지배자 계열 로컬 원형은 큰 가시 견갑, 각진 폐쇄형 투구, 긴 붉은 찢긴 망토와 넓고 큰 장검을 가진 중갑 기사다. runtime은 둥근 단순 투구, 작은 검, 큰 방패와 짧은 평범한 망토의 병사다. 원형의 무게감/갑주 외곽/무기 비율이 사라졌으며 원형에 없는 방패가 주요 실루엣을 차지한다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:말하는 섬의 지배자",
+        "name": "말하는 섬의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "지배자 계열 로컬 원형은 큰 가시 견갑, 각진 폐쇄형 투구, 긴 붉은 찢긴 망토와 넓고 큰 장검을 가진 중갑 기사다. runtime은 둥근 단순 투구, 작은 검, 큰 방패와 짧은 평범한 망토의 병사다. 원형의 무게감/갑주 외곽/무기 비율이 사라졌으며 원형에 없는 방패가 주요 실루엣을 차지한다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:바포메트",
+        "name": "바포메트",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "바포메트와 베레스는 authoring_sources 원형 crop도 같고 runtime PNG도 동일한 salah/poses-0,1을 사용한다. 각 보스가 서로 다른 고유 외형이어야 하는지 판정할 독립된 원형 증거가 없으므로 보스별 고유성 최종 승인은 보류한다. 단순 공유 사실만으로 기존 승인을 취소하지 않는다.",
+          "WALK 3위상 전 방향에서 발 위치와 무릎의 전후 변화가 보이나 전용 RUN은 없다. 짧은 3위상의 실제 이동속도에서 접지와 망토 후행/무게감은 정지 시트로 확정할 수 없다.",
+          "신화급 최종 품질 승인에는 실제 재생 속도/접촉 시점 확인이 남아 있다. 로컬 원형 일치나 기하 검사만으로 PASS 처리하지 않았다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:베레스",
+        "name": "베레스",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "바포메트와 베레스는 authoring_sources 원형 crop도 같고 runtime PNG도 동일한 salah/poses-0,1을 사용한다. 각 보스가 서로 다른 고유 외형이어야 하는지 판정할 독립된 원형 증거가 없으므로 보스별 고유성 최종 승인은 보류한다. 단순 공유 사실만으로 기존 승인을 취소하지 않는다.",
+          "WALK 3위상 전 방향에서 발 위치와 무릎의 전후 변화가 보이나 전용 RUN은 없다. 짧은 3위상의 실제 이동속도에서 접지와 망토 후행/무게감은 정지 시트로 확정할 수 없다.",
+          "신화급 최종 품질 승인에는 실제 재생 속도/접촉 시점 확인이 남아 있다. 로컬 원형 일치나 기하 검사만으로 PASS 처리하지 않았다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:분노의 주시자 라즈엘",
+        "name": "분노의 주시자 라즈엘",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "ATTACK 3위상에서 phase1의 좌우 확장과 촉수/몸통 쏠림이 보이며 idle과 구분된다. 중심 눈/촉수 어느 부위가 어떤 거리의 대상을 타격하는지, 이 자세가 판정 contact=1과 맞는지는 실제 장면에서 보지 않았다.",
+          "신화급 최종 품질 승인에는 실제 재생 속도/접촉 시점 확인이 남아 있다. 로컬 원형 일치나 기하 검사만으로 PASS 처리하지 않았다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:불멸의 리치",
+        "name": "불멸의 리치",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "불멸의 리치 원형의 긴 검정/금색 로브, 화려한 왕관과 긴 해골 지팡이에 비해 runtime은 노출된 금색 해골 다리, 단순 왕관/흉갑, 평범한 보라색 등 망토와 짧은 보라 끝 막대다. 왕관 추가만으로 원형의 로브 질량과 해골 지팡이 정체성이 복구되지 않는다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json"
+      },
+      {
+        "id": "monster:불사의 머미 로드",
+        "name": "불사의 머미 로드",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The runtime RUN route uses the three-pose WALK cycle. Enlarged E/S/W/NE source sequences leave the opposite support leg partly obscured by the cloak; a complete alternating-support/weight transfer is not established by this inspection."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:불신의 시어",
+        "name": "불신의 시어",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "PASS",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Single central red eye, teeth, crown and red eye-stalk silhouette match the source; the floating eyeball anatomy is retained.",
+          "S exposes the central eye/front mouth; N shows the back mantle. Side and rear-quarter stalk silhouettes change with camera direction.",
+          "Floating movement uses changing body tilt and independently curved eye-stalk poses rather than foot walking; ground-paw alternation is not applicable.",
+          "Attack spreads/leans the eye-stalk cluster, recoil pulls it back, and idle is restrained. No obvious detached part, hard cutoff or collapsed body appeared in the reviewed regions."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:살라흐",
+        "name": "살라흐",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Runtime RUN falls back to three WALK poses. Enlarged E/S/W/NE hoof sequences show steps, but which anatomical hoof takes the opposite support and the contact duration are not sufficiently established for mythic locomotion approval.",
+          "Windup and sweep exist, but the S/front poleaxe sweeps mostly laterally across the body. Real forward target contact at the marker requires a timed Main/target review; no contact PASS is inferred from the pose name."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:샌드 웜",
+        "name": "샌드 웜",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "PASS",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Large circular red tooth-lined mouth, segmented curved sand-colored body and rubble base retain the source worm silhouette.",
+          "S presents the open mouth, N presents back segmentation, side/rear-quarter bends differ; it is not a rotated flat portrait.",
+          "A burrowing/anchored-body interpretation is used. The base stays at the source plane while the neck changes compression and bend; biped/quadruped foot support is not applicable.",
+          "Attack compresses/thrusts the mouth, hit retracts it and death progressively slumps. No obvious region cutoff or disconnected core was visible in the examined source frames."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:수룡의 둥지의 지배자",
+        "name": "수룡의 둥지의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original is a heavily spiked black armored knight with a skull/chest motif, long broad blade and torn red cape. Runtime is a slim generic plate knight with small one-hand sword, prominent shield and plain dark cape; the distinctive heavy armor/red-cape silhouette is lost.",
+          "One generic SpriteFrames body is shared across these named/regional bosses. Palette or width variants cannot establish a dedicated mythic boss identity."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:시간의 균열의 지배자",
+        "name": "시간의 균열의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original is a heavily spiked black armored knight with a skull/chest motif, long broad blade and torn red cape. Runtime is a slim generic plate knight with small one-hand sword, prominent shield and plain dark cape; the distinctive heavy armor/red-cape silhouette is lost.",
+          "One generic SpriteFrames body is shared across these named/regional bosses. Palette or width variants cannot establish a dedicated mythic boss identity."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:아크모",
+        "name": "아크모",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original is a heavily spiked black armored knight with a skull/chest motif, long broad blade and torn red cape. Runtime is a slim generic plate knight with small one-hand sword, prominent shield and plain dark cape; the distinctive heavy armor/red-cape silhouette is lost.",
+          "One generic SpriteFrames body is shared across these named/regional bosses. Palette or width variants cannot establish a dedicated mythic boss identity."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:아틀란티스의 지배자",
+        "name": "아틀란티스의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original is a heavily spiked black armored knight with a skull/chest motif, long broad blade and torn red cape. Runtime is a slim generic plate knight with small one-hand sword, prominent shield and plain dark cape; the distinctive heavy armor/red-cape silhouette is lost.",
+          "One generic SpriteFrames body is shared across these named/regional bosses. Palette or width variants cannot establish a dedicated mythic boss identity."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:알비노 데몬",
+        "name": "알비노 데몬",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Runtime is a squat black/lava golem-like fist fighter with glowing forearms. It has no authored axe/sword or feather wings; the target reference identity cannot be recovered by tinting this body."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:알비노 유니콘",
+        "name": "알비노 유니콘",
+        "prior_status_preserved": "SOURCE_HOLD",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The source reference is a long-maned horse/unicorn form. Runtime is a branching-antler deer/stag with short mane and deer proportions; the single unicorn horn/horse silhouette is not preserved.",
+          "Runtime lowers and charges with broad branching antlers, which is a deer attack rather than the target unicorn horn/body action."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:알비노 피닉스",
+        "name": "알비노 피닉스",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "PASS",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Orange-gold flame bird, pointed crest, long curled flame tail and layered wings match the provided project reference. White recoloring is not assumed from the name albino.",
+          "Front S, rear N, side and rear-quarter wing/body silhouettes are visibly differentiated.",
+          "High/mid/low wing poses form a readable flying cycle with tail follow-through; ground foot support is not applicable.",
+          "Forward beak/talon attack, folded/recoiling hit and restrained idle flight are distinguishable. Flame tail/wing tips remain complete in the viewed frames."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:어둠의 나이트발드",
+        "name": "어둠의 나이트발드",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original Nightvald reference shows massive black spiked armor, torn red cape and a very long jagged sword. Runtime uses a slim generic plate rig with small battle axe and shield, losing both weapon and heavy silhouette."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:얼음 여왕",
+        "name": "얼음 여왕",
+        "prior_status_preserved": "IN_PROGRESS",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Ice Queen reference is silver-haired/crowned with purple feather wings, black/gold armor, purple dress and purple staff. Runtime is a plain brown hooded mage with green-tipped staff, with no wings or crown."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:에바 왕국의 지배자",
+        "name": "에바 왕국의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original is a heavily spiked black armored knight with a skull/chest motif, long broad blade and torn red cape. Runtime is a slim generic plate knight with small one-hand sword, prominent shield and plain dark cape; the distinctive heavy armor/red-cape silhouette is lost.",
+          "One generic SpriteFrames body is shared across these named/regional bosses. Palette or width variants cannot establish a dedicated mythic boss identity."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:오만의 탑의 지배자",
+        "name": "오만의 탑의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original is a heavily spiked black armored knight with a skull/chest motif, long broad blade and torn red cape. Runtime is a slim generic plate knight with small one-hand sword, prominent shield and plain dark cape; the distinctive heavy armor/red-cape silhouette is lost.",
+          "One generic SpriteFrames body is shared across these named/regional bosses. Palette or width variants cannot establish a dedicated mythic boss identity."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:오만한 우그누스",
+        "name": "오만한 우그누스",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Runtime is a squat black/lava golem-like fist fighter with glowing forearms. It has no authored axe/sword or feather wings; the target reference identity cannot be recovered by tinting this body."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:왜곡의 제니스 퀸",
+        "name": "왜곡의 제니스 퀸",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The Zenith Queen reference has a crowned purple spider/arachnid lower body and multiple long legs. Runtime is a brown-haired gold-bikini lamia with one green snake tail, losing the spider abdomen/leg silhouette.",
+          "Serpent slither and bare-hand gestures do not provide the target spider leg propulsion/attack anatomy."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:욥니르",
+        "name": "욥니르",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The Yopnir reference is a white-furred quadruped bull with gold-armored huge horns. Runtime is a gray two-headed biped ogre carrying a spiked club, replacing the species, number of heads and weapon/body mechanics.",
+          "A two-legged club swing cannot stand in for the target bull charge and horn/hoof motion."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:용의 계곡의 지배자",
+        "name": "용의 계곡의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "The original is a heavily spiked black armored knight with a skull/chest motif, long broad blade and torn red cape. Runtime is a slim generic plate knight with small one-hand sword, prominent shield and plain dark cape; the distinctive heavy armor/red-cape silhouette is lost.",
+          "One generic SpriteFrames body is shared across these named/regional bosses. Palette or width variants cannot establish a dedicated mythic boss identity."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:웨링",
+        "name": "웨링",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "Runtime RUN uses three WALK poses. Enlarged E/S/W/NE paw sequences do not establish the full opposite fore/hind support exchange with enough certainty to grant mythic gait/contact approval."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json"
+      },
+      {
+        "id": "monster:이프리트",
+        "name": "이프리트",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "전용 외형/방향/역할의 기본 소스 구분은 확인했으나 실제 게임의 이동 루프·방출 순간과 대상 접촉을 확인하지 않아 신화급 동작 완료 PASS를 주지 않는다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:잊혀진 섬의 지배자",
+        "name": "잊혀진 섬의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:잔혹한 아이리스",
+        "name": "잔혹한 아이리스",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "원형 고유 날개/머리/의복/무기 정체성이 공용 서큐버스로 대체되어 신화급 기준 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:제로스",
+        "name": "제로스",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:종말의 성역의 지배자",
+        "name": "종말의 성역의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:죽음의 좀비 로드",
+        "name": "죽음의 좀비 로드",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "종족을 좀비로 읽을 수 있다는 사실만으로 거대한 좀비 로드 정체성을 충족하지 않는다. 전용 체적·장비·중량 동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:지룡의 둥지의 지배자",
+        "name": "지룡의 둥지의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:지옥의 쿠거",
+        "name": "지옥의 쿠거",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "외형/8방향 기본 실루엣은 유지되나 대형 사족 보행의 반대 지지 교대와 이동 루프의 중량·접촉 타이밍이 미확정이다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:질투의 공주 이자벨",
+        "name": "질투의 공주 이자벨",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "성별/인간형 공통점만 남고 핵심 날개·갑옷·창 정체성이 소실되어 전용 보스 제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:천상계의 지배자",
+        "name": "천상계의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:커츠",
+        "name": "커츠",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:탐욕의 여왕 벨리엘",
+        "name": "탐욕의 여왕 벨리엘",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "원형 고유 날개/머리/의복/무기 정체성이 공용 서큐버스로 대체되어 신화급 기준 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:테베 아누비스",
+        "name": "테베 아누비스",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:테베 오시리스",
+        "name": "테베 오시리스",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:테베 호루스",
+        "name": "테베 호루스",
+        "prior_status_preserved": "NOT_AUTHORED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:테베라스의 지배자",
+        "name": "테베라스의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:풍룡의 둥지의 지배자",
+        "name": "풍룡의 둥지의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:피닉스",
+        "name": "피닉스",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "HOLD",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "전용 외형과 방향/날개 단계는 보존되나 비행 루프의 몸통 고도/날개 중량 및 실제 타격 시점은 추가 게임 재생 품질 검토가 필요하다."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:화룡의 둥지의 지배자",
+        "name": "화룡의 둥지의 지배자",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "보스 전용 원형의 망토·가시 갑옷·대검 비례가 현재 공용 바인딩에 보존되지 않아 전용 아트/동작 재제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      },
+      {
+        "id": "monster:흑장로",
+        "name": "흑장로",
+        "prior_status_preserved": "VERIFIED_COMPLETED",
+        "current_visual_screen": "REWORK_CANDIDATE",
+        "approval_changed": false,
+        "new_production_approval": false,
+        "reasons": [
+          "후드 마법사라는 공통 역할로 고유 노년 외형·의복·나무 지팡이를 대체하므로 신화급 보스 전용 제작 후보."
+        ],
+        "detail_report": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json"
+      }
+    ],
+    "new_queen_RUN_review": {
+      "schema": "pr122-queen-staging-visual-review-v1",
+      "id": "monster:얼음 여왕",
+      "date": "2026-10-23",
+      "frozen": true,
+      "record_basis": "Formal extraction of the already observed private static source-frame review; no new visual inspection or playback was performed for this record.",
+      "review_target": "New Ice Queen RUN staging sources; separate from the currently connected hooded-mage runtime proxy",
+      "required_quality": "mythic_transform",
+      "current_review": "HOLD",
+      "new_approvals": 0,
+      "approval_granted": false,
+      "approval_changed": false,
+      "original_approval": false,
+      "original_status": "IN_PROGRESS",
+      "prior_status_unchanged": true,
+      "source_assets_changed": 0,
+      "production_connected": false,
+      "separate_current_runtime_review": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json",
+        "sha256": "6061a8e91f8775c97526099cb001a2188f356d9b9afabd80127a2fb4c4784652",
+        "id": "monster:얼음 여왕",
+        "current_review": "REWORK_CANDIDATE",
+        "note": "This existing runtime verdict is unchanged by the separate staging HOLD record."
+      },
+      "examined_views": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "examined_roles": [
+        "run"
+      ],
+      "examined_tracks": 8,
+      "poses_per_track": 6,
+      "examined_poses": 48,
+      "inspection_method": "Actual source poses were privately viewed in a direction-by-phase diagnostic against the exact current project reference. This is static visual screening; no timing or in-game support/contact approval is implied.",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          305,
+          965,
+          306,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 13,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8"
+      },
+      "reference_crop": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/references/32.png",
+        "sha256": "aafad119248fd8d5e0e08877fbd874afc00ccfd20148a8129615e3555f69d5a9"
+      },
+      "register_profile_pins": [
+        {
+          "register": "data/pr122_monster_animation_staging.json",
+          "profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/NativeMotionProfile.tres",
+          "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+          "pixel_scale": 0.614285714286,
+          "profile_sha256": "04ee8d89f9b02f7150fbf73bc06b8ca381dde6f83995286afac3c2da229e7723",
+          "frames_sha256": "35613dcf25fde5343783d87c40c0f8eab04d6c60695ba9f7219ff6765ee32413",
+          "register_sha256": "94339b973f5a01c52625905b2deccd0dd865616e3eed73195bd9524dd965fd64"
+        },
+        {
+          "register": "data/pr122_monster_queen_run_staging.json",
+          "profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NativeMotionProfile.tres",
+          "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+          "pixel_scale": 2.25389025389,
+          "profile_sha256": "44ec1e8cf7b71d9ead4c347da1449d47900451f3f2feb49c4376497fb3a454d2",
+          "frames_sha256": "0487825374e9642545a1875ec6276e2e3beb0e5c2f3a397accb14557fb5e1b01",
+          "register_sha256": "9028fa6aa9ca645afb275b255286dd24a4652b69d9ce0653bb6943ec97130f32"
+        }
+      ],
+      "source_tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-E-run6.png",
+          "source_sha256": "85577468992a1b7406f84159452baec3113c79950d43ddd4dea1a478ee7e0cdb",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/E-run.png",
+          "inspection_pixel_scale": 0.614285714286,
+          "texture_sha256": "85577468992a1b7406f84159452baec3113c79950d43ddd4dea1a478ee7e0cdb",
+          "register": "data/pr122_monster_animation_staging.json",
+          "animation": "run_0",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            544,
+            544
+          ],
+          "geometry_frame_rgba_sha256": [
+            "0ffe7cfd1c94007e7bd3d1bf27e8eac04251bcd543f579d4e971df6b78eabdee",
+            "4b9ac985502cc3b0dabf4a48e3fcb0609733b56c70afc8c36e487a20b293aa9a",
+            "679c59bb19afd2525a6480dbcf24c635de31aba9f849d314af2f4fbc12aeaba8",
+            "d3288c2cb38d17d311ede265ac2adc43848fe03f2f5568c1890b1745df6615e8",
+            "b6bd1b1062dc80081f335d266c3520bab4d33f807c41351c25adbf1cfb2996df",
+            "5fe83ac6f877818e747671996085091acedccd0cec43d15553c040078f496e0d"
+          ]
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-S-run6.png",
+          "source_sha256": "ab9c86f29fb2f24901bb4a2e61306d25f45ebdf2ec9d1c8ac37ef2d08ed44133",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/S-run.png",
+          "inspection_pixel_scale": 0.614285714286,
+          "texture_sha256": "ab9c86f29fb2f24901bb4a2e61306d25f45ebdf2ec9d1c8ac37ef2d08ed44133",
+          "register": "data/pr122_monster_animation_staging.json",
+          "animation": "run_2",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            624,
+            624
+          ],
+          "geometry_frame_rgba_sha256": [
+            "6980c6fbffced100aee16e5b3992eaca60d861b3e99e96335f789b35054604d5",
+            "64e859606aeb28e2a97329d4a196475eaa46e312c0f77b48420ac4d6d62d9dd3",
+            "45bf94526483b793da0857a1cc0842d75105dea742f7b00804e36d2b86ee7600",
+            "f78f7bc0c66dc212cdbaa05544e511bedd6412efee7049ac43b5fa791eba2bd6",
+            "dc648e0231fe3e073b99aa2b5e106ce9f8eba4bc81ec168943d4c27550eac11c",
+            "79c67793e35e5f62887dd987ddeb85c157da7e0d02bae8bb8d5cb8ed0a44d20d"
+          ]
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-SE-run6-v01.png",
+          "source_sha256": "85de5856c079d199271dc59467ab5c94e4991849ebd1e4924cad6f0f8dc3cec4",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SE-run.png",
+          "inspection_pixel_scale": 2.25389025389,
+          "texture_sha256": "85de5856c079d199271dc59467ab5c94e4991849ebd1e4924cad6f0f8dc3cec4",
+          "register": "data/pr122_monster_queen_run_staging.json",
+          "animation": "run_1",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            2048,
+            2048
+          ],
+          "geometry_frame_rgba_sha256": [
+            "380cd97f8c954f0884398f4c5bf6c4dd762555cfbe6b414013e59cb028d44f73",
+            "f45260aba6940f295551d9c8ce2513c5eb91990b625ad487e2f7d2391ce5b379",
+            "87df186e03e51363799ddcafe2cdd0bd24790e01129533f3c08f17f3dfd69bb3",
+            "71b77fea4c652abb4b701925ef1e84ffde1311b7604c43a618e119c44c09871f",
+            "7290cd18c76f20d9388b3b025c2e87d47048c15835be2907c98cbe81dffb546d",
+            "00d5f522fa216e47849415fdbe34ccd45ca12400d77b5618fa4e78bb59d6781b"
+          ]
+        },
+        {
+          "direction": "SW",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-SW-run6-v01.png",
+          "source_sha256": "0e804061dd55f756239ca2b7fab6b68ff5865086c5a2cfafe679c1d28d5383c7",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SW-run.png",
+          "inspection_pixel_scale": 2.25389025389,
+          "texture_sha256": "0e804061dd55f756239ca2b7fab6b68ff5865086c5a2cfafe679c1d28d5383c7",
+          "register": "data/pr122_monster_queen_run_staging.json",
+          "animation": "run_3",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            2048,
+            2048
+          ],
+          "geometry_frame_rgba_sha256": [
+            "722f67964ce54eadfcbbafef6885a154d6be9d97d325f2a0323d783d737d5094",
+            "2b93815c9efff065ef349dfc87753b0597fefcb0592a842ada32654291b4283c",
+            "b92f3cd16ebbaf67c3d3282ba54be7e07e898513cb94159a1577382147121e6a",
+            "364359930952be6469b668feb72ea6a27d3d319c5fffc0c741b038c500a5d659",
+            "23125fb51c299f484c4674776c7b51f7707bcaab17a7fbe6890eda470d6f8911",
+            "bc7aaf93d99fcef63adcd523b72ce61792d40193d4c7ae0cb141bd1230ebe25f"
+          ]
+        },
+        {
+          "direction": "W",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-W-run6-v01.png",
+          "source_sha256": "f7c6abcd1b3d6417a0faf3166a640256c43497bfb34ee2138f712e13e8497156",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/W-run.png",
+          "inspection_pixel_scale": 2.25389025389,
+          "texture_sha256": "f7c6abcd1b3d6417a0faf3166a640256c43497bfb34ee2138f712e13e8497156",
+          "register": "data/pr122_monster_queen_run_staging.json",
+          "animation": "run_4",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            2048,
+            2048
+          ],
+          "geometry_frame_rgba_sha256": [
+            "2e2ae0b561f0427e280cd7c49fb39230331c97370bbb4bbfa9f2706ca3689ccd",
+            "95ae3ff02b5f7a359efc93ae3770ecfae452943b21baee651d388646668603e7",
+            "2ca128adb5ef289ec979830cb97660e579d6ebce36fe4798f4b7fda00d53b5b2",
+            "129266cbd8adafe2b2c3075dcf05e90ee8e8467233733205bc660eaaef057242",
+            "9d1eb3348a10d2d8682f291d4f3f0467dd82d446a032174423c137716939b8f1",
+            "db8aa4dd1f8777dc66491f04b824930ade11a8bc5dfea82f72f5e6924b952050"
+          ]
+        },
+        {
+          "direction": "NW",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-NW-run6-v01.png",
+          "source_sha256": "2d7bab89f617bf46151877c89335431a2c52c9baabf956f61b9d49eb7975890e",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NW-run.png",
+          "inspection_pixel_scale": 2.25389025389,
+          "texture_sha256": "2d7bab89f617bf46151877c89335431a2c52c9baabf956f61b9d49eb7975890e",
+          "register": "data/pr122_monster_queen_run_staging.json",
+          "animation": "run_5",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            2048,
+            2048
+          ],
+          "geometry_frame_rgba_sha256": [
+            "22fcd2cdb82bc6b80e78b5a7b5de994192204aa5907a945298477a134a6a1cd4",
+            "c3c0445e36b46691dcc58e9a82be101eff0b142945489da9df326e1b1fd5e8bd",
+            "663eaf2de51ce1e6bc368ce00e57cee9ebf5128310a678254c8bf5690a0aa084",
+            "7b13680f408f0510d22455db18ade7edcca4cd3b50c8f582a7aa0d76cccc8448",
+            "fabd9f9815f758dc172e940c4b8099e3d1e9e3cadd7e446978eaa8822a8aba0e",
+            "29dd10b6a857c8aac2ad099427e69454ef3e124c227c868c810f9922f87f613d"
+          ]
+        },
+        {
+          "direction": "N",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-N-run6-v01.png",
+          "source_sha256": "ce9d143a809930f76fb7e5563c2b815a920d64a96d4b4fb92ee403f7e159845f",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/N-run.png",
+          "inspection_pixel_scale": 2.25389025389,
+          "texture_sha256": "ce9d143a809930f76fb7e5563c2b815a920d64a96d4b4fb92ee403f7e159845f",
+          "register": "data/pr122_monster_queen_run_staging.json",
+          "animation": "run_6",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            2048,
+            2048
+          ],
+          "geometry_frame_rgba_sha256": [
+            "a592a8438f12361c4702122f8511e9f65a8c244c04b5fd770352a4d44ae0baf1",
+            "6ea5c2a977f087cb6342f2b2c744203d34c1fbb114bc1f2c76a3ac1667220597",
+            "02459a95f75b7533e2f867bcbf8fc99c65d3168312a1086e37b9f3e8e4ff7d48",
+            "efd2e823c8a01439f6e4508ec3a2cd6338b92ddb59902f04f26142e75652bb14",
+            "0480008c816dabcc883a1cd17c329948567ada9b068920c508997850a697f62b",
+            "ee6099af3f24e28d6601ac50afdcbeda93efb505685de4526d15d165c2e79cf8"
+          ]
+        },
+        {
+          "direction": "NE",
+          "role": "run",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-NE-run6-v01.png",
+          "source_sha256": "3979658a0110bc31190460cfb95c0ba5e85f2d8f0a4ca3071af70635f986894d",
+          "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NE-run.png",
+          "inspection_pixel_scale": 2.25389025389,
+          "texture_sha256": "3979658a0110bc31190460cfb95c0ba5e85f2d8f0a4ca3071af70635f986894d",
+          "register": "data/pr122_monster_queen_run_staging.json",
+          "animation": "run_7",
+          "frames": 6,
+          "distinct_pixel_frames": 6,
+          "physical_canvas_size": [
+            2048,
+            2048
+          ],
+          "geometry_frame_rgba_sha256": [
+            "782c0a04a8c0d59ef80b7f491ee2f41329d220c421136c15ff05cc5b6d858dfc",
+            "4c38c024354e6edcd45c0d704904670108f5908b28d09aa0bf18bd618c9c14cc",
+            "b69d1f329a0a958c94a3e41bd5a728012cb8edf6468384e7cabf2d197655d905",
+            "a0db6f41ec8595a004a2b5a9172c17cd8fed4a4acaf8bf695050cf393b5ab40b",
+            "bc761900f8c47b823a0f5c985511ccea6efeb310cfc0b02eb85e68a786c040ab",
+            "41a486505b652c3ad663dabab4c29283f3990d7e6a2106f5436e5c34cdacb198"
+          ]
+        }
+      ],
+      "source_tracks_pin_file": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/queen-staging-pins.json",
+        "sha256": "e02b79cd08e0b14d2cbd66b68859113d6dbe0eadcd98634c9b4c5857cb92ea61"
+      },
+      "findings": [
+        {
+          "criterion": "identity",
+          "result": "PASS",
+          "observation": "New sources restore silver hair/crown, black-gold bodice, purple wings/dress and purple staff rather than the hooded-mage proxy."
+        },
+        {
+          "criterion": "opposite_support",
+          "result": "HOLD",
+          "observation": "In E/S and several front/side directions, phases0/3 retain a similar exposed leading-leg plant and phases1/4 and2/5 repeat a similar knee lift. Opposite anatomical LEFT support is not established; six distinct pixel hashes do not prove a six-phase alternating run."
+        },
+        {
+          "criterion": "NE_camera",
+          "result": "HOLD",
+          "observation": "NE reads close to an E/SE side/front silhouette with the face/front bodice visible; a convincing rear-right camera distinction needs correction or independent confirmation."
+        },
+        {
+          "criterion": "ground_plane",
+          "result": "HOLD",
+          "observation": "The source-plane anchoring is bbox-derived; named flight/contact phases lack independent anatomical sole/ground-plane proof. The technical canvas-foot PASS is not physical support approval."
+        }
+      ],
+      "reasons": [
+        "In E/S and several front/side directions, phases0/3 retain a similar exposed leading-leg plant and phases1/4 and2/5 repeat a similar knee lift. Opposite anatomical LEFT support is not established; six distinct pixel hashes do not prove a six-phase alternating run.",
+        "NE reads close to an E/SE side/front silhouette with the face/front bodice visible; a convincing rear-right camera distinction needs correction or independent confirmation.",
+        "The source-plane anchoring is bbox-derived; named flight/contact phases lack independent anatomical sole/ground-plane proof. The technical canvas-foot PASS is not physical support approval."
+      ],
+      "identity_restoration": {
+        "result": "PASS",
+        "observation": "New sources restore silver hair/crown, black-gold bodice, purple wings/dress and purple staff rather than the hooded-mage proxy.",
+        "scope": "Observed queen appearance only; this grants no completed animation or new approval."
+      },
+      "scale_review_note": "Each source was rendered using its own actual NativeMotionProfile pixel_scale and canvas256 normalization; source resolution differences were not misreported as body-scale defects.",
+      "evidence": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/queen-staging-run8.png",
+        "sha256": "1dfcd2490530ec6b9c2158f86242f855603c626b7bd828c5219c3ab89b445e89"
+      },
+      "timing_review": "NOT_REVIEWED",
+      "unseen_not_reviewed": [
+        "Timed RUN playback, per-frame durations and transitions in default Main",
+        "Actual alternating anatomical support and physical contact on a moving-world ground plane",
+        "NE camera confirmation in timed in-game playback",
+        "Staged idle, attack, hit and death sources",
+        "Attack contact/target hitbox interaction",
+        "GPU tint/material/VFX presentation",
+        "Final release or new approval decision"
+      ]
+    },
+    "runtime_validation": {
+      "schema": "pr122-boss-runtime-playability-summary-v1",
+      "engine": "4.7.2-stable (official)",
+      "plan_HEAD": "b101d3d416658aeba374485a4715d2726cc416cb",
+      "exact_boss_ids": [
+        "monster:드레이크",
+        "monster:흑장로",
+        "monster:이프리트",
+        "monster:바포메트",
+        "monster:커츠",
+        "monster:테베 아누비스",
+        "monster:테베 호루스",
+        "monster:테베 오시리스",
+        "monster:샌드 웜",
+        "monster:피닉스",
+        "monster:데스나이트",
+        "monster:얼음 여왕",
+        "monster:거대 드레이크",
+        "monster:베레스",
+        "monster:네크로맨서",
+        "monster:아크모",
+        "monster:제로스",
+        "monster:그림 리퍼",
+        "monster:말하는 섬의 지배자",
+        "monster:검은숲의 지배자",
+        "monster:글루디오 던전의 지배자",
+        "monster:개미굴의 지배자",
+        "monster:기란 평원의 지배자",
+        "monster:에바 왕국의 지배자",
+        "monster:용의 계곡의 지배자",
+        "monster:오만의 탑의 지배자",
+        "monster:화룡의 둥지의 지배자",
+        "monster:풍룡의 둥지의 지배자",
+        "monster:지룡의 둥지의 지배자",
+        "monster:수룡의 둥지의 지배자",
+        "monster:잊혀진 섬의 지배자",
+        "monster:라스타바드의 지배자",
+        "monster:테베라스의 지배자",
+        "monster:아틀란티스의 지배자",
+        "monster:마계의 지배자",
+        "monster:천상계의 지배자",
+        "monster:시간의 균열의 지배자",
+        "monster:종말의 성역의 지배자",
+        "monster:공포의 뱀파이어",
+        "monster:교만의 왕자 데우스",
+        "monster:그라디움",
+        "monster:듀페리온",
+        "monster:분노의 주시자 라즈엘",
+        "monster:불멸의 리치",
+        "monster:불사의 머미 로드",
+        "monster:불신의 시어",
+        "monster:살라흐",
+        "monster:알비노 데몬",
+        "monster:알비노 유니콘",
+        "monster:알비노 피닉스",
+        "monster:어둠의 나이트발드",
+        "monster:오만한 우그누스",
+        "monster:왜곡의 제니스 퀸",
+        "monster:욥니르",
+        "monster:웨링",
+        "monster:잔혹한 아이리스",
+        "monster:죽음의 좀비 로드",
+        "monster:지옥의 쿠거",
+        "monster:질투의 공주 이자벨",
+        "monster:탐욕의 여왕 벨리엘"
+      ],
+      "bosses": 60,
+      "approved_preserved": 43,
+      "unique_TRES": 29,
+      "unique_PNG_paths": 163,
+      "required_roles_direction_counts": {
+        "idle": 8,
+        "run": 8,
+        "attack": 8,
+        "hit": 8,
+        "death": 1
+      },
+      "required_role_direction_requests": 1980,
+      "preserved_death_direction_extra_requests": 420,
+      "total_AnimatedSprite2D_play_requests": 2400,
+      "required_resolver_unavailable": 0,
+      "total_resolver_unavailable": 0,
+      "AnimatedSprite2D_play_failures": 0,
+      "existing_run_to_walk_fallback_requests": 480,
+      "SpriteFrames_load_failures": 0,
+      "PNG_load_failures": 0,
+      "failed_bosses": [],
+      "final_Godot_script_error_lines": false,
+      "tested_scope": "Actual canonical-profile ActorMotion resolver and AnimatedSprite2D.play with real engine-clock frame/progress advancement; loaded selected frame texture is nonnull with positive dimensions.",
+      "playback_speed_scale": 137,
+      "limitations": [
+        "Accelerated headless playability sample, not gameplay cadence or full-phase timing review.",
+        "No default Main/combat scene, collision, damage, platform rendering or boss appearance evaluation.",
+        "Resource loading or playback PASS does not confer mythic-quality approval."
+      ],
+      "art_quality_review": "NOT_PERFORMED; independent boss A/B/C reviewers own appearance decisions",
+      "approval_changes": 0
+    },
+    "runtime_validation_directory": "docs/remake/evidence/pr122-monsters-20261023/review-boss-runtime"
+  },
+  "preservation": {
+    "existing_normal_approvals": 221,
+    "existing_boss_approvals": 43,
+    "approval_mutations": 0,
+    "production_status_mutations": 0,
+    "existing_asset_mutations": 0,
+    "runtime_catalog_mutations": 0,
+    "new_art_in_this_review": 0,
+    "new_production_approvals": 0,
+    "production_counts_unchanged": {
+      "normal": {
+        "total": 258,
+        "completed_preserved": 221,
+        "remaining": 37,
+        "statuses": {
+          "VERIFIED_COMPLETED": 221,
+          "SOURCE_HOLD": 9,
+          "IN_PROGRESS": 9,
+          "NOT_AUTHORED": 19
+        }
+      },
+      "boss": {
+        "total": 60,
+        "completed_preserved": 43,
+        "remaining": 17,
+        "statuses": {
+          "VERIFIED_COMPLETED": 43,
+          "NOT_AUTHORED": 15,
+          "IN_PROGRESS": 1,
+          "SOURCE_HOLD": 1
+        }
+      }
+    }
+  },
+  "validation": {
+    "manifest_file_entries_verified": 209,
+    "manifest_bytes_verified": 102449957,
+    "manifest_mismatches": 0,
+    "full_CI_repeated": false,
+    "chat_images_or_base64_emitted": false
+  },
+  "input_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-normal-frames/file-manifest.json",
+      "bytes": 2245,
+      "sha256": "624ca768650435b7d1a7026c67332d7ebd83fea310d3bb4d3109c915e934958d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/manifest.json",
+      "bytes": 24559,
+      "sha256": "6ac0f2d474db00bbce0ee385388a2127f1cd30eec34fe48effcaaa6c62f2a485"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/file-manifest.json",
+      "bytes": 10684,
+      "sha256": "e952c780759cecff0271b7d9e7bd6483848377d283b4f4feaff5d4a5c60ce973"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/file-manifest.json",
+      "bytes": 8851,
+      "sha256": "ef7d85ce5f8bab7275191889407f617086461c04a8947d8bd9282def6604561d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-runtime/file-manifest.json",
+      "bytes": 1891,
+      "sha256": "2dec65a2d6cb65edb22ad0c806a824a170e1e6be9a55c700614da23189897d7f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-a/actor-list.json",
+      "bytes": 15558,
+      "sha256": "7affebe59397c9f5cd7f20c9ad7aa8872b418fe82fe4a4f3fbea7183185a97bb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/review-results.json",
+      "bytes": 269103,
+      "sha256": "6061a8e91f8775c97526099cb001a2188f356d9b9afabd80127a2fb4c4784652"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-c/review-results.json",
+      "bytes": 323995,
+      "sha256": "4bb2f991eca75e53b1fdce219112e69475d3f08e5a797c56326423d1e5357881"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-normal-frames/results.json",
+      "bytes": 3961786,
+      "sha256": "a0da37794d06d9d7d3fe963468dffeb9aab533124667ea278760f65e12b69a32"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-inputs.json",
+      "bytes": 442,
+      "sha256": "dadd928776abe9506088676147fec7a28673d4e25f6efeaafc5ba7bb85fc62b1"
+    },
+    {
+      "path": "data/pr122_monster_review_scope.json",
+      "bytes": 1320,
+      "sha256": "0b74a19dd9ce9cce2f6131570d6f28c038fe58fb3a19f6a2f412f993e2a94cbe"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-runtime/summary.json",
+      "bytes": 3633,
+      "sha256": "7d679f235a2089e89f7bb7fc9bbedc8f2bb0aa9e1ab6a34323f55c86f4fdf919"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/review-boss-b/queen-staging-review.json",
+      "bytes": 16414,
+      "sha256": "581b922e3f620013a14a21c4294a90d08f3790c834364defb82580c3226952b5"
+    }
+  ]
+}

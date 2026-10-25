@@ -1,0 +1,38 @@
+{
+  "status": "SOURCE_REPAIR_AND_MAIN_PLAYER_CANDIDATE_PASS",
+  "actor": "transform:412",
+  "clips": [
+    "N:attack"
+  ],
+  "newly_authored_source_frames": 6,
+  "source_part_or_frame_checker_changes": 0,
+  "original24tracks_preserved": true,
+  "main_player": {
+    "status": "PASS",
+    "actors": 1,
+    "clips": 25,
+    "death_directions": 8,
+    "groups": [
+      {
+        "keys": [
+          "transform:412"
+        ],
+        "status": "PASS",
+        "exit_code": 0,
+        "clips": 25,
+        "death_directions": 8,
+        "unsized_frame_fixtures": 0,
+        "log": "main-player-final-00.log"
+      }
+    ],
+    "production_switches": 0,
+    "final_approvals_added": 0
+  },
+  "internal_visual_review": "Six back-facing poses, weapon/body identity and attack order checked. Full runtime visual/production approval remains HOLD; alpha-residue and source halo review remain.",
+  "new_final_motion_approvals": 0,
+  "active_actor_approvals": "2/19",
+  "remaining_source_holds": 262,
+  "generation_holds": 3,
+  "production_switches": 0,
+  "latest_remote_base": "db1b9b7430db2abf3041cd85ebd34a4472263456"
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "zenith_queen",
+  "actor": "monster:왜곡의 제니스 퀸",
+  "clip": "S-death-v02",
+  "direction": "S",
+  "role": "death",
+  "layout": "phase_grid2",
+  "phase_count": 6,
+  "reference_sha256": "9b4466690a9756efc46c55361eb635541bd9dc081cb90aae2c277601586e2856",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique monstrous SPIDER QUEEN: regal pale female head and dark flowing hair under a thorn crown, armored purple-black female upper torso with exactly TWO clawed arms, merging naturally into ONE huge purple-black spider abdomen and exactly EIGHT segmented spider walking legs. Gold chitin ornaments, purple waist plating and hooked claws. No human legs, hand-held weapon or extra human torso. Eight spider legs spread naturally around connected thorax; distinct spider silhouette, no loose webs or effects.\nFixed camera throughout this sheet: SOUTH straight FRONT facing DOWN toward viewer. Anatomical RIGHT weapon hand is viewerLEFT, LEFT empty hand viewerRIGHT.\nAction DEATH: Six non-graphic SOUTH death stages:0 wounded upright,1 knees/legs weaken,2 body descends,3 collapses,4 settles on ground,5 motionless full corpse. All armor/limbs/weapon/wings/tail remain attached or contiguous and fully visible. No gore, blood, dissolving particles or vanished body. Horse/spider collapse naturally with all limbs present.\nLayout EXACTLY SIX COMPLETE distinct animation poses in TWO COLUMNS and THREE ROWS (2x3), read row-major 0,1 / 2,3 / 4,5, WIDE LANDSCAPE transparent canvas. Keep each figure body about200px high with identical scale. Each full silhouette including extended wings, scythe, axe, staff, sword, tail and cape must fit comfortably inside its own large cell with generous empty alpha gutters and outside margins. No pose or weapon intersects another; no anatomy reaches canvas edge. No floor/shadow/effects/text. Preserve character identity and action sequence. Not flipped, no mirrored anatomy.\nCorrection of ambiguous detached foreground: all wings, hands, weapon, legs, tail and accessories remain physically connected to their own body. Exactly six full bodies, isolated with clear empty gutters. No floating fragments.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/canonical-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/S-idle-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "corrects": "S-death-v01",
+  "confirmed_causes": [
+    "unprovable_detached_foreground_ownership"
+  ]
+}

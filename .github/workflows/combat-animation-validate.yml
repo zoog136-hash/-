@@ -15,6 +15,9 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    # PR122 run 39142875145 passed all applicable regressions, then reached
+    # the 75m cap during region rendering. Preserve every render, frozen
+    # baseline and combat benchmark; allow the same 120m as integration.
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4

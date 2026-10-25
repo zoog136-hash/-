@@ -1,0 +1,144 @@
+{
+  "schema": "native1254-C1920-leftcontact0-actual-service-r002-freeze-v1",
+  "status": "HOLD_PENDING_INDEPENDENT_ACTUAL_HEEL_PITCH_GROUND_QC",
+  "actual_service_attempts_thisdir": 1,
+  "request_sha256": "fa359afe20e7e7a28f0b8c48eb150e723a15fa41b5800750ad1af5d3a6a26913",
+  "raw_service_sha256": "a8b3bd84cc4f50c19279e4eec5fc90d281eafde7f5b5e5aa6db1fec8016ecf21",
+  "latest_bounded_candidate_sha256": "332ef97f0a973aa5329a25f02cf0139b29c92c38e4c2aaca6424379d741466cb",
+  "source_native_canvas": [
+    1254,
+    1254
+  ],
+  "fixed_C": 1920,
+  "body_unit": 1.875,
+  "no_resample_Cchange_or_rootfit": true,
+  "exact_pixels_outside_ROI_preserved": true,
+  "own_composition_mask_correction": "v01 retained isolated boot pixels mistaken as coat; preserved as superseded. v02 simple rectangle removes them; service raw untouched.",
+  "observable_heel": [
+    616.5,
+    850
+  ],
+  "target_heel": [
+    612.9375,
+    797.1601879188124
+  ],
+  "actual_contact_or_source_approval": false,
+  "completed_added": 0,
+  "artifacts": [
+    {
+      "name": "N-contact0-r002-left-forward-bounded-v02.png",
+      "bytes": 452709,
+      "sha256": "332ef97f0a973aa5329a25f02cf0139b29c92c38e4c2aaca6424379d741466cb"
+    },
+    {
+      "name": "N-contact0-r002-left-forward-bounded.png",
+      "bytes": 453387,
+      "sha256": "573751fee6dd05964b101e30ef6f30368b65f22f154f3811442a2bca9a86b77c"
+    },
+    {
+      "name": "N-contact0-r002-leftleg-before-after-preview.jpg",
+      "bytes": 59978,
+      "sha256": "82e2f16174cbdca2df1ec1bd2220f67e248afa77aa3cf47f08d1d874c5a97576"
+    },
+    {
+      "name": "N-contact0-r002-leftleg-corrected-mask-preview.jpg",
+      "bytes": 59878,
+      "sha256": "90c5a6b53bddab1981d38673548da5ebd9235e89f1358ba1a36a5da2bfae8219"
+    },
+    {
+      "name": "N-contact0-r002-service-raw.png",
+      "bytes": 491338,
+      "sha256": "a8b3bd84cc4f50c19279e4eec5fc90d281eafde7f5b5e5aa6db1fec8016ecf21"
+    },
+    {
+      "name": "N-contact0-r002-whole-before-after-preview.jpg",
+      "bytes": 48254,
+      "sha256": "23d9f9afb355d2bd43269f570c09284293e45d9e85d893ef3199351506f20ede"
+    },
+    {
+      "name": "N-contact0-r002-whole-corrected-mask-preview.jpg",
+      "bytes": 48155,
+      "sha256": "0b1885ec31c912f5be498750c908462272e1b283ea39cb0be3270127163aeebb"
+    },
+    {
+      "name": "actual-observable-heel-v02.json",
+      "bytes": 504,
+      "sha256": "38a8cef81fdd8f488e5f57e2348be28fc4d221a8624b266e75b589b196783546"
+    },
+    {
+      "name": "bounded-composition-contract.json",
+      "bytes": 1170,
+      "sha256": "749b7990340316c5b9dca3c15f721fd145fd1543b649f8e2b5568cfd49a71b8a"
+    },
+    {
+      "name": "bounded-composition-result-v02.json",
+      "bytes": 1293,
+      "sha256": "f6cc4d1773f50d6743ed25ec9602b9d869b3b29c85832a28e538b1654702e0fc"
+    },
+    {
+      "name": "bounded-leftleg-edit-mask-v02.png",
+      "bytes": 2083,
+      "sha256": "b9364c56b2277833029042459c0b33dfab412d759ec365a1ceefee2da6ce6021"
+    },
+    {
+      "name": "bounded-leftleg-edit-mask.png",
+      "bytes": 2170,
+      "sha256": "097ebc4a1548638f626ddbb2af55225909133c14e60ef9ac4917a75ec6dff94f"
+    },
+    {
+      "name": "immutable-native1254-base.png",
+      "bytes": 452692,
+      "sha256": "f1ba34c210354ba37d900bded07f72427b0999305b72dd15c13b985df8780d4c"
+    },
+    {
+      "name": "left-contact0-base-and-guide-preview.jpg",
+      "bytes": 48569,
+      "sha256": "564efcb83ba157e44efa6872c7977cdede337b137aa97acca19bc77a754d3dec"
+    },
+    {
+      "name": "left-forward-contact-exact-joint-guide1254.png",
+      "bytes": 427791,
+      "sha256": "72022ff2f91b4f73abbbb258b4f06f994b488ee4de6c929058828721e7cf2eae"
+    },
+    {
+      "name": "private-context-ledger-r002-freeze.json",
+      "bytes": 4319,
+      "sha256": "d813d6db15bca7d9f0c757370597098cd4d7be7c33caaa9a6d3da6f246057309"
+    },
+    {
+      "name": "registered-target-guide.json",
+      "bytes": 2948,
+      "sha256": "7d28915bff820155eeffcf067da044da6256153bf9cb94d9f47d5d6b35cb2c2e"
+    },
+    {
+      "name": "request-spec.json",
+      "bytes": 934,
+      "sha256": "a66105944a5f648c1542433492d7be4a20945811aaaffce0fc116f8bf8d61bc8"
+    },
+    {
+      "name": "request.json",
+      "bytes": 4762,
+      "sha256": "fa359afe20e7e7a28f0b8c48eb150e723a15fa41b5800750ad1af5d3a6a26913"
+    },
+    {
+      "name": "response.json",
+      "bytes": 1000,
+      "sha256": "93e65771a99cc698dc980a0622f491b0c10b80046af4f96f591be1ffec58cfb5"
+    },
+    {
+      "name": "service-result-composition-v01.json",
+      "bytes": 1231,
+      "sha256": "bb010903864f557fb51786e9d0e9736ad994b2422bd08bca456c3eab8f5d05b1"
+    },
+    {
+      "name": "service-result.json",
+      "bytes": 1434,
+      "sha256": "ca0a63cd0d83f1c65ba7d75ec5139e555fc362425b1cc459fb98cb95e342f43f"
+    },
+    {
+      "name": "service-status.json",
+      "bytes": 372,
+      "sha256": "5918df5f5d1dd0d5ac4a847a1cc0b0d12c966a9298b5cfd5bc899dfa17b77ef0"
+    }
+  ]
+}

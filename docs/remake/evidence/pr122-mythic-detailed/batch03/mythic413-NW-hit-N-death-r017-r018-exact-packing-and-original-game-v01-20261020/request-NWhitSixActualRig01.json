@@ -1,0 +1,123 @@
+{
+  "status": "REQUESTED_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "hit",
+  "version": "NWhitSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+    "base_geometry_sha256": "24ea383ac409ffd91b5c468a91db98153cfd83489df35b4565ea11fcb1ee07bc",
+    "direction": "NW",
+    "regions": [
+      [
+        460,
+        15,
+        610,
+        1105
+      ],
+      [
+        1996,
+        15,
+        610,
+        1105
+      ],
+      [
+        460,
+        1551,
+        610,
+        1105
+      ],
+      [
+        1996,
+        1551,
+        611,
+        1105
+      ],
+      [
+        460,
+        3087,
+        610,
+        1105
+      ],
+      [
+        1996,
+        3087,
+        610,
+        1105
+      ]
+    ],
+    "nearest_owner_sha256": "00a910530a4d3dbdbd0402d0bf7814d0f4a8a214dacbf30c9a6b04a5ddd831e6",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 2d8747f73668c57dcde03064931d78514ac308baf8986ccac1acc908806db10c"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+    "direction": "NW",
+    "role": "hit",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        641,
+        1058
+      ],
+      [
+        2177,
+        1058
+      ],
+      [
+        641,
+        2594
+      ],
+      [
+        2177,
+        2594
+      ],
+      [
+        641,
+        4130
+      ],
+      [
+        2177,
+        4130
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "2d8747f73668c57dcde03064931d78514ac308baf8986ccac1acc908806db10c",
+  "authored_common_root_float": [
+    641,
+    1058.3
+  ],
+  "common_root_integer": [
+    641,
+    1058
+  ],
+  "common_root_rounding_delta": [
+    0,
+    -0.2999999999999545
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0
+}

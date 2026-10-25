@@ -1,0 +1,152 @@
+{
+  "schema": "PR122-independent-actual-NE-death-source-cycle-review-v1",
+  "status": "PASS_EXACT_NE_DEATH_SIX_SOURCE_VISIBLE_FALL_AND_HELD_TERMINAL",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "death",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/actual-NE-DEATH-six-source-contract-v13.json",
+    "sha256": "f48f6769e20de2f3bf12171ff59d2e27fceed66e5c57801632707854a5ef8a43",
+    "bytes": 114666
+  },
+  "all_six_independent_binding": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase0-actual-native-v13.png",
+        "sha256": "5cf510e279bc63e04e302a8ed9d4f3fff82890b716686edf070a10f05c552bb2",
+        "bytes": 799555
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase1-actual-native-v13.png",
+        "sha256": "96d7db05d92951cb055e7b7ed73d014a438abf2cf43ac909b81f6a9224468223",
+        "bytes": 881737
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase2-actual-native-v13.png",
+        "sha256": "b9b761f6ff390b7a9eda2c57b69902fa55014258fe513f2a8ed4a977e468b816",
+        "bytes": 955972
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase3-actual-native-v13.png",
+        "sha256": "bb8eb102ea47325e1360040319836debd4a6d6dd12e8e36db08ae0e87805bfd1",
+        "bytes": 845598
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase4-actual-native-v13.png",
+        "sha256": "467ab5f545ee3d84d599a74e5fa0512f1f5cb0a16044e4732dba761e3a53415b",
+        "bytes": 763289
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v13/NE-death-phase5-actual-native-v13.png",
+        "sha256": "af3c0fcd7a70ffa01e4104ab2e0c56795f53b6f849bfa5c23f82eb3a067c9b90",
+        "bytes": 768032
+      },
+      "RGBA_composition_mismatch_pixels": 0,
+      "strong_bodies": 1
+    }
+  ],
+  "C_fixed": 2432,
+  "bodyunit_fixed": 2.375,
+  "common_rig_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "source_canvas": [
+    2304,
+    2304
+  ],
+  "loop": false,
+  "runtime_cycle_seconds": 0.8,
+  "phase_seconds": 0.13333333333333333,
+  "resource_role_seconds": 0.65,
+  "resource_fps": 9.23076923076923,
+  "held_dead_terminal": true,
+  "visual_findings": [
+    "The actual NE six-source sequence shows loss of balance, buckling, knees down, forward torso collapse, prone settling, then a held dead terminal. The head, torso, pelvis and limbs change through dedicated articulated poses while retaining the same character, costume and anatomical RIGHT staff.",
+    "The original straight leather card ends and RIGHT white/gold elbow gaps were held in v05. The accepted repairs use the actual original black/gold knee strip continuously across the existing femur/calf surfaces, bounded native ankle leather, and the complete curved white/gold sleeve; narrow actual checks covered repaired knees2/5 and all remaining new joints0/1/3/4. The rejected broad circular caps remain historical HOLD evidence.",
+    "The complete hand/grip and both staff ends remain a single rigid node through the fall; full equipment, white skirt, blue/gold coattails and original skin material remain recognizable and complete without source-edge clipping. Source v13 moves the genuine small ribbon and LEFT cuff remnants to their proper moving owners with unchanged original RGBA.",
+    "The visible body progression, cloth settling and final prone hold are coherent for a non-looping death. The final terminal does not visibly return toward a living pose. Actual runtime death sampling is .8 seconds; the staged resource role duration .65 seconds is retained separately.",
+    "All114 actual editable rasters reproduce the six final PNGs exactly. The independently checked authored finite surface model includes source and actual raster texel quads, continuous knee/sleeve and arclength cloth, fixed275.2625 femur/tibia lengths, and rigid grip/staff source Gram; the smallest guarded surface clearance is0.5810119386 native."
+  ],
+  "visual_limitations": [
+    "Source appearance and visible fall/terminal quality are approved for this exact six-PNG scope. This is not full actor approval, production binding, or evidence of any game test.",
+    "Hidden depth, foot yaw, anatomical joint centers and the finite60native torso/head support hull are declared compatible construction choices, not unique3D measurements recovered from the image. Source and actual material bounds validate that chosen model only.",
+    "The original v05 whole-six view is reused with narrowly viewed accepted repairs and exact unchanged-control/owner-transfer evidence; no duplicate whole-six view was introduced. Remaining tiny diagonal AA source-edge components are recorded without changing thresholds.",
+    "The actual .8-second runtime death clock is distinct from the unchanged .65-second resource authoring duration; the final phase is held rather than looped."
+  ],
+  "exact_numeric_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v13-independent-exact114-source-raster-finite-floor-companion-v01.json",
+    "sha256": "6dd33dd7f7d4ccfc5efd8e3cbdc47961c797932b432683713d2e152c68ab382c",
+    "bytes": 91824
+  },
+  "prior_actual_HOLD_and_narrow_PASS_records": [
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v05-5b29e6-independent-actual-native-knee-join-HOLD-v01.json",
+      "sha256": "cb86874eafcccca9dcf7c998ca1150690abe41e89a65343b72c67e7b341c5f9b",
+      "bytes": 4371
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v05-native-RIGHT-elbow-and-complete-upper-source-HOLD-addendum-v01.json",
+      "sha256": "7fe04bd365d5a7b7d8bc708eb0bd80d517144cd40dab60e33eed2a01c9b16d86",
+      "bytes": 2204
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v08-local-knee-HOLD-and-RIGHTelbow5-narrow-PASS-v01.json",
+      "sha256": "731c6d512c3be94b6d0476b8b071c3341f60aaabbc92ad47983532a6e32e720a",
+      "bytes": 2033
+    },
+    {
+      "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v09-302dee-actual-original-leather-knee2-5-narrow-source-PASS-v01.json",
+      "sha256": "3724828aebffb142d102e3d1f2d8e5f22ba18db928423a673a2e12d895fb07be",
+      "bytes": 2039
+    }
+  ],
+  "v05_to_v11_joint_only_transfer": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v11-v05-unchanged-bones-source-gear-and-joint-only-RGBA-binding-v01.json",
+    "sha256": "e72c8563af27f768107d6febe9835b3b309199b5f3b697b05d8cf46565617531",
+    "bytes": 9362
+  },
+  "v11_to_v13_genuine_owner_transfer": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/NE-DEATH-v13-v11-true-ribbon-and-LEFTcuff-owner-only-RGBA-binding-v01.json",
+    "sha256": "4e7a204a928b76fe31dd7057a3fbfe1ffcab35882c74428c564f244e75ffcebb",
+    "bytes": 7188
+  },
+  "immutable_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NEdeath-final-and-Eattack-native-view91-frozen.json",
+    "sha256": "075afba8d2fd840dd5328916f0293fcfef61c93b07206a33036310cfc72eb9d1",
+    "bytes": 45118
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

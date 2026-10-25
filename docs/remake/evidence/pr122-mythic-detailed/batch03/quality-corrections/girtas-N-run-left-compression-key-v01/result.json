@@ -1,0 +1,51 @@
+{
+  "key": "267",
+  "direction": "N",
+  "role": "run",
+  "version": "left-compression-key-v01",
+  "source_batch": "batch03",
+  "expected_poses": 1,
+  "intended_game_phase": 1,
+  "original_generated_file": "/workspace/generated_images/exec-fa477391-d992-4743-a65f-2e3ae591a988.png",
+  "raw_path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/girtas-N-run-left-compression-key-v01.png",
+  "raw_sha256": "bab36ad1f2c2445b8ebc48a263c24d0e2b289224ba7a2822210f3ca3daee13a1",
+  "raw_bytes": 1369164,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/request-girtas-N-run-left-compression-key-v01.json",
+  "request_sha256": "60963c2f3610561844ad130d993b832c7901dbdc7540343dbf99c3e9aaeb25b8",
+  "imagegen_attempts": 1,
+  "source_visual_status": "PASS",
+  "created_at": "2026-10-19T12:49:31.852994+00:00",
+  "actor_approval": false,
+  "runtime_final_status": "HOLD_PENDING_COMPLETE_SIX_POSE_QC",
+  "status": "SOURCE_KEY_PASS_RUNTIME_HOLD",
+  "source_role_status": "LEFT_COMPRESSION_KEY_SOURCE_PASS",
+  "geometry_status": "PASS",
+  "geometry_path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/geometry-base2048.json",
+  "geometry_sha256": "f374421dacefe7f030a0d7c93f380d984b3078139559aadd8960a5367599c32a",
+  "visual_findings": [
+    "True NORTH back-view identity preserved: pale hair, hard narrow gold dorsal rays, long dark gold-trim robe, gold original armor and original long sinuous weapon in anatomical RIGHT hand.",
+    "Actual LEFT support chain now zig-zags visibly: LEFT knee extends out-left, shin angles back-in to flat grounded LEFT boot; RIGHT knee and boot are raised. This is distinct from the old near-straight landing pose.",
+    "Loaded knee flexion visibly meaningful, approximately45\u201360degrees by coarse manual appearance; requested guide73degrees is not claimed as measured output anatomy.",
+    "Closed complete LEFT support boot and raised RIGHT boot; no extra arm, leg or weapon hand detected."
+  ],
+  "visual_limitations": [
+    "Source-only author review; independent stance/heading review pending.",
+    "Planted LEFT boot has outward splay associated with bent support knee; final whole-six Player gait/foot heading needs private QA.",
+    "No complete run, flight, runtime layout or actor approval.",
+    "All raw source pixels remain untouched; strict geometry/complete alpha>16 coverage passed."
+  ],
+  "reviewed_at": "2026-10-19T12:54:38.492810+00:00",
+  "independent_source_status": "PENDING",
+  "newly_authored_pose_count": 1,
+  "newly_usable_required_run_source_keys": 1,
+  "new_approvals": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "source_PNG_mutations": false,
+  "repo_mutations": false,
+  "chat_image_attachments": false
+}

@@ -1,0 +1,59 @@
+{
+  "key": "transform:267",
+  "name": "지배자 기르타스",
+  "direction": "S",
+  "role": "run",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v02.png": "01f7f906efd051ab4255a68df9873301dc0846a7ccb70dfd7d48c7fb8bde4d47"
+  },
+  "prompt": "Create SIX genuine successive FAST RUN animation sprites of the exact original GIRTAS in the three references. FIRST reference is original identity authority, SECOND is its faithful high-detail reconstruction, THIRD is the already connected SOUTH WALK and establishes front-facing identity, anatomy, equipment and slow gait. Author a new visibly faster RUN; do not copy the walk or draw six neutral guards.\n\nOutput a transparent 1024x1536 PNG atlas, EXACTLY TWO COLUMNS and THREE ROWS, six512x512 cells in left-to-right then down temporal order. ONE complete character per cell, centered consistently in its own cell with wide clear gutters. Match the same head/torso/limb proportions and apparent body scale; actual body head-to-feet around320-360px, with ALL thin gold spines, hair, skirt and weapon intact inside each512cell (whole silhouette at most420px tall/wide). No cropped rays or weapon. Preserve consistent camera and body scale throughout.\n\nEvery pose faces exactly SOUTH, front toward viewer/screen-DOWN, small isometric overhead camera. The pale face, shoulders, breastplate and pelvis remain front-facing throughout; no side/back turn. Preserve pale face, long flowing white/silver hair, ornate black-and-gold armor, long original DARK SKIRT with angular gold-trim panels and front opening, bright chest core and thin GOLD RADIAL SPINES. These are narrow gold rays, never wings, black feathers or thick horns. The skirt remains a long skirt in all six poses; let panels lift/separate naturally enough to read the running boots, never replace with pants, shorts or a short tunic.\n\nThe ONE long luminous orange/gold SINUOUS CURVING weapon is held in ANATOMICAL RIGHT HAND, which is IMAGE LEFT in this front SOUTH view, in every pose. Same weapon hand and same long serpentine shape, never a straight sword, second weapon or hand swap. Anatomical LEFT hand on imageRIGHT is free and naturally counter-swings. Preserve gold gauntlets and connected complete arms. Keep radiance inside the weapon/body silhouette, no detached streaks.\n\nReal repeating six-phase sprint cycle, with clearly alternating opposite leg support, longer strides than the slow WALK reference, compressed push-off and genuine flight/passing:\n0: ANATOMICAL RIGHT LEG (imageLEFT) visibly leads/front-lands toward viewer; LEFT leg trails back. Right boot is supporting contact, left heel raised. Torso frontS with purposeful forward lean, skirt flows back.\n1: RIGHT-leg compressed push-off/toe contact; LEFT knee drives forward, same opposite leg visibly moving through. Arms counterbalance without moving weapon to other hand.\n2: airborne passing, BOTH boots clearly off ground and knees exchanging; LEFT leg passes into the lead, right trails. Actual bent joints, not a rigid whole-body lift.\n3: ANATOMICAL LEFT LEG (imageRIGHT) visibly leads/front-lands and supports; RIGHT leg trails. This is the opposite support of phase0, visibly opposite boot forward, while body/equipment are NOT mirrored.\n4: LEFT-leg compressed push-off/toe contact; RIGHT knee drives forward, skirt panels respond to opposite leg drive.\n5: airborne passing with RIGHT leg moving into next forward landing, closing naturally into phase0; both boots free, readable opposite arrangement to phase2.\n\nSix genuinely different articulated poses with coherent anatomy and clear opposite-leg exchange, not six frames with same leading foot, same stance or shuffling, not attack poses. Running can lift and compress naturally, preserve mass/proportions and spatial root consistency; no whole-sprite translation/rotation clones. Phase2->3 and5->0 must be believable flight-to-opposite-landing transitions. Keep all hair, skirt, feet, weapon and rays complete. Fully opaque materials including black cloth. Alpha0 outside silhouette,1-2pixel antialias only. No background, floor, cast shadow, fog, smoke, grid, labels, text, glow halos, outer glow bridges, extra limbs or loose equipment.",
+  "transparent_background": true,
+  "phase_contract": [
+    "right_support_landing",
+    "right_push_left_drive",
+    "airborne_left_passing",
+    "left_support_landing",
+    "left_push_right_drive",
+    "airborne_right_passing"
+  ],
+  "corrective_reason": "Replace visually redesigned old Girtas S run with faithful original identity and genuine distinct fast opposite-leg support/flight cycle; preserve the long gold-trimmed skirt and anatomical-right/image-left sinuous weapon.",
+  "user_authorization": "Production image tools authorized; no image attachments/links in main chat; one private corrective generation attempt.",
+  "requested_at": "2026-10-19T10:43:41.536656+00:00",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six poses keep front SOUTH face, shoulders, chest and pelvis; pale face, long white hair, chest core and thin gold radial spines match the faithful canonical and selected new S walk.",
+      "One sinuous luminous weapon remains in anatomicalRIGHT/imageLEFT hand throughout; imageRIGHT hand stays free. Long dark gold-trimmed skirt panels remain visible and flare with leg drive; no pants-only redesign.",
+      "The gait genuinely exchanges leg arrangements: phases0/3 have one boot extended/loaded and the other tucked, phases1/4 show the opposite leg arrangement with knee drive, and phases2/5 show shorter/tucked passing configurations. This is visibly faster and more articulated than the saved slow S walk; not all frames retain one leading leg.",
+      "Phase2->3 and5->0 read as compact passing/flight into a longer opposite-leg extension/landing; skirt, knees and boots articulate while front-body orientation and weapon hand remain stable.",
+      "All six complete figures and equipment fit the source without significant alpha on any outer border; strict source geometry independently finds six distinct poses."
+    ],
+    "visual_limitations": [
+      "The actual six-frame timing uses a repeated rapid exchange beat: phases0 and3 share the extended lead side, with distinct articulation, rather than exactly reproducing the literal symmetric six-phase prompt. PASS is for the observed alternating-support fast gait, not literal phase-contract compliance.",
+      "Floorless transparent source cannot prove exact world-ground contact or cadence. Root must still validate compiled anchors, run cadence, walk/run transitions and actual game playback; no all-actor approval or completed count is granted.",
+      "At source scale the full silhouette neutralheight493.5px closely matches selected S walk489px; head/torso/equipment scale still requires cross-clip runtime quality review."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "d57271cba97110ffb6b09974a89620c0310915090351e4d54f5d137f649c571d",
+    "raw_bytes": 2518246,
+    "request_sha256": "b121b49e27ed031146156589bc6be1f6e9c8f2d57e4cf71f583763e01b685e34",
+    "review_sha256": "db4df96e7dc7797442bf9d0702bb691ece17da22876e7ac7e6dc12123505cd61"
+  },
+  "available_repository_reference_sources": {
+    "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-run-v02.png",
+  "output_sha256": "d57271cba97110ffb6b09974a89620c0310915090351e4d54f5d137f649c571d",
+  "output_bytes": 2518246,
+  "original_generated_file": "/workspace/scratch/girtas-S-run-repair/girtas-S-run-v02.png"
+}

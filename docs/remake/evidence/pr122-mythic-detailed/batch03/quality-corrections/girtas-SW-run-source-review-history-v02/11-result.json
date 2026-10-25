@@ -1,0 +1,47 @@
+{
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "run",
+  "version": "v01LEFTAIR5",
+  "status": "SOURCE_PASS_SELECTED_ACTUAL_RUN_PHASE_ONLY_PHYSICAL_PENDING",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "game_pose_map": [
+    5
+  ],
+  "request_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/request.json",
+  "request_sha256": "aae6eed55bcafba3bcc158c73f8bb414061835dd132cacb04f2c987e5fdc199b",
+  "original_generated_file": "/workspace/generated_images/exec-40780604-6765-49fe-a9bf-67ca88627aeb.png",
+  "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+  "raw_png": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+  "raw_sha256": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937",
+  "raw_bytes": 1630888,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/generated-private.jpg",
+  "private_preview_bytes": 133307,
+  "source_visual_status": "PASS",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T16:19:43.517905+00:00",
+  "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+  "outer_edge_alpha100_count": 0,
+  "independent_source_review": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-selected-six-final-independent-source-QC-v01.json",
+    "sha256": "d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4",
+    "status": "SCOPED_SELECTED_SOURCE_SIX_PASS"
+  },
+  "visual_findings": [
+    "Actual chosen original SW run phase individually coherent: faithful selected current camera/model/gear, permanent farRIGHT blade and nearLEFT empty hand, two connected legs with assigned support/load/trueAIR chain.",
+    "Idle-only hilt absence inference was withdrawn after actual selected SWwalk0 and SWattack3 confirm original gold blade-base prongs. No hilt edit selected."
+  ],
+  "visual_limitations": [
+    "Individual SOURCEPASS only; final six physical C/root/AIR and actual compiled Player remain separate before actor approval.",
+    "All original raw/request/earlier PASS/HOLD snapshots and unused hilt5 service result are preserved."
+  ]
+}

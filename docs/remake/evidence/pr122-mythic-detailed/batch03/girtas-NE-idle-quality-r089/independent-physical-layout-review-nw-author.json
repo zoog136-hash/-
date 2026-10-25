@@ -1,0 +1,67 @@
+{
+  "status": "PASS_SCOPED_NE_IDLE_SIX_CANDIDATE_PHYSICAL_LAYOUT_ONLY_NOT_COMPILED_RUNTIME_OR_ACTOR",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "idle",
+  "version": "v03",
+  "reviewer": "/root/girtas_nw_walk_author (independentNEsource/metadataauthor)",
+  "raw_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+  "layout_path": "/workspace/scratch/girtas-NE-idle-repair-v03/reviewed_runtime_layout.proposal.json",
+  "layout_sha256": "db439e88672f5a2ee5c95364fc12558139ac483fe0335a1f40ab4262e17208ca",
+  "physical_metadata_path": "/workspace/scratch/girtas-NE-idle-repair-v03/rigid-scale-two-sole-ground-root-proposal.json",
+  "physical_metadata_sha256": "46b08dfc6608ff3ea1b165d05bc44985bd5b61d6c5bf466398c6916c42387a25",
+  "private_preview": "/workspace/scratch/girtas-NE-idle-repair-v03/private-common-physical-ten-panel-C832-proposal.jpg",
+  "private_preview_sha256": "f26a8fb200598c6ae47ded9705e72637d858e1887011f2564e82c36111299aae",
+  "private_preview_bytes": 144752,
+  "source_review_path": "/workspace/scratch/girtas-NE-idle-repair-v03/independent-source-camera-review-nw-author.json",
+  "source_review_sha256": "d10764d7c62ad9e00f12d83157cb76619e1844c7bd611d60ce3907a6504e48e4",
+  "canvas": 832,
+  "source_anchors": [
+    [
+      337,
+      407
+    ],
+    [
+      897,
+      407
+    ],
+    [
+      334,
+      828
+    ],
+    [
+      897,
+      828
+    ],
+    [
+      336,
+      1252
+    ],
+    [
+      898,
+      1253
+    ]
+  ],
+  "rigid_crown_hair_marker_canonical_range": [
+    82.46153846153847,
+    86.15384615384616
+  ],
+  "projected_near_far_depth_canonical_range": [
+    23.384615384615383,
+    27.076923076923077
+  ],
+  "findings": [
+    "Actual10panelphysicalcomparisonshowsnewNEidleC832consistentphysicalskull/helmetcore/nearpauldron/waistwithcorrectNidleC1024andNWidleC944. Perspectiveleg/robe/hair/ray/bladeenvelopesarenotnormalizers. Numericcrown-core->boundedhair-rootmarkers82.46..86.15canonicalmatchN83/NW85.69, nearshoulder/waistdistanceconsistentwithinmanual5pxuncertainty.",
+    "All6samecorrectNErearRIGHTbody/camera/sizeasindependentSOURCEPASS. Breathingchangeslocalshoulder/hair/cloth, head/girdlebodyheightstayswithinquietidlebreath; 5->0showsnosizeflip/headanglejumporfalsegait.",
+    "EachsourceanchorindependentlymatchesroundedmeanofBOTHactualrestingbootsolecentroidswithin0.5px; nearRIGHTandfarLEFTdepthremains23..27canonicalinsteadflatteningsolesY. Samefixedpairstance/rootconvention6poses; norootselectionfromblade/robe/spikebbox. Floorrootnearhipsandprojectedpaireddepthpreservedin10panel; noinventedAIR/step.",
+    "OriginalsourcePNGunchanged: exactrawSHAandN/NW/NEguardreferenceSHAsverified, all6targetC832equalandpinned. SourceartandpriorSOURCEQCstayunchanged."
+  ],
+  "limitations": [
+    "CandidatephysicalmetadataPASSonly; actualcompiledSpriteFrames/Player/entry-exit/enginegroundrootsandfinalactorqualityremainHOLDforrootintegration.",
+    "CorrectNEguardCURRENTC1024isvisiblysmall; guard@C864iscomparisonONLYnotappliednorapprovedhere. NewNEidleC832passdoesnotapproveoldattackguardruntimealignmentorentireactor."
+  ],
+  "actor_approval_added": 0,
+  "detailed_completion_added": 0,
+  "repository_mutated": false,
+  "created_at": "2026-10-19T14:58:26.708470+00:00"
+}

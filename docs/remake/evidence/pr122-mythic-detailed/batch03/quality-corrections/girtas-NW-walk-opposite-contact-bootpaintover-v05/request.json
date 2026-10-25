@@ -1,0 +1,23 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "walk",
+  "pose": 3,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-walk-opposite-contact-bootpaintover-v05/rough-opposite-legs-guide.png",
+    "/workspace/scratch/girtas-NW-walk-author-v01/cell-0.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-walk-opposite-contact-bootpaintover-v05/rough-opposite-legs-guide.png": "0ffe54eedd0a05724eef87a19784e0c276c5fcfcf3baaf848a52744f4d333fed",
+    "/workspace/scratch/girtas-NW-walk-author-v01/cell-0.png": "098ab0ca25b19fc9ccc4e7b71ddc7e8f228a6e942ffc3b56700337b22a3281c1"
+  },
+  "reference_provenance": {
+    "roughguide_only_not_final_source": "Original source torso pixels retained, old visiblelegs removed from guide only; sourceboot art repositioned into requestedoppositelegplacement with gold jointstrokes. Imagegen must author continuous correctjoints/cloth, no guide pixels approved."
+  },
+  "prompt": "Finish image1 ROUGH POSE PAINTOVER into ONE anatomically continuous GIRTAS WALK keyframe. Image1 is the REQUIRED new foot placement/composition, NOT final art: repair rough seams, wrong detached shin strips and leg armor into correct natural matching anatomy. Image2 supplies the exact undamaged original Girtas identity, armor, long robe and boots details ONLY, NOT its old leg pose. Do not revert image1 feet to image2. Preserve EXACT SAME UP-LEFT rear-LEFT 3/4 head/torso/hips camera, no imageflip. Keep blackgoldarmor, longpalesilverhair, goldcrown, thin HARD GOLD straight radial rays, LONG DARK GOLDTRIM ROBE, same TWOARMS, anatomicalLEFT near/imageLEFT EMPTYlowhand, anatomicalRIGHT far/imageRIGHT closedhand holding same sinuous lowgoldyellowblade.\n\nThe REQUIRED WALKING stance is FAR RIGHT FOOT FORWARD and NEAR LEFT FOOT BACK. In image1 the FORWARD FOOT is the UPPER-LEFT boot under the left robe edge, with sole flat/heel touching ground; connect it by the FAR RIGHT LEG emerging behind robe from far/right hip. The BACK FOOT is the LOWER-RIGHT boot under the right robe edge, toe on ground and heel RAISED; connect it by NEAR LEFT LEG, hip near/imageLEFT and thigh diagonally BACK/RIGHT under robe. This is a normal walking legs-crossed projection seen from rear-left. Correct shin/knee continuity, keep exactly TWO legs and boots and proper thigh lengths. NearLEFT now trails, farRIGHT now leads, opposite to image2. The stance pelvis remains SAMEbodyorientation. Do not change head/shoulder/camera tohide leg exchange. Longrobe panels open/trail naturally, no missingrobe, no pants substitution, no detached boots/threelegs. OnefarRIGHT leadingheel andonenearLEFT trailingtoe contacting sameprojectedground, ordinary WALK notAIR/run.\n\nTransparent1024x1024 PNG, ONE fullfigure with allcrown/rays/hair/robe/boots/blade present and 70px emptyborder, fine-detail originalmatching gamecutout. No roughpaintover lines, guidecolors, text, grids, floor, shadows, extraobjects orparticles. Only complete finishedfaithfulGirtas in this materially changed RIGHTcontactwalking pose.",
+  "material_change": "Primaryreference is nowexplicitopposite-foot paintover instead of oldsamelegpose with secondaryskeleton; cannotrepeatidenticalfailedcall.",
+  "transparent_background": true,
+  "requested_at": "2026-10-19T14:19:02.277019+00:00"
+}

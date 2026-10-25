@@ -1,0 +1,71 @@
+{
+  "status": "HOLD_ACTUAL_NE_RUN_CONTACT0_MATERIAL_CONTINUITY",
+  "actor": "transform:413",
+  "direction": "NE",
+  "role": "run",
+  "source_contract_sha256": "1c17170e46401d2fd7483159a77e82e5b1fd675d78ed90d13aee0b91604f21b6",
+  "actual_source_sha256": "008e1a7520b0b18748496b14378fab357de4d4f4c5158afb2f75022dcb5c6c7c",
+  "fixed_C": 2432,
+  "unit": 2.375,
+  "common_unpadded_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "observed_PASS": [
+    "Actual dedicated running gesture and source identity remain recognizable.",
+    "Full original RIGHTstaff both endpoints/grip and blue/gold costume are preserved.",
+    "Original complete shoe gold counter/stiletto outline is retained; do not erase it as a joint defect."
+  ],
+  "blocking_findings": [
+    {
+      "area": "RIGHT stance calf to whole shoe tarsal",
+      "raw_approximate_bbox": [
+        768,
+        937,
+        810,
+        960
+      ],
+      "defect": "Visible background cuts through actual calf/shoe attachment; model endpoint coincidence alone does not close the art."
+    },
+    {
+      "area": "Underhem thigh skin and leather",
+      "raw_approximate_RIGHT_gap_endpoints": [
+        [
+          767,
+          714
+        ],
+        [
+          746,
+          801
+        ]
+      ],
+      "defect": "Thin background corridor cuts through RIGHT thigh skin to boot; LEFT thigh outer silhouette also has stepped missing material below hem."
+    },
+    {
+      "area": "Moving LEFT full cuff/upperarm versus old stationary outline",
+      "raw_approximate_cuff_join": [
+        552,
+        536,
+        587,
+        568
+      ],
+      "raw_approximate_old_outline": [
+        496,
+        529,
+        540,
+        581
+      ],
+      "defect": "Open background wedge at cuff-elbow joint and detached gold oldbracer outline west of the moved cuff."
+    }
+  ],
+  "required_finite_fix": "Use actual original skin/leather/complete cuff silhouettes to close the three common material operators. Preserve old files, complete gold shoes, true coat/whitehem, body/root/unit and bone controls. Apply only real affected materials across six poses.",
+  "whole_six_reviewed": false,
+  "physical_status": "Final entire6 bone/heelclock/actualshoe AIR and declared staff model audit pending source repair. No unique hidden3D claim.",
+  "image_context_cumulative_bytes": 1763532,
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

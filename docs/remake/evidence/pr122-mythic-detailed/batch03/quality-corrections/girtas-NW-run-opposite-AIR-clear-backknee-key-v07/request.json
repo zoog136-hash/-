@@ -1,0 +1,28 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "pose": 2,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-clear-backknee-guide-v07/exact-3D-actual-LEFT-backknee-RIGHT-foreknee-guide.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png",
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/current-NW-idle0-small-collar-hilt-exactcrop.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-clear-backknee-guide-v07/exact-3D-actual-LEFT-backknee-RIGHT-foreknee-guide.png": "67e3e305b8cd4b3b7ef7f1a0df2d67cef3fa4b1abd579117e99b2b3c069c076a",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png": "1d51c981f6ea0f8436543289381ca16c3bd9d014fe66f483949273e6f0df14d0",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png": "073692cc9c4307c3ce38c7821c5f07a2c2beee358ba7475b3db2a50fa838e738",
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/current-NW-idle0-small-collar-hilt-exactcrop.png": "3f3712d9deb8c0c4671e26dd20d6dd35ba026bc07edff3f563d720ccf57145fd"
+  },
+  "prompt": "Create exactly ONE complete faithful GIRTAS character animation RUN-AIR phase, dressing image1's exact 3D joint/depth mannequin with image2's exact identity and image3 longrobe detail. Image4 is the original SMALL PLAIN collar/hilt where anatomicalRIGHT hand holds its continuous sinuous blade. No flower/diamond/star crossguard. Image1 is ABSOLUTE leg anatomy authority; image2 contains NO oldlegs and supplies identity only. NEVER invent a familiar nearLEFT-leading knee pose. This new pose is specifically the OPPOSITE AIR halfcycle: FAR anatomical RIGHT leads UP-LEFT, NEAR anatomical LEFT trails BACK/DOWN-RIGHT.\n\nCAMERA true NORTHWEST rear-LEFT3/4, exact hardgoldrays/silverhair/crown/armor/longrobe from image2. BODY: faithful head/shoulder/torso/realhip proportions, gentle RUN forwardlean, not distorted longlegs. TWO legs only, TWO arms only. RIGHT is orange FAR behind body/robe and holds blade; LEFT is cyan/blue NEAR foreground, with EMPTY hand. Match image1 joint occlusion, no mirror/swap.\n\nCRITICAL NEAR LEFT TRAILING CHAIN: cyan LEFT hip descends diagonally DOWN-RIGHT/BACK to the LOW cyan LEFT KNEE BEHIND its own hip, then the cyan shin folds UP-RIGHT/BACK to a HIGH LEFT HEEL/BOOT near hip height. In image1 1024px LEFT hip462,496 -> LEFT knee508,684 -> LEFT ankle601,640; copy that actual DOWN-RIGHT thigh / UP-RIGHT folded shin geometry. LEFT knee MUST NOT point UP-LEFT/forward. This is the trailing thigh, not a forward knee with only the ankle pulled back. Show the actual goldarmored LEFT knee/shin/raisedheel at the natural longrobe slit/hem without shortening/redesigning robe or exposing bare thigh.\n\nCRITICAL FAR RIGHT LEADING CHAIN: orange farRIGHT hip562,466 -> orange RIGHT knee459,478 forward UP-LEFT -> RIGHT ankle443,643. Actual farRIGHT thigh/knee leads markedly UP-LEFT from its hip and the shin/boot reaches forward, partly behind longrobe but chain/boot must be legible. Orange RIGHT boot is farther FORWARD/UP-LEFT than cyan trailingLEFT boot. Match3D perspective, NOT just foot tip labels. BOTH boots visibly AIRBORNE above floor with no toe/heel ground contact (running flight); robe may flutter but no groundplane/shadow.\n\nPreserve continuous sinuous glowing blade in FAR RIGHT hand, EMPTY nearLEFT hand, rigid thin HARD golden rays (not feathered wings), longsilverhair, unique goldblack armor and original long flowing gold-trim robe. No new equipment, extraheads/limbs/blades, rescaleanatomy, flippedcamera, guidecolors/text/markers. Plenty transparent padding around every raytip, bladelongtip and boot. Output ONE unlabelled complete pose, no grid/atlas/text.",
+  "transparent_background": true,
+  "material_change": "new fixedbone3D trailingLEFT knee genuinely DOWNRIGHT behindhip (oldnearLEFTknee forward caused samelead AIR); farRIGHT knee UPLEFT forward; no oldcharacterleg reference",
+  "joint_proof_path": "/workspace/scratch/girtas-NW-run-opposite-AIR-clear-backknee-guide-v07/3d-run-joint-authority.json",
+  "prior_independent_HOLD_sha256": "9246493e9d73298a39ef18c455d949ea5c95f5355a1d6d919ba27b53f0ab9d52",
+  "requested_at": "2026-10-19T15:49:56.690927+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0
+}

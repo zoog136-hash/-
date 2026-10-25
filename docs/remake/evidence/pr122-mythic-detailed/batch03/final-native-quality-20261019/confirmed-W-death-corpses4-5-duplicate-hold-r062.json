@@ -1,0 +1,50 @@
+{
+  "schema": "pr122-independent-native-quality-findings-v1",
+  "actor": "transform:393",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+  "selected_frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+  "status": "HOLD",
+  "actor_approved": false,
+  "counts_changed": false,
+  "findings": [
+    {
+      "direction": "W",
+      "role": "death",
+      "status": "HOLD_SOURCE_DUPLICATED_HEAD_AND_WEAPON_CORPSE_4_5",
+      "phases": [
+        4,
+        5
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+      "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r033/W-death.png",
+      "phase5_region": [
+        525,
+        1236,
+        496,
+        157
+      ],
+      "phase5_rgba_sha256": "dc63bcc89d3a376bede3837d54be0fc882db4a4109042058f190afcfd39ba6bc",
+      "basis": "Both settling4 and final corpse5 have two separately recognizable horned black helmet/facemask assemblies, one at image-left looking left and a second at image-right looking right, on a single overlapping body. Both ends also have separately visible unsheathed purple/gold blades. These are duplicate head/equipment endpoints, not a normal gold pauldron shape or permitted shoulder occlusion. Preserve actual westward collapse but regenerate corpse pose(s) with one head, one RIGHT-hand weapon, two arms and two legs. Native source phase4 independently shows the same two distinct facemasks, horn roots, neck/pauldron assemblies and two purple blades.",
+      "head_locations_in_region_approx": {
+        "left_facing_head": [
+          165,
+          100
+        ],
+        "right_facing_head": [
+          365,
+          105
+        ]
+      },
+      "fix_type": "new_corpse_source_pose_required",
+      "metadata_only_fix_possible": false
+    }
+  ],
+  "private_evidence_panels": [
+    "r062-all-death-phase5-source-detail.jpg",
+    "r062-W-death-phase5-source-detail.jpg",
+    "r062-W-death-phase4-source-detail.jpg"
+  ],
+  "reviewer": "halpas_final_native_quality",
+  "prior_phase5_review_sha256": "9ae9534b359261fe4240cb1f15001c06165d0497eb56bcd80b5af9a2469e4389"
+}
