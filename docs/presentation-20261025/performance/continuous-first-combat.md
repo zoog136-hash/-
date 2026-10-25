@@ -1,5 +1,7 @@
 # Continuous first-combat engine profile
 
+Follow-up: [spawn registration optimization](spawn-registration/README.md) removes most of this native category cost using unchanged final spawn transforms. The capture below remains the original baseline.
+
 Measured production head: `99f31c3e9d75d82cfce2c3b67e876469fabdbea9`. No runtime code changed in this follow-up.
 
 ## Result

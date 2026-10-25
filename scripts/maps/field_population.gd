@@ -136,7 +136,11 @@ func _spawn_slot(slot: Dictionary) -> void:
 		if not is_instance_valid(candidate) or candidate.is_queued_for_deletion(): continue
 		monster = candidate as TwilightMonster
 		break
-	if monster == null: monster = world.MONSTER_SCENE.instantiate()
+	if monster == null:
+		monster = world.MONSTER_SCENE.instantiate()
+		# Register new physics bodies at their final spawn transform. Entering
+		# at the origin first sweeps a map-wide AABB on the first physics tick.
+		monster.position = world.monsters_root.to_local(p)
 	if monster.get_parent() != null: monster.reparent(world.monsters_root,false)
 	else: world.monsters_root.add_child(monster)
 	monster.global_position = p

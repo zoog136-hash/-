@@ -8,13 +8,13 @@
     },
     {
       "path": "PERFORMANCE_SCOPE.md",
-      "bytes": 2802,
-      "sha256": "d8248d037c67bb9a19d027d23823064ee78f75029cb2e4aace42d326d5349f26"
+      "bytes": 3294,
+      "sha256": "5bf7811edc27775487652878fd48613fa8b35e5c9c2f060e2bed0683a80be7bd"
     },
     {
       "path": "README.md",
-      "bytes": 6623,
-      "sha256": "30c50adf2427bdc57d20c48843f67a9160181ee2d8ab1ad9a938cb17fa7d383f"
+      "bytes": 7166,
+      "sha256": "6b4af59d072768db08243f8d9a36723721ede18cf983a3f5b324e7de5f86ce2b"
     },
     {
       "path": "REFERENCE.md",
@@ -23,8 +23,8 @@
     },
     {
       "path": "REMAINING_SCOPE.md",
-      "bytes": 2539,
-      "sha256": "2bc21739aaa3d659477769684f0672df2811f02562b77a9723b274a8f2ddb836"
+      "bytes": 2615,
+      "sha256": "96231d0ae77cf96a956ef5489a9edf93e5919c89892fb0f22df2bc53f2e0657e"
     },
     {
       "path": "evidence/audio-guard/combat_timing_test.log",
@@ -1493,8 +1493,8 @@
     },
     {
       "path": "performance/continuous-first-combat.md",
-      "bytes": 5967,
-      "sha256": "99782e58c1beb66e5bdc086bda76f76afe105c619a5a067a4cfd6025244a95e1"
+      "bytes": 6174,
+      "sha256": "c2039cd013d25d4b14e8ba286abe1dbc57059a9a5ea1bb35a78dcefef0e907a0"
     },
     {
       "path": "performance/entry-cost.md",
@@ -1882,6 +1882,131 @@
       "sha256": "376a17e078d332756b37f633179ab7d03841ebcc14063f9f509d5e42e13a8bdb"
     },
     {
+      "path": "performance/spawn-registration/README.md",
+      "bytes": 6743,
+      "sha256": "6d5f3f54a32f74c52304b70ae2610d02a599941fb0277eee356613394fca522a"
+    },
+    {
+      "path": "performance/spawn-registration/after-1.json",
+      "bytes": 57259,
+      "sha256": "b3d6fcf97a02d8af91d29228de7c1072f82d3af38d017c241992c210e9c205fe"
+    },
+    {
+      "path": "performance/spawn-registration/after-1.log",
+      "bytes": 1460,
+      "sha256": "d804d9c176bbe74bb8c23e4a5c4bbaa86c240146534c857fbd50383f2038a8f7"
+    },
+    {
+      "path": "performance/spawn-registration/after-2.json",
+      "bytes": 57279,
+      "sha256": "7e19f28d64cefab2ff37cc3b09fd8d2d137814ec7fe9cdcb6f6ba95d210a8734"
+    },
+    {
+      "path": "performance/spawn-registration/after-2.log",
+      "bytes": 1460,
+      "sha256": "d804d9c176bbe74bb8c23e4a5c4bbaa86c240146534c857fbd50383f2038a8f7"
+    },
+    {
+      "path": "performance/spawn-registration/after-continuous-benchmark.json",
+      "bytes": 57276,
+      "sha256": "8b14fc698f7acbde93d3f46f674fbb4b8723eb23959215b795f0149b3270f9d7"
+    },
+    {
+      "path": "performance/spawn-registration/after-continuous.jsonl",
+      "bytes": 1395097,
+      "sha256": "3c664174aa1a9a6ea1bb85ba35b48a4ceb59059fc3b514c05d674da2ab186c46"
+    },
+    {
+      "path": "performance/spawn-registration/after-continuous.log",
+      "bytes": 1460,
+      "sha256": "d804d9c176bbe74bb8c23e4a5c4bbaa86c240146534c857fbd50383f2038a8f7"
+    },
+    {
+      "path": "performance/spawn-registration/after-registration.log",
+      "bytes": 141,
+      "sha256": "914bd3e69684704e9619271e42f112602e370e5fcfcf6c6f068ac7ececfe40b1"
+    },
+    {
+      "path": "performance/spawn-registration/after-roster.json",
+      "bytes": 29771,
+      "sha256": "cf43c75700bd679d7f4b9ca3a87cc242dfa0afda7d48b7958f85571e8b37d749"
+    },
+    {
+      "path": "performance/spawn-registration/before-1.json",
+      "bytes": 57265,
+      "sha256": "07260e4dfd6f79e82e1724f9e297b084404a13d239d6e3da26c60b77d0d66f83"
+    },
+    {
+      "path": "performance/spawn-registration/before-1.log",
+      "bytes": 1460,
+      "sha256": "d804d9c176bbe74bb8c23e4a5c4bbaa86c240146534c857fbd50383f2038a8f7"
+    },
+    {
+      "path": "performance/spawn-registration/before-2.json",
+      "bytes": 57234,
+      "sha256": "2f6aab6dbf0f95ebee64d48d77b1d2af2c4b19f7daf4e867d9606fe3d31a4c8c"
+    },
+    {
+      "path": "performance/spawn-registration/before-2.log",
+      "bytes": 1460,
+      "sha256": "d804d9c176bbe74bb8c23e4a5c4bbaa86c240146534c857fbd50383f2038a8f7"
+    },
+    {
+      "path": "performance/spawn-registration/before-registration-expected-failure.log",
+      "bytes": 10913,
+      "sha256": "a402ae20119def731ee0605690d6b88fccd879d095915f1d49e9f351ed59bbf7"
+    },
+    {
+      "path": "performance/spawn-registration/before-roster.json",
+      "bytes": 41343,
+      "sha256": "86f8a19091b6fc5ac87d61c72caf1c06fa10d221b67cb010eb4e21ac9c61dde2"
+    },
+    {
+      "path": "performance/spawn-registration/comparison.json",
+      "bytes": 277277,
+      "sha256": "7b176b158a63cccf6e45a838ce2d6c49c0754f36ae931b8c123463c9eb4e31aa"
+    },
+    {
+      "path": "performance/spawn-registration/monitor-enums.json",
+      "bytes": 2353,
+      "sha256": "403fbc3b0159391bb24840edae0eff15c9eedd0ade0f45e8ad5243093f61759f"
+    },
+    {
+      "path": "performance/spawn-registration/native-final.log",
+      "bytes": 141,
+      "sha256": "914bd3e69684704e9619271e42f112602e370e5fcfcf6c6f068ac7ececfe40b1"
+    },
+    {
+      "path": "performance/spawn-registration/regression/boot.log",
+      "bytes": 137,
+      "sha256": "03ec8cbb9bea0492319a3549ec61107699c4aec7919f0190c7564813cc5abee8"
+    },
+    {
+      "path": "performance/spawn-registration/regression/combat_timing_test.log",
+      "bytes": 179,
+      "sha256": "1a8087e54fefa8c12a488310c8c1e6f2d6fa1fe4896dab6225e0b971cd9f2a3d"
+    },
+    {
+      "path": "performance/spawn-registration/regression/field_spawn_registration_test.log",
+      "bytes": 204,
+      "sha256": "7cf9aac557848b4246916a3a018b06e39b56e6c47384b40c93fee64af7ff83ab"
+    },
+    {
+      "path": "performance/spawn-registration/regression/remake_map_population_test.log",
+      "bytes": 175,
+      "sha256": "5a34acddea255e398cdb8ead7a7366b32071cc632a1cd325d7829e5a3185c142"
+    },
+    {
+      "path": "performance/spawn-registration/regression/summary.json",
+      "bytes": 11106,
+      "sha256": "22a11b1ff0502175f710483911cb0ce394cb9fe234ebd5b5ee5ffe8f0edff734"
+    },
+    {
+      "path": "performance/spawn-registration/resource-integrity.log",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    {
       "path": "performance/spike-regression-runner.log",
       "bytes": 213,
       "sha256": "32cf27832dd15fa1c922599ccb7359d41945e51077787dbc4695ade869c80b7d"
@@ -1973,13 +2098,13 @@
     },
     {
       "path": "validation.json",
-      "bytes": 3941,
-      "sha256": "7dc19cd58476a2e6121c16f941796e81de3f3281b2bead3621f85f359dcda1d5"
+      "bytes": 4484,
+      "sha256": "74378e60861a6c19e49c083a5ec21be1d3fd589f3a30069ae38b26ff785dbe4b"
     }
   ],
-  "total_bytes": 94232721,
+  "total_bytes": 138957356,
   "source_revision": "Containing Git commit; exact runtime source hashes below",
-  "previous_remote_commit": "989beac8874cda8b9ab957340031b66a329b1a69",
+  "previous_remote_commit": "423771a523b44b0113a0b65342e7ddb0e50f0521",
   "runtime_sources": [
     {
       "path": "scripts/audio/presentation_audio.gd",
@@ -1990,6 +2115,11 @@
       "path": "scripts/maps/field_minimap.gd",
       "bytes": 9452,
       "sha256": "1d7c535ffe93726732957633eaf75b81b5c411d637abe1ba0aae66c3fb4ffcd0"
+    },
+    {
+      "path": "scripts/maps/field_population.gd",
+      "bytes": 16633,
+      "sha256": "e95a9bd8215c8cf03d71772e7265717fdf830b34cc5dd6cc6ce53d2d8361f89e"
     },
     {
       "path": "scripts/maps/minimap_geography_cache.gd",

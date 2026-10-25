@@ -90,6 +90,11 @@
     "native_line_sample_cache_test": {
       "status": "PASS",
       "summary": "performance/spike-regression/summary.json"
+    },
+    "field_spawn_registration_test": {
+      "status": "PASS",
+      "summary": "performance/spawn-registration/regression/summary.json",
+      "native_explicit_checks": 807
     }
   },
   "full_ci": "HELD_BY_LATEST_USER_INSTRUCTION",
@@ -114,6 +119,15 @@
     "summary": "performance/spike-regression/summary.json",
     "exact_replay": "performance/first-route-exact-baseline.json",
     "complete_stall_resolved": false,
-    "next_measurement": "continuous per-frame Godot profiler / native thread trace for unattributed remainder"
+    "next_measurement": "Cold route cost remains; native spawn-registration cost now reduced, see spawn-registration/comparison.json"
+  },
+  "spawn_registration_followup": {
+    "targeted_passed": 4,
+    "native_checks": 807,
+    "same_seed_roster_exact_entries": 133,
+    "summary": "performance/spawn-registration/regression/summary.json",
+    "comparison": "performance/spawn-registration/comparison.json",
+    "complete_stall_resolved": false,
+    "android": "NOT_RUN"
   }
 }
