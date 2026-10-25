@@ -135,18 +135,18 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
             preview = root / ADEN_PREVIEW_RENDERER
             preview.parent.mkdir(parents=True)
             preview.write_text(
-                'extends Node2D\\nvar source = "res://assets/maps/aden_modular_pilot/compiled/"\\n'
+                'extends Node2D\nvar source = "res://assets/maps/aden_modular_pilot/compiled/"\n'
             )
             self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
 
             scene = root / "Main.tscn"
-            scene.write_text('path="res://' + ADEN_PREVIEW_RENDERER + '"\\n')
+            scene.write_text('path="res://' + ADEN_PREVIEW_RENDERER + '"\n')
             with self.assertRaisesRegex(ValueError, "excluded Aden preview renderer"):
                 audit_authoring_exclusions(root)
             scene.unlink()
 
             catalog = root / "data/runtime_preview.json"
-            catalog.write_text('{"script": "res://' + ADEN_PREVIEW_RENDERER + '"}\\n')
+            catalog.write_text('{"script": "res://' + ADEN_PREVIEW_RENDERER + '"}\n')
             with self.assertRaisesRegex(ValueError, "excluded Aden preview renderer"):
                 audit_authoring_exclusions(root)
             catalog.unlink()
