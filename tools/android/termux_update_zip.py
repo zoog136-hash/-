@@ -68,6 +68,19 @@ def sha1_of_blob(path, size):
     return digest.hexdigest()
 
 
+# Only paths needed by Godot and its updater belong in a mobile install.
+# In October the repository gained tens of thousands of documentation and
+# generated test/evidence files. Keep older local copies of those untouched.
+RUNTIME_ROOTS = frozenset(('addons', 'assets', 'data', 'external_map_packs',
+                           'scenes', 'scripts', 'tools'))
+RUNTIME_FILES = frozenset(('project.godot', 'Main.tscn', 'export_presets.cfg'))
+
+
+def is_runtime_path(path):
+    relative = safe_path(path)
+    return relative.parts[0] in RUNTIME_ROOTS or str(relative) in RUNTIME_FILES
+
+
 def get_inventory():
     """Read a complete Git tree even after GitHub's recursive response limit.
 
@@ -97,6 +110,8 @@ def get_inventory():
 
     def add_blob(path, entry):
         relative = safe_path(path)
+        if not is_runtime_path(path):
+            return
         size = entry.get('size')
         blob_sha = entry.get('sha')
         mode = entry.get('mode')
@@ -138,6 +153,8 @@ def get_inventory():
             if entry.get('type') == 'blob':
                 add_blob(path, entry)
             elif entry.get('type') == 'tree' and entry.get('mode') == '040000':
+                if not is_runtime_path(path):
+                    continue
                 child_sha = entry.get('sha')
                 if not isinstance(child_sha, str) or len(child_sha) != 40:
                     raise RuntimeError('Invalid child GitHub tree: ' + path)
@@ -218,7 +235,12 @@ def update(root, assume_yes=False):
             changed.append(name)
         if idx % 3000 == 0:
             print('Compared:', idx, '/', len(inventory), flush=True)
-    removed = sorted(set(old_state.get('tracked_files', [])) - set(inventory))
+    # Previous updater versions managed documentation too. Leave those older
+    # local non-runtime files alone rather than treating this scope change as
+    # a request to delete or back up thousands of documents.
+    removed = sorted(name for name in
+                     set(old_state.get('tracked_files', [])) - set(inventory)
+                     if is_runtime_path(name))
     for name in removed:
         ensure_not_symlink(root, safe_path(name))
     print('Changes to download:', len(changed), 'Retired managed files:', len(removed), flush=True)
