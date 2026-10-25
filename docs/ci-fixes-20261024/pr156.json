@@ -1,0 +1,127 @@
+{
+  "pr": 156,
+  "source_head": "b7c4cd2b8d349ddec2dfc69db38b372874009185",
+  "base_main": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "scope": "CI fixtures, explicit tool dependency and bounded runtime budget; gameplay/art unchanged",
+  "fixes": [
+    "Preserve all pickup assertions and accept valid single-destination paths only at physically safe manual/AUTO arrival points",
+    "Install and assert ripgrep before tower log checks",
+    "Keep every five-map OpenGL route/physics/zoom/portal/save assertion with a300s cap"
+  ],
+  "failing_run_ids": [
+    40071054557,
+    40071054423,
+    40071054680,
+    40071054534,
+    40071054528,
+    40071054632,
+    40071054640,
+    40071054592
+  ],
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "sha256_match": true
+  },
+  "pickup_before_after": [
+    {
+      "name": "ground-original",
+      "exit_code": 1,
+      "seconds": 8.188,
+      "log": "/workspace/scratch/76a8f4d524e6/pr-fix-evidence/ground-original.log",
+      "signals": [
+        "GROUND_DROP_FAIL: manual walk-to-pickup failed",
+        "GROUND_DROP_FAIL: manual item was not removed",
+        "GROUND_DROP_FAIL: AUTO did not find nearby ground drop",
+        "GROUND_DROP_FAIL: AUTO ground pickup did not grant loot",
+        "GROUND_DROP_FAIL: AUTO collected item was not removed",
+        "GROUND_DROP_FAIL: ground item missing from save snapshot",
+        "GROUND_DROP_FAIL: saved drop was not restored",
+        "GROUND_DROP_SMOKE_FAILED: 7 failure(s)"
+      ]
+    },
+    {
+      "name": "ground-fixed",
+      "exit_code": 0,
+      "seconds": 8.098,
+      "log": "/workspace/scratch/76a8f4d524e6/pr-fix-evidence/ground-fixed.log",
+      "signals": [
+        "GROUND_DROP_SMOKE_OK: manual/auto/loot/snapshot pickup validated"
+      ]
+    }
+  ],
+  "existing_full_loot_suite": {
+    "checks": 175,
+    "exit": 0,
+    "seconds": 35.633,
+    "scope": "Existing explicit legacy A3 fixture; native fixture is validated separately above"
+  },
+  "native_map_runtime": {
+    "exit": 0,
+    "passed": true,
+    "elapsed_seconds": 166.532,
+    "errors": [],
+    "runtime_report": {
+      "actual_main_png": true,
+      "android_device": "NOT_RUN",
+      "checks": 295,
+      "failures": [],
+      "maps": [
+        {
+          "full_map_collision_verified": false,
+          "map": "aden_world",
+          "source_sha256": "c0af339cbc2dbba5fb2e65c3c7f01d9467507545d7b91cbb331f5bbd51128730",
+          "walked_path_pixels": 1270.90749549866
+        },
+        {
+          "full_map_collision_verified": false,
+          "map": "faith_01",
+          "source_sha256": "1bf9d61b7b12c12b5dca0d0e8d0ac6c36c57aeab975fe5a7b60e82814880ea3b",
+          "walked_path_pixels": 636.83847284317
+        },
+        {
+          "full_map_collision_verified": false,
+          "map": "faith_02",
+          "source_sha256": "17785cf69b7af227f9cbc25c84adf21976bc30018fab2a8c162b76d896edb0d2",
+          "walked_path_pixels": 639.68239068985
+        },
+        {
+          "full_map_collision_verified": false,
+          "map": "faith_04",
+          "source_sha256": "534110cd42d6f5730515360c18a5b1840c4f80353d72b01a7496fb3854ca3a6e",
+          "walked_path_pixels": 636.83847284317
+        },
+        {
+          "full_map_collision_verified": false,
+          "map": "faith_03",
+          "source_sha256": "7348875ceec9a599a69aab980d2bb455a4aede9f0fe9e880793e2cd56314e5d1",
+          "walked_path_pixels": 862.136749267578
+        }
+      ]
+    }
+  },
+  "discarded_parallel_render_attempt": {
+    "exit": 137,
+    "seconds": 220.692,
+    "cgroup_oom_kill_observed": true,
+    "passed": false,
+    "reason": "8GiB environment was concurrently importing PR122 and PR153; rerun alone passed"
+  },
+  "python_runner_contracts": {
+    "tests": 27,
+    "passed": true
+  },
+  "python_selection_plan": {
+    "tests": 29,
+    "passed": true
+  },
+  "workflow_actionlint": "PASS1.7.12",
+  "clean_godot_import": {
+    "exit": 0,
+    "engine_errors": 0,
+    "seconds": 5.94
+  },
+  "remote_ci_at_commit": "New commit requires GitHub Actions; no full remote CI or Android-device pass claimed",
+  "created_at_utc": "2026-10-24T08:37:56.148619+00:00"
+}
