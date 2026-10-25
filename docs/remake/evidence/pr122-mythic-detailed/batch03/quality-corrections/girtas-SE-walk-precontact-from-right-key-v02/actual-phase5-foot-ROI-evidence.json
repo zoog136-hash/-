@@ -1,0 +1,44 @@
+{
+  "source_path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/girtas-SE-walk-precontact-from-right-key-v02.png",
+  "source_sha256": "d6f694992d64ac6260dc601809eb09145c127fb2b5420b78c130a80193c3c49f",
+  "status": "ACTUAL_BOOT_ROI_MEASUREMENT_ONLY_NOT_PLANE_APPROVAL",
+  "boots": [
+    {
+      "label": "farLEFT_trailing_toe_support",
+      "ROI_xyxy": [
+        850,
+        1015,
+        950,
+        1110
+      ],
+      "last_strong_y": 1095,
+      "last_strong_x_median": 925.0,
+      "last_strong_x_range": [
+        920,
+        930
+      ],
+      "threshold_alpha_gt": 100
+    },
+    {
+      "label": "nearRIGHT_arriving_heel",
+      "ROI_xyxy": [
+        425,
+        1100,
+        610,
+        1220
+      ],
+      "last_strong_y": 1191,
+      "last_strong_x_median": 532.0,
+      "last_strong_x_range": [
+        523,
+        541
+      ],
+      "threshold_alpha_gt": 100
+    }
+  ],
+  "support_foot": "farLEFT_trailing_toe",
+  "nearRIGHT_heel": "precontactsourcepose, actualsharedplane/foreaftdepthnotyetproven",
+  "preview_path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/private-phase5-foot-native-grid.jpg",
+  "preview_bytes": 52433,
+  "note": "farLEFTtoeROIisolatesvisiblebootfromrobe/hair/weapon, nearRIGHTheelROIactualheelnottoes. OriginalRGBAunchanged. DoesnotclaimsameYworldfloor forboth near/far footpoints."
+}

@@ -1,0 +1,214 @@
+
+COMMAND ['git', '-c', 'core.compression=0', 'add', '--sparse', '--', 'docs/remake/TWILIGHT_PR122_BATCH17_20261019.md', 'docs/remake/TWILIGHT_PR122_RESUME_20261019.md', 'docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json', 'docs/remake/evidence/pr122-remaining106/batch17/README.md', 'docs/remake/evidence/pr122-remaining106/batch17/checkpoint.json', 'docs/remake/TWILIGHT_PR122_STOP_20261019.md', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/README.md', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/SHA256SUMS', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/preservation-manifest.json', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part001', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part002', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part003', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part004', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part005', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part006', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part007', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part008', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part009', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part010', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part011', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part012', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part013', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part014', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part015', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part016', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part017', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part018', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part019', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part020', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part021', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part022', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part023', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part024', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part025', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part026', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part027', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part028', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part029', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part030', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part031', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part032', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part033', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part034', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part035', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part036', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part037', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part038', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part039', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part040', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part041']
+
+COMMAND ['git', 'diff', '--cached', '--check']
+
+COMMAND ['git', 'commit', '-m', '[skip ci] Save user-stopped batch17 evidence (1/4)']
+[feature/twilight-remaining106-20261016 e069f84] [skip ci] Save user-stopped batch17 evidence (1/4)
+ 50 files changed, 25941 insertions(+), 32 deletions(-)
+ create mode 100644 docs/remake/TWILIGHT_PR122_STOP_20261019.md
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/README.md
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/SHA256SUMS
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part001
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part002
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part003
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part004
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part005
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part006
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part007
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part008
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part009
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part010
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part011
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part012
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part013
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part014
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part015
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part016
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part017
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part018
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part019
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part020
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part021
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part022
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part023
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part024
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part025
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part026
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part027
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part028
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part029
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part030
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part031
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part032
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part033
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part034
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part035
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part036
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part037
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part038
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part039
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part040
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part041
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/preservation-manifest.json
+
+COMMAND ['git', '-c', 'pack.compression=0', 'push', 'origin', 'HEAD:feature/twilight-remaining106-20261016']
+To https://github.com/zoog136-hash/-.git
+   c3115b7..e069f84  HEAD -> feature/twilight-remaining106-20261016
+
+COMMAND ['git', '-c', 'core.compression=0', 'add', '--sparse', '--', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part042', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part043', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part044', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part045', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part046', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part047', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part048', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part049', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part050', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part051', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part052', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part053', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part054', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part055', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part056', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part057', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part058', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part059', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part060', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part061', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part062', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part063', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part064', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part065', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part066', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part067', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part068', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part069', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part070', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part071', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part072', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part073', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part074', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part075', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part076', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part077', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part078', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part079', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part080', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part081', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part082']
+
+COMMAND ['git', 'diff', '--cached', '--check']
+
+COMMAND ['git', 'commit', '-m', '[skip ci] Save user-stopped batch17 evidence (2/4)']
+[feature/twilight-remaining106-20261016 16e2751] [skip ci] Save user-stopped batch17 evidence (2/4)
+ 41 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part042
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part043
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part044
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part045
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part046
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part047
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part048
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part049
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part050
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part051
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part052
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part053
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part054
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part055
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part056
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part057
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part058
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part059
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part060
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part061
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part062
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part063
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part064
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part065
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part066
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part067
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part068
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part069
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part070
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part071
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part072
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part073
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part074
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part075
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part076
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part077
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part078
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part079
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part080
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part081
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part082
+
+COMMAND ['git', '-c', 'pack.compression=0', 'push', 'origin', 'HEAD:feature/twilight-remaining106-20261016']
+To https://github.com/zoog136-hash/-.git
+   e069f84..16e2751  HEAD -> feature/twilight-remaining106-20261016
+
+COMMAND ['git', '-c', 'core.compression=0', 'add', '--sparse', '--', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part083', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part084', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part085', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part086', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part087', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part088', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part089', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part090', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part091', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part092', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part093', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part094', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part095', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part096', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part097', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part098', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part099', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part100', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part101', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part102', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part103', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part104', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part105', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part106', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part107', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part108', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part109', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part110', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part111', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part112', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part113', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part114', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part115', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part116', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part117', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part118', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part119', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part120', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part121', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part122', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part123']
+
+COMMAND ['git', 'diff', '--cached', '--check']
+
+COMMAND ['git', 'commit', '-m', '[skip ci] Save user-stopped batch17 evidence (3/4)']
+[feature/twilight-remaining106-20261016 4367e17] [skip ci] Save user-stopped batch17 evidence (3/4)
+ 41 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part083
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part084
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part085
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part086
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part087
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part088
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part089
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part090
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part091
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part092
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part093
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part094
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part095
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part096
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part097
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part098
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part099
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part100
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part101
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part102
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part103
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part104
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part105
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part106
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part107
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part108
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part109
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part110
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part111
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part112
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part113
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part114
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part115
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part116
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part117
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part118
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part119
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part120
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part121
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part122
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part123
+
+COMMAND ['git', '-c', 'pack.compression=0', 'push', 'origin', 'HEAD:feature/twilight-remaining106-20261016']
+To https://github.com/zoog136-hash/-.git
+   16e2751..4367e17  HEAD -> feature/twilight-remaining106-20261016
+
+COMMAND ['git', '-c', 'core.compression=0', 'add', '--sparse', '--', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part124', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part125', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part126', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part127', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part128', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part129', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part130', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part131', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part132', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part133', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part134', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part135', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part136', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part137', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part138', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part139', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part140', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part141', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part142', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part143', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part144', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part145', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part146', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part147', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part148', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part149', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part150', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part151', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part152', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part153', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part154', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part155', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part156', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part157', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part158', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part159', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part160', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part161', 'docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part162']
+
+COMMAND ['git', 'diff', '--cached', '--check']
+
+COMMAND ['git', 'commit', '-m', '[skip ci] Save user-stopped batch17 evidence (4/4)']
+[feature/twilight-remaining106-20261016 4459ada] [skip ci] Save user-stopped batch17 evidence (4/4)
+ 39 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part124
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part125
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part126
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part127
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part128
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part129
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part130
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part131
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part132
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part133
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part134
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part135
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part136
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part137
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part138
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part139
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part140
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part141
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part142
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part143
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part144
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part145
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part146
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part147
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part148
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part149
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part150
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part151
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part152
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part153
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part154
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part155
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part156
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part157
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part158
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part159
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part160
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part161
+ create mode 100644 docs/remake/evidence/pr122-remaining106/batch17/authoring-stop-20261019/all-current-work.tar.zst.part162
+
+COMMAND ['git', '-c', 'pack.compression=0', 'push', 'origin', 'HEAD:feature/twilight-remaining106-20261016']
+To https://github.com/zoog136-hash/-.git
+   4367e17..4459ada  HEAD -> feature/twilight-remaining106-20261016

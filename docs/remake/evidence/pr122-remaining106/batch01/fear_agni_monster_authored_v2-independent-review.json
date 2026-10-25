@@ -1,0 +1,80 @@
+{
+  "observed_utc": "2026-10-16T04:43:54.595807+00:00",
+  "key": "monster:공포의 아그니",
+  "actor": "fear_agni_monster_authored_v2",
+  "status": "INDEPENDENT_LOCAL_VISUAL_PASS_PRODUCTION_LINK_ALLOWED_CI_PENDING",
+  "review_stage": "Separate post-authoring review by resuming agent; this review did not generate or edit source PNGs. Actual framebuffer outputs, chronological native samples and original reference compared; not an independent human-review claim.",
+  "source_review": {
+    "status": "PASS",
+    "identity": "Source atlas_2 cell4 yellow/orange/red fire elemental, pointed crown/eyes, branching hot chest, two attached claw arms and one curling vortex retained. No legs, equipment, rocks or detached embers. N rear has spine/back flame planes and no frontal eyes/core. Distinct E/W/NE/NW rear/front planes.",
+    "motion": "All24 walk phases reviewed: alternating shoulder/elbow/waist/vortex deformation without invented feet; existing floating=true explains retained hover rather than a grounded-foot requirement. Attack3 windup/extension/recovery agree with compass and unchanged magic hit ratio .52. Real projectile arrives after release and can meet player after caster returns idle. Hit/death fold attached head/core/arms into one low darkening flame body, without fragmentation."
+  },
+  "static_image_gate": {
+    "status": "PASS",
+    "directions": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "roles": [
+      "idle",
+      "walk",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "unique_native_poses": 104
+  },
+  "temporal_gate": {
+    "status": "PASS",
+    "actual_Main": true,
+    "native_rendered": 104,
+    "all_roles": 40,
+    "simulation_step_seconds": 0.008333333333333333,
+    "production_MotionController": true,
+    "direct_texture_assignment": false,
+    "wall_time_performance_claim": false
+  },
+  "game_function_gate": {
+    "status": "PASS",
+    "AI_directions": 8,
+    "actual_strikes_and_contacts": 8,
+    "original_HP": 1410,
+    "hit": true,
+    "death": true,
+    "death_screens": [
+      0,
+      1,
+      2
+    ],
+    "real_ground_drop": true,
+    "manual_UI_pickup": true,
+    "game_stats_maps_paths_changed": false
+  },
+  "actual_Main_visual_gate": {
+    "status": "PASS",
+    "tree_or_other_actor_occlusion": "none in final review positions; conservative existing256x176 body and192px actor exclusion retained",
+    "body_inside_viewport": true,
+    "actual_frame_atomic_readback": true,
+    "prior_obscured_captures": "preserved; not used as approval"
+  },
+  "baseline_comparison": {
+    "status": "PASS",
+    "baseline": "지옥의 쿠거 / hell_cougar_monster_boss_v3",
+    "actual_same_Main_camera": true,
+    "checks": 295,
+    "full_actor_viewport_and_minimap_exclusion": true,
+    "notes": "Painterly 2D outlines, material detail and source-driven native scale consistent. Quad/biped/fire anatomy and source-specific dimensions remain distinct. New elemental retains its original floating presentation; lizard and cougar meet their respective ground roots. No baseline asset changed."
+  },
+  "source_PNG_changed": false,
+  "source_claim": "Newly authored motion from existing project references, not extracted original game animation",
+  "CI_gate": "PENDING exact pushed code head workflows",
+  "Android_APK_gate": "PENDING",
+  "Android_real_device": "UNVERIFIED",
+  "completed_added": 0
+}

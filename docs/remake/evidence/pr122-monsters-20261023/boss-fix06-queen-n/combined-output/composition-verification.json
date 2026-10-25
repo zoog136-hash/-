@@ -1,0 +1,514 @@
+{
+  "native_tracks": 33,
+  "unique_RGBA_source_poses": 108,
+  "missing_required_tracks": [],
+  "all_input_manifests_verified": true,
+  "source_PNG_RGBA_region_margin_order_timing_preserved": true,
+  "N_per_frame_canvases": [
+    [
+      616,
+      616
+    ],
+    [
+      696,
+      696
+    ],
+    [
+      616,
+      616
+    ],
+    [
+      616,
+      616
+    ],
+    [
+      728,
+      728
+    ],
+    [
+      776,
+      776
+    ]
+  ],
+  "SW_per_frame_canvases": [
+    [
+      1128,
+      1128
+    ],
+    [
+      1752,
+      1752
+    ],
+    [
+      1128,
+      1128
+    ]
+  ],
+  "base_profile_only_frames_path_changed": true,
+  "new_approvals": 0,
+  "inputs": [
+    {
+      "input": "base",
+      "candidate": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/queen-combined-candidate.json",
+        "bytes": 150966,
+        "sha256": "2794dd57de37c39a37dde81d72cf24a5a7728df0d3bab72ecd7cc5b00eaa8e3c"
+      },
+      "manifest": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/queen-combined-file-manifest.json",
+        "bytes": 2569,
+        "sha256": "1594164139dbab49b14504db515bae50ef71a93c2de48eb2917d34364b578703"
+      },
+      "files_verified": 8
+    },
+    {
+      "input": "N",
+      "candidate": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/candidate.json",
+        "bytes": 15107,
+        "sha256": "07f997da2c695d5a79df3aab2b493079451a39aa7664822996a4b3ce6da906ed"
+      },
+      "manifest": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/file-manifest.json",
+        "bytes": 11095,
+        "sha256": "83f93060662842393312978cbf0dad4110fb4e9f5f33d01e0c7317101045ef5a"
+      },
+      "files_verified": 46
+    },
+    {
+      "input": "SE",
+      "candidate": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/candidate-SE.json",
+        "bytes": 5043,
+        "sha256": "97ff41f06013c00e098bd164c2afc63dfdbf634420fd931fd4bbb17bc85941bc"
+      },
+      "manifest": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/manifest-SE.json",
+        "bytes": 7731,
+        "sha256": "bbc1688a94f5e2a3138979e0f1db12da0448f7aa5651b622d46adb480ff7e91c"
+      },
+      "files_verified": 31
+    },
+    {
+      "input": "SW",
+      "candidate": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/sw-contact-final/candidate-SW.json",
+        "bytes": 9265,
+        "sha256": "17205b925b640dbd544c87a5d59db893abf310eb028d32b488b616e9cd0ecc0c"
+      },
+      "manifest": {
+        "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/sw-contact-final/manifest-SW.json",
+        "bytes": 7849,
+        "sha256": "5b2ccbf72a4723bcbc83af480f13fcf01c4ffd8df5869d6a1ea9c907e79df52e"
+      },
+      "files_verified": 29
+    }
+  ],
+  "checks": [
+    {
+      "animation": "attack_0",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "attack_1",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "attack_2",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "attack_3",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "attack_4",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "attack_5",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "attack_6",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "attack_7",
+      "frames": 3,
+      "FPS": 8.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "death_2",
+      "frames": 4,
+      "FPS": 6.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_0",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_1",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_2",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_3",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_4",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_5",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_6",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "hit_7",
+      "frames": 2,
+      "FPS": 12.0,
+      "loop": false,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_0",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_1",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_2",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_3",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_4",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_5",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_6",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "idle_7",
+      "frames": 2,
+      "FPS": 5.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_0",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_1",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_2",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_3",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_4",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_5",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_6",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    },
+    {
+      "animation": "run_7",
+      "frames": 6,
+      "FPS": 12.5,
+      "loop": true,
+      "frame_durations": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "all_AtlasTexture_source_region_margin_and_RGBA": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_run_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 3,
+  "intended_anatomical_support": "RIGHT_near",
+  "transparent_background": true,
+  "corrective_reason": "Author distinct genuinely missing RIGHT forward landing/LEFT knee drive from selected faithful E idle and isolated material joint scaffold; no old E run or failed opposite-leg source used.",
+  "user_authorization": "Private production images authorized; no main-chat attachment. One attempt for this missing landing key; failures HOLD.",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "references": [
+    "/workspace/scratch/girtas-E-run-right-landing-key-v01/E-run-right-forward-landing-isolated-joint-guide.png",
+    "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-run-right-landing-key-v01/E-run-right-forward-landing-isolated-joint-guide.png": "8b9334f6058f6e070abdc53e3f5336c195bbed7445c4efb5d31f7320d47cbdb1",
+    "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "prompt": "Produce exactly ONE new full-body transparent RGBA game-animation key: GIRTAS E RUN phase3, the anatomical NEAR RIGHT leg FORWARD LANDING and FAR LEFT knee DRIVE. Reference1 is an ISOLATED anatomical joint scaffold, not final artwork. It is primary pose authority; its absent old standing-leg silhouette is intentional. Follow MAGENTA near-RIGHT hip(620,575)->knee(770,775)->ankle(850,1000)->flat sole from(820,1020)to(930,1020): RIGHT boot must plant clearly IN FRONT OF the pelvis in screen-X, never behind the body. The planted near RIGHT boot has heel and toe on one horizontal near-support projection, toe points RIGHT, knee softly flexed for first impact. Do NOT place supporting boot back LEFT behind pelvis: that is push-off and fails this requested contact. BLUE far-LEFT thigh drives high forward; LEFT knee is raised in front at hip height, LEFT shin folds back and entire LEFT boot is clearly lifted above both support planes. Two complete visible legs, no merged third limb. Right-facing running body leans forward, shoulders/head forward of hips, camera matches reference2 selected E idle's slight front-chest visibility: face, nose, pelvis and travel all RIGHT, not SE/down-right. Preserve reference2/3 original identity and permanent anatomical RIGHT/near hand holding the original LONG SINUOUS gold-orange blade trailing back LEFT, LEFT/far hand empty. Pale human face and long pale flowing hair, narrow rigid hard-gold radial rays, same helmet/chest/shoulder/waist proportions, LONG DARK gold-trim robe/skirt flowing LEFT with open split showing both booted legs; no replacement pants. No red V mask, no flame feather fan, no short broad sword, no hand swap. Full uncut blade/rays/body/hair/cloth. Transparent canvas, one figure, no text/skeleton/ground/shadow/glow haze. Whole gear envelope fits within1120x1120 on a1254-equivalent canvas with>=60px transparent gaps, scale whole figure uniformly if needed without shortening equipment. The essential material constraint is near RIGHT FORWARD flat landing and far LEFT knee high; it is NOT the previous far-left push-off pose and not a generic same-leg running illustration.",
+  "requested_at": "2026-10-19T14:17:36.916988+00:00",
+  "pose_guide_proof": {
+    "purpose": "PRODUCTION_REFERENCE_ONLY_NOT_GAME_ART",
+    "guide": "/workspace/scratch/girtas-E-run-right-landing-key-v01/E-run-right-forward-landing-isolated-joint-guide.png",
+    "guide_sha256": "8b9334f6058f6e070abdc53e3f5336c195bbed7445c4efb5d31f7320d47cbdb1",
+    "joint_coordinates": {
+      "pelvis_near_RIGHT": [
+        620,
+        575
+      ],
+      "RIGHT_knee": [
+        770,
+        775
+      ],
+      "RIGHT_ankle": [
+        850,
+        1000
+      ],
+      "RIGHT_heel": [
+        820,
+        1020
+      ],
+      "RIGHT_toe": [
+        930,
+        1020
+      ],
+      "pelvis_far_LEFT": [
+        655,
+        565
+      ],
+      "LEFT_knee": [
+        850,
+        675
+      ],
+      "LEFT_ankle": [
+        750,
+        835
+      ],
+      "LEFT_heel": [
+        730,
+        845
+      ],
+      "LEFT_toe": [
+        825,
+        845
+      ],
+      "shoulder": [
+        720,
+        350
+      ],
+      "head": [
+        770,
+        180
+      ]
+    },
+    "near_side": "anatomicalRIGHT",
+    "far_side": "anatomicalLEFT",
+    "near_support_plane_y": 1020,
+    "far_support_plane_y": 980,
+    "intended_forward_landing_constraint": "support heel and toe X > pelvis X, full sole flat; opposite whole boot lifted",
+    "old_idle_leg_silhouette_used": false
+  },
+  "pose_guide_proof_sha256": "4b9b0213e45f501ce50d379e61116253699bc6ab43a0fc91a6492be5cd914d18"
+}

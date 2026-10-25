@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "key": "monster:테베 아누비스",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/resume210-min001/NativeMotionProfile.tres",
+      "slug": "thebes_anubis",
+      "directions": [
+        "W"
+      ],
+      "roles": [
+        "run"
+      ],
+      "move_speed": 62.0,
+      "attack_seconds": 1.27,
+      "attack_range": 58.0,
+      "run_seconds": 1.1,
+      "idle_seconds": 1.2
+    },
+    {
+      "key": "monster:테베 호루스",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/resume210-min001/NativeMotionProfile.tres",
+      "slug": "thebes_horus",
+      "directions": [
+        "SW"
+      ],
+      "roles": [
+        "run"
+      ],
+      "move_speed": 64.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.1,
+      "idle_seconds": 1.2
+    }
+  ],
+  "output": "/workspace/runtime/boss-resume210-min001-network",
+  "capture": true
+}

@@ -1,0 +1,157 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "S",
+  "role": "idle",
+  "version": "SidleSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "base_geometry_sha256": "3883764633df6e8c85932b1a261cc3dd5d70af0d8735d25aff03bfbaab4f2e00",
+    "direction": "S",
+    "regions": [
+      [
+        389,
+        137,
+        732,
+        1192
+      ],
+      [
+        1925,
+        137,
+        732,
+        1192
+      ],
+      [
+        389,
+        1673,
+        732,
+        1192
+      ],
+      [
+        1925,
+        1673,
+        732,
+        1192
+      ],
+      [
+        389,
+        3209,
+        732,
+        1192
+      ],
+      [
+        1925,
+        3209,
+        732,
+        1192
+      ]
+    ],
+    "nearest_owner_sha256": "0333a3b94f303f9178ea64bd931fd5ff6c61f5e1598fd07fdb715676c171d407",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 82337292a054b1bb0898da3db5e2111d5ca3704c000ccaa65a4fdccffc65148f"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "direction": "S",
+    "role": "idle",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        783,
+        1146
+      ],
+      [
+        2319,
+        1146
+      ],
+      [
+        783,
+        2682
+      ],
+      [
+        2319,
+        2682
+      ],
+      [
+        783,
+        4218
+      ],
+      [
+        2319,
+        4218
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "82337292a054b1bb0898da3db5e2111d5ca3704c000ccaa65a4fdccffc65148f",
+  "authored_common_root_float": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "common_root_integer": [
+    655,
+    1018
+  ],
+  "common_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615944218
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "The actual front-facing fixed-root six poses show restrained corset/rib expansion, relaxed complete LEFT arm/cuff/hand motion, head and neck lag and cloth follow-through.",
+      "Native0/3/5 collar, shoulder and cuff contours remain natural; no blocking old-arm remnant, detached cap or narrow joint bridge was observed.",
+      "Complete original RIGHT grip/staff and full fixed lowerbody/boots retain actual original RGBA. Front identity remains consistent through the5-to0 breathing seam.",
+      "The actual renderer uses unit-scaled2pi-periodic breath and lag nodes. Six equal samples at5fps form a1.2-second loop."
+    ],
+    "visual_limitations": [
+      "The6.0 amplitude is a control parameter; source-point x-span expands4.840847native and is not reported as measured full chest width.",
+      "This source/loop PASS requires separate actual Godot/game validation. Original stationary boots are unchanged; hidden depth/sole models are separate declared compatible constructions.",
+      "No actor approvals, gameplay/profile changes or old-clip changes are included.",
+      "No additional image viewing: every full1536px stored frame, including alpha0 RGB and all alpha-positive pixels, equals the already-reviewed exact source.",
+      "Nominal compiler canvas and per-pose physical body canvas remain separate; actual authored physicalC2560/unit2.5 and unpadded commonroot are retained."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "raw_bytes": 3637789,
+    "request_sha256": "906758e1d8335ad23858f456e9431f2d7fb664bbe7168acaaf45152d881db416",
+    "review_sha256": "6cb92a96a6a7b236c36b3611d606c8d54305fc44737577be83ae90fd5f615e31"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-S-idle-actual-packed-r001-20261020/thunder_female-S-idle-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-wk1k16x9/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-S-idle-actual-packed-r001-20261020/request-SidleSixActualRig01.json": "906758e1d8335ad23858f456e9431f2d7fb664bbe7168acaaf45152d881db416",
+      "/workspace/scratch/mythic413-S-idle-actual-packed-r001-20261020/thunder_female-S-idle-six-actual-poses-r001.png": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+      "/workspace/scratch/mythic413-S-idle-independent-qc-20261020-v01/SidleSixActualRig01-exact-r001-request-source-loop-PASS-v01.json": "6cb92a96a6a7b236c36b3611d606c8d54305fc44737577be83ae90fd5f615e31",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-idle-SidleSixActualRig01.png",
+  "output_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+  "output_bytes": 3637789,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-wk1k16x9/reviewed-source.png"
+}

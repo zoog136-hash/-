@@ -1,0 +1,65 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v04release3",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 3,
+  "references": [
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+    "/workspace/scratch/halpas-NE-hit-release3-key-v04/NE-release3-left-lowering-authority-guide.png",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+    "/workspace/scratch/halpas-NE-hit-release3-key-v04/NE-release3-left-lowering-authority-guide.png": "b4d7d562396d06031b0b52311a7594e32b89342b39802ebb750012572de15dd4",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9"
+  },
+  "transparent_background": true,
+  "guide_joint_authority": {
+    "fixed_RIGHT_shoulder_elbow_grip": [
+      [
+        895,
+        548
+      ],
+      [
+        946,
+        677
+      ],
+      [
+        987,
+        766
+      ]
+    ],
+    "moving_EMPTY_LEFT_shoulder_elbow_wrist": [
+      [
+        698,
+        455
+      ],
+      [
+        620,
+        525
+      ],
+      [
+        620,
+        430
+      ]
+    ],
+    "reference_canvas": [
+      1254,
+      1254
+    ],
+    "fist_below_helmet_base": true
+  },
+  "corrective_reason": "Materially new SINGLE release3 with wide one-pose layout after visualgood pair release could not be exactly isolated. New explicit LEFT lowering guide + verified peak2/lowonset1, no failed pair ref or identical pair/repack retry. Keep continuous low RIGHT blade arm.",
+  "prompt": "Create ONE new HIT RELEASE3 key of the SAME Halpas immediately after good peak2 in PRIMARY image1. Image2 is ONLY a joint authority guide; image3 is correct LOW onset1 for anatomy/camera. True NE BACK-RIGHT/UP-RIGHT view throughout: original closed gold-horn helmet REAR and back spinal armor, front face and pink breastplate HIDDEN. Same black/gold plate segments, TWO solid purple crystal fan wings on back roots, LEFT-back torn burgundy cape, ONE original compact purple blade, two complete hovering legs and exact model/proportions. No camera/body spin or equipment redesign.\n\nEXACTLY TWO arms, same ownership as good peak2. Keep original imageRIGHT low blade arm LOCKED LOW, continuous same near/right gold pauldron -> upperarm -> elbow -> forearm -> closed grippinghand -> same blade beside hip (GREEN guide). No empty raised right fist, no loose/floating blade, no additional arm or hand.\n\nREDRAW ONLY far/imageLEFT EMPTY arm from peak: same LEFT shoulder beside back wing root -> elbow dropping BELOW left shoulder -> forearm bending upward only a little -> EMPTY LEFT wrist at upper-rib/left-shoulder-base height (CYAN guide), clearly BELOW helmet base and far LOWER than peak2 fist above horn. The hand is now beside upper back/left ribs, not above or beside top of helmet. Elbow descends with natural contiguous upperarm/forearm chain. REMOVE the previous high peak forearm/fist by actually replacing the same arm; never leave both high and lowered hands. It belongs to imageLEFT pauldron, never the right blade shoulder. Original imageRIGHT weapon chain stays low/attached.\n\nDistinct release3: LEFT arm coming down from high peak but still more bent/raised than low onset1 image3; head/back easing from peak recoil toward normal NE rear angle, wing roots partly relax and cape lags. Same hips, hovering leg pose and rear camera. Show real local head/shoulder/cape recovery, no duplicate peak or no-motion tracing, no attack swing. Natural partial far-arm occlusion under LEFT wing permitted with no invented extra hand.\n\nONE complete centered transparent1024x1024 cutout, figure silhouette inside central700x800 with at least120px clear transparent gutters all sides. All horns/fan feathers/cape/blade/toes full and uncut. Opaque crisp RPG materials and thin edgeAA, alpha0 background/gaps. No guide marks, lines/dots, labels, text, panels, floor, shadows, glow, particles, trails or other objects.",
+  "requested_at": "2026-10-19T13:26:57.020415+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

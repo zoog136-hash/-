@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-NE-death-author-20261020-v01/author-NE-DEATH-source-semantic-ribbon-and-LEFTcuff-closure-v12.py", line 45, in <module>
+    old=np.array(Image.open(f['path']).convert('RGBA'));diff=np.any(old!=a,axis=2);outside=int((diff&~allowed).sum());assert outside==0
+                                                                                                                             ^^^^^^^^^^
+AssertionError

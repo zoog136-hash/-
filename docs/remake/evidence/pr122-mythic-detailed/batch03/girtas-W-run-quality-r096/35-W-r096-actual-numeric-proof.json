@@ -1,0 +1,70 @@
+{
+  "source_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+  "six_region_exact_canonical": true,
+  "total_alpha_positive": 3221133,
+  "total_alpha_gt16": 2756565,
+  "alpha_positive_outside_regions": 0,
+  "alpha_positive_duplicated": 0,
+  "near_far_reference_canonical_y": [
+    0,
+    -24
+  ],
+  "higher_far_plane_world_y": -5.258520281568,
+  "world_root_bias_y": 3.300115736237785e-11,
+  "AIR": [
+    {
+      "phase": 2,
+      "all_foreground_alpha_gt16_bottom_edge_world_y": -8.680731893382095,
+      "bottom_pixel_center_world_y": -8.722466181331047,
+      "conservative_edge_clearance_above_higher_far_plane": 3.4222116118140953,
+      "bottom_pixel_index_clearance_above_higher_far_plane": 3.505680187712,
+      "meaning": "all foreground clearance is a conservative sufficient test for both boots, not an anatomical sole measurement"
+    },
+    {
+      "phase": 5,
+      "all_foreground_alpha_gt16_bottom_edge_world_y": -11.101320594421335,
+      "bottom_pixel_center_world_y": -11.143054882370286,
+      "conservative_edge_clearance_above_higher_far_plane": 5.842800312853335,
+      "bottom_pixel_index_clearance_above_higher_far_plane": 5.926268888751239,
+      "meaning": "all foreground clearance is a conservative sufficient test for both boots, not an anatomical sole measurement"
+    }
+  ],
+  "inferred_hip_world_y": [
+    {
+      "phase": 0,
+      "world_y": -42.594014280700804,
+      "uncertainty_world": 1.7528400938560003,
+      "basis": "preserved independently reviewed partly robe-occluded source landmarks; visual arc checked fresh actual reconstruction"
+    },
+    {
+      "phase": 1,
+      "world_y": -41.56735079715657,
+      "uncertainty_world": 1.6693715179580955,
+      "basis": "preserved independently reviewed partly robe-occluded source landmarks; visual arc checked fresh actual reconstruction"
+    },
+    {
+      "phase": 2,
+      "world_y": -48.244836868988955,
+      "uncertainty_world": 1.6693715179580955,
+      "basis": "preserved independently reviewed partly robe-occluded source landmarks; visual arc checked fresh actual reconstruction"
+    },
+    {
+      "phase": 3,
+      "world_y": -42.54620955086837,
+      "uncertainty_world": 1.5934909944145457,
+      "basis": "preserved independently reviewed partly robe-occluded source landmarks; visual arc checked fresh actual reconstruction"
+    },
+    {
+      "phase": 4,
+      "world_y": -41.65081937305448,
+      "uncertainty_world": 1.6693715179580955,
+      "basis": "preserved independently reviewed partly robe-occluded source landmarks; visual arc checked fresh actual reconstruction"
+    },
+    {
+      "phase": 5,
+      "world_y": -48.244836868988955,
+      "uncertainty_world": 1.6693715179580955,
+      "basis": "preserved independently reviewed partly robe-occluded source landmarks; visual arc checked fresh actual reconstruction"
+    }
+  ]
+}

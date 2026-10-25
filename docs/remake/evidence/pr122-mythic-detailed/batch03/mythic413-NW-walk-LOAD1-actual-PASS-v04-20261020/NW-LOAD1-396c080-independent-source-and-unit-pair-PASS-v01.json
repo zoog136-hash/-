@@ -1,0 +1,101 @@
+{
+  "schema": "pr122-413-NW-LOAD1-independent-source-and-pair-quality-v1",
+  "actor": "transform:413",
+  "direction": "NW",
+  "action": "walk",
+  "scope": "actual single LOAD1 source and CONTACT0-to-LOAD1 pair only; not whole six cycle/staging/actor completion",
+  "source0": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-bounded-v02.png",
+    "sha256": "0874d56a0adf0d76b5e91c565ec41d601d8bbb76457c64e703a89dba54cf0645",
+    "bytes": 519225
+  },
+  "LOAD1": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/thunder_female-NW-walk-LOAD1-rigged-retouched-v04.png",
+    "sha256": "396c0803145a31990f7caeff6a889aac8d41966c2efe27e3362734268670b886",
+    "bytes": 517801
+  },
+  "new_unique_leg_material": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/thunder_female-NW-walk-LOAD1-local-v02-service.png",
+    "sha256": "8d0a200e4323dce5cfc04fc2bc6faa9b63996f86775706965f88bdb42ac69498",
+    "bytes": 575911
+  },
+  "author_rig_provenance": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/actual-LOAD1-limb-rig-retouch-proof-v04.json",
+    "sha256": "7683b2bf10175889776a1b3fce9ccfd61806c7d10e705959a0106a3e3d73b170",
+    "bytes": 2092
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NW-LOAD1v04-view16-frozen.json",
+    "sha256": "84ab61cc338bc239b8d31ef52f2691ec96f91ad101017579feb2fed666b74ff4",
+    "bytes": 7876
+  },
+  "status": "SOURCE_QUALITY_AND_UNIT_PAIR_PASS",
+  "fixed_C": 2048,
+  "fixed_body_factor": 2,
+  "runtime_profile_unchanged": true,
+  "independent_preservation": {
+    "upperbody_y_lt714_changed_RGBA_pixels": 0,
+    "protected_RIGHT_staff_mask_changed_RGBA_pixels": 0,
+    "all_changed_RGBA_pixels": 64318,
+    "outside_original_allowed_leg_hip_mask_changed_RGBA_pixels": 0
+  },
+  "actual_quality": [
+    "Near LEFT support calf/knee and complete gold stiletto shoe are naturally joined; far RIGHT leg passes with complete airborne boot.",
+    "Skin/skirt join has no duplicate horizontal cloth boundary or missing foot as rejected v01.",
+    "Genuine dedicated new leg material plus local shin articulation/rigid shoe movement completes this phase; assembly method is accepted by actual quality rather than blanket rejected.",
+    "Retained upperbody/equipment/palette and unique costume are preserved."
+  ],
+  "actual_pair_landmarks": {
+    "contact0_LEFT_stiletto_estimate": [
+      514,
+      944
+    ],
+    "required_LEFT_heel1": [
+      625.3543188022422,
+      1044.2188869220179
+    ],
+    "LOAD1_actual_alpha16_stiletto_bottom_xrange": [
+      624,
+      627
+    ],
+    "LOAD1_actual_alpha16_stiletto_bottom_y": 1045,
+    "actual_heel_center_estimate": [
+      625.5,
+      1045
+    ],
+    "estimated_pair_residual_Player_world": [
+      0.015541420881473617,
+      0.09258883467450808
+    ],
+    "forefoot_underside_alpha100_samples": [
+      [
+        590,
+        1015
+      ],
+      [
+        595,
+        1018
+      ],
+      [
+        600,
+        1020
+      ]
+    ],
+    "forefoot_vs_heel_NW_groundline_condition": "All three visible underside samples are within \u00b13 nativepx of y=1044.2188869+.9*(x-625.3543188); ornamental raised pointed toe excluded.",
+    "RIGHT_AIR_boot_ROI": [
+      665,
+      945,
+      800,
+      1090
+    ],
+    "RIGHT_AIR_all_alpha100_min_groundline_gap_source_px": 56.49999999999977,
+    "RIGHT_AIR_min_groundline_gap_Player_world": 6.697198275855222,
+    "plane_caveat": "Finite-width/yaw and root body-ground plane remain whole-cycle binding work; narrow unit-pair evidence does not assert all unseen 3D points or all six phase physics."
+  },
+  "next": "Create actual terminal2 then other three phases, retain same C/clock and protected costume. Full six actual cycle and real staging required before clip/actor completion.",
+  "whole_cycle_APPROVED": false,
+  "staging_APPROVED": false,
+  "actor_APPROVED": false,
+  "completed_added": 0,
+  "images_forwarded": 0
+}

@@ -1,0 +1,121 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v05RIGHTmidstance4",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 4,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/E-walk4-fresh-two-leg-support-authority-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png": "d6650ea48f1b708be9f5fd0815fbd9907d8d31c02368bb4a48e1aed6cc2d2f13",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/E-walk4-fresh-two-leg-support-authority-guide.png": "40a173ab864401b2e853c394c8f12f0314213f990c96fdb3aada5cb155e5372b"
+  },
+  "reference_provenance": [
+    {
+      "path": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png",
+      "sha256": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca",
+      "exact_source_crop": [
+        0,
+        0,
+        427,
+        305
+      ],
+      "source": "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png",
+      "source_sha256": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+      "no_final_pixel_edit": true
+    },
+    {
+      "path": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+      "sha256": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+      "exact_source_crop": [
+        210,
+        275,
+        155,
+        150
+      ],
+      "source": "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png",
+      "source_sha256": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+      "no_final_pixel_edit": true
+    },
+    {
+      "path": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png",
+      "sha256": "d6650ea48f1b708be9f5fd0815fbd9907d8d31c02368bb4a48e1aed6cc2d2f13",
+      "exact_source_crop": [
+        0,
+        275,
+        205,
+        220
+      ],
+      "source": "/workspace/scratch/girtas-E-walk-production-reference-v05/current-E-idle0-exactRGBA.png",
+      "source_sha256": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+      "no_final_pixel_edit": true
+    }
+  ],
+  "guide_joint_authority": {
+    "reference_canvas": [
+      427,
+      495
+    ],
+    "near_RIGHT_support_underHIP_lowerGround": [
+      [
+        286,
+        288
+      ],
+      [
+        282,
+        385
+      ],
+      [
+        282,
+        470
+      ],
+      [
+        273,
+        490
+      ],
+      [
+        313,
+        490
+      ]
+    ],
+    "far_LEFT_forwardSwing_airAboveUpperGround": [
+      [
+        322,
+        286
+      ],
+      [
+        343,
+        368
+      ],
+      [
+        376,
+        425
+      ],
+      [
+        405,
+        447
+      ]
+    ],
+    "old_final_legs_NOT_REFERENCED": true
+  },
+  "transparent_background": true,
+  "corrective_reason": "Distinct missing RIGHTmidstance4 from upperbody-only faithfulEidle+exactrobe/blade detail, no originallegsilhouette conditioning. Explicit nearRIGHTvertical whole-sole support underhip/lowerground +farLEFTswingfrontupperAIR; materialnew phase/source method while contactpairownership independently reviewed. No failedsource reuse/finallegpatch/mirror.",
+  "user_authorization": "ActualUniqueproduction privateimagegen/boundedJPEG permitted, no mainchatimages/binary, rootonlyGit/data.",
+  "prompt": "Author ONE new WALK RIGHT MIDSTANCE4 key for EXACT GIRTAS model. Image1 is correct current E UPPERBODY ONLY (legs deliberately absent). Image2 preserves original LONG goldtrim ROBE panels, image3 original LONG SINUOUS goldblade. Image4 is the NEW two-leg support/ground-depth skeleton. Construct two genuine new connected legs matching the skeleton, not a copied old leadingboot pose. Keep exact E/right-facing side/oblique camera/profile, pale face/long palehair, goldcrown, blackgold armor, THIN HARD STRAIGHT GOLD radialrays, SAME longrobe/boots and same RIGHTnear bladehand+EMPTYLEFTfar hand. No newpants, shortskirt, gear/model/camerachange.\n\nWALK MIDSTANCE4: AnatomicalRIGHT is NEAR/foreground on same side as bladehand, projected ground LOW (orange). RIGHT HIP->RIGHTthigh->knee->nearly VERTICALshin->WHOLE RIGHT sole planted on LOWER/NEAR ground DIRECTLY UNDER HIP, bodyweight supported on that real RIGHT leg. This supportfoot must not be stretched wayforward asheelstrike or behind astoeoff. Knee slightly soft, not highrunning crouch. Real fullsole onground, ONE supportfoot.\n\nOTHER anatomicalLEFT leg is FAR behind nearRIGHTthigh (blue), swinging forward SCREEN-RIGHT with knee/shin/boot onfar side. FarLEFT boot is ENTIRELY slightly ABOVE the UPPER/FAR groundlane (about15-25refpixels clearance), toe up a little, passing forward before nextLEFTreach5. Only FAR LEFT foot is airborne; RIGHTfullsole staysplanted. Two actual unbroken hip->thigh->knee->shin->ankle->footchains, not legswap, mergedhips, two near legs or extra boot. Original LONGrobe panels follow walk and may trail aside naturally through their EXISTING openings to reveal knee/shin continuity; keep full longgoldtrim panels, no newcutslits/pants substitute. Hidden proximal thigh allowed but visible shin/boot depth must reflect same far/near ownership.\n\nSmall steady walk bodyforwardreadiness, no sprint/airbornewholebody/bothfeetoffground, no heavyattacklunge. Same continuous nearRIGHT shoulder-elbow-wrist-grip holds original sinuousblade LOW/back asidle, EMPTY farLEFT arm slight natural counterbalance low, exactly2arms. HARDgoldrays rigid, hair/robe gentlelag. Complete head/gear/blade/robe/boots.\n\nONE whole centered transparent1024x1024cutout, whole silhouette central800x800/100px clear margins. Opaque detailed crispRPG art/thin edgeAA, alpha0 background/gaps. No guidecoloredjoints/lines/text, floor/shadows, glow/bloom/particles/trails/extraobjects.",
+  "requested_at": "2026-10-19T14:25:15.354820+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "pr122-author-physical-layout-DRAFT-v1",
+  "status": "AUTHOR_MEASUREMENT_DRAFT_NOT_REVIEWED",
+  "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+  "authored_pose_canvas_sizes": [
+    2560,
+    1792,
+    1792,
+    2560,
+    1728,
+    1728
+  ],
+  "source_native_anchors": [
+    [
+      635,
+      1156
+    ],
+    [
+      420,
+      896
+    ],
+    [
+      1172,
+      889
+    ],
+    [
+      724,
+      1165
+    ],
+    [
+      398,
+      899
+    ],
+    [
+      1160,
+      897
+    ]
+  ],
+  "source_anchors": [
+    [
+      777,
+      1328
+    ],
+    [
+      2339,
+      1179
+    ],
+    [
+      797,
+      2709
+    ],
+    [
+      2407,
+      2892
+    ],
+    [
+      802,
+      4223
+    ],
+    [
+      2328,
+      4224
+    ]
+  ],
+  "actor_approval": false,
+  "runtime_validation": "NOT_RUN",
+  "review_notes": [
+    "First landmark-based review candidate only, no automatic body-bbox fit.",
+    "Explicitly inspect potential leg/body proportion HOLD against selected W idle; do not hide a defect by enlarging virtual C to fit full bounds.",
+    "Near/far projected support-root depths remain independently unapproved."
+  ]
+}

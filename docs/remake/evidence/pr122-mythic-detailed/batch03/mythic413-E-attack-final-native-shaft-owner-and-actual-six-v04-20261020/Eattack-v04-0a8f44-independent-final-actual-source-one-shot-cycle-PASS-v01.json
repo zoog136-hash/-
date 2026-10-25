@@ -1,0 +1,480 @@
+{
+  "schema": "PR122-independent-actual-E-attack-source-cycle-review-v1",
+  "status": "PASS_EXACT_E_ATTACK_SIX_ACTUAL_SOURCE_AND_ONE_SHOT_CYCLE",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "E",
+  "role": "attack",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/E-ATTACK6-actual-native-articulated-six-rig-and-local-cape-contract-v04.json",
+    "sha256": "0a8f44c0bb01a5985acf63f31993e27b7445d013983a01eabbd5a660a7a3292b",
+    "bytes": 27236
+  },
+  "all_six_independent_binding": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/thunder_female-E-attack-0-READY-actual-native-v04.png",
+        "sha256": "5299dee80978d404ca9ba2929b68acedf5d9b4c0705f057cc6970f78c3998bb4",
+        "bytes": 992774
+      },
+      "RGBA_sha256": "630a469bb234d8eeeed3a277bc91ebb540ac75b5caadf10d1d43b10cc92c6ac7",
+      "actual6node_recomposition_mismatch": 0,
+      "prior_v03_node_changes": [
+        {
+          "node": 0,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 1,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 2,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 3,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 4,
+          "prior_RGBA_changed_pixels": 183,
+          "only_declared_metal_owner_nodes_changed": true
+        },
+        {
+          "node": 5,
+          "prior_RGBA_changed_pixels": 184,
+          "only_declared_metal_owner_nodes_changed": true
+        }
+      ],
+      "original_stationary_sole_lowerboot_material": [
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 12559
+        },
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 13059
+        }
+      ],
+      "full_rigid_pole_rotation_orthogonality_residual": 0.0,
+      "same_forearm_affine_grip_target": [
+        385.99999999999994,
+        506.0
+      ],
+      "strong_bodies": 1,
+      "small_alpha100_components_ge3": [
+        {
+          "area": 7,
+          "stored_bbox": [
+            767,
+            453,
+            770,
+            457
+          ]
+        }
+      ],
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/thunder_female-E-attack-1-WINDUP-actual-native-v04.png",
+        "sha256": "232f4bd6758e2df1e7f66d9bcbae50d604c0822818bc3e5abadbe1700445e4b0",
+        "bytes": 904975
+      },
+      "RGBA_sha256": "16aa81c51096cdf516bd3076b29b07c877fef2c3ca1c27b9afd607f19c2cb088",
+      "actual6node_recomposition_mismatch": 0,
+      "prior_v03_node_changes": [
+        {
+          "node": 0,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 1,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 2,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 3,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 4,
+          "prior_RGBA_changed_pixels": 338,
+          "only_declared_metal_owner_nodes_changed": true
+        },
+        {
+          "node": 5,
+          "prior_RGBA_changed_pixels": 330,
+          "only_declared_metal_owner_nodes_changed": true
+        }
+      ],
+      "original_stationary_sole_lowerboot_material": [
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 12559
+        },
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 13059
+        }
+      ],
+      "full_rigid_pole_rotation_orthogonality_residual": 1.1102230246251565e-16,
+      "same_forearm_affine_grip_target": [
+        514.0844526126307,
+        336.9897964718734
+      ],
+      "strong_bodies": 1,
+      "small_alpha100_components_ge3": [
+        {
+          "area": 4,
+          "stored_bbox": [
+            733,
+            470,
+            735,
+            472
+          ]
+        }
+      ],
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/thunder_female-E-attack-2-COIL-actual-native-v04.png",
+        "sha256": "a91bdbd258cd084b34949ef7464362254994c2e3f9e7507fb51435e4b5d94b0c",
+        "bytes": 904853
+      },
+      "RGBA_sha256": "9023158ea1d3830725d9e80d321ac101b3a0e0d6d4fe44a7e780a466e5e95269",
+      "actual6node_recomposition_mismatch": 0,
+      "prior_v03_node_changes": [
+        {
+          "node": 0,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 1,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 2,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 3,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 4,
+          "prior_RGBA_changed_pixels": 336,
+          "only_declared_metal_owner_nodes_changed": true
+        },
+        {
+          "node": 5,
+          "prior_RGBA_changed_pixels": 342,
+          "only_declared_metal_owner_nodes_changed": true
+        }
+      ],
+      "original_stationary_sole_lowerboot_material": [
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 12559
+        },
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 13059
+        }
+      ],
+      "full_rigid_pole_rotation_orthogonality_residual": 1.1102230246251565e-16,
+      "same_forearm_affine_grip_target": [
+        526.927997752794,
+        341.85325871365353
+      ],
+      "strong_bodies": 1,
+      "small_alpha100_components_ge3": [
+        {
+          "area": 4,
+          "stored_bbox": [
+            708,
+            485,
+            711,
+            487
+          ]
+        }
+      ],
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/thunder_female-E-attack-3-STRIKE3-actual-native-v04.png",
+        "sha256": "604612797bf1a37dbfa349045102e372b10a27db24d0afab30eb757df3ef46db",
+        "bytes": 923751
+      },
+      "RGBA_sha256": "73fe079f34027fb500247a3d3f2124f248e2a6116f478dd3722ae4fe009dfdcd",
+      "actual6node_recomposition_mismatch": 0,
+      "prior_v03_node_changes": [
+        {
+          "node": 0,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 1,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 2,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 3,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 4,
+          "prior_RGBA_changed_pixels": 340,
+          "only_declared_metal_owner_nodes_changed": true
+        },
+        {
+          "node": 5,
+          "prior_RGBA_changed_pixels": 333,
+          "only_declared_metal_owner_nodes_changed": true
+        }
+      ],
+      "original_stationary_sole_lowerboot_material": [
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 12559
+        },
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 13059
+        }
+      ],
+      "full_rigid_pole_rotation_orthogonality_residual": 0.0,
+      "same_forearm_affine_grip_target": [
+        951.1294947355544,
+        449.67866575156927
+      ],
+      "strong_bodies": 1,
+      "small_alpha100_components_ge3": [],
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/thunder_female-E-attack-4-FOLLOW-actual-native-v04.png",
+        "sha256": "91786643e32e9a6626c8c6e119e9116d4a6e916482f8f15b806b6f52a467a261",
+        "bytes": 926932
+      },
+      "RGBA_sha256": "dc148fee35fa1f91917964349de2c369c6074bad24545ad97e0ce3f404d476b5",
+      "actual6node_recomposition_mismatch": 0,
+      "prior_v03_node_changes": [
+        {
+          "node": 0,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 1,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 2,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 3,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 4,
+          "prior_RGBA_changed_pixels": 347,
+          "only_declared_metal_owner_nodes_changed": true
+        },
+        {
+          "node": 5,
+          "prior_RGBA_changed_pixels": 333,
+          "only_declared_metal_owner_nodes_changed": true
+        }
+      ],
+      "original_stationary_sole_lowerboot_material": [
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 12559
+        },
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 13059
+        }
+      ],
+      "full_rigid_pole_rotation_orthogonality_residual": 1.229457450725973e-17,
+      "same_forearm_affine_grip_target": [
+        972.0836041386231,
+        450.2419537807276
+      ],
+      "strong_bodies": 1,
+      "small_alpha100_components_ge3": [
+        {
+          "area": 3,
+          "stored_bbox": [
+            1069,
+            597,
+            1070,
+            600
+          ]
+        }
+      ],
+      "storage_edge_contact": false
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/thunder_female-E-attack-5-RECOVER-actual-native-v04.png",
+        "sha256": "89782023a5a998bffd6642b7cfdb9693319efad581139a62e7c8945e9adeec35",
+        "bytes": 993599
+      },
+      "RGBA_sha256": "855415ec3bbb15d3f199b804099f4ebc7a956a6c4ea9e5545d606014c787fa76",
+      "actual6node_recomposition_mismatch": 0,
+      "prior_v03_node_changes": [
+        {
+          "node": 0,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 1,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 2,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 3,
+          "prior_RGBA_changed_pixels": 0,
+          "only_declared_metal_owner_nodes_changed": false
+        },
+        {
+          "node": 4,
+          "prior_RGBA_changed_pixels": 323,
+          "only_declared_metal_owner_nodes_changed": true
+        },
+        {
+          "node": 5,
+          "prior_RGBA_changed_pixels": 354,
+          "only_declared_metal_owner_nodes_changed": true
+        }
+      ],
+      "original_stationary_sole_lowerboot_material": [
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 12559
+        },
+        {
+          "original_stationary_lowerboot_and_sole_RGBA_changes": 0,
+          "actual_original_painted_texels": 13059
+        }
+      ],
+      "full_rigid_pole_rotation_orthogonality_residual": 2.1632406296408585e-18,
+      "same_forearm_affine_grip_target": [
+        387.8498658722529,
+        507.6862107372094
+      ],
+      "strong_bodies": 1,
+      "small_alpha100_components_ge3": [
+        {
+          "area": 7,
+          "stored_bbox": [
+            767,
+            453,
+            770,
+            457
+          ]
+        }
+      ],
+      "storage_edge_contact": false
+    }
+  ],
+  "C_fixed": 2816,
+  "bodyunit_fixed": 2.75,
+  "common_rig_root": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "source_canvas": [
+    1792,
+    1792
+  ],
+  "loop": false,
+  "cycle_seconds": 0.42,
+  "phase_seconds": 0.07,
+  "resource_fps": 14.285714285714286,
+  "intended_contact_frame": 3,
+  "visual_findings": [
+    "The actual dedicated six-source E attack reads READY, WINDUP, COIL, extended pure-E STRIKE3, FOLLOW and RECOVER. The torso lean, articulated RIGHT near weapon arm, LEFT free counterarm and delayed blue/gold cloth create a clear one-shot attack rather than a translated still.",
+    "Native actual RIGHT grip/curved white-gold cuff/elbow and LEFT upper/forearm joins were inspected across all six. The complete original double-ended staff remains rigid, attached to the same transformed forearm grip, and unclipped; hands, costume, head and character identity remain consistent.",
+    "The accepted local cape finish preserves the blue folds, connected gold motif and curved hem without the former strict-mask seam. It uses the one actual local paint service in a bounded23295pixel cloth mask. All original visible cape alpha outside the original5113pixel pole-occluded region and all source/CORE pixels outside the allowed cloth mask remain exact.",
+    "The visually detached metal flecks beside STRIKE/FOLLOW hands were traced to original shaft highlights/dark edges wrongly left in the foregrip input. Finalv04 moves all185 original RGBA texels to the complete rigid pole, preserving the actual fist/cuff and all other nodes. The former STRIKE fragments are absent; the remaining3pixel FOLLOW edge is the proper lower pole AA at inverse sourceUV408.9..410.88,533.89..534.17 rather than an old hand remnant.",
+    "All36 actual editable node rasters reproduce the six final sources exactly. The original stationary sole/lowerboot capture patches are unchanged; the common C2816/bodyunit2.75/root and transparent storage offset are fixed. The six distinct sources retain a coherent fixed-heel braced stance through torso weight shift and recovery."
+  ],
+  "visual_limitations": [
+    "This approves this exact six-source appearance, natural visible attack progression and intended contact3 only. It does not add full actor approval, game test evidence or production binding.",
+    "Forearm/grip and pole rigidity are verified in the authored projection. Hidden3D bones, body depth, attack force and floor anatomy are not claimed uniquely recovered from the image.",
+    "Actual v02 whole-six, v06 local cape and v03 native joints were reviewed once. Finalv04 is connected by exact unchanged-node and original-metal-owner transfer proofs; no duplicate final whole-six or native view was necessary.",
+    "The unchanged alpha100/4-connected rule records tiny original shoulder/cuff and pole AA edge components. No threshold was relaxed or decorative material blindly deleted.",
+    "Any final storage extension is transparent packing only. The source native canvas1792 must preserve all original RGBA, common root and body unit; source resizing or per-pose fitting is not covered."
+  ],
+  "exact_numeric_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Eattack-v04-independent-exact-current-six-native-node-cape-sole-grip-binding-v01.json",
+    "sha256": "071f41041c1683845782206f2080307cdcc90d3a39fe6d1bdbdf5163051afc6c",
+    "bytes": 16202
+  },
+  "actual_original_metal_owner_transfer": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v04/E-ATTACK6-v04-actual-original-shaft-node-owner-exact-transfer-proof-v01.json",
+    "sha256": "b9d7e820088e5b9204f528a2b3650bb1b5a975bdc897a954678eb565f0ddc944",
+    "bytes": 14081
+  },
+  "native_owner_trace": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/E-ATTACK-v03-tiny-hand-native-node-original-source-trace-v01.json",
+    "sha256": "3ed4e795a3557bd9450e4ee7acdae3f1d2e470cbb0650999083bd34dc3c3957b",
+    "bytes": 12119
+  },
+  "immutable_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NEdeath-final-and-Eattack-native-view91-frozen.json",
+    "sha256": "075afba8d2fd840dd5328916f0293fcfef61c93b07206a33036310cfc72eb9d1",
+    "bytes": 45118
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

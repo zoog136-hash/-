@@ -1,0 +1,91 @@
+{
+  "status": "REFERENCE_ONLY_KINEMATIC_CONDITIONING",
+  "primary_source": "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/faithful-NE-idle-source-row0-lossless.png",
+  "primary_source_sha256": "2d45d9c51502e69503a7f58d38fa325d750e9a9f4e94aa695d71120c515a55ba",
+  "primary_native_size": [
+    472,
+    493
+  ],
+  "reference_scale": 0.73,
+  "reference_resize": [
+    345,
+    360
+  ],
+  "reference_translation": [
+    97,
+    73
+  ],
+  "reference_only_leg_mask_rectangle": [
+    190,
+    282,
+    334,
+    465
+  ],
+  "native_source_hip_axis_estimate": [
+    210,
+    270
+  ],
+  "guide_hip_axis": [
+    250,
+    270
+  ],
+  "projected_local_contact_plane": [
+    [
+      190,
+      414
+    ],
+    [
+      375,
+      388
+    ]
+  ],
+  "target_anatomical_leg_chains": {
+    "RIGHT": [
+      [
+        269,
+        273
+      ],
+      [
+        279,
+        327
+      ],
+      [
+        286,
+        394
+      ],
+      [
+        300,
+        399
+      ]
+    ],
+    "LEFT": [
+      [
+        235,
+        270
+      ],
+      [
+        263,
+        264
+      ],
+      [
+        242,
+        315
+      ],
+      [
+        254,
+        331
+      ]
+    ]
+  },
+  "guide_path": "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/right-support-opposite-contact-production-guide.png",
+  "guide_sha256": "594c260f1b0aad621a73f0737652ba8900c077f0ad75ea892c02944dad903a23",
+  "original_PNGs_changed": false,
+  "final_sprite_resampling": false,
+  "new_anatomical_support": "RIGHT",
+  "left_boot_target_ground_clearance_pixels_guide": 70,
+  "limitations": [
+    "Guide anatomy is a projected movement constraint, not final character clothing.",
+    "Restore original long dark skirt panels while making the intended support boot and raised passing boot actually visible.",
+    "Final art compass, hip/knee/ankle geometry and single right weapon hand must be inspected; guide labels do not prove correctness."
+  ]
+}

@@ -11,10 +11,15 @@ extends "res://tests/run_original_based_transform_batch.gd"
 ## performance or an HP/death/loot command. No texture/animation/frame is assigned.
 
 const TRANSFORM_TEMPORAL_MOTION = preload("res://scripts/animation/actor_motion.gd")
+const SOURCE_FRAME_QA = preload("res://tests/qa_original_source_frame.gd")
+const RENDERED_PROP_QA = preload("res://tests/qa_rendered_prop_clearance.gd")
 const TRANSFORM_TEMPORAL_STEP := 1.0 / 120.0
 const TRANSFORM_TEMPORAL_ROLES := ["idle", "walk", "attack", "hit", "death"]
 var transform_temporal_wall_start: int = 0
 var transform_temporal_render := false
+var transform_temporal_source_index: Dictionary = {}
+var transform_temporal_pose_index: Dictionary = {}
+var transform_temporal_frame_index: Dictionary = {}
 
 func transform_temporal_vec(value: Vector2) -> Array:
 	return [value.x, value.y]
@@ -74,6 +79,7 @@ func transform_temporal_position_clear() -> bool:
 			world.player.camera.reset_smoothing()
 			world.player.camera.force_update_scroll()
 			world.field_renderer.refresh_visible()
+			if not RENDERED_PROP_QA.clear_bounds(world.field_renderer, envelope): continue
 			for prop: Node2D in world.field_renderer.faded:
 				if prop is Sprite2D and prop.global_position.y + 16.0 > point.y - 160.0:
 					if (prop.global_transform * (prop as Sprite2D).get_rect()).intersects(envelope):
@@ -89,6 +95,7 @@ func transform_temporal_position_clear() -> bool:
 	return false
 
 func transform_temporal_unoccluded(bounds: Rect2) -> bool:
+	if not RENDERED_PROP_QA.clear_bounds(world.field_renderer, bounds): return false
 	for actor: Node in world.monsters_root.get_children():
 		if not actor is TwilightMonster or not (actor as TwilightMonster).is_visible_in_tree(): continue
 		var monster := actor as TwilightMonster
@@ -123,8 +130,8 @@ func transform_temporal_provenance_record(role: String, direction: int, phase: i
 		var ids: Array = (track.get("source_poses_by_direction", {}) as Dictionary).get(COMPASS[direction], [])
 		if phase < 0 or phase >= ids.size(): return {}
 		var id: String = str(ids[phase])
-		var pose: Dictionary = proof.get("_temporal_pose_index", {}).get(id, {})
-		record = proof.get("_temporal_frame_index", {}).get(id, {})
+		var pose: Dictionary = transform_temporal_pose_index.get(id, {})
+		record = transform_temporal_frame_index.get(id, {})
 		if pose.is_empty() or record.is_empty(): return {}
 		if str(pose.get("file", "")) != atlas.atlas.resource_path or str(record.get("pose_id", "")) != id: return {}
 		if str(pose.get("role", "")) != role or str(record.get("role", "")) != role: return {}
@@ -143,7 +150,7 @@ func transform_temporal_provenance_record(role: String, direction: int, phase: i
 				sheet = int(stem.trim_prefix("poses-"))
 		if sheet < 0: return {}
 		var key := "%d|%d|%s" % [sheet, int(rows[phase]), COMPASS[direction]]
-		record = proof.get("_temporal_source_index", {}).get(key, {})
+		record = transform_temporal_source_index.get(key, {})
 	if record.is_empty(): return {}
 	var region: Array = record.get("region", [])
 	var margin: Array = record.get("margin", [])
@@ -160,15 +167,17 @@ func transform_temporal_snapshot(sprite: AnimatedSprite2D, motion: TwilightActor
 	var source_foot := canonical_foot
 	var role := str(sprite.animation).trim_suffix("_" + str(motion.facing8))
 	if role in ["cast", "ranged_attack"]: role = "attack"
-	# Provenance records physical atlas cells (sheet/row/direction), not
-	# role/phase. The role's source_rows identifies the authored row for
-	# each controller phase; atlas_files identifies the actual source sheet.
-	var source_record: Dictionary = transform_temporal_provenance_record(
-		role, motion.facing8, sprite.frame, texture, proof)
-	var source_record_found := not source_record.is_empty()
+	var frame := SOURCE_FRAME_QA.recorded_frame(proof, role, COMPASS[motion.facing8], sprite.frame, texture)
+	# Retain main's indexed mixed/legacy lookup as an independent cross-check.
+	# QA-only source trials have explicit role/phase records without source_rows.
+	var source_track: Dictionary = proof.get("tracks", {}).get(role, {})
+	if source_track.has("source_rows") or str(proof.get("input_representation", "")) == "mixed_sources_v1":
+		check(frame == transform_temporal_provenance_record(role, motion.facing8, sprite.frame, texture, proof),
+			"independent source record lookups agree on exact PNG/region/anchor")
+	var source_record_found := not frame.is_empty()
 	if source_record_found:
 		var atlas := texture as AtlasTexture
-		var anchor: Array = source_record["source_anchor"]
+		var anchor: Array = frame.source_anchor
 		source_foot = local_origin + atlas.margin.position + Vector2(float(anchor[0]), float(anchor[1])) - atlas.region.position
 	var bounds := transform_temporal_local_bounds(sprite, texture) if texture != null else Rect2()
 	var world_bounds: Rect2 = sprite.global_transform * bounds
@@ -254,6 +263,11 @@ func transform_temporal_role(direction: int, role: String, sprite: AnimatedSprit
 	check(frames.has_animation(key), "actual equipped transform native temporal track " + key)
 	if not frames.has_animation(key): motion.strike.disconnect(marker_listener); return {}
 	var count := frames.get_frame_count(key)
+	var minima := {"idle": 2, "walk": 3, "attack": 3, "hit": 2, "death": 3}
+	if SOURCE_FRAME_QA.pinned_existing_walk_two(proof, profile.frames_path, profile.profile_id):
+		# Preserve only the pre-existing, SHA-pinned 96-pose transform:258.
+		# New actors still require the unchanged 104/112 matrix.
+		minima.walk = 2
 	# The provenance records the exact number of independently authored
 	# native frames for this role. Reaper male has two genuine walk frames,
 	# unlike the three-frame walk tracks in the other cases.
@@ -263,11 +277,19 @@ func transform_temporal_role(direction: int, role: String, sprite: AnimatedSprit
 	var authored_rows: Array = source_track.get("source_rows", [])
 	if str(proof.get("input_representation", "")) == "mixed_sources_v1":
 		authored_rows = (source_track.get("source_poses_by_direction", {}) as Dictionary).get(COMPASS[direction], [])
+	elif not source_track.has("source_rows"):
+		# Isolated source trials retain explicit immutable per-role/phase records.
+		# Do not infer additional poses from the requested output frame count.
+		for frame: Dictionary in proof.get("frames", []):
+			if str(frame.get("role", "")) == role and str(frame.get("direction", "")) == COMPASS[direction]:
+				authored_rows.append(int(frame.get("phase", -1)))
+		authored_rows.sort()
+		for phase: int in range(authored_rows.size()):
+			check(authored_rows[phase] == phase, "contiguous unique recorded source phase " + key)
 	check(authored_frames == authored_rows.size() and authored_frames >= 2,
 		"original provenance contains independently authored native phases " + key)
 	check(count == authored_frames,
 		"actual equipped transform preserves the exact original native phase count " + key)
-	var minima := {"idle": 2, "walk": 2, "attack": 3, "hit": 2, "death": 3}
 	check(count >= int(minima[role]), "transform native temporal role minima " + key)
 	var weight := 0.0
 	for index: int in range(count): weight += frames.get_frame_duration(key, index)
@@ -409,7 +431,11 @@ func inspect_poses() -> void:
 	check(world.player.transform_active and profile.profile_id == original_profile_id and profile.frames_path == subject_path(), "temporal stage uses exact actually equipped production transformation")
 	var frames := sprite.sprite_frames
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(subject_path().get_base_dir().path_join("provenance.json")))
-	proof["_temporal_source_index"] = transform_temporal_provenance_index(proof)
+	# Cache outside the raw proof: the historical 96-pose exception compares
+	# the complete SHA-pinned on-disk provenance, without diagnostic mutation.
+	transform_temporal_source_index = transform_temporal_provenance_index(proof)
+	transform_temporal_pose_index.clear()
+	transform_temporal_frame_index.clear()
 	if str(proof.get("input_representation", "")) == "mixed_sources_v1":
 		var pose_lookup: Dictionary = {}
 		var frame_lookup: Dictionary = {}
@@ -433,8 +459,8 @@ func inspect_poses() -> void:
 			if not id.is_empty() and not frame_lookup.has(id): frame_lookup[id] = frame
 		check(pose_lookup.size() == int(proof.get("distinct_pixel_frames", -1)) and frame_lookup.size() == pose_lookup.size(),
 			"every original mixed-source pose has one real atlas frame")
-		proof["_temporal_pose_index"] = pose_lookup
-		proof["_temporal_frame_index"] = frame_lookup
+		transform_temporal_pose_index = pose_lookup
+		transform_temporal_frame_index = frame_lookup
 	check((proof.get("target_keys", []) as Array).has(original_profile_id), "temporal source provenance binds exact production transform")
 	var reference: Dictionary = proof.get("reference", {})
 	check(FileAccess.get_sha256(str(reference.get("path", ""))) == str(reference.get("sha256", "missing")), "original transform reference bytes unchanged during Main temporal stage")
@@ -495,12 +521,13 @@ func inspect_poses() -> void:
 		native_total += int(entry.get("native_frames", 0))
 		for evidence: Dictionary in entry.get("captures", []):
 			if evidence.has("path"): rendered_total += 1
+	var approved_total := native_total == 96 if SOURCE_FRAME_QA.pinned_existing_walk_two(proof, profile.frames_path, profile.profile_id) else native_total in [104, 112]
 	var original_native_total := 0
 	var native_tracks: Dictionary = proof.get("tracks", {})
 	for source_role: String in TRANSFORM_TEMPORAL_ROLES:
 		var authored_track: Dictionary = native_tracks.get(source_role, {})
 		original_native_total += int(authored_track.get("unique_frames_per_direction", -1)) * 8
-	check(native_total == int(proof.get("distinct_pixel_frames", -1)) and native_total == original_native_total and native_total >= 96 and native_total <= 112,
+	check(native_total == int(proof.get("distinct_pixel_frames", -1)) and native_total == original_native_total and approved_total,
 		"every source-authored original native transform phase receives continuous controller coverage")
 	check(report.pose_samples.size() == native_total, "native transform poses counted once without idle/alias inflation")
 	if transform_temporal_render: check(rendered_total == native_total, "every native transform phase drawn/captured in actual Main")

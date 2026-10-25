@@ -1,0 +1,109 @@
+{
+  "schema": "NE_HIT_GENUINE_SETTLED_GUARD_INDEPENDENT_NODE_CHANGE_PROOF_V04",
+  "prior_duplicate_guard_sources": [
+    {
+      "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v03/phase0-actual-NE-hit-stable_guard-v01/thunder_female-NE-hit-phase0-stable_guard-actual-native-v01.png",
+      "sha256": "589f871ad4b06d991455dee2bfb151916db4354c4d2533e5b8a2c4a0e4d9a0a0",
+      "bytes": 762136
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v03/phase5-actual-NE-hit-regained_guard-v01/thunder_female-NE-hit-phase5-regained_guard-actual-native-v01.png",
+      "sha256": "589f871ad4b06d991455dee2bfb151916db4354c4d2533e5b8a2c4a0e4d9a0a0",
+      "bytes": 762136
+    }
+  ],
+  "new_phase5": {
+    "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-settled-guard-v04/phase5-actual-NE-hit-regained_guard_settled-v01/thunder_female-NE-hit-phase5-regained_guard_settled-actual-native-v04.png",
+    "sha256": "18a9208863375df1e4a5e9830a3770e72a7873e15ee7b3f78a7405fd7ec6113c",
+    "bytes": 754400
+  },
+  "actual_forearm_guard_controls_before": [
+    [
+      558.352,
+      521.296
+    ],
+    [
+      558.5,
+      551.0
+    ],
+    [
+      493.0,
+      650.0
+    ]
+  ],
+  "actual_forearm_guard_controls_after": [
+    [
+      560.296,
+      518.056
+    ],
+    [
+      560.0,
+      548.5
+    ],
+    [
+      512.0,
+      635.0
+    ]
+  ],
+  "independent_native_node_changes": {
+    "body_head_thorax_clothing": {
+      "changed_RGBA_pixels": 145464,
+      "bbox": [
+        405,
+        317,
+        978,
+        1121
+      ]
+    },
+    "actual_LEFT_complete_guard_forearm": {
+      "changed_RGBA_pixels": 12048,
+      "bbox": [
+        589,
+        633,
+        732,
+        823
+      ]
+    },
+    "final_composite": {
+      "changed_RGBA_pixels": 154942,
+      "bbox": [
+        405,
+        317,
+        978,
+        1121
+      ]
+    }
+  },
+  "actual_own_material_response": {
+    "head_upper_thorax_before": [
+      -1.0,
+      2.0
+    ],
+    "head_upper_thorax_after": [
+      2.0,
+      -3.0
+    ],
+    "cranial_degrees_before": 0.0,
+    "cranial_degrees_after": 0.8,
+    "cloth_before": [
+      0.0,
+      0.0
+    ],
+    "cloth_after": [
+      -5.0,
+      2.0
+    ],
+    "ribbon_before": [
+      0.0,
+      0.0
+    ],
+    "ribbon_after": [
+      -3.0,
+      -2.0
+    ]
+  },
+  "complete_boots_legs_and_full_RIGHT_staff_RGBA_mismatch": 0,
+  "C_root_foot_fitting": false,
+  "actor_approvals_added": 0,
+  "scope": "Actual independently articulated arm/head/torso and cloth response, not metadata-only change or whole-frame jitter; actual source/cycle quality gate remains independent."
+}

@@ -1,0 +1,475 @@
+{
+  "schema": 1,
+  "key": "transform:288",
+  "job": "사신",
+  "role": "walk",
+  "direction": "W",
+  "prototype_only": true,
+  "production_applied": false,
+  "completed_added": 0,
+  "final_model_approval": false,
+  "source_physical_final_approval": false,
+  "baseline_walk_frames": 3,
+  "original_resource": "res://assets/actors/eight_direction/original_based/doguri_transform/SpriteFrames.tres",
+  "source_preservation_manifest": "res://docs/remake/evidence/pr122-remaining106/batch07/doguri-E-walk6-pilot01/original-preservation.json",
+  "selected_distinct_sources": 6,
+  "distinct_whole_source_PNGs": 1,
+  "whole_source_sheets": [
+    {
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "source_sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60",
+      "rows": 6,
+      "directions": [
+        "W"
+      ],
+      "directions_axis": "columns",
+      "reference_rows": [
+        0,
+        3
+      ],
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "W",
+            "region": [
+              21,
+              184,
+              327,
+              353
+            ],
+            "margin": [
+              284,
+              181,
+              521,
+              495
+            ],
+            "source_anchor": [
+              161,
+              533
+            ],
+            "rgba_sha256": "77c2cb4116b16c761ac6ea9e970347d5efc606953c4a9b50947a211a6bfa19cb"
+          },
+          {
+            "row": 1,
+            "direction": "W",
+            "region": [
+              388,
+              185,
+              324,
+              352
+            ],
+            "margin": [
+              289,
+              182,
+              524,
+              496
+            ],
+            "source_anchor": [
+              523,
+              533
+            ],
+            "rgba_sha256": "7b024347cb9435410e5039160dbffd2fe2d03aeb4bf4ad58604fd1bea623ec78"
+          },
+          {
+            "row": 2,
+            "direction": "W",
+            "region": [
+              753,
+              184,
+              321,
+              353
+            ],
+            "margin": [
+              292,
+              181,
+              527,
+              495
+            ],
+            "source_anchor": [
+              885,
+              533
+            ],
+            "rgba_sha256": "3a225443698654af8bdb6c67c78f31f310a108f50fc9b2c4a0da9828aeeff1be"
+          },
+          {
+            "row": 3,
+            "direction": "W",
+            "region": [
+              1113,
+              185,
+              324,
+              351
+            ],
+            "margin": [
+              290,
+              183,
+              524,
+              497
+            ],
+            "source_anchor": [
+              1247,
+              532
+            ],
+            "rgba_sha256": "c3bef8deb4bb9f3a168d329bf91495d9bc4457efee7f1f6de2952f929fdfdc05"
+          },
+          {
+            "row": 4,
+            "direction": "W",
+            "region": [
+              1477,
+              185,
+              322,
+              350
+            ],
+            "margin": [
+              292,
+              184,
+              526,
+              498
+            ],
+            "source_anchor": [
+              1609,
+              531
+            ],
+            "rgba_sha256": "a4984515f26b9b02125661124e0da13b180cad326939deb51bf52009a30f9212"
+          },
+          {
+            "row": 5,
+            "direction": "W",
+            "region": [
+              1840,
+              184,
+              315,
+              350
+            ],
+            "margin": [
+              293,
+              184,
+              533,
+              498
+            ],
+            "source_anchor": [
+              1971,
+              530
+            ],
+            "rgba_sha256": "e0f27630fba047039b4b322972fbd19760b84eed640cf33f4e8c852015953b5b"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 346.0,
+        "canvas_size": [
+          848,
+          848
+        ],
+        "foot": [
+          424,
+          530
+        ]
+      }
+    }
+  ],
+  "frames": [
+    {
+      "phase": 0,
+      "name": "contact-A",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "source_sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60",
+      "bytes": 725203,
+      "source_frame_row": 0,
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "W",
+            "region": [
+              21,
+              184,
+              327,
+              353
+            ],
+            "margin": [
+              284,
+              181,
+              521,
+              495
+            ],
+            "source_anchor": [
+              161,
+              533
+            ],
+            "rgba_sha256": "77c2cb4116b16c761ac6ea9e970347d5efc606953c4a9b50947a211a6bfa19cb"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 346.0,
+        "canvas_size": [
+          848,
+          848
+        ],
+        "foot": [
+          424,
+          530
+        ]
+      },
+      "strict_complete_region": "PASS_WHOLE6_SOURCE_ALL_BODIES_OWNED",
+      "visible_pixel_fingerprint": "dc00200bbccc3f483c06fe728e9377bbb3f00e1570adb15b0c264609ba923d99"
+    },
+    {
+      "phase": 1,
+      "name": "down-A",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "source_sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60",
+      "bytes": 725203,
+      "source_frame_row": 1,
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 1,
+            "direction": "W",
+            "region": [
+              388,
+              185,
+              324,
+              352
+            ],
+            "margin": [
+              289,
+              182,
+              524,
+              496
+            ],
+            "source_anchor": [
+              523,
+              533
+            ],
+            "rgba_sha256": "7b024347cb9435410e5039160dbffd2fe2d03aeb4bf4ad58604fd1bea623ec78"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 346.0,
+        "canvas_size": [
+          848,
+          848
+        ],
+        "foot": [
+          424,
+          530
+        ]
+      },
+      "strict_complete_region": "PASS_WHOLE6_SOURCE_ALL_BODIES_OWNED",
+      "visible_pixel_fingerprint": "33672eb3caad97f197334df7f9dfb1bb433a52026714a5ee7aabfc36016a6d35"
+    },
+    {
+      "phase": 2,
+      "name": "pass-A",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "source_sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60",
+      "bytes": 725203,
+      "source_frame_row": 2,
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 2,
+            "direction": "W",
+            "region": [
+              753,
+              184,
+              321,
+              353
+            ],
+            "margin": [
+              292,
+              181,
+              527,
+              495
+            ],
+            "source_anchor": [
+              885,
+              533
+            ],
+            "rgba_sha256": "3a225443698654af8bdb6c67c78f31f310a108f50fc9b2c4a0da9828aeeff1be"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 346.0,
+        "canvas_size": [
+          848,
+          848
+        ],
+        "foot": [
+          424,
+          530
+        ]
+      },
+      "strict_complete_region": "PASS_WHOLE6_SOURCE_ALL_BODIES_OWNED",
+      "visible_pixel_fingerprint": "c88cbdb0711afadc7fa3addb8280023d3c7e88a48d5edeed3586166b1f90ffe0"
+    },
+    {
+      "phase": 3,
+      "name": "contact-B",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "source_sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60",
+      "bytes": 725203,
+      "source_frame_row": 3,
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 3,
+            "direction": "W",
+            "region": [
+              1113,
+              185,
+              324,
+              351
+            ],
+            "margin": [
+              290,
+              183,
+              524,
+              497
+            ],
+            "source_anchor": [
+              1247,
+              532
+            ],
+            "rgba_sha256": "c3bef8deb4bb9f3a168d329bf91495d9bc4457efee7f1f6de2952f929fdfdc05"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 346.0,
+        "canvas_size": [
+          848,
+          848
+        ],
+        "foot": [
+          424,
+          530
+        ]
+      },
+      "strict_complete_region": "PASS_WHOLE6_SOURCE_ALL_BODIES_OWNED",
+      "visible_pixel_fingerprint": "b3805e24dbcc743c5446b34bfa5d7a76a508378223a9719153e24239238e7cd0"
+    },
+    {
+      "phase": 4,
+      "name": "down-B",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "source_sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60",
+      "bytes": 725203,
+      "source_frame_row": 4,
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 4,
+            "direction": "W",
+            "region": [
+              1477,
+              185,
+              322,
+              350
+            ],
+            "margin": [
+              292,
+              184,
+              526,
+              498
+            ],
+            "source_anchor": [
+              1609,
+              531
+            ],
+            "rgba_sha256": "a4984515f26b9b02125661124e0da13b180cad326939deb51bf52009a30f9212"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 346.0,
+        "canvas_size": [
+          848,
+          848
+        ],
+        "foot": [
+          424,
+          530
+        ]
+      },
+      "strict_complete_region": "PASS_WHOLE6_SOURCE_ALL_BODIES_OWNED",
+      "visible_pixel_fingerprint": "28cbf4725f11b2818bb1377b19b179e98b5a5e42f3e9c8f0af8bd0aa07d68f4d"
+    },
+    {
+      "phase": 5,
+      "name": "pass-B",
+      "file": "res://docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "source_sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60",
+      "bytes": 725203,
+      "source_frame_row": 5,
+      "geometry": {
+        "image_size": [
+          2172,
+          724
+        ],
+        "frames": [
+          {
+            "row": 5,
+            "direction": "W",
+            "region": [
+              1840,
+              184,
+              315,
+              350
+            ],
+            "margin": [
+              293,
+              184,
+              533,
+              498
+            ],
+            "source_anchor": [
+              1971,
+              530
+            ],
+            "rgba_sha256": "e0f27630fba047039b4b322972fbd19760b84eed640cf33f4e8c852015953b5b"
+          }
+        ],
+        "distinct_pixel_frames": 1,
+        "neutral_height": 346.0,
+        "canvas_size": [
+          848,
+          848
+        ],
+        "foot": [
+          424,
+          530
+        ]
+      },
+      "strict_complete_region": "PASS_WHOLE6_SOURCE_ALL_BODIES_OWNED",
+      "visible_pixel_fingerprint": "42a7b1b8f8fe08c73f631a9a0b720faeeab9876153739e8b96a43b3e5a6f1183"
+    }
+  ],
+  "full_gait_identity_approval": "HOLD",
+  "other7walk_and8run": "BEFORE",
+  "physical_review": "PILOT: corrected contact-B and down-B now show smaller far leading paw LEFT and foreground near knee/paw trailing RIGHT; opposite support improved. Full original identity, sole locking and complete gait chronology remain HOLD."
+}

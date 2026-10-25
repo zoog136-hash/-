@@ -1,0 +1,63 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v04onset1",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 1,
+  "references": [
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/NE-onset1-low-left-authority-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/NE-onset1-low-left-authority-guide.png": "34079b670c8a624fefd401f3e694af42d49fb72ba63d8b827b88910e043c1d8e"
+  },
+  "transparent_background": true,
+  "guide_joint_authority": {
+    "fixed_RIGHT_shoulder_elbow_grip": [
+      [
+        352,
+        164
+      ],
+      [
+        375,
+        218
+      ],
+      [
+        398,
+        245
+      ]
+    ],
+    "moving_LOW_EMPTY_LEFT_shoulder_elbow_wrist": [
+      [
+        256,
+        158
+      ],
+      [
+        232,
+        193
+      ],
+      [
+        219,
+        177
+      ]
+    ],
+    "reference_canvas": [
+      498,
+      415
+    ],
+    "fist_below_shoulder": true
+  },
+  "corrective_reason": "Materially new neutral-primary SINGLE low onset1 after pair copied highpeak and geometry bridged. New explicit LOW LEFT joint authority prevents peakduplication; never bad hitpair source. Preserve fixed low RIGHT blade chain.",
+  "prompt": "Create ONE new EARLY HIT ONSET1 key of the SAME Halpas from NEUTRAL image1. Image2 is an explicit small-motion ownership guide, not output. True NE BACK-RIGHT/UP-RIGHT camera: closed horned helmet REAR and spinal/back armor visible, front face and pink breastplate HIDDEN away. Exact original black/gold segmented armor, TWO solid purple crystal feather fan wings on upper back, torn burgundy LEFT/back cape, one same compact purple blade and hovering two-legged pose. Same camera, proportions, pelvis and equipment in all respects.\n\nEXACTLY TWO ARMS. GREEN guide: same near/imageRIGHT pauldron -> upperarm -> elbow -> LOW forearm -> CLOSED HAND GRIPPING original blade at hip. This right weapon arm is FIXED LOW, unbroken and attached to hilt. Do not raise an empty right fist. Never leave a separate floating blade.\n\nCYAN guide: only original far/imageLEFT EMPTY arm makes a SMALL flinch. Same LEFT shoulder (256,158 in498x415ref) -> elbow (232,193) -> EMPTY wrist (219,177). Empty LEFT fist stays BELOW LEFT SHOULDER at upper-rib level, clearly BELOW neck and helmet base. Bend elbow only a little, about20degrees from original, NOT high above shoulder/head and NOT beside/above helmet. Keep hand low enough that it cannot be mistaken for peak2. Redraw the original LEFT forearm/hand into this mild bent position, do not add a second empty hand or leave the old downarm. Same imageLEFT shoulder owns it, never imageRIGHT pauldron. Natural far-arm occlusion under LEFT wing root allowed, but two arm chains only.\n\nEarly onset1, not peak: SMALL initial head/upper-back recoil only, just enough to show impact beginning, subtle left shoulder lift and wing-root tension/cape twitch. Head remains almost original NE rear angle and hip unchanged. The left wrist remains down at ribs while torso jerks slightly; high fist is explicitly wrong. Preserve full silhouette with two leg chains, blade length, fan feathers and horns. No attack, no spin/camera turn or extra striking arm.\n\nONE full centered transparent1024x1024 cutout. Whole figure inside central700x800 with at least120px clear transparent gutters around extreme horn/wing/cape/blade/toe tips. Never crop or shorten equipment. Opaque crisp RPG sprite materials, thin edgeAA, alpha0 background/gaps. No text, labels, panels, guide marks, colored lines/dots, glow, particles, shadow, floor, trails or extra objects.",
+  "requested_at": "2026-10-19T13:24:38.559129+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

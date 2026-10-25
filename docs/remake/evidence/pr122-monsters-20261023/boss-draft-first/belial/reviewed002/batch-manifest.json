@@ -1,0 +1,1538 @@
+{
+  "schema": "pr122-boss-production-batch-v1",
+  "actor": "monster:탐욕의 여왕 벨리엘",
+  "clips": 31,
+  "poses": 186,
+  "missing_required_slots": 2,
+  "root_Godot_real_speed": "PASS",
+  "viewport_captures": 256,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/E-attack-v01.png",
+      "bytes": 2053988,
+      "sha256": "025b8dc24773dfe3d737f2638e601913e25735c696074782e6cd2224d6f4577b"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/E-hit-v01.png",
+      "bytes": 1932017,
+      "sha256": "15bf311f2549da9e1e6331099a0aa14a6d42cf0be04e9d67ca841f7f4e9f336b"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/E-idle-v01.png",
+      "bytes": 1767006,
+      "sha256": "89aafc374002b9a52c93c1f07f1d5718df658dbdbfae8c13aab86a2f919ea0da"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/E-run-v01.png",
+      "bytes": 2022115,
+      "sha256": "550f814f230b9613c077cee0f3277897561c33e86c21cde009d984a305582912"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/NE-attack-v01.png",
+      "bytes": 1919085,
+      "sha256": "cb50820ed93674da4991af13b3d0f643ae8521d423efe4ccdddca7a3a149c413"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/NW-attack-v01.png",
+      "bytes": 1926553,
+      "sha256": "99cedd69f1c9116842e381eaea3c0506bbeb3048b8c304fe493dc4e6442b4254"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/NW-run-v01.png",
+      "bytes": 2015905,
+      "sha256": "db4f5377a7cf195f8808dbb5439fb1a1f5ac711bf8a0939fce4d1d789ce4224b"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/S-death-v01.png",
+      "bytes": 1918124,
+      "sha256": "0a05279e34001259f4aa0a0e251658d533e0fc88767324e0b1c450664b559679"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/S-idle-v01.png",
+      "bytes": 1993017,
+      "sha256": "718da799e3e4834de43f1cd70dad99fbf53d31469ec35f9395b128bc66095a8d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/SE-idle-v01.png",
+      "bytes": 2070094,
+      "sha256": "a9cae5ba276051d90150ea8b77ee1f0959537188841755632800ddfa81a2fcf1"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/SE-run-v01.png",
+      "bytes": 1947369,
+      "sha256": "062fe5c2541af20e4f6918f5316e08f54c5a3e6292ac454138b30a993f5b126a"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/SW-idle-v01.png",
+      "bytes": 1989817,
+      "sha256": "7372ce9bd7708f4c71ab8052b39e1033133185b8c0cb8796b20d3539db8764f4"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/SW-run-v01.png",
+      "bytes": 1940072,
+      "sha256": "370db72e2544e27cb6e0bb66b1eb4b56647e5ba7d7d358a2212270524399b40a"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/W-hit-v01.png",
+      "bytes": 2232946,
+      "sha256": "d83f062c62f5e3e5c0b3ac601562bc89b1b2c8d842a58efc8398ebef6741337e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/W-run-v01.png",
+      "bytes": 1897830,
+      "sha256": "71ea364d077c54c1d97607a4110a056c3f9e25c10eeaf1e078e1af351c838240"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/reviewed002/NativeMotionProfile.tres",
+      "bytes": 795,
+      "sha256": "8c0f4cedd035f0251b0cb8050014e2ba9d60e499a35fdc9689f6ebf66c15094d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/reviewed002/SpriteFrames.tres",
+      "bytes": 47888,
+      "sha256": "8c63ff8eb7209aa9be48f20ba4b598a2aabd87b4099f6945f05d4f8d038f83b6"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/N-attack-v01.png",
+      "bytes": 2548742,
+      "sha256": "8a7aa836bd0550b13c8182180f6fb6a860bf7ec683474474a2cdf837821ea594"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/N-hit-v01.png",
+      "bytes": 2412028,
+      "sha256": "f545e12b4ba43af582d9c1b3c026f8e01c35f4450b732b9ff86f14f29f90d8ff"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/N-idle-v01.png",
+      "bytes": 2483914,
+      "sha256": "214d672613c6198b0c4a10c493cfe86cee974fe7c60bbff42602e33dfa8501dc"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/N-run-v01.png",
+      "bytes": 2420026,
+      "sha256": "e41fb6c30f91e10aa830aed80550daf3a349369003c710dc3dd16f365a3da789"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/NE-hit-v01.png",
+      "bytes": 2586284,
+      "sha256": "049aeee9168144f9df079e486dee17aeb30a485ec8495d2924e32f2fa2b3cd34"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/NE-idle-v01.png",
+      "bytes": 2549850,
+      "sha256": "55986915566b0474b2b673f7f2b4fc7c59b0ac8477954bb65e0d42ec103eb0bc"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/NE-run-v01.png",
+      "bytes": 2469841,
+      "sha256": "69dc9038938a12e5d6aac89ae9b24d0077b3b8041a662120a1109f4e9767fd61"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/NW-hit-v01.png",
+      "bytes": 2527869,
+      "sha256": "05c482f5ded892bb740ff8d159c8e1bb872dba04de2840e845212a6abad9a9fe"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/NW-idle-v01.png",
+      "bytes": 2388649,
+      "sha256": "238d099bbab4797b9027c5c7c843e5bf8efc1f9652f41673ad40d86bd12a9b37"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/S-attack-v01.png",
+      "bytes": 2745026,
+      "sha256": "fd39043f4da32dd79cd1ee178b1d935f247cb5fa6529e11acc3bd9fe46ee971b"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/S-hit-v01.png",
+      "bytes": 2678138,
+      "sha256": "69d813ccd750712534882038a078538b22943f633450b297acc81d284b69010d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/S-run-v01.png",
+      "bytes": 2644372,
+      "sha256": "ba915f210bb32d3156738e119bd3e727965c85163af0c04b5330e011df0cc88e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/SE-hit-v01.png",
+      "bytes": 2795693,
+      "sha256": "7a157bfb31d9bdded9c9c416d37df6ac534885dd7d8baae6259fe78a1a0c6a87"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/SW-hit-v01.png",
+      "bytes": 2652921,
+      "sha256": "ffc09c951e277da0f379ecfcd3dcd799ebb72683f4bdc8650f2ed36b9c42a27e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/W-attack-v01.png",
+      "bytes": 2606679,
+      "sha256": "e3340c68d4dca06237c07093f9efca894bbfce084f9b087bf3aae021b2cbd414"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/W-idle-v01.png",
+      "bytes": 2479168,
+      "sha256": "b56e062dc9b339537f655f90e8db4c6257460c92052f7643669a7b74c8662491"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "bytes": 2193483,
+      "sha256": "bada1c70ce150ef280fdb26509ae937325bbb01c28a3071c76d239ebae40b593"
+    },
+    {
+      "path": "data/pr122_monster_production_scope.json",
+      "bytes": 906771,
+      "sha256": "8a15d11df8fc79f8577537df21ea642269c157b2abb214a38e29fd9e979172b9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/candidate.json",
+      "bytes": 180161,
+      "sha256": "baf57f2b234b51dd9167c8b32db8311d9a818f57c394509aea85f3b146e62a68"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-attack_0-0.png",
+      "bytes": 51856,
+      "sha256": "a97b3bf9734b9efc0e529e5736199db64946b51a11f17ed5d6036616958f3609"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-attack_0-1.png",
+      "bytes": 56308,
+      "sha256": "3aee05cd0476740fea5810d19f8ee9765bf0d17c4b4b6b8a3cb5c6ccedce4c47"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-attack_0-2-strike.png",
+      "bytes": 57309,
+      "sha256": "cbf0100b4566f72a649ab7f5f445ed71452c17518e8861db2e31813c12de6129"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-attack_0-2.png",
+      "bytes": 57428,
+      "sha256": "6b4f66e58d9ff15ee016e9a398196177eb35d51df5634473376a5389524deb15"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-attack_0-3.png",
+      "bytes": 58584,
+      "sha256": "6a13deae0879b2de5cb139a945bdf4dc3641b89e3e49401089adb343a1f3224c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-attack_0-4.png",
+      "bytes": 55025,
+      "sha256": "49233b292c3211ab4d3027faad38e2bd274b6f2e1da50ea7c38518483b9f8a0a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-attack_0-5.png",
+      "bytes": 52317,
+      "sha256": "6c84208127e86619df0b2bbc4e332707a51e6e7c7df5fee5e2f3bd3e3c60eefa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-idle_0-0.png",
+      "bytes": 47402,
+      "sha256": "71641ad1027b50cd81df4e3f52131ea62a21bd1645ae78e7a954dc384130ca13"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-action-idle_0-1.png",
+      "bytes": 47543,
+      "sha256": "1b3bd68c21d9d99387d56cdac01ec8cb26bcb001cc91a083a943542d4b9d316b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-E-pre-idle-idle_0-0.png",
+      "bytes": 47354,
+      "sha256": "fbe4d3231ae9faf2daab016a877fcc7a1148fcfa2e5f9e44dc835241be366c6b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-attack_6-0.png",
+      "bytes": 56628,
+      "sha256": "8c2039b5377cd03f5dd08aa3d52cb8b86317d0b65808128b2e2a61faf9d00d44"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-attack_6-1.png",
+      "bytes": 57984,
+      "sha256": "b207a499ee34476a7cf78ad8e926fd537a65bf4e1004ea9d4da5411188be4213"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-attack_6-2-strike.png",
+      "bytes": 55428,
+      "sha256": "c74e821baab259a2e6be4cf3de5985bc5e4ce3d8cbc5263755609840a4df351a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-attack_6-2.png",
+      "bytes": 55798,
+      "sha256": "52f9069e434c1062af072bc0bc3631bd666250e69a9a1056e872d5fa00f6059b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-attack_6-3.png",
+      "bytes": 58815,
+      "sha256": "c71970fe0ed514ad066ef4f8e6230c3de4935e3147b3d30c95d7b6b3cfabc2a4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-attack_6-4.png",
+      "bytes": 57935,
+      "sha256": "c1172bb37f4a3f629382736500d6add9896d53ee6776da748e174da232b16930"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-attack_6-5.png",
+      "bytes": 56226,
+      "sha256": "db598fe6e20800e95f3a2ff643c85c139d52b1138874e5692d65e8b336042030"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-idle_6-0.png",
+      "bytes": 53679,
+      "sha256": "e44677f153cf0b22c47d5613e6879edbeda736e160aacefa4072df05e1b47176"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-action-idle_6-1.png",
+      "bytes": 54204,
+      "sha256": "2dd92904c06189e9a961fbd989e11ff1f98fbd29741aa653c2d3a000ae837849"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-N-pre-idle-idle_6-0.png",
+      "bytes": 53590,
+      "sha256": "ef8f6621bb0815f070209f86951d44fbc70fb57905fa406d6819fe06ef1d4978"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-attack_7-0.png",
+      "bytes": 49126,
+      "sha256": "de2b1e16bf45f013a4ea3f4032de189c697083520f63d088658e0de76d12ce6e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-attack_7-1.png",
+      "bytes": 49674,
+      "sha256": "8d1ed394e55f1981f6095dbfee2f559786d211a661fd1cea15b9328c3aa8e6e9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-attack_7-2-strike.png",
+      "bytes": 51406,
+      "sha256": "cc8692748210eec95e852d67df36ccd969b35f0a847896202397d65a9dac6987"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-attack_7-2.png",
+      "bytes": 51559,
+      "sha256": "ca6b3d3bceb43f4c23d70a838f01ed39590fb013000c72d9abf9cea3f5a371f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-attack_7-3.png",
+      "bytes": 54142,
+      "sha256": "564de7de37725e3160f447bdcc47f8968352914fc6113ac0a69ccd0c94bbb2be"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-attack_7-4.png",
+      "bytes": 50527,
+      "sha256": "e92217a98f904dfcd6537f27ba572b34886b654f0f59509f9339fb0230f9ecc3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-attack_7-5.png",
+      "bytes": 48952,
+      "sha256": "69b629481a72cefb8e0538da5114a998335368d673aaffb97f9f74d85599c4dd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-idle_7-0.png",
+      "bytes": 53499,
+      "sha256": "e8148683c1dd5f19cc728d53398f278bb46800a8fc8deddc5469851fabbe43b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-action-idle_7-1.png",
+      "bytes": 53423,
+      "sha256": "42a0d583081ee0135597f974e17af521942948907b674e3986071f81cbd5fbe2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NE-pre-idle-idle_7-0.png",
+      "bytes": 53579,
+      "sha256": "707271cf0663f105532c6bdbada45a4b8e875768b07c5728bd673d6062221e8c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-attack_5-0.png",
+      "bytes": 51582,
+      "sha256": "3754d8dceb82701cfb314e34f0eb0e4ae0224f9a5b8a1aa0925745ee5c48054f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-attack_5-1.png",
+      "bytes": 52434,
+      "sha256": "dfef0198c753f1211e5cc95dac18066de3bfefea50e27d57c4b1c5d73e080585"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-attack_5-2-strike.png",
+      "bytes": 53434,
+      "sha256": "72bea3c0c3af97fc2582a1f69f5494e46bbe7cb76265fae6011bb9a042ca00e0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-attack_5-2.png",
+      "bytes": 53590,
+      "sha256": "259bf6c6cef5c144b496aefce70b85bb7345a676d2a54939f02463e5dbabb101"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-attack_5-3.png",
+      "bytes": 54766,
+      "sha256": "007a45c11edd729293ebe6f2369ee7162e0b5784f1b7b06de1db12ef2606e703"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-attack_5-4.png",
+      "bytes": 51790,
+      "sha256": "f61fad5804cc06f7dd314b5bfa5f870f41c891c466bc45e253ae2873314e5509"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-attack_5-5.png",
+      "bytes": 50798,
+      "sha256": "eeebb7a6ce3903f51982aa3155e9d91e221392ba81278cb83748844e6ff86326"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-idle_5-0.png",
+      "bytes": 52272,
+      "sha256": "c6746cecd9e2b5a96992415aa17081df36b18f7fefaa179111c93fe6b0f16cbb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-action-idle_5-1.png",
+      "bytes": 52302,
+      "sha256": "c920df9fc292023f2fbaf40e88ac9d8c7fd493f796edd884add94432c4a24322"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-NW-pre-idle-idle_5-0.png",
+      "bytes": 52168,
+      "sha256": "552d6741d41f1664e01017e5d33bc565bc4f2035c2c3c757c25c4b88f9f135ba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-attack_2-0.png",
+      "bytes": 58191,
+      "sha256": "078401dd02375382fde68a733821d38e8f618eed1e81e47150611c4e5a12e061"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-attack_2-1.png",
+      "bytes": 58695,
+      "sha256": "b29b6c000ff4916fd1663d951da9ad2c5855f053b2eab127834c1fb6deb254e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-attack_2-2-strike.png",
+      "bytes": 56515,
+      "sha256": "7c72ed17eab70758c32d6d44d9e7be5fd93787d33885d94f9fb0b471a9443ffb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-attack_2-2.png",
+      "bytes": 56642,
+      "sha256": "62aa6384c444af7096f3807156f611f66d383953bac925984c695033c1566af5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-attack_2-3.png",
+      "bytes": 60604,
+      "sha256": "5724b755a49c6f6647752c9823f36547a0787e610dd34a59831891ee2062769b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-attack_2-4.png",
+      "bytes": 56183,
+      "sha256": "778bac06162d6851b057221073aa2248bb50b0a8406dc1e218c7e7a2b55f9bb4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-attack_2-5.png",
+      "bytes": 56478,
+      "sha256": "af91f4f7003fc55646d1d1fb64af95aad6f03ce83bfb8eb7446551ced6d6d12c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-idle_2-0.png",
+      "bytes": 49452,
+      "sha256": "792d8a03e82467c9d6d6e4e7792e8dea64311eef76433a0796ce3a46898ec2f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-action-idle_2-1.png",
+      "bytes": 49987,
+      "sha256": "0c5a874ac5dafdffdb340e3e46e23c1f745cda0d14a013b4ff366f1e6ed18b77"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-pre-idle-idle_2-0.png",
+      "bytes": 49128,
+      "sha256": "c01186f6032722866cf9ddbc69597f66e1d8249e332c385fe8997f144dbb903f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-S-pre-idle-idle_2-1.png",
+      "bytes": 50046,
+      "sha256": "ba46789c23587b2adf3e6e31bc12072eea6b23527fc1b2b7e4faf3c3cbc8572e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-attack_4-0.png",
+      "bytes": 55890,
+      "sha256": "0e62f72efb825f2ba8388788c73f84eee70a02c2cf3e8d8fe6dcfbd9a609fb7d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-attack_4-1.png",
+      "bytes": 58332,
+      "sha256": "978dddfe9db4da3ac9f793e10b7dc26d8023b440023602556892985584e903f3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-attack_4-2-strike.png",
+      "bytes": 57973,
+      "sha256": "bc2c02e2e9787f1d56254f4aa24f1876735fe64a560213ecbd5a4e6cbd2e92be"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-attack_4-2.png",
+      "bytes": 58111,
+      "sha256": "74d21232bec662a1cd76fd602b34e216ce4f91820183b51b047547ac059ea80d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-attack_4-3.png",
+      "bytes": 60299,
+      "sha256": "cd8716f0b914cafeb34bad79558c9089880d8946da042478c4d031398e6e0551"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-attack_4-4.png",
+      "bytes": 56893,
+      "sha256": "545e9b56c676321c64fa6ce5059e1af13014159923f63f2e5b351bb4068c217c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-attack_4-5.png",
+      "bytes": 56099,
+      "sha256": "7f50f3a252e260caeac2ec7cf513fa7030dd283f02710acf0dc7ca8ef6867fb9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-idle_4-0.png",
+      "bytes": 52134,
+      "sha256": "3d5dd2fa352dd4b4c31f044e5703d5856821f142eb9b0ea48931baf714a0940c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-action-idle_4-1.png",
+      "bytes": 53738,
+      "sha256": "56fb9b3dd79736d04355e67b7a4ac4f4d6784776d6f1c4e822d92582acf5f902"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/captures/attack-W-pre-idle-idle_4-0.png",
+      "bytes": 52077,
+      "sha256": "59f8f09db0f128b561bc402646e1148e3a0c040edc094e5334cf72d5aa8f6c01"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-attack/samples.json",
+      "bytes": 464042,
+      "sha256": "11a8d241f89b045703c481cde2c6cc2edd477815dd0abba05938a1d3549cd90d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-action-death_2-0.png",
+      "bytes": 56705,
+      "sha256": "106b284292ff16101291bbc15bfcb0fe052e18a171887edc7ddd3ce15ad6a7d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-action-death_2-1.png",
+      "bytes": 53618,
+      "sha256": "1c2a5df2a70173d9cd6026b6593f0aec87c3ff3bc14d2bec450455ad7656147c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-action-death_2-2.png",
+      "bytes": 52119,
+      "sha256": "66282f2318997a421fbc4669d18c7232c6f84ec87c6855a11e5bbf06ff411ef9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-action-death_2-3.png",
+      "bytes": 49348,
+      "sha256": "f4fe62a66b5fcc996d66f74dd09446985ce05fe252058d63c5c84b004c783e7d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-action-death_2-4.png",
+      "bytes": 48002,
+      "sha256": "8383473bab618f940b4d065133c0527e7b6613cd05bc94e70091c9b7d4c5330d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-action-death_2-5.png",
+      "bytes": 46394,
+      "sha256": "15c18fe838eb6d38ec9c7fa7b0447909cb7b85a6d24d305ebc7bb5b338e0747d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-pre-idle-idle_2-0.png",
+      "bytes": 49025,
+      "sha256": "4abd99e04de863631432ae5f315578e6a124e04ac98cc0d681a423bb662da21d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/captures/death-S-pre-idle-idle_2-1.png",
+      "bytes": 49937,
+      "sha256": "b41f78f4d438ef2b7a219438b8207429463e89054ee6daef37225e90c65880a2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-death/samples.json",
+      "bytes": 49800,
+      "sha256": "a219e73ec5ef7a1293452e1c19eec1574446a01aefd243985970e09012fb28fd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-hit_0-1.png",
+      "bytes": 47322,
+      "sha256": "083d894015c215208b323d1bc9ec6a73685d53158887cf5ddca6155a37054805"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-hit_0-2.png",
+      "bytes": 47550,
+      "sha256": "5234b7c6f9dc285919105af8457f11a7d9dd649edaf2f016e160111e475adb2e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-hit_0-3.png",
+      "bytes": 47964,
+      "sha256": "7eee8f442f70505e88b0219466d195b789b9674d2424b5873a56119f2a6bc3a9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-hit_0-4.png",
+      "bytes": 48236,
+      "sha256": "3ded74e7f9eb9a3b8b81f7f6078211d5530f89b4d42ffb2a9a507256fdaefc27"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-hit_0-5.png",
+      "bytes": 47813,
+      "sha256": "66b7e7a5a9950effe25bde930399286238d3bcfc2fb455dcdd97f8acc35aff5c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-idle_0-0.png",
+      "bytes": 47086,
+      "sha256": "a4183a2b1bd554adefb8e2c10ac1eedd69543a53dcd888535eedd803da9b812c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-idle_0-1.png",
+      "bytes": 47216,
+      "sha256": "26ab430932e9c2392a5443ba41c45f180c3cb70f00ffe31102dea4f6563718b0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-action-idle_0-2.png",
+      "bytes": 47655,
+      "sha256": "d1b40783473df21a3145516f6e055947754d4b52fe48e6563b2410acc7756e53"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-E-pre-idle-idle_0-0.png",
+      "bytes": 46953,
+      "sha256": "859a9fd861bd47c72e230e59d34498ac00bc588fb87cb50fddd603ec349072b1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-hit_6-1.png",
+      "bytes": 56090,
+      "sha256": "ae2476751e970eb7f530242f5a872f68c81b54604f950b8a61da5b30441e88f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-hit_6-2.png",
+      "bytes": 54909,
+      "sha256": "be2b8ec5532129265253229504624b11da3f64730af8d0405b30624d74220eb8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-hit_6-3.png",
+      "bytes": 56693,
+      "sha256": "38744ff7f53c21de98c5e2e68809c34abac9a9569f3c3d52c5dfe30dd7b8872a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-hit_6-4.png",
+      "bytes": 55084,
+      "sha256": "8ee7060d2d3ee7fac74e2a84b3bb2019ed6d8665ce2467342929947fcccec0bf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-hit_6-5.png",
+      "bytes": 55289,
+      "sha256": "7acfb67a1bc826aa272f398a24f7e312c7d3cff7457c89dcfc5e49dcb85a8933"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-idle_6-0.png",
+      "bytes": 53301,
+      "sha256": "49221c0c176d9cd4a05fa0ae0ec2fbd9cfe89f1fdfe27229714e6068a6bc5e80"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-idle_6-1.png",
+      "bytes": 53800,
+      "sha256": "f65bf64fe4400b1bad793e7472d871ac26c87cb436164d31dc14782b31114067"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-action-idle_6-2.png",
+      "bytes": 54106,
+      "sha256": "69b0e6314e3e04a1f37c4b5c93afb0f6e86abd40da525804359c174e7c859409"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-N-pre-idle-idle_6-0.png",
+      "bytes": 52982,
+      "sha256": "f43a1095ed4899dd012b3de69b99d36836fa33c259d67b8c63f1f05f70229ae0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-hit_7-1.png",
+      "bytes": 57404,
+      "sha256": "d08661c6265e701073324bc3bb8dc48b2f9a8dfe7dfde1117adecbcf7ca5db67"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-hit_7-2.png",
+      "bytes": 56554,
+      "sha256": "37dea0b9231426730475ddfea5fada05492e83f6359bf1432fe6ec40ee34a736"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-hit_7-3.png",
+      "bytes": 57102,
+      "sha256": "a1500d85ba055d6fcae9f3b942916b9f0dd9ad64669809d984c889cca1c06f54"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-hit_7-4.png",
+      "bytes": 58142,
+      "sha256": "e4ee8d6b8003a4fa26d943b366a2019071d0fa5a957cef7dfba9dfc03d69020a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-hit_7-5.png",
+      "bytes": 58423,
+      "sha256": "968da0137660cadb7fbd1bf1c7bf16c2402f8f1d01386e31cf1750a864202956"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-idle_7-0.png",
+      "bytes": 53258,
+      "sha256": "b654f48db2e977902e98f25209b8ff9bd67375b1197b3562874d0a6f003c2d93"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-idle_7-1.png",
+      "bytes": 53111,
+      "sha256": "ed21a1509267efa19f9ce8192b629f2f3fc62712d8ece650a514eba5a7d4cbb1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-action-idle_7-2.png",
+      "bytes": 54444,
+      "sha256": "690056d24a98c2526cb62282c06ec6f298b0853d9183142dc07f4f75f7652dac"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NE-pre-idle-idle_7-0.png",
+      "bytes": 52995,
+      "sha256": "0b71632117f20bd2a10a09b7c8a3cc9b3fe723ad6253870a34be423455df7a91"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-hit_5-1.png",
+      "bytes": 59904,
+      "sha256": "16cebc5c18a83556b09ccdc2a4b6ae3f04a7352f2a4dfdf5fac5c9b4e2cff35d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-hit_5-2.png",
+      "bytes": 63536,
+      "sha256": "2f983a8a231f46ed0a76e696a18087c742d1dbc86fdc6003a170e874ab80351e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-hit_5-3.png",
+      "bytes": 59666,
+      "sha256": "7beea966d5b56207748494b5a24eaa0d516bc98ea3fd58b97fd99fdc16d4c1b1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-hit_5-4.png",
+      "bytes": 60363,
+      "sha256": "3baf8b005e9bb7e99a64116733fbd47a1321f866712d068ed29c106def6c18d5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-hit_5-5.png",
+      "bytes": 59440,
+      "sha256": "de0c18a9764e4af7b0bb4c06039a53352471423361700a74b068a7e290bd92f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-idle_5-0.png",
+      "bytes": 52173,
+      "sha256": "acd95414e3eb172e9df2aba6f23b73c1039b447c2a8b06c5d709da7260b5937f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-idle_5-1.png",
+      "bytes": 52123,
+      "sha256": "d01fb738203ba507618fcaa85505322fd1b5b73b90d1b2ef77ed3c2b0eb437d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-action-idle_5-2.png",
+      "bytes": 53847,
+      "sha256": "389ccd9a10ef81194f727af36fcc176ce8d09c256a3cdd2b983dfc912524e686"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-NW-pre-idle-idle_5-0.png",
+      "bytes": 51626,
+      "sha256": "6eb1e67de93e2191ccb7b947bab94bc4c1bc912086b2769c0d4a4a9f8e7a3d14"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-hit_2-1.png",
+      "bytes": 57361,
+      "sha256": "e017e428bc64e44f371fa5cf07e57fa53e223b03f7e2400c22fd6e708014bb67"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-hit_2-2.png",
+      "bytes": 56000,
+      "sha256": "1b8372586f47c8d0b9009a3520e9abc404cb977b865d47af6b7b1d675022ea10"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-hit_2-3.png",
+      "bytes": 57606,
+      "sha256": "de1559edcff1fac88ca13d83660f6b7df020a91703015a96aaf02d4baf3a8350"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-hit_2-4.png",
+      "bytes": 56329,
+      "sha256": "ed80187bd88deb9cff43798231be1770e42e337ef12b6ddef0c5c762bec6abc2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-hit_2-5.png",
+      "bytes": 55993,
+      "sha256": "9df1233659db532dd423819359c28a75645447988f7d5b9608e907cbf93920d1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-idle_2-0.png",
+      "bytes": 49062,
+      "sha256": "b7ff7961331efd0fb47cafdf55b4dd5ec8590a2497053add6bffdbe2a97cc367"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-idle_2-1.png",
+      "bytes": 49529,
+      "sha256": "f2c587912c1fafa7fbaa8e1ed23acf6ee0f7006b0591d73ad001c01764c47b9d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-action-idle_2-2.png",
+      "bytes": 49582,
+      "sha256": "6abef52aafc93e3799f27452820ec6b4e8f37b0000c2621884391572cfb97585"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-pre-idle-idle_2-0.png",
+      "bytes": 48445,
+      "sha256": "7ebc073d2b367ee97e4788cd53444248c8af66ab7a0d199bb47977c1ab884ede"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-S-pre-idle-idle_2-1.png",
+      "bytes": 49373,
+      "sha256": "bf892964b7b00aaffabeb88d091663b0e5369a74c35a0bd53c12675fb62ec365"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-hit_1-1.png",
+      "bytes": 58182,
+      "sha256": "8a91b7334aff62835d44eca30f43a90649b07a352acde1f018e2509d946c1069"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-hit_1-2.png",
+      "bytes": 58829,
+      "sha256": "8c2cb689ac3ebb1bd3b100f46af836b0f9f539f1af86ffdd3145e015ecc3e64b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-hit_1-3.png",
+      "bytes": 59294,
+      "sha256": "b6dca0e0442c80d847f439d5045a4b42268d463f05676c70c556cee8b0bd3636"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-hit_1-4.png",
+      "bytes": 57563,
+      "sha256": "902ccd2b1889e1967956f4baf97b0632a79efb06d3a128f4faa1ab1e35da6d15"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-hit_1-5.png",
+      "bytes": 58379,
+      "sha256": "f60e0e2f113c7179aed31ba4d0937deff08d6cfd29adba4a4a5f4c629e89b459"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-idle_1-0.png",
+      "bytes": 48660,
+      "sha256": "d505cf2b051e867db3e65e47643e6c2030a4595b65897f400171550c93a96ee6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-idle_1-1.png",
+      "bytes": 49086,
+      "sha256": "875ba8a64a00903d15d648e5fde0d39b1020b7a72a5d608ac947de7ee11a0cde"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-action-idle_1-2.png",
+      "bytes": 50658,
+      "sha256": "13e99b6d33fab8d43b3586b8ae1db0609ec3677668915f4a4c1efe930df01227"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SE-pre-idle-idle_1-0.png",
+      "bytes": 48190,
+      "sha256": "50132082c3ce9daacf401120f2c4402a95b5842e6e2fb024b75151de64cf816d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-hit_3-1.png",
+      "bytes": 58869,
+      "sha256": "646de4550fdf3f49b9c4f4e066589caadfa43108df04b05da7bd7d0013bc6938"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-hit_3-2.png",
+      "bytes": 58690,
+      "sha256": "506f58f8850b303176b909a1f33f63b1294bdeb633c5c4517c87c877340a5d04"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-hit_3-3.png",
+      "bytes": 59078,
+      "sha256": "3a5e24b08eb462a102beaa3b43ce0b8cd5237207220d72c8229e1170208018dc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-hit_3-4.png",
+      "bytes": 57499,
+      "sha256": "43ea5546cbb4da19e153a2fd21c113e0f88167382571bd63a27703e0c97e5bef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-hit_3-5.png",
+      "bytes": 56311,
+      "sha256": "b864571092cabd6fca4c7fc4fc023fdeda5b5374d6012d1d40a808340a746a22"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-idle_3-0.png",
+      "bytes": 50548,
+      "sha256": "060050229882003507ce1acd0e6e8308129e157a5573fb88b55a0849f62df842"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-idle_3-1.png",
+      "bytes": 50602,
+      "sha256": "edfd347e30f74496e16de686ff9e52e25b43e59c7579d158bc469863b95dc007"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-action-idle_3-2.png",
+      "bytes": 52219,
+      "sha256": "920867a7d936d7defa211c5c8e041d681aed99c0b03ccdedf2d97c4c23a3b597"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-SW-pre-idle-idle_3-0.png",
+      "bytes": 50218,
+      "sha256": "49c782b2f768ee1f420466657e2cf53c8645c12809953862a4d1adf84fa8dc89"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-hit_4-1.png",
+      "bytes": 51888,
+      "sha256": "2706c87e008e259586973ba79ec31c2eaa0cfb2c06afec31dffa82c52959c27a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-hit_4-2.png",
+      "bytes": 50060,
+      "sha256": "4f06df8fd1f380ee267b4ce6fca8fd85fe1a7ec827c4630117f23f98e4f560c3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-hit_4-3.png",
+      "bytes": 48174,
+      "sha256": "76657b0ae7f711ab9b1a631ab466eaf8160855b1011cc69cce3a464b6b3990d5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-hit_4-4.png",
+      "bytes": 48114,
+      "sha256": "732d77210e1c6be7f223267e50c5fc833069c49f22a863668b86e5d2245ddff6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-hit_4-5.png",
+      "bytes": 50616,
+      "sha256": "1850968bc93c6b2c8c4b1ddd7dba4e7b757043d14513460469ee4251269dadb8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-idle_4-0.png",
+      "bytes": 51757,
+      "sha256": "6afedbc8c151ef8a7c38b01641a1738cc3cf9a892f33066b6efbc73f4600fc5d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-idle_4-1.png",
+      "bytes": 53313,
+      "sha256": "6f435b7d51c2a97c3e1a320f4078c8369eb77ce59074cde993c2047d0f07811f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-action-idle_4-2.png",
+      "bytes": 53429,
+      "sha256": "93f422ce254a50b4862c8e880f24844d861eb64d162f20fd8eda32f1f37f5f92"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/captures/hit-W-pre-idle-idle_4-0.png",
+      "bytes": 51223,
+      "sha256": "8c49fffea283ccc9744d4a234a3c0dd25ec8231e2a15c28c763de899376506d6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-hit/samples.json",
+      "bytes": 225592,
+      "sha256": "91d2bf3c301082ca7a110816cc9a7de846450de74a17958772386a476b6b639c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-E-action-idle_0-0.png",
+      "bytes": 46988,
+      "sha256": "2222cfa6c8dcb2c17a4402a72eeea7eaf4e456a925f697e9d5c2a47826d46aa2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-E-action-idle_0-1.png",
+      "bytes": 47482,
+      "sha256": "2c3eec7b261747198121f72893f314c9b6d295f2aae115dd1b85209ea55ede3a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-E-action-idle_0-2.png",
+      "bytes": 48062,
+      "sha256": "baed0d487b82601703374e91a96d84e34215f4771dfb945e73b1cee4b9980a3e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-E-action-idle_0-3.png",
+      "bytes": 48524,
+      "sha256": "579dd602d846e08f6e5b9a5b3d3de0f62ebec1fe5aba91fea2208a485f41658d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-E-action-idle_0-4.png",
+      "bytes": 47713,
+      "sha256": "6d102612e7ff037e938a516c3367635694ef0292faf610b10814a4af186c463d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-E-action-idle_0-5.png",
+      "bytes": 47437,
+      "sha256": "f7e9ab326110719d0dffe5d0d57e84fa0f8764ee0e1a4125aee2b234053f24ad"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-E-pre-idle-idle_0-0.png",
+      "bytes": 47004,
+      "sha256": "d1f51304a244d2baa23ced96327f3c075f3a94f8d0796846344a6cf47c0c8dd2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-N-action-idle_6-0.png",
+      "bytes": 53107,
+      "sha256": "3a7402f10ec489531b8f2efb0dd6bcdbd805c13bb43948d059e89abd162554f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-N-action-idle_6-1.png",
+      "bytes": 54189,
+      "sha256": "228519566874c806609c6229b81e21bdaf122b7ddb72a63110f1458d9252d807"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-N-action-idle_6-2.png",
+      "bytes": 54368,
+      "sha256": "e3289e3c690f24c5f3aa9af14a7d30925184fa42add4cd9adb4d72900e301664"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-N-action-idle_6-3.png",
+      "bytes": 54220,
+      "sha256": "8dfc7500a78dc5d1220e4dfa2b8bb7c7eb042d137c78714c3f9b11b578147d41"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-N-action-idle_6-4.png",
+      "bytes": 54852,
+      "sha256": "765ce46f96a1cf2a1020826626052cbd1535273bf4449683c54df212a767e9e4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-N-action-idle_6-5.png",
+      "bytes": 53409,
+      "sha256": "b9ad3b86fdb8e6b9b857c3860a7d6ffaf3e47f713c56c2113eefaf1669109657"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-N-pre-idle-idle_6-0.png",
+      "bytes": 53043,
+      "sha256": "c603ddb10566dbe695645935e121c07fb1b8a02427b96322d5eb8c935c0cf747"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NE-action-idle_7-0.png",
+      "bytes": 53199,
+      "sha256": "8d9d504a7bc60d945be77a0a4946de8a6c97d3d7e24d21e90dc258ed6b1769b0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NE-action-idle_7-1.png",
+      "bytes": 53648,
+      "sha256": "4d201faab5f548366f3f23a8cbe5999702c5e7bb90ec88224c5b129daf116854"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NE-action-idle_7-2.png",
+      "bytes": 54812,
+      "sha256": "c49c0f702c925862c3bd53261d7f3d884216e44ed52fa2ac0f0842243c010bdf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NE-action-idle_7-3.png",
+      "bytes": 55010,
+      "sha256": "1ae6a059e413a44ad57e996b5bcf2572ecbcf6a7e0705f87b145a896bd46f485"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NE-action-idle_7-4.png",
+      "bytes": 53788,
+      "sha256": "4c2901fcf7525b3af7e70e7890d633ddd41585ad89ee16308517ecfc5aaca2ae"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NE-action-idle_7-5.png",
+      "bytes": 54175,
+      "sha256": "9e867b47d99cb656c313a987023e3759762579499cae7aaa15ad452e46f407b2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NE-pre-idle-idle_7-0.png",
+      "bytes": 53076,
+      "sha256": "c90415b0694ea5e3a1f750e20339d9881e295549c1094f1defcc0bbec91b7177"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NW-action-idle_5-0.png",
+      "bytes": 51608,
+      "sha256": "636bdbb8d8ce8df9b15591ba5d43be06a6428c676199dfe2ab5212484f736335"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NW-action-idle_5-1.png",
+      "bytes": 52171,
+      "sha256": "c30d43eb8ef5cc5989ce7663f8e69f935183c6ede9ed73ae7c9597cf82ad6bd4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NW-action-idle_5-2.png",
+      "bytes": 53741,
+      "sha256": "4e170320035f52aa536e173c663aca0ef840d6ba69fbbbcff5145098b75c29e8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NW-action-idle_5-3.png",
+      "bytes": 52972,
+      "sha256": "6c8187f169597b92bac6b914cdcd1af4e010c782344f16be60dcf866d1eda98d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NW-action-idle_5-4.png",
+      "bytes": 53495,
+      "sha256": "293d70c67da15dc95b34d64bcd33f07b4606dec1fb4ddd3abd580d14eca294c4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NW-action-idle_5-5.png",
+      "bytes": 51962,
+      "sha256": "35dd9c175b27cbbd34ba1e9e4420f5f7739c801d46084e6a6f6e3971e8b49ed5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-NW-pre-idle-idle_5-0.png",
+      "bytes": 51574,
+      "sha256": "1bc6d4953f77591d3952c559158056dbf318d9eb00229f43533067d2f57d26df"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-action-idle_2-0.png",
+      "bytes": 48749,
+      "sha256": "644189df4fd761564a30e19aff031c69f79e90c21d3a93502d8eaefea250f272"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-action-idle_2-1.png",
+      "bytes": 49268,
+      "sha256": "27ccbc4e8bdca369b40b1407ef431d018caf37205c55ab86df65b4125ebd34a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-action-idle_2-2.png",
+      "bytes": 49710,
+      "sha256": "a3b74fbbafd239273289833a5a9bd15b917d4c6f346cca896f4e1ff14dede2a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-action-idle_2-3.png",
+      "bytes": 49758,
+      "sha256": "6003e04fdca2983ed4db45b291311758c6839abf636032582020e97b409cde2c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-action-idle_2-4.png",
+      "bytes": 49892,
+      "sha256": "2de46f10243c23d90900f45b75c7c6e58427cada06f30cb8f339c5668f42c154"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-action-idle_2-5.png",
+      "bytes": 49401,
+      "sha256": "137f5199c8097cfdfa5a54b723f3e5b7bfd5f4cb81d2d105c84026a830c1a465"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 48646,
+      "sha256": "60adee4a30449435f01cfa1fc6bae79cebf1f9b32f91195d75f40e146f8f8766"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-S-pre-idle-idle_2-1.png",
+      "bytes": 49573,
+      "sha256": "16983277acf4650c37bf01e9d085c4c30b5ec88fed60460c74a2886615c37b01"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SE-action-idle_1-0.png",
+      "bytes": 48192,
+      "sha256": "0c2675c445525afa429069672c0f8dea619734ad6793b259949c57dc35144a5f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SE-action-idle_1-1.png",
+      "bytes": 49076,
+      "sha256": "e306bd1ea185eee1bcac891ded361429b681acb0022fbdf596d8ecafa0f003b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SE-action-idle_1-2.png",
+      "bytes": 50512,
+      "sha256": "0f7d8b2ea08564f210126983efebe5b9dc7e1cf91d3cfb15a6171de413ea38b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SE-action-idle_1-3.png",
+      "bytes": 48784,
+      "sha256": "19b1033de78112dec88dff78f175c6e2ad95087535cb03b24984da9c6696bfab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SE-action-idle_1-4.png",
+      "bytes": 48872,
+      "sha256": "2b252b45118ab0d4111c0cc5aab8f54bb90d0570071b8000ee9540ecc990820b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SE-action-idle_1-5.png",
+      "bytes": 47584,
+      "sha256": "166c28a26a76d6c21826f72c712be756cd0afaddd7120e32584cc48f620a40b5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SE-pre-idle-idle_1-0.png",
+      "bytes": 48273,
+      "sha256": "42a28088b898e0f1f66a94fcadf0f612a1e2d2ef69db711284973073ef4175f0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SW-action-idle_3-0.png",
+      "bytes": 50572,
+      "sha256": "b474a6c779317b3f8f238ede948bd09c153bc68fbe2e50fb105f6ac1ed71d2ac"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SW-action-idle_3-1.png",
+      "bytes": 51238,
+      "sha256": "5a07722b866735d58b354a5076f184c17a1cd193933e2c6f9ce5cd8706366af8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SW-action-idle_3-2.png",
+      "bytes": 52714,
+      "sha256": "3a28e0a84b2b533166324750b0d4b69ebffbbe48f5f47ee79effa36306610cbb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SW-action-idle_3-3.png",
+      "bytes": 51320,
+      "sha256": "a6c7e2a9b3c2f8ae955041bc3bcbf080171cf1a42071f84300b8476292dc6f96"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SW-action-idle_3-4.png",
+      "bytes": 51343,
+      "sha256": "ed98f3f6b6cf4da7ce3a8c991e9582607bdbe2111f235d0d8d2587fd90738ddc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SW-action-idle_3-5.png",
+      "bytes": 51371,
+      "sha256": "98e6debc9d5863de54a581d911c1651029ba3adf5cb55079a00549082f00653e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-SW-pre-idle-idle_3-0.png",
+      "bytes": 50565,
+      "sha256": "aea0e1d058bd914d78fc31bf534d07cbbba5fe7a6997678034b01e2debd20f94"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-W-action-idle_4-0.png",
+      "bytes": 51532,
+      "sha256": "615b2da22b2ec1d210917ec0ae3948196765c643a5f4dd9ae029604dbcda5768"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-W-action-idle_4-1.png",
+      "bytes": 53695,
+      "sha256": "911b5db87790ec2f2af3e5531914920cb65e715e4bf68a1a3d15bbac7e20a72f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-W-action-idle_4-2.png",
+      "bytes": 53674,
+      "sha256": "c701874b8fdc9833933e489e0cbca663949d12340e059786085e3948012f84a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-W-action-idle_4-3.png",
+      "bytes": 54429,
+      "sha256": "056f9c22335d36f1b5f9a47468557aac2aac602d45061d0ef5234dfc79e4df74"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-W-action-idle_4-4.png",
+      "bytes": 52799,
+      "sha256": "91fdf1c5ee66d98c478d31d7eaf4e2991e729eb34fd6d3b1b539fbb42855ddd1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-W-action-idle_4-5.png",
+      "bytes": 51189,
+      "sha256": "5e4de0309dffc78ac697019413be5b7517d19374e81b1d1851e95cbdb5311289"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 51625,
+      "sha256": "3f595f0fbe680136e1fc0f697638f1ef9189172150d9bc7fae16d82b0129ae4e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-idle/samples.json",
+      "bytes": 428633,
+      "sha256": "178ce25c237638ccedb03a2fa0d5dfacdae5db2894e88042b5a304aa3bccc435"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-E-action-run_0-0.png",
+      "bytes": 51814,
+      "sha256": "230fd9cded4d963961e247acbcd6e13017b1227c0fef8df58e6ae07bac42017c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-E-action-run_0-1.png",
+      "bytes": 51137,
+      "sha256": "0bbb9f109d6bc0b3f2bb8fc06cc77fe89f789fff512a0a6b2b4318e0fb22d45d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-E-action-run_0-2.png",
+      "bytes": 52325,
+      "sha256": "fc0414caadc78cc65e6b75eeeb3a61d778a03df0dd25074417fe339d01bb0703"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-E-action-run_0-3.png",
+      "bytes": 50614,
+      "sha256": "2c1206035d060534b4cc208265b93425acbf278e2b9e884122386514f34eae94"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-E-action-run_0-4.png",
+      "bytes": 49725,
+      "sha256": "904190402d0a8cfe73d0382cdc67dd98739020062d4a648680f9e52699105e58"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-E-action-run_0-5.png",
+      "bytes": 50113,
+      "sha256": "4ea11303dca4460bca5b1d13518ecf124451b01cb7ea71f6ec46122162835238"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 46874,
+      "sha256": "b914a9bf0333debfb9f700700f4aaba6ae5902138f5a52342922f266f1075ed5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-N-action-run_6-0.png",
+      "bytes": 52832,
+      "sha256": "f4730ec69af7f5af2b303531e3f30c6f7d6b453508ddca880be2c2614c67b5be"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-N-action-run_6-1.png",
+      "bytes": 52852,
+      "sha256": "c58249e7899c0d725d4b87545960eb328e1c762e2ff80e4abb44d16bc637f9ca"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-N-action-run_6-2.png",
+      "bytes": 52165,
+      "sha256": "b040f69ef37106d57df09c9f611d8cdcc0ab1951e0ba20aa0b1b11985fb8610c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-N-action-run_6-3.png",
+      "bytes": 51782,
+      "sha256": "547be49143deda05d6e0f1b42adcd14616963ac47cd8fda825fcde3fdf581d31"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-N-action-run_6-4.png",
+      "bytes": 51182,
+      "sha256": "f73db45dd5476dea46e1b0ac17e07681424caa7b88b814d7a324bb65eda980d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-N-action-run_6-5.png",
+      "bytes": 53730,
+      "sha256": "debd44125bca357cec83d61f9d96f3cd8733ae092dd1803b9d3590d2c7a93993"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-N-pre-idle-idle_6-0.png",
+      "bytes": 52683,
+      "sha256": "53fba00910cd3f4d9f613de9c717006eb8609d61c38205da8a2840dc26c1e36a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NE-action-run_7-0.png",
+      "bytes": 56619,
+      "sha256": "dd8899fc096d3fae5b6676436a55d9c6cad42c1111d5da1146e7a88627fbf69a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NE-action-run_7-1.png",
+      "bytes": 55218,
+      "sha256": "d662e571bc866c63e596a1a996d7fae6f9140be178ddc2a068abacb8a427595b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NE-action-run_7-2.png",
+      "bytes": 54637,
+      "sha256": "ea5b26091e925bb5bca6be2b3cee396025065def370bedf1428f2ab33c27151a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NE-action-run_7-3.png",
+      "bytes": 54679,
+      "sha256": "8e8642a0a6986f11dabc595de62b617f9e08780a74056778793c878b91807f4c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NE-action-run_7-4.png",
+      "bytes": 55005,
+      "sha256": "cabeebdc09fac23389e8dc81a3fcd0c4f83990add3b6ba3a1286a0f648f65615"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NE-action-run_7-5.png",
+      "bytes": 55393,
+      "sha256": "a52c8c25ded1ca12533de473d31a0de7b80fa5634d91c098731fc0a4718d3ea7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NE-pre-idle-idle_7-0.png",
+      "bytes": 52765,
+      "sha256": "afacc3bf76d1f375489800a13558971ec3a634086e5fbb6f8af789c8146e0648"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NW-action-run_5-0.png",
+      "bytes": 53565,
+      "sha256": "1449c6c1e1e5812def82f86e3833e87b45be3ca0e3664f142d7478f13f5f7a83"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NW-action-run_5-1.png",
+      "bytes": 52939,
+      "sha256": "d5968197e14bf5fb3aa0e718eeac497d031bf554c8bd6e74c4a05d87ec71e028"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NW-action-run_5-2.png",
+      "bytes": 52951,
+      "sha256": "c503617000f68f13686f239551fe96555b316faf8bc5fc061a423e54e5a3914e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NW-action-run_5-3.png",
+      "bytes": 52052,
+      "sha256": "6226c7d0ce6913c858ab8fbf51c2076dae30255a84eec38b83073f77366ee6d1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NW-action-run_5-4.png",
+      "bytes": 51652,
+      "sha256": "e648dd227d28f5fd677f11cf8ca5041d0da146f829efc2e0bde07396015a621a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NW-action-run_5-5.png",
+      "bytes": 50629,
+      "sha256": "7817ad547ef3014ed8eb9e51a8c6ae7ef20a158d83c36150f8224f32da1b2e11"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-NW-pre-idle-idle_5-0.png",
+      "bytes": 51607,
+      "sha256": "ff7dbe751b914f2d40cdf8e24708334906d0f7ed542afb1390d73bb2c5f2595c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-action-run_2-0.png",
+      "bytes": 52660,
+      "sha256": "32f162b78376633a002b13b408328cda801d33fb9c6a981576760a583576cd1b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-action-run_2-1.png",
+      "bytes": 52212,
+      "sha256": "3623080aecdb9acd6419badb93024bbdcfabe113ea848e0af4b08544ad875916"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-action-run_2-2.png",
+      "bytes": 54927,
+      "sha256": "45ab6e86f1d7cef208112fec045c77ca44dcaf7b1ee7086be57a69edf689aadc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-action-run_2-3.png",
+      "bytes": 54203,
+      "sha256": "73305efa2179f9658809354278900d222fa20ee5d213d12fba93dd1ac835ed3d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-action-run_2-4.png",
+      "bytes": 54662,
+      "sha256": "961e3c21c5644e42d9a5acc131944b3f944d9c66e664790ec6b8466c72ae3211"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-action-run_2-5.png",
+      "bytes": 55278,
+      "sha256": "565155a814f0d79a54fcefc23cda0d1af3ad33f88273b1089a944b3cb8bec525"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-pre-idle-idle_2-0.png",
+      "bytes": 48436,
+      "sha256": "3588ff878e75bc46f7284eecd3582979d0efda498db12737cb5b7e071b94f966"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-S-pre-idle-idle_2-1.png",
+      "bytes": 49367,
+      "sha256": "d008d0362d5c2f4d7391edffdd83ce37a72bcda32cdeef2d822a5767438a2588"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SE-action-run_1-0.png",
+      "bytes": 52511,
+      "sha256": "88ac5fbcaa99fce8763b96a87a9989893a471a07bfed8b6b08ee6e779fbd8e1c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SE-action-run_1-1.png",
+      "bytes": 50394,
+      "sha256": "d9d490400501555c9403b218764d7672b264d8c3c1e3ff4d0561ba302cf6461c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SE-action-run_1-2.png",
+      "bytes": 49906,
+      "sha256": "e701d8bef1aadd620f0f1fc2f8951f730d4ac0a7db31d46845dca9aa10f3548b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SE-action-run_1-3.png",
+      "bytes": 51905,
+      "sha256": "fb6579557d73e4c9aa935316fd7209990d6ac634f092222cf70dee17d3f508c1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SE-action-run_1-4.png",
+      "bytes": 50397,
+      "sha256": "50f4dac054bbee549e0cabec362fc63c15567dd114549f238c5d3bdb0a60ce76"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SE-action-run_1-5.png",
+      "bytes": 48416,
+      "sha256": "674a926345cbd2cd8a99498955488b4c33e58630cbe8ea1fe11db2cb3ccede01"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SE-pre-idle-idle_1-0.png",
+      "bytes": 48183,
+      "sha256": "413f2f22683c7cd06b4b1ae7b0a6deaa1ae2f713c3171064ec8aa5b8efccfe7d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SW-action-run_3-0.png",
+      "bytes": 51243,
+      "sha256": "025c9f7c93a18835fe93c516bf6fbed65d03d1889f7b6c669e05c0a2401bd8aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SW-action-run_3-1.png",
+      "bytes": 51124,
+      "sha256": "427d22fbe2e8f646bd2839cb17a24f6b2b8066e38a0f70ac57d4b0f5b147c95c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SW-action-run_3-2.png",
+      "bytes": 52389,
+      "sha256": "8a3d1bec07ebfa1ffe81d9b25fed6d1527734858ae7c5d5718e498d25444533e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SW-action-run_3-3.png",
+      "bytes": 53966,
+      "sha256": "09dab2afc4b345e565bfd39ae7e703104bc149d7ec92b2b8ca5f6953bbc1d18a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SW-action-run_3-4.png",
+      "bytes": 52898,
+      "sha256": "5910de521f4d5f3cb21e6cdea7c707133b787bfb24f609caf24ea13e1da7a61a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SW-action-run_3-5.png",
+      "bytes": 51332,
+      "sha256": "0e9ce48e6c6d435fb839f17059f6cb86b81ad45016bde06055efddae84a6c595"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-SW-pre-idle-idle_3-0.png",
+      "bytes": 50304,
+      "sha256": "29b7f3aa5cd67b5fceffc36caf135e937264a27c6f95d45452a760000624e11b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-W-action-run_4-0.png",
+      "bytes": 52279,
+      "sha256": "268c839cf8a4f9a3cb2e58f31c75a8f23e56c431ad0f985452f2dd099c81fea7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-W-action-run_4-1.png",
+      "bytes": 52844,
+      "sha256": "80d2e00b8e87d78aaaef69f2ae1357dca0dcc6d582112ad3e91f248c43f2f188"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-W-action-run_4-2.png",
+      "bytes": 52212,
+      "sha256": "f9650eb08bff8805a8c8f6c8445aa38c767a7fe15f3003bcd87bb238d1fdcdda"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-W-action-run_4-3.png",
+      "bytes": 52973,
+      "sha256": "c802b0611f14e340e8862caf7b6c8713f2689e98b0219e1b676374018c44fdfb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-W-action-run_4-4.png",
+      "bytes": 53939,
+      "sha256": "5658ccf0f7efc82c3b71bf10e7c4fe4196ddcb6fc8b52cfceb2e43138fa3b966"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-W-action-run_4-5.png",
+      "bytes": 52696,
+      "sha256": "c1ea21c1f3ee664eed6256f7c836593bdb3bd96f6ec9c85c0361e31edd0a8707"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/captures/run-W-pre-idle-idle_4-0.png",
+      "bytes": 51357,
+      "sha256": "ff1b2a982151c46092696cb930b38600690683e47645df5573bcbfddef6cfe76"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/belial-run/samples.json",
+      "bytes": 308698,
+      "sha256": "857ba087e5ad553f9810283d40f7a62c933f7d97d79f5a741c51d6723c62e63c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/capture-manifest.json",
+      "bytes": 59128,
+      "sha256": "9989e3e43b4194df3912d9b097b8dcc01d41945063652932b3f58ac94f935805"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/command.json",
+      "bytes": 377,
+      "sha256": "bb991ffb93d0cafa074fcd74f34fe15aceb3901b93bb8fc2ee7b3f9f6e25f268"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/config.json",
+      "bytes": 2655,
+      "sha256": "a69edb2bed245ec46537ef6a81499469119d39fd58184c92b0db455e2b2c25ab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/godot-run.txt",
+      "bytes": 17923,
+      "sha256": "b18cda0b37ff5a51d05cb2d98b325bd7026991d7562021d5ebfdfe83dacd34df"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/process.json",
+      "bytes": 246,
+      "sha256": "26d2644970ad00bcf51e1234e409d6fb32ef3796595f5644332a2b4ae095e61f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/report.json",
+      "bytes": 24445,
+      "sha256": "ba6d62ddafcb12b394bc90a3028d3dddcbf4155653b7a18631a7c4c54348df3a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/reviewed002/playback/xvfb-run.txt",
+      "bytes": 64,
+      "sha256": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/save_batch.py",
+      "bytes": 4548,
+      "sha256": "f4194633e76dd92459a1c48ba959f9e2b5aded692f261377fd80f8cdfbb17ab2"
+    }
+  ]
+}

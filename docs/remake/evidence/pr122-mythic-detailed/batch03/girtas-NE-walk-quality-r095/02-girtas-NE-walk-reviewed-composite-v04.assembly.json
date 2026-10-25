@@ -1,0 +1,556 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:267",
+  "role": "walk",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "NE",
+  "metadata_sha256": "f61d712aa61e0768ff2209e4fe067d13dd747a33248f1914c645697c77515b6e",
+  "metadata_path": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/spec.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/girtas-NE-walk-reviewed-composite-v04.png",
+  "output_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+  "output_canvas": [
+    3072,
+    4608
+  ],
+  "cell_size": [
+    1536,
+    1536
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/girtas-NE-walk-left-forward-contact-3d-key-v03.png",
+      "source_sha256": "c571d32c6d83b2f56136980bf08125a6a622794205b9943cd1ce720400341f59",
+      "source_pose": 0,
+      "source_region": [
+        226,
+        44,
+        1019,
+        1138
+      ],
+      "rgba_sha256": "13b1080fb16dea8bbea2d5529c80c4ad3d958661470eccf07a9e2e1aff2a5379",
+      "visible_pose_sha256": "528386341b922519f0e048e5883d4e883aab2df640248793a34766ac07193c84",
+      "newly_authored": true,
+      "review_basis": "NEWtruefarLEFTforwardheel0 fromexactNEfixedbone3DPRIMARY, originallegconditioningremoved; nearRIGHTtrailtoeDOWNLEFT/farLEFTforeheelUPRIGHT, independentlySOURCEPASS5b5b7fcd. Whole6andphysicalrootpending; noactorapproval.",
+      "output_region": [
+        258,
+        199,
+        1019,
+        1138
+      ],
+      "translation": [
+        32,
+        155
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 389419
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-halfcycles-v01/girtas-NE-walk-left-halfcycles-v01.png",
+      "source_sha256": "033826172c6cf0865decb1133cf315af4fc8a320bb85de673e004b6bc6f0ae79",
+      "source_pose": 0,
+      "source_region": [
+        145,
+        16,
+        784,
+        847
+      ],
+      "rgba_sha256": "c7bc03a976ed086257f18c107a97aec34024fdfdf6efd0e7d3338f2aeea2267d",
+      "visible_pose_sha256": "b6b1f72ad46bd24709e249989b7383ef5f5bbd0b0ac2c9c5bcf4ad7f6f7211b1",
+      "newly_authored": true,
+      "review_basis": "LEFTfarloadedflatstance, RIGHTnearpassing; genuineNEwalknotRUN, originalmodel/camera. Sourcefull6physicalandindependentQCpending. Outwardonlyownedalpha16completecropcheckedbyunchangedassembler, oldstrictHOLDpreserved.",
+      "output_region": [
+        1912,
+        344,
+        784,
+        847
+      ],
+      "translation": [
+        1767,
+        328
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 224068
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-halfcycles-v01/girtas-NE-walk-left-halfcycles-v01.png",
+      "source_sha256": "033826172c6cf0865decb1133cf315af4fc8a320bb85de673e004b6bc6f0ae79",
+      "source_pose": 1,
+      "source_region": [
+        984,
+        14,
+        774,
+        823
+      ],
+      "rgba_sha256": "c3ad9d685fd054a84b9b4fb1e7c8e969f693e195f744e7a181257db42b40917e",
+      "visible_pose_sha256": "601af7aa6483a853e2d9c079d8c597e0359642b20f0793cf9e8874ca50564a9e",
+      "newly_authored": true,
+      "review_basis": "LEFTfartoeoff, RIGHTnearforwardreach; genuineNEwalknotRUN, originalmodel/camera. Sourcefull6physicalandindependentQCpending. Outwardonlyownedalpha16completecropcheckedbyunchangedassembler, oldstrictHOLDpreserved.",
+      "output_region": [
+        381,
+        1892,
+        774,
+        823
+      ],
+      "translation": [
+        -603,
+        1878
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 214514
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NE-walk-right-contact-from-reach-key-v02/girtas-NE-walk-right-contact-from-reach-key-v02.png",
+      "source_sha256": "c5f00361ecef96330a02b78879c2cc1c0e7173fe0ef479964ab34e40bec050f9",
+      "source_pose": 0,
+      "source_region": [
+        23,
+        12,
+        1208,
+        1232
+      ],
+      "rgba_sha256": "35b6702c85f7a711f7ba64832d95318964b2a601b2ea2ef581fd052de5a8ddfd",
+      "visible_pose_sha256": "0a54fd11ac13c1eb1c1051efb992a1525587f856cdb5535cc53e3fcd0d14fae5",
+      "newly_authored": true,
+      "review_basis": "Material NEW RIGHTheelcontact3 authored from exact successfulRIGHTreach2 only after independent source2\u2192old3 forwardlegretractionHOLD152d952f\u2026; actualRIGHThip/knee/shinforward extent retained withsettledheel/forefootangle, farLEFTtrailtoe. Owncandidateonly, independentheelcontact+whole6source/root reviewpending. No rootfix disguise.",
+      "output_region": [
+        1700,
+        1688,
+        1208,
+        1232
+      ],
+      "translation": [
+        1677,
+        1676
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 509613
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-NE-walk-right-halfcycles-v01/girtas-NE-walk-right-halfcycles-v01.png",
+      "source_sha256": "0d779a5d5079779a79e2e9b4013586101e9f6ec436e3238fe54a569272fa9a38",
+      "source_pose": 0,
+      "source_region": [
+        160,
+        29,
+        737,
+        820
+      ],
+      "rgba_sha256": "1f0c02e81499c0733dd7cc89aadf0e17594ae38ee7cdbd595a4df5a99d069351",
+      "visible_pose_sha256": "698f2e02e6ab3990ffc0068398cf71925aae84be76a89550bf07f040b3e8487a",
+      "newly_authored": true,
+      "review_basis": "RIGHTnearloadedflatstance, LEFTfarpassing; genuineNEwalknotRUN, originalmodel/camera. Sourcefull6physicalandindependentQCpending. Outwardonlyownedalpha16completecropcheckedbyunchangedassembler, oldstrictHOLDpreserved.",
+      "output_region": [
+        399,
+        3430,
+        737,
+        820
+      ],
+      "translation": [
+        239,
+        3401
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 216664
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-forward-precontact-from-3d0-key-v03/girtas-NE-walk-left-forward-precontact-from-3d0-key-v03.png",
+      "source_sha256": "804f2b33b763713d2d930fe16782f56019123ebbb541b25f06ddc2fc6ef80543",
+      "source_pose": 0,
+      "source_region": [
+        220,
+        37,
+        1027,
+        1159
+      ],
+      "rgba_sha256": "526df7665f44a1b5d27f7afa0b59202a184d4d3ead13b7a7f839fa01ae90511e",
+      "visible_pose_sha256": "f70191384305fa3aec3497127c1962a191bef65d01bf9173344a36ec78bca9a8",
+      "newly_authored": true,
+      "review_basis": "NEWtrueparallelfarLEFTforwardprecontact5 fromindependentlycorrect3DLEFT0; foreLEFTheelhovers\u224830nativeabove0 whileRIGHTrearTOEonlysupport remains; independentlySOURCEPASSb9991ad4. Whole6andphysicalrootpending; noactorapproval.",
+      "output_region": [
+        1790,
+        3260,
+        1027,
+        1159
+      ],
+      "translation": [
+        1570,
+        3223
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 405178
+    }
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      3072,
+      4608
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NE",
+        "region": [
+          258,
+          199,
+          1019,
+          1138
+        ],
+        "margin": [
+          514,
+          146,
+          1029,
+          910
+        ],
+        "source_anchor": [
+          768,
+          1333
+        ],
+        "rgba_sha256": "13b1080fb16dea8bbea2d5529c80c4ad3d958661470eccf07a9e2e1aff2a5379"
+      },
+      {
+        "row": 1,
+        "direction": "NE",
+        "region": [
+          1912,
+          344,
+          784,
+          847
+        ],
+        "margin": [
+          632,
+          437,
+          1264,
+          1201
+        ],
+        "source_anchor": [
+          2304,
+          1187
+        ],
+        "rgba_sha256": "c7bc03a976ed086257f18c107a97aec34024fdfdf6efd0e7d3338f2aeea2267d"
+      },
+      {
+        "row": 2,
+        "direction": "NE",
+        "region": [
+          381,
+          1892,
+          774,
+          823
+        ],
+        "margin": [
+          637,
+          461,
+          1274,
+          1225
+        ],
+        "source_anchor": [
+          768,
+          2711
+        ],
+        "rgba_sha256": "c3ad9d685fd054a84b9b4fb1e7c8e969f693e195f744e7a181257db42b40917e"
+      },
+      {
+        "row": 3,
+        "direction": "NE",
+        "region": [
+          1700,
+          1688,
+          1208,
+          1232
+        ],
+        "margin": [
+          420,
+          52,
+          840,
+          816
+        ],
+        "source_anchor": [
+          2304,
+          2916
+        ],
+        "rgba_sha256": "35b6702c85f7a711f7ba64832d95318964b2a601b2ea2ef581fd052de5a8ddfd"
+      },
+      {
+        "row": 4,
+        "direction": "NE",
+        "region": [
+          399,
+          3430,
+          737,
+          820
+        ],
+        "margin": [
+          655,
+          464,
+          1311,
+          1228
+        ],
+        "source_anchor": [
+          768,
+          4246
+        ],
+        "rgba_sha256": "1f0c02e81499c0733dd7cc89aadf0e17594ae38ee7cdbd595a4df5a99d069351"
+      },
+      {
+        "row": 5,
+        "direction": "NE",
+        "region": [
+          1790,
+          3260,
+          1027,
+          1159
+        ],
+        "margin": [
+          510,
+          125,
+          1021,
+          889
+        ],
+        "source_anchor": [
+          2304,
+          4415
+        ],
+        "rgba_sha256": "526df7665f44a1b5d27f7afa0b59202a184d4d3ead13b7a7f839fa01ae90511e"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 1179.0,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": null,
+  "region_height_span": [
+    820,
+    1232
+  ],
+  "possible_region_height_mismatch": true,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed.",
+  "finalization": "EXISTING_IMMUTABLE_ATLAS_WITH_REVIEWED_OUTPUT_REGIONS",
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+    "base_geometry_sha256": "f15c79b36cce8be834b623aa35b810cb7f9c62f1587b0214961095d9a2c87f89",
+    "direction": "NE",
+    "review_basis": "MaterialtrueforwardLEFT0/5 sixatlas preserved afterautomaticoutputfringeSTOP. Outward-only ownerregions preserve ALL alpha>16 exactly, unchanged originalsixbody/threshold/ownershipguards. Officialfinalizerchecks fullatlas==sixpinnedunresampledsourcecrops andpreservesSTOPreceipt. Actualfull6gait/physicalstillpending.",
+    "regions": [
+      [
+        258,
+        199,
+        1019,
+        1138
+      ],
+      [
+        1912,
+        344,
+        784,
+        847
+      ],
+      [
+        381,
+        1892,
+        774,
+        823
+      ],
+      [
+        1700,
+        1688,
+        1208,
+        1232
+      ],
+      [
+        399,
+        3430,
+        737,
+        820
+      ],
+      [
+        1790,
+        3260,
+        1027,
+        1159
+      ]
+    ],
+    "nearest_owner_sha256": "5bf987bdd052f3081ef4b7dff5f034b204d59bdb332dea2306679ae8e031a71f"
+  },
+  "source_region_proof": {
+    "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+    "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+    "source_RGBA_sha256": "0a7997eb923372516dfb2c92d7560462fba1e868c4d16d74b3fe3e85734589e0",
+    "base_geometry_sha256": "f15c79b36cce8be834b623aa35b810cb7f9c62f1587b0214961095d9a2c87f89",
+    "derived_geometry_sha256": "1c4e1132c1d859716013c7306d81ddd77649efcafe12595b2680022ff7bfb847",
+    "review_sha256": "e81044edd97f05d1c5d13707d82be8032d184376f1e160394dfd37c11cb1c661",
+    "review_basis": "MaterialtrueforwardLEFT0/5 sixatlas preserved afterautomaticoutputfringeSTOP. Outward-only ownerregions preserve ALL alpha>16 exactly, unchanged originalsixbody/threshold/ownershipguards. Officialfinalizerchecks fullatlas==sixpinnedunresampledsourcecrops andpreservesSTOPreceipt. Actualfull6gait/physicalstillpending.",
+    "source_unchanged": true,
+    "canonical_canvas_foot_anchors_unchanged": true,
+    "all_alpha_gt16_covered_exactly_once": true,
+    "foreign_foreground_pixels": 0,
+    "alpha_gt16_pixels": 1959456,
+    "added_alpha_gt16_pixels": 2,
+    "all_alpha_positive_covered": true,
+    "expanded_regions": [
+      [
+        258,
+        199,
+        1019,
+        1138
+      ],
+      [
+        1912,
+        344,
+        784,
+        847
+      ],
+      [
+        381,
+        1892,
+        774,
+        823
+      ],
+      [
+        1700,
+        1688,
+        1208,
+        1232
+      ],
+      [
+        399,
+        3430,
+        737,
+        820
+      ],
+      [
+        1790,
+        3260,
+        1027,
+        1159
+      ]
+    ],
+    "default_importer_repacker_unchanged": true,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "5bf987bdd052f3081ef4b7dff5f034b204d59bdb332dea2306679ae8e031a71f",
+    "foreground_owner_sha256": "de59b5bc945fcd3e16bdc3234a234fdd58c77ea91006296bc35a901a1238f1a9",
+    "detached_pixels": 6,
+    "detached_fragments": [
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          614,
+          661,
+          615,
+          662
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 1241.146647258091,
+        "owner_margin_min": 1238.9105792805913
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          504,
+          665,
+          505,
+          666
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 1243.0679788330162,
+        "owner_margin_min": 1241.0679788330162
+      },
+      {
+        "row": 2,
+        "pixels": 3,
+        "bbox": [
+          590,
+          2307,
+          591,
+          2310
+        ],
+        "nearest_max": 8.54400374531753,
+        "second_nearest_min": 974.1154962323512,
+        "owner_margin_min": 967.4072922998519
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          637,
+          2353,
+          638,
+          2354
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 1021.8825764245126,
+        "owner_margin_min": 1019.0541492997664
+      }
+    ],
+    "minimum_required_owner_margin": 32.0
+  },
+  "original_failed_receipt": {
+    "path": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/girtas-NE-walk-reviewed-composite-v04.assembly-error.json",
+    "sha256": "ba12d8a9f7c34e368e01157f2c42ac6157f7641f2402c5320354aa1465a58bbc"
+  },
+  "atlas_and_original_error_unchanged": true
+}

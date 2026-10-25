@@ -1,0 +1,49 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "SW",
+  "role": "run",
+  "version": "v01RIGHTAIR2",
+  "source_pose": 2,
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_batch": "batch03",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase2-fixedbone.png",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase2-fixedbone.png": "0dbdbe3446a372ffccd22b9c198abf575f27f7ad16807a4db6e2ff0faebb6845",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+  },
+  "prompt": "Create ONE full high-detail Girtas SW RUN production key2 on transparent background. One character/one pose, no scene/text/guides/floor. Generous CLEAR transparent margins around ALL rays/weapon/boots; every top HARD gold spike ends in a complete tapered point well INSIDE the canvas, ideally60px or more from edges. No gear clipped.\nImage1 is PRIMARY exact fixed-bone three-dimensional pose/camera authority. Faithfully dress this mannequin, do not substitute old legs/another stance. This exact phase2 is true RUN FLIGHT/AIR: BOTH feet airborne, NONE touching its projected ground. FAR anatomical RIGHT ORANGE advances FORWARD/DOWNLEFT in AIR approaching its next heel landing; NEAR anatomical LEFT BLUE trails BACK/UPRIGHT in AIR with knee flexion. The rear toe MUST be airborne too, not terminal push-off touching ground. Preserve actual opposite hip→thigh→knee→ankle chains and positive guide clearances on BOTH boots; not a standing/single-support pose with an AIR label. Body rises naturally with the primary, never normalize flight away.  Anatomical RIGHT FAR=imageLEFT, anatomical LEFT NEAR=imageRIGHT. Guide orange/blue indicate ownership ONLY; final colors original BLACK/GOLD. Exactly TWO connected fully armored legs. Expose actual near hip→thigh→knee through natural longrobe slit, faithful black under-armor/gold trim on ALL thighs, NO bare pink skin/generic trousers. MANDATORY two COMPLETE DISTINCT boots visible: in phase1 the farRIGHT recovery boot must not disappear behind nearLEFT thigh or robe. Swing/part only flowing robe panels naturally to frame that real boot, no extra foot or disconnected boot.\nImages2/3 supply ONLY same original approved SW upperbody/crown identity (oldlegs removed), image4 only ankle-length longrobe material/gold trim, image5 only original long SINUOUS blade. Same pale SW FRONT3/4 face looking DOWNLEFT, long pale hair, THIN HARD STRAIGHT radial gold metal rays, blackgold armor, original full longrobe panels. Hair/longrobe stream consistently BACK/UPRIGHT behind the run direction, modest coherent motion; never shorten robe/replace with pants. Original permanent RIGHT FAR=imageLEFT shoulder→elbow→LOW grip remains ONE continuous arm holding that same wavy gold-edged blade FORWARD/DOWNLEFT. EMPTY nearLEFT=imageRIGHT arm alone counter-swings; exactly TWO arms, no empty right fist/extra blade. Same skull/pauldron/torso/hip/boot physical proportions at every phase; compression/flight comes from real fixed-bone articulation/translation not body resizing. Strict SW FRONT DOWNLEFT camera, never NWrear/Eside. Preserve Girtas unique boss model/equipment and detailed art; no mannequin colors/primitives. Both boots and whole blade/crown/hair/robe complete inside frame.",
+  "corrective_reason": "New distinct actual AIR phase after independently passed opposite contact0/3; sameconstantbones/selectedSWleglessidentity, no oldgenericlegs or sharedmotion. Keep actual load/trueAIR, not labels or geometry-only completion.",
+  "contact_pair_QC": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+      "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-repaired-contact3-independent-source-QC-v01.json",
+      "sha256": "907b10c63fd7797d381e5f7f569743b56e6fd6f6c858a7fa0d24d902930b4aca"
+    }
+  ],
+  "guide_preinspection": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-four-role-guide-only-independent-QC-v01.json",
+    "sha256": "7291aaef31ee09c8541904a899a31669277c05458181ed908c8a3d9124953e47"
+  },
+  "bone_authority": {
+    "path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/constantbone-joint-and-ground-authority.json",
+    "sha256": "32df7c3b8443cb714e7802f8309e5f745bc8dbc69017b859d17b37d4937a9133"
+  },
+  "requested_at": "2026-10-19T16:12:03.753874+00:00"
+}

@@ -1,0 +1,25 @@
+{
+  "actor": "monster:아크모",
+  "slug": "arcmo",
+  "clip": "E-attack-v01",
+  "role": "attack",
+  "direction": "E",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/E-attack-v01.png",
+  "source_sha256": "c3d08b68ee8f7c31609e833b3aa90b275c3d775a5c74caf50a5aa88a24d1a0c7",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      100030,
+      89866,
+      83956,
+      82379,
+      80583,
+      76765
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

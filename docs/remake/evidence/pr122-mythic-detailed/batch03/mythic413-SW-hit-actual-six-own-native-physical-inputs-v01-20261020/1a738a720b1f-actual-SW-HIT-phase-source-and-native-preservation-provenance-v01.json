@@ -1,0 +1,99 @@
+{
+  "phase": 1,
+  "role": "impact_response",
+  "source": {
+    "path": "/workspace/scratch/mythic413-SW-hit-author-20261020-v01/actual-SW-HIT6-own-native-articulated-v01/phase1-actual-SW-hit-impact_response-v01/thunder_female-SW-hit-phase1-impact_response-actual-native-v01.png",
+    "sha256": "6e36a01af3ceb57e03610fada6a378836ddf86f25ef13eb033b3b22636d57b1e",
+    "bytes": 860931
+  },
+  "native_size": [
+    1536,
+    1536
+  ],
+  "C": 2496.0,
+  "bodyunit": 2.4375,
+  "common_rig_root_unpadded": [
+    667.65625,
+    1003.5996691442447
+  ],
+  "storage_translation": [
+    128.0,
+    128.0
+  ],
+  "stored_common_root": [
+    795.65625,
+    1131.5996691442447
+  ],
+  "head_torso_velocity_parameter_native": [
+    3.078947368421053,
+    11.289473684210527
+  ],
+  "head_local_angular_velocity_parameter_degrees": 1.7,
+  "LEFT_actual_source_knots": [
+    [
+      734.0,
+      480.0
+    ],
+    [
+      756.0,
+      513.0
+    ],
+    [
+      853.0,
+      619.0
+    ]
+  ],
+  "LEFT_actual_guard_knots_unpadded": [
+    [
+      735.7271872758865,
+      486.3330202102661
+    ],
+    [
+      757.2191462516785,
+      517.470202922821
+    ],
+    [
+      891.1374207276727,
+      473.957517860046
+    ]
+  ],
+  "LEFT_guard_target_angle": -18.0,
+  "LEFT_guard_projected_length": 140.81000674667976,
+  "source_complete_LEFT_native_material": {
+    "path": "/workspace/scratch/mythic413-SW-hit-author-20261020-v01/common-own-SW-native-LEFT-materials-v02/original-actual-SW-LEFT-far-complete-curved-cuff-forearm-free-hand-material-v02.png",
+    "sha256": "dd8f7377f729211845118e9a36bbf1506420fb7a6735f7129b8e547cdd658194",
+    "bytes": 48485
+  },
+  "actual_LEFT_guard_forward_mesh": {
+    "path": "/workspace/scratch/mythic413-SW-hit-author-20261020-v01/actual-SW-HIT6-own-native-articulated-v01/phase1-actual-SW-hit-impact_response-v01/LEFT-own-SW-complete-curved-cuff-forearm-fingers-guard-actual-forward-mesh.json",
+    "sha256": "8f66051aef853a8da52d4f8d7caf6f308933c24c12b31a1e5e84965abd9f0df3",
+    "bytes": 143275
+  },
+  "cloth_lag_native": [
+    3.0,
+    2.0
+  ],
+  "ribbon_lag_native": [
+    2.0,
+    1.0
+  ],
+  "body_inverse_maximum_residual": 2.2737367544323206e-13,
+  "actual_body_forward_flow": {
+    "path": "/workspace/scratch/mythic413-SW-hit-author-20261020-v01/actual-SW-HIT6-own-native-articulated-v01/phase1-actual-SW-hit-impact_response-v01/actual-SW-native-body-causal-forward-material-flow-v03.npz",
+    "sha256": "52ac7896c6c31cbbdb0aa61bf0852f6b5aa1379a4dc378eafb7f5ce16e7111f0",
+    "bytes": 2595556
+  },
+  "body_flow_definition": {
+    "scaling_squaring_steps": 8,
+    "initial_velocity_divisor": 256,
+    "minimum_dense_Jacobian_determinant": 0.7493341329995928,
+    "maximum_native_displacement": 29.926244735717773,
+    "stored_precision": "float32 exact render input"
+  },
+  "fixed_original_complete_legs_boots_native_region_RGBA_changed": 0,
+  "original_RIGHT_gear_and_conservative_fixed_native_region_RGBA_changed": 0,
+  "strong_alpha100_components_ge200": [
+    304610
+  ],
+  "actor_approvals_added": 0
+}

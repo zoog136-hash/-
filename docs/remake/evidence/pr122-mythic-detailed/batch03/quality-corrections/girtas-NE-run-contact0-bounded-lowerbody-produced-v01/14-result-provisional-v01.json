@@ -1,0 +1,47 @@
+{
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    0
+  ],
+  "source_kind": "NEW_bounded_farLEFT_support_knee_foreshortening_from_owned_contact0",
+  "raw_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v01.png",
+  "raw_png": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v01.png",
+  "raw_sha256": "99eacae26b148d58339441ed91ba0985d0eb7b54dbebb766dc8191e353bfc90e",
+  "raw_bytes": 1147951,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/request.json",
+  "request_sha256": "52bc84db9bdcb375b25234611b6d83312d451a177ff8619c5695d09eacc80028",
+  "original_generated_file": "/workspace/generated_images/exec-9fc12ba1-a969-496b-90a6-3271ee11b47c.png",
+  "imagegen_completed_service_calls": 1,
+  "source_visual_status": "HOLD_PENDING_INDEPENDENT_ACTUAL_SOURCE_AND_PHYSICAL_REVIEW",
+  "status": "PROVISIONAL_BOUNDED_SOURCE_CANDIDATE_NOT_ADOPTED",
+  "actor_approval": false,
+  "new_approvals": 0,
+  "integration_ready": false,
+  "newly_authored_poses": 1,
+  "reused_poses": 0,
+  "completion_count_delta": 0,
+  "fixed_runtime_canvas": 1936,
+  "visual_findings": [
+    "Single actual production image edit changed supporting farLEFT leg/attached inner robe inside agreed semantic mask.",
+    "Exact original RGBA outside mask preserved; opposite nearRIGHT folded recovery, upper rigid body and entire weapon unchanged.",
+    "Direct native observation: new support boot ROI [610,900,780,1025], approximate back heel [635,1007], middlebottomsole [670,1009], leadingtoe [739,992]."
+  ],
+  "visual_limitations": [
+    "Source anatomy/knee flexion versus projected limb shortening requires independent v04 verdict.",
+    "Actual new heel differs from nominal green target683967; physical author must derive ground/root from actual new sole, not targets.",
+    "No six-pose physical, actual Godot, game connection, or actor approval is claimed."
+  ],
+  "source_crop_alpha16_proof_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/source-crop-alpha16-proof.json",
+  "source_crop_alpha16_proof_sha256": "b6e9387f5aebdfe76b49ef62913fa5417b0b316817d65b5d25199b66fd158f1e",
+  "exact_preservation_proof_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/exact-bounded-preservation-proof.json",
+  "exact_preservation_proof_sha256": "754b548f3081f8b9a61d98669448de1acdd997fdf3c4de7317bc280097070f3d"
+}

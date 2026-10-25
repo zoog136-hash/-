@@ -1,0 +1,90 @@
+{
+  "schema": "pr122-kurtz-boss-repair-r002-frozen-v1",
+  "id": "monster:커츠",
+  "revision": "r002",
+  "frozen": true,
+  "native_clips": 19,
+  "native_unique_poses": 76,
+  "new_r002_selected_poses": 24,
+  "reused_r001_selected_poses": 52,
+  "missing_required_tracks": [
+    "attack_0",
+    "attack_1",
+    "attack_4",
+    "attack_5",
+    "attack_6",
+    "attack_7",
+    "hit_0",
+    "hit_1",
+    "hit_2",
+    "hit_3",
+    "idle_0",
+    "idle_1",
+    "idle_2",
+    "idle_3"
+  ],
+  "selected_source_sheets_added": 3,
+  "raw_sources_preserved_added": 6,
+  "raw_source_HOLD_added": 3,
+  "new_approvals": 0,
+  "production_connected": false,
+  "existing_approvals_preserved": true,
+  "quality_review": "HOLD: baked W/NW camera defects inherited in RUN and observed in back idle/hit, front attack hand/contact inconsistency, common scale and actual Main contact unsigned. Complete raw pixels/resource playback do not grant mythic approval.",
+  "quality_findings": [
+    {
+      "criterion": "reference_identity",
+      "result": "IMPROVED_SOURCE_SCREEN",
+      "observation": "Broad spiked plated armor, closed decorated helmet, torn dark-scarlet cape and long broad greatsword restore the project reference silhouette missing from the thin shared runtime knight."
+    },
+    {
+      "criterion": "S_support_exchange",
+      "result": "PARTIAL_OBSERVED",
+      "observation": "Dedicated S6 v02 visibly exchanges screen-left forward boot in phase0 and screen-right forward boot in phase3 while keeping front camera and sword hand fixed. Full swing/flight cadence and physical contact remain HOLD."
+    },
+    {
+      "criterion": "W_NW_camera",
+      "result": "HOLD",
+      "observation": "The generated back RUN sheet turns the W and NW bodies toward the opposite camera in phases3-5. Software flip_h remains false; this is baked source orientation drift and is not hidden by geometry tests."
+    },
+    {
+      "criterion": "other_RUN_support",
+      "result": "HOLD",
+      "observation": "E/SE/SW support exchange is not established; N/NE boots are partly obscured by cape. Do not infer mythic gait from six distinct RGBA phases."
+    },
+    {
+      "criterion": "ground_plane",
+      "result": "METADATA_ONLY",
+      "observation": "Ground anchors are derived from source contact phases0/3, not each airborne boot bottom. This preserves raw PNG pixels and permits airborne clearance, but is not a physical contact approval."
+    },
+    {
+      "criterion": "death_S",
+      "result": "SOURCE_SCREEN_OBSERVED",
+      "observation": "Four complete full-body source stages progress from wounded upright to knee, collapse and prone armor/cape/sword. Actual Main floor/corpse overlap is not signed off."
+    },
+    {
+      "criterion": "new_back_idle_hit_camera",
+      "result": "HOLD",
+      "observation": "Private source view shows W column actually turns screen-right and NW resembles rear-right NE rather than distinct rear-left. N and NE rear silhouettes are present. No eight-view identity approval is granted."
+    },
+    {
+      "criterion": "new_S_attack",
+      "result": "HOLD",
+      "observation": "Four large articulated sword poses are separate and complete, but overhead hand assignment is inconsistent with the original right-hand guard and the contact source extends mostly laterally rather than proving forward S target contact."
+    },
+    {
+      "criterion": "new_SW_attack",
+      "result": "IMPROVED_SOURCE_SCREEN_ONLY",
+      "observation": "Large complete greatsword, broad armored torso and scarlet cape retain the boss source identity through windup/downswing/contact/recovery. Source contact extends toward lower-left. Real target contact/timing, common scale and sword-hand continuity remain unsigned."
+    },
+    {
+      "criterion": "failed_large_sources",
+      "result": "SOURCE_HOLD_PRESERVED",
+      "observation": "Front idle/hit and E attack include another body inside a full-pose bounding rectangle; SE attack has only three separate connected bodies because neighboring poses touch. These sources are preserved raw and no frames are invented or cropped around the failure."
+    }
+  ],
+  "all_selected_PNGs_byte_identical_to_raw": true,
+  "all_declared_phases_ActorMotion_and_AnimatedSprite2D_1x": "PASS",
+  "default_Main": "NOT_RUN",
+  "new_generation_stopped_after_these_six_inflight_sources": true,
+  "prior_revision_manifest_SHA256": "a465550bacb3057943fbd0ab35d4b8eb65f3eb9067d0f96e0bbea8e0cb663f08"
+}

@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-NE-death-author-20261020-v01/bind-NE-DEATH-v11-whole-actual-source-raster-floor-and-editable-parts-v01.py", line 93, in <module>
+    target=B/'NE-DEATH-v11-whole-actual-source-raster-floor-and-exact-editable-parts-binding-v01.json';assert not target.exists();target.write_text(json.dumps(proof,indent=2)+'\n');minimum=min(q[k]for q in records for k in ['source_texel_quad_plus_guard_min_Z','raster_texel_quad_plus_guard_min_Z']);bad=[dict(phase=q['phase'],name=q['name'],source=q['source_texel_quad_plus_guard_min_Z'],raster=q['raster_texel_quad_plus_guard_min_Z'])for q in records if not q['above_floor']];print(json.dumps(dict(proof=stamp(target),parts=len(files),records=len(records),all6_exact_RGBA=True,minimum_guarded_Z=minimum,floor_HOLD=bad)))
+                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type bool is not JSON serializable

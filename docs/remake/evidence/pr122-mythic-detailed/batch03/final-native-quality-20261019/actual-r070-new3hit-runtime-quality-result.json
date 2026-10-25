@@ -1,0 +1,65 @@
+{
+  "schema": "pr122-scoped-actual-native-quality-review-v1",
+  "actor": "transform:393",
+  "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/SpriteFrames.tres",
+  "frames_sha256": "6e497557701026263e10ed2e9d81e6177afaa335ee2d6fe2b0b74f6ebe96441c",
+  "status": "PASS_SCOPED_3_CORRECTED_HIT_TRACKS",
+  "reviewed_tracks": [
+    {
+      "direction": "N",
+      "role": "hit",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "status": "PASS_SCOPED_SOURCE_BODY_ROOT_TRANSITION"
+    },
+    {
+      "direction": "E",
+      "role": "hit",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "status": "PASS_SCOPED_SOURCE_BODY_ROOT_TRANSITION"
+    },
+    {
+      "direction": "NW",
+      "role": "hit",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "status": "PASS_SCOPED_SOURCE_BODY_ROOT_TRANSITION"
+    }
+  ],
+  "reviewed_hit_poses": 18,
+  "idle_reference_poses": 3,
+  "actual_tres_geometry_and_RGBA_equality_proof": {
+    "file": "/workspace/scratch/halpas-final-native-quality-20261019/actual-r070-new3hit-frame-equality-proof.json",
+    "sha256": "b40c3d5b29adedb34c8110798871a848d570557fad6d681724f2a07d029190fe"
+  },
+  "source_RGBA_unchanged": true,
+  "body_scale_review": "Actual perpose C1280 frames match faithful N/E/NW idles in helmet/neck/shoulder/pelvis model scale, with wing/cape area excluded from sizing. N head/hip neutral0 and5 match existing rear reference without prior 25percent size jump; E side body and hip pivot are aligned after perpose X origin correction; NW rear body retains the same physical model as idle while its recoil lean remains visible.",
+  "root_and_transition_review": "Actual idle0->hit0 and corrected sixpose recovery5->idle0 have no material body-size or pivot pop. Perpose hip-root X normalization removes source packing movement while all original Y/bob, torso/head recoil and wing/cloth articulation remain. NW deliberate forward torso bend and lifted trailing feet are physical recoil rather than heading error.",
+  "anatomy_and_heading_review": "All18 corrected poses retain N/E/NW body/head/hip view, exactly two coherent arms with persistent RIGHT blade and empty LEFT; no old frontal backplate morph, extra empty-fist weapon branch, detached weapon or swapped hand.",
+  "timing_scope": "Actual TRES hit tracks are non-looping; review covers sixpose recoil and recovery-to-idle. Engine hit-window playback/action timing was root focused-test scope, not newly rerun here.",
+  "private_panel": "actual-r070-new3hit-all18-vs-idle.jpg",
+  "private_panel_bytes": 143109,
+  "actor_approved": false,
+  "completed_added": 0,
+  "counts_changed": false,
+  "default_enable_authorized_by_review": false
+}

@@ -1,0 +1,123 @@
+{
+  "status": "REQUESTED_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "S",
+  "role": "idle",
+  "version": "SidleSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "base_geometry_sha256": "3883764633df6e8c85932b1a261cc3dd5d70af0d8735d25aff03bfbaab4f2e00",
+    "direction": "S",
+    "regions": [
+      [
+        389,
+        137,
+        732,
+        1192
+      ],
+      [
+        1925,
+        137,
+        732,
+        1192
+      ],
+      [
+        389,
+        1673,
+        732,
+        1192
+      ],
+      [
+        1925,
+        1673,
+        732,
+        1192
+      ],
+      [
+        389,
+        3209,
+        732,
+        1192
+      ],
+      [
+        1925,
+        3209,
+        732,
+        1192
+      ]
+    ],
+    "nearest_owner_sha256": "0333a3b94f303f9178ea64bd931fd5ff6c61f5e1598fd07fdb715676c171d407",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 82337292a054b1bb0898da3db5e2111d5ca3704c000ccaa65a4fdccffc65148f"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "e5adbf333bfa91acc8e0ccabaa8db4d20c2d8998c81972e8f2c328ccfb1e2a70",
+    "direction": "S",
+    "role": "idle",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        783,
+        1146
+      ],
+      [
+        2319,
+        1146
+      ],
+      [
+        783,
+        2682
+      ],
+      [
+        2319,
+        2682
+      ],
+      [
+        783,
+        4218
+      ],
+      [
+        2319,
+        4218
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "82337292a054b1bb0898da3db5e2111d5ca3704c000ccaa65a4fdccffc65148f",
+  "authored_common_root_float": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "common_root_integer": [
+    655,
+    1018
+  ],
+  "common_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615944218
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0
+}

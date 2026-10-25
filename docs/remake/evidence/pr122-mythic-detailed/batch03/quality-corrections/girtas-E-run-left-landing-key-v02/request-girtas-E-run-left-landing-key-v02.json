@@ -1,0 +1,90 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_run_keypose_localized_material_edit",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 0,
+  "intended_anatomical_support": "LEFT_far",
+  "references": [
+    "/workspace/scratch/girtas-E-run-left-landing-key-v02/E-run-localized-LEFT-support-locked-nearRIGHT-knee-guide.png",
+    "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-run-left-landing-key-v02/E-run-localized-LEFT-support-locked-nearRIGHT-knee-guide.png": "1f56ee2fb042c4dd0dec9663e95912c792305e9e339369994a47cdee7fb87487",
+    "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "corrective_reason": "First whole-pose LEFT request produced terminal push-off/HOLD. Materially different localized source-conditioned authoring preserves already forward farLEFT chain from actual selected Eidle and changes ONLY nearRIGHT leg into high knee drive; no failed run PNG or uncertain Ewalk candidate used. This remains a genuinely missing phase0, not repeated full6 or relabeled failed art.",
+  "prompt": "Exactly ONE GIRTAS E RUN LEFT landing key, full original-quality transparent RGBA. Make a LOCALIZED JOINT EDIT of reference2 selected E idle, NOT a generic running illustration. Reference1 is a surgical pose guide on that SAME idle: the BLUE FAR anatomical LEFT hip/shin/forward boot is ALREADY correctly in front of the hips. KEEP this FAR LEFT support chain/foot orientation and location relative to pelvis. Do not move the pelvis forward past that foot and do not sweep that LEFT leg backward into trailing push-off. Preserve far LEFT hip322,286 -> knee334,380 -> ankle350,447 -> forward boot sole around360,470, in those SOURCE-coordinate proportions. Keep LEFT forward heel/sole planted flat on its higher/far ground projection, LEFT knee softly flexed for first landing, not terminal heel-up push-off. The ONLY major lower-body change is the anatomical NEAR RIGHT leg: remove/replace the guide's gray old near-RIGHT lower leg and raise it by near hip286,288 -> RIGHT knee400,315 -> ankle350,390 -> RIGHT boot400,420. RIGHT thigh drives almost horizontally forward RIGHT, RIGHT knee high, shin folded back, ENTIRE RIGHT boot raised clear of both support planes. Exactly TWO legs, no old extra neutral boot left behind. This is a true opposite run landing compared to near-RIGHT contact; far LEFT remains support, near RIGHT drives up. Dynamic torso lean can occur ABOVE the waist without dragging pelvis forward of LEFT support; cloth and pale hair flow backwards LEFT. Camera/face/nose/pelvis heading RIGHT matches selected E plane with slight front-chest visibility, not SE or back. Preserve exact physical skull/helmet/shoulder/hip proportions and all original identity: pale visible face, long pale hair, thin HARD GOLD radial spines, black/gold armor, LONG DARK gold-trim ROBE/SKIRT with opened panels just for the two boots, permanent anatomical RIGHT/near hand holding the long SINUOUS gold-orange blade trailing LEFT, LEFT hand empty. No red V mask/flamefeatherfan/pants/shortbroadblade/hand swap. Keep all blade/rays/gear complete with >=55px alpha gap on1254-equivalent canvas; uniformly enlarge source figure about2.1x as a whole, never crop or shorten gear. No text, joint lines, gray patch, ground pixels, shadows, haze or extra figure. The old first E-run terminal LEFT push-off image is NOT a reference and must not be reconstructed. Required exact material result: existing FAR LEFT FORWARD support retained while ONLY near RIGHT knee drives up.",
+  "requested_at": "2026-10-19T14:26:58.406997+00:00",
+  "user_authorization": "Private production image tools permitted, main-chat images banned; one localized missing-pose request from materially changed source scaffold.",
+  "pose_guide_proof": {
+    "purpose": "REFERENCE_ONLY_LOCALIZED_POSE_AUTHORITY_NOT_GAME_ART",
+    "source": "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png",
+    "source_sha256": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "source_size": [
+      427,
+      495
+    ],
+    "source_translation_in_guide": [
+      35,
+      30
+    ],
+    "source_pixels_not_modified": true,
+    "guide_sha256": "1f56ee2fb042c4dd0dec9663e95912c792305e9e339369994a47cdee7fb87487",
+    "joint_estimates_source_coords": {
+      "FAR_LEFT_hip": [
+        322,
+        286
+      ],
+      "FAR_LEFT_knee": [
+        334,
+        380
+      ],
+      "FAR_LEFT_ankle": [
+        350,
+        447
+      ],
+      "FAR_LEFT_sole": [
+        360,
+        470
+      ],
+      "NEAR_RIGHT_hip": [
+        286,
+        288
+      ],
+      "NEAR_RIGHT_new_knee": [
+        400,
+        315
+      ],
+      "NEAR_RIGHT_new_ankle": [
+        350,
+        390
+      ],
+      "NEAR_RIGHT_new_boot": [
+        400,
+        420
+      ]
+    },
+    "far_LEFT_chain_is_existing_selected_idle_not_generated_failed_run": true,
+    "old_near_RIGHT_lower_leg_indicated_remove_reference_only": true,
+    "far_ground_native_estimate": 470,
+    "near_ground_native_estimate": 490,
+    "poses_not_final_animation": [
+      "selectedidleusedasposeauthorityonly"
+    ]
+  },
+  "pose_guide_proof_sha256": "7477629ecb69dcded3c4c97ac10bb20481901b479afbabccd0741ffd28177f1b",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false
+}

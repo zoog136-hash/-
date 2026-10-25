@@ -1,0 +1,712 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "S",
+  "role": "attack",
+  "version": "v03owners01",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/scratch/girtas-S-attack-layout-repair-v03/girtas-S-attack-v03.png",
+    "/workspace/scratch/girtas-S-idle-repair/girtas-S-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-S-attack-layout-repair-v03/girtas-S-attack-v03.png": "3a5f2f68e33ffad19726b267305b7109c5f783c6a8a7f12201b31b303ab3e544",
+    "/workspace/scratch/girtas-S-idle-repair/girtas-S-idle-v02.png": "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641"
+  },
+  "transparent_background": true,
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+    "base_geometry_sha256": "32af41d67fccc81f7dc3d8adb46a2d6c32e4e558c65e6dea897d7e097ee4ffa5",
+    "direction": "S",
+    "review_basis": "Original faithful S attack art PASS plus sourceSHA/ownerhash-pinned exact ALL-RGBA single-copy export. Entire original canvas including alpha0 latent RGB and faint fringe conserved once. Full six physical poses/contact3 unchanged;704px cells align original column anchors,1024virtual pixel placement exact.",
+    "regions": [
+      [
+        96,
+        45,
+        538,
+        614
+      ],
+      [
+        794,
+        67,
+        518,
+        569
+      ],
+      [
+        96,
+        797,
+        556,
+        518
+      ],
+      [
+        790,
+        773,
+        522,
+        565
+      ],
+      [
+        96,
+        1485,
+        566,
+        549
+      ],
+      [
+        744,
+        1476,
+        568,
+        568
+      ]
+    ],
+    "nearest_owner_sha256": "855989bf44830af86231700f1b5b62c9f1941f1ba5515863e6385eb5a12504b2",
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+  },
+  "source_conservation": {
+    "method": "exact-source-pinned-all-RGBA-owner-single-copy-export",
+    "original_raw_sha256": "3a5f2f68e33ffad19726b267305b7109c5f783c6a8a7f12201b31b303ab3e544",
+    "export_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+    "source_RGBA_sha256": "f92890b56c3d5ffed25f995a06b3978b367740aead2587885d697f079a0a3fe7",
+    "target_RGBA_sha256": "1bc63608d2df4cc10dea3b4cca4c957e56d39c9e6587ddd71a510a5a15301dc1",
+    "source_owner_partition_sha256": "90ab8265575b283221130a39f71902538c5b4d1f39017550c61b04d7decf717f",
+    "source_foreground_owner_sha256": "bc730f94f1b9945ac1e0aefc9c5d7900c87a073fdd6ad1578613877d05b3ee60",
+    "source_plan_sha256": "56cba04965e0df26d048e87f16dd2c1c90f2ac2543b75e34cbf474845d362605",
+    "all_source_pixels": 1572864,
+    "source_pixels": 1572864,
+    "all_original_RGBA_including_alpha0_RGB_preserved_once": true,
+    "foreground_pixels": 494688,
+    "foreground_all_preserved_exactly_once": true,
+    "all_relative_body_pixels_unchanged": true,
+    "same_1024_virtual_coordinates": true,
+    "source_alpha_positive": 764752,
+    "target_alpha_positive": 764752,
+    "target_cell": [
+      704,
+      704
+    ],
+    "target_size": [
+      1408,
+      2112
+    ],
+    "phases": [
+      {
+        "phase": 0,
+        "source_core_bbox": [
+          58,
+          68,
+          445,
+          522
+        ],
+        "target_core_bbox": [
+          154,
+          113,
+          541,
+          567
+        ],
+        "translation": [
+          96,
+          45
+        ],
+        "foreground_pixels": 78790,
+        "source_foreground_RGBA_sha256": "8ae9a96957235f551cad3d5f963135ba4a86597a7df30b93a70bf04114d5f7bc",
+        "target_foreground_RGBA_sha256": "8ae9a96957235f551cad3d5f963135ba4a86597a7df30b93a70bf04114d5f7bc",
+        "original_source_anchor": [
+          256,
+          521
+        ],
+        "target_source_anchor": [
+          352,
+          566
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 1,
+        "source_core_bbox": [
+          574,
+          46,
+          946,
+          525
+        ],
+        "target_core_bbox": [
+          862,
+          113,
+          1234,
+          592
+        ],
+        "translation": [
+          288,
+          67
+        ],
+        "foreground_pixels": 82373,
+        "source_foreground_RGBA_sha256": "1f52c2887175dea737ebe2c12e5ea1f34cbf6a9a730e4d52ba10b9f3a8b90189",
+        "target_foreground_RGBA_sha256": "1f52c2887175dea737ebe2c12e5ea1f34cbf6a9a730e4d52ba10b9f3a8b90189",
+        "original_source_anchor": [
+          768,
+          524
+        ],
+        "target_source_anchor": [
+          1056,
+          591
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 2,
+        "source_core_bbox": [
+          60,
+          568,
+          511,
+          988
+        ],
+        "target_core_bbox": [
+          156,
+          848,
+          607,
+          1268
+        ],
+        "translation": [
+          96,
+          280
+        ],
+        "foreground_pixels": 87897,
+        "source_foreground_RGBA_sha256": "26883ea79dd0a2c9314db61b8feb203372536e2cc4268a9a1681bb2b51a36714",
+        "target_foreground_RGBA_sha256": "26883ea79dd0a2c9314db61b8feb203372536e2cc4268a9a1681bb2b51a36714",
+        "original_source_anchor": [
+          256,
+          987
+        ],
+        "target_source_anchor": [
+          352,
+          1267
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 3,
+        "source_core_bbox": [
+          572,
+          568,
+          958,
+          1019
+        ],
+        "target_core_bbox": [
+          860,
+          819,
+          1246,
+          1270
+        ],
+        "translation": [
+          288,
+          251
+        ],
+        "foreground_pixels": 79650,
+        "source_foreground_RGBA_sha256": "bd9f6f96914614fd1551c19a487f46976a90d4cb14b5c09ea30042b2040dbd96",
+        "target_foreground_RGBA_sha256": "bd9f6f96914614fd1551c19a487f46976a90d4cb14b5c09ea30042b2040dbd96",
+        "original_source_anchor": [
+          768,
+          1018
+        ],
+        "target_source_anchor": [
+          1056,
+          1269
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 4,
+        "source_core_bbox": [
+          67,
+          1035,
+          504,
+          1480
+        ],
+        "target_core_bbox": [
+          163,
+          1533,
+          600,
+          1978
+        ],
+        "translation": [
+          96,
+          498
+        ],
+        "foreground_pixels": 81828,
+        "source_foreground_RGBA_sha256": "c414c73509ccee58677385018cce040a950edf01d06aecb9804bd6ecc13856a5",
+        "target_foreground_RGBA_sha256": "c414c73509ccee58677385018cce040a950edf01d06aecb9804bd6ecc13856a5",
+        "original_source_anchor": [
+          256,
+          1479
+        ],
+        "target_source_anchor": [
+          352,
+          1977
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 5,
+        "source_core_bbox": [
+          546,
+          1008,
+          937,
+          1478
+        ],
+        "target_core_bbox": [
+          834,
+          1516,
+          1225,
+          1986
+        ],
+        "translation": [
+          288,
+          508
+        ],
+        "foreground_pixels": 84150,
+        "source_foreground_RGBA_sha256": "72dfde2ef4f074a6f72cc4c4f6cc1370ca4beb20ec9101245fa5f658c8155e5f",
+        "target_foreground_RGBA_sha256": "72dfde2ef4f074a6f72cc4c4f6cc1370ca4beb20ec9101245fa5f658c8155e5f",
+        "original_source_anchor": [
+          768,
+          1477
+        ],
+        "target_source_anchor": [
+          1056,
+          1985
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      }
+    ],
+    "all_RGBA_owner_boxes": [
+      {
+        "phase": 0,
+        "source_owner_bbox": [
+          0,
+          0,
+          538,
+          614
+        ],
+        "region": [
+          96,
+          45,
+          538,
+          614
+        ],
+        "translation": [
+          96,
+          45
+        ],
+        "pixels": 291063,
+        "source_RGBA_sha256": "c5a4ceaf8c20e701499827ced1f3ac126164bab51a3a701d15a611e947f38676",
+        "target_RGBA_sha256": "c5a4ceaf8c20e701499827ced1f3ac126164bab51a3a701d15a611e947f38676",
+        "original_source_anchor": [
+          256,
+          521
+        ],
+        "expected_target_source_anchor": [
+          352,
+          566
+        ]
+      },
+      {
+        "phase": 1,
+        "source_owner_bbox": [
+          506,
+          0,
+          1024,
+          569
+        ],
+        "region": [
+          794,
+          67,
+          518,
+          569
+        ],
+        "translation": [
+          288,
+          67
+        ],
+        "pixels": 273567,
+        "source_RGBA_sha256": "259f6920f94cc06a1a8af3a6773384aaf4fa1da488b89f64a2809b440fdc38c0",
+        "target_RGBA_sha256": "259f6920f94cc06a1a8af3a6773384aaf4fa1da488b89f64a2809b440fdc38c0",
+        "original_source_anchor": [
+          768,
+          524
+        ],
+        "expected_target_source_anchor": [
+          1056,
+          591
+        ]
+      },
+      {
+        "phase": 2,
+        "source_owner_bbox": [
+          0,
+          517,
+          556,
+          1035
+        ],
+        "region": [
+          96,
+          797,
+          556,
+          518
+        ],
+        "translation": [
+          96,
+          280
+        ],
+        "pixels": 249185,
+        "source_RGBA_sha256": "83bcc45fa4f8fa24696d73583410d85eaed9b284583dc8c4314ababa5dc72f9b",
+        "target_RGBA_sha256": "83bcc45fa4f8fa24696d73583410d85eaed9b284583dc8c4314ababa5dc72f9b",
+        "original_source_anchor": [
+          256,
+          987
+        ],
+        "expected_target_source_anchor": [
+          352,
+          1267
+        ]
+      },
+      {
+        "phase": 3,
+        "source_owner_bbox": [
+          502,
+          522,
+          1024,
+          1087
+        ],
+        "region": [
+          790,
+          773,
+          522,
+          565
+        ],
+        "translation": [
+          288,
+          251
+        ],
+        "pixels": 225388,
+        "source_RGBA_sha256": "f20028e592f7772543d1401883b8d3d605883de441f6f6d5ec69d6ac8bc66912",
+        "target_RGBA_sha256": "f20028e592f7772543d1401883b8d3d605883de441f6f6d5ec69d6ac8bc66912",
+        "original_source_anchor": [
+          768,
+          1018
+        ],
+        "expected_target_source_anchor": [
+          1056,
+          1269
+        ]
+      },
+      {
+        "phase": 4,
+        "source_owner_bbox": [
+          0,
+          987,
+          566,
+          1536
+        ],
+        "region": [
+          96,
+          1485,
+          566,
+          549
+        ],
+        "translation": [
+          96,
+          498
+        ],
+        "pixels": 276388,
+        "source_RGBA_sha256": "d98c0a9dea6767120729686fe01216984464a1565d4c84a37f4265c449cd2d70",
+        "target_RGBA_sha256": "d98c0a9dea6767120729686fe01216984464a1565d4c84a37f4265c449cd2d70",
+        "original_source_anchor": [
+          256,
+          1479
+        ],
+        "expected_target_source_anchor": [
+          352,
+          1977
+        ]
+      },
+      {
+        "phase": 5,
+        "source_owner_bbox": [
+          456,
+          968,
+          1024,
+          1536
+        ],
+        "region": [
+          744,
+          1476,
+          568,
+          568
+        ],
+        "translation": [
+          288,
+          508
+        ],
+        "pixels": 257273,
+        "source_RGBA_sha256": "54b18157447062559410df81661dcc315f2b16ceb8619539adcc14e653c6d142",
+        "target_RGBA_sha256": "54b18157447062559410df81661dcc315f2b16ceb8619539adcc14e653c6d142",
+        "original_source_anchor": [
+          768,
+          1477
+        ],
+        "expected_target_source_anchor": [
+          1056,
+          1985
+        ]
+      }
+    ],
+    "source_ownership": {
+      "detached_pixels": 21,
+      "fragments": [
+        {
+          "phase": 1,
+          "pixels": 1,
+          "bbox": [
+            803,
+            117,
+            804,
+            118
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 365.3176699805253,
+          "margin_min": 363.0816020030255
+        },
+        {
+          "phase": 0,
+          "pixels": 2,
+          "bbox": [
+            234,
+            283,
+            235,
+            285
+          ],
+          "nearest_max": 4.0,
+          "second_nearest_min": 288.19611378365255,
+          "margin_min": 284.19611378365255
+        },
+        {
+          "phase": 1,
+          "pixels": 1,
+          "bbox": [
+            693,
+            285,
+            694,
+            286
+          ],
+          "nearest_max": 4.0,
+          "second_nearest_min": 252.3529274646918,
+          "margin_min": 248.3529274646918
+        },
+        {
+          "phase": 1,
+          "pixels": 1,
+          "bbox": [
+            722,
+            315,
+            723,
+            316
+          ],
+          "nearest_max": 5.0,
+          "second_nearest_min": 257.13031715455105,
+          "margin_min": 252.13031715455105
+        },
+        {
+          "phase": 1,
+          "pixels": 2,
+          "bbox": [
+            722,
+            318,
+            723,
+            320
+          ],
+          "nearest_max": 8.06225774829855,
+          "second_nearest_min": 253.17977802344325,
+          "margin_min": 245.1175202751447
+        },
+        {
+          "phase": 1,
+          "pixels": 1,
+          "bbox": [
+            727,
+            318,
+            728,
+            319
+          ],
+          "nearest_max": 3.605551275463989,
+          "second_nearest_min": 253.4284909002932,
+          "margin_min": 249.82293962482922
+        },
+        {
+          "phase": 1,
+          "pixels": 5,
+          "bbox": [
+            718,
+            319,
+            721,
+            321
+          ],
+          "nearest_max": 11.180339887498949,
+          "second_nearest_min": 252.5173261382276,
+          "margin_min": 241.677327585726
+        },
+        {
+          "phase": 0,
+          "pixels": 2,
+          "bbox": [
+            59,
+            519,
+            61,
+            520
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 149.4590244849738,
+          "margin_min": 147.222956507474
+        },
+        {
+          "phase": 3,
+          "pixels": 1,
+          "bbox": [
+            655,
+            715,
+            656,
+            716
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 151.52887513606112,
+          "margin_min": 149.29280715856132
+        },
+        {
+          "phase": 3,
+          "pixels": 1,
+          "bbox": [
+            861,
+            725,
+            862,
+            726
+          ],
+          "nearest_max": 5.0,
+          "second_nearest_min": 216.0208323287363,
+          "margin_min": 211.0208323287363
+        },
+        {
+          "phase": 2,
+          "pixels": 1,
+          "bbox": [
+            239,
+            747,
+            240,
+            748
+          ],
+          "nearest_max": 2.0,
+          "second_nearest_min": 231.9051530259731,
+          "margin_min": 229.9051530259731
+        },
+        {
+          "phase": 3,
+          "pixels": 1,
+          "bbox": [
+            679,
+            768,
+            680,
+            769
+          ],
+          "nearest_max": 3.1622776601683795,
+          "second_nearest_min": 169.23947530053383,
+          "margin_min": 166.07719764036545
+        },
+        {
+          "phase": 4,
+          "pixels": 1,
+          "bbox": [
+            218,
+            1255,
+            219,
+            1256
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 268.9014689435519,
+          "margin_min": 266.6654009660521
+        },
+        {
+          "phase": 5,
+          "pixels": 1,
+          "bbox": [
+            547,
+            1479,
+            548,
+            1480
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 116.40017182117903,
+          "margin_min": 114.16410384367924
+        }
+      ]
+    },
+    "default_repacker_not_rerun": true,
+    "resampled": false,
+    "recolored": false,
+    "removed_pixels": 0,
+    "removed_alpha_gt16_pixels": 0,
+    "image_service_calls": 0,
+    "export_code_sha256": "c2170131f56cb983d8a7d7c70b8a0130945dfb06015cb2f34fd6e0d90be4ade1"
+  },
+  "original_art_review": {
+    "path": "/workspace/scratch/girtas-S-attack-layout-repair-v03/result.json",
+    "sha256": "f34be8d3218e133fce3d6d4c7a28db21392d99e03e8ee824f0c9fe95aa27de38",
+    "source_sha256": "3a5f2f68e33ffad19726b267305b7109c5f783c6a8a7f12201b31b303ab3e544",
+    "source_visual_status": "PASS",
+    "visual_findings": [
+      "All six original frontal SOUTH attack phase constructions/order are retained: guard0, same right/image-left raised anticipation1, loaded knees/arm2, foreground/downward contact3, downward follow-through4 and low recovery5. None replaced with idle or E/rear model.",
+      "Front pale face/chest/pelvis stay SOUTH throughout. Long pale hair, crown, thin rigid GOLD radial spikes, long DARK goldtrim skirt, original dark/gold boots and material identity are retained.",
+      "Exactly TWO arm/hand chains each pose. AnatomicalRIGHT/imageLEFT keeps the one long thin sinuous orange-gold weapon; contact3 still projects toward screenBOTTOM/foreground-downleft with full repeated S-curved contour and tip, not a short broad blade or horizontal E thrust. Free left arm remains distinct imageRIGHT.",
+      "Edited raw has six large complete foreground bodies at alpha16/32 and no outer-edge clipping. Diffuse source haze is reduced, but residual stronger-than-alpha16 isolated fringe remains and fails strict bounded ownership."
+    ],
+    "visual_limitations": [
+      "RAW strict extraction HOLD: pose bounding rectangle includes another body. One attempt of the UNCHANGED lossless repacker also HOLD: require six separate bodies with only bounded faint edge fringe. No derivative was generated.",
+      "Read-only diagnostic finds6 bodies>=200pixels at both seed16 and32, but detached stronger foreground is7.62px from seed16 bodies and8.06px from seed32 bodies; all alpha>16 foreground reaches8.94px from seed32 bodies. This exceeds unchanged2px/5px guards. No thresholds were relaxed, no alpha>16 deleted, no recolor/resampling or repeated image generation.",
+      "The requested wholegear<=320px safe area was not achieved by the raw edit. This source must remain geometryHOLD and cannot be selected/connected as an extracted complete resource.",
+      "Source-only visual PASS, not actor completion or runtime/contact/Main approval. Original v02 unchanged and all produced data preserved."
+    ]
+  },
+  "authoring_operation": "exact-source-pinned-all-RGBA-owner-single-copy-export",
+  "image_service_calls": 0,
+  "corrective_reason": "Preserve original faithful S attack ALL RGBA via one exact-SHA ownership export, keeping originalbody-relative pixels/weapon/contact3 and1024virtual coordinates; explicit reviewed regions cover every detached foreground pixel without relaxing default guards.",
+  "requested_at": "2026-10-19T11:51:33.200864+00:00",
+  "intended_contact_frame": 3,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
+      "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
+      "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
+      "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
+      "All1,572,864 original RGBA pixels including transparent RGB/faintbackground retained exactlyonce; original S attack contact3/front heading and long sinuous weapon are unchanged."
+    ],
+    "visual_limitations": [
+      "Geometry/source-only authoring PASS, not actual Player/Main playback/scale/clock approval or actor completion. Root must compile and perform the required fresh runtime QA.",
+      "No new image generation or new visual inspection was necessary for an exact existing-art derivative; source quality relies on the pinned original visual review and independently verified pixel conservation."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+    "raw_bytes": 2491237,
+    "request_sha256": "bc59427cc747ba4f5fc3e6b9381f82a745c126724cf5f6ab8adaec18be735321",
+    "review_sha256": "23874f98f7b820532c1014fee236c19d7b0885c358b11bcb99dbb37f790d7a7c"
+  },
+  "available_repository_reference_sources": {
+    "3a5f2f68e33ffad19726b267305b7109c5f783c6a8a7f12201b31b303ab3e544": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03.png",
+    "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png",
+  "output_sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+  "output_bytes": 2491237,
+  "original_generated_file": "/workspace/scratch/girtas-S-attack-reviewed-owner-v01/girtas-S-attack-v03owners01.png"
+}

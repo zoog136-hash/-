@@ -1,0 +1,3826 @@
+{
+	"boss": [],
+	"checks": 1787,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792374811.83497,
+				"expires_at": 1792375411.83497,
+				"grade": "일반",
+				"hunt_batch": "95141ea3f65918aeaff5217c8428a816",
+				"id": "fc73844ce17661d210b7362cced1a582",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1860,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 27
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(93.5625, 0.0)",
+			"name": "알비노 디어",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(66.1875, 66.1875)",
+			"name": "알비노 디어",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 93.5625)",
+			"name": "알비노 디어",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-66.1875, 66.1875)",
+			"name": "알비노 디어",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-93.5625, 0.0)",
+			"name": "알비노 디어",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-66.1875, -66.1875)",
+			"name": "알비노 디어",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -93.5625)",
+			"name": "알비노 디어",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(66.1875, -66.1875)",
+			"name": "알비노 디어",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 34,
+			"facing": 0,
+			"kind": "melee",
+			"name": "알비노 디어"
+		},
+		{
+			"damage": 34,
+			"facing": 1,
+			"kind": "melee",
+			"name": "알비노 디어"
+		},
+		{
+			"damage": 34,
+			"facing": 2,
+			"kind": "melee",
+			"name": "알비노 디어"
+		},
+		{
+			"damage": 34,
+			"facing": 3,
+			"kind": "melee",
+			"name": "알비노 디어"
+		},
+		{
+			"damage": 34,
+			"facing": 4,
+			"kind": "melee",
+			"name": "알비노 디어"
+		},
+		{
+			"damage": 34,
+			"facing": 5,
+			"kind": "melee",
+			"name": "알비노 디어"
+		},
+		{
+			"damage": 34,
+			"facing": 6,
+			"kind": "melee",
+			"name": "알비노 디어"
+		},
+		{
+			"damage": 34,
+			"facing": 7,
+			"kind": "melee",
+			"name": "알비노 디어"
+		}
+	],
+	"physics_ticks": 1258,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 4,
+			"track": "walk_0"
+		},
+		{
+			"frame": 5,
+			"track": "walk_0"
+		},
+		{
+			"frame": 6,
+			"track": "walk_0"
+		},
+		{
+			"frame": 7,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 4,
+			"track": "walk_1"
+		},
+		{
+			"frame": 5,
+			"track": "walk_1"
+		},
+		{
+			"frame": 6,
+			"track": "walk_1"
+		},
+		{
+			"frame": 7,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 4,
+			"track": "walk_2"
+		},
+		{
+			"frame": 5,
+			"track": "walk_2"
+		},
+		{
+			"frame": 6,
+			"track": "walk_2"
+		},
+		{
+			"frame": 7,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 4,
+			"track": "walk_3"
+		},
+		{
+			"frame": 5,
+			"track": "walk_3"
+		},
+		{
+			"frame": 6,
+			"track": "walk_3"
+		},
+		{
+			"frame": 7,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 4,
+			"track": "walk_4"
+		},
+		{
+			"frame": 5,
+			"track": "walk_4"
+		},
+		{
+			"frame": 6,
+			"track": "walk_4"
+		},
+		{
+			"frame": 7,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 4,
+			"track": "walk_5"
+		},
+		{
+			"frame": 5,
+			"track": "walk_5"
+		},
+		{
+			"frame": 6,
+			"track": "walk_5"
+		},
+		{
+			"frame": 7,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 4,
+			"track": "walk_6"
+		},
+		{
+			"frame": 5,
+			"track": "walk_6"
+		},
+		{
+			"frame": 6,
+			"track": "walk_6"
+		},
+		{
+			"frame": 7,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 4,
+			"track": "walk_7"
+		},
+		{
+			"frame": 5,
+			"track": "walk_7"
+		},
+		{
+			"frame": 6,
+			"track": "walk_7"
+		},
+		{
+			"frame": 7,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25333.94921875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "e7adaca5c142a8c36808e2e67319f4b9b710581c0c5371f5be679bbfa8fffcc9",
+			"visible_body_viewport": [
+				556.009033203125,
+				253.088012695312,
+				186.087768554688,
+				192.123016357422
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25333.94921875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "e7adaca5c142a8c36808e2e67319f4b9b710581c0c5371f5be679bbfa8fffcc9",
+			"visible_body_viewport": [
+				556.009033203125,
+				253.088012695312,
+				186.087768554688,
+				192.123016357422
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25339.796875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-1.png",
+			"physics_tick": 22,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "e6b302b16fc713897d1f0cc2d6c1bd791263ea0526681fda01eaa1da6a888c50",
+			"visible_body_viewport": [
+				560.032592773438,
+				255.60270690918,
+				170.49658203125,
+				189.608291625977
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25347.59375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-2.png",
+			"physics_tick": 27,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "b566e8ed4257bb62864afe04d58ab409bb08bd5e44ce49335745ef56f3dfecf2",
+			"visible_body_viewport": [
+				544.4453125,
+				249.567428588867,
+				177.034790039062,
+				195.643569946289
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25353.44140625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-3.png",
+			"physics_tick": 31,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "012f29d01168ed65c4b7e13338f790fcf71bebab13997590ab4ff3fbcb4d5c5f",
+			"visible_body_viewport": [
+				555.003173828125,
+				251.579193115234,
+				167.98193359375,
+				193.6318359375
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25361.23828125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-4.png",
+			"physics_tick": 36,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "a86e5d98eb49635c9b61d22d650cb7518bcdfba58371c9435a42c7d13c9b9774",
+			"visible_body_viewport": [
+				551.989440917969,
+				256.608581542969,
+				193.6318359375,
+				188.602416992188
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25369.03515625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-5.png",
+			"physics_tick": 41,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "a0cadf322584ff4d1d10ed8e23c9bb38b596eb6850b6dd8a42bd7eda8a5b33ff",
+			"visible_body_viewport": [
+				562.048217773438,
+				258.620361328125,
+				182.064208984375,
+				186.590667724609
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25374.8828125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-6.png",
+			"physics_tick": 45,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "b458a008ae7b9e959600994c406001839d1a856f9c022ca8865c0e6ae4370c24",
+			"visible_body_viewport": [
+				551.989440917969,
+				257.111511230469,
+				184.075988769531,
+				188.099487304688
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25382.6796875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-walk-native-7.png",
+			"physics_tick": 50,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "f44c190dfb62d56ec399e0bc829356349df2ed64c271b8f0540f5d5488719167",
+			"visible_body_viewport": [
+				546.952209472656,
+				254.596832275391,
+				188.602416992188,
+				190.614196777344
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25425.5625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-attack-0.png",
+			"physics_tick": 74,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "53715d7e3aa219fd1cda9e6907523ed98adfd9648a56e626af4cecba3c53de15",
+			"visible_body_viewport": [
+				527.210754394531,
+				258.010498046875,
+				222.386535644531,
+				186.788696289062
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25425.5625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-attack-1.png",
+			"physics_tick": 92,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "a031d4596e4cbce112b70ff3927af0ebfadb13f5637fb9c45c1fd451f6aea730",
+			"visible_body_viewport": [
+				515.611450195312,
+				294.808258056641,
+				257.184448242188,
+				149.990936279297
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25425.5625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-E-contact.png",
+			"physics_tick": 92,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "a031d4596e4cbce112b70ff3927af0ebfadb13f5637fb9c45c1fd451f6aea730",
+			"visible_body_viewport": [
+				515.611450195312,
+				294.808258056641,
+				257.184448242188,
+				149.990936279297
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25374.384765625,
+				22746.384765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk.png",
+			"physics_tick": 105,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "e08e57158e7357eaa4c34cdc7050c7fe520fe2a1e85f63152367c4a9a81d7346",
+			"visible_body_viewport": [
+				563.804626464844,
+				259.190002441406,
+				173.642517089844,
+				186.082580566406
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25374.384765625,
+				22746.384765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-5.png",
+			"physics_tick": 105,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "e08e57158e7357eaa4c34cdc7050c7fe520fe2a1e85f63152367c4a9a81d7346",
+			"visible_body_viewport": [
+				563.804626464844,
+				259.190002441406,
+				173.642517089844,
+				186.082580566406
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25377.142578125,
+				22749.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-6.png",
+			"physics_tick": 108,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "65d4c405d1761e3ac47003634a9bf3bda3fee8fbe123b42fd4ff05840eba83f4",
+			"visible_body_viewport": [
+				570.028564453125,
+				259.708343505859,
+				164.3125,
+				185.564270019531
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25382.658203125,
+				22754.658203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-7.png",
+			"physics_tick": 113,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "7f4f6570b5ff6123747f872bd567df5d6481b50d8a682351572807e0cc869ea3",
+			"visible_body_viewport": [
+				556.547912597656,
+				259.708343505859,
+				177.789245605469,
+				185.564270019531
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25386.794921875,
+				22758.794921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-0.png",
+			"physics_tick": 117,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "ca86d171afe3ea3e864d59d63aa80d35230ed3646b6b8c4074471e1a4b5f9bc7",
+			"visible_body_viewport": [
+				558.621276855469,
+				253.484405517578,
+				178.825866699219,
+				191.784301757812
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25392.310546875,
+				22764.310546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-1.png",
+			"physics_tick": 122,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "75ec5f2689bdbc8743c7a880cde573ed85cf0a9582f7c5ceb2581219892fbb93",
+			"visible_body_viewport": [
+				559.661865234375,
+				255.043319702148,
+				175.197509765625,
+				190.229293823242
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25396.447265625,
+				22768.447265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-2.png",
+			"physics_tick": 126,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "bdd299ce7618436397301bc3c185076a580568511bf9ade50f0f189a490e7faa",
+			"visible_body_viewport": [
+				553.956237792969,
+				252.451644897461,
+				182.972595214844,
+				192.82096862793
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25401.962890625,
+				22773.962890625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-3.png",
+			"physics_tick": 131,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "57610566c91e04acf20e6e7c0b4fe70b03664e6e42baae1366f96ea699a40c83",
+			"visible_body_viewport": [
+				552.919555664062,
+				258.671691894531,
+				181.417602539062,
+				186.600952148438
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25407.478515625,
+				22779.478515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-walk-native-4.png",
+			"physics_tick": 136,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "3025bdc7333b0883b7bcbd388c4f8c9ee7fc83b01a63f7b5160de62bbdc65513",
+			"visible_body_viewport": [
+				551.368469238281,
+				255.557754516602,
+				185.564270019531,
+				189.710952758789
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25439.193359375,
+				22811.193359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-attack-0.png",
+			"physics_tick": 161,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "a02ae91d77d4c199cde3a15d23f9caa8e0cd8727c321a03af5c3dd781f107350",
+			"visible_body_viewport": [
+				506.193481445312,
+				253.640029907227,
+				242.008056640625,
+				191.211166381836
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25439.193359375,
+				22811.193359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-attack-1.png",
+			"physics_tick": 179,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "b2c6f9c0e5fb271cb554a6c1698e583fa8c18edf2b31724cce4b79a546683546",
+			"visible_body_viewport": [
+				499.585754394531,
+				289.569549560547,
+				273.807800292969,
+				155.281646728516
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25439.193359375,
+				22811.193359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SE-contact.png",
+			"physics_tick": 179,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "b2c6f9c0e5fb271cb554a6c1698e583fa8c18edf2b31724cce4b79a546683546",
+			"visible_body_viewport": [
+				499.585754394531,
+				289.569549560547,
+				273.807800292969,
+				155.281646728516
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22705.94921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk.png",
+			"physics_tick": 192,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "7df5a67294b6d8043c0160c595dda6e2767674766459d9ad2c2d2c716d3414c3",
+			"visible_body_viewport": [
+				580.641784667969,
+				247.431350708008,
+				128.419189453125,
+				198.05094909668
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22705.94921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-2.png",
+			"physics_tick": 192,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "7df5a67294b6d8043c0160c595dda6e2767674766459d9ad2c2d2c716d3414c3",
+			"visible_body_viewport": [
+				580.641784667969,
+				247.431350708008,
+				128.419189453125,
+				198.05094909668
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22707.8984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-3.png",
+			"physics_tick": 194,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "deb45590a65f9227d59f5134c2184ed1667c04ad2270b32b0b52c33c4d72b6ab",
+			"visible_body_viewport": [
+				577.21728515625,
+				249.71435546875,
+				129.560668945312,
+				195.767944335938
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22713.74609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-4.png",
+			"physics_tick": 198,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "ce9d4e37fbcaf440de2012302b3fdc3c7616a435a242ba0a07218889f256c441",
+			"visible_body_viewport": [
+				574.363525390625,
+				252.568115234375,
+				128.989929199219,
+				192.914184570312
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22721.54296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-5.png",
+			"physics_tick": 203,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "17002a09055fd69c91a242dad60817b828cf470d8935c3c1b4b4058384cd9e94",
+			"visible_body_viewport": [
+				575.505004882812,
+				254.851119995117,
+				127.848449707031,
+				190.631149291992
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22729.33984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-6.png",
+			"physics_tick": 208,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "f9964bdf87c9380f45eb8d4010f807c5a1c3074b9de2de12bec002e1e87a741a",
+			"visible_body_viewport": [
+				574.363525390625,
+				255.992630004883,
+				128.989929199219,
+				189.489669799805
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22735.1875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-7.png",
+			"physics_tick": 212,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "dcde314411285292faa8496e09a9090ad6c510a49d2abf1ff5d29b07dcfcc65e",
+			"visible_body_viewport": [
+				570.939025878906,
+				253.138870239258,
+				124.994689941406,
+				192.34342956543
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22742.984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-0.png",
+			"physics_tick": 217,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "297b17dcaa8e14c7edb26e72a665097ea7e3433bb3681f6e63a28896f93047b7",
+			"visible_body_viewport": [
+				588.061584472656,
+				248.572845458984,
+				127.848449707031,
+				196.909423828125
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22748.83203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-walk-native-1.png",
+			"physics_tick": 221,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "813a938ae2c51eea95ffa45640a6502ed4d3c55ae7a7bb4a67f7e8ad41bab4d3",
+			"visible_body_viewport": [
+				586.349304199219,
+				253.138870239258,
+				126.706970214844,
+				192.34342956543
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22797.5625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-attack-0.png",
+			"physics_tick": 248,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "1d4c645c4c0438198a2b10fa9beabf1fff81c28ff7ba3fc422da0dd32d5f2b62",
+			"visible_body_viewport": [
+				548.484924316406,
+				256.943878173828,
+				182.627014160156,
+				187.868011474609
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22797.5625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-attack-1.png",
+			"physics_tick": 266,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "5bad2721ae78fafd4e58706ae546d3ec848d8aad6c94579de916cd3e07b04c7b",
+			"visible_body_viewport": [
+				548.081787109375,
+				293.630554199219,
+				183.836486816406,
+				151.181335449219
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22797.5625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-S-contact.png",
+			"physics_tick": 266,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "5bad2721ae78fafd4e58706ae546d3ec848d8aad6c94579de916cd3e07b04c7b",
+			"visible_body_viewport": [
+				548.081787109375,
+				293.630554199219,
+				183.836486816406,
+				151.181335449219
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25569.615234375,
+				22746.384765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk.png",
+			"physics_tick": 279,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "e8d59f5202c7068b8c2321ce11861822d286d2b00bb159af66b622fbb6ec6143",
+			"visible_body_viewport": [
+				586.927856445312,
+				258.846374511719,
+				126.706909179688,
+				186.635894775391
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25569.615234375,
+				22746.384765625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-0.png",
+			"physics_tick": 279,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "e8d59f5202c7068b8c2321ce11861822d286d2b00bb159af66b622fbb6ec6143",
+			"visible_body_viewport": [
+				586.927856445312,
+				258.846374511719,
+				126.706909179688,
+				186.635894775391
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25565.478515625,
+				22750.521484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-1.png",
+			"physics_tick": 283,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "0d61c60b8846dd8c3d5ed0dda431ce5e902fc42815ca2878f10bf920cde3f30b",
+			"visible_body_viewport": [
+				582.9248046875,
+				266.8369140625,
+				130.702209472656,
+				178.645385742188
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25559.962890625,
+				22756.037109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-2.png",
+			"physics_tick": 288,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "4b8c73234d8eff15924a662a97ad1e9195c8b0fd4629d5b3c6cbbb9e4612c019",
+			"visible_body_viewport": [
+				582.9248046875,
+				258.846374511719,
+				138.121948242188,
+				186.635894775391
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25555.826171875,
+				22760.173828125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-3.png",
+			"physics_tick": 292,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "5c1b40db136116a0b79b9c6d5dd67335245920b7d6131c8d38fc5725a2b3258d",
+			"visible_body_viewport": [
+				579.508117675781,
+				259.987884521484,
+				134.697448730469,
+				185.494384765625
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25550.310546875,
+				22765.689453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-4.png",
+			"physics_tick": 297,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "e9a4179fd947f141b3b0739c62a723d874b545f7da5bd5f728c255bf12912ec3",
+			"visible_body_viewport": [
+				573.222045898438,
+				256.559448242188,
+				131.27294921875,
+				188.918884277344
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25544.794921875,
+				22771.205078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-5.png",
+			"physics_tick": 302,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "5cc4650e48ab71df6f321da500977605bb752c68867ac4780d6ef9247dd875a8",
+			"visible_body_viewport": [
+				576.646545410156,
+				259.987884521484,
+				129.560729980469,
+				185.494384765625
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25540.658203125,
+				22775.341796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-6.png",
+			"physics_tick": 306,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "b57e6f76a8dec07fd8e2b1128f09fe88ca57efc3bca2bcb561dfd0f0c82c7385",
+			"visible_body_viewport": [
+				573.222045898438,
+				257.704895019531,
+				138.121948242188,
+				187.777404785156
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25535.142578125,
+				22780.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-walk-native-7.png",
+			"physics_tick": 311,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "eddb92391e0b5dfbcb8917a23e671d239160756ab4893c46d5e6ae5a95d9bd50",
+			"visible_body_viewport": [
+				568.085266113281,
+				255.992630004883,
+				126.706970214844,
+				189.489669799805
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25504.806640625,
+				22811.193359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-attack-0.png",
+			"physics_tick": 335,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "291cad1d0cffe829a548fad19647e23ab76869742b29b19b9fb4b1b797a677e5",
+			"visible_body_viewport": [
+				524.995727539062,
+				250.983703613281,
+				241.386962890625,
+				193.841064453125
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25504.806640625,
+				22811.193359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-attack-1.png",
+			"physics_tick": 353,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "f74025f5513e73e0b87f1af719cb248248355aee1145b6206dafbab15eb928a6",
+			"visible_body_viewport": [
+				516.868225097656,
+				270.896087646484,
+				271.865173339844,
+				173.928680419922
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25504.806640625,
+				22811.193359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-SW-contact.png",
+			"physics_tick": 353,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "f74025f5513e73e0b87f1af719cb248248355aee1145b6206dafbab15eb928a6",
+			"visible_body_viewport": [
+				516.868225097656,
+				270.896087646484,
+				271.865173339844,
+				173.928680419922
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25610.05078125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk.png",
+			"physics_tick": 366,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "d94ee627e780358c093186367fd1261f745f0068e77f98ae315dd3488ece66e9",
+			"visible_body_viewport": [
+				563.058044433594,
+				255.60270690918,
+				180.052429199219,
+				189.608291625977
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25610.05078125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-5.png",
+			"physics_tick": 366,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "d94ee627e780358c093186367fd1261f745f0068e77f98ae315dd3488ece66e9",
+			"visible_body_viewport": [
+				563.058044433594,
+				255.60270690918,
+				180.052429199219,
+				189.608291625977
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25606.15234375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-6.png",
+			"physics_tick": 369,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "d2f632d7f2a84765acd640aa79ea2ed2bc51d3c3ca85650881da14414e256a61",
+			"visible_body_viewport": [
+				562.044311523438,
+				256.608581542969,
+				181.561279296875,
+				188.602416992188
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25598.35546875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-7.png",
+			"physics_tick": 374,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "5c5238a01ca4cf60a44d11d92544103fec87a7a71bae5e85483a030917f35f4c",
+			"visible_body_viewport": [
+				560.535522460938,
+				256.608581542969,
+				178.040710449219,
+				188.602416992188
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25592.5078125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-0.png",
+			"physics_tick": 378,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "9c48ffdecd74a3986acb4b0f149584fa5a81cd488093b62a577d770518dfaea3",
+			"visible_body_viewport": [
+				577.132507324219,
+				254.093887329102,
+				171.502502441406,
+				191.117111206055
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25584.7109375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-1.png",
+			"physics_tick": 383,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "ca37216368c2d215702cbd5526b9829ee7468057dae2da35207025e165144adf",
+			"visible_body_viewport": [
+				564.056091308594,
+				257.111511230469,
+				180.052429199219,
+				188.099487304688
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25578.86328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-2.png",
+			"physics_tick": 387,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "648771d93f02fb3381acd612624e93cf0d93c6134558f0dc3e5ff8be031ccf0a",
+			"visible_body_viewport": [
+				566.06787109375,
+				255.09977722168,
+				180.052490234375,
+				190.111251831055
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25571.06640625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-3.png",
+			"physics_tick": 392,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "a37ad88e351c34b1240f79454ca3b57b40d62ccde3651c1a6232040a75ae91b5",
+			"visible_body_viewport": [
+				563.058044433594,
+				257.111511230469,
+				166.473083496094,
+				188.099487304688
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25563.26953125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-walk-native-4.png",
+			"physics_tick": 397,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "bbe62cfd468a4ed03fc22b355eaf7aec6d6be97621659bf7c7f59b3ea08c3301",
+			"visible_body_viewport": [
+				561.541381835938,
+				256.105651855469,
+				187.596557617188,
+				189.105377197266
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25518.4375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-attack-0.png",
+			"physics_tick": 422,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "746e31b9fd70432b73de30e7d97881e556492e48902ce3a09c4494329c46280e",
+			"visible_body_viewport": [
+				534.586853027344,
+				253.379180908203,
+				205.479309082031,
+				191.347808837891
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25518.4375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-attack-1.png",
+			"physics_tick": 440,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "959cd2ef0b06299e8147c06ee38d273bca55d5d87afad646cb4416696bb2e02b",
+			"visible_body_viewport": [
+				505.178100585938,
+				287.37109375,
+				252.074951171875,
+				157.355895996094
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25518.4375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-W-contact.png",
+			"physics_tick": 440,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "959cd2ef0b06299e8147c06ee38d273bca55d5d87afad646cb4416696bb2e02b",
+			"visible_body_viewport": [
+				505.178100585938,
+				287.37109375,
+				252.074951171875,
+				157.355895996094
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25569.615234375,
+				22941.615234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk.png",
+			"physics_tick": 453,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "a617102640cb6a1dff19514b120567ec709f654f33c4cea551d32a42b8099473",
+			"visible_body_viewport": [
+				564.074279785156,
+				248.914123535156,
+				140.869812011719,
+				196.379852294922
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25569.615234375,
+				22941.615234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-2.png",
+			"physics_tick": 453,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "a617102640cb6a1dff19514b120567ec709f654f33c4cea551d32a42b8099473",
+			"visible_body_viewport": [
+				564.074279785156,
+				248.914123535156,
+				140.869812011719,
+				196.379852294922
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25568.236328125,
+				22940.236328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-3.png",
+			"physics_tick": 455,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "750832d270d304f9a1ac733458afb8d560ba0498ad150e26a43b455302ef1884",
+			"visible_body_viewport": [
+				560.924377441406,
+				254.150924682617,
+				158.674926757812,
+				191.143081665039
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25564.099609375,
+				22936.099609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-4.png",
+			"physics_tick": 459,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "98d4e35743457cd8cdf4c99af9fef776e0b22686800f27f1dd69c05a948512ac",
+			"visible_body_viewport": [
+				571.921630859375,
+				252.052307128906,
+				146.630310058594,
+				193.23779296875
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25558.583984375,
+				22930.583984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-5.png",
+			"physics_tick": 464,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "ec754ae145c7b605c4e64b107b43afa58de9d96a23243c03a7e3fbc53b950a64",
+			"visible_body_viewport": [
+				572.4453125,
+				252.056213378906,
+				141.917175292969,
+				193.23779296875
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25553.068359375,
+				22925.068359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-6.png",
+			"physics_tick": 469,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "1d0bef2dd4f300a9271fb3f3aa3849054385bac6cb3612a22adc6bdd2c46d09f",
+			"visible_body_viewport": [
+				567.208557128906,
+				258.864044189453,
+				151.867065429688,
+				186.429962158203
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25548.931640625,
+				22920.931640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-7.png",
+			"physics_tick": 473,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "1974eaf906f3086e91c0e80675fc5d459d90e207943b93a7c6891f3c515995a7",
+			"visible_body_viewport": [
+				565.113830566406,
+				252.579879760742,
+				142.964538574219,
+				192.714096069336
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25543.416015625,
+				22915.416015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-0.png",
+			"physics_tick": 478,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "87f0d764a7f0df1e5d6c439a80bdfe3e3b16058b5d98d0062663d275bd397a6f",
+			"visible_body_viewport": [
+				571.929443359375,
+				252.575973510742,
+				142.440856933594,
+				192.714096069336
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25539.279296875,
+				22911.279296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-walk-native-1.png",
+			"physics_tick": 482,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "beb2179e3c70d8985b8e924fc8a4c42788325a70ca3864d6bde3e49bbf182d57",
+			"visible_body_viewport": [
+				568.255859375,
+				251.532531738281,
+				151.343383789062,
+				193.761474609375
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25504.806640625,
+				22876.806640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-attack-0.png",
+			"physics_tick": 509,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "454551772062e5fe41a0156c25e8bae855e5e813ecbef4b9631d98eef9794788",
+			"visible_body_viewport": [
+				532.977478027344,
+				241.950378417969,
+				217.922668457031,
+				202.799926757812
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25504.806640625,
+				22876.806640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-attack-1.png",
+			"physics_tick": 527,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "911497c8ec75e25941a49874c815328d3364ab09352aadfa6c3197b36a4d8de2",
+			"visible_body_viewport": [
+				494.976715087891,
+				287.318634033203,
+				269.107391357422,
+				157.431671142578
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25504.806640625,
+				22876.806640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NW-contact.png",
+			"physics_tick": 527,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "911497c8ec75e25941a49874c815328d3364ab09352aadfa6c3197b36a4d8de2",
+			"visible_body_viewport": [
+				494.976715087891,
+				287.318634033203,
+				269.107391357422,
+				157.431671142578
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22982.05078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk.png",
+			"physics_tick": 540,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "0009464f5a63512285a544399be14b98016963d9934657cd64b0c55947762612",
+			"visible_body_viewport": [
+				587.129760742188,
+				260.744995117188,
+				115.070556640625,
+				184.527587890625
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22982.05078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-0.png",
+			"physics_tick": 540,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "0009464f5a63512285a544399be14b98016963d9934657cd64b0c55947762612",
+			"visible_body_viewport": [
+				587.129760742188,
+				260.744995117188,
+				115.070556640625,
+				184.527587890625
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22976.203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-1.png",
+			"physics_tick": 544,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "6f21e6046d0aa7d447057526eaa297ca01263aa7904f91531f773dddb8115bb5",
+			"visible_body_viewport": [
+				585.57470703125,
+				260.226684570312,
+				116.625610351562,
+				185.045928955078
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22968.40625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-2.png",
+			"physics_tick": 549,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "caba0b750acd32e4fe3e0a38b175553d4f73ea3ef3ac50880412126e4618d2b8",
+			"visible_body_viewport": [
+				585.056396484375,
+				260.226684570312,
+				116.107238769531,
+				185.045928955078
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22962.55859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-3.png",
+			"physics_tick": 553,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "cefcfc184b51037eed1a93dbdb112c9c2a3a336e8b0929ba1bb0e0e27f7d3051",
+			"visible_body_viewport": [
+				583.501403808594,
+				259.190002441406,
+				116.625610351562,
+				186.082580566406
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22954.76171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-4.png",
+			"physics_tick": 558,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "be0471e6a3c9397465acec23d984fba7b716b2b3df89a5d6b30fbd165aa87646",
+			"visible_body_viewport": [
+				585.056396484375,
+				259.708343505859,
+				116.107238769531,
+				185.564270019531
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22946.96484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-5.png",
+			"physics_tick": 563,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "5c7f4108e7deab927dabe2da2f26a40fde356c544b511d78cb30ac56573497df",
+			"visible_body_viewport": [
+				585.57470703125,
+				262.818359375,
+				115.070556640625,
+				182.454254150391
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22941.1171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-6.png",
+			"physics_tick": 567,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "6d6bbe617ab4e28f6661475f088a4e223f4d627d842a59ddce453692d9fa23e9",
+			"visible_body_viewport": [
+				583.501403808594,
+				260.226684570312,
+				117.662231445312,
+				185.045928955078
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22933.3203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-walk-native-7.png",
+			"physics_tick": 572,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "86c5f4e357e8e35d92151cc4c06f521999544203f8591d9a96b4f00b3165bf70",
+			"visible_body_viewport": [
+				581.946350097656,
+				258.671691894531,
+				116.625610351562,
+				186.600952148438
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22890.4375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-attack-0.png",
+			"physics_tick": 596,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "5b0832108146d8eb1478e9699f49b1d7558315de3d442dddab6107697998ce59",
+			"visible_body_viewport": [
+				557.406494140625,
+				250.093399047852,
+				164.023681640625,
+				194.65690612793
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22890.4375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-attack-1.png",
+			"physics_tick": 614,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "e763bae9d636ee0c9c93a4b79dcc98127918f0628478b6ee8b7795bad9900fb1",
+			"visible_body_viewport": [
+				557.018737792969,
+				260.56298828125,
+				169.840087890625,
+				184.187316894531
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25472.0,
+				22890.4375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-N-contact.png",
+			"physics_tick": 614,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "e763bae9d636ee0c9c93a4b79dcc98127918f0628478b6ee8b7795bad9900fb1",
+			"visible_body_viewport": [
+				557.018737792969,
+				260.56298828125,
+				169.840087890625,
+				184.187316894531
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25374.384765625,
+				22941.615234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk.png",
+			"physics_tick": 627,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "dd1f58e71d7a398d00ef1d1e657a69546885fa7d6ef69281ed83549976c8aa8b",
+			"visible_body_viewport": [
+				589.203063964844,
+				248.823287963867,
+				114.033874511719,
+				196.449325561523
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25374.384765625,
+				22941.615234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-5.png",
+			"physics_tick": 627,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "dd1f58e71d7a398d00ef1d1e657a69546885fa7d6ef69281ed83549976c8aa8b",
+			"visible_body_viewport": [
+				589.203063964844,
+				248.823287963867,
+				114.033874511719,
+				196.449325561523
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25377.142578125,
+				22938.857421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-6.png",
+			"physics_tick": 630,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "dddb265db1a82e05ed30f2b656354503f48bc0565a4c29eb440f67ec4e619add",
+			"visible_body_viewport": [
+				588.688659667969,
+				245.713272094727,
+				114.55224609375,
+				199.559341430664
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25382.658203125,
+				22933.341796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-7.png",
+			"physics_tick": 635,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "fc98c4c0911066d24ab01eb8a92a625f58fa6ef6856f78cdafcd9e20ecca521a",
+			"visible_body_viewport": [
+				586.093078613281,
+				247.78662109375,
+				114.033874511719,
+				197.485992431641
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25386.794921875,
+				22929.205078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-0.png",
+			"physics_tick": 639,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "1dc6472926f52c5937c48022145f2254faee8dfb0107f6f9c179db524745fb0c",
+			"visible_body_viewport": [
+				592.831420898438,
+				246.746032714844,
+				118.698913574219,
+				198.522644042969
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25392.310546875,
+				22923.689453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-1.png",
+			"physics_tick": 644,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "2812bedd82776d5d51ed3796936bb065d13ff206e05ba39d5f13e52c2a597af8",
+			"visible_body_viewport": [
+				587.651977539062,
+				247.78662109375,
+				120.772277832031,
+				197.485992431641
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25396.447265625,
+				22919.552734375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-2.png",
+			"physics_tick": 648,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "678b74b1088c55cd66d9f74061a77cee2de68ceb8723275047e468e35bbe49d4",
+			"visible_body_viewport": [
+				591.276428222656,
+				248.304946899414,
+				114.033874511719,
+				196.967636108398
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25401.962890625,
+				22914.037109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-3.png",
+			"physics_tick": 653,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "5105365f497a6e79beff683eb0ae8b2db60facdfc6d9aa25dd3398595d39d2b6",
+			"visible_body_viewport": [
+				590.23974609375,
+				247.268280029297,
+				111.960571289062,
+				198.004333496094
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25407.478515625,
+				22908.521484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-walk-native-4.png",
+			"physics_tick": 658,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "bd98d9e001c626cdef5400476f0065796d5e07b75f192fabe2284eaa714cf55d",
+			"visible_body_viewport": [
+				589.725341796875,
+				247.264373779297,
+				112.478881835938,
+				198.004333496094
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25439.193359375,
+				22876.806640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-attack-0.png",
+			"physics_tick": 683,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "0711a78409d622f1571785a0b8a5589ff651500bf9aa500fc4ae8eac1079cadd",
+			"visible_body_viewport": [
+				525.50537109375,
+				253.315521240234,
+				210.847534179688,
+				191.496337890625
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25439.193359375,
+				22876.806640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-attack-1.png",
+			"physics_tick": 701,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "805eb38847faee969f3b5234578de280cd76b1207bf38ea240cdc5189c982c6a",
+			"visible_body_viewport": [
+				520.667541503906,
+				256.540710449219,
+				228.183044433594,
+				188.271148681641
+			]
+		},
+		{
+			"actor_hp": 1860,
+			"actor_world": [
+				25439.193359375,
+				22876.806640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/ai-NE-contact.png",
+			"physics_tick": 701,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "805eb38847faee969f3b5234578de280cd76b1207bf38ea240cdc5189c982c6a",
+			"visible_body_viewport": [
+				520.667541503906,
+				256.540710449219,
+				228.183044433594,
+				188.271148681641
+			]
+		},
+		{
+			"actor_hp": 1666,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/lifecycle-hit.png",
+			"physics_tick": 724,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "1f0ee800033370d78d35f8f5740d7661ef4aa127a38ca6efc347adb74b47769c",
+			"visible_body_viewport": [
+				566.979431152344,
+				253.980728149414,
+				144.771240234375,
+				191.758407592773
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/lifecycle-ground-drop.png",
+			"physics_tick": 1155,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "2613e694d0e35c55e120f2fb3ed51a25c28854efdab199e3d41216a16bdd5dd6",
+			"visible_body_viewport": [
+				561.264770507812,
+				251.440887451172,
+				156.835510253906,
+				194.298248291016
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/lifecycle-death-0.png",
+			"physics_tick": 1157,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "da72478bf94306fbeef617d60b6dc23cff808deca8519e5546c5350977f70b45",
+			"visible_body_viewport": [
+				570.154235839844,
+				320.016723632812,
+				139.056579589844,
+				125.722381591797
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/lifecycle-manual-pickup.png",
+			"physics_tick": 1168,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "bc9f4148ea9adc106365a364e1a1b7fb9ebc78b35c7eaa0547ecdbf906db2f9c",
+			"visible_body_viewport": [
+				570.154235839844,
+				320.016723632812,
+				139.056579589844,
+				125.722381591797
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/lifecycle-death-1.png",
+			"physics_tick": 1171,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "7d7179814ddb9f3af9d478a05f7af8608a552f89c90fe8dba4a898eb771f254a",
+			"visible_body_viewport": [
+				565.70947265625,
+				338.430603027344,
+				152.390747070312,
+				107.308502197266
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-deer/lifecycle-death-2.png",
+			"physics_tick": 1185,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "29e5b8444af12cf5daeb19e57a0d486afb091968014650cac1644ae3a9a5b400",
+			"visible_body_viewport": [
+				544.755737304688,
+				365.733947753906,
+				182.868896484375,
+				80.0051574707031
+			]
+		}
+	],
+	"scope": "original-based albino_deer_batch16_authored, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-walk-native-3.png",
+		"ai-E-walk-native-4.png",
+		"ai-E-walk-native-5.png",
+		"ai-E-walk-native-6.png",
+		"ai-E-walk-native-7.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-5.png",
+		"ai-SE-walk-native-6.png",
+		"ai-SE-walk-native-7.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-3.png",
+		"ai-SE-walk-native-4.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-3.png",
+		"ai-S-walk-native-4.png",
+		"ai-S-walk-native-5.png",
+		"ai-S-walk-native-6.png",
+		"ai-S-walk-native-7.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-3.png",
+		"ai-SW-walk-native-4.png",
+		"ai-SW-walk-native-5.png",
+		"ai-SW-walk-native-6.png",
+		"ai-SW-walk-native-7.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-5.png",
+		"ai-W-walk-native-6.png",
+		"ai-W-walk-native-7.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-3.png",
+		"ai-W-walk-native-4.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-3.png",
+		"ai-NW-walk-native-4.png",
+		"ai-NW-walk-native-5.png",
+		"ai-NW-walk-native-6.png",
+		"ai-NW-walk-native-7.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-3.png",
+		"ai-N-walk-native-4.png",
+		"ai-N-walk-native-5.png",
+		"ai-N-walk-native-6.png",
+		"ai-N-walk-native-7.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-5.png",
+		"ai-NE-walk-native-6.png",
+		"ai-NE-walk-native-7.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-3.png",
+		"ai-NE-walk-native-4.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-walk-4.png",
+		"authored-E-walk-5.png",
+		"authored-E-walk-6.png",
+		"authored-E-walk-7.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-walk-4.png",
+		"authored-SE-walk-5.png",
+		"authored-SE-walk-6.png",
+		"authored-SE-walk-7.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-walk-4.png",
+		"authored-S-walk-5.png",
+		"authored-S-walk-6.png",
+		"authored-S-walk-7.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-walk-4.png",
+		"authored-SW-walk-5.png",
+		"authored-SW-walk-6.png",
+		"authored-SW-walk-7.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-walk-4.png",
+		"authored-W-walk-5.png",
+		"authored-W-walk-6.png",
+		"authored-W-walk-7.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-walk-4.png",
+		"authored-NW-walk-5.png",
+		"authored-NW-walk-6.png",
+		"authored-NW-walk-7.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-walk-4.png",
+		"authored-N-walk-5.png",
+		"authored-N-walk-6.png",
+		"authored-N-walk-7.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-walk-4.png",
+		"authored-NE-walk-5.png",
+		"authored-NE-walk-6.png",
+		"authored-NE-walk-7.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "알비노 디어",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_4.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_4.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

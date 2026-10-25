@@ -1,0 +1,26 @@
+{
+  "actor": "monster:그림 리퍼",
+  "slug": "grim_reaper",
+  "clip": "SW-hit-v02",
+  "role": "hit",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/SW-hit-v02.png",
+  "source_sha256": "3486dfde44634f1d24c64691fe41cc2f2e0a861c2bb349658a19437c661fb1f3",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      107388,
+      102958,
+      101660,
+      100652,
+      100630,
+      94079
+    ]
+  },
+  "status": "HOLD",
+  "cause": "phase_grid_assignment",
+  "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+}

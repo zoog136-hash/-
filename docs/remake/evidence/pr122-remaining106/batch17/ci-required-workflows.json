@@ -1,0 +1,243 @@
+[
+  {
+    "name": "Animation Presentation Validate",
+    "path": ".github/workflows/animation-presentation-validate.yml",
+    "workflow_id": "382033338",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "Combat Animation Validate",
+    "path": ".github/workflows/combat-animation-validate.yml",
+    "workflow_id": "378485460",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "Godot Validate",
+    "path": ".github/workflows/godot-validate.yml",
+    "workflow_id": "377003206",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "Ground Loot Validate",
+    "path": ".github/workflows/ground-loot-validate.yml",
+    "workflow_id": "379116623",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "L1J Runtime and Recovery Validation",
+    "path": ".github/workflows/l1j-runtime-validate.yml",
+    "workflow_id": "380258541",
+    "dispatch_supported": true,
+    "dispatch_inputs": {
+      "retry_scope": {
+        "description": "Full validation, or the authenticated PR122 Linux remainder",
+        "type": "choice",
+        "default": "full",
+        "options": [
+          "full",
+          "linux_remaining"
+        ]
+      }
+    }
+  },
+  {
+    "name": "Monster World Validate",
+    "path": ".github/workflows/monster-world-validate.yml",
+    "workflow_id": "379399166",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "Original Skill Migration Validation",
+    "path": ".github/workflows/original-skills-validate.yml",
+    "workflow_id": "380092473",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "PR122 partial locomotion source previews",
+    "path": ".github/workflows/pr122-locomotion-source-preview.yml",
+    "workflow_id": "388190719",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "PR122 restored Tomb269 actual Main",
+    "path": ".github/workflows/pr122-tomb269-actual-main.yml",
+    "workflow_id": "388120178",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "PR122 Tomb269 additive probe parse",
+    "path": ".github/workflows/pr122-tomb269-probe-parse.yml",
+    "workflow_id": "386446579",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "PR122 unicorn microrepair (unapproved source only)",
+    "path": ".github/workflows/pr122-unicorn-alpha-microrepair.yml",
+    "workflow_id": "386436620",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "PR122 wolf and wild dog source review",
+    "path": ".github/workflows/pr122-gait-source-review.yml",
+    "workflow_id": "386445785",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "Remaining106 actual Main visual gates",
+    "path": ".github/workflows/remaining106-animation-validate.yml",
+    "workflow_id": "386327368",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT 25 Map Visual Styles",
+    "path": ".github/workflows/twilight-map-visual-style.yml",
+    "workflow_id": "380364706",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Android ARM64 APK Playtest",
+    "path": ".github/workflows/twilight-android-playtest-apk.yml",
+    "workflow_id": "379260143",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Atomic Crafting",
+    "path": ".github/workflows/twilight-crafting-validate.yml",
+    "workflow_id": "380357580",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT AUTO Pursuit Reliability",
+    "path": ".github/workflows/auto-hunt-reliability.yml",
+    "workflow_id": "380533426",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Combat Resolution Equivalence",
+    "path": ".github/workflows/twilight-combat-resolution.yml",
+    "workflow_id": "380366289",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Integration Validate",
+    "path": ".github/workflows/twilight-integration-validate.yml",
+    "workflow_id": "379158955",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT L1J Selective Integration",
+    "path": ".github/workflows/l1j-selective-validate.yml",
+    "workflow_id": "380317675",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Local Crafting",
+    "path": ".github/workflows/twilight-local-crafting.yml",
+    "workflow_id": "380343250",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Monster AI Leash and Path",
+    "path": ".github/workflows/twilight-monster-ai.yml",
+    "workflow_id": "380362451",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT NPC Dialogue Branches",
+    "path": ".github/workflows/twilight-npc-dialogue.yml",
+    "workflow_id": "380360604",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT NPC Teleport",
+    "path": ".github/workflows/twilight-npc-teleport.yml",
+    "workflow_id": "380341213",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Optional 8-Direction SPX Actor",
+    "path": ".github/workflows/external-spx-actor-validate.yml",
+    "workflow_id": "380519557",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Remake Regression",
+    "path": ".github/workflows/twilight-remake-validate.yml",
+    "workflow_id": "382710491",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT renewed-map spawn validation",
+    "path": ".github/workflows/renewed-map-spawns.yml",
+    "workflow_id": "381804530",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT resource integrity (no silent missing assets)",
+    "path": ".github/workflows/resource-integrity.yml",
+    "workflow_id": "380912768",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Shop Authority",
+    "path": ".github/workflows/twilight-shop-authority.yml",
+    "workflow_id": "380334602",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Shop Buyback",
+    "path": ".github/workflows/twilight-shop-buyback.yml",
+    "workflow_id": "380345911",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "Twilight Skill Mechanism",
+    "path": ".github/workflows/skill-mechanism-validate.yml",
+    "workflow_id": "377954955",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Visible Gameplay Smoke",
+    "path": ".github/workflows/visible-gameplay-validate.yml",
+    "workflow_id": "380477485",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  },
+  {
+    "name": "TWILIGHT Warehouse Persistence",
+    "path": ".github/workflows/twilight-warehouse-validate.yml",
+    "workflow_id": "380339384",
+    "dispatch_supported": true,
+    "dispatch_inputs": {}
+  }
+]

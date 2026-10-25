@@ -1,0 +1,272 @@
+{
+  "status": "AUTHOR_UNCERTAIN_ACTUAL_V02_ANNOTATION_NOT_APPROVAL",
+  "source": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v02-forward-service.png",
+  "source_sha256": "d5cc5599df4a943ba28dcec2e9b8809ba0c6ff89d74b0750f6e77184b23d4752",
+  "native_C": 2560,
+  "unitfactor": 2.5,
+  "grid_preview": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-run-contact0-v02-forward-grid-private.jpg",
+  "grid_preview_bytes": 143346,
+  "points": {
+    "head_skull_center": {
+      "xy": [
+        590,
+        270
+      ],
+      "uncertainty_px": [
+        14,
+        16
+      ],
+      "visibility": "under rear bun/hair"
+    },
+    "neck_nape": {
+      "xy": [
+        614,
+        339
+      ],
+      "uncertainty_px": [
+        10,
+        10
+      ],
+      "visibility": "back collar/hair"
+    },
+    "waist_belt_center": {
+      "xy": [
+        668,
+        548
+      ],
+      "uncertainty_px": [
+        10,
+        10
+      ],
+      "visibility": "belt center structuralpoint"
+    },
+    "pelvis_center": {
+      "xy": [
+        662,
+        654
+      ],
+      "uncertainty_px": [
+        23,
+        24
+      ],
+      "visibility": "occluded under pleated skirt"
+    },
+    "L_shoulder_near": {
+      "xy": [
+        551,
+        382
+      ],
+      "uncertainty_px": [
+        12,
+        12
+      ],
+      "visibility": "visible bare shoulder"
+    },
+    "L_elbow_near": {
+      "xy": [
+        483,
+        500
+      ],
+      "uncertainty_px": [
+        15,
+        18
+      ],
+      "visibility": "sleeve hinge inferred"
+    },
+    "L_wrist_free": {
+      "xy": [
+        415,
+        577
+      ],
+      "uncertainty_px": [
+        9,
+        9
+      ],
+      "visibility": "cuff to bare hand"
+    },
+    "R_shoulder_far": {
+      "xy": [
+        738,
+        403
+      ],
+      "uncertainty_px": [
+        14,
+        15
+      ],
+      "visibility": "far upperarm shoulder"
+    },
+    "R_elbow_far": {
+      "xy": [
+        815,
+        498
+      ],
+      "uncertainty_px": [
+        15,
+        16
+      ],
+      "visibility": "white sleeve bend"
+    },
+    "R_wrist_grip": {
+      "xy": [
+        894,
+        432
+      ],
+      "uncertainty_px": [
+        9,
+        10
+      ],
+      "visibility": "hand/wrist cuffstaff"
+    },
+    "L_hip_near": {
+      "xy": [
+        605,
+        695
+      ],
+      "uncertainty_px": [
+        24,
+        24
+      ],
+      "visibility": "upper near femur joint under skirt, changed from earliermaster estimate620684"
+    },
+    "L_knee_support": {
+      "xy": [
+        575,
+        866
+      ],
+      "uncertainty_px": [
+        13,
+        18
+      ],
+      "visibility": "smooth boot hinge inferred"
+    },
+    "L_ankle_support": {
+      "xy": [
+        561,
+        1064
+      ],
+      "uncertainty_px": [
+        11,
+        12
+      ],
+      "visibility": "black bootshaft to shoe bend"
+    },
+    "L_heel_tip_contact": {
+      "xy": [
+        569.5,
+        1193
+      ],
+      "uncertainty_px": [
+        2,
+        1
+      ],
+      "visibility": "EXACT alpha16 bottom row1193 xrange568..571"
+    },
+    "L_toe_tip": {
+      "xy": [
+        492,
+        1153
+      ],
+      "uncertainty_px": [
+        5,
+        5
+      ],
+      "visibility": "leftmost forefoottoe silhouette"
+    },
+    "L_forefoot_sole_low": {
+      "xy": [
+        515,
+        1170
+      ],
+      "uncertainty_px": [
+        6,
+        5
+      ],
+      "visibility": "front sole undersurface, not outertoe tip"
+    },
+    "R_hip_far": {
+      "xy": [
+        690,
+        705
+      ],
+      "uncertainty_px": [
+        28,
+        28
+      ],
+      "visibility": "inferred farhip under skirt"
+    },
+    "R_knee_recovery": {
+      "xy": [
+        635,
+        795
+      ],
+      "uncertainty_px": [
+        30,
+        30
+      ],
+      "visibility": "occluded behind near thigh; broaduncertainty"
+    },
+    "R_ankle_recovery": {
+      "xy": [
+        768,
+        858
+      ],
+      "uncertainty_px": [
+        15,
+        17
+      ],
+      "visibility": "ornate rear heel/ankle collar"
+    },
+    "R_toe_recovery": {
+      "xy": [
+        782,
+        983
+      ],
+      "uncertainty_px": [
+        7,
+        8
+      ],
+      "visibility": "visible lifted toe"
+    },
+    "R_heel_tip_recovery": {
+      "xy": [
+        800,
+        904
+      ],
+      "uncertainty_px": [
+        5,
+        5
+      ],
+      "visibility": "lifted pointedheel"
+    },
+    "staff_upper_endpoint": {
+      "xy": [
+        896,
+        14
+      ],
+      "uncertainty_px": [
+        2,
+        2
+      ],
+      "visibility": "upperend"
+    },
+    "staff_lower_endpoint": {
+      "xy": [
+        926,
+        1110
+      ],
+      "uncertainty_px": [
+        2,
+        2
+      ],
+      "visibility": "lowerend"
+    }
+  },
+  "heel_minus_nearhip": [
+    -35.5,
+    498.0
+  ],
+  "provisional_arm_read": "LEFTwrist415577 vsLEFTshoulder551382 gives[-136,+195]; couldbeoutwardabduction/depth aswellasforwardarm, authorcannotassert3Dcounterphase; freshQCgate",
+  "heel_footground": "goldheelpoint exact but groundplane/shoe pitch/yaw actualQCpending; no root/C repair forwrongrelativejointgeometry",
+  "source_unit_registration": "newnape614339\u2192belt668548=215.86projectedraw, normalized86.35; original213.68, within~1%; no newCfit/perposealpha normalization",
+  "no_resample": true
+}

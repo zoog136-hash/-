@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "key": "monster:분노의 데스 서번트",
+  "actor": "rage_death_servant_monster_authored_trial01",
+  "stage": "separate post-authoring full native playback + actual gameplay + baseline comparison review",
+  "independent_human_claim": false,
+  "production_changed": false,
+  "completed_added": 0,
+  "status": "HOLD_CONTACT_S_NOT_APPROVED",
+  "static_all_104_native_phases": "REVIEWED_IDENTITY_PALETTE_CONTINUOUS_BODY_AND_REAR_FACES_ACCEPTABLE; root/model calibration not final",
+  "temporal_automatic": {
+    "checks": 40364,
+    "failures": 0,
+    "native_phases": 104,
+    "actual_GL": true,
+    "report": "/workspace/scratch/remaining106-main-review-20261016/servant-trial01-temporal-isolated/report.json"
+  },
+  "actual_AI_combat_lifecycle_automatic": {
+    "checks": 1412,
+    "failures": 0,
+    "all_eight_AI_contacts": true,
+    "report": "/workspace/scratch/remaining106-main-review-20261016/servant-trial01-visual/report.json"
+  },
+  "baseline_actual_Main_comparison": {
+    "report": "/workspace/scratch/remaining106-main-review-20261016/servant-trial01-style/report.json",
+    "baseline": "지옥의 쿠거 v3",
+    "scope": "All eight idle and chronological E/S/W/N walk samples"
+  },
+  "visual_defects": [
+    {
+      "slot": {
+        "role": "attack",
+        "direction": "S",
+        "phase": 1
+      },
+      "source_sheet": 5,
+      "source_frame_index": 48,
+      "source_rgba_sha256": "2577c80cd7454968b69deafa37b62bfa62f8045be8a3a52f317b279aab5a2725",
+      "reason": "At actual S contact/damage event the claw remains visibly above the player helmet; visible damage and automatic contact PASS do not establish drawn hand/body contact. Needs local pose/root diagnosis against actual original model.",
+      "decision": "NOT_APPROVED; no broad source regeneration or arbitrary anchor translation to force contact"
+    }
+  ],
+  "other_directions": "SW hand reaches helmet in reviewed contact still; not automatically included in S defect. Other directions require full event review before final approval.",
+  "source_model_root_review": "UNFINISHED; source author notes S/SW model-scale and proposed cloth anchors remain relevant",
+  "evidence": [
+    {
+      "path": "/workspace/scratch/remaining106-main-review-20261016/servant-trial01-visual/captures/rage-death-servant-trial01/ai-S-contact.png",
+      "sha256": "9e0f435d7f9a91faecff0d277c0cafde656622ad859ba10a12dfc4369e11de98"
+    },
+    {
+      "path": "/workspace/scratch/remaining106-main-review-20261016/servant-trial01-visual/captures/rage-death-servant-trial01/ai-S-attack-1.png",
+      "sha256": "9e0f435d7f9a91faecff0d277c0cafde656622ad859ba10a12dfc4369e11de98"
+    },
+    {
+      "path": "/workspace/scratch/remaining106-main-review-20261016/servant-trial01-visual/captures/rage-death-servant-trial01/ai-SW-contact.png",
+      "sha256": "18bb64f9e6a0b92a51e1d32271fedb21cd972042d483b55ae825241a8b80910f"
+    }
+  ],
+  "next": "Repair/confirm only S attack impact after causal root/arm diagnosis; preserve all 104 baseline source frames, trial01 assets and all failure captures. Do not promote from automatic PASS."
+}

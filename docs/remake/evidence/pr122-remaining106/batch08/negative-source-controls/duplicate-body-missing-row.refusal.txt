@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 134, in <module>
+    main()
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 59, in main
+    assert row in range(6) and row not in ownership[entry['file']]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

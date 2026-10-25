@@ -1,0 +1,24 @@
+{
+  "schema": "pr122-user-requested-transform-only-motion-scope-proof-v1",
+  "status": "SCOPED_CODE_AND_ACTUAL_PLAYER_PASS",
+  "user_scope": "Mythic and lower transformations omit WALK; UNIQUE and BOSSES retain WALK",
+  "source_pins_sha256": "131032fa64bfade90b0f4c078740186982729ee1c7a33006e53e6e796ea78d5e",
+  "pure_approval_and_scope_tests_passed": 21,
+  "queue_boundary_tests_passed": 1,
+  "isolated_actual_motion_boundary_cases": 7,
+  "actual_Player_actor": "transform:413",
+  "actual_Player_clips": 7,
+  "actual_Player_native_phases": 42,
+  "detailed_approvals": 2,
+  "approved_keys": [
+    "transform:393",
+    "transform:267"
+  ],
+  "historical_approvals": 405,
+  "palette_and_profile_table_sha256": "22550e0dfc48a07bfb0b69793560ae1c0a9f5719e5aa786fc16e2ea4d2867910",
+  "new_approval_gate_sha256": "e10c66e9241969c11678f24f056350ed5f1daab2ce1e6136dd117d5b8f6e4234",
+  "existing_source_assets_deleted": 0,
+  "omission_grants_approval": false,
+  "default_Main_requirement_retained": true,
+  "unchanged_unique_default_Main_marker": "tracks=48 poses=288 candidate_injection=0"
+}

@@ -1,0 +1,2568 @@
+{
+	"boss": [],
+	"checks": 1614,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 768,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792335778.63256,
+				"expires_at": 1792336378.63256,
+				"grade": "고급",
+				"hunt_batch": "1054af97fb1d3831a8a64960525883ca",
+				"id": "2f8587d46767d03ddf4e58ca453b1aaa",
+				"item_name": "강력 HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			},
+			{
+				"created_at": 1792335778.63691,
+				"expires_at": 1792336378.63691,
+				"grade": "희귀",
+				"hunt_batch": "1054af97fb1d3831a8a64960525883ca",
+				"id": "00b6e26ce239c008c712c4f017d2ebbf",
+				"item_name": "미스릴 원석",
+				"map_id": "aden_world",
+				"position": [
+					25550.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 300,
+		"manual_pickup": true,
+		"player_hp": 1967,
+		"weapon_attempts": 2
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(83.57031, 0.0)",
+			"name": "바포메트",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(59.07812, 59.07812)",
+			"name": "바포메트",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 83.57031)",
+			"name": "바포메트",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-59.07812, 59.07812)",
+			"name": "바포메트",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-83.57031, 0.0)",
+			"name": "바포메트",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-59.07812, -59.07812)",
+			"name": "바포메트",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -83.57031)",
+			"name": "바포메트",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(59.07812, -59.07812)",
+			"name": "바포메트",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 92,
+			"facing": 0,
+			"kind": "melee",
+			"name": "바포메트"
+		},
+		{
+			"damage": 92,
+			"facing": 1,
+			"kind": "melee",
+			"name": "바포메트"
+		},
+		{
+			"damage": 92,
+			"facing": 2,
+			"kind": "melee",
+			"name": "바포메트"
+		},
+		{
+			"damage": 92,
+			"facing": 3,
+			"kind": "melee",
+			"name": "바포메트"
+		},
+		{
+			"damage": 92,
+			"facing": 4,
+			"kind": "melee",
+			"name": "바포메트"
+		},
+		{
+			"damage": 92,
+			"facing": 5,
+			"kind": "melee",
+			"name": "바포메트"
+		},
+		{
+			"damage": 92,
+			"facing": 6,
+			"kind": "melee",
+			"name": "바포메트"
+		},
+		{
+			"damage": 92,
+			"facing": 7,
+			"kind": "melee",
+			"name": "바포메트"
+		}
+	],
+	"physics_ticks": 1029,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25333.099609375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "e9e236e79546c1433fac48809621a363ee058c6562c3f7e3dfd3c4a625774905",
+			"visible_body_viewport": [
+				540.199951171875,
+				258.298675537109,
+				213.209106445312,
+				190.633392333984
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25333.099609375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "e9e236e79546c1433fac48809621a363ee058c6562c3f7e3dfd3c4a625774905",
+			"visible_body_viewport": [
+				540.199951171875,
+				258.298675537109,
+				213.209106445312,
+				190.633392333984
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25341.896484375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-E-walk-native-1.png",
+			"physics_tick": 27,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "257fb24fb2a0ae15d2317edc9c77eaf221c5a5d2ffb3658587017fdde95642ae",
+			"visible_body_viewport": [
+				540.203857421875,
+				261.165344238281,
+				201.112182617188,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25351.79296875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-E-walk-native-2.png",
+			"physics_tick": 37,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "bb4a1acea37895a06a66f587decd483e5bc0725410728c4a96c9881c3583e909",
+			"visible_body_viewport": [
+				537.175720214844,
+				261.165344238281,
+				204.136413574219,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25415.5703125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-E-attack-0.png",
+			"physics_tick": 97,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "66b82a5c50b7b120b0290b9eff91b3519cbba40570f216547606986cf569d214",
+			"visible_body_viewport": [
+				570.4384765625,
+				236.79866027832,
+				182.966674804688,
+				212.133377075195
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25415.5703125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-E-attack-1.png",
+			"physics_tick": 115,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "384104891a9f7faa3512943762567f9a02a42bec9c183d94ee9f8bf5eb793c5d",
+			"visible_body_viewport": [
+				544.732421875,
+				278.365356445312,
+				232.86669921875,
+				170.566711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25415.5703125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-E-contact.png",
+			"physics_tick": 115,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "384104891a9f7faa3512943762567f9a02a42bec9c183d94ee9f8bf5eb793c5d",
+			"visible_body_viewport": [
+				544.732421875,
+				278.365356445312,
+				232.86669921875,
+				170.566711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25373.783203125,
+				22745.783203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SE-walk.png",
+			"physics_tick": 128,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "e78e5bfd3769b0ec397d58eefdf17baf6df2c6526c53d306f5d6b6c6f814e549",
+			"visible_body_viewport": [
+				544.740234375,
+				256.865356445312,
+				185.990966796875,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25373.783203125,
+				22745.783203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SE-walk-native-2.png",
+			"physics_tick": 128,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "e78e5bfd3769b0ec397d58eefdf17baf6df2c6526c53d306f5d6b6c6f814e549",
+			"visible_body_viewport": [
+				544.740234375,
+				256.865356445312,
+				185.990966796875,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25376.892578125,
+				22748.892578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SE-walk-native-0.png",
+			"physics_tick": 133,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "0a89c3f371973386904fbd10e932ad7d80ab4092a2caa1f8cccd5e20edb3b6c2",
+			"visible_body_viewport": [
+				546.252380371094,
+				262.598663330078,
+				184.478820800781,
+				186.333374023438
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25383.888671875,
+				22755.888671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SE-walk-native-1.png",
+			"physics_tick": 143,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "6c709ec34ebbb843308cb706344aa69383bd852d107ff38791773d19c063f999",
+			"visible_body_viewport": [
+				549.276611328125,
+				255.432006835938,
+				193.551574707031,
+				193.500061035156
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25432.083984375,
+				22804.083984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SE-attack-0.png",
+			"physics_tick": 207,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "b05631bd8371015a1e11e6677e5770b369b9b84fc32ba36fb11f30d0586c1a1a",
+			"visible_body_viewport": [
+				549.272705078125,
+				266.898681640625,
+				167.845458984375,
+				182.033386230469
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25432.083984375,
+				22804.083984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SE-attack-1.png",
+			"physics_tick": 225,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "ca9cd48f6ecf930efa0adb42235b4391f9c2890f88327d1a2e3c7d4db2fea4cc",
+			"visible_body_viewport": [
+				550.784851074219,
+				285.532012939453,
+				214.721252441406,
+				163.400054931641
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25432.083984375,
+				22804.083984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SE-contact.png",
+			"physics_tick": 225,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "ca9cd48f6ecf930efa0adb42235b4391f9c2890f88327d1a2e3c7d4db2fea4cc",
+			"visible_body_viewport": [
+				550.784851074219,
+				285.532012939453,
+				214.721252441406,
+				163.400054931641
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22705.099609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-S-walk.png",
+			"physics_tick": 238,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "a95877461478b225bd81fbb2090207dafbc28d1002c5a8f377c29f3b0daa742a",
+			"visible_body_viewport": [
+				556.833312988281,
+				259.731994628906,
+				179.942443847656,
+				189.200042724609
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22705.099609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-S-walk-native-2.png",
+			"physics_tick": 238,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "a95877461478b225bd81fbb2090207dafbc28d1002c5a8f377c29f3b0daa742a",
+			"visible_body_viewport": [
+				556.833312988281,
+				259.731994628906,
+				179.942443847656,
+				189.200042724609
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22712.796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-S-walk-native-0.png",
+			"physics_tick": 246,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "ba229268d814a7c276407a0708e301a20f8778e2acbd0c61a4fc188d407facc0",
+			"visible_body_viewport": [
+				550.784851074219,
+				255.432006835938,
+				182.966735839844,
+				193.500061035156
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22721.59375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-S-walk-native-1.png",
+			"physics_tick": 255,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "d6f5cb4e416e3df6b7d4bb3c17ef5f1f3157f620ad22e258540ff9a76cfa278c",
+			"visible_body_viewport": [
+				550.784851074219,
+				251.13591003418,
+				179.942443847656,
+				197.800064086914
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22787.5703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-S-attack-0.png",
+			"physics_tick": 317,
+			"player_hp": 1743,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "f998e8263f0ef1d1221ac8cad76148475b13d146eb1d29b58d0dc944f03ce35f",
+			"visible_body_viewport": [
+				555.321166992188,
+				238.235900878906,
+				151.212158203125,
+				210.700042724609
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22787.5703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-S-attack-1.png",
+			"physics_tick": 335,
+			"player_hp": 1654,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "006278e9793cde81458536452566cf27a9f86fcf80d465495f7d89f8975711f3",
+			"visible_body_viewport": [
+				541.712097167969,
+				304.169250488281,
+				217.745483398438,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22787.5703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-S-contact.png",
+			"physics_tick": 335,
+			"player_hp": 1654,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "006278e9793cde81458536452566cf27a9f86fcf80d465495f7d89f8975711f3",
+			"visible_body_viewport": [
+				541.712097167969,
+				304.169250488281,
+				217.745483398438,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25570.216796875,
+				22745.783203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SW-walk.png",
+			"physics_tick": 348,
+			"player_hp": 1654,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "a47d3c074fc97327bb2fee0c82a790318c4185bb447e0b96de7de56e9cb8d694",
+			"visible_body_viewport": [
+				544.736328125,
+				256.865356445312,
+				193.551574707031,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25570.216796875,
+				22745.783203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SW-walk-native-2.png",
+			"physics_tick": 348,
+			"player_hp": 1654,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "a47d3c074fc97327bb2fee0c82a790318c4185bb447e0b96de7de56e9cb8d694",
+			"visible_body_viewport": [
+				544.736328125,
+				256.865356445312,
+				193.551574707031,
+				192.066711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25564.775390625,
+				22751.224609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SW-walk-native-0.png",
+			"physics_tick": 356,
+			"player_hp": 1654,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "167e232e4722e771136ecd348803e20410547e75d7fb645dc0cef1dd74d37544",
+			"visible_body_viewport": [
+				538.687866210938,
+				261.165344238281,
+				190.52734375,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25557.779296875,
+				22758.220703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SW-walk-native-1.png",
+			"physics_tick": 366,
+			"player_hp": 1654,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "2a14006115a8eb5f33ea5d607fd9379df6cd6004d2a1e1173b586dcf0de60017",
+			"visible_body_viewport": [
+				541.719909667969,
+				255.435913085938,
+				192.039428710938,
+				193.500061035156
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25511.916015625,
+				22804.083984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SW-attack-0.png",
+			"physics_tick": 427,
+			"player_hp": 1654,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "8dc3cf716655fc878c6bb514e09bf9b6c33e1bb03c4c48f373507263aa5cc53a",
+			"visible_body_viewport": [
+				543.224243164062,
+				261.165344238281,
+				178.430358886719,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25511.916015625,
+				22804.083984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SW-attack-1.png",
+			"physics_tick": 445,
+			"player_hp": 1565,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "6067d3d8adcda07f84d784ead777c5433c34d9ec3c830223cf407f75795104ae",
+			"visible_body_viewport": [
+				523.566650390625,
+				299.865356445312,
+				204.136413574219,
+				149.066711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25511.916015625,
+				22804.083984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-SW-contact.png",
+			"physics_tick": 445,
+			"player_hp": 1565,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "6067d3d8adcda07f84d784ead777c5433c34d9ec3c830223cf407f75795104ae",
+			"visible_body_viewport": [
+				523.566650390625,
+				299.865356445312,
+				204.136413574219,
+				149.066711425781
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25610.900390625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-W-walk.png",
+			"physics_tick": 458,
+			"player_hp": 1565,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "35f6dbba9d834584ecf89c94165148f2174b7e109d6847fad6f99924084ca968",
+			"visible_body_viewport": [
+				541.712097167969,
+				271.198669433594,
+				192.039428710938,
+				177.733367919922
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25610.900390625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-W-walk-native-1.png",
+			"physics_tick": 458,
+			"player_hp": 1565,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "35f6dbba9d834584ecf89c94165148f2174b7e109d6847fad6f99924084ca968",
+			"visible_body_viewport": [
+				541.712097167969,
+				271.198669433594,
+				192.039428710938,
+				177.733367919922
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25609.80078125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-W-walk-native-2.png",
+			"physics_tick": 460,
+			"player_hp": 1565,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "92b8fbb697753943eb854a33f85ae60b772cffdc8958bc7a400d60fa0a2e2133",
+			"visible_body_viewport": [
+				550.784851074219,
+				253.998672485352,
+				178.430358886719,
+				194.933395385742
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25599.904296875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-W-walk-native-0.png",
+			"physics_tick": 470,
+			"player_hp": 1565,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "4403f8c6dc9f5d81550e5079d5fc8e5f63cba77510cfebc27c5e0c554e48b3c0",
+			"visible_body_viewport": [
+				541.712097167969,
+				258.298675537109,
+				189.015197753906,
+				190.633392333984
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25528.4296875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-W-attack-0.png",
+			"physics_tick": 537,
+			"player_hp": 1565,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "cecd1af225b6ec02abc537f329687aebf1db39a889223454d19a6ed3d3b7f903",
+			"visible_body_viewport": [
+				570.4423828125,
+				231.065322875977,
+				151.212158203125,
+				217.866714477539
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25528.4296875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-W-attack-1.png",
+			"physics_tick": 555,
+			"player_hp": 1476,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "a3012d479e5a35947b9a7c366744a6258924b1e2a47dc663d1455777d5bfaaf8",
+			"visible_body_viewport": [
+				500.884826660156,
+				284.098663330078,
+				231.354614257812,
+				164.833374023438
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25528.4296875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-W-contact.png",
+			"physics_tick": 555,
+			"player_hp": 1476,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "a3012d479e5a35947b9a7c366744a6258924b1e2a47dc663d1455777d5bfaaf8",
+			"visible_body_viewport": [
+				500.884826660156,
+				284.098663330078,
+				231.354614257812,
+				164.833374023438
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25570.216796875,
+				22942.216796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NW-walk.png",
+			"physics_tick": 568,
+			"player_hp": 1476,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "93f98239702a5ca1c51c0866a07026baecfe8a44cdc01ab310d06c1ddf822701",
+			"visible_body_viewport": [
+				544.736328125,
+				253.998672485352,
+				175.406127929688,
+				194.933395385742
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25570.216796875,
+				22942.216796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NW-walk-native-1.png",
+			"physics_tick": 568,
+			"player_hp": 1476,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "93f98239702a5ca1c51c0866a07026baecfe8a44cdc01ab310d06c1ddf822701",
+			"visible_body_viewport": [
+				544.736328125,
+				253.998672485352,
+				175.406127929688,
+				194.933395385742
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25565.552734375,
+				22937.552734375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NW-walk-native-2.png",
+			"physics_tick": 575,
+			"player_hp": 1476,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "123165022fb960ed8061375103440ef0de7454728c461496a18bdcfd902ff5aa",
+			"visible_body_viewport": [
+				559.865356445312,
+				264.031982421875,
+				166.333374023438,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25558.556640625,
+				22930.556640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NW-walk-native-0.png",
+			"physics_tick": 585,
+			"player_hp": 1476,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "0754c4873c8f2400a443120b07d24905735d828be3096830efc78ae121459e5a",
+			"visible_body_viewport": [
+				555.321166992188,
+				264.031982421875,
+				170.869750976562,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25511.916015625,
+				22883.916015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NW-attack-0.png",
+			"physics_tick": 647,
+			"player_hp": 1476,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "2a1a2ed38ecb6b2d9a569bd900293c5ecde323ec1f6947cb743a532408e2a2ec",
+			"visible_body_viewport": [
+				567.418151855469,
+				248.265335083008,
+				148.187927246094,
+				200.666702270508
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25511.916015625,
+				22883.916015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NW-attack-1.png",
+			"physics_tick": 665,
+			"player_hp": 1387,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "ec8e3895a59b7ccd8656174be5efc5a10588ebcdb7bd30ee7ddf4de2516eef84",
+			"visible_body_viewport": [
+				512.981811523438,
+				291.265350341797,
+				214.721252441406,
+				157.666717529297
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25511.916015625,
+				22883.916015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NW-contact.png",
+			"physics_tick": 665,
+			"player_hp": 1387,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "ec8e3895a59b7ccd8656174be5efc5a10588ebcdb7bd30ee7ddf4de2516eef84",
+			"visible_body_viewport": [
+				512.981811523438,
+				291.265350341797,
+				214.721252441406,
+				157.666717529297
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22982.900390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-N-walk.png",
+			"physics_tick": 678,
+			"player_hp": 1387,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "5734a53f570b0bae89c32a4b4b8b8b0cfb54d9ee9e7d2a59826ecce4cce0438c",
+			"visible_body_viewport": [
+				571.954528808594,
+				248.265335083008,
+				140.627319335938,
+				200.666702270508
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22982.900390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-N-walk-native-1.png",
+			"physics_tick": 678,
+			"player_hp": 1387,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "5734a53f570b0bae89c32a4b4b8b8b0cfb54d9ee9e7d2a59826ecce4cce0438c",
+			"visible_body_viewport": [
+				571.954528808594,
+				248.265335083008,
+				140.627319335938,
+				200.666702270508
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22974.103515625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-N-walk-native-2.png",
+			"physics_tick": 687,
+			"player_hp": 1387,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "0d39da72e654508bd34a5f5dc55a5e00208a2059225481255f0a6f0b06b96683",
+			"visible_body_viewport": [
+				568.930297851562,
+				264.031982421875,
+				143.651550292969,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22964.20703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-N-walk-native-0.png",
+			"physics_tick": 697,
+			"player_hp": 1387,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "be51acd95274189ec7cec0d6c8a610435cabfe5ffef394c4260cccc73fa8a949",
+			"visible_body_viewport": [
+				568.930297851562,
+				252.565338134766,
+				130.04248046875,
+				196.366729736328
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22900.4296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-N-attack-0.png",
+			"physics_tick": 757,
+			"player_hp": 1387,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "7a4ffa89d6f10d083edde4f1f3af48b1d63901455ed26b76acef2f333f4370bf",
+			"visible_body_viewport": [
+				570.4423828125,
+				225.332000732422,
+				143.651550292969,
+				223.600067138672
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22900.4296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-N-attack-1.png",
+			"physics_tick": 775,
+			"player_hp": 1298,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "285de74a187fb106c1c4fff5bd28f611822b0a6f5922b67a5b8d712a883ce0f3",
+			"visible_body_viewport": [
+				559.857543945312,
+				275.498657226562,
+				161.796997070312,
+				173.433349609375
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25472.0,
+				22900.4296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-N-contact.png",
+			"physics_tick": 775,
+			"player_hp": 1298,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "285de74a187fb106c1c4fff5bd28f611822b0a6f5922b67a5b8d712a883ce0f3",
+			"visible_body_viewport": [
+				559.857543945312,
+				275.498657226562,
+				161.796997070312,
+				173.433349609375
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25373.783203125,
+				22942.216796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NE-walk.png",
+			"physics_tick": 788,
+			"player_hp": 1298,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "ac4879fa017bd231ab1dac64441843e0f92a5aeea1f99156d44c8db8384d583c",
+			"visible_body_viewport": [
+				553.81298828125,
+				264.031982421875,
+				170.869750976562,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25373.783203125,
+				22942.216796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NE-walk-native-0.png",
+			"physics_tick": 788,
+			"player_hp": 1298,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "ac4879fa017bd231ab1dac64441843e0f92a5aeea1f99156d44c8db8384d583c",
+			"visible_body_viewport": [
+				553.81298828125,
+				264.031982421875,
+				170.869750976562,
+				184.900024414062
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25374.560546875,
+				22941.439453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NE-walk-native-1.png",
+			"physics_tick": 790,
+			"player_hp": 1298,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "28f200ec33b8b4cbce26820bd7e70d9151cafd65516c705552767f00ff7d168b",
+			"visible_body_viewport": [
+				546.244567871094,
+				261.165344238281,
+				185.990966796875,
+				187.766723632812
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25380.779296875,
+				22935.220703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NE-walk-native-2.png",
+			"physics_tick": 799,
+			"player_hp": 1298,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "010a32736de91091cbaefea8d94fb765bad43d636c598518ff43ce2436775c41",
+			"visible_body_viewport": [
+				546.248474121094,
+				268.332000732422,
+				179.942443847656,
+				180.600036621094
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25432.083984375,
+				22883.916015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NE-attack-0.png",
+			"physics_tick": 867,
+			"player_hp": 1298,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "4a7f363e0986a3e7e5d060fa0385c3c2bddebdab36eaccd26919a76574f6abab",
+			"visible_body_viewport": [
+				558.345458984375,
+				228.198669433594,
+				158.772766113281,
+				220.7333984375
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25432.083984375,
+				22883.916015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NE-attack-1.png",
+			"physics_tick": 885,
+			"player_hp": 1209,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "6987c4288e493ca2be1dabfbf3aef9a4039a4791c34da24f92c652e117aafe92",
+			"visible_body_viewport": [
+				543.224243164062,
+				304.165344238281,
+				207.16064453125,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 1700,
+			"actor_world": [
+				25432.083984375,
+				22883.916015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/qa/family-main02/captures/baphomet/ai-NE-contact.png",
+			"physics_tick": 885,
+			"player_hp": 1209,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "6987c4288e493ca2be1dabfbf3aef9a4039a4791c34da24f92c652e117aafe92",
+			"visible_body_viewport": [
+				543.224243164062,
+				304.165344238281,
+				207.16064453125,
+				144.766693115234
+			]
+		},
+		{
+			"actor_hp": 106,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/qa/family-main02/captures/baphomet/lifecycle-hit.png",
+			"physics_tick": 908,
+			"player_hp": 1209,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "c0eb4aafe5d5b779806d766f7989fbe7f1a80d7797f220bdbea0f51cc1b19229",
+			"visible_body_viewport": [
+				546.853332519531,
+				270.052001953125,
+				169.357604980469,
+				177.733367919922
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 2,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/qa/family-main02/captures/baphomet/lifecycle-ground-drop.png",
+			"physics_tick": 926,
+			"player_hp": 1967,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "9c9cf79393e8c2aee1467300958b1b40b73e22e350b4e35aeef48f8143329e05",
+			"visible_body_viewport": [
+				552.296936035156,
+				278.365356445312,
+				172.3818359375,
+				170.566711425781
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 2,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/qa/family-main02/captures/baphomet/lifecycle-death-0.png",
+			"physics_tick": 928,
+			"player_hp": 1967,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "72bd21640fe93faa80f977bc5330c6fb8264f47a06c72f21334d0397656c0c91",
+			"visible_body_viewport": [
+				546.853332519531,
+				284.958679199219,
+				206.858215332031,
+				162.826690673828
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/qa/family-main02/captures/baphomet/lifecycle-manual-pickup.png",
+			"physics_tick": 939,
+			"player_hp": 1967,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "c4ac7a67353c16ac6692b1902241977eda87df0b17510f80e618dce9faf8011e",
+			"visible_body_viewport": [
+				546.853332519531,
+				284.958679199219,
+				206.858215332031,
+				162.826690673828
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/qa/family-main02/captures/baphomet/lifecycle-death-1.png",
+			"physics_tick": 942,
+			"player_hp": 1967,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "3bd12edd726cba3dd9ad72f26b34bb8a0bbfbe23841d4dcdadf34891878b52a4",
+			"visible_body_viewport": [
+				529.917541503906,
+				345.732025146484,
+				225.003723144531,
+				102.053344726562
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/qa/family-main02/captures/baphomet/lifecycle-death-2.png",
+			"physics_tick": 956,
+			"player_hp": 1967,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "f37e1da4a991bb86facdfff8ca540f1cd388bfad5b74e808787704e5d8d2bbc6",
+			"visible_body_viewport": [
+				508.143005371094,
+				374.398681640625,
+				238.310363769531,
+				73.3866882324219
+			]
+		}
+	],
+	"scope": "original-based baphomet_project_source, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_battle_scope": {
+			"finishing_hits": "actual equipped weapon and native physics/death/drop",
+			"original_max_hp": 1700,
+			"phase": "original-HP boss finisher, not entire fight",
+			"prior_battle_damage": 1400,
+			"prior_damage_pipeline": "TwilightMonster.take_damage"
+		},
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "바포메트",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_3.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_3.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

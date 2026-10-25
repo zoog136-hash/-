@@ -1,0 +1,73 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02composite01",
+  "source_batch": "batch03",
+  "raw_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.png",
+  "raw_png": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.png",
+  "raw_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+  "raw_bytes": 6169213,
+  "image_size": [
+    3072,
+    4608
+  ],
+  "request_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/request-girtas-W-walk-v02composite01-ready-v02.json",
+  "request_sha256": "93086534307222b39a239c667c57470bcd7a09b5495f50f6e683705548aa9935",
+  "expected_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "layout_revised_poses": 2,
+  "source_visual_status": "PASS",
+  "motion_visual_status": "PASS",
+  "identity_visual_status": "PASS",
+  "geometry_status": "PASS_STRICT6_COMPLETE_OWNED_REGIONS_AND_PROPOSED_RUNTIME_LAYOUT",
+  "integration_ready": true,
+  "independent_source_review_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/independent-SE-author-common-physical-six-gait-review-v02.json",
+  "independent_source_review_sha256": "20f4a2232f976b1c83c7db904956f25b30d9c9f4954b44049cdfd2d46f128f75",
+  "authored_pose_canvas_sizes": [
+    2560,
+    1792,
+    1792,
+    2560,
+    1728,
+    1728
+  ],
+  "source_anchors": [
+    [
+      777,
+      1328
+    ],
+    [
+      2339,
+      1179
+    ],
+    [
+      797,
+      2709
+    ],
+    [
+      2407,
+      2892
+    ],
+    [
+      802,
+      4223
+    ],
+    [
+      2328,
+      4224
+    ]
+  ],
+  "runtime_validation": "NOT_RUN_ACTUAL_COMPILED_PLAYER_AND_DEFAULTMAIN_HOLD",
+  "actor_approval": false,
+  "approved_actor_count_added": 0,
+  "visual_findings": [
+    "Six genuine newly authored faithful Wwalk poses with independently proven nearLEFT and farRIGHT opposite contacts, alternate support/passing and toeoff/reach; onefoot support, not running AIR.",
+    "Fresh independent commonphysical skull/neck/pauldron/belt and limb/anatomy/fullgait candidate PASS against selected W idle; no material bodyratio distortion found.",
+    "Exact original source RGBA preserved; perposeC/root metadata, outward transparent region padding only; no rescale/mirror/recolor/cleanup/thresholdchange.",
+    "Ready for ROOT controlled manifest/staging/Godot integration, not actor completion. Actual compiled SpriteFrames/Player/idletransition/5to0/defaultMain remain to validate."
+  ],
+  "source_candidate_status": "PASS_SCOPED_COMMON_PHYSICAL_AND_FULL_SIX_GAIT_CANDIDATE"
+}

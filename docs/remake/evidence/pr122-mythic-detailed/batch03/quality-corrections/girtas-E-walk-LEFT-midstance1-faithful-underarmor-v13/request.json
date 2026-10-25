@@ -1,0 +1,32 @@
+{
+  "key": "transform_267",
+  "name": "Girtas",
+  "direction": "E",
+  "role": "walk",
+  "version": "v13LEFTmidstance1armor",
+  "source_pose": 1,
+  "requested_poses": 1,
+  "expected_poses": 1,
+  "newly_authored_poses": 1,
+  "source_batch": "batch03",
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10.png": "22b6172ae3a607f8c5b5e9fcb920f662c5d2409d02f3301c678167f0e631563e",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca"
+  },
+  "prompt": "Edit image1 with ONE localized faithful equipment correction ONLY. Preserve the entire actual image1 character, exact camera, face, hair, narrow hard crown rays, armor, blade, two arms, two legs, all joint positions, every boot position and ground-contact pose, longrobe and framing. Transparent background. One complete character, generous unchanged margins, no text.\nThe ONLY defect is the PALE PINK BARE SKIN patch on the NEAR anatomical RIGHT UPPER THIGH exposed in the natural longrobe slit, immediately BELOW the weapon-side hip and ABOVE the bent right armored knee. Girtas is covered in full black/gold protective equipment: there must be NO bare skin on either upper leg. Replace that bare patch with actual faithful DARK BLACK fitted articulated under-armor / protective thigh armor, subtle same ornate gold edging and real armor material/detail consistent with image2 robe/trim and image3 original armor identity. Draw connected blackgold thigh protection physically joined from the existing right hip to the existing bent right knee. This is actual equipment restoration, not a skin-colored panel, no naked thigh, no generic trousers. Keep the natural slit open enough that the actual armored hip\u2192thigh\u2192knee chain remains visibly continuous. Do NOT conceal the leg by closing a robe panel over it, moving the leg, shortening robe, changing pants, or adding limbs.\nThe existing image1 walking stance is correct: FAR LEFT full sole planted under the hip supports body; NEAR RIGHT bent leg passes backward/imageLEFT with its boot AIRBORNE, no running flight. Preserve this stance exactly. Preserve original low anatomical RIGHT weapon grip and sinuous blade; LEFT hand remains empty. Exactly two connected arms and two connected armored legs. All original longrobe side/back panels remain ankle-length. Face/nose right, same E camera as image1. Return only this same complete production pose with the single bare-upper-thigh equipment defect corrected.",
+  "corrective_reason": "Localized actual armor restoration of independently HOLD bare nearRIGHT upperthigh only; actual stance/joint chain already plausible, must preserve pose. Not identical generation/full6 retry.",
+  "prior_hold_source": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10.png",
+  "prior_hold_sha256": "22b6172ae3a607f8c5b5e9fcb920f662c5d2409d02f3301c678167f0e631563e",
+  "independent_hold_proof": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-LEFT-midstance1-visible-RIGHT-passing-v10-independent-source-review.json",
+    "sha256": "c8333310c5155a76792387ed237b726fdaf4bd0c4d6ad6e3851a213cd4d2b044"
+  },
+  "quality_gate": "Faithful actual blackgold upperthigh armor, visible actual nearRIGHT passing chain, exact two legs, unchanged E walking pose and identity. Fresh independent QC required."
+}

@@ -1,0 +1,39 @@
+{
+  "key": "267",
+  "name": "Girtas",
+  "direction": "N",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "left-halfcycles-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "missing_run_halfcycles",
+  "expected_poses": 2,
+  "requested_poses": 2,
+  "intended_game_phases": [
+    1,
+    2
+  ],
+  "primary_anatomical_support": "LEFT",
+  "references": [
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+    "/workspace/scratch/girtas-N-run-left-halfcycles-v01/left-support-two-pose-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+    "/workspace/scratch/girtas-N-run-left-halfcycles-v01/left-support-two-pose-production-guide.png": "a70be82ce281c8c909b8ef1f341f95926768445d890e31befd1a5e56ed65e373"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Failed original six-pose Nrun used one repeated anatomical support side. These are TWO genuinely missing halfcycle poses from a correct single-support landing key, not another six-pose retry. One attempt only; any failed pose remains HOLD.",
+  "prompt": "EDIT the FIRST supplied correct NORTH RUN LEFT-FOOT LANDING KEY into exactly TWO NEW FULL-BODY RUN HALF-CYCLE POSES for the SAME unique boss GIRTAS. FIRST IMAGE is the PRIMARY AND ONLY actor/identity/leg-side authority. SECOND IMAGE is a production-only kinematic diagram made from that SAME key: its colored chains and shared contact plane specify actual knee/ankle/sole geometry, not final clothing. Create TWO COMPLETE ORIGINAL CHARACTER FIGURES in one horizontal row, two 512x512 cells on a 1024x512 transparent RGBA canvas. Read in left-to-right order phases 1 then 2. Do not include the original landing key as a third pose.\n\nLEFT PANEL is game phase1: anatomical LEFT support sole stays FLAT ON the contact plane directly below the hip, LEFT knee visibly flexes and pelvis compresses downward; anatomical RIGHT thigh drives FORWARD/UP (towards top of image, away from camera), RIGHT knee higher than its hip, right boot raised. RIGHT PANEL is game phase2: a REAL AIRBORNE FLIGHT pose; anatomical RIGHT bent knee leads FORWARD/UP, anatomical LEFT bent knee and boot trail DOWN/back. BOTH boot soles are visibly lifted above the projected ground, with clear daylight below BOTH; no long straight boot still planted. This is LEFT-support then RIGHT-forward-flight half, not LEFT-knee-up grounded-right poses.\n\nEvery pose MUST remain TRUE NORTH REAR VIEW heading UP away from camera: back of head and pale hair, dorsal dark gold-trim armor/cape, spine/robe back visible, front face/chest hidden. Anatomical LEFT is imageLEFT and RIGHT is imageRIGHT in this rear view. The existing long sinuous orange-gold weapon stays in the SAME anatomical RIGHT hand (imageRIGHT); the empty LEFT arm remains singular and anatomically plausible. Never mirror body/gear or swap weapon hand. Preserve pale hair, thin narrow hard GOLD radial dorsal spines (not red feather/flame fan), original long DARK gold-trim skirt/robe panels, gold armor/boots, long sinuous weapon and complete gear. Articulate actual knees/ankles/boots visible between the faithful moving skirt panels; do not invent black armored trousers or hide both legs in a rigid cone. Maintain original head, shoulder, pelvis and equipment proportions; use vigorous forward lean, real compress/push-off vs compact airborne flexion. Six-frame animation will later use these TWO distinct missing poses, so genuine support/flight geometry is essential.\n\nFINAL output must be ONLY two separate finished natural original sprites on full transparent alpha0. NO guide colors, skeletons, text, arrows, floor lines, cast shadows, glow/outer-haze, background or extra limbs. Do not reproduce diagram annotations. Keep whole body, every gold spine and full long weapon entirely inside each sparse cell, with at least 48px fully transparent margin to every edge and a large empty alpha gutter between figures. Shrink WHOLE figure uniformly to fit rather than shorten weapon or clip rays. Draw body about 250-290px high, entire gear extent <=390x390px per cell. BOTH figures same character physical scale and NORTH camera angle, every delicate endpoint intact. Output exactly TWO figures, no extra tile, closeup or label.",
+  "requested_at": "2026-10-19T12:30:02.541859+00:00",
+  "user_authorization": "Production image edits authorized; no main-chat image attachments. Exactly one two-pose call for this distinct missing half, no failed-pose retry.",
+  "production_guide_proof": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/production-guide-proof.json",
+  "production_guide_proof_sha256": "d9b6c3c6a6207b5b808aa8bafe3b3e6658c0c2512e6a2cad782fc45759467f4c",
+  "reference_scale_proposal": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/contact-key-physical-scale-reference-proposal.json",
+  "reference_scale_proposal_sha256": "5731e74b8ecce4e19e129a28b00c905583da1af7a050ed25ec96410f7cd879d5",
+  "newly_authored_pose_target": 2,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_final_status": "HOLD_PENDING_SIX_POSE_RUNTIME_QC"
+}

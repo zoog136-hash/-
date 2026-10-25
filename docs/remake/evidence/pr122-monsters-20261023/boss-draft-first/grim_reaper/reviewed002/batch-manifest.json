@@ -1,0 +1,1018 @@
+{
+  "schema": "pr122-boss-production-batch-v1",
+  "actor": "monster:그림 리퍼",
+  "clips": 21,
+  "poses": 126,
+  "missing_required_slots": 12,
+  "root_Godot_real_speed": "PASS",
+  "viewport_captures": 164,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/E-attack-v01.png",
+      "bytes": 1981864,
+      "sha256": "c8e3fa84c7892ed94b222794c2abc9dcb69b0b5b1ec0a81be684060fd6ce7153"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/N-idle-v01.png",
+      "bytes": 1997796,
+      "sha256": "facdd43a3b9e9ae7853f6bd9a09b8d7eaefb81b98e9f3880e93c32fb4472fd17"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/NE-idle-v01.png",
+      "bytes": 1956744,
+      "sha256": "4b8773fce1ecde328436ac1282f4f418de7966738c467a986966fd3be4c6381f"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/NE-run-v01.png",
+      "bytes": 2100351,
+      "sha256": "42d67cbda1737cc9abd3001e4c9a8bd193ec5f1259cea17c891739320aaa09f7"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/NW-attack-v01.png",
+      "bytes": 1898737,
+      "sha256": "7634f4d78c08f4287a8bfca4eca0ff971b9fa1ac1cee66e60f964bbe9855dad0"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/S-attack-v01.png",
+      "bytes": 2356365,
+      "sha256": "d314c8342570b536fa3723dcc750712e6b344d61d3605cbc18213348e138aa0c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/S-run-v01.png",
+      "bytes": 2187022,
+      "sha256": "a89add89c072c23cd8605ab0d2e2f7cba7d1b40a38c3c177ec33ad97e7a6fe99"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/SE-attack-v01.png",
+      "bytes": 2094896,
+      "sha256": "66742bcd2dc0eb153e4b7cdb7e55f0fbc3f6b2d81e706f2fb21c9ce7a683f514"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/SW-run-v01.png",
+      "bytes": 2188113,
+      "sha256": "e140f7b2d8c634c269564347129a6fccd55c3b107dd0fe2f82672a661d79f281"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/owned_parts_v01/W-run-v01.png",
+      "bytes": 1840945,
+      "sha256": "a78700b7aec51873b48b869f7341e70dc7499773b1ed7fb6575e39330228faea"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/NativeMotionProfile.tres",
+      "bytes": 786,
+      "sha256": "9b97d07953c40a6b39970639dab7720610fcb083fa0044b238853a7030a48f0d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/SpriteFrames.tres",
+      "bytes": 32574,
+      "sha256": "1b4f3df808368049f036f993ede8623e082b3e02b61055d0b1a72ef07120259e"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/E-run-v01.png",
+      "bytes": 2645960,
+      "sha256": "ea395785929be9b7dac1d53193bd875641639d11552794d9f59921319556f905"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/N-run-v01.png",
+      "bytes": 2596303,
+      "sha256": "4bff80335c05b25ebbdaa121104fb7a4b48334d416247f4b3470f4e64948156f"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/NW-idle-v01.png",
+      "bytes": 2489310,
+      "sha256": "602e53943b1ff80099a2de705032253496c02a55177d3a874eb533954c48963c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/NW-run-v01.png",
+      "bytes": 2522415,
+      "sha256": "8f87329a7d58af319a623a917d9fe7f0fbcfe27d8b3f73e064d49530ff83f544"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/S-idle-v01.png",
+      "bytes": 2585908,
+      "sha256": "f23a2b4b3ecff1cd78dab03485120f26048602218e757562e4b295ca74dc47b3"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/SE-idle-v01.png",
+      "bytes": 2608508,
+      "sha256": "d2e3e190c5b88dbc41af71182154c96fb1d7fbc08e1f79f5d2846ac7ed45bc33"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/SE-run-v01.png",
+      "bytes": 2742367,
+      "sha256": "e436237bdfe36cf3bcde116851caa4dd168a7a69f9ba8ba672497226d5883b1a"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/SW-attack-v01.png",
+      "bytes": 2642840,
+      "sha256": "f3ea98eac6f5d683d26dd537bc274317170a224bf13ef9d1e4131b17b60ffbcb"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/SW-idle-v01.png",
+      "bytes": 2712424,
+      "sha256": "7a8fe7212252c8b7e44e3bbd2456f7d59b39f7d6fba717ff1561ecb582504d10"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/W-attack-v01.png",
+      "bytes": 2545077,
+      "sha256": "9c70f5f26cdc2ccb498e31ba27b627054cff9e0daeb60059437a01a1bbd103d3"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/W-idle-v01.png",
+      "bytes": 2513014,
+      "sha256": "df16b0076643f5a1a8d8ae262976d2520f86cfa82019779865274298c417995e"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "bytes": 1762092,
+      "sha256": "5d87687bad297b98f567fc5eca29e3ac376b56e290bd55938a3670e26b447a60"
+    },
+    {
+      "path": "data/pr122_monster_production_scope.json",
+      "bytes": 907037,
+      "sha256": "6473b4e4cda6ac87a8cc7f66b45a086c6feb5f4d191bb0a2016b73d3c40cf05a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/candidate.json",
+      "bytes": 122779,
+      "sha256": "717ae65f91727e40cf1fa166452037700f052f8717393b47c0027e5815504486"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/capture-manifest.json",
+      "bytes": 39708,
+      "sha256": "b661a24c5c6033849a4ca9f563da04229f9e7c38ed4d60c9e2ec6bba5fbb5180"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/command.json",
+      "bytes": 382,
+      "sha256": "3a0bcec9dfb201d73e19b411e8d3564a056746c4cd11d962736b61d35ba8e2a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/config.json",
+      "bytes": 1658,
+      "sha256": "6204f657fa8147b2b59db3f808c091829066e61f6c52308cfbebe105a19b812e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/godot-run.txt",
+      "bytes": 12326,
+      "sha256": "633c3fb13edc3145b72c3efaed7b91688a669f2019e2e13fc27ace832ca75199"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-E-action-attack_0-0.png",
+      "bytes": 47596,
+      "sha256": "5c47009745e7c65219586dc6fb541ba26b70bd3bc1679112989956af90c1440f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-E-action-attack_0-1.png",
+      "bytes": 48991,
+      "sha256": "b5629b1cbe499edb154ee2e25e7132bfef91d493be32e9a7e5e61d94026ca821"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-E-action-attack_0-2-strike.png",
+      "bytes": 49830,
+      "sha256": "a8b1f03a49cde27889c50f92b548fc119af518f764dab2b98d60442d7e345463"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-E-action-attack_0-2.png",
+      "bytes": 49494,
+      "sha256": "93937a885089e73293f2bbb62789a1aef92408530d6203368d1f277e6ff9d717"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-E-action-attack_0-3.png",
+      "bytes": 51951,
+      "sha256": "7d93d5ec73530d512a2018661ccc144a496a413e965845381ab16745073f6f10"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-E-action-attack_0-4.png",
+      "bytes": 48959,
+      "sha256": "9a1cbc452216eaa95c8c59c05044cfbfd48e59b68f0a905e4d630b13e5fae8b6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-E-action-attack_0-5.png",
+      "bytes": 48628,
+      "sha256": "403cdf5ae62cb041cc3e50739ae6d6821e2496613874e9e02e1339df62ad2103"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-attack_5-0.png",
+      "bytes": 50959,
+      "sha256": "4fff9b493423ee30ab15791265147773ecb9da70bfb1b40f24c3422dd25641fa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-attack_5-1.png",
+      "bytes": 48887,
+      "sha256": "da7cfc9b82b0ec6e5845be243a0d955904a43146403bf0074bf0c669c8d33139"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-attack_5-2-strike.png",
+      "bytes": 48730,
+      "sha256": "9d479a0f21c41d8996dcaf9bad34cc2ffc3e362b588ba7d3301a10f1f036301e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-attack_5-2.png",
+      "bytes": 48174,
+      "sha256": "099391aa2eae0f42d21e0a1a9924d948f67ffcc54c138a10961980ed7a8e4412"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-attack_5-3.png",
+      "bytes": 48323,
+      "sha256": "53f47a43682129b53c9bcb1b81c4dd71a2414ed8921849d7ce95350300422fbb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-attack_5-4.png",
+      "bytes": 50482,
+      "sha256": "946ad54e244b91c46d9a54fe75f930e7e24ba0c2920acdb9ec6d3a8e40163615"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-attack_5-5.png",
+      "bytes": 50539,
+      "sha256": "0008f12ea5aca5caedc8527dcdbf49a5d421008e0b875aaafe18846f5c46d1ae"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-idle_5-0.png",
+      "bytes": 48099,
+      "sha256": "66479f57908d4a553cedacc7aac213f52502d4431cd9b7554df814359b225d42"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-action-idle_5-1.png",
+      "bytes": 49039,
+      "sha256": "782a4cd298ea4d5a1c6fd2410b77ed0ed571958b90f3de361c84b751ffde48b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-NW-pre-idle-idle_5-0.png",
+      "bytes": 48411,
+      "sha256": "eff913e2db0acd00729276b767a700b5477fd7a582d691d58eb62cfa54d1270a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-attack_2-0.png",
+      "bytes": 55288,
+      "sha256": "febbfc51791c783a2a997d8ecdb299171268f4167fe6cc7540f5b8228651b010"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-attack_2-1.png",
+      "bytes": 55606,
+      "sha256": "785d1de0c80d2ba9e7577507e54273869b3f92774bde7c91319ee9d1c10aeae4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-attack_2-2-strike.png",
+      "bytes": 55485,
+      "sha256": "924332caa19cd32022d4bfe4556d8c55610900c33b480bbe85a7160d615f2b48"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-attack_2-2.png",
+      "bytes": 55183,
+      "sha256": "e52c60e7089fcd2c7b68a4ad6e9d5551b75f1f2a505cb8f6079026d0fe9ffc44"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-attack_2-3.png",
+      "bytes": 59025,
+      "sha256": "96b503c29ac71f9d0fa18f5ab34ad650c7dbf3256fab60800550bd08c56347e3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-attack_2-4.png",
+      "bytes": 55241,
+      "sha256": "d6fab144707cb1e95b3bacfd8b01e0240caab7887d213822721533a0283e79e0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-attack_2-5.png",
+      "bytes": 55776,
+      "sha256": "e06aee0c6200286a1438171dc5827b2ab4d144e6c123d1d4b49c1c8bceb7c879"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-idle_2-0.png",
+      "bytes": 50963,
+      "sha256": "3e5752ec9372549cbfbfc2c95cb1b8feb340f7adc074bf06ae96b510c6186630"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-action-idle_2-1.png",
+      "bytes": 51651,
+      "sha256": "8d96f8e9006753420597bbe1a4a451092752fab4696b6b9fc7a24607707398e8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-pre-idle-idle_2-0.png",
+      "bytes": 50925,
+      "sha256": "2195f8abc5dd6cbb2526143d09ea022a02fc5ff2120eb4ddb1772de52a5398b5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-S-pre-idle-idle_2-1.png",
+      "bytes": 51784,
+      "sha256": "7de267a9c6dd7db3739e0133659cc52eb839b73ae731f6a72fb659610d4bdaa4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-attack_1-0.png",
+      "bytes": 51882,
+      "sha256": "f830df4de491b1db16e95800ab4b6daf4bd4cf8e7edf498e1d99b7616947df13"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-attack_1-1.png",
+      "bytes": 53248,
+      "sha256": "29f76187867ed2f673a8915bdbb5d62c17b64cd3f4db27602a0e620bed8cf311"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-attack_1-2-strike.png",
+      "bytes": 51944,
+      "sha256": "f3e4aea4b572e2d894b145f9695450f5b8b38ea20dc64e749a0bdad08dc864a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-attack_1-2.png",
+      "bytes": 51618,
+      "sha256": "a6f8f0955700d2883f0e43d8236b3371dec4d0056007a58550bdd51e39f25f03"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-attack_1-3.png",
+      "bytes": 53336,
+      "sha256": "b5e83e1e2d3230128eeee656d56f48d307d84853bd93e8ff2ad2db4aa69feaa2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-attack_1-4.png",
+      "bytes": 52786,
+      "sha256": "b83fe43bef9acd6033b234fa8e47a5ceace7966d385f9fa3ebb2ecc761e5dc8a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-attack_1-5.png",
+      "bytes": 51546,
+      "sha256": "7be6a3b1f93c9af2702b5e22aa3068a60aa3a645437897db185c91d1042f658a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-idle_1-0.png",
+      "bytes": 51374,
+      "sha256": "c5fb3f85ae329df1d68d77f46579cb8f32f7609920e30d6999a9df61f0424358"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-action-idle_1-1.png",
+      "bytes": 52994,
+      "sha256": "3ffb6d275901788e2223ab2680b858b68f8c0ed4fe31271c919415f3ccbdf0d6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SE-pre-idle-idle_1-0.png",
+      "bytes": 51404,
+      "sha256": "b8c43ae567c71404414db292efad26c2e318d635767bde77e025157db90ac2bb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-attack_3-0.png",
+      "bytes": 59065,
+      "sha256": "e2fc98dcdc69b12da50b9d858dff8287cbf7b958fb943074aa515e94b91c3d41"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-attack_3-1.png",
+      "bytes": 59042,
+      "sha256": "2a1be38efbb93deffff503de50bb19bdfd91ecea26a12768774e7bfa83bcf6d4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-attack_3-2-strike.png",
+      "bytes": 55237,
+      "sha256": "242aad84d2197b5e9c84562814fb31e46049f6f4c0b7ad9760ae80ee3537e040"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-attack_3-2.png",
+      "bytes": 55179,
+      "sha256": "7e71a9fc27cbacd91e8344f68186f65c0ab82aedaf32764998dd69d8cc9cfad7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-attack_3-3.png",
+      "bytes": 60724,
+      "sha256": "580ed386875b3e93a1a393bad0c5270660a0e041bbd354fe2b4bc3b10f098e54"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-attack_3-4.png",
+      "bytes": 59250,
+      "sha256": "5e33b3fe5dffb4feb9228767edd72476c372e5270956fcfa12f44e59799fb5dd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-attack_3-5.png",
+      "bytes": 59299,
+      "sha256": "d69fa6c57361e22d24301ab2c3395897fc662c88b0c7c52ab638d58c6f6c96db"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-idle_3-0.png",
+      "bytes": 53626,
+      "sha256": "db5fa43d512f34eb3db49f781bab5f5efcb50f0cfadb23b85f503408eb9dea91"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-action-idle_3-1.png",
+      "bytes": 55617,
+      "sha256": "0de6bd88b4ffc4d9689a276aeb601586559a427aea9057137963e3a774b24758"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-SW-pre-idle-idle_3-0.png",
+      "bytes": 53719,
+      "sha256": "56d574d07ae08fbd82bde8b56f69747f393062d22961bb9c2435e9aed1d0d072"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-attack_4-0.png",
+      "bytes": 54235,
+      "sha256": "23db7b2aac37f68cce47572d524027e96dfbfbc8a6554632dc30e5d2e2d4adce"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-attack_4-1.png",
+      "bytes": 57679,
+      "sha256": "f5067bc295deb4b44112a84a49b29915b6ebe2e4dea762a98ff4619990488c76"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-attack_4-2-strike.png",
+      "bytes": 56248,
+      "sha256": "2d41c92f4de01171e8e3683ca48f79b8548687259a020705843af8bc24649fb1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-attack_4-2.png",
+      "bytes": 55931,
+      "sha256": "e4254e9222124bba97f8d5ffd7b45232e2fd22f891affe812224dc0da5f3473c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-attack_4-3.png",
+      "bytes": 58302,
+      "sha256": "bbfd12e137f0f5ba10fc03b4f75af17a7db28caf016ad4fa4c7f761606d3c74e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-attack_4-4.png",
+      "bytes": 55714,
+      "sha256": "84895d7cd3a465bc16ffa299be6dd3078f0a1f9b3da3f404399046ca7e733183"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-attack_4-5.png",
+      "bytes": 52577,
+      "sha256": "909c827614d99d5396c21a2b5bc3072d7cd26099816df8fb33ef6b0c3b27e1c0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-idle_4-0.png",
+      "bytes": 48259,
+      "sha256": "4648152abb70c69a70a12a1b9a4cb9594cbe53f4024ea72099494826c2f01b2d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-action-idle_4-1.png",
+      "bytes": 49484,
+      "sha256": "ec5ce47c772f40fac7f0df58cfc449cb1cd7161203589e64e28d02dd818e99e9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/captures/attack-W-pre-idle-idle_4-0.png",
+      "bytes": 48528,
+      "sha256": "850fbaff1531596b78dc31580922cc14a7974bfff589f8b5c0450813dd45bea6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-attack/samples.json",
+      "bytes": 440214,
+      "sha256": "1eed38e45b9cb17e306c0e9c4b56f509a9106c903c7f96bf7e0711cfa76e47d3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-N-action-idle_6-0.png",
+      "bytes": 46737,
+      "sha256": "745e8adc642daae05860bf01206c10bc560ccaabf6dc823eea401621cdcb9083"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-N-action-idle_6-1.png",
+      "bytes": 48212,
+      "sha256": "7558fba38a13c5b90ffe6907eff43428b878ddf20e6d1952e45853bf6abbc37e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-N-action-idle_6-2.png",
+      "bytes": 49681,
+      "sha256": "757ce728e98da19fcff75f4540dc0cfe0ad1287b53f66de323dfdc38b6799ff6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-N-action-idle_6-3.png",
+      "bytes": 49015,
+      "sha256": "59d97f789b9d3ed64fba4dda0ce6b85e5dfb8072599d43e7d99687c39bece2c5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-N-action-idle_6-4.png",
+      "bytes": 47239,
+      "sha256": "70416f9da5c005955e36c439891b9fb7921575543a32438ec7cedf6e6f4d1395"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-N-action-idle_6-5.png",
+      "bytes": 46600,
+      "sha256": "a82042e1b7c2dcf248bb7681bd1dce51623a9a878b90d31333efe822bbb2cd1c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-N-pre-idle-idle_6-0.png",
+      "bytes": 46649,
+      "sha256": "2d108b71cf7d8c898043bfaac24a10d4f95ca6ed668adcd4f45886c686f69162"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NE-action-idle_7-0.png",
+      "bytes": 46209,
+      "sha256": "dce3f3b543ddb490346529b6f526537e4a7957514f361bffc86526a0c9c64fbd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NE-action-idle_7-1.png",
+      "bytes": 46539,
+      "sha256": "5e6ccd1f48bcc29a7d3984cf223b5d0a4b12c289b37b5d9ec8f40d06c92c093d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NE-action-idle_7-2.png",
+      "bytes": 46955,
+      "sha256": "87450c5e1364bec7d3e239cac0443df560e0624e3ddb11d9ad0d79151677a629"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NE-action-idle_7-3.png",
+      "bytes": 46588,
+      "sha256": "ccd0cb725c94bf04e073db133b2584644e50e6e20a218a371bf861d4141d5396"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NE-action-idle_7-4.png",
+      "bytes": 46670,
+      "sha256": "4138c98e9719e42c2babee4ced62aa302015545d93ed93404df93381e308ca1a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NE-action-idle_7-5.png",
+      "bytes": 46300,
+      "sha256": "10ffa603e8afe2a04be0a66ea6ed0517addaff1b76b9685c568d8563f1a54b4d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NE-pre-idle-idle_7-0.png",
+      "bytes": 46148,
+      "sha256": "edc91a15b553047c1522fa2dbdc579bcc86dd69ad3f46028e328e511ab9a1be7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NW-action-idle_5-0.png",
+      "bytes": 48009,
+      "sha256": "4b110dd11cd543bf4d2a0ed0af265a2d0f6fdab164589c1d9fff92849391e03a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NW-action-idle_5-1.png",
+      "bytes": 49314,
+      "sha256": "80ecd598d12b67e43dc22a1e05db7c1a7c54c9c50147bf1e233c072f57b58d65"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NW-action-idle_5-2.png",
+      "bytes": 51462,
+      "sha256": "25182c93950c55dfd789c7fa604684d40ce49b1d953b752eac28c4b6e425b65e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NW-action-idle_5-3.png",
+      "bytes": 52670,
+      "sha256": "65e9e7482c1dbc767a4c07ca9bd2b73bd24054572b9a4a73f0858a4f8774d13a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NW-action-idle_5-4.png",
+      "bytes": 49268,
+      "sha256": "5c39c8da968a1d51e7d7dce61401a7dc5a4d36193f9ba1ac64dce58a3b9d53b1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NW-action-idle_5-5.png",
+      "bytes": 48271,
+      "sha256": "21a6ee50e5fdf0f7fc00026584e33fd71a7069367790b5117b5e4bbc0d2bbf83"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-NW-pre-idle-idle_5-0.png",
+      "bytes": 47829,
+      "sha256": "59f1d613504b82177ad1c1401e36d493a45387a9a6407a95de45d95e49f50574"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-action-idle_2-0.png",
+      "bytes": 50487,
+      "sha256": "63ad5175016a54050f561c80cdfce32904c1b68d5d400f67dba52196187d9e51"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-action-idle_2-1.png",
+      "bytes": 50970,
+      "sha256": "31e4283f3e44fa79267f4532a3068ce6a050887e8b02f9d3e23984ba1f4d1638"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-action-idle_2-2.png",
+      "bytes": 55033,
+      "sha256": "71f2fa8bb8e685d9cbb2116a7b06db80c9d3c0931d1926bac5cb9877d612676d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-action-idle_2-3.png",
+      "bytes": 54628,
+      "sha256": "b806f26afddfa542dd44ccb327ad98a9d6d88765a7157bce446ad64d92cb8d31"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-action-idle_2-4.png",
+      "bytes": 52898,
+      "sha256": "310a1f3ed0341da77f14086c9da3d45c722c9a883f3754e39d5dfe73e2eae3ba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-action-idle_2-5.png",
+      "bytes": 51467,
+      "sha256": "3f1e16e11db90543419ce695f5997381efa3c5da7f1581ad06fa0d279948354f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 50305,
+      "sha256": "cb62921c745732261cb735e51106fe1a8d2295c15c2f9250f5a40e537a3de579"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-S-pre-idle-idle_2-1.png",
+      "bytes": 51168,
+      "sha256": "ce0ade258d03c2aa7d1f1474780c8ac183628978775fc25753f753b4d60fd979"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SE-action-idle_1-0.png",
+      "bytes": 50816,
+      "sha256": "10221c7bb0e9f563617cd066ec62ea360b765c79caa1552be27eee8eae32d275"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SE-action-idle_1-1.png",
+      "bytes": 52781,
+      "sha256": "25ce2629b30cfe2c96c71a2b2a6834ce2b9e24ae89b751c58c2eccc5be933ae8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SE-action-idle_1-2.png",
+      "bytes": 53882,
+      "sha256": "14516fdf0923c52c00a7558f8a57c7bf50ad63570bed80061272a54bb7060874"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SE-action-idle_1-3.png",
+      "bytes": 52674,
+      "sha256": "8b6a059c8789d905645bd2829cbfcd3346f801af1f50eab52ef0ac06589c90c2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SE-action-idle_1-4.png",
+      "bytes": 51580,
+      "sha256": "533da1def94d8e8ebc782497f1366a4400ac7edf243edecc571247e060ec079f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SE-action-idle_1-5.png",
+      "bytes": 50872,
+      "sha256": "97b4c08fd5ddabfb3410d2b7fe0ff82cb8889f772408603527253abee6698fba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SE-pre-idle-idle_1-0.png",
+      "bytes": 50926,
+      "sha256": "619b4acc686444da1c67b217ee2437b626bdc767098581c0ed6f3f344cee3501"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SW-action-idle_3-0.png",
+      "bytes": 53115,
+      "sha256": "d7a2decf846a4da986b8f0ad2643036efcedcaedf9d2cc3a37b5a184f98fb270"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SW-action-idle_3-1.png",
+      "bytes": 55452,
+      "sha256": "8ea3cb4563be59f72890b8987016e9f34768bba3f653170105a24ee50532ecb7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SW-action-idle_3-2.png",
+      "bytes": 56095,
+      "sha256": "354141dbc46717498da3aab8d9a4fd933147a83fc5d000a556c51d7e647bdb28"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SW-action-idle_3-3.png",
+      "bytes": 54626,
+      "sha256": "b9609467e4e201a42b4e600fcfedfcc9609060d0b8f5ba75beaaaf48b2ee5fa1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SW-action-idle_3-4.png",
+      "bytes": 53709,
+      "sha256": "27d6a7535848ee2a8ebbd8774d71d7ae0cbfee49bc0f73e8070824b1b0d04019"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SW-action-idle_3-5.png",
+      "bytes": 53310,
+      "sha256": "31957ff0916e22ba96212f4972b399589510d08b913db6969f9d92297b32a1f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-SW-pre-idle-idle_3-0.png",
+      "bytes": 53167,
+      "sha256": "e678341032e84b003a7a48ff9b0d7fdf36b5f8141e5ce36fa2e2cfedf18439b7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-W-action-idle_4-0.png",
+      "bytes": 47867,
+      "sha256": "4721b94137ebea31038db14df2b9440dad40945c98e0a2309fb005c7b011fdc0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-W-action-idle_4-1.png",
+      "bytes": 49452,
+      "sha256": "b5de3ca383dd61c5acf1df8e4ad68c5ab229d7b338d5c5dc29e194b569a1ba62"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-W-action-idle_4-2.png",
+      "bytes": 51419,
+      "sha256": "4043e82a04fc725c17e98b7ce5f411256bb3bfa4b295926fd8bbdefed1b9cdec"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-W-action-idle_4-3.png",
+      "bytes": 52990,
+      "sha256": "83d95f3f1445620501e8281ca0b7119c0904f313161e6b8fdeade3b73c081d00"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-W-action-idle_4-4.png",
+      "bytes": 49752,
+      "sha256": "6628ad42731f56344d06df5ee5294e374e91c6ee88a4ff572c727d1048ab4dff"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-W-action-idle_4-5.png",
+      "bytes": 48020,
+      "sha256": "c4cf5b231cc87c4f78143edb5728f975ba567e4556a40a27860ec1698f6a2726"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 48125,
+      "sha256": "d2cb784084930d0c91f5496a7764ebe32f2669108db4a290a1788e43770cea12"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-idle/samples.json",
+      "bytes": 375000,
+      "sha256": "e0ae67456d276c9035abc519d2fce8daa30d335291dbba44d6f9e869a4dd2667"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-E-action-run_0-0.png",
+      "bytes": 52792,
+      "sha256": "dbb375847a6f85c21574fbcc85054a39277ddbe4a6749c18cc353ce881120d63"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-E-action-run_0-1.png",
+      "bytes": 51568,
+      "sha256": "680746956f39071bac8f0da1f4e335bb506faa44eb252b1d806c7002afadd687"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-E-action-run_0-2.png",
+      "bytes": 52676,
+      "sha256": "21c8d6f66c43cde923a8fdc6010f80a44cf0434ca7522adef2ec5cb6c809c316"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-E-action-run_0-3.png",
+      "bytes": 53841,
+      "sha256": "9306763d83041da16d4c50c7ad0aadcd88012742ddf3d9d55f110ff12db73cfb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-E-action-run_0-4.png",
+      "bytes": 51345,
+      "sha256": "73ace2a9f000f8c75a14abedfe1aaa37e03ad9d4c291fbd19ba09b2ef3164b5b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-E-action-run_0-5.png",
+      "bytes": 52393,
+      "sha256": "186b514a5c1200faf4b71f0de53e0ff56236ab5ab196934e853ee523a295c573"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-N-action-run_6-0.png",
+      "bytes": 51969,
+      "sha256": "690a41029c5f302169bd219cdf91e25035fc71190d36b19d34138e0209142eda"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-N-action-run_6-1.png",
+      "bytes": 50024,
+      "sha256": "df79931f533de885998c0aac9eb1ef695c86288b48cdd69cef2af59573dcfec9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-N-action-run_6-2.png",
+      "bytes": 52028,
+      "sha256": "318c0ced31b04c1727e44a50a6799113642a207b319065e573a227053c89b72a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-N-action-run_6-3.png",
+      "bytes": 49052,
+      "sha256": "d95507b37dfb372bf2dd3c241f6d81dc5b6a22e09d704e5fa98bf661cdb87bc9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-N-action-run_6-4.png",
+      "bytes": 51081,
+      "sha256": "94c4ec220f67cc7964f948c84984c4a1182b37532687068ffff8b0c7d28747fa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-N-action-run_6-5.png",
+      "bytes": 51010,
+      "sha256": "2148beb922524aacbd8418766e1ab8b3fd56cf3aa5e85d7d16d667747ad1c252"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-N-pre-idle-idle_6-0.png",
+      "bytes": 46473,
+      "sha256": "e29a60ca4061fef7cd237d5d63e05c536da79437f703b417a57cea74960dfc89"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NE-action-run_7-0.png",
+      "bytes": 47589,
+      "sha256": "538d774fcf975030863dcfead3a7d4e77881823992b75fa412ae4feac13a6b20"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NE-action-run_7-1.png",
+      "bytes": 47301,
+      "sha256": "4c9f45044b52e897e2daebaa9aa2a8e1a8fd0ea948003d208b7a3d73d88849b4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NE-action-run_7-2.png",
+      "bytes": 48271,
+      "sha256": "d3b35093c5348c0d581f4132f5d567e6c2641d077fc4982a3f1de526abe7e323"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NE-action-run_7-3.png",
+      "bytes": 49029,
+      "sha256": "5a1bab7f7b8fed7eb965da38636865b41c5f0c977de8ecadea389b7245cf2f29"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NE-action-run_7-4.png",
+      "bytes": 47897,
+      "sha256": "bd3ee872c78b442014188fe400aee8cd42a78a7ee9e179d68f39ba770fdcd284"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NE-action-run_7-5.png",
+      "bytes": 47686,
+      "sha256": "e2f130831a54a3ac89062be73535a855193a4cc279e33492adfedcc8e3fcb908"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NE-pre-idle-idle_7-0.png",
+      "bytes": 46153,
+      "sha256": "82dbd44cfa135dcb508f3ad4ea2120ac0abc4f760ab860166e812ebd525c6c09"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NW-action-run_5-0.png",
+      "bytes": 51863,
+      "sha256": "e2a630cf534ddf52c33370c2d37cb3d3eaf67e3bb1c4044b7e035821004dca30"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NW-action-run_5-1.png",
+      "bytes": 51452,
+      "sha256": "42ed0d2ecbaccb74172d70137c9d3483a349f7024752ba3edcf4df72849bb1bf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NW-action-run_5-2.png",
+      "bytes": 52755,
+      "sha256": "13fc27ae847d486950eee2f4a80db69505f46bb32dfd7cc31635a4ed3b4d96b9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NW-action-run_5-3.png",
+      "bytes": 52253,
+      "sha256": "4f7f9d1f67002f773e794fce54fc27bccc1b5da23fcd5e04930a2edfe815f9f9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NW-action-run_5-4.png",
+      "bytes": 50821,
+      "sha256": "de9a53e28718000949d5689c75891059ff8c03a180514937efd425f52468d8b4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NW-action-run_5-5.png",
+      "bytes": 52702,
+      "sha256": "4b449b97727544ff04b880d0ab0236f4137f2ba0040198517b9c06f1c63743b5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-NW-pre-idle-idle_5-0.png",
+      "bytes": 47802,
+      "sha256": "f9b2b1c3e61c7e43f05e5028291bd59e8dc7912b9770935b95020c2fe3c2ec38"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-action-run_2-0.png",
+      "bytes": 53082,
+      "sha256": "00602148874a089e3ea1b2a0a159608019d5e7fb4887e40d5421893184956685"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-action-run_2-1.png",
+      "bytes": 50949,
+      "sha256": "0aa095686397d55db99b6767dca008415bdd4999b8ca77f5ddd1d2008c759709"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-action-run_2-2.png",
+      "bytes": 54095,
+      "sha256": "07f964d2f4a8d25a56a8fd407634dfc17e5868bd9826a4e6d7bc2e859f9b5d05"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-action-run_2-3.png",
+      "bytes": 53000,
+      "sha256": "4956cffc711a83263cd54831e389725d5a57f419b3472d021a6bea07daf8a155"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-action-run_2-4.png",
+      "bytes": 52141,
+      "sha256": "b3236f6332ee7d1249943f53b4cf4fb3b50b16b1290bd8f5c89ac41d2aa1932e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-action-run_2-5.png",
+      "bytes": 53252,
+      "sha256": "0cd232ea7affcb71c6a537d29cde04a2fec23d2e486e7d48a9922debe0da2e4e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-pre-idle-idle_2-0.png",
+      "bytes": 50258,
+      "sha256": "a5911c91cbefe5afc0bac42adf018d968e07fd539709cc0ce662f60cbfabccb9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-S-pre-idle-idle_2-1.png",
+      "bytes": 51115,
+      "sha256": "239801d1f4a737a94b5caf5e0f073f52bb798477496be9e419f4ba9ccd293713"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SE-action-run_1-0.png",
+      "bytes": 56937,
+      "sha256": "f3344d719ace99efefb4aa2b95fdff9695eab9fc82e2fd86d73e99efcd1a3f69"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SE-action-run_1-1.png",
+      "bytes": 55787,
+      "sha256": "937ab5608b16bf7d797eea551ba75c4c77784f2bcedf3e96b02403cae9055f00"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SE-action-run_1-2.png",
+      "bytes": 56952,
+      "sha256": "f8dd19f597f57fdb71fb34d49ba97d5089bc4787d4ded8de6578b240ec686343"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SE-action-run_1-3.png",
+      "bytes": 58686,
+      "sha256": "bfbc3bf100258e981127dc92d14d7c2e89e22686a09351c175228c7347aeced6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SE-action-run_1-4.png",
+      "bytes": 54934,
+      "sha256": "97ed81528614c20dfa340de2bc4d31a1d94596a7865bfa0c556ad3f9fbba7e65"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SE-action-run_1-5.png",
+      "bytes": 56812,
+      "sha256": "09494c8a4fc1f9019b4bf0e23b7a7ba63cdd1b696949912f1d5e7d6012525b4b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SE-pre-idle-idle_1-0.png",
+      "bytes": 50730,
+      "sha256": "91c5dd7b842f8e058f6814436ff702842829ca4d9fba42eea8b125216be8e485"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SW-action-run_3-0.png",
+      "bytes": 52623,
+      "sha256": "81bb479eab63cf9e04693a61c1989225f4d619ee83f1b05de34ce17708ddc1bd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SW-action-run_3-1.png",
+      "bytes": 51531,
+      "sha256": "32dab93f8bc5ed6d6d0482ad0ff06e6565d8cb578af228d503f6915b08b61895"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SW-action-run_3-2.png",
+      "bytes": 52453,
+      "sha256": "e3819c8846471ea3b7d3ba51c34b642354ff48cfadf3fe3a7c47215eec6323ce"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SW-action-run_3-3.png",
+      "bytes": 52690,
+      "sha256": "7b5c90ecfb4144d0fddc5af70b46498ed8916252a93c60e5497e9cb58a4cc628"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SW-action-run_3-4.png",
+      "bytes": 52215,
+      "sha256": "534ee8dc4db6ae0a4244ed1f7f63f7e9353a3a53c2807ae5add96de6f268bd44"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SW-action-run_3-5.png",
+      "bytes": 51835,
+      "sha256": "f756d7437052ece84476dd9da1db37e6c80ccbef716cc8c6fd2a4d9589978af2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-SW-pre-idle-idle_3-0.png",
+      "bytes": 53030,
+      "sha256": "31ffdf3498835755d124d7ce2fb46654e8da151f5448d6c4037e986af244b158"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-W-action-run_4-0.png",
+      "bytes": 45902,
+      "sha256": "37ff79b7d8620d5ea281dcd7fecad4c36da2111bf3bf998d4f03c78dd2c8f00d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-W-action-run_4-1.png",
+      "bytes": 46055,
+      "sha256": "ef8a590871e9fa758c2c517b90315cb8d9dc8ebc2876de6f6b150390fd2307a0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-W-action-run_4-2.png",
+      "bytes": 44772,
+      "sha256": "c6594037a5dac027ba7c5070dc516284bc0e2125676cbdc271e7026363e2f37b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-W-action-run_4-3.png",
+      "bytes": 44952,
+      "sha256": "addd418bdd0bd970514f5f18500a89f224c44d27c531928920427b0a1a7eebc4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-W-action-run_4-4.png",
+      "bytes": 44585,
+      "sha256": "e60af37142a6f399cdb1543cf0b3d5bb8d7e9aed4c0b5079f30d44a1effa08cf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-W-action-run_4-5.png",
+      "bytes": 43727,
+      "sha256": "0f861b425581fa44055b4a068dbcc6c829848938f75e3feeac181925f1f216ad"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/captures/run-W-pre-idle-idle_4-0.png",
+      "bytes": 47813,
+      "sha256": "8267fc79db066a762394d70167978bf1c5bcce314f7521c5a7a98cae23c9f568"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/grim_reaper-run/samples.json",
+      "bytes": 304311,
+      "sha256": "d12e8982ea8cb4a34464acb32ed1b5f5e32e14a131265191f4623e44e886112a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/process.json",
+      "bytes": 247,
+      "sha256": "db8669e02eec3eb13ccee24555120376b0e5687fcae37d0c3a0b6f255a308e53"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/report.json",
+      "bytes": 16436,
+      "sha256": "94ff60c2f36bb4854ef084f79a58b90cf760f88950aca9ae40d4441e1401a355"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/reviewed002/playback/xvfb-run.txt",
+      "bytes": 64,
+      "sha256": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/save_batch.py",
+      "bytes": 4548,
+      "sha256": "f4194633e76dd92459a1c48ba959f9e2b5aded692f261377fd80f8cdfbb17ab2"
+    }
+  ]
+}

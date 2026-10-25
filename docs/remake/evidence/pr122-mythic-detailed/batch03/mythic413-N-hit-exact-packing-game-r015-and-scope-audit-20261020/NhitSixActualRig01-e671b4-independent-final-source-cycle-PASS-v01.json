@@ -1,0 +1,52 @@
+{
+  "schema": "PR122-independent-authored-source-visual-review-v1",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "hit",
+  "version": "NhitSixActualRig01",
+  "request_sha256": "e671b4e28f2ca8fa8c598e27e77008c72745006d39313c1a43b24ede525e9052",
+  "exact_request_sha256": "e671b4e28f2ca8fa8c598e27e77008c72745006d39313c1a43b24ede525e9052",
+  "request_path": "/workspace/scratch/mythic413-N-hit-actual-packed-r001-20261020/request-NhitSixActualRig01.json",
+  "raw_sha256": "7fe2eeccf4de1d284af0b7acd5d4f692b3f362fc5940ae1b8f404233c17392ef",
+  "raw_bytes": 2084626,
+  "raw_path": "/workspace/scratch/mythic413-N-hit-actual-packed-r001-20261020/thunder_female-N-hit-six-actual-poses-r001.png",
+  "packing_sha256": "3cab8a9e501bc006a2db3e6d2fe927b66de122223988755a79053a2d857d1abc",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-hit-author-20261020-v01/actual-N-HIT6-articulated-rig-v08/actual-N-HIT6-native-articulated-recoil-contract-v08.json",
+    "sha256": "97c6e6429a14c16f55c33beb08a012409ced581800d22aac9dc4d6f2bcca9e74",
+    "bytes": 11378
+  },
+  "source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Nhit-v08-97c6e6-independent-actual-source-cycle-PASS-v01.json",
+    "sha256": "39fb15164ee3864342c6bc97a0ed8c9149261a5fb9476f0eccd1f814db41942c",
+    "bytes": 6644
+  },
+  "independent_exact_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Nhit-v08-final-exact-request-source-binding-v01.json",
+    "sha256": "76b752d240b60d0433540f09b5423ab9e479ec8ec8d02cd9cf9bcedf486cfe1f",
+    "bytes": 4468
+  },
+  "private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-Nhit-final-joints-view64-frozen.json",
+    "sha256": "1d4cd7eb7b74e067b2648e8ba3c6de82a534f669a8a3fdb864e26405b9c23e54",
+    "bytes": 30778
+  },
+  "reviewed_source_frames": 6,
+  "reviewed_cycle": "Guard→impact→peak recoil→counterbalance→regaining control→recovered guard; dedicated one-shot HIT reaction",
+  "visual_findings": [
+    "Six dedicated reaction phases form stable guard→impact→peak recoil→counterbalance→regain→recovered guard, with real head/spine/free-arm and coat lag movement.",
+    "Curved original blue upper cuff remains fixed while the actual white/gold forearm and complete hand articulate about the visible distal hinge; the old flat elbow cut/gap is closed.",
+    "The full unique legs/shoes remain planted and the anatomical RIGHT-held complete double-ended staff stays coherent; no previous walking sequence is relabeled.",
+    "Rear N identity, bun/ribbon, gold-blue costume, white skirt and high-heeled boot material remain consistent through the reaction and recovery.",
+    "All six reviewed native RGBA sources and fixed C1920/root are exact in this atlas; the same quantization offset is applied to every frame and adds no relative support drift."
+  ],
+  "visual_limitations": [
+    "This source/visible-cycle receipt does not replace pending actual Godot/Player/action checks or verify the runtime HIT timing by itself.",
+    "Source reaction/complete materials and fixed support are verified; no unique hidden3D reconstruction or complete-actor approval is claimed."
+  ],
+  "actual_game_binding_status": "PENDING",
+  "actor_approvals_added": 0,
+  "source_pixels_modified_by_reviewer": false,
+  "images_forwarded": 0
+}

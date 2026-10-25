@@ -1,0 +1,34 @@
+{
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "walk",
+  "source_kind": "single_faithful_locomotion_contact_keypose",
+  "expected_poses": 1,
+  "intended_game_phase": 0,
+  "original_generated_file": "/workspace/generated_images/exec-c089fbad-2605-4777-ab0a-e0d6ab375094.png",
+  "raw_path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png",
+  "raw_png": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png",
+  "raw_sha256": "1a08a21b414edcf7aa5ac2e1661dde21749c5d94daafd2d467d45625b3d0181c",
+  "raw_bytes": 1332244,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/request.json",
+  "request_sha256": "07bf8fef23fbcef9b04a89a546dee0a0b2154656d38e895335dee06e28baa925",
+  "imagegen_attempts": 2,
+  "completed_outputs": 1,
+  "prior_aborted_attempts": 1,
+  "source_visual_status": "PASS",
+  "complete_clip": false,
+  "actor_approval": false,
+  "geometry_status": "PASS",
+  "geometry_path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/geometry-base2048.json",
+  "integration_ready": false,
+  "status": "PARTIAL_SOURCE_CONTACT_ONLY",
+  "visual_findings": [
+    "Unambiguous near anatomicalRIGHT weapon-side long leg grounded LOWER-LEFT; farLEFT trail boot UPPER-RIGHT. Opposite to valid farLEFTcontact key.",
+    "Fixed SE front3/4 camera, pale face/long palehair, hard narrow GOLD radialspines, full longdark goldtrimrobe, sinuousRIGHTweapon and emptyLEFT preserved.",
+    "Real grounded singlewalkcontact only, all original raw/cancelledrequest preserved; no cycle or actor approval."
+  ]
+}

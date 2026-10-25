@@ -1,0 +1,68 @@
+{
+  "schema": "PR122_SW_RUN_FOUR_REMAINING_GUIDE_ONLY_QC_V1",
+  "utc": "2026-10-19T16:10:43.176852+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "GUIDE_USABLE_FOR_FOUR_NEW_ROLE_SOURCES",
+  "scope": "3D guide-only; actualSWcontact0/repaired3sourcePASS inherited. No newcompression/AIRart/physical/actor approval.",
+  "actor_approval_increment": 0,
+  "authority_pin": {
+    "path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/constantbone-joint-and-ground-authority.json",
+    "sha256": "32df7c3b8443cb714e7802f8309e5f745bc8dbc69017b859d17b37d4937a9133"
+  },
+  "render_pins": [
+    {
+      "phase": 1,
+      "render_path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase1-fixedbone.png",
+      "render_sha256": "1e162492a71f267d890dac6e95d2f8aef33d45b81b2575c9c5a32d5cc6ae23e6",
+      "boot_clearances": {
+        "RIGHT": 0.32,
+        "LEFT": 0
+      }
+    },
+    {
+      "phase": 2,
+      "render_path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase2-fixedbone.png",
+      "render_sha256": "0dbdbe3446a372ffccd22b9c198abf575f27f7ad16807a4db6e2ff0faebb6845",
+      "boot_clearances": {
+        "RIGHT": 0.1,
+        "LEFT": 0.24
+      }
+    },
+    {
+      "phase": 4,
+      "render_path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase4-fixedbone.png",
+      "render_sha256": "7dd56ba4190da003e8ff276b700808b7fc48295bcd025647ba11a7f6f6b4df3f",
+      "boot_clearances": {
+        "RIGHT": 0,
+        "LEFT": 0.32
+      }
+    },
+    {
+      "phase": 5,
+      "render_path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase5-fixedbone.png",
+      "render_sha256": "5af373bbbeb8d2a34e31659a382d845830231437607a6aac4b00b9c1b27f3320",
+      "boot_clearances": {
+        "RIGHT": 0.24,
+        "LEFT": 0.1
+      }
+    }
+  ],
+  "max_measured_bone_error": 1.6653345369377348e-16,
+  "findings": [
+    "Proper fixed SWcamera/nearLEFTblue-empty/farRIGHTorange-permanentblade ownership.",
+    "1actualnearLEFT flexedflatload and4actualfarRIGHT flexedflatload are opposite, pelvislower thancontact; oppositelegs foldrearAIR.",
+    "2farRIGHT lead/nearLEFTrear and5nearLEFTlead/farRIGHTrear are genuine opposite projectedchains with positive authored bothboot clearances.",
+    "FarRIGHT lowwrist/forward-down-leftblade orientation remains consistent with selectedSW."
+  ],
+  "source_requirements": [
+    "Guide1 farRIGHT recoveryboot is partly hidden in projection; actualart MUST expose complete separate recoveryboot rather than hiding it in longrobe.",
+    "AIR2/5 must show distinct complete front/rear bootchains and genuine run-flight draw; positive worldfloor clearance requires later actualroot/physical fit, never a source label.",
+    "Preserve faithful pale humanface/hair, rigid hardgoldrays/crown, longdarkgoldtrimrobe and complete permanentRIGHT sinuousblade. Genericboneconstants do not certify exactGirtas proportions."
+  ],
+  "remaining_HOLD": [
+    "Allfour newactualsources and finalwhole6 source/physicalC/root/floor/AIR/runtime/actor pending; actor2670/catalogOFF."
+  ],
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "5736921fc45dac0c4c73103b0ef4c6af7128ee7211cc94130ff7b185e86874d1",
+  "repository_mutations": false
+}

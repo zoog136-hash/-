@@ -1,0 +1,4347 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_5.png",
+    "region": [
+      16,
+      305,
+      304,
+      306
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 5,
+    "cell": 4,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "5abe098f0509d2d4810ebd4a42830916b1651959aa5b39c320a4f72756eb2284",
+    "image_size": [
+      1287,
+      1222
+    ],
+    "region_rgba_sha256": "03aacdb80bdc12007b84dff89e36b730dd85312c366cdd932a06db1ee847e9df"
+  },
+  "target_keys": [
+    "monster:놀"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 5,
+      "cell": 4,
+      "body": "gnoll",
+      "variant": 3,
+      "width": 1.024,
+      "weapon": "sword",
+      "crest": 2,
+      "accent": "849bab"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:놀": {
+      "path": "res://assets/monsters/original/atlas_5.png",
+      "region": [
+        16,
+        305,
+        304,
+        306
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 5,
+      "cell": 4,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "5abe098f0509d2d4810ebd4a42830916b1651959aa5b39c320a4f72756eb2284",
+      "image_size": [
+        1287,
+        1222
+      ],
+      "region_rgba_sha256": "03aacdb80bdc12007b84dff89e36b730dd85312c366cdd932a06db1ee847e9df"
+    }
+  },
+  "target_presentations": {
+    "monster:놀": {
+      "visual": {
+        "atlas": 5,
+        "cell": 4,
+        "body": "gnoll",
+        "variant": 3,
+        "width": 1.024,
+        "weapon": "sword",
+        "crest": 2,
+        "accent": "849bab"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "Batch17 isolated source candidate. Exact generation requests, all rejected variants and SHA checks preserved. All source bodies accounted; no raw PNG changes, exclusions, mirrored or duplicate frames. Newly authored reference-based source, not recovered SPX. Native QA staging does NOT grant approval.",
+  "instruction_record_kind": "batch_instructions_with_exact_saved_image_generation_requests",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Provisional stage inputs: reference model, explicitly authored eight directions and all five nominal motion roles, strict full-source geometry/uniqueness/clipping pass. Actual gait exchange, contact timing and cross-role anatomy remain separate SOURCE_HOLD visual gates. Positive stage flags never substitute for completion approval."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 128,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        65,
+        29,
+        238,
+        221
+      ],
+      "margin": [
+        297,
+        313,
+        610,
+        627
+      ],
+      "source_anchor": [
+        192,
+        246
+      ],
+      "rgba_sha256": "be0bafccdabef63033ab1cb88d7d6397c240aa6fd8c3af8d6558bdbee62efc83",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        433,
+        33,
+        267,
+        214
+      ],
+      "margin": [
+        281,
+        320,
+        581,
+        634
+      ],
+      "source_anchor": [
+        576,
+        243
+      ],
+      "rgba_sha256": "b52ecb7c7d27bee4889a75b355e3b99bf4b8d69b18d45c41c9484e77dafb5fec",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        796,
+        25,
+        273,
+        228
+      ],
+      "margin": [
+        260,
+        306,
+        575,
+        620
+      ],
+      "source_anchor": [
+        960,
+        249
+      ],
+      "rgba_sha256": "2f00375458f6090a3d6ae94e3b2d2dca08b3f2509bf58010582fb4923a7b85a9",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        1203,
+        23,
+        295,
+        227
+      ],
+      "margin": [
+        283,
+        307,
+        553,
+        621
+      ],
+      "source_anchor": [
+        1344,
+        246
+      ],
+      "rgba_sha256": "2967fee3e788301686c4d1d372b0ae728544f3e7d9b84784613cfbf3877d9d0c",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        49,
+        278,
+        294,
+        224
+      ],
+      "margin": [
+        281,
+        310,
+        554,
+        624
+      ],
+      "source_anchor": [
+        192,
+        498
+      ],
+      "rgba_sha256": "5bb1ac9386448961d611a8ed0f082dff7210fb666a18996e8a2558795a119ebd",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "E",
+      "region": [
+        435,
+        280,
+        304,
+        222
+      ],
+      "margin": [
+        283,
+        312,
+        544,
+        626
+      ],
+      "source_anchor": [
+        576,
+        498
+      ],
+      "rgba_sha256": "08e891b768222d23d5921e0fad165a675a6a504219860232f1ec63075c3574bb",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "E",
+      "region": [
+        807,
+        279,
+        315,
+        213
+      ],
+      "margin": [
+        271,
+        321,
+        533,
+        635
+      ],
+      "source_anchor": [
+        960,
+        488
+      ],
+      "rgba_sha256": "987d8e5bd1c95672647938e18013e00a1ef66d7d39080866e91c1cc5aa399c49",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "E",
+      "region": [
+        1203,
+        279,
+        298,
+        223
+      ],
+      "margin": [
+        283,
+        311,
+        550,
+        625
+      ],
+      "source_anchor": [
+        1344,
+        498
+      ],
+      "rgba_sha256": "27a0580d62f8bfda29c2f38251a8b80dfcbbedb3ee404b936142ce4b42186e88",
+      "sheet": 0
+    },
+    {
+      "row": 8,
+      "direction": "E",
+      "region": [
+        20,
+        529,
+        311,
+        222
+      ],
+      "margin": [
+        252,
+        312,
+        537,
+        626
+      ],
+      "source_anchor": [
+        192,
+        747
+      ],
+      "rgba_sha256": "d55174db975a9ce49274931223b0c5c781b7c65dbc919214eb8b8b9c692c6b82",
+      "sheet": 0
+    },
+    {
+      "row": 9,
+      "direction": "E",
+      "region": [
+        408,
+        503,
+        293,
+        250
+      ],
+      "margin": [
+        256,
+        284,
+        555,
+        598
+      ],
+      "source_anchor": [
+        576,
+        749
+      ],
+      "rgba_sha256": "7f4502e6d33de12e327b45f9b5bc8dccbf732f21edc32c1e37932098c016e30c",
+      "sheet": 0
+    },
+    {
+      "row": 10,
+      "direction": "E",
+      "region": [
+        783,
+        534,
+        458,
+        216
+      ],
+      "margin": [
+        247,
+        318,
+        390,
+        632
+      ],
+      "source_anchor": [
+        960,
+        746
+      ],
+      "rgba_sha256": "ddb1a6742ef4a29c2041880c1f29480e4af4ebf2275220e36b22cd4035ff852c",
+      "sheet": 0
+    },
+    {
+      "row": 11,
+      "direction": "E",
+      "region": [
+        1242,
+        539,
+        261,
+        220
+      ],
+      "margin": [
+        322,
+        314,
+        587,
+        628
+      ],
+      "source_anchor": [
+        1344,
+        755
+      ],
+      "rgba_sha256": "2bd2e918be16f22f637b3e8305d55a9a116dcc5a892dacf91cc2169e2851f96c",
+      "sheet": 0
+    },
+    {
+      "row": 12,
+      "direction": "E",
+      "region": [
+        50,
+        766,
+        256,
+        224
+      ],
+      "margin": [
+        282,
+        310,
+        592,
+        624
+      ],
+      "source_anchor": [
+        192,
+        986
+      ],
+      "rgba_sha256": "d015e8d8065b477d65508eb30b4f0f58b80ec5f79d78dfc04e00f9f7f4874d53",
+      "sheet": 0
+    },
+    {
+      "row": 13,
+      "direction": "E",
+      "region": [
+        445,
+        774,
+        268,
+        216
+      ],
+      "margin": [
+        293,
+        318,
+        580,
+        632
+      ],
+      "source_anchor": [
+        576,
+        986
+      ],
+      "rgba_sha256": "5b299f49d544b70e970c617ce3b98819b30f4fcbc04c55ea42a6470064513d0e",
+      "sheet": 0
+    },
+    {
+      "row": 14,
+      "direction": "E",
+      "region": [
+        804,
+        820,
+        328,
+        173
+      ],
+      "margin": [
+        268,
+        361,
+        520,
+        675
+      ],
+      "source_anchor": [
+        960,
+        989
+      ],
+      "rgba_sha256": "1925ee2e1ef54eab5a0e14991bca2695054cf61eaba5682018b4cfb56a33cfbb",
+      "sheet": 0
+    },
+    {
+      "row": 15,
+      "direction": "E",
+      "region": [
+        1165,
+        869,
+        363,
+        131
+      ],
+      "margin": [
+        245,
+        403,
+        485,
+        717
+      ],
+      "source_anchor": [
+        1344,
+        996
+      ],
+      "rgba_sha256": "04b71915757c65f83b51555d84a33bc972d48faf305cc81a7b18feb068251b35",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        42,
+        56,
+        202,
+        212
+      ],
+      "margin": [
+        287,
+        302,
+        614,
+        604
+      ],
+      "source_anchor": [
+        163,
+        264
+      ],
+      "rgba_sha256": "b33e193fcaa13219be52a9c80635986305ce6ab5b4e69e9717ea794f4cf6e503",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        379,
+        58,
+        199,
+        210
+      ],
+      "margin": [
+        298,
+        304,
+        617,
+        606
+      ],
+      "source_anchor": [
+        489,
+        264
+      ],
+      "rgba_sha256": "b5d3586c480df8beaf23359e50d99710a537dae57f67d4b3717ddc2b9ae76ad1",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        715,
+        55,
+        204,
+        215
+      ],
+      "margin": [
+        307,
+        299,
+        612,
+        601
+      ],
+      "source_anchor": [
+        816,
+        266
+      ],
+      "rgba_sha256": "a1d70be93bae5254bbadf3494f41905a2d3adf6ac9348f918939f83f79f9caae",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        1065,
+        58,
+        191,
+        220
+      ],
+      "margin": [
+        331,
+        294,
+        625,
+        596
+      ],
+      "source_anchor": [
+        1142,
+        274
+      ],
+      "rgba_sha256": "47cd7ef64485ad4a2564dc65a453a037edf666a9ed8c6264643aa97bc69d922c",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        45,
+        350,
+        206,
+        230
+      ],
+      "margin": [
+        290,
+        284,
+        610,
+        586
+      ],
+      "source_anchor": [
+        163,
+        576
+      ],
+      "rgba_sha256": "6fff970d1fd6549a39d592a6d7b0d8776b49ec7df23cc2a3810f1df56792edce",
+      "sheet": 1
+    },
+    {
+      "row": 5,
+      "direction": "SE",
+      "region": [
+        385,
+        350,
+        209,
+        220
+      ],
+      "margin": [
+        304,
+        294,
+        607,
+        596
+      ],
+      "source_anchor": [
+        489,
+        566
+      ],
+      "rgba_sha256": "67498492ef65f8e078995472ed3eb086d0f362b6373230ef510beb3f853686b6",
+      "sheet": 1
+    },
+    {
+      "row": 6,
+      "direction": "SE",
+      "region": [
+        735,
+        350,
+        197,
+        220
+      ],
+      "margin": [
+        327,
+        294,
+        619,
+        596
+      ],
+      "source_anchor": [
+        816,
+        566
+      ],
+      "rgba_sha256": "ece6d2dbc66f20a614e103f9b8d2fbf9132e938709085d8a5946facd21ebbecc",
+      "sheet": 1
+    },
+    {
+      "row": 7,
+      "direction": "SE",
+      "region": [
+        1062,
+        349,
+        209,
+        210
+      ],
+      "margin": [
+        328,
+        304,
+        607,
+        606
+      ],
+      "source_anchor": [
+        1142,
+        555
+      ],
+      "rgba_sha256": "f03c6960686ec659cae22aa4cf1eeb2810a1e388a8ca971ac565877444d2eba7",
+      "sheet": 1
+    },
+    {
+      "row": 8,
+      "direction": "SE",
+      "region": [
+        44,
+        654,
+        225,
+        201
+      ],
+      "margin": [
+        289,
+        313,
+        591,
+        615
+      ],
+      "source_anchor": [
+        163,
+        851
+      ],
+      "rgba_sha256": "e4cc72bf00d0debf4247eeb2c2cbe5a5cb22f500e3d6d3f4ee30f62034571310",
+      "sheet": 1
+    },
+    {
+      "row": 9,
+      "direction": "SE",
+      "region": [
+        372,
+        615,
+        223,
+        245
+      ],
+      "margin": [
+        291,
+        269,
+        593,
+        571
+      ],
+      "source_anchor": [
+        489,
+        856
+      ],
+      "rgba_sha256": "1e03c043ad3972f254bd2a6607e0c705b936d7bd8080c14d0482e8ad648c1773",
+      "sheet": 1
+    },
+    {
+      "row": 10,
+      "direction": "SE",
+      "region": [
+        704,
+        670,
+        338,
+        183
+      ],
+      "margin": [
+        296,
+        331,
+        478,
+        633
+      ],
+      "source_anchor": [
+        816,
+        849
+      ],
+      "rgba_sha256": "cb92e421595f0b56ccbe66880fcd9655500b9638d143094e1061aa00b1708b63",
+      "sheet": 1
+    },
+    {
+      "row": 11,
+      "direction": "SE",
+      "region": [
+        1066,
+        666,
+        215,
+        183
+      ],
+      "margin": [
+        332,
+        331,
+        601,
+        633
+      ],
+      "source_anchor": [
+        1142,
+        845
+      ],
+      "rgba_sha256": "78fa3278ff60bfc78cfdfdf97a5f1689e27d9a5762089480a5262a7f3d2aaed9",
+      "sheet": 1
+    },
+    {
+      "row": 12,
+      "direction": "SE",
+      "region": [
+        78,
+        937,
+        168,
+        206
+      ],
+      "margin": [
+        323,
+        308,
+        648,
+        610
+      ],
+      "source_anchor": [
+        163,
+        1139
+      ],
+      "rgba_sha256": "9218d696cb3f302f94b4f35dafd668827d9129ae13e6c53f3e8c58892182eeed",
+      "sheet": 1
+    },
+    {
+      "row": 13,
+      "direction": "SE",
+      "region": [
+        385,
+        957,
+        203,
+        205
+      ],
+      "margin": [
+        304,
+        309,
+        613,
+        611
+      ],
+      "source_anchor": [
+        489,
+        1158
+      ],
+      "rgba_sha256": "87b03649abd25496cdbd4d934e1240e16c68b5548f46489ca1eee837da5c1ddf",
+      "sheet": 1
+    },
+    {
+      "row": 14,
+      "direction": "SE",
+      "region": [
+        698,
+        983,
+        229,
+        162
+      ],
+      "margin": [
+        290,
+        352,
+        587,
+        654
+      ],
+      "source_anchor": [
+        816,
+        1141
+      ],
+      "rgba_sha256": "53e42ea3682d90746cfd33638f48055e8ef002f12a216094129db4c5858c7435",
+      "sheet": 1
+    },
+    {
+      "row": 15,
+      "direction": "SE",
+      "region": [
+        1003,
+        994,
+        279,
+        146
+      ],
+      "margin": [
+        269,
+        368,
+        537,
+        670
+      ],
+      "source_anchor": [
+        1142,
+        1136
+      ],
+      "rgba_sha256": "c53327c550a754eba7e2722d3fe7b29d45638c16ae5ca99d4166a60673f1a93e",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        86,
+        14,
+        209,
+        273
+      ],
+      "margin": [
+        450,
+        401,
+        863,
+        799
+      ],
+      "source_anchor": [
+        172,
+        283
+      ],
+      "rgba_sha256": "4e0549e945658748dd214897f2d292ee57d8e53a3e18505f96267bf458bb7676",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        420,
+        14,
+        215,
+        274
+      ],
+      "margin": [
+        441,
+        400,
+        857,
+        798
+      ],
+      "source_anchor": [
+        515,
+        284
+      ],
+      "rgba_sha256": "be3d529ac45987a296db1e32a8953148ee7c8590fb45b59a77122c61f98fce98",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        759,
+        13,
+        239,
+        268
+      ],
+      "margin": [
+        436,
+        406,
+        833,
+        804
+      ],
+      "source_anchor": [
+        859,
+        277
+      ],
+      "rgba_sha256": "7aa2d4ea242fcaeb7941c7d60dabdf05d27d2f1e3a570ad840857a01c52269c5",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        1108,
+        14,
+        218,
+        274
+      ],
+      "margin": [
+        442,
+        400,
+        854,
+        798
+      ],
+      "source_anchor": [
+        1202,
+        284
+      ],
+      "rgba_sha256": "805b62f64af2c049918ca5043af6f58311368fc1d089d3e79204c5b2916f949f",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        64,
+        294,
+        230,
+        276
+      ],
+      "margin": [
+        428,
+        398,
+        842,
+        796
+      ],
+      "source_anchor": [
+        172,
+        566
+      ],
+      "rgba_sha256": "3874398a068b1dbda9820d0d7437c7c3b0396e0c416a69f93ad5e1ce5c918148",
+      "sheet": 2
+    },
+    {
+      "row": 5,
+      "direction": "S",
+      "region": [
+        416,
+        296,
+        226,
+        268
+      ],
+      "margin": [
+        437,
+        406,
+        846,
+        804
+      ],
+      "source_anchor": [
+        515,
+        560
+      ],
+      "rgba_sha256": "7c559f19bbfe0007305b9db28ed051898c17827390d13e37aa9575349de064b9",
+      "sheet": 2
+    },
+    {
+      "row": 6,
+      "direction": "S",
+      "region": [
+        764,
+        294,
+        225,
+        280
+      ],
+      "margin": [
+        441,
+        394,
+        847,
+        792
+      ],
+      "source_anchor": [
+        859,
+        570
+      ],
+      "rgba_sha256": "2db8f1600ab508244c0802161fc3b2bdd155750ba01b267be9efdbbc1a2a8c4c",
+      "sheet": 2
+    },
+    {
+      "row": 7,
+      "direction": "S",
+      "region": [
+        1107,
+        293,
+        213,
+        276
+      ],
+      "margin": [
+        441,
+        398,
+        859,
+        796
+      ],
+      "source_anchor": [
+        1202,
+        565
+      ],
+      "rgba_sha256": "47f9efa27ca4b7b045f4c5ca4776b319a0c6b98906e9daac5cc70a850d8e72e8",
+      "sheet": 2
+    },
+    {
+      "row": 8,
+      "direction": "S",
+      "region": [
+        59,
+        623,
+        247,
+        236
+      ],
+      "margin": [
+        423,
+        438,
+        825,
+        836
+      ],
+      "source_anchor": [
+        172,
+        855
+      ],
+      "rgba_sha256": "88f6b50c5810eae06e80dd4e45892e1b3d8afc0f84fead68c2fc577505f748e1",
+      "sheet": 2
+    },
+    {
+      "row": 9,
+      "direction": "S",
+      "region": [
+        403,
+        578,
+        239,
+        281
+      ],
+      "margin": [
+        424,
+        393,
+        833,
+        791
+      ],
+      "source_anchor": [
+        515,
+        855
+      ],
+      "rgba_sha256": "6045952b2b7dd7982ec74060e71ed6b95939d879ddf33aec064a839338f8023c",
+      "sheet": 2
+    },
+    {
+      "row": 10,
+      "direction": "S",
+      "region": [
+        685,
+        617,
+        296,
+        248
+      ],
+      "margin": [
+        362,
+        426,
+        776,
+        824
+      ],
+      "source_anchor": [
+        859,
+        861
+      ],
+      "rgba_sha256": "1170d33869950391b630654f6aab055f7e6c9079a9cf4aa3dafdd75ae6295c89",
+      "sheet": 2
+    },
+    {
+      "row": 11,
+      "direction": "S",
+      "region": [
+        1104,
+        611,
+        216,
+        267
+      ],
+      "margin": [
+        438,
+        407,
+        856,
+        805
+      ],
+      "source_anchor": [
+        1202,
+        874
+      ],
+      "rgba_sha256": "83fc99e203a119673585db2f099c708dcd3b176faba670df3726e1d688f74db1",
+      "sheet": 2
+    },
+    {
+      "row": 12,
+      "direction": "S",
+      "region": [
+        78,
+        875,
+        218,
+        260
+      ],
+      "margin": [
+        442,
+        414,
+        854,
+        812
+      ],
+      "source_anchor": [
+        172,
+        1131
+      ],
+      "rgba_sha256": "a3bc0c788106a44efee6cc2641165be5ff62c228bb7ec39671c788281b9c56d0",
+      "sheet": 2
+    },
+    {
+      "row": 13,
+      "direction": "S",
+      "region": [
+        403,
+        918,
+        239,
+        206
+      ],
+      "margin": [
+        424,
+        468,
+        833,
+        866
+      ],
+      "source_anchor": [
+        515,
+        1120
+      ],
+      "rgba_sha256": "70f12c84e2640fa384685ab47890d7b1cdbe1776d6c75ae704d1458a52c2371c",
+      "sheet": 2
+    },
+    {
+      "row": 14,
+      "direction": "S",
+      "region": [
+        674,
+        969,
+        335,
+        149
+      ],
+      "margin": [
+        351,
+        525,
+        737,
+        923
+      ],
+      "source_anchor": [
+        859,
+        1114
+      ],
+      "rgba_sha256": "7c7a427a34d58a4f3492107bae114c3b1d2ef83bdc1f3559674e0f128c9410f9",
+      "sheet": 2
+    },
+    {
+      "row": 15,
+      "direction": "S",
+      "region": [
+        1022,
+        983,
+        331,
+        132
+      ],
+      "margin": [
+        356,
+        542,
+        741,
+        940
+      ],
+      "source_anchor": [
+        1202,
+        1111
+      ],
+      "rgba_sha256": "7e876810bdfeb0a206cd2742b2014b167080d481c8805501b7433c36d5bb86f3",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        70,
+        18,
+        259,
+        233
+      ],
+      "margin": [
+        334,
+        341,
+        653,
+        679
+      ],
+      "source_anchor": [
+        192,
+        247
+      ],
+      "rgba_sha256": "7d17681fcc5d5c032c85cb5c92261e5dbf6da07f6522cc166bfb36d86abc1bd2",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        434,
+        18,
+        265,
+        234
+      ],
+      "margin": [
+        314,
+        340,
+        647,
+        678
+      ],
+      "source_anchor": [
+        576,
+        248
+      ],
+      "rgba_sha256": "53aeb0203f026651eeecb79d5a14216fe05c060e2be1b585fc4a7a15141eea09",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        812,
+        20,
+        286,
+        230
+      ],
+      "margin": [
+        308,
+        344,
+        626,
+        682
+      ],
+      "source_anchor": [
+        960,
+        246
+      ],
+      "rgba_sha256": "44ca7b029aef9ae3249f387a50124da06f5163176873af146f0eef80c943829e",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        1190,
+        18,
+        300,
+        234
+      ],
+      "margin": [
+        302,
+        340,
+        612,
+        678
+      ],
+      "source_anchor": [
+        1344,
+        248
+      ],
+      "rgba_sha256": "4e041734ebe41102dd69bdccab144f9f846db0f29cac1e45751cc3ca5b251c83",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        39,
+        269,
+        287,
+        232
+      ],
+      "margin": [
+        303,
+        342,
+        625,
+        680
+      ],
+      "source_anchor": [
+        192,
+        497
+      ],
+      "rgba_sha256": "df0e888f0c1b7ada0806b06c8d19a17fac0df3335952003a04602159bdfd2215",
+      "sheet": 3
+    },
+    {
+      "row": 5,
+      "direction": "SW",
+      "region": [
+        402,
+        273,
+        308,
+        232
+      ],
+      "margin": [
+        282,
+        342,
+        604,
+        680
+      ],
+      "source_anchor": [
+        576,
+        501
+      ],
+      "rgba_sha256": "93da3363b769ebeefbdce6319231e72dfa9b3c068d72baf52e9497d46e0efa2b",
+      "sheet": 3
+    },
+    {
+      "row": 6,
+      "direction": "SW",
+      "region": [
+        810,
+        272,
+        293,
+        238
+      ],
+      "margin": [
+        306,
+        336,
+        619,
+        674
+      ],
+      "source_anchor": [
+        960,
+        506
+      ],
+      "rgba_sha256": "509bb5c703245f98afdf003f1e951f2021973593bc8eae6e14cc7e1c98d341b1",
+      "sheet": 3
+    },
+    {
+      "row": 7,
+      "direction": "SW",
+      "region": [
+        1202,
+        272,
+        275,
+        244
+      ],
+      "margin": [
+        314,
+        330,
+        637,
+        668
+      ],
+      "source_anchor": [
+        1344,
+        512
+      ],
+      "rgba_sha256": "3c889114e093d51bc61e7f4c549000822501b6a118988aca77ebc6b402ca875e",
+      "sheet": 3
+    },
+    {
+      "row": 8,
+      "direction": "SW",
+      "region": [
+        28,
+        510,
+        263,
+        251
+      ],
+      "margin": [
+        292,
+        323,
+        649,
+        661
+      ],
+      "source_anchor": [
+        192,
+        757
+      ],
+      "rgba_sha256": "399cdbde3b580ada5d0a50bdfc7d832fa3ce855e58aa7b922bcd489d0e57bdb5",
+      "sheet": 3
+    },
+    {
+      "row": 9,
+      "direction": "SW",
+      "region": [
+        408,
+        517,
+        320,
+        240
+      ],
+      "margin": [
+        288,
+        334,
+        592,
+        672
+      ],
+      "source_anchor": [
+        576,
+        753
+      ],
+      "rgba_sha256": "881bb509b2e521d8c99aa7d735d8826eb50b43d991caaba948012841c3a41e9e",
+      "sheet": 3
+    },
+    {
+      "row": 10,
+      "direction": "SW",
+      "region": [
+        725,
+        532,
+        413,
+        225
+      ],
+      "margin": [
+        221,
+        349,
+        499,
+        687
+      ],
+      "source_anchor": [
+        960,
+        753
+      ],
+      "rgba_sha256": "6771be8fe9c56fe0d5cc3593ad7124d3c3d6668b69779543b8b7eae8ce35fd28",
+      "sheet": 3
+    },
+    {
+      "row": 11,
+      "direction": "SW",
+      "region": [
+        1235,
+        536,
+        262,
+        229
+      ],
+      "margin": [
+        347,
+        345,
+        650,
+        683
+      ],
+      "source_anchor": [
+        1344,
+        761
+      ],
+      "rgba_sha256": "52d2b34e895bbeff5a32a5216e256ad38bd3a5115c8858fc0f5d9ea61e9d6285",
+      "sheet": 3
+    },
+    {
+      "row": 12,
+      "direction": "SW",
+      "region": [
+        81,
+        787,
+        239,
+        221
+      ],
+      "margin": [
+        345,
+        353,
+        673,
+        691
+      ],
+      "source_anchor": [
+        192,
+        1004
+      ],
+      "rgba_sha256": "b87f2fdb23dc6ffda2208e94b14315ea73510b953e918a8c10c99422a152b53a",
+      "sheet": 3
+    },
+    {
+      "row": 13,
+      "direction": "SW",
+      "region": [
+        400,
+        787,
+        306,
+        219
+      ],
+      "margin": [
+        280,
+        355,
+        606,
+        693
+      ],
+      "source_anchor": [
+        576,
+        1002
+      ],
+      "rgba_sha256": "e6243a8464e209f7c4189a1bff9d7e91410c74bf55303a9c30108d1a6c559c2e",
+      "sheet": 3
+    },
+    {
+      "row": 14,
+      "direction": "SW",
+      "region": [
+        770,
+        828,
+        361,
+        167
+      ],
+      "margin": [
+        266,
+        407,
+        551,
+        745
+      ],
+      "source_anchor": [
+        960,
+        991
+      ],
+      "rgba_sha256": "16f79073c284064961693f5355a2a7bf3b87bd6f93f2c8469297cba5f37d8130",
+      "sheet": 3
+    },
+    {
+      "row": 15,
+      "direction": "SW",
+      "region": [
+        1155,
+        845,
+        360,
+        138
+      ],
+      "margin": [
+        267,
+        436,
+        552,
+        774
+      ],
+      "source_anchor": [
+        1344,
+        979
+      ],
+      "rgba_sha256": "f646669dfa8ea3a2225dc4758a373b3e3bf24e1811f8b87a04287e56a9beecba",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        100,
+        90,
+        234,
+        171
+      ],
+      "margin": [
+        232,
+        238,
+        414,
+        477
+      ],
+      "source_anchor": [
+        192,
+        257
+      ],
+      "rgba_sha256": "a2955880b59847d18f62db2be52bacf9565718a5428b4b953720b2a9b21f0e57",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        480,
+        97,
+        227,
+        164
+      ],
+      "margin": [
+        228,
+        245,
+        421,
+        484
+      ],
+      "source_anchor": [
+        576,
+        257
+      ],
+      "rgba_sha256": "285e325afccc54da750957df9423b76f0985397a36e0399dfe2b45635f125ed4",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        811,
+        102,
+        252,
+        160
+      ],
+      "margin": [
+        175,
+        249,
+        396,
+        488
+      ],
+      "source_anchor": [
+        960,
+        258
+      ],
+      "rgba_sha256": "a4c8f910435b124e2bccf7487fdf8a521c8049acf5af1fbfb99f966be39b25da",
+      "sheet": 4
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        1178,
+        100,
+        251,
+        161
+      ],
+      "margin": [
+        158,
+        248,
+        397,
+        487
+      ],
+      "source_anchor": [
+        1344,
+        257
+      ],
+      "rgba_sha256": "bf70949a6aa7696c70178025de59215772a98f6827fec97bbfd0e318790d10c1",
+      "sheet": 4
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        87,
+        336,
+        252,
+        159
+      ],
+      "margin": [
+        219,
+        250,
+        396,
+        489
+      ],
+      "source_anchor": [
+        192,
+        491
+      ],
+      "rgba_sha256": "8bf7a5f8ad418448981a1c8f5a61159b3dfe477050022dddc7af003a8da73245",
+      "sheet": 4
+    },
+    {
+      "row": 5,
+      "direction": "W",
+      "region": [
+        456,
+        335,
+        242,
+        163
+      ],
+      "margin": [
+        204,
+        246,
+        406,
+        485
+      ],
+      "source_anchor": [
+        576,
+        494
+      ],
+      "rgba_sha256": "da7f2a4c909cd6f610b9d7eb37302d19747038e582c1c6f138670cd0d057357a",
+      "sheet": 4
+    },
+    {
+      "row": 6,
+      "direction": "W",
+      "region": [
+        825,
+        335,
+        238,
+        162
+      ],
+      "margin": [
+        189,
+        247,
+        410,
+        486
+      ],
+      "source_anchor": [
+        960,
+        493
+      ],
+      "rgba_sha256": "84c2d4131717ffd8332e17641a6b511e8474b3e9271015c02e080509a8e10694",
+      "sheet": 4
+    },
+    {
+      "row": 7,
+      "direction": "W",
+      "region": [
+        1182,
+        335,
+        246,
+        163
+      ],
+      "margin": [
+        162,
+        246,
+        402,
+        485
+      ],
+      "source_anchor": [
+        1344,
+        494
+      ],
+      "rgba_sha256": "78d89ca13083b6b55cfcc2be13bd412d3544d7ed2ba33898d111f2751300aec1",
+      "sheet": 4
+    },
+    {
+      "row": 8,
+      "direction": "W",
+      "region": [
+        120,
+        552,
+        215,
+        184
+      ],
+      "margin": [
+        252,
+        225,
+        433,
+        464
+      ],
+      "source_anchor": [
+        192,
+        732
+      ],
+      "rgba_sha256": "c19110163b1f5c9083a49177c891c390ecd0a5239c51d9a5043ab70656399ff9",
+      "sheet": 4
+    },
+    {
+      "row": 9,
+      "direction": "W",
+      "region": [
+        489,
+        525,
+        197,
+        212
+      ],
+      "margin": [
+        237,
+        197,
+        451,
+        436
+      ],
+      "source_anchor": [
+        576,
+        733
+      ],
+      "rgba_sha256": "b31928b2362d49ecfe496ba98cfa8b37ca6b315685455b09f7ef06dab9235d4c",
+      "sheet": 4
+    },
+    {
+      "row": 10,
+      "direction": "W",
+      "region": [
+        762,
+        572,
+        303,
+        168
+      ],
+      "margin": [
+        126,
+        241,
+        345,
+        480
+      ],
+      "source_anchor": [
+        960,
+        736
+      ],
+      "rgba_sha256": "9977a77a7023d07e87721f2d4362cddacb8cdb9f858f92329aca782cf27effc1",
+      "sheet": 4
+    },
+    {
+      "row": 11,
+      "direction": "W",
+      "region": [
+        1140,
+        585,
+        339,
+        153
+      ],
+      "margin": [
+        120,
+        256,
+        309,
+        495
+      ],
+      "source_anchor": [
+        1344,
+        734
+      ],
+      "rgba_sha256": "a4f3ada896d56f0b95b8bd3b5ceedabf9f504fb812951b59ef535e2c4bb29047",
+      "sheet": 4
+    },
+    {
+      "row": 12,
+      "direction": "W",
+      "region": [
+        97,
+        791,
+        214,
+        172
+      ],
+      "margin": [
+        229,
+        237,
+        434,
+        476
+      ],
+      "source_anchor": [
+        192,
+        959
+      ],
+      "rgba_sha256": "c86bb73841cebc8caea49cc913e7bf69969ef60f3acc65a954b4648f1f2b192a",
+      "sheet": 4
+    },
+    {
+      "row": 13,
+      "direction": "W",
+      "region": [
+        480,
+        809,
+        218,
+        154
+      ],
+      "margin": [
+        228,
+        255,
+        430,
+        494
+      ],
+      "source_anchor": [
+        576,
+        959
+      ],
+      "rgba_sha256": "e39523bc99133b10bceaacb0c8f13a9827770e09bec3559c94f7cf8fb2132f8a",
+      "sheet": 4
+    },
+    {
+      "row": 14,
+      "direction": "W",
+      "region": [
+        806,
+        845,
+        242,
+        119
+      ],
+      "margin": [
+        170,
+        290,
+        406,
+        529
+      ],
+      "source_anchor": [
+        960,
+        960
+      ],
+      "rgba_sha256": "3a8c16d0ddbda62ea808b6923f8a7fc51a63d7e40fd986eedbdcb48cfce6fed5",
+      "sheet": 4
+    },
+    {
+      "row": 15,
+      "direction": "W",
+      "region": [
+        1140,
+        880,
+        341,
+        75
+      ],
+      "margin": [
+        120,
+        334,
+        307,
+        573
+      ],
+      "source_anchor": [
+        1344,
+        951
+      ],
+      "rgba_sha256": "f954e52cebd78f47b85b30b18d10fffc113676e89c40151a5bfc523875ea7e3b",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        71,
+        48,
+        231,
+        238
+      ],
+      "margin": [
+        387,
+        366,
+        729,
+        722
+      ],
+      "source_anchor": [
+        164,
+        282
+      ],
+      "rgba_sha256": "2a03e8d4eb2a150bb539fd5d4390819c1dcd596bd1d93890fc35b74246f6578e",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        407,
+        32,
+        228,
+        254
+      ],
+      "margin": [
+        395,
+        350,
+        732,
+        706
+      ],
+      "source_anchor": [
+        492,
+        282
+      ],
+      "rgba_sha256": "78a8b1bddd8139387c59de6de17a3b628b9ab47984a364c8f1b291f12f27afac",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        727,
+        41,
+        248,
+        250
+      ],
+      "margin": [
+        387,
+        354,
+        712,
+        710
+      ],
+      "source_anchor": [
+        820,
+        287
+      ],
+      "rgba_sha256": "4b0e9d9b12e630d86c87b43903da9c1cb04b3fad5f2e294159e2633af7f62625",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        1057,
+        42,
+        239,
+        242
+      ],
+      "margin": [
+        389,
+        362,
+        721,
+        718
+      ],
+      "source_anchor": [
+        1148,
+        280
+      ],
+      "rgba_sha256": "f14e826ac70689d77153110a8ed8dd89202620ca6447831dae4af1c8b3690640",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        75,
+        343,
+        234,
+        249
+      ],
+      "margin": [
+        391,
+        355,
+        726,
+        711
+      ],
+      "source_anchor": [
+        164,
+        588
+      ],
+      "rgba_sha256": "236c91f405aae346fff9c24048d48c1319a7eba4125401b59ef17f9ce3a954f3",
+      "sheet": 5
+    },
+    {
+      "row": 5,
+      "direction": "NW",
+      "region": [
+        410,
+        345,
+        213,
+        241
+      ],
+      "margin": [
+        398,
+        363,
+        747,
+        719
+      ],
+      "source_anchor": [
+        492,
+        582
+      ],
+      "rgba_sha256": "7e01d844e95be4560fffded835a76f81a767928940535309a471a33312a1810d",
+      "sheet": 5
+    },
+    {
+      "row": 6,
+      "direction": "NW",
+      "region": [
+        727,
+        337,
+        247,
+        252
+      ],
+      "margin": [
+        387,
+        352,
+        713,
+        708
+      ],
+      "source_anchor": [
+        820,
+        585
+      ],
+      "rgba_sha256": "bca394d66bfda95fd5fda154ab3320154db4fefdfc0c50cede4a598200f0eaee",
+      "sheet": 5
+    },
+    {
+      "row": 7,
+      "direction": "NW",
+      "region": [
+        1052,
+        343,
+        234,
+        247
+      ],
+      "margin": [
+        384,
+        357,
+        726,
+        713
+      ],
+      "source_anchor": [
+        1148,
+        586
+      ],
+      "rgba_sha256": "ad1686c460cd76e2ca9dd27f8884d0021511ff0d18493e915a6d539f1b0886ef",
+      "sheet": 5
+    },
+    {
+      "row": 8,
+      "direction": "NW",
+      "region": [
+        72,
+        647,
+        258,
+        221
+      ],
+      "margin": [
+        388,
+        383,
+        702,
+        739
+      ],
+      "source_anchor": [
+        164,
+        864
+      ],
+      "rgba_sha256": "c1d977400d70da1dfb851e6875a3779d7951fa6bd4b32694b9c34996dce45c4c",
+      "sheet": 5
+    },
+    {
+      "row": 9,
+      "direction": "NW",
+      "region": [
+        386,
+        616,
+        245,
+        254
+      ],
+      "margin": [
+        374,
+        350,
+        715,
+        706
+      ],
+      "source_anchor": [
+        492,
+        866
+      ],
+      "rgba_sha256": "e4c743ccc62edfc776ec133d6cdbe5bba9883e511becbbdf54f8cdbe4987bcea",
+      "sheet": 5
+    },
+    {
+      "row": 10,
+      "direction": "NW",
+      "region": [
+        646,
+        655,
+        336,
+        222
+      ],
+      "margin": [
+        306,
+        382,
+        624,
+        738
+      ],
+      "source_anchor": [
+        820,
+        873
+      ],
+      "rgba_sha256": "5425dcaab11201e06f20fd3062935d5d8f4613b88a5cf17de6ac7a6f9717c1ac",
+      "sheet": 5
+    },
+    {
+      "row": 11,
+      "direction": "NW",
+      "region": [
+        1054,
+        637,
+        238,
+        241
+      ],
+      "margin": [
+        386,
+        363,
+        722,
+        719
+      ],
+      "source_anchor": [
+        1148,
+        874
+      ],
+      "rgba_sha256": "530298b261e4c8babaf7643dd57ce546281c6f184677ad8bdbfe79ccdfe21aac",
+      "sheet": 5
+    },
+    {
+      "row": 12,
+      "direction": "NW",
+      "region": [
+        81,
+        932,
+        227,
+        211
+      ],
+      "margin": [
+        397,
+        393,
+        733,
+        749
+      ],
+      "source_anchor": [
+        164,
+        1139
+      ],
+      "rgba_sha256": "b9f3594577f7971118d9a7afd19450b7829b5656d1ff756cf47a27dc6276ce06",
+      "sheet": 5
+    },
+    {
+      "row": 13,
+      "direction": "NW",
+      "region": [
+        399,
+        938,
+        248,
+        196
+      ],
+      "margin": [
+        387,
+        408,
+        712,
+        764
+      ],
+      "source_anchor": [
+        492,
+        1130
+      ],
+      "rgba_sha256": "aa240c97342463b6d2ef23b49ad32dbb685deca43ee96a2f07451f0d9cc28cbc",
+      "sheet": 5
+    },
+    {
+      "row": 14,
+      "direction": "NW",
+      "region": [
+        707,
+        980,
+        260,
+        173
+      ],
+      "margin": [
+        367,
+        431,
+        700,
+        787
+      ],
+      "source_anchor": [
+        820,
+        1149
+      ],
+      "rgba_sha256": "f3564bef2d7b247ab76f9cea25da920ddce54f7116a7056e5b8b7fdbfe7aca82",
+      "sheet": 5
+    },
+    {
+      "row": 15,
+      "direction": "NW",
+      "region": [
+        1008,
+        1012,
+        276,
+        154
+      ],
+      "margin": [
+        340,
+        450,
+        684,
+        806
+      ],
+      "source_anchor": [
+        1148,
+        1162
+      ],
+      "rgba_sha256": "2494ce67d7438c453998a1ce76cf0ee09b82463a22ed72f3b0eb62306da27efa",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        81,
+        3,
+        201,
+        265
+      ],
+      "margin": [
+        418,
+        379,
+        823,
+        759
+      ],
+      "source_anchor": [
+        175,
+        264
+      ],
+      "rgba_sha256": "959e4836ac87f4be52a1c3ab1267df3a0c39302023f05a9ac6d7c9b41237766a",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        435,
+        8,
+        198,
+        260
+      ],
+      "margin": [
+        422,
+        384,
+        826,
+        764
+      ],
+      "source_anchor": [
+        525,
+        264
+      ],
+      "rgba_sha256": "6ac865f3a5b8dfb812de4951c049a48f0a7026a5e7c5b82d71dd4e6e7369ce18",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        779,
+        14,
+        196,
+        256
+      ],
+      "margin": [
+        415,
+        388,
+        828,
+        768
+      ],
+      "source_anchor": [
+        876,
+        266
+      ],
+      "rgba_sha256": "819195d6563811fdc02b745ed500617d5edb7b5cc8b1599589506dc3ee243922",
+      "sheet": 6
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1142,
+        16,
+        199,
+        252
+      ],
+      "margin": [
+        428,
+        392,
+        825,
+        772
+      ],
+      "source_anchor": [
+        1226,
+        264
+      ],
+      "rgba_sha256": "7fe0ba455593cb47bdcd63e4f963c5dd6d0f7e7c043d6afede158debfcca193a",
+      "sheet": 6
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        82,
+        291,
+        200,
+        253
+      ],
+      "margin": [
+        419,
+        391,
+        824,
+        771
+      ],
+      "source_anchor": [
+        175,
+        540
+      ],
+      "rgba_sha256": "6528a05f097256aa675f4480818be94943fe109e11a349d505fc0a451beca5d2",
+      "sheet": 6
+    },
+    {
+      "row": 5,
+      "direction": "N",
+      "region": [
+        432,
+        290,
+        195,
+        262
+      ],
+      "margin": [
+        419,
+        382,
+        829,
+        762
+      ],
+      "source_anchor": [
+        525,
+        548
+      ],
+      "rgba_sha256": "2fc48710b3ad480311a13cd6f9383334985b8acb11bf57fefd0bff7290bd5fb4",
+      "sheet": 6
+    },
+    {
+      "row": 6,
+      "direction": "N",
+      "region": [
+        780,
+        296,
+        199,
+        254
+      ],
+      "margin": [
+        416,
+        390,
+        825,
+        770
+      ],
+      "source_anchor": [
+        876,
+        546
+      ],
+      "rgba_sha256": "e14e67ba63ac4b8253eed1a3b7f1ed0d95b0282f533607f6ca0f5ff5d2219b40",
+      "sheet": 6
+    },
+    {
+      "row": 7,
+      "direction": "N",
+      "region": [
+        1142,
+        298,
+        204,
+        254
+      ],
+      "margin": [
+        428,
+        390,
+        820,
+        770
+      ],
+      "source_anchor": [
+        1226,
+        548
+      ],
+      "rgba_sha256": "7a700324624f2e576eca0dcad54f1dfef9ee98297df4dd19cd6a7f2efd05fcf5",
+      "sheet": 6
+    },
+    {
+      "row": 8,
+      "direction": "N",
+      "region": [
+        75,
+        553,
+        219,
+        273
+      ],
+      "margin": [
+        412,
+        371,
+        805,
+        751
+      ],
+      "source_anchor": [
+        175,
+        822
+      ],
+      "rgba_sha256": "388d1029cefd5a34cc58b3b772e828116aa2067ef5e68efacdca7d11d223afb7",
+      "sheet": 6
+    },
+    {
+      "row": 9,
+      "direction": "N",
+      "region": [
+        405,
+        613,
+        313,
+        215
+      ],
+      "margin": [
+        392,
+        429,
+        711,
+        809
+      ],
+      "source_anchor": [
+        525,
+        824
+      ],
+      "rgba_sha256": "6e7bc943274edd2dcfd414e3f6ad45bc851b1cd8d01af58c8da9db4aad09d220",
+      "sheet": 6
+    },
+    {
+      "row": 10,
+      "direction": "N",
+      "region": [
+        781,
+        603,
+        297,
+        221
+      ],
+      "margin": [
+        417,
+        423,
+        727,
+        803
+      ],
+      "source_anchor": [
+        876,
+        820
+      ],
+      "rgba_sha256": "9cdcfcb1be228a5972412680f644dd5e8b27eae19bcd66bfacd3c6ae6ce7bfa9",
+      "sheet": 6
+    },
+    {
+      "row": 11,
+      "direction": "N",
+      "region": [
+        1129,
+        620,
+        221,
+        206
+      ],
+      "margin": [
+        415,
+        438,
+        803,
+        818
+      ],
+      "source_anchor": [
+        1226,
+        822
+      ],
+      "rgba_sha256": "8ccf5c6b99f504241f7a335e8759986f0e7ec09f9229ac045e8e3f0f1582172a",
+      "sheet": 6
+    },
+    {
+      "row": 12,
+      "direction": "N",
+      "region": [
+        69,
+        878,
+        238,
+        218
+      ],
+      "margin": [
+        406,
+        426,
+        786,
+        806
+      ],
+      "source_anchor": [
+        175,
+        1092
+      ],
+      "rgba_sha256": "bb6ded090c4505ac325528dd8fdead342023de9272c42cfe8cb670d621793668",
+      "sheet": 6
+    },
+    {
+      "row": 13,
+      "direction": "N",
+      "region": [
+        416,
+        913,
+        243,
+        181
+      ],
+      "margin": [
+        403,
+        463,
+        781,
+        843
+      ],
+      "source_anchor": [
+        525,
+        1090
+      ],
+      "rgba_sha256": "f468a6a05c4237767fee436c3f45fd6d7a0c22099e429b9336f2d2c29879088e",
+      "sheet": 6
+    },
+    {
+      "row": 14,
+      "direction": "N",
+      "region": [
+        705,
+        945,
+        308,
+        153
+      ],
+      "margin": [
+        341,
+        491,
+        716,
+        871
+      ],
+      "source_anchor": [
+        876,
+        1094
+      ],
+      "rgba_sha256": "fbd503f07f86852ed5c1ff57c7c05fee5d98e8241adf15c06c4824d4f7e06f20",
+      "sheet": 6
+    },
+    {
+      "row": 15,
+      "direction": "N",
+      "region": [
+        1052,
+        993,
+        327,
+        105
+      ],
+      "margin": [
+        338,
+        539,
+        697,
+        919
+      ],
+      "source_anchor": [
+        1226,
+        1094
+      ],
+      "rgba_sha256": "73e20dbd86261a413e94a436111a8b003d650e49232998ae1693c9f6b5bfd099",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        98,
+        8,
+        278,
+        236
+      ],
+      "margin": [
+        366,
+        343,
+        642,
+        684
+      ],
+      "source_anchor": [
+        192,
+        240
+      ],
+      "rgba_sha256": "cd479dd01ca38550ced670488be4132352b6e8a172597c8f3b0d237c632b26db",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        464,
+        8,
+        289,
+        236
+      ],
+      "margin": [
+        348,
+        343,
+        631,
+        684
+      ],
+      "source_anchor": [
+        576,
+        240
+      ],
+      "rgba_sha256": "23a6f9362f35af1b38788d0b1f617416455648078325dce2244a3c3adf56b10b",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        830,
+        11,
+        315,
+        231
+      ],
+      "margin": [
+        330,
+        348,
+        605,
+        689
+      ],
+      "source_anchor": [
+        960,
+        238
+      ],
+      "rgba_sha256": "89f5c75cebee04882015cce1b8ecb12ea87dc1d1f2feacf755cba4f74ba55ef3",
+      "sheet": 7
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1227,
+        11,
+        301,
+        234
+      ],
+      "margin": [
+        343,
+        345,
+        619,
+        686
+      ],
+      "source_anchor": [
+        1344,
+        241
+      ],
+      "rgba_sha256": "6e43ac379ae6f553b10801305c22bf56e8398342d360bcba53dfd82426895246",
+      "sheet": 7
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        75,
+        260,
+        311,
+        230
+      ],
+      "margin": [
+        343,
+        349,
+        609,
+        690
+      ],
+      "source_anchor": [
+        192,
+        486
+      ],
+      "rgba_sha256": "cee8cf5ef4b6d98e2e100ad1912f77e51d915af2d72579b88187573bc4aca68a",
+      "sheet": 7
+    },
+    {
+      "row": 5,
+      "direction": "NE",
+      "region": [
+        464,
+        261,
+        307,
+        237
+      ],
+      "margin": [
+        348,
+        342,
+        613,
+        683
+      ],
+      "source_anchor": [
+        576,
+        494
+      ],
+      "rgba_sha256": "13656fd7827b20494811e5293a1ac2cc7d1a88dbef25adc559710a71de549892",
+      "sheet": 7
+    },
+    {
+      "row": 6,
+      "direction": "NE",
+      "region": [
+        857,
+        261,
+        295,
+        239
+      ],
+      "margin": [
+        357,
+        340,
+        625,
+        681
+      ],
+      "source_anchor": [
+        960,
+        496
+      ],
+      "rgba_sha256": "e24953e3076031a1911ac58b69852b95f5b90d1b31ff807bfdbecc7e8ec1e97c",
+      "sheet": 7
+    },
+    {
+      "row": 7,
+      "direction": "NE",
+      "region": [
+        1240,
+        262,
+        281,
+        231
+      ],
+      "margin": [
+        356,
+        348,
+        639,
+        689
+      ],
+      "source_anchor": [
+        1344,
+        489
+      ],
+      "rgba_sha256": "a3af4ada3a00497427b9571aa15818e175d78437534d822132ed2169b9299487",
+      "sheet": 7
+    },
+    {
+      "row": 8,
+      "direction": "NE",
+      "region": [
+        74,
+        510,
+        305,
+        251
+      ],
+      "margin": [
+        342,
+        328,
+        615,
+        669
+      ],
+      "source_anchor": [
+        192,
+        757
+      ],
+      "rgba_sha256": "b17e770ec59623fa3da84f7c98c285cf25994f82941b8bb21af673759c1ff06b",
+      "sheet": 7
+    },
+    {
+      "row": 9,
+      "direction": "NE",
+      "region": [
+        431,
+        537,
+        360,
+        212
+      ],
+      "margin": [
+        315,
+        367,
+        560,
+        708
+      ],
+      "source_anchor": [
+        576,
+        745
+      ],
+      "rgba_sha256": "9f110288a3f0c50f7960b8ab2bf303b8486b4e8a1571957f7c80416fef40ee4f",
+      "sheet": 7
+    },
+    {
+      "row": 10,
+      "direction": "NE",
+      "region": [
+        795,
+        538,
+        427,
+        210
+      ],
+      "margin": [
+        295,
+        369,
+        493,
+        710
+      ],
+      "source_anchor": [
+        960,
+        744
+      ],
+      "rgba_sha256": "b1dd7dd0e0c3efabb5bb0adb9a05557f213f5b72ef70c89ca10aee86cafb4b15",
+      "sheet": 7
+    },
+    {
+      "row": 11,
+      "direction": "NE",
+      "region": [
+        1236,
+        536,
+        284,
+        216
+      ],
+      "margin": [
+        352,
+        363,
+        636,
+        704
+      ],
+      "source_anchor": [
+        1344,
+        748
+      ],
+      "rgba_sha256": "9bf67273995a7f5092c4b452c717862e67706ac3129c783763cf8bb088597866",
+      "sheet": 7
+    },
+    {
+      "row": 12,
+      "direction": "NE",
+      "region": [
+        72,
+        780,
+        288,
+        211
+      ],
+      "margin": [
+        340,
+        368,
+        632,
+        709
+      ],
+      "source_anchor": [
+        192,
+        987
+      ],
+      "rgba_sha256": "25f71037a2c1ea4474d3e575124fa5fe57e88def8b9815f97dfd633d657ed031",
+      "sheet": 7
+    },
+    {
+      "row": 13,
+      "direction": "NE",
+      "region": [
+        427,
+        812,
+        317,
+        180
+      ],
+      "margin": [
+        311,
+        399,
+        603,
+        740
+      ],
+      "source_anchor": [
+        576,
+        988
+      ],
+      "rgba_sha256": "ac65f19c7db01123142283689cb59180d5edc5756e0f6ae0f3ef1d711cf98442",
+      "sheet": 7
+    },
+    {
+      "row": 14,
+      "direction": "NE",
+      "region": [
+        775,
+        831,
+        342,
+        150
+      ],
+      "margin": [
+        275,
+        429,
+        578,
+        770
+      ],
+      "source_anchor": [
+        960,
+        977
+      ],
+      "rgba_sha256": "486eae25c32b50266192bfe0bbb7b159243bb8f8cec5cb941bba4f196ca1a17f",
+      "sheet": 7
+    },
+    {
+      "row": 15,
+      "direction": "NE",
+      "region": [
+        1127,
+        864,
+        397,
+        111
+      ],
+      "margin": [
+        243,
+        468,
+        523,
+        809
+      ],
+      "source_anchor": [
+        1344,
+        971
+      ],
+      "rgba_sha256": "aeca2a7d1416f7f6b5ab0b9acf4b71d15fdcbe1f50f9cbb1dd6cd23ce57aaa5c",
+      "sheet": 7
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "sha256": "75a912a1c269fdd540f0daf1c4726f1d76eb9320ac22453219efe886ac9bea22",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            848,
+            848
+          ],
+          "foot": [
+            424,
+            530
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "sha256": "b0bf53e88aafe241707b87f6c421e07420a047f897e3cd23086e7526747233f4",
+          "size": [
+            1305,
+            1205
+          ],
+          "canvas_size": [
+            816,
+            816
+          ],
+          "foot": [
+            408,
+            510
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "sha256": "0b515a63b2b4dd3e97e231ab0438cacefb8d73f3195fff5313d4e062c8cc1f5e",
+          "size": [
+            1374,
+            1145
+          ],
+          "canvas_size": [
+            1072,
+            1072
+          ],
+          "foot": [
+            536,
+            670
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "sha256": "39bf6b4215e8a7c08c1c8f895febaddf85cc9b9cd13aa91779b43ef502b16dbe",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "sha256": "c75b86b49c1d55c278b7af38d7ea0f7f6f2cf11304225d7605606f77d1ce247d",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "sha256": "4f528daa00a39a75afa98169b23f9949ad639c9627bab3f51e2e3697720cfeec",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "sha256": "6856b3680e75e7d23ce7ec1f161b1455294fce6330b759e57e71c3b0e9876e41",
+          "size": [
+            1401,
+            1123
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "sha256": "e85561cb6305c5f007daf7660ccb0aa98448ad0d40defbd57f3e1e05817a224a",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "sha256": "75a912a1c269fdd540f0daf1c4726f1d76eb9320ac22453219efe886ac9bea22",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            848,
+            848
+          ],
+          "foot": [
+            424,
+            530
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "sha256": "b0bf53e88aafe241707b87f6c421e07420a047f897e3cd23086e7526747233f4",
+          "size": [
+            1305,
+            1205
+          ],
+          "canvas_size": [
+            816,
+            816
+          ],
+          "foot": [
+            408,
+            510
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "sha256": "0b515a63b2b4dd3e97e231ab0438cacefb8d73f3195fff5313d4e062c8cc1f5e",
+          "size": [
+            1374,
+            1145
+          ],
+          "canvas_size": [
+            1072,
+            1072
+          ],
+          "foot": [
+            536,
+            670
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "sha256": "39bf6b4215e8a7c08c1c8f895febaddf85cc9b9cd13aa91779b43ef502b16dbe",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "sha256": "c75b86b49c1d55c278b7af38d7ea0f7f6f2cf11304225d7605606f77d1ce247d",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "sha256": "4f528daa00a39a75afa98169b23f9949ad639c9627bab3f51e2e3697720cfeec",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "sha256": "6856b3680e75e7d23ce7ec1f161b1455294fce6330b759e57e71c3b0e9876e41",
+          "size": [
+            1401,
+            1123
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "sha256": "e85561cb6305c5f007daf7660ccb0aa98448ad0d40defbd57f3e1e05817a224a",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "source_frames_per_direction": 6,
+      "unique_frames_per_direction": 6,
+      "direction_unique_frames": {
+        "E": 6,
+        "SE": 6,
+        "S": 6,
+        "SW": 6,
+        "W": 6,
+        "NW": 6,
+        "N": 6,
+        "NE": 6
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "sha256": "75a912a1c269fdd540f0daf1c4726f1d76eb9320ac22453219efe886ac9bea22",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            848,
+            848
+          ],
+          "foot": [
+            424,
+            530
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "sha256": "b0bf53e88aafe241707b87f6c421e07420a047f897e3cd23086e7526747233f4",
+          "size": [
+            1305,
+            1205
+          ],
+          "canvas_size": [
+            816,
+            816
+          ],
+          "foot": [
+            408,
+            510
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "sha256": "0b515a63b2b4dd3e97e231ab0438cacefb8d73f3195fff5313d4e062c8cc1f5e",
+          "size": [
+            1374,
+            1145
+          ],
+          "canvas_size": [
+            1072,
+            1072
+          ],
+          "foot": [
+            536,
+            670
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "sha256": "39bf6b4215e8a7c08c1c8f895febaddf85cc9b9cd13aa91779b43ef502b16dbe",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "sha256": "c75b86b49c1d55c278b7af38d7ea0f7f6f2cf11304225d7605606f77d1ce247d",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "sha256": "4f528daa00a39a75afa98169b23f9949ad639c9627bab3f51e2e3697720cfeec",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "sha256": "6856b3680e75e7d23ce7ec1f161b1455294fce6330b759e57e71c3b0e9876e41",
+          "size": [
+            1401,
+            1123
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "sha256": "e85561cb6305c5f007daf7660ccb0aa98448ad0d40defbd57f3e1e05817a224a",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "sha256": "75a912a1c269fdd540f0daf1c4726f1d76eb9320ac22453219efe886ac9bea22",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            848,
+            848
+          ],
+          "foot": [
+            424,
+            530
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "sha256": "b0bf53e88aafe241707b87f6c421e07420a047f897e3cd23086e7526747233f4",
+          "size": [
+            1305,
+            1205
+          ],
+          "canvas_size": [
+            816,
+            816
+          ],
+          "foot": [
+            408,
+            510
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "sha256": "0b515a63b2b4dd3e97e231ab0438cacefb8d73f3195fff5313d4e062c8cc1f5e",
+          "size": [
+            1374,
+            1145
+          ],
+          "canvas_size": [
+            1072,
+            1072
+          ],
+          "foot": [
+            536,
+            670
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "sha256": "39bf6b4215e8a7c08c1c8f895febaddf85cc9b9cd13aa91779b43ef502b16dbe",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "sha256": "c75b86b49c1d55c278b7af38d7ea0f7f6f2cf11304225d7605606f77d1ce247d",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "sha256": "4f528daa00a39a75afa98169b23f9949ad639c9627bab3f51e2e3697720cfeec",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "sha256": "6856b3680e75e7d23ce7ec1f161b1455294fce6330b759e57e71c3b0e9876e41",
+          "size": [
+            1401,
+            1123
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "sha256": "e85561cb6305c5f007daf7660ccb0aa98448ad0d40defbd57f3e1e05817a224a",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "sha256": "75a912a1c269fdd540f0daf1c4726f1d76eb9320ac22453219efe886ac9bea22",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            848,
+            848
+          ],
+          "foot": [
+            424,
+            530
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "sha256": "b0bf53e88aafe241707b87f6c421e07420a047f897e3cd23086e7526747233f4",
+          "size": [
+            1305,
+            1205
+          ],
+          "canvas_size": [
+            816,
+            816
+          ],
+          "foot": [
+            408,
+            510
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "sha256": "0b515a63b2b4dd3e97e231ab0438cacefb8d73f3195fff5313d4e062c8cc1f5e",
+          "size": [
+            1374,
+            1145
+          ],
+          "canvas_size": [
+            1072,
+            1072
+          ],
+          "foot": [
+            536,
+            670
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "sha256": "39bf6b4215e8a7c08c1c8f895febaddf85cc9b9cd13aa91779b43ef502b16dbe",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "sha256": "c75b86b49c1d55c278b7af38d7ea0f7f6f2cf11304225d7605606f77d1ce247d",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "sha256": "4f528daa00a39a75afa98169b23f9949ad639c9627bab3f51e2e3697720cfeec",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "sha256": "6856b3680e75e7d23ce7ec1f161b1455294fce6330b759e57e71c3b0e9876e41",
+          "size": [
+            1401,
+            1123
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "sha256": "e85561cb6305c5f007daf7660ccb0aa98448ad0d40defbd57f3e1e05817a224a",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-0.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-1.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-2.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-3.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-4.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-5.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-6.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/gnoll_batch17_candidate/poses-7.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 83.75308641975309
+}

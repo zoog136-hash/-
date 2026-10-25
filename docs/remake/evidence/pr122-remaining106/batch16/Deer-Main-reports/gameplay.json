@@ -1,0 +1,43 @@
+{
+	"cases": [
+		{
+			"checks": 1788,
+			"failures": [],
+			"folder": "albino_deer_batch16_authored",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "알비노 디어",
+			"physics_ticks": 1272,
+			"pose_samples": 144,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/albino-deer/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch16/Deer-Main-QA-v01/gameplay-cases/albino-deer.json",
+			"screenshots": 254,
+			"slug": "albino-deer"
+		},
+		{
+			"checks": 1484,
+			"failures": [],
+			"folder": "albino_iguana_monster_authored",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "알비노 이구아나",
+			"physics_ticks": 1237,
+			"pose_samples": 112,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/preserved-iguana-baseline/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch16/Deer-Main-QA-v01/gameplay-cases/preserved-iguana-baseline.json",
+			"screenshots": 190,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 3272,
+	"config": "res://tests/fixtures/pr122_batch16_deer.json",
+	"engine_processes": 1,
+	"failures": [],
+	"process_id": 16638,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/runtime/batch16/Deer-Main-QA-v01/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

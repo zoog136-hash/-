@@ -1,0 +1,3572 @@
+{
+  "schema": "pr122-monster-staging-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold",
+  "actors": {
+    "monster:알비노 피쉬맨": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/SpriteFrames.tres",
+      "frames_sha256": "9f9b1f046f1948143bf01cda2b33f872d87d0e4c86922c5d1cdffe9eb5fee58d",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/NativeMotionProfile.tres",
+      "native_profile_sha256": "fd5eeef8f66a7acc963960dba04c657463c60c8a2c108bf8a8456f43865513c6",
+      "native_track_count": 41,
+      "native_pose_count": 115,
+      "required_track_count": 33,
+      "required_pose_count": 91,
+      "preserved_walk_tracks": 8,
+      "production_connected": false,
+      "detailed_completed": false,
+      "tracks": [
+        {
+          "role": "idle",
+          "direction": "E",
+          "animation": "idle_0",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  47,
+                  167,
+                  198,
+                  197
+                ],
+                "margin": [
+                  178,
+                  127,
+                  314,
+                  315
+                ],
+                "source_anchor": [
+                  125,
+                  360
+                ],
+                "rgba_sha256": "b5d9a7b38661427b7126800d1486b6119e4559e515b8080d8b0352233e5785cc"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  49,
+                  861,
+                  206,
+                  194
+                ],
+                "margin": [
+                  177,
+                  130,
+                  306,
+                  318
+                ],
+                "source_anchor": [
+                  128,
+                  1051
+                ],
+                "rgba_sha256": "cf6ddc321ab51cc276f777f53ad9452637976e8a4ebf11b6809ff4bb81e1b1d0"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "idle",
+          "direction": "SE",
+          "animation": "idle_1",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  300,
+                  151,
+                  201,
+                  211
+                ],
+                "margin": [
+                  178,
+                  114,
+                  311,
+                  301
+                ],
+                "source_anchor": [
+                  378,
+                  357
+                ],
+                "rgba_sha256": "13767f7193a1a4ebe987e9e32e5aacf8b0894691f59c4f9f3f4df324748b77ea"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  297,
+                  847,
+                  203,
+                  208
+                ],
+                "margin": [
+                  175,
+                  118,
+                  309,
+                  304
+                ],
+                "source_anchor": [
+                  378,
+                  1049
+                ],
+                "rgba_sha256": "9936411754d575cd5b481b01456561d8079661ff015ade0dba2c15aa88617818"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "idle",
+          "direction": "S",
+          "animation": "idle_2",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  541,
+                  156,
+                  192,
+                  213
+                ],
+                "margin": [
+                  176,
+                  112,
+                  320,
+                  299
+                ],
+                "source_anchor": [
+                  621,
+                  364
+                ],
+                "rgba_sha256": "1c041b0ba13835396b8bf957ef6c5bbe45555988f4855e6df1a58540ae4e3a20"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  539,
+                  853,
+                  194,
+                  206
+                ],
+                "margin": [
+                  172,
+                  118,
+                  318,
+                  306
+                ],
+                "source_anchor": [
+                  623,
+                  1055
+                ],
+                "rgba_sha256": "b63e3ef26765598065a9c1c09859df44027782b38b6463f2dda6f1a6a39dca74"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "idle",
+          "direction": "SW",
+          "animation": "idle_3",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  778,
+                  161,
+                  193,
+                  202
+                ],
+                "margin": [
+                  146,
+                  124,
+                  319,
+                  310
+                ],
+                "source_anchor": [
+                  888,
+                  357
+                ],
+                "rgba_sha256": "12de36e836e2f64446674c2abe1317ec66e0c6fca541362f0a2be481ae25b928"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  775,
+                  853,
+                  195,
+                  203
+                ],
+                "margin": [
+                  140,
+                  122,
+                  317,
+                  309
+                ],
+                "source_anchor": [
+                  891,
+                  1051
+                ],
+                "rgba_sha256": "edc48a6744373144ac2d4daf5b652abe05c6899c0c7984d94dfa1376d25dc1ce"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "idle",
+          "direction": "W",
+          "animation": "idle_4",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  34,
+                  483,
+                  207,
+                  198
+                ],
+                "margin": [
+                  140,
+                  128,
+                  305,
+                  314
+                ],
+                "source_anchor": [
+                  150,
+                  675
+                ],
+                "rgba_sha256": "a5d4be0c293489d41bfd5e8b9f01fa980685bc813af63d89a9227ad540d8b1f9"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  36,
+                  1197,
+                  207,
+                  198
+                ],
+                "margin": [
+                  138,
+                  127,
+                  305,
+                  314
+                ],
+                "source_anchor": [
+                  154,
+                  1390
+                ],
+                "rgba_sha256": "36598dfafe56830a7f3037ef4a4010b28c8f765a9f7aa62d6df2e51a4c79b552"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "idle",
+          "direction": "NW",
+          "animation": "idle_5",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  279,
+                  493,
+                  202,
+                  185
+                ],
+                "margin": [
+                  142,
+                  140,
+                  310,
+                  327
+                ],
+                "source_anchor": [
+                  393,
+                  673
+                ],
+                "rgba_sha256": "6755bf02ce38a071b681764392edb0b0e7e990a78c4bf84c68874b561c13c73a"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  279,
+                  1208,
+                  207,
+                  181
+                ],
+                "margin": [
+                  140,
+                  143,
+                  305,
+                  331
+                ],
+                "source_anchor": [
+                  395,
+                  1385
+                ],
+                "rgba_sha256": "4e5ef3182b6547e3dc89e8381be190ed9c84ac420a7e2cc936aa92917f1c064e"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "idle",
+          "direction": "N",
+          "animation": "idle_6",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  522,
+                  489,
+                  203,
+                  197
+                ],
+                "margin": [
+                  142,
+                  128,
+                  309,
+                  315
+                ],
+                "source_anchor": [
+                  636,
+                  681
+                ],
+                "rgba_sha256": "224849f4250c4f9a3841dd77635097e8f0bbf3c81273e3d6247f6d7d7840f215"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  522,
+                  1208,
+                  203,
+                  191
+                ],
+                "margin": [
+                  142,
+                  134,
+                  309,
+                  321
+                ],
+                "source_anchor": [
+                  636,
+                  1394
+                ],
+                "rgba_sha256": "68bec7560670a6c36725eecc625e8736c6733d06ac7c7ff7dab3da7fff5c31f7"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "idle",
+          "direction": "NE",
+          "animation": "idle_7",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/idle-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/idle-v2.png",
+          "source_sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  787,
+                  499,
+                  206,
+                  180
+                ],
+                "margin": [
+                  162,
+                  146,
+                  306,
+                  332
+                ],
+                "source_anchor": [
+                  881,
+                  673
+                ],
+                "rgba_sha256": "74db40ac5fee1d219a41e818f82083bfa5fedb41e7f741506f7dafca4bac355d"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  783,
+                  1215,
+                  208,
+                  179
+                ],
+                "margin": [
+                  162,
+                  145,
+                  304,
+                  333
+                ],
+                "source_anchor": [
+                  877,
+                  1390
+                ],
+                "rgba_sha256": "c97531be9845b9f9d730d849db1acff3199e6d37d889a91bf96472b351bf0bb1"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              512,
+              512
+            ],
+            "foot": [
+              256,
+              320
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "E",
+          "animation": "walk_0",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  32,
+                  23,
+                  240,
+                  243
+                ],
+                "margin": [
+                  240,
+                  157,
+                  392,
+                  389
+                ],
+                "source_anchor": [
+                  108,
+                  261
+                ],
+                "rgba_sha256": "faecd6ebbbc73c5563b671070d409f959d1751567af954a9fe3938f0c4db2b27"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  27,
+                  525,
+                  246,
+                  251
+                ],
+                "margin": [
+                  216,
+                  148,
+                  386,
+                  381
+                ],
+                "source_anchor": [
+                  127,
+                  772
+                ],
+                "rgba_sha256": "ffdd1b8100c8cc77fa8d6076ce0bb88a63132544eb939f914442bd5039f4cd65"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  30,
+                  1033,
+                  246,
+                  247
+                ],
+                "margin": [
+                  221,
+                  152,
+                  386,
+                  385
+                ],
+                "source_anchor": [
+                  125,
+                  1276
+                ],
+                "rgba_sha256": "ba5e14689e6457c5acc75a81f57c4dab871ffe56c6c108c025bb4ff88e645d21"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "SE",
+          "animation": "walk_1",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  299,
+                  23,
+                  230,
+                  240
+                ],
+                "margin": [
+                  236,
+                  161,
+                  402,
+                  392
+                ],
+                "source_anchor": [
+                  379,
+                  257
+                ],
+                "rgba_sha256": "d80d3ef1c23628c97b27e5b2010b355dc084ea4ea25f1bab2890944c335e3520"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  293,
+                  522,
+                  235,
+                  258
+                ],
+                "margin": [
+                  206,
+                  141,
+                  397,
+                  374
+                ],
+                "source_anchor": [
+                  403,
+                  776
+                ],
+                "rgba_sha256": "d49f80bfab641cebb6c14ac360ffdbfb13b10f8920ba71eb0c21bea9fdfd2b8d"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  296,
+                  1037,
+                  235,
+                  245
+                ],
+                "margin": [
+                  217,
+                  155,
+                  397,
+                  387
+                ],
+                "source_anchor": [
+                  395,
+                  1277
+                ],
+                "rgba_sha256": "1f48617e4f704b13df1852af73b0716db33b991a4b640bd53be9f8dce3eff1d0"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "S",
+          "animation": "walk_2",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  543,
+                  19,
+                  206,
+                  252
+                ],
+                "margin": [
+                  246,
+                  147,
+                  426,
+                  380
+                ],
+                "source_anchor": [
+                  613,
+                  267
+                ],
+                "rgba_sha256": "393566f840cde3824d4c26277fb2fd96727683d1b4dc03201fc71298fca6d432"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  535,
+                  522,
+                  218,
+                  259
+                ],
+                "margin": [
+                  220,
+                  141,
+                  414,
+                  373
+                ],
+                "source_anchor": [
+                  631,
+                  776
+                ],
+                "rgba_sha256": "54551d44047ff741113f8800bceedb12ab241f4fdbbbf189882664a3ec3d2781"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  543,
+                  1034,
+                  217,
+                  251
+                ],
+                "margin": [
+                  222,
+                  148,
+                  415,
+                  381
+                ],
+                "source_anchor": [
+                  637,
+                  1281
+                ],
+                "rgba_sha256": "3e3d0b05cfb12addec50989fa5193f96749e6d97f51c0d823a4a5b6fdabcf15a"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "SW",
+          "animation": "walk_3",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  775,
+                  24,
+                  212,
+                  242
+                ],
+                "margin": [
+                  190,
+                  157,
+                  420,
+                  390
+                ],
+                "source_anchor": [
+                  901,
+                  262
+                ],
+                "rgba_sha256": "e33d94c88e41d156a7f238ac910ae06b82d50e18735e56842428caaa4133dbfc"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  771,
+                  526,
+                  214,
+                  253
+                ],
+                "margin": [
+                  208,
+                  147,
+                  418,
+                  379
+                ],
+                "source_anchor": [
+                  879,
+                  774
+                ],
+                "rgba_sha256": "25d6d744e72ccebc8c5bd1d1fd7ccafbe9edbccde9d28042a6325afae52c870b"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  773,
+                  1031,
+                  222,
+                  250
+                ],
+                "margin": [
+                  186,
+                  149,
+                  410,
+                  382
+                ],
+                "source_anchor": [
+                  903,
+                  1277
+                ],
+                "rgba_sha256": "ded0d9984e318ba3f73f236e6b649e8d703c5bbe0dc6a101a6931e38dcb9bfb0"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "W",
+          "animation": "walk_4",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  19,
+                  279,
+                  232,
+                  233
+                ],
+                "margin": [
+                  124,
+                  165,
+                  400,
+                  399
+                ],
+                "source_anchor": [
+                  211,
+                  509
+                ],
+                "rgba_sha256": "7f97cb8aa3eb991ff94c849a04445e8332b93b3a7c48e6315f2679de89dd945d"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  25,
+                  781,
+                  232,
+                  230
+                ],
+                "margin": [
+                  186,
+                  168,
+                  400,
+                  402
+                ],
+                "source_anchor": [
+                  155,
+                  1008
+                ],
+                "rgba_sha256": "e0262c1780225851a988e8cd0e98e53d35a879b4e3be7e6fd295253efe0c1f39"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  24,
+                  1281,
+                  224,
+                  231
+                ],
+                "margin": [
+                  182,
+                  168,
+                  408,
+                  401
+                ],
+                "source_anchor": [
+                  158,
+                  1508
+                ],
+                "rgba_sha256": "0605f5c7f18371f3f3f1077ea886a7913e469993a243d0143e8a029cb7ed29df"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "NW",
+          "animation": "walk_5",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  281,
+                  281,
+                  222,
+                  228
+                ],
+                "margin": [
+                  188,
+                  170,
+                  410,
+                  404
+                ],
+                "source_anchor": [
+                  409,
+                  506
+                ],
+                "rgba_sha256": "5637b42bc27b8a412d1c606c545fb02e0cd5069edb83e4f5ea04082a57fe1717"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  275,
+                  788,
+                  232,
+                  236
+                ],
+                "margin": [
+                  182,
+                  162,
+                  400,
+                  396
+                ],
+                "source_anchor": [
+                  409,
+                  1021
+                ],
+                "rgba_sha256": "ba5de17e7bbe18ddae51a68fc2250caf3a21c32dc60372981f19b8bef3cbd5a1"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  290,
+                  1290,
+                  216,
+                  229
+                ],
+                "margin": [
+                  152,
+                  170,
+                  416,
+                  403
+                ],
+                "source_anchor": [
+                  454,
+                  1515
+                ],
+                "rgba_sha256": "2df6b6f2e0bc1c9e289a3f7394b7f4944b6b80ccf4d0f475cf3164b2ce6893da"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "N",
+          "animation": "walk_6",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  544,
+                  275,
+                  193,
+                  236
+                ],
+                "margin": [
+                  202,
+                  162,
+                  439,
+                  396
+                ],
+                "source_anchor": [
+                  658,
+                  508
+                ],
+                "rgba_sha256": "75df1b639300ceb839a6a50a5c6bb1496e9d4f09ddeeda9f5b8a6a2557d83652"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  535,
+                  783,
+                  207,
+                  244
+                ],
+                "margin": [
+                  204,
+                  155,
+                  425,
+                  388
+                ],
+                "source_anchor": [
+                  647,
+                  1023
+                ],
+                "rgba_sha256": "1c1db8a675c70c69a1ec34f37b15fa7b28d8d65226bf962c54a7bea6794eeed7"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  530,
+                  1289,
+                  207,
+                  227
+                ],
+                "margin": [
+                  194,
+                  172,
+                  425,
+                  405
+                ],
+                "source_anchor": [
+                  652,
+                  1512
+                ],
+                "rgba_sha256": "3ec116660b85a54e122e35434896438723029cdddbe33b1abff7a0d1128285c8"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "walk",
+          "direction": "NE",
+          "animation": "walk_7",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/walk-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/walk-v2.png",
+          "source_sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  781,
+                  281,
+                  223,
+                  230
+                ],
+                "margin": [
+                  226,
+                  169,
+                  409,
+                  402
+                ],
+                "source_anchor": [
+                  871,
+                  507
+                ],
+                "rgba_sha256": "6981e9f4878d1730e7941c16cbca0aff089e2e567e09e16431ff6fb1d3e38804"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  774,
+                  786,
+                  230,
+                  235
+                ],
+                "margin": [
+                  230,
+                  164,
+                  402,
+                  397
+                ],
+                "source_anchor": [
+                  860,
+                  1017
+                ],
+                "rgba_sha256": "0081cd80f8546cf3ac4fa2e1f3ffbcf2e10175a475af45d96439b43bd4fb693d"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  778,
+                  1281,
+                  223,
+                  239
+                ],
+                "margin": [
+                  260,
+                  160,
+                  409,
+                  393
+                ],
+                "source_anchor": [
+                  834,
+                  1516
+                ],
+                "rgba_sha256": "c391bf122dd12c909989675de386d2df8d11aaccf3d38b42e272fbb7cb231d4b"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 235.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "E",
+          "animation": "attack_0",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  57,
+                  94,
+                  202,
+                  148
+                ],
+                "margin": [
+                  140,
+                  125,
+                  230,
+                  284
+                ],
+                "source_anchor": [
+                  133,
+                  239
+                ],
+                "rgba_sha256": "7b4adf35923fe34db52e168bde71b1646ca37e5a9b1cd3e8152126a3f785bee5"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  55,
+                  589,
+                  259,
+                  158
+                ],
+                "margin": [
+                  138,
+                  115,
+                  173,
+                  274
+                ],
+                "source_anchor": [
+                  133,
+                  744
+                ],
+                "rgba_sha256": "eaa32b25e093b1bd10ea1b7b109a0c473e398e0379eda576baf6cf02643220f1"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  55,
+                  1092,
+                  205,
+                  168
+                ],
+                "margin": [
+                  134,
+                  106,
+                  227,
+                  264
+                ],
+                "source_anchor": [
+                  137,
+                  1256
+                ],
+                "rgba_sha256": "1c58e16fedb93ec9d8c3c0fc7f08d61cdb379cb3142ea3798e46071f1389894a"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "SE",
+          "animation": "attack_1",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  326,
+                  81,
+                  187,
+                  168
+                ],
+                "margin": [
+                  150,
+                  107,
+                  245,
+                  264
+                ],
+                "source_anchor": [
+                  392,
+                  244
+                ],
+                "rgba_sha256": "ef73c417375b50019f90498d16cf7d3fb6a541594e7e84aeaa9199b6ed4e2283"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  325,
+                  593,
+                  217,
+                  173
+                ],
+                "margin": [
+                  112,
+                  101,
+                  215,
+                  259
+                ],
+                "source_anchor": [
+                  429,
+                  762
+                ],
+                "rgba_sha256": "8bbae5d76cd6ce02434800a27572aa7abb2afedcf52ac17506a8f7d3b9fd3b75"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  323,
+                  1093,
+                  202,
+                  175
+                ],
+                "margin": [
+                  140,
+                  99,
+                  230,
+                  257
+                ],
+                "source_anchor": [
+                  399,
+                  1264
+                ],
+                "rgba_sha256": "3921a710fabc46d0587e5616fc202240041e13d40a401cbdd422b7eff66a4889"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "S",
+          "animation": "attack_2",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  569,
+                  76,
+                  132,
+                  180
+                ],
+                "margin": [
+                  144,
+                  96,
+                  300,
+                  252
+                ],
+                "source_anchor": [
+                  641,
+                  250
+                ],
+                "rgba_sha256": "749ae879a5e3e425dd74d3875bc69e73df405c79da3ad526e29a7f37b9d9e65b"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  571,
+                  588,
+                  128,
+                  207
+                ],
+                "margin": [
+                  149,
+                  91,
+                  304,
+                  225
+                ],
+                "source_anchor": [
+                  638,
+                  767
+                ],
+                "rgba_sha256": "b2c32987e4a1ca8c65e14fbb446524766be0b46eb8e429a3b51466827313b825"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  570,
+                  1094,
+                  145,
+                  180
+                ],
+                "margin": [
+                  144,
+                  96,
+                  287,
+                  252
+                ],
+                "source_anchor": [
+                  642,
+                  1268
+                ],
+                "rgba_sha256": "0f97fe4b58c530a168f3787a3a5fac35b91b6604e6ec2ece04add91910a0902b"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "SW",
+          "animation": "attack_3",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  771,
+                  87,
+                  191,
+                  163
+                ],
+                "margin": [
+                  94,
+                  113,
+                  241,
+                  269
+                ],
+                "source_anchor": [
+                  893,
+                  244
+                ],
+                "rgba_sha256": "4be30c9e84b3926464c936c897f3d83b45820f2afb2e5540eaa5a5cacf328c3e"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  753,
+                  597,
+                  215,
+                  169
+                ],
+                "margin": [
+                  106,
+                  105,
+                  217,
+                  263
+                ],
+                "source_anchor": [
+                  863,
+                  762
+                ],
+                "rgba_sha256": "58f881cb402b6458e90fcee52e44081c19279553a35ca4244b4c5774a5150bff"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  787,
+                  1099,
+                  191,
+                  173
+                ],
+                "margin": [
+                  116,
+                  102,
+                  241,
+                  259
+                ],
+                "source_anchor": [
+                  887,
+                  1267
+                ],
+                "rgba_sha256": "5a40a58efb92933d3f20a8b226eea49d319260fc9f1ba35f01b6b51e05edfa1d"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "W",
+          "animation": "attack_4",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  33,
+                  351,
+                  196,
+                  161
+                ],
+                "margin": [
+                  91,
+                  113,
+                  236,
+                  271
+                ],
+                "source_anchor": [
+                  158,
+                  508
+                ],
+                "rgba_sha256": "a694e1fc8e35d24e0634b3c9a49e3a565c8fcafc1d8f5913c3a957b8021e91f9"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  17,
+                  856,
+                  235,
+                  156
+                ],
+                "margin": [
+                  72,
+                  118,
+                  197,
+                  276
+                ],
+                "source_anchor": [
+                  161,
+                  1008
+                ],
+                "rgba_sha256": "47c30f1cfe3ccb2aab26acc2cf0ffb361dbf9a6db007f15331dd8d939ea0d1d6"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  40,
+                  1325,
+                  202,
+                  155
+                ],
+                "margin": [
+                  91,
+                  120,
+                  230,
+                  277
+                ],
+                "source_anchor": [
+                  165,
+                  1475
+                ],
+                "rgba_sha256": "866c51f84b3f92e6d42c64c7b31e84303950b5ca80656dfc5c838cf37a965ea3"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "NW",
+          "animation": "attack_5",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  320,
+                  346,
+                  169,
+                  160
+                ],
+                "margin": [
+                  118,
+                  113,
+                  263,
+                  272
+                ],
+                "source_anchor": [
+                  418,
+                  503
+                ],
+                "rgba_sha256": "d8efbdbaaa404f48075fd06239f01dcc1dad359a5db8bd24dfbc283c9c76716a"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  291,
+                  860,
+                  214,
+                  157
+                ],
+                "margin": [
+                  84,
+                  118,
+                  218,
+                  275
+                ],
+                "source_anchor": [
+                  423,
+                  1012
+                ],
+                "rgba_sha256": "66fc52f13cd368e6e2c9ee29d8bec9948535bd3ad4e7bd52737862ba0a43266e"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  323,
+                  1324,
+                  173,
+                  157
+                ],
+                "margin": [
+                  120,
+                  117,
+                  259,
+                  275
+                ],
+                "source_anchor": [
+                  419,
+                  1477
+                ],
+                "rgba_sha256": "e6fe78bc0d38c5047aa6970b48946eef7a867763f86c60c4d8c1e30159372cea"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "N",
+          "animation": "attack_6",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  559,
+                  344,
+                  153,
+                  167
+                ],
+                "margin": [
+                  134,
+                  106,
+                  279,
+                  265
+                ],
+                "source_anchor": [
+                  641,
+                  508
+                ],
+                "rgba_sha256": "1722ef8036ec7e4f64c56d4ffcf206b77a2a471ec0624a9d5a0db2277601bce4"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  564,
+                  813,
+                  151,
+                  209
+                ],
+                "margin": [
+                  140,
+                  65,
+                  281,
+                  223
+                ],
+                "source_anchor": [
+                  640,
+                  1018
+                ],
+                "rgba_sha256": "46e1b2a3963f17a43066da6f38559e029b65c9efd6a4ea4bcd1d88589aa7cd3c"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  568,
+                  1326,
+                  171,
+                  167
+                ],
+                "margin": [
+                  136,
+                  108,
+                  261,
+                  265
+                ],
+                "source_anchor": [
+                  648,
+                  1488
+                ],
+                "rgba_sha256": "21a6bf295a3e29e21303a51e2790488c563408b59eca51e97469c057c4debbbb"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "attack",
+          "direction": "NE",
+          "animation": "attack_7",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/attack-v2.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/attack-v2.png",
+          "source_sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  802,
+                  348,
+                  163,
+                  161
+                ],
+                "margin": [
+                  141,
+                  115,
+                  269,
+                  271
+                ],
+                "source_anchor": [
+                  877,
+                  503
+                ],
+                "rgba_sha256": "47d3c72323ef2af70bb0517dbfd7d1868e86d5ae425f8694f72503e2b2f0ec92"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  792,
+                  855,
+                  189,
+                  162
+                ],
+                "margin": [
+                  132,
+                  112,
+                  243,
+                  270
+                ],
+                "source_anchor": [
+                  876,
+                  1013
+                ],
+                "rgba_sha256": "54237d73b56bf8eaada3c3090e49f9b1c4199495c78e749a8eb94554b8a66714"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  794,
+                  1329,
+                  184,
+                  154
+                ],
+                "margin": [
+                  134,
+                  119,
+                  248,
+                  278
+                ],
+                "source_anchor": [
+                  876,
+                  1480
+                ],
+                "rgba_sha256": "6df80d96086e26570c832c39c16a8f2af2d53aac0186d05bfd269fafc797f2cb"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 161.5,
+            "canvas_size": [
+              432,
+              432
+            ],
+            "foot": [
+              216,
+              270
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "E",
+          "animation": "hit_0",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  39,
+                  170,
+                  224,
+                  206
+                ],
+                "margin": [
+                  175,
+                  137,
+                  312,
+                  330
+                ],
+                "source_anchor": [
+                  132,
+                  368
+                ],
+                "rgba_sha256": "af2a42d8c271cf84241f2d3d985a01b2b3bffbc5bf8efcdd139d1639bc19be84"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  47,
+                  859,
+                  216,
+                  217
+                ],
+                "margin": [
+                  182,
+                  123,
+                  320,
+                  319
+                ],
+                "source_anchor": [
+                  133,
+                  1071
+                ],
+                "rgba_sha256": "1b4921475ebbf13632652efeb8e7b7cd59588ab08b2fd355782f752cee6a292f"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "SE",
+          "animation": "hit_1",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  298,
+                  167,
+                  219,
+                  211
+                ],
+                "margin": [
+                  189,
+                  131,
+                  317,
+                  325
+                ],
+                "source_anchor": [
+                  377,
+                  371
+                ],
+                "rgba_sha256": "8dcf70e1e22582cfbdc2a20205b1cfd55ca0c18787156ed7acca395c63436b4c"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  299,
+                  856,
+                  220,
+                  217
+                ],
+                "margin": [
+                  184,
+                  125,
+                  316,
+                  319
+                ],
+                "source_anchor": [
+                  383,
+                  1066
+                ],
+                "rgba_sha256": "88dfae87edcaa755a3f68f1dff1752294e312aa9c37793ab0fe01f6609521f5c"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "S",
+          "animation": "hit_2",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  549,
+                  153,
+                  216,
+                  233
+                ],
+                "margin": [
+                  184,
+                  110,
+                  320,
+                  303
+                ],
+                "source_anchor": [
+                  633,
+                  378
+                ],
+                "rgba_sha256": "fc039ce9d376d2b25a9107cd22165c5d4193b748197be6eb807a2ab6dacecd44"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  543,
+                  854,
+                  208,
+                  227
+                ],
+                "margin": [
+                  180,
+                  117,
+                  328,
+                  309
+                ],
+                "source_anchor": [
+                  631,
+                  1072
+                ],
+                "rgba_sha256": "61749bdc8056357982304fd8d699c2e54c5c2abc3a0b0e51e44f89223c734ab5"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "SW",
+          "animation": "hit_3",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  783,
+                  170,
+                  201,
+                  209
+                ],
+                "margin": [
+                  141,
+                  134,
+                  335,
+                  327
+                ],
+                "source_anchor": [
+                  910,
+                  371
+                ],
+                "rgba_sha256": "80a5b615f74c3193672e6abd13a19a523d546121e206eb2589dbb912a949b2fd"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  760,
+                  860,
+                  216,
+                  214
+                ],
+                "margin": [
+                  132,
+                  126,
+                  320,
+                  322
+                ],
+                "source_anchor": [
+                  896,
+                  1069
+                ],
+                "rgba_sha256": "9a475a0203bc2a2ba62e5ac802251246ecf877ce114fc3b530276763c5fa08e1"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "W",
+          "animation": "hit_4",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  29,
+                  501,
+                  212,
+                  196
+                ],
+                "margin": [
+                  144,
+                  145,
+                  324,
+                  340
+                ],
+                "source_anchor": [
+                  153,
+                  691
+                ],
+                "rgba_sha256": "42c8c6281906b969f361b9e53c0046a55890eb6bc833dafa26420af3896bffd1"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  25,
+                  1226,
+                  216,
+                  193
+                ],
+                "margin": [
+                  142,
+                  148,
+                  320,
+                  343
+                ],
+                "source_anchor": [
+                  151,
+                  1413
+                ],
+                "rgba_sha256": "f5d268c83b1bfc8291b6685f1f0d54273516fd9182892d9f2fa4eb7810edc68b"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "NW",
+          "animation": "hit_5",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  277,
+                  490,
+                  211,
+                  207
+                ],
+                "margin": [
+                  151,
+                  131,
+                  325,
+                  329
+                ],
+                "source_anchor": [
+                  394,
+                  694
+                ],
+                "rgba_sha256": "47b19d23a76ea812fc99f79825392d6e4b12637c42efccf02d9d45dabf584d35"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  277,
+                  1228,
+                  217,
+                  192
+                ],
+                "margin": [
+                  146,
+                  147,
+                  319,
+                  344
+                ],
+                "source_anchor": [
+                  399,
+                  1416
+                ],
+                "rgba_sha256": "3cc6d96b8b78233e69bc5fd5c47c0dce9c05239737fe71d67cac19e76c66e2ad"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "N",
+          "animation": "hit_6",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  523,
+                  502,
+                  212,
+                  207
+                ],
+                "margin": [
+                  148,
+                  132,
+                  324,
+                  329
+                ],
+                "source_anchor": [
+                  643,
+                  705
+                ],
+                "rgba_sha256": "2ee3682247b8b9d3784d92e1ac34537aad9cb1c3bf74225748f0fdfb462e0893"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  524,
+                  1228,
+                  209,
+                  205
+                ],
+                "margin": [
+                  150,
+                  136,
+                  327,
+                  331
+                ],
+                "source_anchor": [
+                  642,
+                  1427
+                ],
+                "rgba_sha256": "7e093c3ecb165979202996b18ebc1bb6272f6b3f65225775c00f29436176751c"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "hit",
+          "direction": "NE",
+          "animation": "hit_7",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/hit-v1.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/preserved-living/hit-v1.png",
+          "source_sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  787,
+                  499,
+                  209,
+                  199
+                ],
+                "margin": [
+                  178,
+                  140,
+                  327,
+                  337
+                ],
+                "source_anchor": [
+                  877,
+                  694
+                ],
+                "rgba_sha256": "cc7ccd6ed4057dc7f8c2314b350c1a517d4a13f2ed069d45ad3bdc03519d41ed"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  783,
+                  1234,
+                  218,
+                  190
+                ],
+                "margin": [
+                  173,
+                  150,
+                  318,
+                  346
+                ],
+                "source_anchor": [
+                  878,
+                  1419
+                ],
+                "rgba_sha256": "ff9cb8ffcd0a6da595d81eca51590b26f821e6568237cc5bf247d6948cfee64b"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 201.0,
+            "canvas_size": [
+              536,
+              536
+            ],
+            "foot": [
+              268,
+              335
+            ]
+          },
+          "source_kind": "preserved_existing"
+        },
+        {
+          "role": "run",
+          "direction": "E",
+          "animation": "run_0",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-front4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-front4-v01.png",
+          "source_sha256": "0940972339762385cc587d9b12e961e24293e06d44848a77bcf3d1e617c4b5ef",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  104,
+                  20,
+                  264,
+                  222
+                ],
+                "margin": [
+                  204,
+                  147,
+                  320,
+                  362
+                ],
+                "source_anchor": [
+                  192,
+                  238
+                ],
+                "rgba_sha256": "1fd2c60b721f04fa664c539624d56a46061978ced5580b2f1506ec82a0524b5a"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  467,
+                  11,
+                  255,
+                  232
+                ],
+                "margin": [
+                  183,
+                  137,
+                  329,
+                  352
+                ],
+                "source_anchor": [
+                  576,
+                  239
+                ],
+                "rgba_sha256": "785da13891e6a6edb168319cb35d3c74b7d16ad92994891dd18b9bcaed6ad3e5"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  826,
+                  25,
+                  284,
+                  214
+                ],
+                "margin": [
+                  158,
+                  155,
+                  300,
+                  370
+                ],
+                "source_anchor": [
+                  960,
+                  235
+                ],
+                "rgba_sha256": "c703c9eadfce689f00847e208166041870fbebd82141b422045f30ee27929453"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  1226,
+                  12,
+                  260,
+                  236
+                ],
+                "margin": [
+                  174,
+                  133,
+                  324,
+                  348
+                ],
+                "source_anchor": [
+                  1344,
+                  244
+                ],
+                "rgba_sha256": "a071e4e3d45da14217296e7f2e4cd10167a1b626bc53378f0027f104aca96005"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 218.0,
+            "canvas_size": [
+              584,
+              584
+            ],
+            "foot": [
+              292,
+              365
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "run",
+          "direction": "SE",
+          "animation": "run_1",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-front4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-front4-v01.png",
+          "source_sha256": "0940972339762385cc587d9b12e961e24293e06d44848a77bcf3d1e617c4b5ef",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  96,
+                  264,
+                  234,
+                  226
+                ],
+                "margin": [
+                  196,
+                  143,
+                  350,
+                  358
+                ],
+                "source_anchor": [
+                  192,
+                  486
+                ],
+                "rgba_sha256": "ac05745712b2a7bdc9d18e74799bea50a3a01b3673e15497e98e5b9015ffd92a"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  468,
+                  260,
+                  246,
+                  239
+                ],
+                "margin": [
+                  184,
+                  130,
+                  338,
+                  345
+                ],
+                "source_anchor": [
+                  576,
+                  495
+                ],
+                "rgba_sha256": "298c896f9220797cf4d6493b6b139e73c47807c1bb554ed45ac40aa5836dfb17"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  847,
+                  267,
+                  251,
+                  232
+                ],
+                "margin": [
+                  179,
+                  137,
+                  333,
+                  352
+                ],
+                "source_anchor": [
+                  960,
+                  495
+                ],
+                "rgba_sha256": "921d284a855514e83ae9b903e053171baede9167dbb7c8e9f106b833d6000235"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  1235,
+                  261,
+                  243,
+                  234
+                ],
+                "margin": [
+                  183,
+                  135,
+                  341,
+                  350
+                ],
+                "source_anchor": [
+                  1344,
+                  491
+                ],
+                "rgba_sha256": "4debf45fb986c62dc9a3844bcc855e69a3319719cf1c90451cd0135ffdd16cc2"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 218.0,
+            "canvas_size": [
+              584,
+              584
+            ],
+            "foot": [
+              292,
+              365
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "run",
+          "direction": "S",
+          "animation": "run_2",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-front4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-front4-v01.png",
+          "source_sha256": "0940972339762385cc587d9b12e961e24293e06d44848a77bcf3d1e617c4b5ef",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  109,
+                  519,
+                  181,
+                  244
+                ],
+                "margin": [
+                  209,
+                  125,
+                  403,
+                  340
+                ],
+                "source_anchor": [
+                  192,
+                  759
+                ],
+                "rgba_sha256": "83b6a3fbfc11bd40043658ed35df26137d429203d0511b87f8dda2d916f9125f"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  474,
+                  519,
+                  201,
+                  244
+                ],
+                "margin": [
+                  190,
+                  125,
+                  383,
+                  340
+                ],
+                "source_anchor": [
+                  576,
+                  759
+                ],
+                "rgba_sha256": "beaa015bf9dd88d7d64c811be2b03a9131ab1309638d19b7f0dc048501079467"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  865,
+                  519,
+                  189,
+                  229
+                ],
+                "margin": [
+                  197,
+                  140,
+                  395,
+                  355
+                ],
+                "source_anchor": [
+                  960,
+                  744
+                ],
+                "rgba_sha256": "138aa0a9d991021883bf8482f43ee3b35c4f6891636cc0ec3ab763d1c63f1cc0"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  1230,
+                  517,
+                  213,
+                  249
+                ],
+                "margin": [
+                  178,
+                  120,
+                  371,
+                  335
+                ],
+                "source_anchor": [
+                  1344,
+                  762
+                ],
+                "rgba_sha256": "22d55d47e9945106a069a1a87b9baa5fa3bb24d85b3baf33c0fc887077d038eb"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 218.0,
+            "canvas_size": [
+              584,
+              584
+            ],
+            "foot": [
+              292,
+              365
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "run",
+          "direction": "SW",
+          "animation": "run_3",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-front4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-front4-v01.png",
+          "source_sha256": "0940972339762385cc587d9b12e961e24293e06d44848a77bcf3d1e617c4b5ef",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  81,
+                  784,
+                  235,
+                  214
+                ],
+                "margin": [
+                  181,
+                  155,
+                  349,
+                  370
+                ],
+                "source_anchor": [
+                  192,
+                  994
+                ],
+                "rgba_sha256": "34bf485839d49617feafc69b20a96a477b8c9a01abfe487e12feabe70f77b7e2"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  446,
+                  781,
+                  246,
+                  232
+                ],
+                "margin": [
+                  162,
+                  137,
+                  338,
+                  352
+                ],
+                "source_anchor": [
+                  576,
+                  1009
+                ],
+                "rgba_sha256": "22b3a1b34a65f09c43dc627b8ed0be3f2d1d876bc0a1126c2741f14982373f1f"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  846,
+                  782,
+                  230,
+                  222
+                ],
+                "margin": [
+                  178,
+                  147,
+                  354,
+                  362
+                ],
+                "source_anchor": [
+                  960,
+                  1000
+                ],
+                "rgba_sha256": "6de42564f29db29e339ced173ab6715a7fbe191bf4e72c2fff32a3a294c7f847"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  1212,
+                  781,
+                  247,
+                  226
+                ],
+                "margin": [
+                  160,
+                  143,
+                  337,
+                  358
+                ],
+                "source_anchor": [
+                  1344,
+                  1003
+                ],
+                "rgba_sha256": "ccb10ee309dcbac0cdb9b54218663fde25564d2208c0b16179bc1b8bd97ecc8a"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 218.0,
+            "canvas_size": [
+              584,
+              584
+            ],
+            "foot": [
+              292,
+              365
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "run",
+          "direction": "W",
+          "animation": "run_4",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-back4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-back4-v01.png",
+          "source_sha256": "b34bb0e711d580ac156da5c0f1b7905e7a3b0af687a697a5ff606b848e7a3e88",
+          "geometry": {
+            "image_size": [
+              1367,
+              1151
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  47,
+                  15,
+                  241,
+                  249
+                ],
+                "margin": [
+                  212,
+                  175,
+                  431,
+                  423
+                ],
+                "source_anchor": [
+                  171,
+                  260
+                ],
+                "rgba_sha256": "a67de0243da1a87a6de8a33fc13f4880a8fe1033bac184f2cf3a4d530fc3169b"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  384,
+                  18,
+                  234,
+                  246
+                ],
+                "margin": [
+                  207,
+                  178,
+                  438,
+                  426
+                ],
+                "source_anchor": [
+                  513,
+                  260
+                ],
+                "rgba_sha256": "f83430ea8a2da86875a851eec6e3a66f728a8e3386870b44869965ee64a001a6"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  732,
+                  16,
+                  241,
+                  248
+                ],
+                "margin": [
+                  214,
+                  176,
+                  431,
+                  424
+                ],
+                "source_anchor": [
+                  854,
+                  260
+                ],
+                "rgba_sha256": "cbe83a51d54dd25d7565f4da2424f38c390550f2bfeb4ef7d4741815a5e49825"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  1076,
+                  16,
+                  230,
+                  250
+                ],
+                "margin": [
+                  216,
+                  174,
+                  442,
+                  422
+                ],
+                "source_anchor": [
+                  1196,
+                  262
+                ],
+                "rgba_sha256": "8192a16da0cd9373db02896ec29bc9f428496ceb5e04df42956abccee58a0fc8"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 252.0,
+            "canvas_size": [
+              672,
+              672
+            ],
+            "foot": [
+              336,
+              420
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "run",
+          "direction": "NW",
+          "animation": "run_5",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-back4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-back4-v01.png",
+          "source_sha256": "b34bb0e711d580ac156da5c0f1b7905e7a3b0af687a697a5ff606b848e7a3e88",
+          "geometry": {
+            "image_size": [
+              1367,
+              1151
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  59,
+                  303,
+                  221,
+                  255
+                ],
+                "margin": [
+                  224,
+                  169,
+                  451,
+                  417
+                ],
+                "source_anchor": [
+                  171,
+                  554
+                ],
+                "rgba_sha256": "a56944837dc450eddaf5087fb58b2e73990d0bc9f0872fdecf31c894f327025a"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  405,
+                  301,
+                  217,
+                  257
+                ],
+                "margin": [
+                  228,
+                  167,
+                  455,
+                  415
+                ],
+                "source_anchor": [
+                  513,
+                  554
+                ],
+                "rgba_sha256": "4f7ed0f1d24e9e324da424f5f83f119e82966f5a5847c84287a5fe1e4d0d155c"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  743,
+                  301,
+                  214,
+                  258
+                ],
+                "margin": [
+                  225,
+                  166,
+                  458,
+                  414
+                ],
+                "source_anchor": [
+                  854,
+                  555
+                ],
+                "rgba_sha256": "781f5907149519acad0407e33e02a0e4d1134212063236ccab81fbb66dfe0049"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  1107,
+                  298,
+                  204,
+                  262
+                ],
+                "margin": [
+                  247,
+                  162,
+                  468,
+                  410
+                ],
+                "source_anchor": [
+                  1196,
+                  556
+                ],
+                "rgba_sha256": "741747af4029bf9f652b3e93f87a46d25c24f149b42afcbb0fb4f186aa6d5b1c"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 252.0,
+            "canvas_size": [
+              672,
+              672
+            ],
+            "foot": [
+              336,
+              420
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "run",
+          "direction": "N",
+          "animation": "run_6",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-back4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-back4-v01.png",
+          "source_sha256": "b34bb0e711d580ac156da5c0f1b7905e7a3b0af687a697a5ff606b848e7a3e88",
+          "geometry": {
+            "image_size": [
+              1367,
+              1151
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  93,
+                  584,
+                  173,
+                  261
+                ],
+                "margin": [
+                  258,
+                  163,
+                  499,
+                  411
+                ],
+                "source_anchor": [
+                  171,
+                  841
+                ],
+                "rgba_sha256": "6375f12cd4762af3befa4e1b9459b7f911f603d69a43312b69771cd2bf3a3a35"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  415,
+                  584,
+                  177,
+                  260
+                ],
+                "margin": [
+                  238,
+                  164,
+                  495,
+                  412
+                ],
+                "source_anchor": [
+                  513,
+                  840
+                ],
+                "rgba_sha256": "3adab0762f04ec691917a4381d2801b7b4c1446a98b87abbec9b83d1d55566a7"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  764,
+                  585,
+                  172,
+                  262
+                ],
+                "margin": [
+                  246,
+                  162,
+                  500,
+                  410
+                ],
+                "source_anchor": [
+                  854,
+                  843
+                ],
+                "rgba_sha256": "a78971cacb2b72ed3b76c0a314b61f1222079fd4539ef2a1dca3ea5365220dc0"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  1102,
+                  588,
+                  187,
+                  257
+                ],
+                "margin": [
+                  242,
+                  167,
+                  485,
+                  415
+                ],
+                "source_anchor": [
+                  1196,
+                  841
+                ],
+                "rgba_sha256": "f01d33c2649a34071787b3ef08eb4d37f97408137ae3d87dc1662484d4bf0bff"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 252.0,
+            "canvas_size": [
+              672,
+              672
+            ],
+            "foot": [
+              336,
+              420
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "run",
+          "direction": "NE",
+          "animation": "run_7",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-run-back4-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-run-back4-v01.png",
+          "source_sha256": "b34bb0e711d580ac156da5c0f1b7905e7a3b0af687a697a5ff606b848e7a3e88",
+          "geometry": {
+            "image_size": [
+              1367,
+              1151
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  73,
+                  865,
+                  226,
+                  258
+                ],
+                "margin": [
+                  238,
+                  166,
+                  446,
+                  414
+                ],
+                "source_anchor": [
+                  171,
+                  1119
+                ],
+                "rgba_sha256": "e9f060ae531125bfb506027595942dae44e2789a4b94b209de5a0c580ee316c4"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  418,
+                  865,
+                  220,
+                  258
+                ],
+                "margin": [
+                  241,
+                  166,
+                  452,
+                  414
+                ],
+                "source_anchor": [
+                  513,
+                  1119
+                ],
+                "rgba_sha256": "154ff1aca14d98cbd8c966e8412d73e40388def85db035020db3a8de43895e13"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  759,
+                  867,
+                  229,
+                  260
+                ],
+                "margin": [
+                  241,
+                  164,
+                  443,
+                  412
+                ],
+                "source_anchor": [
+                  854,
+                  1123
+                ],
+                "rgba_sha256": "51acf252c838231f3b8b3e028d1cecb854fbe91f20451ed775d5f213fed3157f"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  1102,
+                  866,
+                  226,
+                  253
+                ],
+                "margin": [
+                  242,
+                  171,
+                  446,
+                  419
+                ],
+                "source_anchor": [
+                  1196,
+                  1115
+                ],
+                "rgba_sha256": "48c094b7638bf3b7ef391a411f43e677a1fe64d56ec5bffaad12ea03c2aa191a"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 252.0,
+            "canvas_size": [
+              672,
+              672
+            ],
+            "foot": [
+              336,
+              420
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        },
+        {
+          "role": "death",
+          "direction": "S",
+          "animation": "death_2",
+          "texture": "assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/fishman-death-S3-v01.png",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch04-normal-hold/raw/fishman-death-S3-v01.png",
+          "source_sha256": "06c92209b01329d9f11282ff947e8c3afc7ec4cad569c821c50a5cf7bbb01422",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  214,
+                  57,
+                  548,
+                  503
+                ],
+                "margin": [
+                  390,
+                  331,
+                  780,
+                  825
+                ],
+                "source_anchor": [
+                  488,
+                  556
+                ],
+                "rgba_sha256": "2e87e8295f7845db60f7943d6e9fb08503dd4f42aa04d756dfbda526ebf00271"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  161,
+                  688,
+                  687,
+                  413
+                ],
+                "margin": [
+                  337,
+                  421,
+                  641,
+                  915
+                ],
+                "source_anchor": [
+                  488,
+                  1097
+                ],
+                "rgba_sha256": "b12fd0ce77f555e98db2f244bf9f4669483973ab743f138b567ca90edd1fa36d"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  95,
+                  1224,
+                  823,
+                  231
+                ],
+                "margin": [
+                  271,
+                  603,
+                  505,
+                  1097
+                ],
+                "source_anchor": [
+                  488,
+                  1451
+                ],
+                "rgba_sha256": "cc7507399c4bb05411bd28ee09a736f8d45ed117835d6931a0108e1f8af51252"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 497.0,
+            "canvas_size": [
+              1328,
+              1328
+            ],
+            "foot": [
+              664,
+              830
+            ]
+          },
+          "source_kind": "new_text_brief_source"
+        }
+      ],
+      "quality_review": "HOLD: identity, foot support/contact, source-plane anchors and default Main quality remain unapproved"
+    }
+  },
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "family_adapters": {
+    "monster:에바 왕국 심해어인": {
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/family-adapters/eva_deep_fishman.tres",
+      "native_profile_sha256": "95fc01394fb027603eb0338e8d847cf5e2ea144314d171c1ae77d2d7c1de0903",
+      "source_actor": "monster:알비노 피쉬맨",
+      "frames": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/SpriteFrames.tres",
+      "native_width_ratio": 1.0781563126252505,
+      "new_source_poses": 0,
+      "new_approval": false,
+      "production_connected": false,
+      "quality_review": "HOLD: same-source family adapter identity/contact/default-Main review pending"
+    },
+    "monster:알비노 심해어": {
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/family-adapters/albino_deep_fish.tres",
+      "native_profile_sha256": "fe4a77cfda3300cdfcbcefc51e0a4ed33590a7cd767c272f253c9f4c2ce54488",
+      "source_actor": "monster:알비노 피쉬맨",
+      "frames": "res://assets/actors/eight_direction/monster_staging/batch04/albino_fishman/r001/SpriteFrames.tres",
+      "native_width_ratio": 1.0781563126252505,
+      "new_source_poses": 0,
+      "new_approval": false,
+      "production_connected": false,
+      "quality_review": "HOLD: same-source family adapter identity/contact/default-Main review pending"
+    }
+  }
+}

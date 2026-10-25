@@ -1,0 +1,189 @@
+{
+  "status": "AUTHOR_FINITE_FOOT_WIDTH_AND_YAW_HYPOTHESIS_PENDING_INDEPENDENT_ACTUAL_REVIEW",
+  "source_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+  "physical_candidate_proof": {
+    "path": "/workspace/scratch/girtas-NE-run-new-contacts-physical-candidate-v02/authored-native-sole-projected-ground-root-candidate-v01.json",
+    "sha256": "d702d9ee6a61327d9cbaa1338ac1a2f66f08603ec971f5d94c16d34d11a0c937"
+  },
+  "m": -0.5902918298980975,
+  "K": 0.8914611308665146,
+  "distinction": "Heel center lane \u00b18 canonical is stance/ground-root uncertainty. It is not the entire finite shoe footprint. A whole sole should not be forced onto one fixed lateral slice. Negative gaps in that center-slice diagnostic remain exposed; they are not silently accepted as physical PASS.",
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+      "source_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+      "heel_center_lane_nominal": -50,
+      "heel_stance_uncertainty": [
+        -58,
+        -42
+      ],
+      "observed_sole_pixels": [
+        {
+          "native_xy": [
+            622,
+            1019
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -55.62506076306525,
+          "offset_from_heel_lane_nominal_canonical": -5.62506076306525
+        },
+        {
+          "native_xy": [
+            630,
+            1020
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -52.22986012993114,
+          "offset_from_heel_lane_nominal_canonical": -2.22986012993114
+        },
+        {
+          "native_xy": [
+            637,
+            1021
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -49.18489402884973,
+          "offset_from_heel_lane_nominal_canonical": 0.8151059711502668
+        },
+        {
+          "native_xy": [
+            645,
+            1021
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -46.38301777242803,
+          "offset_from_heel_lane_nominal_canonical": 3.6169822275719667
+        },
+        {
+          "native_xy": [
+            660,
+            1021
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -41.12949979163732,
+          "offset_from_heel_lane_nominal_canonical": 8.870500208362678
+        },
+        {
+          "native_xy": [
+            680,
+            1019
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -35.31145790400785,
+          "offset_from_heel_lane_nominal_canonical": 14.688542095992148
+        },
+        {
+          "native_xy": [
+            700,
+            1019
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -28.306767262953578,
+          "offset_from_heel_lane_nominal_canonical": 21.693232737046422
+        },
+        {
+          "native_xy": [
+            720,
+            1016
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -23.082049752036514,
+          "offset_from_heel_lane_nominal_canonical": 26.917950247963486
+        },
+        {
+          "native_xy": [
+            740,
+            1011
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": -19.043980994544263,
+          "offset_from_heel_lane_nominal_canonical": 30.956019005455737
+        }
+      ],
+      "note": "Each requiredL is a conditional diagnostic, not a floor certificate or shoe-anatomy measurement. Toe/outer corners may differ from heel lane due to finite width, yaw and heel roll. Observed perimeter points are not all heel-center samples."
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-v04.png",
+      "source_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+      "heel_center_lane_nominal": 79,
+      "heel_stance_uncertainty": [
+        71,
+        87
+      ],
+      "observed_sole_pixels": [
+        {
+          "native_xy": [
+            922,
+            1012
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 71.1518272266969,
+          "offset_from_heel_lane_nominal_canonical": -7.848172773303105
+        },
+        {
+          "native_xy": [
+            934,
+            1018
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 79.61393567745138,
+          "offset_from_heel_lane_nominal_canonical": 0.61393567745138
+        },
+        {
+          "native_xy": [
+            950,
+            1016
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 84.42897671249328,
+          "offset_from_heel_lane_nominal_canonical": 5.428976712493281
+        },
+        {
+          "native_xy": [
+            980,
+            1007
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 90.06159928106572,
+          "offset_from_heel_lane_nominal_canonical": 11.061599281065725
+        },
+        {
+          "native_xy": [
+            1000,
+            987
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 84.76180266776436,
+          "offset_from_heel_lane_nominal_canonical": 5.761802667764357
+        },
+        {
+          "native_xy": [
+            1020,
+            981
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 88.51688438014598,
+          "offset_from_heel_lane_nominal_canonical": 9.516884380145981
+        },
+        {
+          "native_xy": [
+            1040,
+            974
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 91.62518906926455,
+          "offset_from_heel_lane_nominal_canonical": 12.62518906926455
+        },
+        {
+          "native_xy": [
+            1060,
+            957
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 88.26572352575239,
+          "offset_from_heel_lane_nominal_canonical": 9.265723525752392
+        },
+        {
+          "native_xy": [
+            1070,
+            940
+          ],
+          "lateral_canonical_if_exactly_on_authored_ground": 81.08838605626016,
+          "offset_from_heel_lane_nominal_canonical": 2.0883860562601626
+        }
+      ],
+      "note": "Each requiredL is a conditional diagnostic, not a floor certificate or shoe-anatomy measurement. Toe/outer corners may differ from heel lane due to finite width, yaw and heel roll. Observed perimeter points are not all heel-center samples."
+    }
+  ],
+  "new3_expected_outer_perimeter_offset_canonical_approximately": 12,
+  "source0_toe_perimeter_may_require_larger_width_or_yaw_so_actual_visual_judgment_required": true,
+  "thresholds_or_guards_changed": false,
+  "source_pixels_changed": false,
+  "physical_status": "HOLD",
+  "actor_approval": false
+}

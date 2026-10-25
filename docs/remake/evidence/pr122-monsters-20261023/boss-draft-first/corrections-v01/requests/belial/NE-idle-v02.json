@@ -1,0 +1,24 @@
+{
+  "slug": "belial",
+  "actor": "monster:탐욕의 여왕 벨리엘",
+  "clip": "NE-idle-v02",
+  "direction": "NE",
+  "role": "idle",
+  "layout": "phase_grid2",
+  "phase_count": 6,
+  "reference_sha256": "99fa487fadadb078fef5bace89a32e54d3cc25548a6625935f425e655ed41728",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique regal demonic queen caster, pale copper skin, long wavy bronze hair, tall branching gold crown with ruby stones, black/gold corseted royal armor and broad ruby-studded pauldrons, rich dark burgundy split gown with gold chains and visible gold armored boots, long black velvet cape with red lining. One gold STAFF with an ornate claw cage holding a red jewel in anatomical RIGHT hand, LEFT hand empty/free for spell gesture. Crown/chain silhouette, no reused Ice Queen wings or purple hair.\nFixed camera throughout this sheet: NORTHEAST REAR three-quarter facing UP-RIGHT. Show back and right side. Anatomical RIGHT weapon arm is near/screenRIGHT, LEFT empty hand far/screenLEFT.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nCORRECTION: The FIRST reference establishes identity ONLY and may face the wrong side. The SECOND reference establishes a reviewed same-character camera direction. Adopt the required camera below consistently for ALL SIX poses; never copy the first reference camera automatically.\nBACK RIGHT three-quarter: BACK of head, cape and shoulders dominate; no front breastplate/bodice or frontal face. Never front-right.\nExactly ONE anatomical RIGHT-held weapon throughout if the character uses one; never hand swap or duplicate. Left hand stays free. Natural head recoil is fine without changing the overall facing.\nLayout EXACTLY SIX COMPLETE distinct animation poses in TWO COLUMNS and THREE ROWS (2x3), read row-major 0,1 / 2,3 / 4,5, WIDE LANDSCAPE transparent canvas. Keep each figure body about200px high with identical scale. Each full silhouette including extended wings, scythe, axe, staff, sword, tail and cape must fit comfortably inside its own large cell with generous empty alpha gutters and outside margins. No pose or weapon intersects another; no anatomy reaches canvas edge. No floor/shadow/effects/text. Preserve character identity and action sequence. Not flipped, no mirrored anatomy.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/canonical-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/N-idle-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "corrects": "NE-idle-v01",
+  "confirmed_causes": [
+    "authored_camera_facing_mismatch"
+  ],
+  "secondary_camera_reference": "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/N-idle-v01.png",
+  "secondary_reference_sha256": "214d672613c6198b0c4a10c493cfe86cee974fe7c60bbff42602e33dfa8501dc"
+}

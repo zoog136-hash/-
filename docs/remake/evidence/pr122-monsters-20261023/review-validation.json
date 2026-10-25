@@ -1,0 +1,33 @@
+{
+  "schema": "pr122-monster-recheck-validation-v1",
+  "reviewed_source_commit": "a6e8a8dec7aa5882e15eef72a238f1406a6626a6",
+  "manifest_file_entries_verified": 209,
+  "manifest_bytes_verified": 102449957,
+  "manifest_SHA256_mismatches": 0,
+  "normal_exact_membership": 258,
+  "boss_exact_membership": 60,
+  "existing_approved_normal_included": 221,
+  "existing_approved_boss_included": 43,
+  "baseline_classification_and_production_statuses_unchanged": true,
+  "asset_and_runtime_catalog_diff_vs_reviewed_source": [],
+  "resource_integrity_check": {
+    "command": "python3 tools/check_resource_integrity.py --root .",
+    "exit_code": 0,
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026
+  },
+  "scope_generation_check": {
+    "command": "python3 tools/reclassify_pr122_monsters.py --check",
+    "exit_code": 0
+  },
+  "Godot_logs_without_errors": [
+    "review-normal-frames/godot-run.txt",
+    "review-boss-runtime/godot-run.txt"
+  ],
+  "full_CI_repeated": false,
+  "chat_image_or_base64_output": false,
+  "approval_mutations": 0,
+  "production_status_mutations": 0,
+  "source_and_evidence_remain_separately_reported": true
+}

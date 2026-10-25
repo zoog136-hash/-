@@ -1,0 +1,593 @@
+{
+  "status": "ACTUAL_DEDICATED_N_RUN_SIX_POSES_PENDING_QUALITY_PHYSICAL_CYCLE_AND_GAME",
+  "actor": "transform:413",
+  "role": "run",
+  "direction": "N",
+  "frames": [
+    {
+      "phase": 0,
+      "name": "LEFT-contact",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v04/N-run-phase0-actual-native-rig-v04.png",
+      "sha256": "fd81f8ac2a5a7ec0f2df32f28367f0a30b2ee69b1308a311641e23fecbf2a620",
+      "bytes": 433122,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        -10,
+        -10
+      ],
+      "body_rigid_torso_lean_degrees": 1.75,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_surface_control": [
+            609.0205220031846,
+            626.3436945812322
+          ],
+          "knee_control": [
+            615,
+            710
+          ],
+          "ankle_material_landmark": [
+            625.0,
+            792.0
+          ],
+          "structural_heel": [
+            616.5,
+            850
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0
+        },
+        "R": {
+          "hidden_hip_surface_control": [
+            676.9888061800812,
+            624.2670756829642
+          ],
+          "knee_control": [
+            715,
+            740
+          ],
+          "ankle_material_landmark": [
+            724,
+            655.0
+          ],
+          "structural_heel": [
+            726,
+            764
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          557.8727307471484,
+          425.8121423266582
+        ],
+        "elbow": [
+          536.5407752163218,
+          513.5044890464881
+        ],
+        "wrist": [
+          500.6128164946723,
+          614.6488501453423
+        ]
+      },
+      "left_coat_tail_degrees": -4,
+      "strong_body_components": [
+        {
+          "area": 140059,
+          "bbox": [
+            515,
+            259,
+            1008,
+            1082
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-load-footroll",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v04/N-run-phase1-actual-native-rig-v04.png",
+      "sha256": "0e0e9aeee46b48d8b1811546445a95f21e69b9b71752f2a9e13f4225be085bd3",
+      "bytes": 440627,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        -3,
+        35
+      ],
+      "body_rigid_torso_lean_degrees": 0.5,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_surface_control": [
+            616.0016753851764,
+            670.3839675619284
+          ],
+          "knee_control": [
+            611,
+            803
+          ],
+          "ankle_material_landmark": [
+            625.0,
+            922.97
+          ],
+          "structural_heel": [
+            616.5,
+            983
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.035
+        },
+        "R": {
+          "hidden_hip_surface_control": [
+            683.9990861535401,
+            669.790563148039
+          ],
+          "knee_control": [
+            725,
+            656
+          ],
+          "ankle_material_landmark": [
+            724.5,
+            800.0
+          ],
+          "structural_heel": [
+            733,
+            858
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          569.2406286766172,
+          468.7843532003926
+        ],
+        "elbow": [
+          532.9488868986111,
+          550.1041507820303
+        ],
+        "wrist": [
+          491.604976292294,
+          625.4678095027749
+        ]
+      },
+      "left_coat_tail_degrees": 6,
+      "strong_body_components": [
+        {
+          "area": 143643,
+          "bbox": [
+            543,
+            306,
+            1012,
+            1130
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-drive-flight",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v04/N-run-phase2-actual-native-rig-v04.png",
+      "sha256": "6107ba636c35bf8068c05acdd69e15e268a5911742d350c17307b60bf0c1e10d",
+      "bytes": 421464,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        12,
+        -48
+      ],
+      "body_rigid_torso_lean_degrees": -1.25,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_surface_control": [
+            631.010470808484,
+            586.0401450584793
+          ],
+          "knee_control": [
+            594,
+            719
+          ],
+          "ankle_material_landmark": [
+            584,
+            633.0
+          ],
+          "structural_heel": [
+            582,
+            742
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0
+        },
+        "R": {
+          "hidden_hip_surface_control": [
+            698.9942886499178,
+            587.5235572408295
+          ],
+          "knee_control": [
+            714,
+            612
+          ],
+          "ankle_material_landmark": [
+            689.5,
+            754.0
+          ],
+          "structural_heel": [
+            698,
+            812
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          590.4277863668694,
+          383.1065457617824
+        ],
+        "elbow": [
+          551.2588255459666,
+          436.2647295927842
+        ],
+        "wrist": [
+          536.4406369045544,
+          381.92854196991607
+        ]
+      },
+      "left_coat_tail_degrees": 10,
+      "strong_body_components": [
+        {
+          "area": 137596,
+          "bbox": [
+            564,
+            228,
+            1022,
+            1052
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-contact",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v04/N-run-phase3-actual-native-rig-v04.png",
+      "sha256": "e4d544cd6f39b2edfafe9360ab7534a2283291306ce8e69a97d2d0e3ec5fbdab",
+      "bytes": 423690,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        10,
+        -10
+      ],
+      "body_rigid_torso_lean_degrees": -1.75,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_surface_control": [
+            629.0205220031846,
+            623.6563054187678
+          ],
+          "knee_control": [
+            610,
+            740
+          ],
+          "ankle_material_landmark": [
+            601,
+            655.0
+          ],
+          "structural_heel": [
+            599,
+            764
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0
+        },
+        "R": {
+          "hidden_hip_surface_control": [
+            696.9888061800812,
+            625.7329243170358
+          ],
+          "knee_control": [
+            711,
+            710
+          ],
+          "ankle_material_landmark": [
+            700.0,
+            792.0
+          ],
+          "structural_heel": [
+            708.5,
+            850
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.0
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          590.2102900839168,
+          420.37628697530977
+        ],
+        "elbow": [
+          559.9411983948395,
+          461.4710809073669
+        ],
+        "wrist": [
+          576.6138204839303,
+          406.95481110949504
+        ]
+      },
+      "left_coat_tail_degrees": 4,
+      "strong_body_components": [
+        {
+          "area": 136587,
+          "bbox": [
+            546,
+            267,
+            1019,
+            1091
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-load-footroll",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v04/N-run-phase4-actual-native-rig-v04.png",
+      "sha256": "3fd2ae1fc6465282597b0e7abe3cd9dcd0efec36e49995f440f006643939194d",
+      "bytes": 432771,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        3,
+        35
+      ],
+      "body_rigid_torso_lean_degrees": -0.5,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_surface_control": [
+            622.0016753851764,
+            669.6160324380716
+          ],
+          "knee_control": [
+            600,
+            656
+          ],
+          "ankle_material_landmark": [
+            600.5,
+            800.0
+          ],
+          "structural_heel": [
+            592,
+            858
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0
+        },
+        "R": {
+          "hidden_hip_surface_control": [
+            689.9990861535401,
+            670.209436851961
+          ],
+          "knee_control": [
+            714,
+            803
+          ],
+          "ankle_material_landmark": [
+            700.0,
+            922.97
+          ],
+          "structural_heel": [
+            708.5,
+            983
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": true,
+          "foot_planar_pitch_projection": 1.035
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          578.7661490179603,
+          467.23102988168216
+        ],
+        "elbow": [
+          543.2787957228053,
+          522.9234688308326
+        ],
+        "wrist": [
+          544.6190925303061,
+          483.9336803668283
+        ]
+      },
+      "left_coat_tail_degrees": -5,
+      "strong_body_components": [
+        {
+          "area": 141004,
+          "bbox": [
+            522,
+            309,
+            1015,
+            1133
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-drive-flight",
+      "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v04/N-run-phase5-actual-native-rig-v04.png",
+      "sha256": "912575018a1028b1c9617e8d215cad8efbab561377d5e0e1cc0a8f248df85309",
+      "bytes": 428679,
+      "physical_C": 1920,
+      "common_rig_root_in_unpadded_frame": [
+        662.8125,
+        917.6920531878804
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "body_node_bob": [
+        -12,
+        -48
+      ],
+      "body_rigid_torso_lean_degrees": 1.25,
+      "joint_controls": {
+        "L": {
+          "hidden_hip_surface_control": [
+            607.010470808484,
+            587.9598549415207
+          ],
+          "knee_control": [
+            611,
+            612
+          ],
+          "ankle_material_landmark": [
+            635.5,
+            754.0
+          ],
+          "structural_heel": [
+            627,
+            812
+          ],
+          "complete_shoe_material": "front",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0
+        },
+        "R": {
+          "hidden_hip_surface_control": [
+            674.9942886499178,
+            586.4764427591705
+          ],
+          "knee_control": [
+            731,
+            719
+          ],
+          "ankle_material_landmark": [
+            742,
+            633.0
+          ],
+          "structural_heel": [
+            744,
+            742
+          ],
+          "complete_shoe_material": "back",
+          "paired_part_mirror": false,
+          "foot_planar_pitch_projection": 1.0
+        }
+      },
+      "freeLEFTarm": {
+        "shoulder": [
+          557.6145728129068,
+          386.98959529793433
+        ],
+        "elbow": [
+          526.3676167220347,
+          467.6904486704675
+        ],
+        "wrist": [
+          497.29098108108894,
+          510.3349003588605
+        ]
+      },
+      "left_coat_tail_degrees": -9,
+      "strong_body_components": [
+        {
+          "area": 139146,
+          "bbox": [
+            502,
+            222,
+            1004,
+            1045
+          ]
+        }
+      ],
+      "status": "ACTUAL_RUN_SOURCE_ART_PENDING_PRIVATE_AND_INDEPENDENT_QC"
+    }
+  ],
+  "fixed_physical_C": 1920,
+  "bodyunit": 1.875,
+  "common_rig_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "native_output_canvas": [
+    1536,
+    1536
+  ],
+  "logical_canvas": 1024,
+  "actual_player_phase_ground_step": [
+    0,
+    132.8727272728626
+  ],
+  "actual_old_calf_residue_removed_alpha16": 156,
+  "actual_run_speed": 262.5,
+  "phase_seconds": 0.064,
+  "cycle_seconds": 0.384,
+  "source_handoff_sha256": "257e6675357a63a8790b8a55732a1851f312a2c6a362bdd31d5a13bc62949763",
+  "semantics": "Actual dedicated articulated native materials and freeLEFTarm/cape/bodybob; no shared motion/color-only loop or fast WALK relabel",
+  "UV": "No t-clamp; inverse map samples alpha-bounded semantic real material, each bone region preclipped with <=7px joint overlap. Complete hand and counter/stiletto are explicitly whole real material groups.",
+  "physical_limitations": [
+    "Hip/knee controls are a chosen constructive rig, not uniquely measured hidden 3D joints.",
+    "Toe occlusion/true sole support and AIR need independent finite model/art verification.",
+    "Projected part lengths alone are not fixed-bone or actual gait approval."
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

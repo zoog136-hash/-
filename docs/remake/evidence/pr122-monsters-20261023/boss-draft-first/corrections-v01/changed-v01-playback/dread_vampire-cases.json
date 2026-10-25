@@ -1,0 +1,76 @@
+[
+  {
+    "key": "monster:공포의 뱀파이어",
+    "slug": "dread_vampire_attack",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+    "roles": [
+      "attack"
+    ],
+    "directions": [
+      "E",
+      "N",
+      "NE",
+      "NW"
+    ],
+    "run_seconds": 1.05,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:공포의 뱀파이어",
+    "slug": "dread_vampire_hit",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+    "roles": [
+      "hit"
+    ],
+    "directions": [
+      "E",
+      "NW",
+      "S",
+      "SE",
+      "SW"
+    ],
+    "run_seconds": 1.05,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:공포의 뱀파이어",
+    "slug": "dread_vampire_idle",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+    "roles": [
+      "idle"
+    ],
+    "directions": [
+      "N",
+      "S"
+    ],
+    "run_seconds": 1.05,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:공포의 뱀파이어",
+    "slug": "dread_vampire_death",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+    "roles": [
+      "death"
+    ],
+    "directions": [
+      "S"
+    ],
+    "run_seconds": 1.05,
+    "idle_seconds": 1.25
+  },
+  {
+    "key": "monster:공포의 뱀파이어",
+    "slug": "dread_vampire_run",
+    "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+    "roles": [
+      "run"
+    ],
+    "directions": [
+      "S",
+      "SW"
+    ],
+    "run_seconds": 1.05,
+    "idle_seconds": 1.25
+  }
+]

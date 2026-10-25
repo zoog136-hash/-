@@ -1,0 +1,27 @@
+{
+  "actor": "monster:잔혹한 아이리스",
+  "slug": "iris",
+  "clip": "W-run-v02",
+  "role": "run",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/W-run-v02.png",
+  "source_sha256": "7a790169ae2292797a2ab273acaaf5efa513d79d39134e772813d07c529268a9",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 7,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      80883,
+      80283,
+      78701,
+      77783,
+      75495,
+      73527,
+      4628
+    ]
+  },
+  "status": "HOLD",
+  "cause": "physical_component_count",
+  "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots"
+}

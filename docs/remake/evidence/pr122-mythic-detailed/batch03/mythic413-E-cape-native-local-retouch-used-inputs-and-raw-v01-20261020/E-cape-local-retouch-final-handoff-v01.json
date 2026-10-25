@@ -1,0 +1,60 @@
+{
+  "status": "ONE_ACTUAL_LOCAL_CAPE_FABRIC_RETOUCH_RAW_PRESERVED_PENDING_FIXED_CROP_MASKED_COMPOSITION_AND_INDEPENDENT_QC",
+  "key": "transform:413",
+  "direction": "E",
+  "motion_owner": "/root/mythic413_n_walk_load_fresh",
+  "actual_retouch_service_calls": 1,
+  "service_retries": 0,
+  "output": "/workspace/scratch/mythic413-E-cape-clearplate-private-retouch-fresh-20261020-v01/service-E-cape-local-retouch-native-r001.png",
+  "sha256": "d5c13d5f8a7cf6c2fa2472b46f9abe306475c79db5b7a1c30f5e9baec38764f3",
+  "bytes": 1212940,
+  "actual_native_size": [
+    1254,
+    1254
+  ],
+  "logical_crop_size": [
+    250,
+    250
+  ],
+  "logical_crop_origin_in_original_native": [
+    260,
+    770
+  ],
+  "requested_source_native_rect": [
+    260,
+    770,
+    510,
+    1020
+  ],
+  "replacement_mask_pixels": 5113,
+  "replacement_mask_source": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/E-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-cape-native-mask-250.png",
+    "sha256": "714410d22f63c6b810252090eca7f857b18c1b24ec1554be0fcbf5438ae96335",
+    "bytes": 686
+  },
+  "source_original_immutable": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "35883c6c11693141bd3988c47399298a1cd37152ba12403e9d94678ab75fbf62",
+    "bytes": 974323
+  },
+  "original_source_C_root_or_unit_modified": false,
+  "child_composited_or_resampled_raw": false,
+  "original_outside_RGBA_exact_pass_claimed": false,
+  "actor_approvals_added": 0,
+  "animation_clips_added": 0,
+  "self_visual_observations": [
+    "New continuous royal-blue fabric and broad curved reflective gold hem were actually painted where the pole had occluded the cape.",
+    "Provider also removed staff outside the white replacement area, so this raw entire crop must never replace the original source crop.",
+    "Returned native canvas1254square differs from requested logical250square; registration and composition inside only the original5113pixel mask belong to the source author.",
+    "Preserve original outside-mask RGBA exactly, original emblems/silhouette, C/root/body unit and all original source files."
+  ],
+  "limitations": [
+    "No independent visual/source approval, native registration, masked outsideRGBA proof, rig, game or actor completion is inferred.",
+    "No second retouch service was called."
+  ],
+  "cumulative_image_bytes": 4234988,
+  "prior_ledger_sha256": "35af5b0ea423bc2bcee1bc9d81331cea2d147204c40a3591474b4ea7f7b3a5ed",
+  "images_or_Base64_forwarded_to_parent": false,
+  "private_preview": "/workspace/scratch/mythic413-E-cape-clearplate-private-retouch-fresh-20261020-v01/private-returned-local-cape-retouch-quality-v01.jpg",
+  "private_preview_bytes": 111585
+}

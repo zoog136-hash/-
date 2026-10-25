@@ -1,0 +1,194 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "W",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v02composite01",
+  "status": "SOURCE_COMPLETE_PHYSICAL_REVIEW_HOLD_NOT_APPROVED",
+  "request_kind": "LOSSLESS_REVIEWED_POSE_MAP_ASSEMBLY",
+  "transparent_background": true,
+  "corrective_reason": "Replace uncorrected original W walk with six newly authored faithful model poses with actual alternating anatomicalLEFTnear/RIGHTfar contacts, support/pass and toeoff/reach. Preserve all old originals and ambiguous rejected contact artifacts. This source-only draft is NOT for runtime integration before physical layout review.",
+  "user_authorization": "Continue existing PR122 actual animation production. Private production image tools permitted; main chat images forbidden. Preserve original approvals/assets/colorprofiles.",
+  "requested_at": "2026-10-19T15:13:14.396136+00:00",
+  "prompt": "ExactRGBA assembly of six explicitly owned fully preserved dedicated W walk source poses. No resampling, mirroring, recolor, cleanup or threshold changes.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+    "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+    "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png",
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+    "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+    "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png": "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b",
+    "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0"
+  },
+  "expected_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "layout_revised_poses": 2,
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "canvas_size": 2048,
+    "review_basis": "Nominal geometry-only canvas2048 accepted by strict exact-RGBA assembly. Actual perpose rigid body Cs/supportroot remain HOLD; this is not default2048 runtime approval.",
+    "assembly_proof": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.assembly.json",
+    "assembly_proof_sha256": "32cb5c0e9af45d8f9da9525b616b716947f446b64399cfdfe8bfd379e64a5c56",
+    "actor_approval": false
+  },
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "base_geometry_sha256": "2eb6cfc0a44e90d912dd4f6614474e801985c4fa250dbda8be77c55acedbf73f",
+    "direction": "W",
+    "review_basis": "Exact immutable 1536-cell six-source atlas; expand only automatic crop bounds outward to preserve ALL original alpha>16 body-owned fringe; actual topology+nearest-body guard unchanged, source colors/alpha/coordinates untouched. All six source motions separately independently reviewed. This is geometry-only, no actor/runtime approval.",
+    "regions": [
+      [
+        158,
+        180,
+        1220,
+        1176
+      ],
+      [
+        1924,
+        346,
+        759,
+        843
+      ],
+      [
+        388,
+        1882,
+        759,
+        844
+      ],
+      [
+        1705,
+        1746,
+        1198,
+        1116
+      ],
+      [
+        427,
+        3450,
+        681,
+        780
+      ],
+      [
+        1960,
+        3455,
+        688,
+        769
+      ]
+    ],
+    "nearest_owner_sha256": "ae044b57c5bea7d78a4765cf1c7387fd5fd3aad7a202ce60fd393edfd183a2e4",
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+  },
+  "source_provenance": {
+    "assembly_spec": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/pose-map-complete-owned-regions-v02.json",
+    "assembly_spec_sha256": "33df36b7c067a07dbb59fb809a4a1585f582ca5b97c71bf9ed2d991497c5c850",
+    "assembly_spec_inline": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:267",
+      "direction": "W",
+      "role": "walk",
+      "poses": [
+        {
+          "path": "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+          "source_sha256": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+          "region": [
+            16,
+            8,
+            1220,
+            1176
+          ],
+          "rgba_sha256": "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase0: IndependentnearLEFTfrontcontact hip/thigh/knee/heel proven332755c6; farRIGHTreartoe, longrobe/identityPASS. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+          "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+          "region": [
+            5,
+            63,
+            759,
+            843
+          ],
+          "rgba_sha256": "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase1: IndependentnearLEFTflat support/farRIGHTliftedpassing626b817e; modelandownershipPASS. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+          "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+          "region": [
+            763,
+            62,
+            759,
+            844
+          ],
+          "rgba_sha256": "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4",
+          "source_pose": 1,
+          "newly_authored": true,
+          "review_basis": "Gamephase2: IndependentnearLEFTtrailingtoe/farRIGHTreachheelhover626b817e; notwholebodyAIR. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png",
+          "source_sha256": "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b",
+          "region": [
+            22,
+            19,
+            1198,
+            1116
+          ],
+          "rgba_sha256": "135ba522ba967e2fac2eb6e50bfbd5f6feb10b99b4c37f3ec5bd2c3a40b2b04c",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase3: IndependentfarRIGHTfrontcontact hip/thigh/frontheel vsnearLEFTrear; exactindependentreview897ec1e2010eb0ea; oppositeLEFT0 proven. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+          "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+          "region": [
+            23,
+            126,
+            681,
+            780
+          ],
+          "rgba_sha256": "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "Gamephase4: OriginalRIGHT4 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTflat+LEFTforegroundpassing, strict2geometryPASS; final layout/full6 independent review pending. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        },
+        {
+          "path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+          "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+          "region": [
+            792,
+            128,
+            688,
+            769
+          ],
+          "rgba_sha256": "6d0e06b35be990ca689d7c550eea30d2dfc62d3ad7db196e732ada706d6648dc",
+          "source_pose": 1,
+          "newly_authored": true,
+          "review_basis": "Gamephase5: OriginalRIGHT5 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTreartoe+LEFTforeheelhover, strict2geometryPASS; final layout/full6 independent review pending. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks."
+        }
+      ],
+      "new_dedicated_gamepose_count": 6,
+      "old_shared_or_legacy_pose_reuse_count": 0,
+      "RIGHT45_original_newly_authored": 2,
+      "RIGHT45_layout_newly_authored": 0,
+      "source_canvas_status": "NOMINAL2048 strictcoverage only; actual perposeC/root proposal pending",
+      "actor_approval": false,
+      "complete_owned_source_region_review_sha256": "57ac0ea5b075eaebf078064cc8259418f01c65beafe6fd30b4e1fbf2995c2c5d"
+    }
+  },
+  "runtime_validation": "NOT_RUN_PHYSICAL_LAYOUT_HOLD",
+  "actor_approval": false,
+  "approved_actor_count_added": 0
+}

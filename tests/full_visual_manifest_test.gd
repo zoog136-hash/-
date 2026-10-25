@@ -2,6 +2,7 @@ extends SceneTree
 
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
+const MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
 const FAMILY = preload("res://scripts/monsters/monster_catalog.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 var failed: Array[String] = []
@@ -25,6 +26,14 @@ func _frames(frames: SpriteFrames, key: String) -> int:
 			check(frames.get_frame_texture(name_value, i) != null, "missing texture " + key + "/" + name_value)
 		total += count
 	return total
+
+func _has_run_track(frames: SpriteFrames, profile: TwilightAnimationProfile, facing8: int, facing4: int) -> bool:
+	for name_value: String in [str(profile.animation_names.get("run:" + str(facing8), "")),
+		str(profile.animation_names.get("run", "")), "run_" + str(facing8),
+		"run" + ["_down", "_up", "_left", "_right"][facing4], "run"]:
+		if not name_value.is_empty() and frames.has_animation(name_value) and frames.get_frame_count(name_value) > 0:
+			return true
+	return false
 
 func _run() -> void:
 	var actor: TwilightPlayer = load("res://scenes/Player.tscn").instantiate()
@@ -77,8 +86,13 @@ func _run() -> void:
 			# jumping by two samples the start of the same loop again.
 			actor.motion.gait = 1.0
 			actor.motion.apply_frames(actor.transform_sprite)
-			check(actor.transform_sprite.frame != first, "walking frame advances " + key)
-			check(str(actor.transform_sprite.animation).begins_with("walk"), "walk selects track " + key)
+			check(actor.transform_sprite.frame != first, "movement frame advances " + key)
+			var requested_role: String = "walk" if MOVEMENT_SCOPE.requires_walk(key) else "run"
+			check(actor.motion.state == requested_role, "movement scope selects state " + key)
+			# New run-only scope preserves old WALK sources when no RUN exists.
+			# Every real RUN takes precedence; missing/empty tracks cannot pass.
+			var expected_track: String = "run" if requested_role == "run" and _has_run_track(frames, profile, actor.motion.facing8, actor.motion.facing4) else "walk"
+			check(actor.motion._resolved_role == expected_track and str(actor.transform_sprite.animation).begins_with(expected_track), "movement selects preserved authored track " + key)
 			actor.start_combat_attack(actor.position + direction * 100, .7, profile.motion_style)
 			actor.motion.advance(.10, Vector2.ZERO)
 			actor.motion.apply_frames(actor.transform_sprite)

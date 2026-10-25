@@ -1,0 +1,27 @@
+{
+  "status": "ALL_PIN_GUARDS_RETAINED_AND_MATCH_CURRENT_TESTED_POLICY",
+  "old_manifest_sha256": "b80d47c7d34e43df2718e2709d05e7dd6c5e5669b4dd6e5244f1aebe3ec78d08",
+  "current_manifest_sha256": "74e6307ffda56801cebf9e87f4e705dc8545d8d61d7414719708793e4dc8c5d3",
+  "tool_pins": {
+    "advance_pr122_native_locomotion.py": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e",
+    "stage_pr122_native_locomotion.py": "edd180a7f261515abefc6be6088220be1f2cfd0582bd9ca8d3ed313668c9c303",
+    "bind_pr122_native_locomotion_profiles.py": "ddc4643a78d01d5cbc0529ee31262e73095ff1e989ce71c6d70264c5eb448a62",
+    "checkpoint_pr122_native_clip.py": "f4188835b2c525de6a36d9450ac272c861e04dee3371fe470695fd551cb10fd1",
+    "integrate_pr122_corrective_clip.py": "5271739c9e02d0a743856d4a6338b67dbb1b1fb3630f747fde5dd8690723d9cd",
+    "pr122_native_production_approvals.py": "b3bcb1899d3d363fb183bcd9c28b8c2813b3953fff98b449d1d91b2971fb6287",
+    "pr122_reviewed_runtime_layout.py": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2",
+    "pr122_reviewed_source_regions.py": "8d2745e5cae9412438c282811323dc4d0e80496fe73c4cc69dfed38078db8857",
+    "pr122_transform_motion_scope.py": "0acf14038d22414e3c8b58df04948aeccd5eedbfac207c04caeb0784e3c4c995"
+  },
+  "scope_contract_pins": {
+    "data/pr122_transform_motion_scope.json": "bc896e56c0dd2d91dd8097fb5b33e8d77344b55ca4a5c844337151d1846febab",
+    "scripts/animation/actor_motion.gd": "a1b215e2ac05b38d00b4cc9adcc7631dbc2ebb1d92aab5d6b2704099ccb1f1bb",
+    "scripts/animation/transformation_movement_scope.gd": "bde780fc18bab522c907337fb73a94d3a9f1ff5407ee6dd628241692bf854f56",
+    "tests/pr122_native_player_connection_test.gd": "ff03a36d5046efc53ba74633109b04ecde1ae12adb4836b31e7db027c74f4b5c",
+    "tests/pr122_native_motion_smoke.gd": "bf13e021e8a26737914994f8fc47cefc4ae4e655f4138bda47c24e05bfed8c6c",
+    "tests/pr122_native_action_test.gd": "b879c2d382f0654749f957eff5e01940598f67d4ceccbb9da019ae74992df149"
+  },
+  "functional_helper_changes": false,
+  "guard_or_threshold_waivers": false,
+  "previous_failed_guard_log_preserved": true
+}

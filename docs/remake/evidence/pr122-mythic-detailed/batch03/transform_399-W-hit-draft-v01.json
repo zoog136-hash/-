@@ -1,0 +1,90 @@
+{
+  "name": "진 드래곤 슬레이어",
+  "grade": "신화",
+  "reference": "res://assets/catalog/91797a43d00c9efdab401444.png",
+  "key": "transform:399",
+  "direction": "W",
+  "role": "hit",
+  "reference_sha256": "ada9edb58135b3d3ef6f9957083848cdeca6aefcd2a585214b6011de1187a2d2",
+  "additional_reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png": "4a1fdb45dbd24205342a241e2e7e6e19308653c3a5ee301c261cb936de400125",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-idle-draft-v01.png": "69eb7f8919cd4baa5afda470d639db7297c8a50e63a97ce92b083e092027d9b8"
+  },
+  "policy": "First drafts across active19 before polishing; retain approved267/393 and all413 work. New death S only; no new mythic WALK; no chat images; no final approval inferred.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new W HIT six-pose animation for transform:399, 진 드래곤 슬레이어. First original catalog reference is authoritative for exact identity, original costume, face, hair, skin, colors, armor, ornaments, footwear and original equipment. Other saved drafts are style/identity and facing guides only, never copy their poses, clipping or errors. Create ONE transparent PNG, exactly SIX new full-body poses in THREE equal columns and TWO equal rows, reading order. ALL six must face WEST / screen left. A true side profile facing screen LEFT; the anatomical LEFT side is nearer the viewer, RIGHT is farther. Keep the same original top-down game camera and painted sprite detail, and the same facing throughout. Newly draw the correct body perspective and occlusion; no whole-image mirroring, flipped equipment, recoloring, rotating a static body or generic substitute. Retain original equipment in the correct anatomical hand, with proper grip and connected joints; never invent a weapon, wings or tail absent from the original. Required progression 0: stable guard; 1: impact response; 2: maximum stagger / recoil; 3: counterbalance; 4: regaining control; 5: recovered guard. One nonfatal impact, maximum stagger, counterbalance and recovery to the same living guard; no death, attack, firing or casting. Preserve grip, connected joints and believable support. No blood, gore, wounds or costume damage. Consistent body scale and common floor. Every full figure, complete weapon tip, original hair ornament and full toes/heels must stay entirely inside its cell with generous transparent gutters, no overlap between cells or clipping. No ground, opaque background, scenery, labels, grids, text, logos or extra figures. This is an unapproved first animation draft for local game production, output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/91797a43d00c9efdab401444.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-idle-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-hit-draft-v01.png",
+  "source_sha256": "85d26f9a6a1e6b4fb0d0cf7423590af3c0f19105c2d4c05eb6a6f5c8e28a8052",
+  "source_bytes": 2586612,
+  "generated_original_path": "/workspace/generated_images/exec-de4c3370-cefa-4568-81de-6f62eb7c0244.png",
+  "output_spriteframes": "res://assets/actors/eight_direction/native_locomotion_staging/transform_399/draft001/W-hit-SpriteFrames.tres",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "rgba_sha256": "424e6cca781ea56b686404b4b5b6e639dc6032b2db8d1d793dca87cca89199d8",
+      "visible_pixels": 95674,
+      "border_alpha_pixels": 245
+    },
+    {
+      "index": 1,
+      "rgba_sha256": "81b5c611b1e7374e3a568b9700cf30ec623d27cf1fc3c145656a854d9a9ed614",
+      "visible_pixels": 97399,
+      "border_alpha_pixels": 538
+    },
+    {
+      "index": 2,
+      "rgba_sha256": "920904cd372e4925769589c58c2f75ef47d211db7aba3daa63ac51d74abbe769",
+      "visible_pixels": 98821,
+      "border_alpha_pixels": 328
+    },
+    {
+      "index": 3,
+      "rgba_sha256": "6c772e3583cdafcf5927d57a8883b9ff4a6395a4aa6517081d4963ac10bd68f0",
+      "visible_pixels": 99641,
+      "border_alpha_pixels": 187
+    },
+    {
+      "index": 4,
+      "rgba_sha256": "f54eeb8cbcd53e7bb5af0fbb4becdd1643eadfe30957afff2d74cf011d8d2430",
+      "visible_pixels": 105233,
+      "border_alpha_pixels": 233
+    },
+    {
+      "index": 5,
+      "rgba_sha256": "ac11aea082bed9e25e7a77315a1217fe5f0b9915598d4f4eafdfd868aeb3821d",
+      "visible_pixels": 95460,
+      "border_alpha_pixels": 62
+    }
+  ],
+  "geometry_review": "NOT_RUN",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "compiler_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "generation_request_sha256": "d1b13d937358e4f1c233752b4d77decb48a3b65f148f6c892579ae9a9d517f7e",
+  "generation_service": "image_gen.imagegen",
+  "Godot_resource_six_pose_playback": "PASS_ONCE"
+}

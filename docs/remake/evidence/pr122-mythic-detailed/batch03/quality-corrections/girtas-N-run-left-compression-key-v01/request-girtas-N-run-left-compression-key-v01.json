@@ -1,0 +1,36 @@
+{
+  "key": "267",
+  "name": "Girtas",
+  "direction": "N",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "left-compression-key-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "missing_single_run_compression_key",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 1,
+  "intended_anatomical_support": "LEFT",
+  "references": [
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+    "/workspace/scratch/girtas-N-run-left-compression-key-v01/left-compression-ground-and-knee-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+    "/workspace/scratch/girtas-N-run-left-compression-key-v01/left-compression-ground-and-knee-production-guide.png": "8cfe99a5f3a01340ee9bdafde55d10c68f9f73dfada6ec9e6bddb8fe76d94361"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Independent QC found halfcycle row0 still nearly straight LEFT support, so no loaded compression pose exists. Author only this missing single compression with explicitly lowered pelvis and materially bent LEFT knee; retained candidate flight is untouched. Not a fullsheet/halfcycle retry.",
+  "prompt": "Edit the FIRST correct LEFT-FOOT NORTH RUN LANDING KEY into exactly ONE genuinely NEW LEFT-SUPPORT COMPRESSION/LOADING pose, gamephase1, for the SAME unique boss GIRTAS. The current first image is a LANDING key with a long nearly straight LEFT support leg; it is the correct support-side and exact identity authority, but its straight knee MUST CHANGE. SECOND image is an explicit projected physical compression target made from the same actor, not final clothing. Author just this SINGLE missing pose, no two/six-figure sheet.\n\nMANDATORY ACTUAL NEW GEOMETRY: anatomical LEFT boot (imageLEFT in this rear view) stays FLAT ON the same ground directly below the pelvis; LEFT knee BENDS visibly OUT to imageLEFT, then LEFT shin angles BACK IN to the planted ankle. Make a clear zig-zag hip\u2192knee\u2192ankle, not the old near-straight hip-to-boot column. Target roughly70degrees knee flexion (internal knee angle about110degrees), visibly bent and loaded. The pelvis and torso sit substantially LOWER than in the straight landing pose, visibly compressing onto that planted LEFT leg. RIGHT thigh/knee drives much HIGHER forward/up away from camera, RIGHT boot clearly raised; do not change to RIGHT support/LEFT knee-up. In the diagram LEFT chain [246,305]hip\u2192[214,350]knee\u2192[249,395]ankle\u2192flatsole400 shows the actual bend; RIGHT knee is at247 above hip305. Its lowered pelvis is about60 guidepixels down from the same-scale landing key. Follow this real material constraint in the finished GOLD thigh/knee/shin/boot, not labels or mere cloth sway. Reveal enough original leg armor between folded robe panels to see the LEFT bent support knee and LEFT grounded boot. Fold/lift the same long dark robe coherently around crouched legs; do not make the robe a rigid cone hiding the pose.\n\nKeep complete TRUE NORTH rear view heading straight UP away from camera: back of helmet, pale hair, dorsal armor and dark robe back dominate; NO front face/chest/side turn. SAME original physique, head/shoulder/hip proportions, thin hard GOLD radial dorsal spines, long DARK gold-trim robe, gold boots/armor, one long SINUOUS gold-orange weapon in original anatomical RIGHT hand (imageRIGHT), LEFT hand empty. Exactly two arms and two legs, no mirror, weapon-hand swap, redesigned mask, orange flame/feather fan or black segmented trousers. Preserve every spine and full weapon length. This must be a visibly compressed RUN push-off/load pose distinct from the existing long straight LEFT landing key, while retaining the correct support side.\n\nOutput ONE complete original finished character, full transparent alpha0 on1024x1024 requested, body about500-600px, gear envelope<=800x800 with>=96px alpha margin on all sides. Shrink the whole figure uniformly if needed; never crop/shorten gear. NO guide marks, colored skeletons, labels, floor/contact plane, arrows, shadows, aura/outerglow, haze or background. Nothing except ONE whole actor. Source knee/ankle visibility and actual pelvis lowering are essential; a near-straight repeated landing pose is unusable.",
+  "requested_at": "2026-10-19T12:47:21.675508+00:00",
+  "user_authorization": "Production image edit authorized, no main-chat images; parent explicitly authorized this truly missing single compression after independent failed stance review. Exactly one attempt.",
+  "production_guide_proof": "/workspace/scratch/girtas-N-run-left-compression-key-v01/production-guide-proof.json",
+  "production_guide_proof_sha256": "da35229c68e9fe79e7a4fd87723a91b72b8aa5ba830aa7421057523039364f35",
+  "source_identity_review": "/workspace/scratch/girtas-N-run-left-landing-key-v01/result.json",
+  "source_identity_review_sha256": "a2586d4f782843e0ce8ed6f200c1080cf2514d6d5e471dcc8ce22307f839b0b2",
+  "imagegen_attempt_limit": 1,
+  "newly_authored_pose_target": 1,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_final_status": "HOLD_PENDING_COMPLETE_SIX_POSE_QC"
+}

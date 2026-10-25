@@ -1,0 +1,82 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v03peak2",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_pose": 2,
+  "references": [
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png",
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/NE-peak2-two-arm-authority-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496",
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/NE-peak2-two-arm-authority-guide.png": "0ef1eb5a3861649586f27e0f04a53e61cd8dd22dedb453c1490bf4efda6878b0"
+  },
+  "reference_provenance": {
+    "direction": "NE",
+    "selected_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+    "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+    "region": [
+      167,
+      50,
+      498,
+      415
+    ],
+    "reference": "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png",
+    "reference_sha256": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496",
+    "operation": "exact_RGBA_crop_no_resize_no_recolor",
+    "role": "idle",
+    "stage_revision": "r062",
+    "raw_rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511"
+  },
+  "guide_joint_authority": {
+    "coordinates_in_reference": [
+      498,
+      415
+    ],
+    "fixed_RIGHT_should_elbow_grip": [
+      [
+        352,
+        164
+      ],
+      [
+        375,
+        218
+      ],
+      [
+        398,
+        245
+      ]
+    ],
+    "moving_EMPTY_LEFT_shoulder_elbow_wrist": [
+      [
+        256,
+        158
+      ],
+      [
+        211,
+        181
+      ],
+      [
+        223,
+        129
+      ]
+    ],
+    "body_camera": "NE_BACK_RIGHT",
+    "same_arm_replacement_only": true
+  },
+  "transparent_background": true,
+  "corrective_reason": "Materially new SINGLE peak2 production after full6 NEv02 weapon-arm ownership HOLD. Only faithful current NE idle + explicit actual joint authority reference; never invalid hit sheet. Preserve low RIGHT blade chain, move EMPTY far LEFT only.",
+  "user_authorization": "Private production imagegen and bounded private JPEG only, no chat image attachments; parent controls Git/native approvals.",
+  "prompt": "Make ONE full-body NORTH-EAST HIT PEAK2 key pose of the SAME Halpas in reference1. Reference2 is ONLY an arm ownership diagram, never render its marks. True BACK-RIGHT/UP-RIGHT view: helmet REAR and back spinal armor visible, front face and pink chest breastplate hidden. Keep same 3/4 rear camera/hips, exact gold-horn black/gold armor, two solid purple crystal wing fans rooted on upper back, same torn burgundy left/back cape, same compact purple crystal blade and hovering two legs.\n\nANATOMY IS THE ENTIRE EDIT. Follow GREEN diagram chain: existing near/imageRIGHT gold pauldron at (352,164) -> right elbow (375,218) -> LOW right gripping wrist (398,245) in the 498x415 reference coordinates. Preserve this ONE continuous low RIGHT arm holding the same blade beside hip. Do NOT lift it. Do NOT add another right fist, forearm, hand or a disconnected blade. Keep real wrist attached to hilt, no floating weapon.\n\nFollow CYAN diagram for the ONLY moving arm: same far/imageLEFT shoulder (256,158) -> LEFT elbow (211,181) -> EMPTY LEFT wrist (223,129). Redraw the ORIGINAL LEFT down-arm into this bent flinch position; do not leave original down-left arm as well. The empty fist must belong to left shoulder on imageLEFT of rear torso, NOT near/imageRIGHT pauldron. Exactly TWO total arms/hands: one low RIGHT blade grip, one lifted EMPTY LEFT fist. Natural partial far-arm occlusion behind same wing/cape root permitted; do not invent any extra visible hand to explain an occlusion.\n\nA real brief hit peak: head and upper torso recoil a little backward while empty LEFT elbow flexes/fist braces beside back-left helmet/upper shoulder; knees/wing roots/cape absorb jerk. Keep rear-facing back armor readable, no front chest and no camera turn. Low RIGHT blade arm follows torso only a tiny amount and never releases grip. Same body physical proportions, no gear redesign, complete horns/wings/cape/boots/blade. This is ONE peak reaction key, not attack or idle and not a sprite sheet.\n\nTransparent PNG single centered cutout, 1024x1024, whole silhouette inside central800x800 and at least110px clear transparent gutter all sides. Opaque armor/cloth/crystal, crisp game sprite, thin edge antialias. No guide, colored joints/lines, text, numbers, panels, floor, shadows, glow, particles, extra objects or motion trails.",
+  "requested_at": "2026-10-19T13:10:13.759374+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

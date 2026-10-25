@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "PENDING_INDEPENDENT_SOURCE_QC",
+  "source_visual_status": "HOLD",
+  "raw_path": "/workspace/scratch/girtas-SE-run-left-landing-key-v01/girtas-SE-run-left-landing-key-v01.png",
+  "raw_sha256": "553356b11936a9dc23449c888c54abd874948576b54d7bb2dd97350b576e817c",
+  "raw_bytes": 1382849,
+  "request_path": "/workspace/scratch/girtas-SE-run-left-landing-key-v01/request-girtas-SE-run-left-landing-key-v01.json",
+  "request_sha256": "51be6d46e9e481b463050b38136a079d680c52d2f32d829e8d1e90ef58d9fb33",
+  "corrective_reason": "Existing SE run uses unfaithful old model/generic motion. Author a genuinely new faithful dedicated run key with constant-bone solid3D joint/depth guide; current SEidle upperbody/material references contain no old complete leg chain. No completed game pose is redone.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "canvas_size": 2048,
+    "distinct": null
+  },
+  "intended_game_phase": 0,
+  "intended_anatomical_support": "LEFT",
+  "intended_air_lead": null,
+  "visual_findings": [
+    "Author has exhausted private image ledger and has NOT viewed this new source. Correct source identity/absolute SE compass/actual articulated support must be independently reviewed."
+  ],
+  "visual_limitations": [
+    "No actual source stance/identity PASS claimed yet. Source composition, rigid physical scale, all-six authored roots/AIR clearance, compiled SpriteFrames/Player/action QC and actor approval pending."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "newly_authored_pose_candidate_count": 1,
+  "approved_actors_delta": 0,
+  "preview_for_fresh_reviewer": {
+    "path": "/workspace/scratch/girtas-SE-run-left-landing-key-v01/private-independent-source-review.jpg",
+    "bytes": 89146,
+    "sha256": "84ed9b6e4a23f7a8c28bb2179abdad8cd64e35ee20cf05d99415107eedfadbca"
+  }
+}

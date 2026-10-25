@@ -1,0 +1,23 @@
+{
+  "slug": "albino_unicorn",
+  "actor": "monster:알비노 유니콘",
+  "clip": "W-idle-v01",
+  "direction": "W",
+  "role": "idle",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "c4f9c5102fd563160f8e517a5a16eccbd92ead5b76c1ec6634cb3d5972cc35cb",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique large ALBINO UNICORN, exactly ONE horse head, one long twisted ivory forehead horn, pearl-white horse body, pale pink muzzle/inner ears, silver-white long mane and flowing tail, gold/silver small decorative brow and chest pieces, exactly FOUR anatomically connected horse legs and four hooves. No wings, rider, human arms, extra heads or extra horns. Noble strong horse silhouette, complete mane/tail/hooves; attacks by horn thrust and foreleg strike.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction IDLE: Six subtly distinct continuous alert breathing poses: neutral, inhale begins, chest/shoulders rise, peak breath, exhale, near-neutral settle. Grounded feet stay at fixed points; use mild cape/hair/wing motion, no whole-body translations.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders. This creature has NO hand-held weapon; ignore humanoid weapon-side instructions. Preserve four horse legs or eight spider legs exactly as canonical identity.\nRESUME CORRECTION TO CAMERA AND SPACING: All SIX poses face screen LEFT in pure LEFT profile. The reference image gives COSTUME ONLY, never copy its right-facing camera. Show near LEFT empty side and FAR RIGHT weapon arm, with no hand swap. Exactly6 full poses, arranged3 columns x2 rows with at least100px of genuinely empty alpha between complete figures. On a1536x1024 sheet each body is about300px tall, each pose including weapon under400px wide, leaving transparent outer margins and clear row gutters. No overlapping source poses. No label text. Keep every limb/held object connected to its own whole body; do not create detached ornaments.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/albino_unicorn/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "resume_attempt": 1,
+  "resume_reason": "User requested remaining210 after previous provider reset time elapsed; unchanged existing285 sheets are excluded.",
+  "original_request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/albino_unicorn/requests/W-idle-v01.json",
+  "original_request_sha256": "3fde5c23d0bf08d5bf11148e32785c9f0dc84fb9aad70a4876ca851bf01a9f08",
+  "original_hold_cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+  "order": 81
+}

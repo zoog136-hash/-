@@ -1,0 +1,102 @@
+{
+  "status": "PRIVATE_TRUELEG_OCCLUSION_CLOSEUP_NO_HIDDEN_BONE_CLAIM",
+  "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+  "sourceCs_unchanged": true,
+  "samecanonical_zoom": 1200,
+  "views": [
+    {
+      "label": "correctNWidle0 C944",
+      "path": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+      "C": 944,
+      "root": [
+        240,
+        456
+      ],
+      "ROI": [
+        75,
+        210,
+        380,
+        490
+      ],
+      "visible_joint_ranges": {
+        "hip": "OCCLUDED; authored axis240,251 is not visible bone",
+        "nearLEFT_exposed_shin_xyxy": [
+          120,
+          365,
+          175,
+          440
+        ],
+        "nearLEFT_ankle_xyxy": [
+          125,
+          420,
+          165,
+          451
+        ]
+      }
+    },
+    {
+      "label": "NWrun0 C848 actualLEFTland",
+      "path": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/girtas-NW-run-v02rig01.png",
+      "C": 848,
+      "root": [
+        239,
+        403
+      ],
+      "ROI": [
+        105,
+        190,
+        405,
+        460
+      ],
+      "visible_joint_ranges": {
+        "hip": "OCCLUDED behind longrobe; do not use clothV aship",
+        "nearLEFT_upperleg_knee_range_xyxy": [
+          145,
+          285,
+          195,
+          365
+        ],
+        "nearLEFT_shin_ankle_range_xyxy": [
+          125,
+          355,
+          175,
+          440
+        ]
+      }
+    },
+    {
+      "label": "NWrun3 C2376 actualRIGHTland",
+      "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+      "C": 2376,
+      "root": [
+        623,
+        1120
+      ],
+      "ROI": [
+        275,
+        500,
+        820,
+        1090
+      ],
+      "visible_joint_ranges": {
+        "farRIGHT_hip": "OCCLUDED behind robe; authored axis is not visible bone",
+        "farRIGHT_visible_leading_leg_range_xyxy": [
+          300,
+          760,
+          455,
+          985
+        ],
+        "nearLEFT_trailing_knee_shin_boot_range_xyxy": [
+          610,
+          800,
+          790,
+          1050
+        ]
+      }
+    }
+  ],
+  "native_ranges_are_manual_visible_armor_probes_not_exact_joint_centers": true,
+  "private_preview": "/workspace/scratch/girtas-NW-run-reviewed-composite-v03/physical-candidate-v01/private-idle-run0-run3-trueleg-closeups-unchangedCs-v01.jpg",
+  "private_preview_bytes": 120442,
+  "private_preview_sha256": "ac23680e79885f43cdea2c84533e3ea7d1ff8c0d55c7a0d0431ad9a1df9c21b8"
+}

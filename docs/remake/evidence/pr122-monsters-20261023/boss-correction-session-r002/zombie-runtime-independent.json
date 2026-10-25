@@ -1,0 +1,140 @@
+{
+  "schema": "pr122-narrow-runtime-visual-review-v1",
+  "actor": "monster:죽음의 좀비 로드",
+  "revision": "r003",
+  "reviewer_agent": "/root/orc_family_production",
+  "capture_author": "/root",
+  "review_scope": "Read-only secondary review of root-rendered E RUN6 and E idle captures at actual game scale. Reviewer also authored the source candidate; this is no new approval.",
+  "status": "NARROW_RUNTIME_VISUAL_CHECK_PASS_WITH_EXISTING_QUALITY_HOLDS",
+  "engine_declared_by_capture_run": "Godot4.7.2 OpenGL Compatibility",
+  "capture_resolution": [
+    960,
+    640
+  ],
+  "speed_scale_shown_on_captures": 1,
+  "camera_zoom_shown_on_captures": 1,
+  "actual_actor_world_speed_measured": 107.00013178531297,
+  "expected_DB_speed": 107,
+  "velocity_evidence": {
+    "first_position": [
+      1.78333330154419,
+      0.0
+    ],
+    "last_position": [
+      192.600234985352,
+      0.0
+    ],
+    "simulation_delta_seconds": 1.78333333333333
+  },
+  "actual_examined_captures": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 59349,
+      "sha256": "0c78ece192df7f5d2760fd048a3672da9ad01b1e2523086d6d03ddd5246601f3",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/run-E-pre-idle-idle_0-0.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-0.png",
+      "bytes": 58969,
+      "sha256": "3d80c38a6197ca6927555c183dd347fbd42c6b47e752bfbd93ac60ec6562dedd",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/run-E-action-run_0-0.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-1.png",
+      "bytes": 58609,
+      "sha256": "72ae25d0df9a6de37cb24ecd2917cf54697aa3685063d13c36b39b3466dff5ca",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/run-E-action-run_0-1.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-2.png",
+      "bytes": 57121,
+      "sha256": "d4b2dcf916c4eb9ff9017e4b5433974ce44a7ebe3cf94ae91a4084de88cca1a7",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/run-E-action-run_0-2.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-3.png",
+      "bytes": 56543,
+      "sha256": "b877a5a2978ead3e6cc5a51b5536b9a201f05b3f17878f25c7e7c76aaec89f40",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/run-E-action-run_0-3.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-4.png",
+      "bytes": 56603,
+      "sha256": "2f92821704174c7ea5536db8ca66c5d148444e00ef0b5606356e65e3d9a21c4c",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/run-E-action-run_0-4.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-5.png",
+      "bytes": 56051,
+      "sha256": "b13419f604af78683d4cb83c4e7a247a12f0cbdb90a8eeaee9c57fe4ee2a80e3",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/run-E-action-run_0-5.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-E-action-idle_0-0.png",
+      "bytes": 59153,
+      "sha256": "61528af79afccf826dbee96d0da927e8f6ab91ad29a4d0ebc6c995891dad7c99",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/idle-E-action-idle_0-0.png"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-E-action-idle_0-1.png",
+      "bytes": 60258,
+      "sha256": "fef91501582d8c57c63b8e607b607e32fc0753edb451ed4bc66e96ad4a00516f",
+      "runtime_capture": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/captures/idle-E-action-idle_0-1.png"
+    }
+  ],
+  "actual_examined_capture_count": 9,
+  "actual_examined_RUN_frames": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "actual_examined_IDLE_frames": [
+    0,
+    1
+  ],
+  "findings": {
+    "opposite_support_0_to3": "OBSERVED_AT_GAME_SCALE: phase0 large nearRIGHT leg extends to the forward grounded sole. Phase3 bends that near thigh/knee and lifts its foot while the smaller farLEFT leg reaches the lower support line. The selected-source support change survives actual1x rendering.",
+    "body_scale_continuity": "No obvious severe size jump between six RUN captures and the two idle poses. Phase3/5 upper body appears slightly more compact than phase0; source/crouch differences remain a minor continuity observation, not an observed catastrophic scale change.",
+    "identity_and_camera": "Huge belly, broad torso, chains, back/shoulder nails, gray skin and right-facing head/body remain legible at1x. No new camera reversal or obvious body collapse in these nine captures.",
+    "clipping": "No visible viewport/frame cut at head, bare feet, fists or chain/skirt extremities in the examined captures.",
+    "halo": "No conspicuous rectangular brown background or severe halo was apparent at1x on the rendered dark grid. No alpha cleanup was performed or requested.",
+    "idle_shape": "E idle0/1 retain the same boss identity and nominal body size. These are separate idle-E captures plus run-E pre-idle, not proof of a recorded run-stop transition."
+  },
+  "return_to_idle_evidence": {
+    "visible_idle_captures": "run-E pre-idle and separate idle-E0/1 viewed",
+    "same_run_case_last_resolved_clip": "run_0",
+    "actual_run_stop_transition": "NOT_SHOWN_IN_REQUESTED_CAPTURE_SET; do not claim observed. No new approval gate is added."
+  },
+  "existing_holds_preserved": [
+    "Near-half forward swing is weak and phase3/5 similar bent-under stance remains a static gait limitation.",
+    "Full temporal gait polish, authored weight and gameplay target contact remain previously recorded HOLD items."
+  ],
+  "not_reviewed": [
+    "Other directions/attack/hit/death in this narrow task.",
+    "Human mythic-tier approval and a new full gameplay session."
+  ],
+  "approval_preserved": true,
+  "new_approval": false,
+  "approval_mutated": false,
+  "new_render_or_generation": false,
+  "frozen_boss_fix07_files_modified": false,
+  "Git_mutations": 0,
+  "arena_cases": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-cases-zombie-kurtz.json",
+    "bytes": 850,
+    "sha256": "4ba073634d3e8c1ae5011f30b961a23026ceff0077a5009ad7fb60a06f1f6f05"
+  },
+  "samples": {
+    "path": "/workspace/runtime/boss-correction-r002-zombie-kurtz/zombie_lord/samples.json",
+    "bytes": 2062146,
+    "sha256": "120f3dbf7b2418bf02bbe22069967e89631fef1466c366b1831674dfc14e61a8"
+  },
+  "frozen_source_review": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/visual-review.json",
+    "bytes": 4197,
+    "sha256": "8fef0ba9d08c05e5c2dd2076f2c4d8331473ac8aacc8c09d6836c1d05bb7670e"
+  }
+}

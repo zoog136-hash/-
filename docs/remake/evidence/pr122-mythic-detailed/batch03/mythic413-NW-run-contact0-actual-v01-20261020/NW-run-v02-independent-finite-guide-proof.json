@@ -1,0 +1,76 @@
+{
+  "status": "PASS_FINITE_GUIDE_ONLY_NOT_ACTUAL_SOURCE_OR_PHYSICAL_APPROVAL",
+  "guide": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-run-fixedbone-contract-v02.json",
+    "sha256": "106ac28cda9f50de8855e2ad3fb720b1bcf092eb20489da0b1eb918834e2dd67"
+  },
+  "bone_max_variation": 3.552713678800501e-14,
+  "contact_checks": [
+    {
+      "phases": [
+        0,
+        1
+      ],
+      "marker": "L_heel",
+      "source_relative_root_delta": [
+        55.67715940112109,
+        50.10944346100894
+      ],
+      "actual_Player_world_drift": [
+        0.0,
+        -1.0106857879335962e-14
+      ]
+    },
+    {
+      "phases": [
+        3,
+        4
+      ],
+      "marker": "R_heel",
+      "source_relative_root_delta": [
+        55.677159401121116,
+        50.10944346100899
+      ],
+      "actual_Player_world_drift": [
+        6.064114727601577e-15,
+        3.3689526264453205e-15
+      ]
+    }
+  ],
+  "perpose_packing_exactly_compensated_by_anchors": true,
+  "all_guide_alpha_margins_at_least12": true,
+  "flight_clearances": {
+    "2": {
+      "L": {
+        "guide_Z": 16.39287128866741,
+        "actual_Player_vertical_clearance_world": 6.473129141612817
+      },
+      "R": {
+        "guide_Z": 20.447085729384874,
+        "actual_Player_vertical_clearance_world": 8.074035607626376
+      }
+    },
+    "5": {
+      "L": {
+        "guide_Z": 20.447085729384874,
+        "actual_Player_vertical_clearance_world": 8.074035607626376
+      },
+      "R": {
+        "guide_Z": 16.39287128866741,
+        "actual_Player_vertical_clearance_world": 6.473129141612817
+      }
+    }
+  },
+  "contact_and_load_knee_angles": [
+    {
+      "L": 127.13864486777067,
+      "R": 74.96916231255621
+    },
+    {
+      "L": 100.92277471780781,
+      "R": 42.46372495170882
+    }
+  ],
+  "appearance_requirement": "Actual new source must be true NW rear3/4 with anatomicalRIGHT far hand gripping staff; v02walk has wrongLEFT hand and is not an approved master",
+  "actor_approval_added": 0
+}

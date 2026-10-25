@@ -1,0 +1,31 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v03pair13",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 2,
+  "requested_poses": 2,
+  "newly_authored_poses": 2,
+  "game_pose_map": [
+    1,
+    3
+  ],
+  "references": [
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Two missing distinct reaction flinch1/release3 from verified two-arm NEpeak2 and correct selected NEidle only. Continuous LOW imageRIGHT weapon chain, imageLEFT EMPTY arm alone moves. No old failed hit reference/full6 retry.",
+  "prompt": "Draw TWO and ONLY TWO new HIT-REACTION poses of this EXACT same Halpas in a transparent TWO-COLUMN ONE-ROW image. Primary reference1 is the verified correct peak2 anatomy, reference2 is correct neutral NE idle. Both references are SAME NE BACK-RIGHT camera. Keep the original closed gold-horn helmet REAR, spinal/back armor, hidden front face/pink chest, black/gold segmented plate, TWO purple crystal fan wings rooted on back, torn LEFT-back burgundy cape and ONE short broad purple blade. Two full hovering leg chains, original proportions. No change of camera, body/pelvis plane, model, blade or gear.\n\nMOST IMPORTANT: EXACTLY TWO ARMS, as the GOOD peak reference1. ImageRIGHT near/right gold shoulder -> upperarm -> elbow -> LOW forearm -> SAME closed hand continuously gripping the SAME blade beside hip. This low RIGHT weapon arm stays anatomically connected and low in BOTH poses. Do not raise an empty right fist or leave a floating blade. The OTHER imageLEFT/far LEFT arm alone changes posture. It begins at the same LEFT shoulder beside wing root; redraw that same arm, never add a new left arm over an old downarm. No third arm/hand, no shoulder ownership swap.\n\nLEFT IMAGE = reaction FLINCH1, between neutral0 and verified peak2. Empty LEFT elbow bends outward/back-left and empty fist rises only to LEFT SHOULDER height, well LOWER than the peak2 fist above helmet in reference1. Small initial head/upper-torso backward jerk, wing root tenses and cape lifts a little; NE back-plane remains. RIGHT grip/blade remain low beside same hip.\nRIGHT IMAGE = RELEASE3, immediately after verified peak2. Empty LEFT elbow descends, EMPTY LEFT fist is below left shoulder at upper-rib level as arm unfolds toward guard. Head and upper torso already easing toward neutral, not same pose as flinch1: less backward lean, lower wrist and elbow, wings relax/cape follows. RIGHT shoulder-elbow-wrist-blade chain remains continuously low. Both are genuinely different motion phases, never mirrored/doubled images, no attack gesture, no body spin.\n\nTransparent 1792x1024 PNG, TWO complete figures only, one in each half. Same head/hip physical pixel size for both, full silhouettes inside central720x780 of each896x1024 half, at least80px clear margins, no cropped horn/wing/cape/boot/blade. Opaque materials, crisp detailed game cutout, thin AA, alpha0 background/gaps. No guide marks, labels, text, panels, shadows, floor, glow, haze, particles, trails, extra objects or afterimages.",
+  "requested_at": "2026-10-19T13:13:44.019735+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

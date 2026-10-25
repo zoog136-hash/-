@@ -1,0 +1,58 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_NATIVE_N_WALK_RUNTIME_VISUAL_QC",
+  "actor_key": "transform:267",
+  "revision": "r076",
+  "checkpoint": "8b3eadd3753eb3d36984af20e93f9121bb434bbb",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r076/SpriteFrames.tres",
+  "frames_sha256": "8340d1831419a812702a0ee68e8f993a2f6f557a472fec038605a071162d1001",
+  "scope": [
+    "actual_N_idle_phase0_to_N_walk_phase0",
+    "actual_N_walk_all6",
+    "actual_N_walk_phase5_to_phase0",
+    "actual_lower_body_limb_and_support_detail"
+  ],
+  "source_authorship": {
+    "newly_authored_poses": 4,
+    "reused_existing_poses": 2,
+    "reused_rows": [
+      0,
+      3
+    ],
+    "all_six_not_claimed_new": true
+  },
+  "pose_canvas_sizes": [
+    1024,
+    1256,
+    1256,
+    1024,
+    2256,
+    1256
+  ],
+  "all_eight_actual_tres_crop_regions_margins_SHA_match": true,
+  "physical_model_review": "PASS: six mixed-resolution textures render comparable crown/head, hair, shoulder/pelvis, dark gold-trim skirt, boots and hardgoldspine scale. Edited phase4 is normalized to2256 virtual canvas without pixel resampling or giant-body transition. Every pose stays trueN/back camera and retains palehair, hardradialgoldspines and long sinuous right-hand weapon.",
+  "anatomy_and_gait_review": "PASS: two physical arms and two legs in all six, weapon remains in right hand; LEFT support in0/1/2 and RIGHT support in3/4/5. Opposite legs have distinct flexed/passing and advancing positions, with coat/hand motion matching the respective halfcycle. No extra hand/weapon swap, hard facing flip or duplicated same-lead halfcycle. The robe partly occludes upper legs naturally; no claim of visible hidden skeleton details.",
+  "grounding": {
+    "status": "PASS_VERTICAL_SUPPORT",
+    "strong_support_sole_max_world_y": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "meaning": "Lastalpha>100 sole of expected support side lies exactly on runtimeY0 in all6. This verifies vertical alignment; X stride and articulated body lean remain authored motion."
+  },
+  "seam_and_root_review": "PASS: phase5_to0 changes support side/coat/arm as expected but keeps head/torso scale, pelvis-root placement and heading. No change of source canvas causes a model enlargement or column placement snap; Nidle_to_walk preserves physical model size.",
+  "source_and_proof_limits": [
+    "This is scoped visual/runtime acceptance for one Nwalk candidate, not complete actor approval.",
+    "Prior strict source/canvas/SHA validation and actual Player/action tests are supplied separately by root; no wholeCI run or default catalog enablement performed here.",
+    "Foot support measurements operate on compiled AtlasTexture exact regions/margins and sourceRGBA, not a substituted thumbnail."
+  ],
+  "source_RGBA_changed": false,
+  "actor_approval_granted": false,
+  "detailed_complete_added": 0,
+  "private_preview_not_for_chat": true,
+  "private_preview_bytes": 637308
+}

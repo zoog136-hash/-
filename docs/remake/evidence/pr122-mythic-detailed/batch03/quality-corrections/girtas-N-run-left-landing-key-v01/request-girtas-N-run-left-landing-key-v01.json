@@ -1,0 +1,82 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "N",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_run_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 0,
+  "intended_anatomical_support": "LEFT",
+  "references": [
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/left-support-production-pose-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+    "/workspace/scratch/girtas-N-run-left-landing-key-v01/left-support-production-pose-guide.png": "5b95ce1f6405483fc0f89b6212688f3de82c5ceef8ebadbf9496468f2275ae24"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Current6Nrun contains RIGHT-support/LEFT-up leg identity only and no LEFT landing. Author only the genuinely missing LEFT-support/RIGHT-knee-up faster landing key from already valid original Nwalk contact0; never reference wrong-leg newrun.",
+  "prompt": "EDIT the FIRST supplied EXACT pose into ONE SINGLE newly authored FAST-RUN LEFT-FOOT-LANDING KEY of unique boss GIRTAS. This is NOT a six-frame sheet. Image1 is the valid original NORTH WALK contact0, with LEFT long leg PLANTED and RIGHT short leg lifted. It is the PRIMARY exact body/leg/gear authority. Image2 is the SAME pose with instruction marks only: GREEN imageLEFT leg/sole MUST REMAIN the grounded SUPPORT; MAGENTA imageRIGHT knee/boot must lift UP/forward. Do not copy labels/colors/lines into final art. Do not change which leg supports.\n\nABSOLUTE SIDE CHECK: NORTH REAR VIEW means anatomicalLEFT is IMAGE LEFT, anatomicalRIGHT is IMAGE RIGHT. Keep the SAME long LEFT leg going downward to the existing lower ground position. LEFT boot sole stays BELOW pelvis and BELOW the other boot, firmly landing/supporting, left knee slightly bent to absorb fast landing. The RIGHT knee on IMAGE RIGHT actually bends and drives HIGH FORWARD toward screenUP away from viewer; RIGHT thigh/knee/boot visibly lifted under the parted original right robe panel. RIGHT boot must be near hip/knee height, clearly ABOVE LEFT support boot. Never lift LEFT knee or leave RIGHT leg as the long down leg. This key is LEFT DOWN / RIGHT UP, unambiguously. Keep two coherent full leg chains and exactly two boots, same original anatomy. No limb swap or body mirror.\n\nMake a REAL FAST-RUN LANDING rather than just copying slow walk: stronger forward NORTH torso/hip lean away from viewer, weight over LEFT planted leg, left knee/ankle absorbs landing, RIGHT knee drives distinctly higher than source walk, freeLEFT arm counterbalances, original weaponRIGHT arm stabilizes. Pale back hair and existing long robe panels show sharp delayed movement. Preserve full long dark skirt: part/lift existing panels enough to READ both actual knees/boots, never remove hem, replace skirt with pants or invent legs. Maintain original body dimensions/proportions and fixed elevated orthographic rear camera. An actual changed right hip/knee configuration and forward lean must be visible, not recoloring/translating the old picture.\n\nIDENTITY: exact verified N/BACK helmet/ornaments, long PALE back hair, BLACK-GOLD rear armor, narrow HARD GOLD radial spines, LONG DARK goldtrim SKIRT/robe, ONE long SINUOUS orange-gold weapon in SAME anatomicalRIGHT hand at IMAGE RIGHT. LEFT hand remains empty at IMAGE LEFT. NO face/front chest, no side turn, no redV mask, orange feather/flame fan, wings, short broad sword, new equipment, extra arm/hand/leg or hand transfer. Spines fixed to body, full blade same shape/proportion, no new energy effect. All gear attached and complete.\n\nOUTPUT ONE complete isolated figure only, TRANSPARENT1024x1024PNG. Center WHOLE silhouette including every radial tip, entire long blade, pale hair, robe hem and both boots, with at least80-100px alpha0 empty margin on all outer sides. No cropped part. Same fine game-sprite rendering/materials as source. Hard opaque weapon with lighting INSIDE solid outline, no outer glow/haze. Background/gaps alpha0 with only1px edge antialias.\n\nNo text, guide marks, green/magenta colors, arrows, ground/floor, shadows, halo, aura, particles, motion trails, blur, panels, grid, labels or duplicate figures. The instruction ground line is invisible in final; only character is drawn. Most important final check: LONG IMAGE-LEFT LEG IS LANDING/PLANTED DOWN, IMAGE-RIGHT KNEE/BOOT ACTUALLY HIGH UP/FORWARD, same N back model and SAME RIGHT weapon hand. Exactly ONE keypose.",
+  "requested_at": "2026-10-19T12:13:26.829576+00:00",
+  "user_authorization": "Production image edit authorized, no main-chat images. Exactly one missing-key attempt, failures HOLD; not another6pose retry.",
+  "pose_guide_proof": {
+    "purpose": "ANNOTATED PRODUCTION POSE GUIDE ONLY, not game art",
+    "source": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+    "source_sha256": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+    "original_region_RGBA_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636",
+    "source_size": [
+      483,
+      493
+    ],
+    "guide": "/workspace/scratch/girtas-N-run-left-landing-key-v01/left-support-production-pose-guide.png",
+    "guide_sha256": "5b95ce1f6405483fc0f89b6212688f3de82c5ceef8ebadbf9496468f2275ae24",
+    "padding": 50,
+    "guide_source_translation": [
+      50,
+      50
+    ],
+    "reference_only_overlay": true,
+    "physical_support_sole_crop_xy": [
+      187,
+      489
+    ],
+    "physical_support_side": "anatomicalLEFT=imageLEFT in Nback",
+    "lift_target": "anatomicalRIGHT=imageRIGHT knee up/forward, sole clearly above LEFT support",
+    "source_PNG_mutation": false,
+    "source_lineage_proof": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/lossless-source-crop-proof.json"
+  },
+  "pose_guide_proof_sha256": "3713500c512a22bcbcd017068655a8c64716cab4e5c601b24e27551aefc8b1b4",
+  "original_contact0_lineage": {
+    "label": "Nwalk_contact0",
+    "source_path": "/workspace/scratch/girtas-N-walk-repair/girtas-N-walk-v02.png",
+    "source_sha256": "399a95205c10e7bd8aacb5f061bb0d5446ec889595fb3a1088485d605ef0a85c",
+    "source_phase": 0,
+    "source_geometry_path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/source-Nwalk-v02.geometry.json",
+    "exact_region": [
+      40,
+      12,
+      483,
+      493
+    ],
+    "source_frame_rgba_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636",
+    "crop_path": "/workspace/scratch/girtas-N-walk-opposite-contact-key-v01/Nwalk_contact0-lossless.png",
+    "crop_png_sha256": "421dcfc19aa7eaf486f74ca22605f3074dcebe554695dea239cdbb1e2c8e4ab5",
+    "crop_rgba_sha256": "92135ff19f06a2a03dabde8b814028012cc4aa4ec5e7095d19c774e64e181636",
+    "dimensions": [
+      483,
+      493
+    ],
+    "lossless_identity": true,
+    "source_interpretation": "Only known-good individual phase0 conditioning crop; whole failedwalk source remainsHOLD and is NOT referenced/approved as animation."
+  },
+  "original_contact0_lineage_file_sha256": "f633398e93cffd6abd7b035cc5bb1d06248cf7482644b69b2b08ec45787e7d28",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false
+}

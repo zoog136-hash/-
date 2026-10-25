@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-N-death-author-20261020-v01/author-N-death-dedicated-native-six-v01.py", line 100, in <module>
+    er=bone_elbow(sr,33.,max(12.,sr[2]-85.),math.hypot(33,89));el=bone_elbow(sl,-18.,max(12.,sl[2]-94.),math.hypot(18,90))
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/mythic413-N-death-author-20261020-v01/author-N-death-dedicated-native-six-v01.py", line 82, in bone_elbow
+    dz=desired_h-shoulder[2];rem=length*length-dx*dx-dz*dz;assert rem>0;dd=math.sqrt(rem);return np.array([shoulder[0]+dx,shoulder[1]+(dd if forward else -dd),desired_h])
+                                                                  ^^^^^
+AssertionError

@@ -1,0 +1,60 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png": "8eaae7e2f362b5500e94d48ac8874735f5bbc0369433d6d16e0d6910dd2b4fea",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33"
+  },
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "corrective_reason": "Prior private source QC: old NE attack phases2-4 turned front/right; author a fully rear-right upper-right-away attack from correct portrait/walk/idle only",
+  "phase_contract": [
+    "rear_right_guard",
+    "rear_right_anticipation",
+    "rear_right_load",
+    "upper_right_away_contact",
+    "rear_right_follow_through",
+    "rear_right_recovery"
+  ],
+  "intended_contact_frame": 3,
+  "requested_poses": 6,
+  "prompt": "Create ONE production game-animation sprite sheet: SIX independently articulated ATTACK phases of the exact unique boss 해방된 할파스 (Halpas). The first attached portrait is original identity authority. The second native WALK sheet and third native IDLE sheet show the correct NORTH-EAST / REAR-RIGHT character orientation and established detailed model. Use ONLY these references. Preserve the specific gold-and-black segmented armor, burgundy-and-black cape, gold horned helmet, purple crystalline wings, exact single purple-bladed weapon and anatomical weapon hand. No model redesign, extra weapon, invented anatomy or missing equipment.\n\nDIRECTION CORRECTION IS THE PRIMARY REQUIREMENT. All SIX characters face NORTH-EAST: screen UPPER-RIGHT, AWAY from the camera, in a REAR-RIGHT three-quarter view. The head looks upper-right away from us, and we see the back of the helmet, the back of the torso armor, cape and rear wing attachment. Maintain the SAME rear-right heading of the second reference through the ENTIRE attack. Anticipation, active strike and recovery must NEVER turn the face or chest toward the viewer or screen lower-right. Do not show a frontal mask or front breastplate during the strike. Pose the arms and turn joints within the rear-right orientation, not by rotating the whole character toward the camera.\n\nThe enemy target is FARTHER UPPER-RIGHT, away into the screen. In contact phase3 the actual weapon/striking arm extends diagonally UP-RIGHT toward that distant target, visibly above-right of the attacking torso in screen coordinates. NEVER thrust toward the lower-right, lower-left, viewer or bottom of the sheet. We continue seeing the character's back even at maximum contact. Cape trails back/down-left as the chest and helmet remain aimed up-right. Preserve exactly the same weapon in exactly the same anatomical hand in every phase. No mirroring.\n\nDraw SIX genuine successive phases, temporal order left-to-right then down: (0) poised rear-right guard matching native walk/idle heading; (1) clear backswing/anticipation with bent striking elbow and loaded shoulder, back still toward us; (2) compressed load immediately before release, feet and cape counterbalance, rear-right head and torso unchanged; (3) ACTIVE CONTACT, weapon and striking arm extended farther UP-RIGHT AWAY FROM CAMERA, back of helmet and torso still visible; (4) controlled follow-through and wing/cape physical response along that same up-right attack line, never a front-facing flourish; (5) recover weapon and arm toward the initial rear-right guard. Each phase needs a distinct articulated arm, shoulder, elbow, torso/hip counter-response and actual wing/cape response. One consistent complete flying armored humanoid, two original arms, two original legs, original wing anatomy and one original weapon throughout. Do not fake the sequence with translation, rigid rotation, recoloring, mirrored copies or repeated locomotion poses.\n\nTechnical atlas: 1024x1536 PNG, EXACTLY TWO COLUMNS and THREE ROWS, SIX figures only, six512x512 cells. Keep each complete silhouette inside the central300x300 area of its own cell, including every helmet point, boot tip, cape, complete original wing tip and entire weapon. Leave at least106px of completely empty transparent margin at every cell edge. More than70percent of the sheet stays empty. Do not enlarge figures to fill the page. No pair of character bounding rectangles may overlap. Keep the same head/torso proportions, same elevated orthographic isometric camera, rendering and pixel scale across all six. Re-articulate existing wings/equipment to fit instead of clipping, removing parts or shrinking one pose.\n\nCrisp detailed game-sprite cutouts with readable gold trim and fully opaque black materials. Shading and purple crystal light stay INSIDE the real solid surfaces. Outside exact silhouettes and inside limb/wing gaps: transparent alpha0; only1-2pixel edge antialiasing. No floor, cast/contact/drop shadow, diffuse aura, bloom, haze, fog, halo, lightning trail, motion blur, background panel, text, captions, grid, labels, detached effects, spare parts or extra figures. Preserve the exact native identity and UP-RIGHT AWAY-facing back view in ALL SIX, especially load, CONTACT and follow-through.",
+  "requested_at": "2026-10-19T10:16:04.457953+00:00",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v01iso01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Absolute compass review: all six poses aim NORTH-EAST/screen upper-right AWAY from the camera. Back of helmet and back segmented torso armor remain visible; these are rear-right views, distinct from southeast front-right views with a visible front face/breastplate.",
+      "Phase0 holds a rear-right guard; phase1 bends the actual weapon arm overhead while the back remains visible; phase2 loads without turning face or chest toward the viewer.",
+      "Phase3 extends the same weapon and anatomical striking arm diagonally upper-right toward a target farther away. The helmet and torso retain their rear-right heading rather than facing screen lower-right.",
+      "Phase4 follows through along that upper-right-away strike line while showing back armor; phase5 returns to the same rear-right guard. Six visibly different articulated guard/anticipation/load/contact/follow-through/recovery poses.",
+      "The established gold/black armor, burgundy/black cape, gold horned helmet, purple crystalline wings and single purple-bladed weapon are preserved from the original portrait and correct native NE walk/idle references.",
+      "At shared source-pixel resolution, translated only onto a common foot baseline, new neutral attack body scale is close to NE walk. No image scaling or bbox-height normalization was performed."
+    ],
+    "visual_limitations": [
+      "Source visual review only; this is not actor approval, detailed completion, game integration or runtime timing approval. Original tiny portrait limits exact small-landmark judgment, without automatically invalidating the native identity.",
+      "Generated figures exceed the requested sparse300/320px silhouette cap, with saved strict geometry region widths383-489px. Six complete distinct separated regions still pass the unchanged importer; no pixels were cropped/resampled or validation relaxed.",
+      "Body-scale visual estimates exclude raised blade/wing extent: crown-to-extended-toe is about316px in attack0,302px in NEwalk0 (+5%) and337px in NEidle0 (-6% for attack). These are pose-dependent visual estimates, not a skeleton or exact anatomical measurement.",
+      "Existing NEidle0 shoulder-to-lower-torso span appears roughly10-15% longer than new attack0/NEwalk0. A visible cross-role torso difference above10% is flagged; it may include pose/armor projection. Do not blindly normalize by full silhouette or claim this calibration is finally approved."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "020fd6c34f3b9f52d804ad1b7eda2149ec91da97f031388f71bcca0c93681013",
+    "raw_bytes": 2198097,
+    "request_sha256": "b23a2087b3c2313f1b8b24460b278b7c45085ec21cc131a97f38e711dc77bed5",
+    "review_sha256": "ff13239209d03922311cd2f86ad892a57008c8d3f494ba18749a5cda9039fe72"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
+  "output_sha256": "020fd6c34f3b9f52d804ad1b7eda2149ec91da97f031388f71bcca0c93681013",
+  "output_bytes": 2198097,
+  "original_generated_file": "/workspace/scratch/halpas-NE-attack-repair/generated.png"
+}

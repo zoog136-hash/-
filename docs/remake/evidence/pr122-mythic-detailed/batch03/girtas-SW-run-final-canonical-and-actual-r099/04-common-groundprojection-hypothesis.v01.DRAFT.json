@@ -1,0 +1,114 @@
+{
+  "status": "DRAFT_CAMERA_AND_NARROW_RUN_LANE_HYPOTHESIS_NOT_INDEPENDENT_PHYSICAL_PROOF",
+  "camera_forward_slope_y_per_x": -0.5902918298980974,
+  "standing_actual_two_boot_intercepts": {
+    "LEFT": 693.5856839550077,
+    "RIGHT": 581.9890026344399
+  },
+  "ground_origin_intercept_canonical": 637.7873432947238,
+  "standing_near_far_lane_halfwidth_canonical": 55.798340660283884,
+  "running_near_far_lane_halfwidth_canonical": 7.92966060422782,
+  "running_lane_fit_basis": "Tentative equal frontwaist surface heights of actualcontact0/3. Frontwaist is not bonyhip; uncertainties\u00b120native. Validate actualhip/knee/ankle/head/pauldron and other4phases; fit alone cannotPASS.",
+  "rootX_basis": "Currentidle frontwaist surface canonical offset+14px, mappedatC2304. Marker not COM/hip; \u00b120pxnative uncertainty.",
+  "air_body_rise_canonical_trial": 19.88142873912005,
+  "air_rise_basis": "Fixedguide pelvis1.03\u21921.14 withtorsolean.10\u2192.18, initial275canonical/world only a trial. Air roots frombody surface registration, never minimumfoot.",
+  "support_details": [
+    {
+      "phase": 0,
+      "side": "LEFT",
+      "native_boot_point": [
+        471.0,
+        1224
+      ],
+      "root_native_draft": [
+        558.5,
+        1159.4862061112754
+      ],
+      "contact_canonical_Y": 668.6727972838776,
+      "surface_canonical_Y": 369.1172417283221
+    },
+    {
+      "phase": 1,
+      "side": "LEFT",
+      "native_boot_point": [
+        580.5,
+        1195
+      ],
+      "root_native_draft": [
+        508.5,
+        1224.6377529800218
+      ],
+      "contact_canonical_Y": 626.8276653422125,
+      "surface_canonical_Y": 349.04988756443475
+    },
+    {
+      "phase": 3,
+      "side": "RIGHT",
+      "native_boot_point": [
+        480.5,
+        1215
+      ],
+      "root_native_draft": [
+        528.5,
+        1209.4862061112754
+      ],
+      "contact_canonical_Y": 642.4505750616554,
+      "surface_canonical_Y": 369.1172417283221
+    },
+    {
+      "phase": 4,
+      "side": "RIGHT",
+      "native_boot_point": [
+        470.0,
+        1141
+      ],
+      "root_native_draft": [
+        518.5,
+        1135.1910601963264
+      ],
+      "contact_canonical_Y": 642.581751023855,
+      "surface_canonical_Y": 397.69286213496605
+    }
+  ],
+  "native_anchors_draft": [
+    [
+      558.5,
+      1159.4862061112754
+    ],
+    [
+      508.5,
+      1224.6377529800218
+    ],
+    [
+      608.5,
+      1204.2194207742955
+    ],
+    [
+      528.5,
+      1209.4862061112754
+    ],
+    [
+      518.5,
+      1135.1910601963264
+    ],
+    [
+      588.5,
+      1219.2194207742955
+    ]
+  ],
+  "surface_observations": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-native-semantic-boot-ROIs-and-surface-search-observations-v02.json",
+    "sha256": "4e61f1860aea77cee36c31f47c3df5f31e6a29c36889cfbda7def51e673dd75e"
+  },
+  "idle_actual_boot_points": {
+    "LEFT": [
+      349.15,
+      493.6
+    ],
+    "RIGHT": [
+      175.14,
+      484.72
+    ]
+  },
+  "review_required": true
+}

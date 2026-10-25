@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "scope": "Normal monsters: frame absence only, including already approved entries. No art-quality review and no approval edits.",
+  "runtime": {
+    "entries": 258,
+    "approved_preserved": 221,
+    "required_role_direction_requests": 8514,
+    "missing_required_direction_clips": 0,
+    "frame_data_failed_entries": 0,
+    "complete_frame_availability_entries": 258,
+    "partial_not_authored_entries": 0,
+    "existing_run_to_walk_fallback_requests": 2064
+  },
+  "staging": {
+    "entries": 12,
+    "approved_preserved": 0,
+    "required_role_direction_requests": 396,
+    "missing_required_direction_clips": 63,
+    "frame_data_failed_entries": 0,
+    "complete_frame_availability_entries": 10,
+    "partial_not_authored_entries": 2,
+    "existing_run_to_walk_fallback_requests": 0
+  },
+  "partial_candidates": [
+    {
+      "key": "monster:놀",
+      "missing_required_clips": 31,
+      "classification": "NOT_AUTHORED_PARTIAL_CANDIDATE"
+    },
+    {
+      "key": "monster:알비노 몽크",
+      "missing_required_clips": 32,
+      "classification": "NOT_AUTHORED_PARTIAL_CANDIDATE"
+    }
+  ],
+  "actual_PNG_load_and_alpha_source_bounds": "PASS all461uniquePNGpaths; all99TRES",
+  "Godot_final_run": "PASS no SCRIPT ERROR/Parse Error/ERROR lines in godot-run.txt",
+  "earlier_harness_attempt": "AnimationCatalog global-class setup unavailable in isolated project. Final harness uses canonical Profile.new properties with record override precedence and unchanged actual ActorMotion resolver, as directed by root. Rejected harness output retained separately and is not a frame finding.",
+  "reproduction": {
+    "prepare": "python3 docs/remake/evidence/pr122-monsters-20261023/review-normal-frames/build_plan.py",
+    "Godot_binary": "/workspace/runtime/bin/Godot_v4.7.2-stable_linux.x86_64",
+    "Godot_args": [
+      "--headless",
+      "--path",
+      "/workspace/runtime/normal-frame-audit",
+      "--script",
+      "res://docs/remake/evidence/pr122-monsters-20261023/review-normal-frames/audit.gd"
+    ],
+    "analyze": "python3 docs/remake/evidence/pr122-monsters-20261023/review-normal-frames/analyze.py"
+  },
+  "delivered_by_root_git_commit_pending": true
+}

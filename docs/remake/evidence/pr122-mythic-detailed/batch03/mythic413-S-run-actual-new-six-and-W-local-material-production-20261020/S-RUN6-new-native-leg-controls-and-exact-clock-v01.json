@@ -1,0 +1,1113 @@
+{
+  "status": "ACTUAL_S_RUN6_NEW_LEGS_AND_FIXED_BONE_CONTROLS_BODY_SHARED_MATERIALS_PENDING",
+  "actor": "transform:413",
+  "direction": "S",
+  "motion": "run",
+  "C": 2560.0,
+  "bodyunit": 2.5,
+  "common_unpadded_root": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "storage_canvas": [
+    2048,
+    2048
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "source_RGBA_rescaled": false,
+  "phase_seconds_authored": 0.08,
+  "cycle_seconds_authored": 0.48,
+  "fps_authored": 12.5,
+  "reference_speed": 210,
+  "runtime_speed_ratio": 1.25,
+  "actual_phase_seconds": 0.064,
+  "actual_run_speed": 262.5,
+  "pixel_scale": 0.23706896551724138,
+  "native_to_game_scale": 0.09482758620689655,
+  "world_phase_displacement": 16.8,
+  "native_support_contact_to_load_step": 177.16363636363639,
+  "source_inputs": {
+    "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-ninety-native-posed-parts-v01/actual-original-native-inputs/own-S-DEATH-readonly-real-part-inputs-cape-CORE-explicitly-not-loaded-v01.json",
+    "bytes": 5088,
+    "sha256": "4fc5c91ae94fff1b33a261cad2fab0fecd38e0aabd522e1d66f77c3f284ab9c2"
+  },
+  "once": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-native-one-time-body-density-C2560-root-registration-v01.json",
+    "bytes": 3681,
+    "sha256": "c9a5c8752e3daf303b4685c02fed424628aa621fe8ad05ff97ddbab838673480"
+  },
+  "sole": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-original-neutral-once-true-sole-and-HIT-six-material-floor-binding-v01.json",
+    "bytes": 16073,
+    "sha256": "b937fcb0e1fea65fae7227ebefbe508b5f352c521055006522ab10b16f02a3c2"
+  },
+  "projection": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "fixed_femur_tibia": 289.75,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "LEFT-CONTACT",
+      "pelvis": [
+        -8.0,
+        80.0,
+        460.92273758384044
+      ],
+      "legs": {
+        "R": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase0-R-complete-real-native-articulated-leg-v01.png",
+          "bytes": 89336,
+          "sha256": "189243fdaeee63756111c81dba6a53408116b1b44297d3b4b1d24b0b5ef09865"
+        },
+        "L": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase0-L-complete-real-native-articulated-leg-v01.png",
+          "bytes": 126371,
+          "sha256": "3c8895b7068dceac5c8cff54c4261b34838e85670f0748c65f670e1124959549"
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/R-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "d013ebc1d1499c3e31521139c4dc3ec87b53098d63738c9d8f5e146e1482bb1e",
+            "bytes": 101327
+          },
+          "hip": [
+            -70.1,
+            80.0,
+            455.92273758384044
+          ],
+          "knee": [
+            -82.38708773474536,
+            366.4839285377561,
+            497.5286105415431
+          ],
+          "ankle": [
+            -128.775,
+            82.61077255749952,
+            462.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            -57.7253784155691,
+            192.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -80,
+          "sole_lift": 170,
+          "native_capture": {
+            "original_source_texels": 35233,
+            "output_texels": 16172,
+            "inverse_max_residual": 0.6865954331382593,
+            "source_bbox": [
+              444,
+              641,
+              616,
+              1198
+            ],
+            "stored_bbox": [
+              679,
+              873,
+              911,
+              1164
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 174.29297736158924
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/L-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "fa2b297268d0bae2f31e4578e3a202b455cc64cb41d54964688a393cb3de78a7",
+            "bytes": 106173
+          },
+          "hip": [
+            41.5,
+            80.0,
+            455.92273758384044
+          ],
+          "knee": [
+            85.58376646807912,
+            346.10632198850965,
+            561.7485824032204
+          ],
+          "ankle": [
+            109.725,
+            382.2810394610202,
+            275.2810394610202
+          ],
+          "heel": [
+            90.825,
+            257.9181905678537,
+            17.918190567853703
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75000000000006,
+          "support": true,
+          "physical_sole_depth": 240,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 36582,
+            "output_texels": 43332,
+            "inverse_max_residual": 4.687428401686771e-13,
+            "source_bbox": [
+              652,
+              638,
+              850,
+              1200
+            ],
+            "stored_bbox": [
+              901,
+              880,
+              1144,
+              1547
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 4.109914734646075
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "legs_only": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase0-both-legs-only-v01.png",
+        "bytes": 200971,
+        "sha256": "ee29fb4aa463b40d7d59c920a9ba4829152d12aede6421f7c8456a53bd59c4d2"
+      }
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-LOAD",
+      "pelvis": [
+        -3.0,
+        80.0,
+        422.92273758384044
+      ],
+      "legs": {
+        "R": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase1-R-complete-real-native-articulated-leg-v01.png",
+          "bytes": 88594,
+          "sha256": "dfd89335bd47b2eaaab99e07ad34ae1a44bdc14ec611b93dae3dc72825507518"
+        },
+        "L": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase1-L-complete-real-native-articulated-leg-v01.png",
+          "bytes": 99887,
+          "sha256": "960273d092e0c0ca6f04e44fca05df9c78a63af8c220de7b777bad2a1053cc09"
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/R-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "d013ebc1d1499c3e31521139c4dc3ec87b53098d63738c9d8f5e146e1482bb1e",
+            "bytes": 101327
+          },
+          "hip": [
+            -65.1,
+            80.0,
+            417.92273758384044
+          ],
+          "knee": [
+            -270.45719748126805,
+            235.67761614404472,
+            550.3914651173491
+          ],
+          "ankle": [
+            -128.775,
+            2.6107725574995015,
+            452.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            -137.7253784155691,
+            182.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -160,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 35233,
+            "output_texels": 16702,
+            "inverse_max_residual": 0.6447688011278165,
+            "source_bbox": [
+              444,
+              641,
+              616,
+              1198
+            ],
+            "stored_bbox": [
+              565,
+              773,
+              894,
+              1027
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 164.29297736158966
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/L-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "fa2b297268d0bae2f31e4578e3a202b455cc64cb41d54964688a393cb3de78a7",
+            "bytes": 106173
+          },
+          "hip": [
+            46.5,
+            80.0,
+            417.92273758384044
+          ],
+          "knee": [
+            78.21241993367786,
+            346.980660619913,
+            525.953806156288
+          ],
+          "ankle": [
+            109.725,
+            205.11740309738383,
+            275.2810394610202
+          ],
+          "heel": [
+            90.825,
+            80.75455420421731,
+            17.918190567853703
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.74999999999994,
+          "tibia_native": 289.74999999999994,
+          "support": true,
+          "physical_sole_depth": 62.836363636363615,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 36582,
+            "output_texels": 29389,
+            "inverse_max_residual": 2.5421149729252077e-13,
+            "source_bbox": [
+              652,
+              638,
+              850,
+              1200
+            ],
+            "stored_bbox": [
+              902,
+              918,
+              1136,
+              1370
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 3.810675956100127
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "legs_only": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase1-both-legs-only-v01.png",
+        "bytes": 172732,
+        "sha256": "57912910642edf02b551c9456a6ee3cf89ac6767ed08e93dab01c0661340e828"
+      }
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-DRIVE-FLIGHT",
+      "pelvis": [
+        5.0,
+        80.0,
+        497.92273758384044
+      ],
+      "legs": {
+        "R": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase2-R-complete-real-native-articulated-leg-v01.png",
+          "bytes": 100834,
+          "sha256": "7b37ae596455d96a4d8508e165eb3ea7c0a6d54eab79ddf9265a5d28f2417ff5"
+        },
+        "L": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase2-L-complete-real-native-articulated-leg-v01.png",
+          "bytes": 106413,
+          "sha256": "27b077d60a0b2318b72db9360332a7380f0a4fdac98c00122dae3a2d7aa3f64a"
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/R-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "d013ebc1d1499c3e31521139c4dc3ec87b53098d63738c9d8f5e146e1482bb1e",
+            "bytes": 101327
+          },
+          "hip": [
+            -57.1,
+            80.0,
+            492.92273758384044
+          ],
+          "knee": [
+            -12.907725407233627,
+            261.76668412501317,
+            714.1985336134
+          ],
+          "ankle": [
+            -128.775,
+            307.6107725574995,
+            452.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            167.2746215844309,
+            182.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75000000000006,
+          "support": false,
+          "physical_sole_depth": 145,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 35233,
+            "output_texels": 26260,
+            "inverse_max_residual": 0.6936489588334923,
+            "source_bbox": [
+              444,
+              641,
+              616,
+              1198
+            ],
+            "stored_bbox": [
+              693,
+              769,
+              967,
+              1292
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 164.29297736158924
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/L-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "fa2b297268d0bae2f31e4578e3a202b455cc64cb41d54964688a393cb3de78a7",
+            "bytes": 106173
+          },
+          "hip": [
+            54.5,
+            80.0,
+            492.92273758384044
+          ],
+          "knee": [
+            315.9630338685536,
+            204.85251664699229,
+            494.9211137156285
+          ],
+          "ankle": [
+            109.725,
+            2.2810394610201996,
+            475.2810394610202
+          ],
+          "heel": [
+            90.825,
+            -122.0818094321463,
+            217.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -140,
+          "sole_lift": 200,
+          "native_capture": {
+            "original_source_texels": 36582,
+            "output_texels": 20765,
+            "inverse_max_residual": 0.6813521370349889,
+            "source_bbox": [
+              652,
+              638,
+              850,
+              1200
+            ],
+            "stored_bbox": [
+              902,
+              758,
+              1319,
+              1032
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 204.10991473464566
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "legs_only": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase2-both-legs-only-v01.png",
+        "bytes": 188106,
+        "sha256": "0905cdce4758b87592fee9bc8f45108faa7e9c58e4b9062474a24535c7faf9d0"
+      }
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-CONTACT",
+      "pelvis": [
+        8.0,
+        80.0,
+        460.92273758384044
+      ],
+      "legs": {
+        "R": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase3-R-complete-real-native-articulated-leg-v01.png",
+          "bytes": 118221,
+          "sha256": "13079638208e30b2e097d007a9a33f6a4cf3a1eeffd76ae8bb852816588701e5"
+        },
+        "L": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase3-L-complete-real-native-articulated-leg-v01.png",
+          "bytes": 85005,
+          "sha256": "0c3652cbcf9df57920a85896c461ec8937ac7130c16d0ea693c3ca4208b3016a"
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/R-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "d013ebc1d1499c3e31521139c4dc3ec87b53098d63738c9d8f5e146e1482bb1e",
+            "bytes": 101327
+          },
+          "hip": [
+            -54.1,
+            80.0,
+            455.92273758384044
+          ],
+          "knee": [
+            -95.28162705706052,
+            341.445480183939,
+            573.8438848998445
+          ],
+          "ankle": [
+            -128.775,
+            402.61077255749956,
+            292.6107725574995
+          ],
+          "heel": [
+            -114.375,
+            262.2746215844309,
+            22.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": true,
+          "physical_sole_depth": 240,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 35233,
+            "output_texels": 40717,
+            "inverse_max_residual": 4.687428401686771e-13,
+            "source_bbox": [
+              444,
+              641,
+              616,
+              1198
+            ],
+            "stored_bbox": [
+              692,
+              883,
+              906,
+              1547
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 4.292977361589681
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/L-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "fa2b297268d0bae2f31e4578e3a202b455cc64cb41d54964688a393cb3de78a7",
+            "bytes": 106173
+          },
+          "hip": [
+            57.5,
+            80.0,
+            455.92273758384044
+          ],
+          "knee": [
+            182.08475987614122,
+            339.8018979708529,
+            486.52786652241446
+          ],
+          "ankle": [
+            109.725,
+            62.2810394610202,
+            445.2810394610202
+          ],
+          "heel": [
+            90.825,
+            -62.0818094321463,
+            187.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.74999999999994,
+          "tibia_native": 289.74999999999994,
+          "support": false,
+          "physical_sole_depth": -80,
+          "sole_lift": 170,
+          "native_capture": {
+            "original_source_texels": 36582,
+            "output_texels": 16081,
+            "inverse_max_residual": 0.6201312804730497,
+            "source_bbox": [
+              652,
+              638,
+              850,
+              1200
+            ],
+            "stored_bbox": [
+              902,
+              880,
+              1233,
+              1149
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 174.39865390692714
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "legs_only": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase3-both-legs-only-v01.png",
+        "bytes": 188345,
+        "sha256": "b031b1a5ec2d82e8793eedc89c351055893813f156a709454dae9b5670783cd2"
+      }
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-LOAD",
+      "pelvis": [
+        3.0,
+        80.0,
+        422.92273758384044
+      ],
+      "legs": {
+        "R": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase4-R-complete-real-native-articulated-leg-v01.png",
+          "bytes": 94648,
+          "sha256": "8cc410f4f89460d2a6ddcaaad78f61769ddc35011b3ec266852f6bccb4946c6e"
+        },
+        "L": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase4-L-complete-real-native-articulated-leg-v01.png",
+          "bytes": 103942,
+          "sha256": "fc582dca7f50049a6ae0b04f676955c9f77f4edda3933e0421aefdf381e12342"
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/R-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "d013ebc1d1499c3e31521139c4dc3ec87b53098d63738c9d8f5e146e1482bb1e",
+            "bytes": 101327
+          },
+          "hip": [
+            -59.1,
+            80.0,
+            417.92273758384044
+          ],
+          "knee": [
+            -76.31887800762131,
+            334.13500970973826,
+            556.0312803318902
+          ],
+          "ankle": [
+            -128.775,
+            225.44713619386312,
+            292.6107725574995
+          ],
+          "heel": [
+            -114.375,
+            85.11098522079452,
+            22.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75000000000006,
+          "support": true,
+          "physical_sole_depth": 62.836363636363615,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 35233,
+            "output_texels": 28292,
+            "inverse_max_residual": 0.6892452132811056,
+            "source_bbox": [
+              444,
+              641,
+              616,
+              1198
+            ],
+            "stored_bbox": [
+              694,
+              921,
+              901,
+              1370
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 3.9713017892750706
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/L-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "fa2b297268d0bae2f31e4578e3a202b455cc64cb41d54964688a393cb3de78a7",
+            "bytes": 106173
+          },
+          "hip": [
+            52.5,
+            80.0,
+            417.92273758384044
+          ],
+          "knee": [
+            299.0151775916328,
+            177.91797491545924,
+            534.5306271343389
+          ],
+          "ankle": [
+            109.725,
+            -17.718960538979786,
+            435.2810394610202
+          ],
+          "heel": [
+            90.825,
+            -142.0818094321463,
+            177.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -160,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 36582,
+            "output_texels": 20193,
+            "inverse_max_residual": 0.6829295166736922,
+            "source_bbox": [
+              652,
+              638,
+              850,
+              1200
+            ],
+            "stored_bbox": [
+              902,
+              743,
+              1281,
+              1002
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 164.68739307920777
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "legs_only": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase4-both-legs-only-v01.png",
+        "bytes": 182712,
+        "sha256": "f70a36a27b9da46e2a7786acb6635633210501ce254d9fa45c2aafb26f0ac666"
+      }
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-DRIVE-FLIGHT",
+      "pelvis": [
+        -5.0,
+        80.0,
+        497.92273758384044
+      ],
+      "legs": {
+        "R": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase5-R-complete-real-native-articulated-leg-v01.png",
+          "bytes": 92739,
+          "sha256": "34b9884ffd078bc3b353f2a55c73b2abf91803511bdaf312b52e152846576c21"
+        },
+        "L": {
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase5-L-complete-real-native-articulated-leg-v01.png",
+          "bytes": 104155,
+          "sha256": "35c6ea5013beb4179224c60f97f9fd3dcf28da6a7e4bb0fc082393ae6061853f"
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/R-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "d013ebc1d1499c3e31521139c4dc3ec87b53098d63738c9d8f5e146e1482bb1e",
+            "bytes": 101327
+          },
+          "hip": [
+            -67.1,
+            80.0,
+            492.92273758384044
+          ],
+          "knee": [
+            -290.1111270661744,
+            257.5471464573062,
+            544.8660768059435
+          ],
+          "ankle": [
+            -128.775,
+            22.610772557499516,
+            492.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            -117.7253784155691,
+            222.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -140,
+          "sole_lift": 200,
+          "native_capture": {
+            "original_source_texels": 35233,
+            "output_texels": 19018,
+            "inverse_max_residual": 0.6598091129951115,
+            "source_bbox": [
+              444,
+              641,
+              616,
+              1198
+            ],
+            "stored_bbox": [
+              541,
+              766,
+              892,
+              1036
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 204.29297736158966
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-head-and-complete-boot-materials-v01/L-complete-native-skin-shaft-goldcounter-stiletto-source-RGBA-v01.png",
+            "sha256": "fa2b297268d0bae2f31e4578e3a202b455cc64cb41d54964688a393cb3de78a7",
+            "bytes": 106173
+          },
+          "hip": [
+            44.5,
+            80.0,
+            492.92273758384044
+          ],
+          "knee": [
+            21.090854193550413,
+            269.81284359048345,
+            710.5879823996058
+          ],
+          "ankle": [
+            109.725,
+            287.2810394610202,
+            435.2810394610202
+          ],
+          "heel": [
+            90.825,
+            162.9181905678537,
+            177.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75000000000006,
+          "tibia_native": 289.75000000000006,
+          "support": false,
+          "physical_sole_depth": 145,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 36582,
+            "output_texels": 28572,
+            "inverse_max_residual": 0.6875235611124626,
+            "source_bbox": [
+              652,
+              638,
+              850,
+              1200
+            ],
+            "stored_bbox": [
+              830,
+              787,
+              1127,
+              1292
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 164.10991473464566
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "legs_only": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v02/S-run-phase5-both-legs-only-v01.png",
+        "bytes": 180229,
+        "sha256": "ae51b9ff69cdc4db206beb3405187ccd608f60b2a68ad3096a786aab52040f07"
+      }
+    }
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0,
+  "limits": [
+    "One declared native capture and conditional hidden geometry; no unique anatomy claim.",
+    "Complete own-side original skin/greave/counter/stiletto source sampled through a continuous source-to-fixed-bone UV chain. No WALK pose or actor mirror.",
+    "Body/arm/head/cape sources are pending assembly. Native leg details and new cycle require source QA."
+  ]
+}

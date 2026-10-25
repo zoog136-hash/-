@@ -1,0 +1,48 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "S",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "transparent_background": true,
+  "user_authorization": "Production image tools authorized; no images or image links in main chat. Exactly one new required S attack correction attempt.",
+  "corrective_reason": "Current old Girtas detailed model diverges from original (red mask/flame fan/leg armor/short blade). Re-author S attack from original portrait plus faithful canonical only; preserve original long skirt, pale face/hair, thin rays, long sinuous right-hand weapon.",
+  "prompt": "Produce ONE production animation sprite sheet of unique boss Girtas: SIX distinctly articulated SOUTH / FRONT-VIEW ATTACK phases. Image1 is exact original portrait and PRIMARY identity authority; image2 is faithful structural identity enlargement only. Use ONLY these two images. Keep the original pale visible face, long PALE silver hair, dark black armor and gold trim, narrow hard GOLD RADIAL SPIKES behind upper body, long DARK gold-trimmed armored SKIRT/coat reaching below knees, and the original LONG SINUOUS orange-gold weapon. Never replace face with red V mask, spikes with broad flame/feather wings, skirt with segmented pants, or long curved weapon with a short broad sword. Keep recognizable original silhouette and proportions in every phase.\n\nDIRECTION S IS STRICT: ALL6 whole bodies face SOUTH, screen DOWN toward the viewer/camera. Face, front breastplate, pelvis and both knees face us throughout the attack. Helmet/head remains frontal or only tiny natural tilt; do not rotate to an E/right-facing side model. The front chest emblem and pale face remain readable. The ATTACK travels FORWARD TOWARD CAMERA / SCREEN DOWN, not sideways to screen-right. Do not draw a rightward thrust. Keep fixed elevated orthographic game camera and same frontal body perspective throughout.\n\nHAND/EQUIPMENT: Original weapon is held in ANATOMICAL RIGHT HAND, which appears at VIEWER LEFT in front view. Maintain that same anatomical right shoulder/arm/hand in all phases, even when it reaches toward the front-center. Left hand (viewer-right) remains free for balance. Show elbow and connected forearm so weapon hand cannot be mistaken for a swapped arm. Exactly one original long sinuous orange-gold blade/weapon, longer than half the body height, preserving its characteristic bent flowing outline. Do not change it to straight sword, spear, dagger, whip, staff, dual blades or a detachable energy effect. The rays are solid thin hard gold spikes rooted behind upper torso, not a circular floating aura. Preserve their coherent attachment and avoid extra arms, hands, legs, crowns or weapons.\n\nSIX ATTACK PHASES read left-to-right/top-to-bottom: phase0 FRONT SOUTH guard, long sinuous weapon down on viewer-left, original long skirt and full boots visible; phase1 anticipation, SAME right weapon arm on viewer-left raises the long blade above/along left shoulder, left hand braces, both shoulders remain frontal; phase2 genuine loaded coil, right elbow bends overhead/in front-left and hips/knees compress for forward attack, torso still faces DOWN toward us; phase3 CONTACT, right shoulder/arm extends FORWARD-DOWN TOWARD CAMERA, long weapon reaches toward lower-center/lower-left as a strong downward/forward strike with perspective foreshortening but complete blade still visible, head/front chest/hips still FRONT S; phase4 follow-through down toward lower-center, same right hand decelerates blade and body absorbs forward strike, NEVER turns to E/right; phase5 recovery to original frontal guard, blade returns to viewer-left, cloth/spikes settle. Six meaningfully different arm/elbow/hip/knee and skirt silhouettes; clear anticipation, contact and recovery, not six idle variants. No repeated/translated pose. Keep narrow original gold rays, long pale hair, long dark skirt and facial identity throughout.\n\nTECHNICAL: transparent1024x1536 PNG, EXACT TWO COLUMNS by THREE ROWS,6 isolated complete figures only. One complete figure per512x512cell, same pixel scale and body proportions. Fit WHOLE silhouette including every radial spike, hair tip, boots, skirt hem, raised or extended ENTIRE weapon into central320x320area of each cell, leaving at least96px transparent empty margin on ALL sides. Smaller complete figures are better than cropping or overlapping. Put phase3 full weapon tip inside its own cell with plenty of alpha below. No body/weapon/spike may touch another cell or page edge. No panels, labels or grid.\n\nDetailed crisp game sprite cutouts, opaque body and gold detail, shading stays inside solids. Background and gaps entirely transparent alpha0, only1-2px antialiasing. No ground, floor, shadow, halo, aura, bloom, diffuse glow, fog, haze, particles, light trails, motion blur, detached fragments or text. Orange light is confined to actual solid weapon/gold surfaces. Critical checks: original unmasked pale-face LONG-SKIRT/THIN-SPIKE identity, original right-hand LONG SINUOUS weapon, all6 FRONTAL SOUTH body orientation, and phase3 STRIKE TOWARD SCREEN DOWN rather than right.",
+  "requested_at": "2026-10-19T10:30:19.670968+00:00",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All6 remain frontal SOUTH: pale face, front chest and pelvis remain toward camera; no East/right-facing model reversal.",
+      "Phase0 frontal guard; phase1 original right/image-left weapon hand raises long sinuous blade; phase2 bends loaded arm/knees; phase3 extends same arm downward toward viewer/lower-left with full long blade visible; phase4 follows through down; phase5 returns front guard.",
+      "Six clearly articulated arm/elbow/hip/knee/skirt configurations, including visible anticipation, contact phase3 and recovery.",
+      "Original structural identity preserved: visible pale unmasked face, long pale hair, narrow hard GOLD radial spikes, long DARK gold-trimmed skirt/coat, long curved orange-gold weapon. No redV mask, flame-feather fan, short broad sword or replacement segmented-pants silhouette.",
+      "One established anatomical right hand holds weapon in all phases; left hand remains free. Full body, boots, skirt, hair, ray tips and entire weapon are visibly present.",
+      "No alpha>100 pixels touch any OUTER image boundary; all figures preserved unchanged. Logical512px cell margins are narrow and still require strict geometry checks."
+    ],
+    "visual_limitations": [
+      "Source visible-structure and action-direction review only. Strict geometry, lossless import, SpriteFrames/contact marker and actual game integration remain for root.",
+      "Phase3 blade projects downward-left toward foreground rather than exactly vertical down; torso/pelvis/face remain frontal S and no rightward/E thrust occurs.",
+      "Original portrait108x132 cannot prove every enlarged engraving, finger contour, radial tip or hidden detail. Faithful canonical remains a structural draft, not final character approval.",
+      "One generation attempt; request remains REQUESTED_NOT_APPROVED and has not been mutated after generation."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "1c07c107c60c3d5161b345bee7bcfa720002653b47ecb3a74d39359e1a649188",
+    "raw_bytes": 2658154,
+    "request_sha256": "16fa175608cbfa36b52b2dbc9d6b4817be78463c5920f6acd522c783b34db00a",
+    "review_sha256": "9b89f9accccc30c01a5565abf35e67458d3684594a0d9a22e926f55ef2b7e2bf"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v02.png",
+  "output_sha256": "1c07c107c60c3d5161b345bee7bcfa720002653b47ecb3a74d39359e1a649188",
+  "output_bytes": 2658154,
+  "original_generated_file": "/workspace/scratch/girtas-S-attack-repair/girtas-S-attack-v02.png"
+}

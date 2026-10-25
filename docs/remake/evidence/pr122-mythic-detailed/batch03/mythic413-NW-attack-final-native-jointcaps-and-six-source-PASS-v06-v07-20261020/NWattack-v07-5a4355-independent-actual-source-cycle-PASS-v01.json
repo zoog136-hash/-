@@ -1,0 +1,523 @@
+{
+  "schema": "PR122-independent-actual-NW-attack-six-source-cycle-prepacking-v1",
+  "status": "PASS_ACTUAL_NW_ATTACK_SIX_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE_PREPACKING",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "attack",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/NW-ATTACK6-actual-directional-rig-contract-v07.json",
+    "sha256": "5a4355ef3f6a7a11985911e2eacc5141910a16aaf22478775cb215e51cc7c332",
+    "bytes": 13740
+  },
+  "all_six_independent_binding": [
+    {
+      "phase": 0,
+      "name": "READY",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/thunder_female-NW-attack-0-READY-actual-native-rig-v07.png",
+        "sha256": "d00d09d4e98cdfb7300a740dea1b59fea140311699753962925ecb600d680924",
+        "bytes": 501007
+      },
+      "rgba_sha256": "de0565374666653a5237f66980beeb2be00241dd006b84d5bcbfaae4e3ae3bd4",
+      "actual_pose": {
+        "name": "READY",
+        "ang": 0.0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          736,
+          520
+        ],
+        "rw": [
+          805,
+          449
+        ],
+        "le": [
+          565,
+          531
+        ],
+        "lw": [
+          520,
+          619
+        ],
+        "staff": 0.0,
+        "lk": [
+          563,
+          808
+        ],
+        "rk": [
+          685,
+          850
+        ],
+        "cloth": 0
+      },
+      "reviewed_node_transfer": {
+        "RIGHTfore": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase0-actual-RIGHTfore-node.png",
+          "sha256": "aba5fcdac32aaf91c0f18dd23f77f966c791caf966397938c3ce19b73be4643d",
+          "bytes": 40061
+        },
+        "RIGHTstaff": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase0-actual-RIGHTstaff-node.png",
+          "sha256": "1eaf8215b537a54e7d4c0c1441f17b93d4253bae4b25675062c063fb3264950e",
+          "bytes": 95931
+        },
+        "LEFTupper": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase0-actual-LEFTupper-node.png",
+          "sha256": "5f815d72ec04a36d572e0b9af683949251e0ab32f5123b889ee9f17e4ac99fd2",
+          "bytes": 32261
+        },
+        "actual_v06_finished_legs": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase0-actual-legs-node.png",
+          "sha256": "4801e56a51301b7fd9c20df72bc262bcf6937d4626ada8b2e5a65573b5566112",
+          "bytes": 102926
+        }
+      },
+      "complete_actual_fixed_shoe_RGBA_changes": {
+        "LEFT": 0,
+        "RIGHT": 0
+      },
+      "strong_alpha100_4connected_components": [
+        166127
+      ],
+      "alpha16_detached_components_ge3": [],
+      "RIGHT_staff_rotation_orthonormality_error": 0.0
+    },
+    {
+      "phase": 1,
+      "name": "WINDUP",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/thunder_female-NW-attack-1-WINDUP-actual-native-rig-v07.png",
+        "sha256": "be7cd10470ea259d2d461336cb8cb70a53ca96e32c47f3113f7d83a503c8cb3f",
+        "bytes": 489030
+      },
+      "rgba_sha256": "770bdf13972901cdba042a394cdd2dfe9a31ffafa65164c4fa32de526583d2aa",
+      "actual_pose": {
+        "name": "WINDUP",
+        "ang": 3.0,
+        "delta": [
+          6,
+          7
+        ],
+        "re": [
+          779,
+          540
+        ],
+        "rw": [
+          843,
+          472
+        ],
+        "le": [
+          575,
+          536
+        ],
+        "lw": [
+          548,
+          629
+        ],
+        "staff": 20.0,
+        "lk": [
+          570,
+          817
+        ],
+        "rk": [
+          697,
+          855
+        ],
+        "cloth": -7
+      },
+      "reviewed_node_transfer": {
+        "RIGHTfore": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase1-actual-RIGHTfore-node.png",
+          "sha256": "2fab7e447ad2d0279c5c22d8d30f50b64e5b0d010e4964365612e5afc3c3be42",
+          "bytes": 39268
+        },
+        "RIGHTstaff": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase1-actual-RIGHTstaff-node.png",
+          "sha256": "412a239cbe8b46531010d695ab49691819d1b13c0599966ed1901da599ce43fd",
+          "bytes": 107891
+        },
+        "LEFTupper": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase1-actual-LEFTupper-node.png",
+          "sha256": "b35f1922d7a75944fa809a4d51d7827a31c0160ece748162c348503c0b5e9e30",
+          "bytes": 33133
+        },
+        "actual_v06_finished_legs": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase1-actual-legs-node.png",
+          "sha256": "fa8038c9f9c27f7f0c8b99b60b69fd3265a7c892146e5cb03434cb6629b43fe2",
+          "bytes": 102974
+        }
+      },
+      "complete_actual_fixed_shoe_RGBA_changes": {
+        "LEFT": 0,
+        "RIGHT": 0
+      },
+      "strong_alpha100_4connected_components": [
+        162521
+      ],
+      "alpha16_detached_components_ge3": [
+        {
+          "pixels": 3,
+          "bbox": [
+            760,
+            386,
+            763,
+            387
+          ]
+        }
+      ],
+      "RIGHT_staff_rotation_orthonormality_error": 2.2221803318675302e-17
+    },
+    {
+      "phase": 2,
+      "name": "COIL",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/thunder_female-NW-attack-2-COIL-actual-native-rig-v07.png",
+        "sha256": "a63018568b7a644c2b5c2fa778c878f41dbb06fe8ca9855d14cd383dfffb4dc4",
+        "bytes": 476487
+      },
+      "rgba_sha256": "ee3a7526d5aa074a83dee565e8daf557dcb5f8b7505dade5c389ce242f06a406",
+      "actual_pose": {
+        "name": "COIL",
+        "ang": 6.0,
+        "delta": [
+          8,
+          13
+        ],
+        "re": [
+          791,
+          546
+        ],
+        "rw": [
+          860,
+          469
+        ],
+        "le": [
+          590,
+          547
+        ],
+        "lw": [
+          568,
+          645
+        ],
+        "staff": 32.0,
+        "lk": [
+          579,
+          825
+        ],
+        "rk": [
+          697,
+          865
+        ],
+        "cloth": -13
+      },
+      "reviewed_node_transfer": {
+        "RIGHTfore": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase2-actual-RIGHTfore-node.png",
+          "sha256": "9d29672e66d1d99a46ef5eecfe294d9c1b1a03f260edf2beb21c5cc49102cd4a",
+          "bytes": 42046
+        },
+        "RIGHTstaff": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase2-actual-RIGHTstaff-node.png",
+          "sha256": "f819107bd65d87a472334258f547e18acc934ca44732d81183fb76bd270bc68e",
+          "bytes": 109420
+        },
+        "LEFTupper": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase2-actual-LEFTupper-node.png",
+          "sha256": "045cc63d91094a69fc56926edc837422bc07eb5324ebdb644ffdeace24a1c7ea",
+          "bytes": 34716
+        },
+        "actual_v06_finished_legs": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase2-actual-legs-node.png",
+          "sha256": "f247a31a0e28bb5eac36089666c35206c50a67e46a898d4a2225af59bc3957a4",
+          "bytes": 102538
+        }
+      },
+      "complete_actual_fixed_shoe_RGBA_changes": {
+        "LEFT": 0,
+        "RIGHT": 0
+      },
+      "strong_alpha100_4connected_components": [
+        158184
+      ],
+      "alpha16_detached_components_ge3": [],
+      "RIGHT_staff_rotation_orthonormality_error": 1.1102230246251565e-16
+    },
+    {
+      "phase": 3,
+      "name": "STRIKE3",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/thunder_female-NW-attack-3-STRIKE3-actual-native-rig-v07.png",
+        "sha256": "1849a3e5bd1c0e08023f9fdd80ea28b34dd9c29cb358c2f4381280becbcd6af2",
+        "bytes": 470312
+      },
+      "rgba_sha256": "10fa4129b9743133e66dfde32e68f46c4ec31dc919e85a1ed318f8c7432dd42e",
+      "actual_pose": {
+        "name": "STRIKE3",
+        "ang": -6.0,
+        "delta": [
+          -17,
+          -9
+        ],
+        "re": [
+          608,
+          437
+        ],
+        "rw": [
+          522,
+          420
+        ],
+        "le": [
+          612,
+          510
+        ],
+        "lw": [
+          705,
+          565
+        ],
+        "staff": -70.0,
+        "lk": [
+          548,
+          797
+        ],
+        "rk": [
+          670,
+          842
+        ],
+        "cloth": 7
+      },
+      "reviewed_node_transfer": {
+        "RIGHTfore": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase3-actual-RIGHTfore-node.png",
+          "sha256": "03bc533a2b1ccc93bc67d6534c0ccbac1d64142dd3205dd7ff9f5e165c93d514",
+          "bytes": 36823
+        },
+        "RIGHTstaff": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase3-actual-RIGHTstaff-node.png",
+          "sha256": "599d8d337bad478e12549e58a3ad0dac377b148d27b6b9d75ba2445868639ca1",
+          "bytes": 105893
+        },
+        "LEFTupper": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase3-actual-LEFTupper-node.png",
+          "sha256": "a95b2c81b0c5227788a66fb6fd65d3ac3e28ed30c1533971ed678923d436230c",
+          "bytes": 34030
+        },
+        "actual_v06_finished_legs": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase3-actual-legs-node.png",
+          "sha256": "30706075ae40b66325f6667c0fb09cc8306c55d903db2b1d68b6437926ddf6e1",
+          "bytes": 103406
+        }
+      },
+      "complete_actual_fixed_shoe_RGBA_changes": {
+        "LEFT": 0,
+        "RIGHT": 0
+      },
+      "strong_alpha100_4connected_components": [
+        156190
+      ],
+      "alpha16_detached_components_ge3": [],
+      "RIGHT_staff_rotation_orthonormality_error": 1.1102230246251565e-16
+    },
+    {
+      "phase": 4,
+      "name": "FOLLOW",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/thunder_female-NW-attack-4-FOLLOW-actual-native-rig-v07.png",
+        "sha256": "7b2a049bd4ecaa84f2c0ad34033df1d95c0d5f4638bc0ffc232f9319257f8a7a",
+        "bytes": 467736
+      },
+      "rgba_sha256": "fac0891e44425aef879963004b9cfedab98435503db25b557f771837f8a64066",
+      "actual_pose": {
+        "name": "FOLLOW",
+        "ang": -8.0,
+        "delta": [
+          -24,
+          -3
+        ],
+        "re": [
+          600,
+          461
+        ],
+        "rw": [
+          520,
+          460
+        ],
+        "le": [
+          618,
+          516
+        ],
+        "lw": [
+          713,
+          573
+        ],
+        "staff": -88.0,
+        "lk": [
+          547,
+          805
+        ],
+        "rk": [
+          665,
+          850
+        ],
+        "cloth": 16
+      },
+      "reviewed_node_transfer": {
+        "RIGHTfore": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase4-actual-RIGHTfore-node.png",
+          "sha256": "f017e0a3217432fa61facafc8961c65cf2abadb8ec41dcfa454789627d4987ac",
+          "bytes": 34916
+        },
+        "RIGHTstaff": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase4-actual-RIGHTstaff-node.png",
+          "sha256": "b51e948dd43f05af38c4688aaaa67d93bfaf0c4489e196651cdb982cbc6a9929",
+          "bytes": 95015
+        },
+        "LEFTupper": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase4-actual-LEFTupper-node.png",
+          "sha256": "325adadb1cf1b8b4ada6a0ead070791ee0eecebe1d20ca2393f26f6a960e90e6",
+          "bytes": 37944
+        },
+        "actual_v06_finished_legs": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase4-actual-legs-node.png",
+          "sha256": "f4a1018f8f7e8b8bfc06bb47ea8790e53a87ad4a3ff2bb2f98d437f51d5968e6",
+          "bytes": 102247
+        }
+      },
+      "complete_actual_fixed_shoe_RGBA_changes": {
+        "LEFT": 0,
+        "RIGHT": 0
+      },
+      "strong_alpha100_4connected_components": [
+        156510
+      ],
+      "alpha16_detached_components_ge3": [],
+      "RIGHT_staff_rotation_orthonormality_error": 2.230872416578801e-18
+    },
+    {
+      "phase": 5,
+      "name": "RECOVER",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/thunder_female-NW-attack-5-RECOVER-actual-native-rig-v07.png",
+        "sha256": "755bc2a5155704a75c2df4fe41c0ae70a985c308ad260467e7f70bbbc261681b",
+        "bytes": 496032
+      },
+      "rgba_sha256": "6e335468ca6c27fba9aa1a661b4fa2a367a42a18da626b410d062a985d04f56d",
+      "actual_pose": {
+        "name": "RECOVER",
+        "ang": 0.0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          735,
+          520
+        ],
+        "rw": [
+          804,
+          450
+        ],
+        "le": [
+          567,
+          532
+        ],
+        "lw": [
+          522,
+          621
+        ],
+        "staff": -3.0,
+        "lk": [
+          560,
+          810
+        ],
+        "rk": [
+          680,
+          852
+        ],
+        "cloth": 4
+      },
+      "reviewed_node_transfer": {
+        "RIGHTfore": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase5-actual-RIGHTfore-node.png",
+          "sha256": "c8a4d1d92bece665cad74419ed1d9c1747487781c0f9eab02a2159ef24b6ddd1",
+          "bytes": 40450
+        },
+        "RIGHTstaff": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase5-actual-RIGHTstaff-node.png",
+          "sha256": "38a8bacb72023732c2aef71db41970319c6bf9cf8fca8b3aeb16c81ba8bfa536",
+          "bytes": 100260
+        },
+        "LEFTupper": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase5-actual-LEFTupper-node.png",
+          "sha256": "7ecda118b6f9b654e1d0738fc5210396350dfb54e41b03de42fbda0ba363a03e",
+          "bytes": 32368
+        },
+        "actual_v06_finished_legs": {
+          "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/phase5-actual-legs-node.png",
+          "sha256": "bf2e730201151ad4dd00b8cbdc5a8419e3686665fd831937a63444d572a44daa",
+          "bytes": 103309
+        }
+      },
+      "complete_actual_fixed_shoe_RGBA_changes": {
+        "LEFT": 0,
+        "RIGHT": 0
+      },
+      "strong_alpha100_4connected_components": [
+        165744
+      ],
+      "alpha16_detached_components_ge3": [],
+      "RIGHT_staff_rotation_orthonormality_error": 1.1102230246251565e-16
+    }
+  ],
+  "C_fixed": 2048,
+  "bodyunit_fixed": 2,
+  "common_rig_root": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "source_canvas": [
+    1536,
+    1536
+  ],
+  "one_shot": true,
+  "impact_frame": 3,
+  "resource_role_seconds": 0.42,
+  "visual_findings": [
+    "Dedicated READY/WINDUP/COIL, NW-directed STRIKE3, FOLLOW and RECOVER poses articulate actual torso/knees/nearLEFT counterarm and farRIGHT staff arm rather than relabeling an existing clip.",
+    "The rearNW unique head/bun/ribbon, gold-blue costume, white skirt and complete high-heeled boots remain coherent. Both real flat shoes preserve their initial native yaw and fixed support material across all six poses.",
+    "Complete far anatomicalRIGHT hand/forearm and rigid double-ended staff stay connected. All six reviewed grip/staff nodes transfer byte-exactly from the native reviewed grip sequence, with orthonormal staff rotations.",
+    "The new continuous RIGHT calf uses actual owned calf-to-flatshoe material and closes the earlier sawtooth/cut contour. The isolated dark old-underarm fragment now follows the real underarm cap; old LEFT fingertip traces are removed while preserving the complete moving hand.",
+    "STRIKE3 reaches the NW quadrant with the actual blade endpoint around[136.294,219.771]; recovery returns toward the ready guard without a body/equipment pop."
+  ],
+  "visual_limitations": [
+    "This approves actual source appearance and visible one-shot attack cycle. Final exact atlas/request binding and actual scoped Godot/Player/impact scheduling remain pending.",
+    "Visible stationary complete-shoe material is independently fixed; hidden3D anatomy and finite foot volume are not uniquely reconstructed. Foot perimeter yaw is retained rather than forced to a common heading slope.",
+    "One3px source bow-edge alpha fragment remains in WINDUP1; it is not a detached hand/armor or additional strong body. No alpha threshold or gameplay validation was relaxed.",
+    "The initial RIGHT flatshoe placement changed once by1nativeY before this final shared stance. It is constant across all six final frames and is not a perpose foot/root fit.",
+    "Only this new NW ATTACK source cycle is approved here; detailed actor approvals remain unchanged."
+  ],
+  "author_material_transfer_proof": {
+    "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/NW-ATTACK6-v06-to-v07-actual-underarm-cap-and-complete-hand-node-transfer-proof-v01.json",
+    "sha256": "c2aadedb57a0ac524234f9d154d7c8c93f2a9c14542919c9b490685732f810d5",
+    "bytes": 2441
+  },
+  "author_fixed_sole_and_gear_proof": {
+    "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/NW-ATTACK6-six-native-fixed-sole-and-rigid-gear-finite-proof-v01.json",
+    "sha256": "168e53cb336de6497b2a3b12c15ce88f2084c1f816bad7c9232e47301d884c79",
+    "bytes": 3133
+  },
+  "private_ledger_snapshot": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NWattack-final-source-view77-frozen.json",
+    "sha256": "cc7ce75b3b19c74b553ac30c8e7c6582f5efa98f0209d8042d85ab4f3cf07da2",
+    "bytes": 37955
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

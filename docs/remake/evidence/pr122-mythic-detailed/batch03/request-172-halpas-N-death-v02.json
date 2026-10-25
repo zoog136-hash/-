@@ -1,0 +1,48 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "N",
+  "role": "death",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Independent final r062 48clip QC confirms original N-death starts/retains FRONT SW/SE instead of correct REAR N. Reauthor six meaningful death poses from ONLY current correct N idle; maintain rear heading, complete 2arm/2leg model, farRIGHT weapon and emptyLEFT. No metadata-only camera fix possible.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v01.png",
+  "user_authorization": "Production imagegen/private agent preview allowed; no mainchat images/binary or preview links. Each role only one initial full6 edit; no identical retries.",
+  "prompt": "Edit the supplied CORRECT REAR IDLE model into a production SIX-POSE DEATH sequence.\n\nCOPY THE REFERENCE NORTH REAR-UP CAMERA EXACTLY: body and helmet face screen TOP directly AWAY from viewer. Rear helmet plates, back shoulder armor and center GOLD DORSAL seam/spine are visible; frontal face and breastplate are HIDDEN. Two shoulder wing fans spread to left/right from authentic back roots. Anatomical RIGHT hand/sword remains on imageRIGHT; LEFT free arm and cape imageLEFT. Keep rear-UP torso/hip view as animation begins. Do NOT instantly show the front chest skull or front pink breastplate gem. No front/SE model hidden behind similar wings. Source model identity is the provided REAR idle only. No camera rotation or mirrored anatomy.\n\nSIX MEANINGFUL DEATH poses in NONLOOPING order, with physical collapse and persistent corpse, no get-up:0 initial death hit in correct reference rear guard, shoulders tense, knees soften, torso still fully correct rear heading;1 pelvis drops, both knees buckle, head bows and upperback folds forward, RIGHT sword arm hangs lower, LEFT empty arm reaches down to brace, TWO complete arm chains only;2 low kneeling collapse on original facing, visible segmented back and bowed rear helmet, both crystal wing roots fold down with feather fans, cape pools, RIGHT weapon stays connected in hand;3 torso falls diagonally forward/side toward the background-facing direction, real hip/knee/shoulder roll visible continuously from2, one emptyLEFT hand may contact floor while RIGHT hand retains sword, no sudden camera flip or frontal chest presentation;4 body settles on its side/back-to-camera at ground level, legs extend/bend naturally and wings crumple/fold as solid articulated crystal fans, no disappearing equipment, helmet and back/side armor still identify same rear model;5 stable final corpse: fully down low on side with back toward viewer, no upright torso, same physical gold horned head+two arms+two legs, featherfans folded/resting connected at same two roots, burgundy cape pooled nearLEFT, original sword held in RIGHT hand beside body. Pose5 clearly final stable corpse, with a small settling change from4. Preserve actual continuous fall; final corpse may expose a side edge as result of visible roll in3-4 but must NOT become frontal SW/SE model at phase0/1/2. No overlaid ghost bodies, severed limbs, vaporizing or dissolve. Wings remain featherfans not membranes; no detached extra wing.\n\n\nProduction game sprite animation of THIS EXACT Halpas boss. Retain this exact black armor with narrow gold rims, closed horned gold/black helmet, segmented dark dorsal armor/spine with center gold chain, the TWO original feather-shaped purple crystal wing fans rooted at gold upper-back joints, long torn burgundy-red cape behind anatomical LEFT side, armored two legs and gold pointed boots, one compact broad purple crystal sword in anatomical RIGHT hand, and an EMPTY LEFT hand. Exactly TWO complete arm chains: shoulder→upperarm→elbow→forearm→wrist→hand; weapon must join the RIGHT palm continuously. No third arm, no extra hand, detached forearm, weapon swap, mirrored gear, new cape or wing model. Maintain recognizable rigid head/shoulder/pelvis dimensions in all six poses while joints articulate. Preserve same elevated orthographic RPG camera. No character redesign or new view inferred from role name.\n\nATLAS: one transparent PNG1024x1536, TWO columns by THREE rows, six independently drawn full poses left-to-right then top-to-bottom. Each512x512cell contains ONE complete figure. Generous pure alpha0 transparent gutters: entire horns/wings/cape/sword/boots including the final horizontal corpse fit within a centered380x380box with at least60px clear margin on every side. Same physical actor pixel scale across poses; movement of limbs/torso and actual falling changes silhouette but never shrink the body to fit. All detached-looking feather tips stay part of original wings. Solid opaque armor/crystal/cloth; only1–2px antialias edges, NO external light haze. Purple/fire light inside solid feathers only. No glow, bloom, aura, ghost copies, trail, smoke, particles, ground shadow, floor, background, lettering, grid, frame, numbers or other props. Full continuous anatomy and complete uncropped equipment.\n",
+  "requested_at": "2026-10-19T12:55:13.216308+00:00",
+  "imagegen_attempt_limit": 1,
+  "private_jpeg_budget_limit": 8000000,
+  "private_source_review": {
+    "visual_findings": [
+      "All six preserve genuine N rear-up model: rear closed helmet plates, central gold dorsal seam and dark segmented back armor are visible; front face, skull chest and frontal pink gem remain hidden. Initialguard0, buckling1 and kneeling2 retain straight rear-UP entry rather than original frontal/SE jump.",
+      "Six actual nonlooping death phases: rear guard0, bowed upperback and buckled knees1, clear low double-knee collapse2, rear/side forward fall3 with knees/hips opening toward prone, settled rear-side body4 and fully down low stable rear corpse5. Side shift during fall is continuously authored from bowed rear posture, no sudden frontal body or upright final pose.",
+      "Exactly two arm/hand chains: anatomicalRIGHT imageRIGHT forearm/hand remains connected to the original purple crystal sword in all6; emptyLEFT hand starts imageLEFT, reaches down during kneeling and is naturally occluded under the near cape/wing as body becomes prone. No extra arm/wrist/hand or weapon hand-swap. Two leg/boot chains remain with physical kneeling→extension.",
+      "Gold horns, black/gold plate landmarks, original two separate purple featherfans at two back shoulder roots, burgundy LEFT cape and purple sword remain through final corpse. Fans fold/settle and cape pools over ground-level body; no membrane, new wings or disappearing equipment.",
+      "Original raw PNG preserved unchanged. All6 body silhouettes are visually complete, zero alpha>100 pixels on outer source edges. Strict default geometry correctly HOLDs because a pose rectangle contains foreign neighboring body; default thresholds remain unchanged and no source pixels removed. A single lossless disjoint-body recovery is required before native integration."
+    ],
+    "visual_limitations": [
+      "Raw source art camera/identity/anatomy/motion PASS only. Geometry HOLD must be resolved through one pixel-preserving disjoint recovery without importer relaxation; root wrapper owns this single recovery attempt. Author has not run repacker.",
+      "Native SpriteFrames/game connection, physical body scale/support/fall anchors and actual Player temporal/transition QC remain for root. No final actor approval, detailed count, default profile/catalog switch or prior approved-history change."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "7710ab80d6ce9c488ce896083e2e204b0d2eb3416d10b5f6ff216a2951cfbfc6",
+    "raw_bytes": 2315855,
+    "request_sha256": "8d3f97aa994abbaaf243dbf71663bfa229d26ab911d6e4e4a8dda7a90f643653",
+    "review_sha256": "7ad50dc216d80f8785c3eaca85807e3a544d5caae78ee435ca7a5b1ea2b3299f"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v02.png",
+  "output_sha256": "7710ab80d6ce9c488ce896083e2e204b0d2eb3416d10b5f6ff216a2951cfbfc6",
+  "output_bytes": 2315855,
+  "original_generated_file": "/workspace/scratch/halpas-N-death-repair-v02/halpas-N-death-v02.png"
+}

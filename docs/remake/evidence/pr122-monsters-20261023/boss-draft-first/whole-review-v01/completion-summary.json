@@ -1,0 +1,88 @@
+{
+  "schema": "pr122-monster-batch-delivery-summary-v1",
+  "all_work_finished": false,
+  "normal": {
+    "total": 258,
+    "historical_completed": 221,
+    "historical_remaining": 37,
+    "omission_check_completed": 258,
+    "runtime_missing_required_slots": 0,
+    "profiles_unchanged": 258,
+    "raw_art_regenerated": 0,
+    "inactive_source_staging_missing_slots": 63,
+    "inactive_source_hold_actors": [
+      "놀",
+      "알비노 몽크"
+    ]
+  },
+  "boss": {
+    "total": 60,
+    "formal_approved_preserved": 43,
+    "formal_unapproved_remaining": 17,
+    "newly_default_connected": [
+      "얼음 여왕",
+      "알비노 데몬",
+      "죽음의 좀비 로드"
+    ],
+    "default_connected_clips": 99,
+    "default_connected_poses": 331,
+    "draft_motion_actors": [
+      "테베 아누비스",
+      "테베 호루스",
+      "테베 오시리스",
+      "아크모",
+      "제로스",
+      "그림 리퍼",
+      "공포의 뱀파이어",
+      "잔혹한 아이리스",
+      "질투의 공주 이자벨",
+      "탐욕의 여왕 벨리엘"
+    ],
+    "draft_action_sheets": 285,
+    "draft_source_poses": 1710,
+    "canonical_design_only": [
+      "교만의 왕자 데우스",
+      "알비노 유니콘",
+      "오만한 우그누스",
+      "왜곡의 제니스 퀸",
+      "욥니르"
+    ],
+    "corrective_authoring": [
+      "커츠",
+      "얼음 여왕",
+      "알비노 데몬"
+    ],
+    "repaired_atlas_clips": 139,
+    "repaired_poses": 834,
+    "source_art_regenerated_in_repair": 0,
+    "normal_speed_Godot_draft_clips": 272,
+    "normal_speed_Godot_draft_actors": 10,
+    "Kurtz_corrected_existing_run_clips": 3,
+    "Kurtz_changed_existing_poses": 9,
+    "Kurtz_preserved_clips": 30
+  },
+  "whole_review": {
+    "available_new_source_sheets": 285,
+    "complete_available_source_pages": 43,
+    "existing_dedicated_pages": 20,
+    "all_bosses_reconciled": 60,
+    "previously_approved_included": 43,
+    "normal_review_scope": "Frame omissions only"
+  },
+  "integrated_validation": {
+    "actual_Main": "PASS",
+    "script_errors": 0,
+    "requests": 144,
+    "clips": 99,
+    "poses": 331,
+    "attack_release_events": 24,
+    "captures": 27,
+    "original_resource_integrity": "723 atlases / 41442 frames / 233420026 bytes PASS"
+  },
+  "remaining_errors": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/remaining-errors.json",
+  "approval_history_changed": false,
+  "full_CI_repeated": false,
+  "production_delivered_to_PR": "PASS",
+  "verified_content_commit": "47fa6692ba929793c60b951c6098449fc3f4cea6",
+  "delivery_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/remote-delivery.json"
+}

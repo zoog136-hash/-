@@ -1,0 +1,725 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:267",
+  "role": "run",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "SW",
+  "metadata_sha256": "0997f3c2434fef670389519a01e68057d10907abfb0ff1d983398975d9475406",
+  "metadata_path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/pose-map.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/girtas-SW-run-v03six.png",
+  "output_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+  "output_canvas": [
+    3072,
+    4608
+  ],
+  "cell_size": [
+    1536,
+    1536
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+      "source_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+      "source_pose": 0,
+      "source_region": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "rgba_sha256": "1c84f819ddb84fcf2ea545fcce5a03a932f2df76e12a8d7091b9c1c3d2b57e0f",
+      "visible_pose_sha256": "3c064cee2c91ecc0851b0b65a9798c3409ebaa6fecf3b2c0cb78043aea0b1c90",
+      "newly_authored": true,
+      "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration.",
+      "output_region": [
+        141,
+        141,
+        1254,
+        1254
+      ],
+      "translation": [
+        141,
+        141
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 2,
+        "retained_boundary_max_alpha": 62,
+        "retained_boundary_pixels_xy_rgba": [
+          {
+            "xy": [
+              624,
+              0
+            ],
+            "rgba": [
+              160,
+              98,
+              12,
+              62
+            ]
+          },
+          {
+            "xy": [
+              625,
+              0
+            ],
+            "rgba": [
+              175,
+              107,
+              17,
+              45
+            ]
+          }
+        ]
+      },
+      "alpha_gt16_pixels": 532112
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png",
+      "source_sha256": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55",
+      "source_pose": 0,
+      "source_region": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "rgba_sha256": "dfe60ce2ec5f6a06b76b5fde53e9930d9396a836a0141891e1f633feb643691a",
+      "visible_pose_sha256": "2b03f2c9968115144aa7dbaa883a0b26ac86afc5be9495a23a1d219932edc8de",
+      "newly_authored": true,
+      "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration.",
+      "output_region": [
+        1677,
+        141,
+        1254,
+        1254
+      ],
+      "translation": [
+        1677,
+        141
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 571538
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+      "source_sha256": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+      "source_pose": 0,
+      "source_region": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "rgba_sha256": "c8e87d8b3933196426ff1b694d2fa00e88e7dea777abb4ac587d57f4cd3db6a1",
+      "visible_pose_sha256": "9b19df331ea9aa0b415bdfced36e1093f936fa9ffd296c8bf9aaa375fa4527c1",
+      "newly_authored": true,
+      "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration.",
+      "output_region": [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      "translation": [
+        141,
+        1677
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 475859
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png",
+      "source_sha256": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50",
+      "source_pose": 0,
+      "source_region": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "rgba_sha256": "8df0d3b44462e99b083af4a7c90a1227b96fb3f8aa2a77130e807372fad15c8a",
+      "visible_pose_sha256": "74b8608d6f87fd10f8626c87d2f16fb751d4462f2b5f9e60851c2bef992a6654",
+      "newly_authored": true,
+      "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration.",
+      "output_region": [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      "translation": [
+        1677,
+        1677
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 509821
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png",
+      "source_sha256": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44",
+      "source_pose": 0,
+      "source_region": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "rgba_sha256": "6c8c4e6a9b4579003202e299bde33464eba9a6b9c0f1cec5098d7cd38185ad9d",
+      "visible_pose_sha256": "59da519e85689e00fde6b08361877b6544a07180cb7afd7634bd2675386f4a37",
+      "newly_authored": true,
+      "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration.",
+      "output_region": [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      "translation": [
+        141,
+        3213
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 534301
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+      "source_sha256": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937",
+      "source_pose": 0,
+      "source_region": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "rgba_sha256": "497837997b3eb05d9d5c0d75a2a52c87f90c6f4cb26ad9e35643aed8f07d9601",
+      "visible_pose_sha256": "e35cc3bca839719710a73c03615099dc1d884148a205f84dc3e0606953b35445",
+      "newly_authored": true,
+      "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration.",
+      "output_region": [
+        1677,
+        3213,
+        1254,
+        1254
+      ],
+      "translation": [
+        1677,
+        3213
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 541950
+    }
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      3072,
+      4608
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "SW",
+        "region": [
+          141,
+          139,
+          1254,
+          1256
+        ],
+        "margin": [
+          397,
+          54,
+          794,
+          792
+        ],
+        "source_anchor": [
+          768,
+          1365
+        ],
+        "rgba_sha256": "6d47bed71a0ad9f908b5fba3026952fe65d5d81e4e5d1ce1a485b670bfe3c8b6"
+      },
+      {
+        "row": 1,
+        "direction": "SW",
+        "region": [
+          1677,
+          140,
+          1254,
+          1255
+        ],
+        "margin": [
+          397,
+          84,
+          794,
+          793
+        ],
+        "source_anchor": [
+          2304,
+          1336
+        ],
+        "rgba_sha256": "50821464387f9a38453a992c2c2d92ed72cb6d91dffe941d595d5f53348ca7a9"
+      },
+      {
+        "row": 2,
+        "direction": "SW",
+        "region": [
+          141,
+          1677,
+          1254,
+          1254
+        ],
+        "margin": [
+          397,
+          115,
+          794,
+          794
+        ],
+        "source_anchor": [
+          768,
+          2842
+        ],
+        "rgba_sha256": "c8e87d8b3933196426ff1b694d2fa00e88e7dea777abb4ac587d57f4cd3db6a1"
+      },
+      {
+        "row": 3,
+        "direction": "SW",
+        "region": [
+          1677,
+          1677,
+          1254,
+          1254
+        ],
+        "margin": [
+          397,
+          65,
+          794,
+          794
+        ],
+        "source_anchor": [
+          2304,
+          2892
+        ],
+        "rgba_sha256": "8df0d3b44462e99b083af4a7c90a1227b96fb3f8aa2a77130e807372fad15c8a"
+      },
+      {
+        "row": 4,
+        "direction": "SW",
+        "region": [
+          141,
+          3213,
+          1254,
+          1254
+        ],
+        "margin": [
+          397,
+          139,
+          794,
+          794
+        ],
+        "source_anchor": [
+          768,
+          4354
+        ],
+        "rgba_sha256": "6c8c4e6a9b4579003202e299bde33464eba9a6b9c0f1cec5098d7cd38185ad9d"
+      },
+      {
+        "row": 5,
+        "direction": "SW",
+        "region": [
+          1677,
+          3213,
+          1254,
+          1254
+        ],
+        "margin": [
+          397,
+          64,
+          794,
+          794
+        ],
+        "source_anchor": [
+          2304,
+          4429
+        ],
+        "rgba_sha256": "497837997b3eb05d9d5c0d75a2a52c87f90c6f4cb26ad9e35643aed8f07d9601"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 1214.5,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": "REQUIRED independent rigid skull/pauldron sizing and actual support/ground/AIR projection. No silhouette bbox normalization, no lowestAIRsole root, no standing near-far invariant.",
+  "region_height_span": [
+    1254,
+    1254
+  ],
+  "possible_region_height_mismatch": false,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed.",
+  "finalization": "EXISTING_IMMUTABLE_ATLAS_WITH_REVIEWED_OUTPUT_REGIONS",
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+    "base_geometry_sha256": "bf481de03545ec1d95efefe2fd2fefd0458f96e41b3b0249c7db5e3b9fc446de",
+    "direction": "SW",
+    "review_basis": "Six individually strict complete source PNGs, one exact1254-square pose per1536 cell, source SHA/RGBA pinned in pose-map; include original low-alpha fringes by outward metadata only. Independent full selected source proof d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4. No resize/repack/alpha cleanup or original error deletion. Retain original automatic transparent 1-2px top padding in phases0/1 as well: each review rectangle is exact union of original base rectangle and full selected1254source rectangle. No pixel change.",
+    "regions": [
+      [
+        141,
+        139,
+        1254,
+        1256
+      ],
+      [
+        1677,
+        140,
+        1254,
+        1255
+      ],
+      [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        3213,
+        1254,
+        1254
+      ]
+    ],
+    "nearest_owner_sha256": "a1f71a5a0eae4162022fc6d03ba7bbf0533f386efb980500e279c04d87b9aa3f"
+  },
+  "source_region_proof": {
+    "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+    "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+    "source_RGBA_sha256": "0579d963d12c0316a1285e7af3fe805b100a26020f24dfa4a2e9c3f8229e4554",
+    "base_geometry_sha256": "bf481de03545ec1d95efefe2fd2fefd0458f96e41b3b0249c7db5e3b9fc446de",
+    "derived_geometry_sha256": "546fb3654e45b51041eb8c6955766b1f1c09675df22084ca31d1f6b3098c6537",
+    "review_sha256": "036b7f239e03510e37993e5e1bdb432f7914dadf374d402396b068846c9019ff",
+    "review_basis": "Six individually strict complete source PNGs, one exact1254-square pose per1536 cell, source SHA/RGBA pinned in pose-map; include original low-alpha fringes by outward metadata only. Independent full selected source proof d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4. No resize/repack/alpha cleanup or original error deletion. Retain original automatic transparent 1-2px top padding in phases0/1 as well: each review rectangle is exact union of original base rectangle and full selected1254source rectangle. No pixel change.",
+    "source_unchanged": true,
+    "canonical_canvas_foot_anchors_unchanged": true,
+    "all_alpha_gt16_covered_exactly_once": true,
+    "foreign_foreground_pixels": 0,
+    "alpha_gt16_pixels": 3165581,
+    "added_alpha_gt16_pixels": 51,
+    "all_alpha_positive_covered": true,
+    "expanded_regions": [
+      [
+        141,
+        139,
+        1254,
+        1256
+      ],
+      [
+        1677,
+        140,
+        1254,
+        1255
+      ],
+      [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        3213,
+        1254,
+        1254
+      ]
+    ],
+    "default_importer_repacker_unchanged": true,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "a1f71a5a0eae4162022fc6d03ba7bbf0533f386efb980500e279c04d87b9aa3f",
+    "foreground_owner_sha256": "07dfa512a935c3553049f9103c2baceaca9d7882b4a137e00a9e5191590b77ac",
+    "detached_pixels": 17,
+    "detached_fragments": [
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          722,
+          176,
+          723,
+          177
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 1255.2517675749355,
+        "owner_margin_min": 1253.2517675749355
+      },
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          2473,
+          385,
+          2474,
+          386
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 1216.5500400723352,
+        "owner_margin_min": 1214.3139720948354
+      },
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          2596,
+          437,
+          2597,
+          438
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 1305.7093857363514,
+        "owner_margin_min": 1302.8809586116051
+      },
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          2673,
+          654,
+          2674,
+          655
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 1124.822208173363,
+        "owner_margin_min": 1121.9937810486167
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          888,
+          923,
+          889,
+          924
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 772.0524593575232,
+        "owner_margin_min": 769.224032232777
+      },
+      {
+        "row": 3,
+        "pixels": 2,
+        "bbox": [
+          2159,
+          1880,
+          2160,
+          1882
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 552.2327407896058,
+        "owner_margin_min": 549.996672812106
+      },
+      {
+        "row": 3,
+        "pixels": 2,
+        "bbox": [
+          2541,
+          1982,
+          2543,
+          1983
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 690.3948145807585,
+        "owner_margin_min": 687.3948145807585
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          2550,
+          1985,
+          2551,
+          1986
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 696.0208330215411,
+        "owner_margin_min": 693.0208330215411
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          668,
+          2171,
+          669,
+          2172
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 806.9919454368799,
+        "owner_margin_min": 804.75587745938
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          598,
+          3501,
+          599,
+          3502
+        ],
+        "nearest_max": 3.605551275463989,
+        "second_nearest_min": 660.9704985852243,
+        "owner_margin_min": 657.3649473097603
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          601,
+          3501,
+          602,
+          3502
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 661.2087416240048,
+        "owner_margin_min": 658.972673646505
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          667,
+          3731,
+          668,
+          3732
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 897.0624281509064,
+        "owner_margin_min": 894.2340010261602
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          1148,
+          3732,
+          1149,
+          3733
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 733.3048479316088,
+        "owner_margin_min": 731.068779954109
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          2464,
+          3774,
+          2465,
+          3775
+        ],
+        "nearest_max": 3.605551275463989,
+        "second_nearest_min": 930.026343712908,
+        "owner_margin_min": 926.420792437444
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          973,
+          3813,
+          974,
+          3814
+        ],
+        "nearest_max": 11.40175425099138,
+        "second_nearest_min": 834.1372788696115,
+        "owner_margin_min": 822.73552461862
+      }
+    ],
+    "minimum_required_owner_margin": 32.0
+  },
+  "original_failed_receipt": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/girtas-SW-run-v03six.assembly-error.json",
+    "sha256": "6fbf7ec5d904aa33f9fc193168771c418654a34eb13780391c9a33c78890a7f1"
+  },
+  "atlas_and_original_error_unchanged": true
+}

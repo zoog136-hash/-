@@ -1,0 +1,162 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "run",
+  "version": "NErunSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+    "base_geometry_sha256": "f71f7ef081dfba27efa29ba58a8638460bece90d1e2d5e720a81f365ca3037f4",
+    "direction": "NE",
+    "regions": [
+      [
+        395,
+        196,
+        768,
+        1044
+      ],
+      [
+        1927,
+        266,
+        768,
+        1044
+      ],
+      [
+        397,
+        1694,
+        768,
+        1044
+      ],
+      [
+        1931,
+        1732,
+        768,
+        1044
+      ],
+      [
+        391,
+        3338,
+        768,
+        1044
+      ],
+      [
+        1933,
+        3230,
+        768,
+        1044
+      ]
+    ],
+    "nearest_owner_sha256": "e11be5f5aa334f07455bc15a9afaedcbad6b20b165bebf511a04db99d622a48b",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 1cd81578c0a1fd2c5f7bd5ac19a1f9be7d453364e6396b7c65360e2439266fba"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+    "direction": "NE",
+    "role": "run",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        844,
+        1182
+      ],
+      [
+        2380,
+        1182
+      ],
+      [
+        844,
+        2718
+      ],
+      [
+        2380,
+        2718
+      ],
+      [
+        844,
+        4254
+      ],
+      [
+        2380,
+        4254
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2432,
+      2432,
+      2432,
+      2432,
+      2432,
+      2432
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "1cd81578c0a1fd2c5f7bd5ac19a1f9be7d453364e6396b7c65360e2439266fba",
+  "authored_common_root_float": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "common_root_integer": [
+    716,
+    1054
+  ],
+  "common_root_rounding_delta": [
+    -0.22916666666662877,
+    -0.27660070464844466
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "The six actual dedicated RIGHT CONTACT/LOAD, LEFT-drive AIR, LEFT CONTACT/LOAD and RIGHT-drive AIR poses form a readable running cycle at one common root, unit and preview scale. No fast WALK relabel or recolor/shared-profile approval is used.",
+      "Distinct actual heel-strike to loaded whole-shoe projection and opposite-side recovery are visible. Complete actual outsole/gold counter/stiletto materials and broad real leather ankle attachments are preserved.",
+      "The full six and5->0 seam retain identity, readable body compression/rise, genuine LEFT free-arm counterphase and complete white/gold cuff/hand with coherent cloth layering.",
+      "Both original RIGHTstaff ends and grip remain complete throughout the six; sampled actual opaque full-weapon region RGBA is unchanged under the same rigid body translation.",
+      "The original old stationary cuff outline and underhem skin/garter corridor have been repaired using actual transferred native materials. The two remaining proximal skin-cut spikes are now closed by continuous pelvis-to-frozen-femur material surfaces under the unchanged whitehem; no blocking new gap/fade or extra limb-shaped spur is visible.",
+      "Only phases2/3 changed after the complete six/cycle view, and those bounded hip regions were reviewed directly. All other source pixels and0/1/4/5 sources remain the exact viewed files.",
+      "Fixed275.2625 leg bones, source/actual controls and rigid original shoe projection agree with the explicit finite model. The native heel step[-132.23325357766257,119.00992821989632] exactly compensates16.8world units per actual.064-second phase.",
+      "Every original/actual raster alpha-positive foot texel quad plus8native guard stays above the declared floor during AIR, minimum24.05779749native. New tarsal and proximal material surfaces have separately verified positive AIR bounds; full staff conservative surface bound is38.5native.",
+      "Exact packed atlas is full-RGBA identical to all six final reviewed original PNGs, including every alpha-positive source pixel. All reviewed source rectangles are disjoint and include all their alpha-positive texels.",
+      "One common root rounding delta is applied across all six; fixed C2432/bodyunit2.375 and original source pixel scale are retained. No per-pose root/foot adjustment or art resampling is introduced."
+    ],
+    "visual_limitations": [
+      "This source and visible-cycle PASS permits exact packet preparation, not actor approval or game adoption. Actual Godot frames/Player/root fit/tempo/no-slide validation remains with parent.",
+      "Hidden hip, boot and flexible source-surface depths are one explicitly fixed compatible2.5D construction, not unique recovered anatomy.",
+      "Declared shoe-card contact/load texel quads reach approximately-5.129/-6.896native. Observed H/F support and AIR proof do not constitute whole volumetric sole-floor collision approval. No source/root/heel pin was moved to hide that limitation.",
+      "Exact atlas all-RGBA/all-alpha preservation must be bound to the final request/raw receipt separately."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+    "raw_bytes": 4428115,
+    "request_sha256": "c73e3578944a9bd8bd2b861742770f68386501e8c8d4f1e8b61596d7d94a8525",
+    "review_sha256": "e184344654df85575a8339cdbc5a44ccb03774c52f67be5c5f59a19340e91992"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-NE-run-actual-packed-r001-20261020/thunder_female-NE-run-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-zut_makq/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-NE-run-actual-packed-r001-20261020/request-NErunSixActualRig01.json": "c73e3578944a9bd8bd2b861742770f68386501e8c8d4f1e8b61596d7d94a8525",
+      "/workspace/scratch/mythic413-NE-run-actual-packed-r001-20261020/thunder_female-NE-run-six-actual-poses-r001.png": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+      "/workspace/scratch/mythic413-NE-run-independent-qc-20261020-v01/NErunSixActualRig01-exact-request-source-cycle-PASS-v01.json": "e184344654df85575a8339cdbc5a44ccb03774c52f67be5c5f59a19340e91992",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-run-NErunSixActualRig01.png",
+  "output_sha256": "21422e0aae26f5c3ed9f5432031f215a0acf9257fb3018d7c25e554cb06be7d3",
+  "output_bytes": 4428115,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-zut_makq/reviewed-source.png"
+}

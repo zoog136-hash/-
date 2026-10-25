@@ -1,0 +1,123 @@
+{
+  "schema": "PR122_SW_RUN_WHOLE6_SELECTED_SOURCE_INDEPENDENT_QC_V1",
+  "utc": "2026-10-19T16:34:05.616203+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "run",
+  "status": "PASS_SCOPED_ALL6_ACTUAL_SOURCE_ROLES_AND_IDENTITY",
+  "source_visual_status": "PASS",
+  "source_pins": [
+    {
+      "phase": 0,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+      "raw_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+      "repair_ROI_XYWH": [
+        300,
+        530,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 1,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png",
+      "raw_sha256": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55",
+      "repair_ROI_XYWH": [
+        230,
+        510,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 2,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+      "raw_sha256": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+      "repair_ROI_XYWH": [
+        340,
+        470,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 3,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png",
+      "raw_sha256": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50",
+      "repair_ROI_XYWH": null,
+      "gear_finding": "smallcollarPASS_keepUNCHANGED"
+    },
+    {
+      "phase": 4,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png",
+      "raw_sha256": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44",
+      "repair_ROI_XYWH": [
+        270,
+        550,
+        210,
+        220
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    },
+    {
+      "phase": 5,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+      "raw_sha256": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937",
+      "repair_ROI_XYWH": [
+        300,
+        500,
+        260,
+        280
+      ],
+      "gear_finding": "addedpointedguardHOLD"
+    }
+  ],
+  "selected_phase_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "findings": [
+    "0nearLEFTheel/contact\u21921nearLEFTflatcompression/recoverfarRIGHT\u21922farRIGHTleadAIR\u21923farRIGHTheel/contact\u21924farRIGHTflatcompression/recovernearLEFT\u21925nearLEFTleadAIR\u21920 uses genuineoppositehip/thigh/knee/shin/boot ownership, complete separateboots and faithfulSWcamera/model.",
+    "Palehumanface/longpalehair, hardgoldraycrown/pauldrons, longdarkgoldtrimrobe and permanentfarRIGHT longcontinuoussinuousblade retained.",
+    "Selected3 is realcrown-tip-restored76dfe\u2026 only. Oldclippedeca89\u2026 remainsHOLD/unselected. Source0notredone.",
+    "Hilt-onlyHOLD is withdrawn aftersame-direction faithfulwalk/attack comparison: no confirmednewstructuralguard defect. Keeporiginal0/1/2/crownrepaired3/4/5; newlygeneratedhilt5patchunselected."
+  ],
+  "actual_newrole_findings": {
+    "1": "NearLEFTfrontthigh\u2192bentknee/shin\u2192completeflatloadboot; farRIGHT separate raised recoveryboot visible. Genuinecompression.",
+    "2": "FarRIGHTleadingthigh emerges far/image-left pelvisside into completefrontknee/shin/boot; nearLEFTseparaterearboot. Genuineoppositeflightchain.",
+    "4": "FarRIGHTsupportthigh exits far-sideapron to deeplybentknee/shin and completeflatboot; nearLEFTseparatefoldedbackboot. Actualopposite1support.",
+    "5": "NearLEFTleadthigh emerges near/image-right pelvisside into frontknee/shin/boot; farRIGHTseparatefoldedbackboot. Actualopposite2flightchain. Sourcealone doesnotcertifyworldfloor.",
+    "model": "SWcamera/paleface/hair/hardgoldrays/longdarkgoldtrimrobe/twoarms-twolegs/fullboots remainfaithful. Actualaddedcrossguard is the isolatedgearproblem."
+  },
+  "gear_withdrawal_pin": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-SW-hilt-current-walk-attack-crosscheck-HOLD-withdrawal-v01.json",
+    "sha256": "67c349dca493ef69e00b6ab27ae4130aaa30117cdbf2a9b3557b938d6fc135f1"
+  },
+  "prior_source_proof_pins": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+      "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-repaired-contact3-independent-source-QC-v01.json",
+      "sha256": "907b10c63fd7797d381e5f7f569743b56e6fd6f6c858a7fa0d24d902930b4aca"
+    }
+  ],
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "physical_status": "HOLD_PENDING_COMMON_C_ROOT_GROUND_AIR_CANDIDATE",
+  "actual_runtime_status": "HOLD_NOT_COMPILED",
+  "remaining_HOLD": [
+    "ExactRGBAselectedsix assembly,rigidhead/pauldron/waist scale,C/root/supportplane/positive two-soleAIR arc physicalcandidate.",
+    "ActualcompiledTRES/profile/Player/Godot andfinalactorquality; actor2670/defaultcatalogOFF."
+  ],
+  "repository_mutations": false
+}

@@ -1,0 +1,31 @@
+{
+  "attempts": [
+    {
+      "revision": "v01",
+      "cause": "Sparse checkout lacked existing addon scripts/shaders and inherited script class cache entries",
+      "resolution": "Restored exact Git HEAD dependencies and all75 real script class names"
+    },
+    {
+      "revision": "v02",
+      "cause": "Native test image loader lacked a FontFile adapter and21 existing player/map dependencies were absent",
+      "resolution": "Read actual TTF bytes; restore exact existing assets"
+    },
+    {
+      "revision": "v03",
+      "cause": "Missing approved map sprites.json caused JSON nil and cascading array-index errors",
+      "resolution": "Restore exact existing metadata and ID textures"
+    },
+    {
+      "revision": "v04",
+      "technical": "PASS; no script errors",
+      "visual": "First-run class picker covered viewport; did not count as boss visual capture"
+    },
+    {
+      "revision": "v05-visible",
+      "technical": "PASS",
+      "visual": "Existing HUD complete_class_selection API dismisses isolated-save overlay; actual map/boss viewport inspected"
+    }
+  ],
+  "source_pngs_regenerated": 0,
+  "full_CI_repeated": false
+}

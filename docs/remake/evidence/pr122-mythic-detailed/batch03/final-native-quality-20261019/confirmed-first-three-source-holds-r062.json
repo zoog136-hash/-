@@ -1,0 +1,74 @@
+{
+  "schema": "pr122-independent-native-quality-findings-v1",
+  "actor": "transform:393",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+  "selected_frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+  "scope": "three confirmed additional source-view holds, independent full review continuing",
+  "status": "HOLD",
+  "actor_approved": false,
+  "counts_changed": false,
+  "findings": [
+    {
+      "direction": "N",
+      "role": "death",
+      "status": "HOLD_SOURCE_VIEW_HEADING",
+      "phases": [
+        0,
+        1,
+        2
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v01.png",
+      "source_sha256": "4f430986e83de4c10466432f1440500bee709ebf3bb56ad0edea688ade54dbc7",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r035/N-death.png",
+      "texture_sha256": "4f430986e83de4c10466432f1440500bee709ebf3bb56ad0edea688ade54dbc7",
+      "basis": "N back idle has rear helmet plates and a gold central dorsal seam. Death phase0 instead immediately presents the frontal face/chest assembly and pink breastplate gem; phases1-2 remain frontal/SE during collapse. No authored turn from N rear entry occurs. Source-body view error; crop/anchor/scale cannot repair it.",
+      "fix_type": "new_source_art_required",
+      "metadata_only_fix_possible": false
+    },
+    {
+      "direction": "NW",
+      "role": "hit",
+      "status": "HOLD_SOURCE_VIEW_HEADING",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v01.png",
+      "source_sha256": "26dcff657f39dafa88fed33d89369d83452d65cfe3a3095e659ba776b520531d",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r026/NW-hit.png",
+      "texture_sha256": "26dcff657f39dafa88fed33d89369d83452d65cfe3a3095e659ba776b520531d",
+      "basis": "Phase0 and recovery5 present the SW frontal face/chest pink gem, torso and bent knees aim down-left; new selected NW idle is a genuine rear-up-left model with dorsal armor/empty near-left hand. All six recoil views originate from the wrong SW camera. Reauthor from current NW idle, preserve right weapon and empty left.",
+      "fix_type": "new_source_art_required",
+      "metadata_only_fix_possible": false
+    },
+    {
+      "direction": "NW",
+      "role": "death",
+      "status": "HOLD_SOURCE_VIEW_HEADING",
+      "phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v01iso01.png",
+      "source_sha256": "5215ed8605d97b59f5b5620955a1f86579bda05051caf54dfa2ef8e9edb38093",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r034/NW-death.png",
+      "texture_sha256": "5215ed8605d97b59f5b5620955a1f86579bda05051caf54dfa2ef8e9edb38093",
+      "basis": "Phase0 starts on SW frontal face/chest with pink breastplate gem and down-left blade/knees rather than current NW rear-up-left dorsal model. Collapse continues from SW camera with no NW-to-SW turn. New NW rear-view death source needed. Existing raw untouched.",
+      "fix_type": "new_source_art_required",
+      "metadata_only_fix_possible": false
+    }
+  ],
+  "private_evidence_panels": [
+    "r062-entry-rear.jpg",
+    "r062-N-hit-death-six.jpg"
+  ],
+  "reviewer": "halpas_final_native_quality"
+}

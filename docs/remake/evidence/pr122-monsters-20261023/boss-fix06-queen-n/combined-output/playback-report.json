@@ -1,0 +1,443 @@
+{
+	"ActorMotion_cases": 40,
+	"AnimatedSprite2D_play_1x_engine_progress": "PASS",
+	"N_run6_positive_case": "PASS",
+	"PNG_paths_loaded": 25,
+	"SE_SW_replacements": "PASS",
+	"S_death_reused_for_requested_headings": 8,
+	"actual_ActorMotion_all108_source_poses": "PASS",
+	"all108_AtlasTexture_region_margin_per_frame_canvas": "PASS",
+	"all33_FPS_loop_frame_duration_match_frozen_inputs": "PASS",
+	"default_Main": "NOT_RUN",
+	"distinct_source_poses_played": 108,
+	"engine": "4.7.2-stable (official)",
+	"input_pins": [
+		{
+			"candidate": {
+				"bytes": 150966.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/queen-combined-candidate.json",
+				"sha256": "2794dd57de37c39a37dde81d72cf24a5a7728df0d3bab72ecd7cc5b00eaa8e3c"
+			},
+			"files_verified": 8.0,
+			"input": "base",
+			"manifest": {
+				"bytes": 2569.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-repair-session/queen-combined-file-manifest.json",
+				"sha256": "1594164139dbab49b14504db515bae50ef71a93c2de48eb2917d34364b578703"
+			}
+		},
+		{
+			"candidate": {
+				"bytes": 15107.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/candidate.json",
+				"sha256": "07f997da2c695d5a79df3aab2b493079451a39aa7664822996a4b3ce6da906ed"
+			},
+			"files_verified": 46.0,
+			"input": "N",
+			"manifest": {
+				"bytes": 11095.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/file-manifest.json",
+				"sha256": "83f93060662842393312978cbf0dad4110fb4e9f5f33d01e0c7317101045ef5a"
+			}
+		},
+		{
+			"candidate": {
+				"bytes": 5043.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/candidate-SE.json",
+				"sha256": "97ff41f06013c00e098bd164c2afc63dfdbf634420fd931fd4bbb17bc85941bc"
+			},
+			"files_verified": 31.0,
+			"input": "SE",
+			"manifest": {
+				"bytes": 7731.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/manifest-SE.json",
+				"sha256": "bbc1688a94f5e2a3138979e0f1db12da0448f7aa5651b622d46adb480ff7e91c"
+			}
+		},
+		{
+			"candidate": {
+				"bytes": 9265.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/sw-contact-final/candidate-SW.json",
+				"sha256": "17205b925b640dbd544c87a5d59db893abf310eb028d32b488b616e9cd0ecc0c"
+			},
+			"files_verified": 29.0,
+			"input": "SW",
+			"manifest": {
+				"bytes": 7849.0,
+				"path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix10-queen-diagonal-attack/sw-contact-final/manifest-SW.json",
+				"sha256": "5b2ccbf72a4723bcbc83af480f13fcf01c4ffd8df5869d6a1ea9c907e79df52e"
+			}
+		}
+	],
+	"native_clips": 33,
+	"new_approvals": 0,
+	"ordinary_role_heading_cases": 32,
+	"physical_contact_or_mythic_approval": false,
+	"production_connected": false,
+	"reports": [
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "E",
+			"requested_role": "idle",
+			"resolved_animation": "idle_0",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SE",
+			"requested_role": "idle",
+			"resolved_animation": "idle_1",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "S",
+			"requested_role": "idle",
+			"resolved_animation": "idle_2",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SW",
+			"requested_role": "idle",
+			"resolved_animation": "idle_3",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "W",
+			"requested_role": "idle",
+			"resolved_animation": "idle_4",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NW",
+			"requested_role": "idle",
+			"resolved_animation": "idle_5",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "N",
+			"requested_role": "idle",
+			"resolved_animation": "idle_6",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NE",
+			"requested_role": "idle",
+			"resolved_animation": "idle_7",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "E",
+			"requested_role": "run",
+			"resolved_animation": "run_0",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SE",
+			"requested_role": "run",
+			"resolved_animation": "run_1",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "S",
+			"requested_role": "run",
+			"resolved_animation": "run_2",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SW",
+			"requested_role": "run",
+			"resolved_animation": "run_3",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "W",
+			"requested_role": "run",
+			"resolved_animation": "run_4",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NW",
+			"requested_role": "run",
+			"resolved_animation": "run_5",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "N",
+			"requested_role": "run",
+			"resolved_animation": "run_6",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NE",
+			"requested_role": "run",
+			"resolved_animation": "run_7",
+			"source_phases_played": 6,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "E",
+			"requested_role": "attack",
+			"resolved_animation": "attack_0",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SE",
+			"requested_role": "attack",
+			"resolved_animation": "attack_1",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "S",
+			"requested_role": "attack",
+			"resolved_animation": "attack_2",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SW",
+			"requested_role": "attack",
+			"resolved_animation": "attack_3",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "W",
+			"requested_role": "attack",
+			"resolved_animation": "attack_4",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NW",
+			"requested_role": "attack",
+			"resolved_animation": "attack_5",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "N",
+			"requested_role": "attack",
+			"resolved_animation": "attack_6",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 187,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NE",
+			"requested_role": "attack",
+			"resolved_animation": "attack_7",
+			"source_phases_played": 3,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "E",
+			"requested_role": "hit",
+			"resolved_animation": "hit_0",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SE",
+			"requested_role": "hit",
+			"resolved_animation": "hit_1",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "S",
+			"requested_role": "hit",
+			"resolved_animation": "hit_2",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SW",
+			"requested_role": "hit",
+			"resolved_animation": "hit_3",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "W",
+			"requested_role": "hit",
+			"resolved_animation": "hit_4",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NW",
+			"requested_role": "hit",
+			"resolved_animation": "hit_5",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "N",
+			"requested_role": "hit",
+			"resolved_animation": "hit_6",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 20,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NE",
+			"requested_role": "hit",
+			"resolved_animation": "hit_7",
+			"source_phases_played": 2,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "E",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SE",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "S",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "SW",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "W",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NW",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "N",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		},
+		{
+			"ActorMotion_samples": 480,
+			"engine_clock_AnimatedSprite2D_1x": "PASS",
+			"requested_heading": "NE",
+			"requested_role": "death",
+			"resolved_animation": "death_2",
+			"source_phases_played": 4,
+			"virtual_ground_and_common_scale": "PASS_METADATA_ONLY"
+		}
+	],
+	"schema": "pr122-queen-combined-r002-playback-v1",
+	"source_RGBA_verification": "PINNED_BY_COMPOSER",
+	"total_case_phase_visits": 136,
+	"virtual_ground_registration": "PASS_METADATA_ONLY"
+}

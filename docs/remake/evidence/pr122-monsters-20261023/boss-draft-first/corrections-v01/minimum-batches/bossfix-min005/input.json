@@ -1,0 +1,170 @@
+{
+  "jobs": [
+    {
+      "actor": "monster:그림 리퍼",
+      "slug": "grim_reaper",
+      "clip": "W-idle-v02",
+      "direction": "W",
+      "role": "idle",
+      "corrects": "W-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/grim_reaper/W-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "E-attack-v02",
+      "direction": "E",
+      "role": "attack",
+      "corrects": "E-attack-v01",
+      "causes": [
+        "physical_component_count"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/E-attack-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "NW-idle-v02",
+      "direction": "NW",
+      "role": "idle",
+      "corrects": "NW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/NW-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-hit-v02",
+      "direction": "SW",
+      "role": "hit",
+      "corrects": "SW-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/SW-hit-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-idle-v02",
+      "direction": "SW",
+      "role": "idle",
+      "corrects": "SW-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/SW-idle-v02.json"
+    },
+    {
+      "actor": "monster:잔혹한 아이리스",
+      "slug": "iris",
+      "clip": "SW-run-v02",
+      "direction": "SW",
+      "role": "run",
+      "corrects": "SW-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/iris/SW-run-v02.json"
+    }
+  ],
+  "source_pins": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/W-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-3974637e-eaba-497d-9568-ab3b3926000c.png",
+      "sha256": "6f0b23fba543918847a2fbe2b6963401f460603f2fc72ec2fd1bb087348664cb",
+      "bytes": 2420607,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 966822,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/E-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-f436292f-f772-49be-8090-0e5c0a76ee5a.png",
+      "sha256": "8b505cd4b52dfdc37ac97f7f214d8ed8a735a1b0afafc5feec6cb54d266cf483",
+      "bytes": 2330816,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1020570,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/NW-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-85cbab5c-6dbc-406c-968e-0707d03a1680.png",
+      "sha256": "98183af2642dee497ec00aff16b5463ff243eee7d6914568a5ac8de0de89c8ca",
+      "bytes": 2620635,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 865865,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/SW-hit-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-c6370976-7cd8-4366-aea3-c03dd9ddfa93.png",
+      "sha256": "771f394f48b60777fe6a6224a80ade20f5264d56c702a59db85fe14fe59460db",
+      "bytes": 2402217,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 997735,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/SW-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-62de90ad-3560-4292-9a20-2220575555b1.png",
+      "sha256": "bdc2d816e7605afb6bab45fa5cb536b10fb150a8b93ef6d19fe4a0ab4f446181",
+      "bytes": 2085751,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1144889,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/SW-run-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-5a4af2ea-7f83-454c-82a2-4cfc11e6876d.png",
+      "sha256": "f0f6199981f7c62d9c0ee534cf853fe3d1f05fc5df8b8311d0ca81c70bff817f",
+      "bytes": 2502226,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 940922,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    }
+  ],
+  "normal_art_changes": 0,
+  "whole_quality_review": "TARGETED_CORRECTIONS_ONLY"
+}

@@ -1,0 +1,322 @@
+{
+  "schema": "actual-source-uncertain-landmarks-v1",
+  "status": "AUTHOR_ANNOTATION_NOT_QC_APPROVAL",
+  "source": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+  "source_sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+  "raw_size": [
+    1254,
+    1254
+  ],
+  "method": "manual private1254coordinate-grid interpretation; all actualsource pixels unchanged",
+  "points": {
+    "head_skull_center": {
+      "xy": [
+        598,
+        271
+      ],
+      "uncertainty_px": [
+        15,
+        16
+      ],
+      "visibility": "rear skull inferred under bun/curls; excludes bun ornaments"
+    },
+    "head_bun_center": {
+      "xy": [
+        617,
+        211
+      ],
+      "uncertainty_px": [
+        8,
+        8
+      ],
+      "visibility": "visible bun"
+    },
+    "neck_nape": {
+      "xy": [
+        622,
+        340
+      ],
+      "uncertainty_px": [
+        10,
+        9
+      ],
+      "visibility": "partly collar/hair occluded"
+    },
+    "L_shoulder_near": {
+      "xy": [
+        559,
+        383
+      ],
+      "uncertainty_px": [
+        12,
+        12
+      ],
+      "visibility": "visible shoulder ball under gold seam"
+    },
+    "R_shoulder_far": {
+      "xy": [
+        740,
+        406
+      ],
+      "uncertainty_px": [
+        14,
+        15
+      ],
+      "visibility": "visible far upper arm ball under trim"
+    },
+    "L_elbow_near": {
+      "xy": [
+        486,
+        500
+      ],
+      "uncertainty_px": [
+        16,
+        18
+      ],
+      "visibility": "sleeve center hinge inferred"
+    },
+    "L_wrist_free": {
+      "xy": [
+        430,
+        576
+      ],
+      "uncertainty_px": [
+        8,
+        8
+      ],
+      "visibility": "visible cuff to barehand"
+    },
+    "R_elbow_far": {
+      "xy": [
+        820,
+        498
+      ],
+      "uncertainty_px": [
+        15,
+        15
+      ],
+      "visibility": "white sleeve lower bend"
+    },
+    "R_wrist_grip": {
+      "xy": [
+        906,
+        433
+      ],
+      "uncertainty_px": [
+        9,
+        10
+      ],
+      "visibility": "visible cuff/hand and staff grip"
+    },
+    "waist_belt_center": {
+      "xy": [
+        675,
+        547
+      ],
+      "uncertainty_px": [
+        12,
+        11
+      ],
+      "visibility": "visible belt diamond/waist structural level"
+    },
+    "pelvis_center": {
+      "xy": [
+        669,
+        653
+      ],
+      "uncertainty_px": [
+        22,
+        22
+      ],
+      "visibility": "inferred under pleated skirt; not belt"
+    },
+    "L_hip_near": {
+      "xy": [
+        620,
+        684
+      ],
+      "uncertainty_px": [
+        21,
+        23
+      ],
+      "visibility": "inferred upper left femur under skirt"
+    },
+    "L_knee_support": {
+      "xy": [
+        668,
+        868
+      ],
+      "uncertainty_px": [
+        13,
+        18
+      ],
+      "visibility": "smooth boot; hinge inferred from thigh/calf contour"
+    },
+    "L_ankle_support": {
+      "xy": [
+        741,
+        1063
+      ],
+      "uncertainty_px": [
+        11,
+        12
+      ],
+      "visibility": "boot shaft to foot bend"
+    },
+    "L_forefoot_contact": {
+      "xy": [
+        708,
+        1161
+      ],
+      "uncertainty_px": [
+        5,
+        5
+      ],
+      "visibility": "visible leftmost gold sole/forefoot edge"
+    },
+    "L_heel_tip_contact": {
+      "xy": [
+        770,
+        1188
+      ],
+      "uncertainty_px": [
+        3,
+        3
+      ],
+      "visibility": "visible small gold heel tip, lower silhouette"
+    },
+    "R_hip_far": {
+      "xy": [
+        706,
+        699
+      ],
+      "uncertainty_px": [
+        25,
+        26
+      ],
+      "visibility": "far hip under skirt/near thigh; uncertain"
+    },
+    "R_knee_recovery": {
+      "xy": [
+        702,
+        813
+      ],
+      "uncertainty_px": [
+        28,
+        30
+      ],
+      "visibility": "mostly occluded hinge; broad uncertainty, not proof of exact bone fit"
+    },
+    "R_ankle_recovery": {
+      "xy": [
+        775,
+        861
+      ],
+      "uncertainty_px": [
+        15,
+        17
+      ],
+      "visibility": "inferred rear ankle at ornate heel collar"
+    },
+    "R_toe_recovery": {
+      "xy": [
+        791,
+        982
+      ],
+      "uncertainty_px": [
+        6,
+        7
+      ],
+      "visibility": "visible distal black/gold toe"
+    },
+    "R_heel_tip_recovery": {
+      "xy": [
+        811,
+        902
+      ],
+      "uncertainty_px": [
+        5,
+        5
+      ],
+      "visibility": "visible lifted heel point"
+    },
+    "staff_upper_endpoint": {
+      "xy": [
+        907,
+        16
+      ],
+      "uncertainty_px": [
+        2,
+        2
+      ],
+      "visibility": "visible exact upper tip"
+    },
+    "staff_lower_endpoint": {
+      "xy": [
+        932,
+        1110
+      ],
+      "uncertainty_px": [
+        2,
+        2
+      ],
+      "visibility": "visible exact lower tip"
+    }
+  },
+  "projected_segments": {
+    "neck_nape__waist_belt_center": {
+      "projected_raw_distance": 213.67732682715777,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "neck_nape__pelvis_center": {
+      "projected_raw_distance": 316.5090835979277,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "L_shoulder_near__R_shoulder_far": {
+      "projected_raw_distance": 182.45547402037573,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "L_hip_near__L_knee_support": {
+      "projected_raw_distance": 190.1578291840754,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "L_knee_support__L_ankle_support": {
+      "projected_raw_distance": 208.21623375712088,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "L_ankle_support__L_forefoot_contact": {
+      "projected_raw_distance": 103.40696301506973,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "L_shoulder_near__L_elbow_near": {
+      "projected_raw_distance": 137.90576492663388,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "L_elbow_near__L_wrist_free": {
+      "projected_raw_distance": 94.40338976964757,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "R_shoulder_far__R_elbow_far": {
+      "projected_raw_distance": 121.91800523302537,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    },
+    "R_elbow_far__R_wrist_grip": {
+      "projected_raw_distance": 107.80074211247342,
+      "scale_authority": false,
+      "note": "projected2D with occlusion uncertainty; no direct 3D bone-equality claim"
+    }
+  },
+  "C_calibration": "PENDING_INDEPENDENT_CONSTANT_BODY_UNIT_FIT; never alpha-height perpose normalization",
+  "baseline_sources": "requested existing413 Nphase0/known native points from Nauthor; no baseline fabricated",
+  "contact_geometry": "two heel/forefoot endpoints visible; actual floor plane and anchor require independent review",
+  "packing": "future edits1254fixedcanvas; perpose art+anchor together packing offsets explicit; real pelvis/limb motion remains"
+}

@@ -1,0 +1,61 @@
+{
+  "purpose": "PRODUCTION_REFERENCE_ONLY_NOT_GAME_ART",
+  "guide": "/workspace/scratch/girtas-E-run-right-landing-key-v01/E-run-right-forward-landing-isolated-joint-guide.png",
+  "guide_sha256": "8b9334f6058f6e070abdc53e3f5336c195bbed7445c4efb5d31f7320d47cbdb1",
+  "joint_coordinates": {
+    "pelvis_near_RIGHT": [
+      620,
+      575
+    ],
+    "RIGHT_knee": [
+      770,
+      775
+    ],
+    "RIGHT_ankle": [
+      850,
+      1000
+    ],
+    "RIGHT_heel": [
+      820,
+      1020
+    ],
+    "RIGHT_toe": [
+      930,
+      1020
+    ],
+    "pelvis_far_LEFT": [
+      655,
+      565
+    ],
+    "LEFT_knee": [
+      850,
+      675
+    ],
+    "LEFT_ankle": [
+      750,
+      835
+    ],
+    "LEFT_heel": [
+      730,
+      845
+    ],
+    "LEFT_toe": [
+      825,
+      845
+    ],
+    "shoulder": [
+      720,
+      350
+    ],
+    "head": [
+      770,
+      180
+    ]
+  },
+  "near_side": "anatomicalRIGHT",
+  "far_side": "anatomicalLEFT",
+  "near_support_plane_y": 1020,
+  "far_support_plane_y": 980,
+  "intended_forward_landing_constraint": "support heel and toe X > pelvis X, full sole flat; opposite whole boot lifted",
+  "old_idle_leg_silhouette_used": false
+}

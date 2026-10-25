@@ -1,0 +1,44 @@
+{
+  "status": "PASS_INPUT_ALL_OWN_ALPHA16_PRESERVED_EXACT_RGBA",
+  "raw_sha256": "c5f00361ecef96330a02b78879c2cc1c0e7173fe0ef479964ab34e40bec050f9",
+  "old_auto_region": [
+    23,
+    12,
+    1208,
+    1232
+  ],
+  "reviewed_input_region": [
+    23,
+    12,
+    1208,
+    1232
+  ],
+  "rgba_sha256": "35b6702c85f7a711f7ba64832d95318964b2a601b2ea2ef581fd052de5a8ddfd",
+  "source_alpha_gt16_count": 509613,
+  "edge_review": {
+    "strong_boundary_alpha_threshold": 100,
+    "selected_strong_boundary_pixels": 0,
+    "retained_alpha_gt16_boundary_pixels": 0,
+    "retained_boundary_max_alpha": 0,
+    "retained_boundary_pixels_xy_rgba": []
+  },
+  "new3_headmarker_exploration": {
+    "crown_core_y": 15,
+    "crown_peak_x": 593,
+    "pale_ROI_xyxy": [
+      490,
+      110,
+      640,
+      345
+    ],
+    "pale_bbox": [
+      490,
+      215,
+      575,
+      345
+    ],
+    "marker_native": 200,
+    "canvas_candidate_multiple8": 2432
+  },
+  "actor_approval": false
+}

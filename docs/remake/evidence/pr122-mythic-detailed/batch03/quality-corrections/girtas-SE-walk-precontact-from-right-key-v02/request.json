@@ -1,0 +1,32 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "SE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_walk_phase_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 5,
+  "intended_anatomical_support": "LEFT_TOE",
+  "references": [
+    "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png",
+    "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/ankle-only-precontact-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png": "1a08a21b414edcf7aa5ac2e1661dde21749c5d94daafd2d467d45625b3d0181c",
+    "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/ankle-only-precontact-production-guide.png": "63077b917277aba27d8f13a17062cddf08be8fbfc626b61b794f00c8c50bf5cf"
+  },
+  "transparent_background": true,
+  "corrective_reason": "RootidentifiedpriorLEFTmidstance primary biased wrongforwardleg. Materiallydifferent primary is already correct RIGHTforwardcontact0; keep samelegownership, author only LEFTtrailingtoe-support andRIGHTforwardprecontactankle/pelvis changes. Preserveallpreviousfailedart.",
+  "prompt": "Edit FIRST correct GIRTAS SE RIGHT-FORWARD CONTACT key into ONE missing GAME5 PRECONTACT / LEFT-TOEOFF pose. This is an ANKLE/SUPPORT CHANGE from an already correct right-forward pose, NOT a leg swap. Do NOT switch which leg is forward. FIRST correct key is primary exact body/camera/geometry authority. SECOND image masks ONLY the ankles/feet to show changed heel/toe targets, not final art. Keep the source exact leg ownership: NEAR anatomicalRIGHT leg is the LONG FORWARD LOWER-LEFT leg; FAR anatomicalLEFT leg is the SHORT TRAILING UPPER-RIGHT leg. No mirror/crossover/hand swap.\n\nMAKE ACTUAL DISTINCT NEW JOINTS FOR GAME5:\n- NEAR RIGHT long leg stays FORWARD LOWER-LEFT as source. Its RIGHT ankle now DORSIFLEXES: RIGHT toes point UP/LEFT, and the RIGHT heel has NOT landed yet, visibly lifted above its imminent contact point by about20-35sourcepixels. Extend the RIGHT knee softly a little farther forward from hip so it is the arriving swing leg, not an already load-bearing flat leg. Right heel/sole must not be FLAT as the source contact0. Show sole/heel silhouette and toe-up ankle changed, not just translating original figure.\n- FAR LEFT leg stays TRAILING UPPER-RIGHT as source. Its LEFT heel now lifts sharply while LEFT TOE points DOWN and SUPPORTS the receding ground at upperRIGHT. Clearly show LEFT ankle plantarflexion/heel-up toe-off (boot is pivoted onto toes), not an airborne left foot with sole sideways and not a big flat advancing left boot. Keep knee/shin attached to the same farLEFT hip.\n- Body weight is still on trailing LEFT TOE until next RIGHT heel landing. Pelvis subtly advances toward the arriving RIGHT leg, torso counterbalances, original robe/hair lag. Grounded WALK not RUN flight: LEFTtoe has real toe-support while RIGHT precontactheel hovers. Only one toe-support leg, no jumping/two-feet-air, no attack. Original TWO legs/two boots and connected limbs.\n\nFixed SE DOWNRIGHT camera and exact approved source model: visible original PALE face looks SCREENRIGHT/downright, frontal3/4 chest, longPALE hair, horncrown, narrowhard straight GOLD radialspines, blackgoldarmor and LONG DARK goldtrim layeredrobe. Do not change style/robe length into pants. RIGHT NEAR hand at IMAGELEFT holds ONE original LONG SINUOUS orangegoldweapon with same shape/length, LEFT FAR hand IMAGERIGHT empty. All gear/spines/tips fullinsidecanvas. No redVmask/flamefan/featherwings/shortbroadsword/newgear/extraarm/hand/limb. Part existing longrobe panels as source to see actual new ankle/heel geometry.\n\nOne complete highdetail game-sprite figure only, transparent requested1024square. Same physical body proportions as source with generous>=96px truealpha0 margin everyouteredge, wholegear<=800px, no crop. Hardopaqueweapon with brightmaterial insideoutline, no outwardbloom/haze. No ground, shadow, text, labels, coloredguide, arrows, grid, blur/trails/effects or duplicate figure. Finalcheck sameNEARRIGHT LOWERLEFT forward leg as source but heelnowUP/precontact andtoesUP; FARRIGHT? NO: FAR LEFT leg UPPERRIGHT trailing heelUP and toeDOWN supporting. Preserve original supportside identity, change actual ankle articulation only.",
+  "requested_at": "2026-10-19T13:28:32.926812+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_reference_only": true,
+  "root_budget": "One last changed-conditioning missingphase5, total7completedcalls cap."
+}

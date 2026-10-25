@@ -1,0 +1,433 @@
+{
+  "status": "PASS_EXACT_SIX_REVIEWED_NATIVE_SOURCES_AND_UNIFORM_SHIPPING_STORAGE_WORLD_EQUIVALENCE",
+  "request": {
+    "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/request-SWattackSixActualRig01.json",
+    "sha256": "7e0421084e5bdebe6b24f32a16e092aa9882e61b5d126e6c8b9d533b0c4a450b",
+    "bytes": 6490
+  },
+  "raw": {
+    "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/thunder_female-SW-attack-six-actual-poses-r001.png",
+    "sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+    "bytes": 4274538
+  },
+  "packing": {
+    "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/thunder_female-SW-attack-six-actual-poses-r001.packing.json",
+    "sha256": "7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+    "bytes": 5711
+  },
+  "source_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SWattack-final5ef9-peer-visual-and-independent-numeric-source-cycle-binding-v01.json",
+    "sha256": "93cf525241970f4c0dea5ff45ad527ce65b4a213a384a0327936e67706d7c9c1",
+    "bytes": 45698
+  },
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-SW-attack-author-fresh-20261020-v01/frozen-SW-ATTACK6-independent-SOURCE-PASS-metadata-v01/SW-ATTACK6-final-actual-native-SOURCE-ONE-SHOT-PASS-contract-v01.json",
+    "sha256": "5ef9a306f1af711b2b28f247fffa285cb6ff64be8279bbd691ac59c8b46fd112",
+    "bytes": 26980
+  },
+  "canonical_declared_descriptor": {
+    "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+    "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+    "packing_proof_sha256": "7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+    "direction": "SW",
+    "canonical_canvas": 2048,
+    "physical_canvases": [
+      2496,
+      2496,
+      2496,
+      2496,
+      2496,
+      2496
+    ],
+    "root_float": [
+      667.65625,
+      1003.5996691442447
+    ],
+    "root_integer": [
+      668,
+      1004
+    ],
+    "tile_size": 2304,
+    "storage_translations": [
+      [
+        384,
+        128
+      ],
+      [
+        384,
+        128
+      ],
+      [
+        384,
+        128
+      ],
+      [
+        384,
+        128
+      ],
+      [
+        384,
+        128
+      ],
+      [
+        384,
+        128
+      ]
+    ],
+    "atlas_origins": [
+      [
+        0,
+        0
+      ],
+      [
+        2304,
+        0
+      ],
+      [
+        0,
+        2304
+      ],
+      [
+        2304,
+        2304
+      ],
+      [
+        0,
+        4608
+      ],
+      [
+        2304,
+        4608
+      ]
+    ],
+    "source_anchors": [
+      [
+        1052,
+        1132
+      ],
+      [
+        3356,
+        1132
+      ],
+      [
+        1052,
+        3436
+      ],
+      [
+        3356,
+        3436
+      ],
+      [
+        1052,
+        5740
+      ],
+      [
+        3356,
+        5740
+      ]
+    ]
+  },
+  "canonical_declared_descriptor_sha256": "c0f3050c6b8a98ab942e286d7a2fe25bba630a0194302180688a6fbe5efa88f8",
+  "required_runtime_adoption": [
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval."
+  ],
+  "runtime_adoption_approved": false,
+  "six_source_bindings": [
+    {
+      "phase": 0,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-author-fresh-20261020-v01/actual-SW-ATTACK6-native-RGBA-PNG-final-shoulder-depth-v09/thunder_female-SW-attack-0-READY-actual-native-v09.png",
+        "sha256": "055a22575e95eb314afde8c44209683bc1e19a6e25b4900b1843397ec1a9645f",
+        "bytes": 884889
+      },
+      "original_source_RGBA_sha256": "f41b7d80c0a026751f0e03bdd548ec84768f9329f5bba806f029bbc884164dcd",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/original-six-exact-RGBA-transparent-storage/phase0-original1792-in-transparent2304.png",
+        "sha256": "df2a93d8f89c36c3b2a3a680c8a351256076a516407be61f8638232222d6c9a8",
+        "bytes": 900605
+      },
+      "shipping_RGBA_sha256": "f2ec322e338bd9b65b04868529625dfda11889fe800e35bb1c0bd42b1bf4e042",
+      "original_size": [
+        1792,
+        1792
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        384,
+        128
+      ],
+      "shipping_storage": [
+        384,
+        128
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 326754,
+      "shipping_alpha_positive_count": 326754,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2496,
+      "source_anchor": [
+        1052,
+        1132
+      ]
+    },
+    {
+      "phase": 1,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-author-fresh-20261020-v01/actual-SW-ATTACK6-native-RGBA-PNG-final-shoulder-depth-v09/thunder_female-SW-attack-1-LOAD-actual-native-v09.png",
+        "sha256": "ce16e2d05a16108ddb8b2117ed9a73950da0d835b37c4295d46acf2b586ec29b",
+        "bytes": 877009
+      },
+      "original_source_RGBA_sha256": "fe45de890a2c1b653abf99139a7d064db66cbe9e11add51bcab847ae3374cfcf",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/original-six-exact-RGBA-transparent-storage/phase1-original1792-in-transparent2304.png",
+        "sha256": "13b7ad6092761b1dab0edf7e8ab52b387dee25b7e41ce506eefbf500e6207d84",
+        "bytes": 894949
+      },
+      "shipping_RGBA_sha256": "c2690e4435315c6205ff50ab9018eba111b92424c32fa59e8c07a4148dd375d3",
+      "original_size": [
+        1792,
+        1792
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        384,
+        128
+      ],
+      "shipping_storage": [
+        384,
+        128
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 328884,
+      "shipping_alpha_positive_count": 328884,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2496,
+      "source_anchor": [
+        3356,
+        1132
+      ]
+    },
+    {
+      "phase": 2,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-author-fresh-20261020-v01/actual-SW-ATTACK6-native-RGBA-PNG-final-shoulder-depth-v09/thunder_female-SW-attack-2-WINDUP-actual-native-v09.png",
+        "sha256": "249bc4d8ece7859fc38543a0051e4150f82c235eddd655c7c5a91963abd8b936",
+        "bytes": 840391
+      },
+      "original_source_RGBA_sha256": "fa9010e30fd2062b02f0d5c9758a7cf2599887ccd112090182b0e850f7cc883e",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/original-six-exact-RGBA-transparent-storage/phase2-original1792-in-transparent2304.png",
+        "sha256": "362759861b5882a441cd6a80e079add1aee7eea9b0146b66c28b59fb3b5826d7",
+        "bytes": 856566
+      },
+      "shipping_RGBA_sha256": "d025f8634e5fab02e957319ee690679a2ebbfdfc0bd32b14d157c63c0038c9b9",
+      "original_size": [
+        1792,
+        1792
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        384,
+        128
+      ],
+      "shipping_storage": [
+        384,
+        128
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 315226,
+      "shipping_alpha_positive_count": 315226,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2496,
+      "source_anchor": [
+        1052,
+        3436
+      ]
+    },
+    {
+      "phase": 3,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-author-fresh-20261020-v01/actual-SW-ATTACK6-native-RGBA-PNG-final-shoulder-depth-v09/thunder_female-SW-attack-3-STRIKE-actual-native-v09.png",
+        "sha256": "c6e8b9b4c86f0f8510748b54efdb09530926326dad543c5a9ff1dfa86aa443c4",
+        "bytes": 849948
+      },
+      "original_source_RGBA_sha256": "0e67b760acc87b5a40814d8f02ae833ca4d91f0552054242aecac81788db995f",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/original-six-exact-RGBA-transparent-storage/phase3-original1792-in-transparent2304.png",
+        "sha256": "826689e23e14ee18f1cf5a193b03b594b92e19299983a5b28c3a1950a3870c11",
+        "bytes": 867809
+      },
+      "shipping_RGBA_sha256": "664ace91c1b17da71103bab9b937824a29e1582de349f549c50b1e3eab1877ba",
+      "original_size": [
+        1792,
+        1792
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        384,
+        128
+      ],
+      "shipping_storage": [
+        384,
+        128
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 321411,
+      "shipping_alpha_positive_count": 321411,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2496,
+      "source_anchor": [
+        3356,
+        3436
+      ]
+    },
+    {
+      "phase": 4,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-author-fresh-20261020-v01/actual-SW-ATTACK6-native-RGBA-PNG-final-shoulder-depth-v09/thunder_female-SW-attack-4-FOLLOW-actual-native-v09.png",
+        "sha256": "d233fa2f21cdb57756a72703d0e8b966cd72ae7579daa8aa898da705522e5ab2",
+        "bytes": 832346
+      },
+      "original_source_RGBA_sha256": "fce775fdedd58653d83e51a38e73e703fdabefb87a67d12209ae5c5e42fd595d",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/original-six-exact-RGBA-transparent-storage/phase4-original1792-in-transparent2304.png",
+        "sha256": "858d8f3ac93542358cfc1688f0fed009f9bde9048636bd8d6e2e9da1399085ea",
+        "bytes": 849071
+      },
+      "shipping_RGBA_sha256": "7b345d843f0902a29b10f285c3eb9ca4d816bee1f6125b46ce7846d704c4dfc1",
+      "original_size": [
+        1792,
+        1792
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        384,
+        128
+      ],
+      "shipping_storage": [
+        384,
+        128
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 317425,
+      "shipping_alpha_positive_count": 317425,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2496,
+      "source_anchor": [
+        1052,
+        5740
+      ]
+    },
+    {
+      "phase": 5,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-author-fresh-20261020-v01/actual-SW-ATTACK6-native-RGBA-PNG-final-shoulder-depth-v09/thunder_female-SW-attack-5-RECOVER-actual-native-v09.png",
+        "sha256": "8edb00312279597e18c62cfd376edfb1b8621b613935a6ff7ee9a28e3fb0a719",
+        "bytes": 858220
+      },
+      "original_source_RGBA_sha256": "e5aa476209707d0ebb37dc06114794f66e8d4b800f05057e823eaf77e29298e3",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/original-six-exact-RGBA-transparent-storage/phase5-original1792-in-transparent2304.png",
+        "sha256": "ef99852d182060d2d62a2a0759719e3b96793dd80b2ae10fb26127ab5f4ada6e",
+        "bytes": 874857
+      },
+      "shipping_RGBA_sha256": "7076297d5d85564351ab58b8029e7c737a55face1f104dddbde35fadaa392673",
+      "original_size": [
+        1792,
+        1792
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        384,
+        128
+      ],
+      "shipping_storage": [
+        384,
+        128
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 324841,
+      "shipping_alpha_positive_count": 324841,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2496,
+      "source_anchor": [
+        3356,
+        5740
+      ]
+    }
+  ],
+  "physical_C": 2496,
+  "common_unpadded_root": [
+    667.65625,
+    1003.5996691442447
+  ],
+  "original_storage": [
+    384,
+    128
+  ],
+  "shipping_storage": [
+    384,
+    128
+  ],
+  "same_integer_translation_all6": [
+    0,
+    0
+  ],
+  "uniform_root_rounding_delta": [
+    0.34375,
+    0.40033085575532823
+  ],
+  "source_resampled": false,
+  "root_C_profile_or_motion_controls_changed": false,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

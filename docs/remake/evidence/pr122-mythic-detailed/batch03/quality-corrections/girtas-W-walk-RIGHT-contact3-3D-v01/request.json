@@ -1,0 +1,37 @@
+{
+  "schema": "pr122-native-source-authoring-request-v1",
+  "status": "REQUESTED",
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "walk",
+  "version": "v02-RIGHTcontact3-3D-v01",
+  "source_batch": "batch03",
+  "expected_poses": 1,
+  "game_phases": [
+    3
+  ],
+  "newly_authored_poses": 1,
+  "operation": "AUTHOR_DEDICATED_TRUE_3D_RIGHT_SUPPORT_WALK_POSES",
+  "corrective_reason": "Complete faithful trueW alternatingnearLEFT/farRIGHTwalk with actual3Dhip/knee/boot depth; old2Dcontactcandidate remainsunapproved/preserved. NewnearLEFT0 alreadyindependentPASS, LEFT1/2 strict2PASS+independentpending.",
+  "references": [
+    "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/3D-W-RIGHT-far-forward-LEFT-near-back.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/3D-W-RIGHT-far-forward-LEFT-near-back.png": "77c6fccd2300c74fb25f22cfae0f0824228ce140ac4ceb7d1330e68839182856",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png": "480e064084b9245c4ecc18d30ca4dc6b35a1e7c0e2c47257f108a0cfe3e8f23f",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+  },
+  "reference_roles": [
+    "ABSOLUTE3Dleg/camera/support/occlusion authority",
+    "Identity/equipmentonly NOoldlegs",
+    "OriginalLONGrobe trim/materialonly"
+  ],
+  "prompt": "Dress EXACT 3D MANNEQUIN OF IMAGE1 as the faithful original GIRTAS from IMAGE2/3. Image1 is ABSOLUTE camera/anatomical hip-thigh-knee-ankle/boot/support/near-far depth authority. Image2 is identity/equipment ONLY with ALL OLD LEGS REMOVED; image3 is original LONG ROBE trim material only. No mannequin colors/guide background/floor/diagram/text in final.\n\nONE full WEST WALK gamephase3 RIGHT FAR heel-contact on transparent RGBA1254x1254. Entire original long wavy blade, hard radial needles, hair/longrobe/both boots inside canvas with70px transparent margin. No other figure, floor, shadow, lettering, particles, trails or glow bridges.\n\nEXACT NEW opposite contact fromimage1: ORANGE RIGHT FAR hip/thigh extends diagonally FORWARD toward screenLEFT, with its leading FAR RIGHT knee/shin behind the NEAR blue leg and FAR RIGHT front HEEL supporting at UPPER screen floor-depth lane, toes slightly raised. BLUE LEFT NEAR hip/thigh instead extends BACK diagonally toward screenRIGHT, its rear TOE supports at LOWER floor-depth lane, heel raised. BLUE near thigh is foreground crossing IN FRONT OF orange far thigh; copy this actual 3D hip/leg occlusion, not just boot heel outlines. TWO real connected legs only. Original long dark gold-trimmed split robe must open/wrap naturally so real FAR RIGHT hip->front thigh->knee continuity is visible, NEAR LEFT hip->rear thigh->knee clearly runs BACK RIGHT. Preserve ankle-length hanging robe/side/back panels and faithful trim, never replace by segmented trousers or hide all roots under flat skirt. Genuine upright WALK contact, NO AIR/run/high knee.\n\nOriginal character fromimage2: true W left-facing side view, pale profile face/nose LEFT and one visible side eye, long silver-white hair, original crown, fine HARD straight GOLD radial back spikes toward imageRIGHT (not feathers or soft flame wings), dark black/gold armor and LONG robe fromimage3. ONE head,TWOarms,TWOlegs. The anatomical RIGHT FAR arm permanently holds ONE full original LONG SINUOUS GOLD/ORANGE WAVY SOLID BLADE toward imageLEFT; coherent right shoulder/upperarm/elbow/forearm/wrist/grip, natural torso occlusion only, no extra blade or swapped hand. The BLUE anatomical LEFT NEAR arm is the distinct visibly EMPTY near hand with gentle walk counter-swing. Same model/boot-greave gold edging/material quality as original, no new equipment. Only the near/far leg/hip joint arrangement and natural walk folds change.\n\nOutput only the finished faithful Girtas in EXACT farRIGHTfront/nearLEFTback pose fromimage1 on transparent background.",
+  "transparent_background": true,
+  "attempt_policy": "One materially3D-authority generation then source/anatomy/support/geometryindependentreview; nofakefullcycle/identicalretries.",
+  "actor_approval": false,
+  "image_chat_attachment": false
+}

@@ -1,0 +1,47 @@
+{
+  "key": "transform_267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v10LEFTmidstance1",
+  "status": "HOLD_BARE_UPPER_THIGH_REDESIGNS_ORIGINAL_FULL_ARMOR",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "game_pose_map": [
+    1
+  ],
+  "request_path": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10/request.json",
+  "request_sha256": "f400e8c2ba78a639daba226f35253b68fc128f4f13c27cfe32ec711b0a7f9af4",
+  "original_generated_file": "/workspace/generated_images/exec-9ab33cb3-c32d-4534-8922-727a04c80180.png",
+  "raw_path": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10.png",
+  "raw_png": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10.png",
+  "raw_sha256": "22b6172ae3a607f8c5b5e9fcb920f662c5d2409d02f3301c678167f0e631563e",
+  "raw_bytes": 1312453,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-visible-RIGHT-passing-v10/generated-private.jpg",
+  "private_preview_bytes": 116289,
+  "source_visual_status": "HOLD",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T14:55:01.455691+00:00",
+  "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+  "outer_edge_alpha100_count": 0,
+  "visual_findings": [
+    "The actual far LEFT leg bears a flat sole under the torso and the near RIGHT leg bends back into passing swing, with its hip/thigh chain visible at the slit. The material stance design is plausible.",
+    "However a conspicuous pale bare-skin patch is exposed on the near RIGHT upper thigh above the armored knee. The original selected Girtas is covered in black-gold armor/long dark robe; this new skin/upper-leg garment change is not part of the faithful equipment model.",
+    "Keep this source HOLD despite useful leg design. A localized actual artwork correction must cover that bare upper thigh with faithful black-gold under-armor/cloth, preserving this pose/long robe/whole source history. Do not mask it through crop, metadata, recolor-only completion claim or generic pants substitution."
+  ],
+  "visual_limitations": [
+    "Source design scope only. Exact C/root/projected20canonical near/far floor and toe clearance require full6 authored layout and actual compiled review. Existing old raw/HOLDs and all actor counts stay unchanged."
+  ],
+  "independent_source_review": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-LEFT-midstance1-visible-RIGHT-passing-v10-independent-source-review.json",
+    "sha256": "c8333310c5155a76792387ed237b726fdaf4bd0c4d6ad6e3851a213cd4d2b044",
+    "status": "HOLD"
+  }
+}

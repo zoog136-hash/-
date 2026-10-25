@@ -1,0 +1,210 @@
+{
+  "schema": "pr122-413-hardened-integration-negative-checks-v02",
+  "status": "PASS",
+  "proposal_sha256": "bb66cf45acb07381f1d3583d35c2f8a1b8c1973c288a59f63c53666ec1d23fd9",
+  "checks": 49,
+  "results": [
+    {
+      "name": "strict_nested_finite_0",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_1",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_2",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_3",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_4",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_5",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_6",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_7",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_nested_finite_8",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "strict_valid_finite_json",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "encode_before_open_0",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "encode_before_open_1",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "encode_before_open_2",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "encode_before_open_3",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "absent_clean_output",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "physical_sidecar_exclusive",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "sparse_tracked_sidecar_exclusive",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "sparse_tracked_directory_exclusive",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "broken_symlink_sidecar_exclusive",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "symlink_parent_exclusive",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "traversal_rejected",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "all_original_input_pins_valid",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "stale_input_rejected_0",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "stale_input_rejected_1",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "stale_input_rejected_2",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "stale_input_rejected_3",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "actual_adoption_reviewed_binding_valid",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "adoption_request_binding_output_sha256",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_request_binding_output_source",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_request_binding_output_bytes",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_request_binding_original_generated_file",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_request_binding_status",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adopted_raw_pixels_sha_changed",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_manifest_raw_sha",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_manifest_raw_bytes",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_duplicate_manifest_raw",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "adoption_selected_slot",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "exact_staged_paths_and_sha_valid",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "unrelated_index_path_rejected",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "staged_blob_sha_rejected",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "missing_staged_path_rejected",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "exact_new_png_and_two_tres_directory_valid",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "whole_directory_extra_file_rejected",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "official_AST_write_guard_stage_pr122_native_locomotion.py",
+      "status": "PASS_COMPILE_ONLY_NOT_EXECUTED"
+    },
+    {
+      "name": "official_AST_write_guard_checkpoint_pr122_native_clip.py",
+      "status": "PASS_COMPILE_ONLY_NOT_EXECUTED"
+    },
+    {
+      "name": "compiled_reviewed_raw_texture_geometry_binding_valid",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "compiled_texture_reviewed_sha_mismatch",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "compiled_geometry_reviewed_binding_mismatch",
+      "status": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "compiled_retained_profile_byte_sha_mismatch",
+      "status": "PASS_EXPECTED_REJECTION"
+    }
+  ],
+  "fixtures": "/tmp/twilight-413-v02-negative-3biccfpn",
+  "actual_repository_writes": 0,
+  "actual_git_commands": 0,
+  "actual_adoption_or_stage_or_Godot": 0,
+  "source_images_generated_or_previewed": 0,
+  "original_35ba_unchanged": true
+}

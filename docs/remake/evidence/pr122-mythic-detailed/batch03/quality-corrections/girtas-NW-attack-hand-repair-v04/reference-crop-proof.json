@@ -1,0 +1,96 @@
+[
+  {
+    "reference": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-target-guard0-recovery5.png",
+    "sha256": "0404a12b4856abac0b2702ae26c8ea07c401a74a4068a6dd9594687212cf3676",
+    "source": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+    "source_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+    "poses": [
+      {
+        "source_phase": 0,
+        "source_crop_xyxy": [
+          42,
+          29,
+          469,
+          499
+        ],
+        "target_xy": [
+          42,
+          150
+        ],
+        "resampled": false,
+        "crop_RGBA_sha256": "c38d4fa1b8796a6f08b396d0c73f267ea1276437193b046ceeb37fd04ba12245"
+      },
+      {
+        "source_phase": 5,
+        "source_crop_xyxy": [
+          544,
+          1043,
+          968,
+          1504
+        ],
+        "target_xy": [
+          556,
+          159
+        ],
+        "resampled": false,
+        "crop_RGBA_sha256": "89b42f04f1555ae2a55df3dc42633a618f4493777ce65d57fdd3e5847f618896"
+      }
+    ],
+    "resampled": false,
+    "purpose": "Reference composition only; original source unchanged"
+  },
+  {
+    "reference": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-correct-farRIGHT-load1-load2.png",
+    "sha256": "07561f81db434bd024c5a0cae20f9168be1a00dedeb43a91c4d96a7ed6c6c9ad",
+    "source": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+    "source_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+    "poses": [
+      {
+        "source_phase": 1,
+        "source_crop_xyxy": [
+          605,
+          6,
+          939,
+          500
+        ],
+        "target_xy": [
+          89,
+          126
+        ],
+        "resampled": false,
+        "crop_RGBA_sha256": "1537f9ee7c0368b8556e7a66c1dec2e5961339a16891b88002095ce31a915ff5"
+      },
+      {
+        "source_phase": 2,
+        "source_crop_xyxy": [
+          146,
+          540,
+          490,
+          995
+        ],
+        "target_xy": [
+          596,
+          165
+        ],
+        "resampled": false,
+        "crop_RGBA_sha256": "98ddd2c0a20b6b726c05cf98d54d86d6f8f8096327e63142f0b510d0ae752cd6"
+      }
+    ],
+    "resampled": false,
+    "purpose": "Reference composition only; original source unchanged"
+  },
+  {
+    "reference": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/reference-faithful-NW-idle-pose0.png",
+    "sha256": "1ed7a661bca195b7d9d736b829f9cc2224b6c37cc666e7e41da13be4ff80e1e9",
+    "source": "/workspace/scratch/girtas-NW-idle-repair/girtas-NW-idle-v02.png",
+    "source_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+    "source_crop_xyxy": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "resampled": false,
+    "purpose": "Correct NW back-left, anatomical farRIGHT weapon-chain authority"
+  }
+]

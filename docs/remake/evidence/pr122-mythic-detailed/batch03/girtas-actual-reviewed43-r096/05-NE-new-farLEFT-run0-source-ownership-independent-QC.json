@@ -1,0 +1,45 @@
+{
+  "schema": "pr122-independent-source-ownership-review-v1",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "phase": 0,
+  "status": "PASS_SCOPED_FARLEFT_SUPPORT_AND_NEARRIGHT_HIGH_RECOVERY_SOURCE",
+  "independent": true,
+  "reviewer": "/root/girtas_final_actual_quality_v03; source and geometry not authored by reviewer",
+  "source": {
+    "label": "NEW BOUNDED RUN0",
+    "raw_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+    "raw_sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+    "request_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/request.json",
+    "request_sha256": "1cb1112cc71f236fb2329d066e51d41cd342b5a3ec9ad0604ec250bcec53aff6",
+    "geometry_or_crop_proof_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/source-crop-alpha16-proof.json",
+    "geometry_or_crop_proof_sha256": "51708878c83f3dc7886e1b8d0e3c461ea19a8dcedb4b9940cf559d5d6c23f3df",
+    "private_native_hipchain_ROI": [
+      400,
+      500,
+      1000,
+      1245
+    ],
+    "hipchain_ROI_RGBA_sha256": "2ce605c7dbf3975f27542400cc754f79b738b8e3735705d898181d3729e2eccc"
+  },
+  "handoff": {
+    "path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/fresh-source-ownership-review-handoff.json",
+    "sha256": "998d44039c2a104a23d40af10cc838c6460a2a1e67a33f427a27d13d299e1838"
+  },
+  "pins": "All3 raw/request/crop-proof and nativeROI RGBA checked exact",
+  "visual_findings": [
+    "Actual new0 has a lower far anatomical LEFT support chain emerging from the far/left hip/robe opening through knee and shin to the lower center-left boot. It is not merely nearRIGHT support relabeled LEFT.",
+    "Near anatomical RIGHT thigh is visibly flexed forward/high on screen-right, with bent knee and lower boot hanging high beside it; this recovery boot is substantially above the LEFT support boot. The chain differs from successful RIGHT-contact3, where the visible nearRIGHT shin extends to the lower-right support boot.",
+    "Native hip-chain comparison to independently established truefarLEFTwalk0 confirms matching ownership despite stronger run knee lift and shorter support stance. This fresh0 establishes genuine opposite ownership to preserved successful3.",
+    "Whole image retains NE back-three-quarter heading, right weapon arm on screen-right, pale hair, narrow hard radial rays, dark longrobe/gold trim and one long sinuous blade. Forward lean and high contralateral recovery read as run."
+  ],
+  "limitations": [
+    "Source-only ownership/camera/model scope; transparent PNG does not prove an absolute floor, body C, runtime ground or AIR clearance.",
+    "Four successor phases, full six cycle, canonical layout, actual compiled Player and actor final9checks remain separate pending work."
+  ],
+  "actor_approved": false,
+  "completed_added": 0,
+  "repo_mutations": false,
+  "main_chat_image_attachments": 0
+}

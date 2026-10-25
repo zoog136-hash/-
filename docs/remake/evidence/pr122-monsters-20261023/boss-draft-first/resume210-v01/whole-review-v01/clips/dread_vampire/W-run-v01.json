@@ -1,0 +1,24 @@
+{
+  "actor": "monster:공포의 뱀파이어",
+  "slug": "dread_vampire",
+  "clip": "W-run-v01",
+  "role": "run",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/W-run-v01.png",
+  "source_sha256": "246d5fb4fa22d8a463ff6e44c35a5a7a2eed006c1280e2875ddadd21b406fa80",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 5,
+    "foreground_alpha16_parts_ge200": 5,
+    "strong_component_areas": [
+      125368,
+      68514,
+      68177,
+      65396,
+      59212
+    ]
+  },
+  "status": "HOLD",
+  "cause": "physical_component_count",
+  "reason": "Expected exactly 6 separated poses, found 5; review/re-author, never invent slots"
+}

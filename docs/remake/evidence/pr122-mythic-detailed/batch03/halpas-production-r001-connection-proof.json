@@ -1,0 +1,1483 @@
+{
+  "schema": "pr122-native-production-connection-preparation-v1",
+  "key": "transform:393",
+  "status": "PREPARED_PENDING_REAL_DEFAULT_MAIN_AND_INDEPENDENT_QUALITY",
+  "utc": "20261019T140708684724Z",
+  "approval_issued": false,
+  "approved_history_preserved": 405,
+  "detailed_complete_before": 0,
+  "detailed_complete_after": 0,
+  "completed_added": 0,
+  "backup_directory": "/workspace/scratch/halpas-production-r001-backup-20261019T140708684724Z",
+  "original_frames": {
+    "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/SpriteFrames.tres",
+    "sha256": "d6f9deee8ef393ec9abc6511fb756721ace3d7274835d483634ee939756e9012"
+  },
+  "production_frames": {
+    "path": "assets/actors/eight_direction/native_production/halpas_393/r001/SpriteFrames.tres",
+    "sha256": "d54cca2c6ccebb4e1dd7133e8091377e298da7fbe8e038852ceac3e02de93260"
+  },
+  "original_profile": {
+    "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/NativeMotionProfile.tres",
+    "sha256": "85ed5e96e9b1ccf424ce0c05dfc7d65918d70edbcb1a709b6c6f987a524b8618"
+  },
+  "production_profile": {
+    "path": "assets/actors/eight_direction/native_production/halpas_393/r001/NativeMotionProfile.tres",
+    "sha256": "337e4179cefa41348727dc73650a63985b3a9d09cf3f958fc7657a5056b43cf2"
+  },
+  "register_before_sha256": "44aca2620d61ffe29fd94ab0bd4db48b123af9ce069e9588baafda8339271552",
+  "register_after_sha256": "c23702a717f9cc2159b560b6646e938377709bc949739d298644dbcee5660556",
+  "original_actor_record_sha256": "07eb4928fc8246b0e0ba87de2dc3609eed51a1970125445d3cd3dfc6b50c0236",
+  "prepared_actor_record_sha256": "68a21ba0527acab2968308b69856215ca8496bbf1c778323e55653c703f5fb31",
+  "preserved_history_entries_before": 73,
+  "preserved_history_entries_after": 74,
+  "entire_previous_actor_appended_to_history": true,
+  "native_track_count": 48,
+  "native_pose_count": 288,
+  "equivalence": {
+    "frames_except_two_metadata_flags_byte_identical": true,
+    "profile_except_frames_path_and_two_metadata_flags_byte_identical": true,
+    "all_288_regions_RGBA_margins_anchors_identical": true,
+    "all_native_track_records_identical": true,
+    "no_PNG_written": true,
+    "native_format_marker_preserved": true,
+    "physical_and_timing_profile_body_sha256": "d9c691ae0313deebc6231caa9fe3476e80cba61fc957c4ce99eac3968fc8d674",
+    "frame_resource_body_sha256": "e6c6c7687dcd7218254c045a2b050ad3a2c3a5ec81bf5457053249e02000288d",
+    "authoritative_combat_clock_before": {
+      "motion_style": "slash",
+      "authoritative_hit_ratio": 0.44,
+      "death_duration": 1.066,
+      "attack_animation_speed": 1.0
+    },
+    "authoritative_combat_clock_after": {
+      "motion_style": "slash",
+      "authoritative_hit_ratio": 0.44,
+      "death_duration": 1.066,
+      "attack_animation_speed": 1.0
+    }
+  },
+  "default_catalog": {
+    "path": "data/catalog_v19.json",
+    "before_sha256": "437a74a978b7984f84f853e814240140094126b1ace70b37a18d331d5e483c14",
+    "after_sha256": "b0f09604f1583ac691e2de587bc5e51a3ec152b726e36294b66ef75d1edf4c57",
+    "source_id": "393",
+    "group": "변신",
+    "only_target_object_replaced": true,
+    "unchanged_prefix_sha256": "66f3c865fa34752e383e0013ed52010b94edacfd0ca27118fe590686ba9a45e6",
+    "unchanged_suffix_sha256": "48fbe42135f4df29d759f64711fed58ff6ee3d2aa3021bec667bded34f271eb3",
+    "all_other_records_sha256": "f713645621f9e33d143adad39f8840e3ca0610bb53c554900c5a7f43a2d092e0",
+    "old_target_record_sha256": "9ea3f3a98b84358b63c6d0d6dc6e72de3b42673630ad60a04d0eda1df69e60c1",
+    "new_target_record_sha256": "06b6190fd897760f7faa8cd44d0a55b10c3ae846059282635d6b2d9fba4b02c2",
+    "inline_profile_sha256": "aa8ad624947ee950546b5c934f33d26fae56dfa12d7ac7f370c4bd6f51a718f2"
+  },
+  "profile_catalog": {
+    "path": "data/combat_animation_profiles.json",
+    "sha256": "22550e0dfc48a07bfb0b69793560ae1c0a9f5719e5aa786fc16e2ea4d2867910",
+    "profile_count": 1490,
+    "all_profiles_including_54_color_shared_profiles_unchanged": true
+  },
+  "source_manifest": {
+    "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/source-manifest.json",
+    "sha256": "45a2e6fd6a729781e31eddc4bae8d19656ad8230a76b4cada56b94545a20dd69",
+    "unchanged": true
+  },
+  "selected_tracks_unchanged": [
+    {
+      "direction": "E",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png",
+        "sha256": "ee982e57247119a40a7cc67e0bac9da4cd2b0267274a8d76de29dcac85d6e040"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r013/E-attack.png",
+        "sha256": "ee982e57247119a40a7cc67e0bac9da4cd2b0267274a8d76de29dcac85d6e040"
+      },
+      "geometry_sha256": "7f87deff0c665ca5b731f1c45c31846a1a7bb5f077b2937f46588e2617496775",
+      "frame_rgba_sha256": [
+        "55397c5316b61004e64d5b1e32c939862438a4a0a253d23115352c3d287b1b38",
+        "57db99c029e1bf90261b92f2a56ba957c211337527254014c57caf8821953d74",
+        "54183fc46feca603125f77d2c6b83669b97090b47a4e6251aa1ee7c88c2ec9ff",
+        "03bd7c4923c607952f21990fc2345ed76347043b0a908506ad3b537c19379ed8",
+        "b4d92390eaa8f29dac0695002a3debe15abeb6681d3e38e61fed4c50cec94789",
+        "32ad5e2d8127a90893f5cd81b1a9c5ceb820e0b0ebff3040d40f2cb24fe34d4a"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "af8a831e511cb9b79b7ca4712a66b5b371f728ae1738483aa91a671601763291",
+        "81f3d85f6bc8de4d1367988c1ab082b5d9a037954378120efe3f155bb47e40d6",
+        "39b4f52b042e6c6863b52d02ddc6e10baafffe9e7deb79679ccc90e60eff8991",
+        "eb0dc65f824ed59a8423d2670fea6c2eb6d4955897cfd2b5bebccb1af298333a",
+        "40e3398b7bc29ae8303a04b1813ad260ab233e60f898c7c427fc072e65f5d1eb",
+        "2581be6d248a44a96db71bc51f1fd03dfe803d0a180250931d7aca821168111c"
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-death-v01iso01.png",
+        "sha256": "00f4159fcf8f44899bda41f149645f4519bed5162b869c5baec788936ad90141"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r029/E-death.png",
+        "sha256": "00f4159fcf8f44899bda41f149645f4519bed5162b869c5baec788936ad90141"
+      },
+      "geometry_sha256": "ec578a521755df6bcd850a4e979fb606afa46c845f1f21924b1a7df468d38e7a",
+      "frame_rgba_sha256": [
+        "3f0ab7a50a1019cbf3d0fa288fdc1391b371e9b96535cce82a7117cf701ea0bf",
+        "9b86e08f86c8ac00b58cd65a1093eea47b4c3b62551f2826111c1375e7a8958d",
+        "0dd26669eb00885726d348e5e6216fdbda889957bb27799683e7203c315afc30",
+        "111c8a404c14db7d0b93869b552ca6e1386d64045bb655800ad7bb4bf7ce6103",
+        "09372f17dbf96d967c8f3cb2ad28dea945c9138f40c3a77784237c1007bbf925",
+        "cc35769f1e8cc7680d9b8ed7f7a5d45891d090e59f847cd14f9f215eb63c2534"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "b290c5452a8b2fae7d73c4e3887fc1c5ccbd22ed070b8ae7e1f4b3f0de0f6cc2",
+        "95376362323f0081984617f4bb4a78b2ab7d6f301ea08f59a7cffaff5ba2a0e3",
+        "c27f1488af50b458e3f757d7f298b04a0466910e4c304f60b6dce4838b74674c",
+        "f2ee17144803f2e38c5356126df1827e1144e04a8f159fdda737ac51885dd5f2",
+        "3139b427f8cce07e8d5caa25e29aa4470243eb469573c51368dc7caf5d206ceb",
+        "802b8f4a153102f2ba2f75dfebcc5a541b838670a3390a0207da02348d64964a"
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
+        "sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r064/E-hit.png",
+        "sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1"
+      },
+      "geometry_sha256": "ab7e16bf94ce2ebceb1f617d8f4319cbaa6b826441088c202f5a6d3434e6eaf6",
+      "frame_rgba_sha256": [
+        "fa5142ac68636480abf926232f80c2e5e22341a43b18f2573ac7ec3b145bdbe4",
+        "ccb436d707a3823a2f6a660493813236e77d1f3b413f2d946e76d0d323df9751",
+        "1b0afa5d051da6744773d65478b515ecbada6bafef332d677f3fecab478d0a29",
+        "e44cca53e798825fc31c751d1d2acb4ff314950169d09ac725bf916984b170c3",
+        "5d898bfa16a10b3acaa83c85d8136aa1cac004a0e82341789af40763bda37c9e",
+        "0204f5b67c0ac4b8fa1877c6fd51711451ee103abeebc35bee1ac7cd374c9444"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "ed67b4c147b1908fc0c59ad5f9271fb2c30af0ddc778367b20c2439a8bbd9233",
+        "ecdd23b390dd19421d596b23635283fe3c419ccbc643b478d298ebe0540b8c9e",
+        "c30d16363d69f4be2b4cefb98e8cde7fd27d636b59ee2fbf51d66032f5387013",
+        "f894819bf51eba88205c8d29596b316f27fbb3214cba7473a5d70e72ddccbc4b",
+        "ef44adba9d827a8202b4406e1ef5a17e1f95a13251bfa232053d0549d230ed7f",
+        "dff88c67c7d608e47a433530ee929845cd4f0881879832a5419d94b2774bbb88"
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+        "sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r048/E-idle.png",
+        "sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007"
+      },
+      "geometry_sha256": "b96fd2d1b54cc044913bbdae17a63f4b17ae2bf2f590821b0cfd266158c783ea",
+      "frame_rgba_sha256": [
+        "66591853ac00ea478a0e9eaad02b7b25772f9e874723fd80d773e509fea650c2",
+        "7c984ba0f7ba922f5f60d44491585177c85bc6407f03be6b0885c9392a895c25",
+        "d259ea14c74b7509d904da809e7df39110a57afcfed87f49e466f35b719381d6",
+        "05b85ef28ffdd6eed93f28dc961cd25d53828813ccf91fb157c3175997ce5e2a",
+        "dd64aec7b1ef8985a81f4042efe577f75dd4579607bfc4654b33ac606b01cea7",
+        "83d340ec639f15f67696395078ac1a7aa1202f7b6f0804dfcbac26f025197619"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "20f881771779471c11ef734126a5352cc6b32887f9f5870145d7360b9b186a11",
+        "7634573034d429fd1581e348cd9280c9c447752c908ebb85f94eb8968186c905",
+        "e6f3f9e387f51682170d85f336958f399dbab6b30a593657df59ea85f38cea62",
+        "ea627c5f3a549f968251356d88ec33019ba5e8bb70c9e4b84997362645ed6b0c",
+        "4570a0c31c2546f9b3b6308c1ac84f73c8590965f32a82a00efff744b112ed5a",
+        "02d24b5426c9a162e5c02e6ea3a05d20233af144649d5f34729f747a0b97bbbf"
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v03iso01.png",
+        "sha256": "7cdf37a20cd14c2f53adb7fed226c879b4a4f0162ab8ddde5ce9e2a42ef5b874"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r054/E-run.png",
+        "sha256": "7cdf37a20cd14c2f53adb7fed226c879b4a4f0162ab8ddde5ce9e2a42ef5b874"
+      },
+      "geometry_sha256": "21ee378dca31076302680849447c0a472b44bb842a079992cce2f96d5af7e11a",
+      "frame_rgba_sha256": [
+        "3e81252b019bccd5fc024cef219a380344986958f015989ea76daf334a2efd9f",
+        "b00b4612315bcecd739693ae8b19f9cfba5460fcf4100336c8166ba735a8affb",
+        "b2e8db1443ca922fb240aa1302c233e40483120fabfdd544ecbc9b73da6fb4d0",
+        "e709614a4ffe6e26eddeeb45053e97375732c37c4e1ca0079c19a404e47926dd",
+        "3485c3cf6896e98187f389c1fce2e6c3e3b52a91443da5876b4b7e75823dc058",
+        "0e395a367574ce6e30278af0f1d98bdb39b50f1313653c55ecd5ca3d1ad3aac9"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "41f87a86fb1c26dbb9e10a49ff7077a1ffaa21c4e4c47563a27eec00d6b56601",
+        "8f9670ee03953b15b773b1907e369ff37caeec4ce494733903deeeb825cf514e",
+        "5cd01de762759dcd1a9b702eeacfdcd9030f17c088c3cdca2ab7dae00cbd2309",
+        "1e4300834223500da3839cda49a483bfb6942d590c14b467332a4f335a21a064",
+        "d51b2a149b7f666770e1eef9fd979e1ea1d6085208f09100aaaf67c4ae617de7",
+        "79bda3c63d88962b6bd7d6981dcd9fc0840e8be9c1d8ead605c15d2bce1d89ec"
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
+        "sha256": "0676e2d482daaef489610cb96f524810d7952f83ddf3706bd82a0b4ec154c292"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r051/E-walk.png",
+        "sha256": "0676e2d482daaef489610cb96f524810d7952f83ddf3706bd82a0b4ec154c292"
+      },
+      "geometry_sha256": "8516fb8b3927a0d9166d7c727e291e41ca29ec474ba6e834788303c0e84fec93",
+      "frame_rgba_sha256": [
+        "5cbe9bcbb5d7b8963fb0e3121ad86666fe3f43c7345aa2e2b022071525b2916e",
+        "b0e06183ead3e296d53ad7a4e2d075772ab99814148f3a1f0fda7c1db26fbbb4",
+        "e841920a6fb2d6b6e46cb2e19d8a729fd448c72085a7fc5aac7a4280f5cb27c2",
+        "6f878bed728e047d38af4386fcdf70369e37999547606e283a9b4ebe4b9106a4",
+        "85e55a9d9942e245c9b4350d7c5c001f08172a523876bf08ac4ffbe4870c32ec",
+        "f270f4e6724f816bc5bd4a3fe0b1d08cc89eb82632f64261bbd0e8d8b140c979"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "363eeb7500e69299878ff1fc2588fbe08868309d32515b14875473ff555d3632",
+        "6e1429826e90ddeb6a196bf80f8ed94f2cf3182386eed5ae7e39f68367febedb",
+        "c72480d254cdcb6ac0841bbd489af95fa2544c99977c603725b6428520c75b1a",
+        "5158eb44ce3cd4aad5ac66d9f182a7cc35348558b89f3e8c5567fac76ec0e568",
+        "782ca2fecbc639b866522cbce1eb9b64a7b11563418f63e0e135097b22bad362",
+        "86750b8913354b90b2f5dd4f16ce998b9a4bd21346f2372553069b1dd66dc7a6"
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
+        "sha256": "a9c2c57d303eaeaf64ddc5d15a6a5bc847018267d4ccca61e10965b6e95c1f84"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r046/N-attack.png",
+        "sha256": "a9c2c57d303eaeaf64ddc5d15a6a5bc847018267d4ccca61e10965b6e95c1f84"
+      },
+      "geometry_sha256": "6308e5504949695195ed6c6d62510fb6bcc0599185784069836232b45c4a8741",
+      "frame_rgba_sha256": [
+        "a4ddc6f7f8e6dde97728418fc18dc3f5a00cd4c772cb3bc86473b0d14577a5e1",
+        "e6ea1a5f036499557b7466d6eb9930499a4d5ff89df811f5b8bb473d063d3deb",
+        "730bca5edaac25a6cc75e87f61324df7d03b92f35b07677da079e70cbe3f37e3",
+        "203a6cf9eb9ba8361bd3f8a43446a2f513e57bf4865c8af692e72d33dc0f3b5d",
+        "7597d7d401765ff87fa520e88f75445b552f6109d68d25526ad8853265a96423",
+        "196adffb4de82d89ac1d0fb02aeb538becce9848785bceda9c7575b2294eed73"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "782b2934e4edc7e5f38a059938202b1234a6d18204fc72309c14a13744b1aa76",
+        "194b296c19054d76a9e089067172c0c2722d2c01fbd835836cff50bc6d5bb449",
+        "27fbf28ae3a368c292fca82dbef6cedfb766b1d4843d88877c292cb1564111d6",
+        "42e69baeda4dd85901b883f8c1b32271f76e7d625c4a306d01efe68d0e9072dc",
+        "be57d0be305eab921cfb4f0c92795a4e0df947e859887fee1949bcb5d19795fd",
+        "e9dcc3a14a017b9487500a716a33662c308fb8badd2d49ebe72e41957b8a3b4c"
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v02iso01.png",
+        "sha256": "ad7429692e4a252d1dd1ea5bf507eacab7baef201a2c078c13375c409d21dd62"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r068/N-death.png",
+        "sha256": "ad7429692e4a252d1dd1ea5bf507eacab7baef201a2c078c13375c409d21dd62"
+      },
+      "geometry_sha256": "b83b037298c90d63f1752efe640b4daf3cc303abbde3854c7f2ce54224699662",
+      "frame_rgba_sha256": [
+        "6ab158b7dae02d8e29393853015d2eedcdcda738d5b7505290f77b394502eb8a",
+        "f78df7e206b083aef416a00a24c350da130cf76f92f120873fb8bd4510882800",
+        "a53633cbc6da4f6e1d88e09a0177e731a7718b05d1d0a5fd2708671482afa538",
+        "64c0b6a79a8bf3302be357a1fa9e25766c614c283f5d22bafabf1910a437426b",
+        "badaf717bca5f4a66f70064a3f5a3f67236e3b97e7c799a9582b3a377e8dd7fb",
+        "063ba3e8cd6260d13ec713460bdb2f495523706038e8e1b4b4cdac8bfef04aa9"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "c3ecfde8c2224b0991aeae2a148b829d8582dd70746df40d8403a252c1485aa2",
+        "f8cb8118ec04f4fff5292625e7eaef2482c7fe268ef0f5d05011f6d70fddd07a",
+        "2f47a3dc203e99637ff92bf9f2f8ca611c03eb93f434226f1110f852d8ea7bb4",
+        "98b586ce8ba72634f1b736c0add959acf0382ee1280ca582e917432155139b68",
+        "21817ad72f0c41eccdc0842027d7551b8678d68bd035f3af43ec23358c148f12",
+        "85537a16b86d8ab67705aa4f369ddb4882b7470f17a92fff792af20e535016a8"
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v02iso01.png",
+        "sha256": "c07306fb8348b7b60379d47a50b4ec4e97f08b20548c649e408bfe6fae4012e3"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r063/N-hit.png",
+        "sha256": "c07306fb8348b7b60379d47a50b4ec4e97f08b20548c649e408bfe6fae4012e3"
+      },
+      "geometry_sha256": "3e73796d0f00e257de43e6ec5107f4ddd6becf19fdc4762f0331351479b0d346",
+      "frame_rgba_sha256": [
+        "5842599cece34572b872cae2d73c20c6d8b177bb06e2730d27519a962246bab7",
+        "d1aeffa6a97beeaa64c1589f1c49674695cf9f44467bec9d02af09c568c5a104",
+        "61d44d8cc141b7e03356527ae444060048b79f390fc42ced20202ada0714ec9a",
+        "797f5b80e2b6f9837a5a60825524cbe47bbea9136854a64ab07d1820a6fb34d1",
+        "546bd48c6dc5b339617af7101676d1f7f4ca144f2749d5c047388d8aa731d67b",
+        "215cbb7f5953bf49e40e6d308ff03cffe24a664d041e29b9b58595ead220d1b2"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "a4ae230220ad2d0e893a843947265a32bdcbb779a0c0b18ec266b06374fff8b3",
+        "81b1efdc483995829131e967bfae07a39268b7f305cdb8f2d660ebd92685400e",
+        "74bf56524dc94eff5ed0532da359577db7a5659b0c549f2e6b9d0b75ec4d1eb1",
+        "a7ec620542905304a73af1c2986a6022f8604f7e9479875364117429abf7dc54",
+        "d055e25ed43b35169970510409bc536eff74cda2869c904d0355422196d5ab68",
+        "4147303222a96a5e50c99b9e34ba38d65a502b3c7eaa33c6e4dbbfae54ad6758"
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
+        "sha256": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r043/N-idle.png",
+        "sha256": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488"
+      },
+      "geometry_sha256": "51f8797fcb7b5c9c5e65c802a343121088fa465ac652fa01b40bc6b5dd88e127",
+      "frame_rgba_sha256": [
+        "92165cfc800a53f769e88c8e64b8620004a7c470c270dfdbbeaaead0dd0629af",
+        "0d24e680a61ae610b18ac2e8f9f33ece2010a758d0ea7ad3f1abd5ae663efb5c",
+        "12528f75fa73c3ea8f02448eb0402cbbab08e1a19012c5e0a524ef0fadfd5276",
+        "afb47b2b921ef9804eedbb0d54ea39bf04d179d60aee442115c5c404141e4434",
+        "3ee51104491346dcf1536a42be3c8c5b1652b1e8bb66cc60c9a31c8c29259587",
+        "208e1c69d3d4ccc87aeb0aa9e5427703d60576a62a112d954e3959bd4758b8f6"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "451c190f42861d06382a1aee5c977441c5dc80f7d7b79ffebdc159d5c3843d72",
+        "175c7d614ebc1dbe79b6c03cffb715937acfe0bea56967b895e78a3f9728e638",
+        "04840154fa69a50769d66b40134090abed76568189f3867afd73b6627a21d6bd",
+        "39f11cc7ff6f04204073b4f99aabd4cca00de0b63184f08b7263b8396c0c59cf",
+        "1f4c6d16706c0f639c6e4083ee7d45fd9e9147204bec8143fa96a7808cb239c1",
+        "94501200a6c7729e0862eac2948a74a851426e4c17daf8161fdb61beaf92b4f5"
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-run-v01.png",
+        "sha256": "6a590f4d8e5df5cde61cf8e99c4e92ded2a5302106a50e0b75fd92639ccaebdb"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r010/N-run.png",
+        "sha256": "6a590f4d8e5df5cde61cf8e99c4e92ded2a5302106a50e0b75fd92639ccaebdb"
+      },
+      "geometry_sha256": "ee85eb4ed4fc852990c391c41dfc6ddc5d6cd1a98d519dc963201d36cd173e03",
+      "frame_rgba_sha256": [
+        "fe65a9d14aa79afb16b69bee634d89de4e2da283c8f98ea62102c142b7611569",
+        "9793e6bd120ac65257d33e8d883a4fec07a9b8cf04f1a4563dd89e3508d46e8a",
+        "698e807490a3f78e176fe520a084efa64323ca40eb350510d688211dd3df8e5f",
+        "688583cdacedf51c18933bb856c1abeea7c493b7cca8e68b595bd114a9f2b42d",
+        "f2d729ca0828a768c28e228283e60c832a49d05cba3b811cbccf81aed5bdb4c4",
+        "74750cf1be99a85dd1c06e1bd260b11099ef19a1c9ff423638efd85a216c1c1d"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "94080b783fc4c419b210106c49029c24afac49bcf57c19e2f2cd705b6cb071da",
+        "a162bc7e1ac381032f74db5b00337a9cbba853c84c4b5b077998cb384ee97a1b",
+        "43d4b604d35eab3416a6e83582c0e91f5fa157556adc59164f0fada4c134ef18",
+        "f18ef8798af85a767fabfe5da9a69e665f626f13da0d82c829d6aa1e34908702",
+        "4ba9a7b510130181e6c5641d2bd235a8f6ae946e4dad94b0c0db8c21e3a6289f",
+        "8a8549f4ddd25d601039f45ce2694ee7894ba6b231ee9ea98ba45b7a26084862"
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
+        "sha256": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r009/N-walk.png",
+        "sha256": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68"
+      },
+      "geometry_sha256": "fc4914173851d483749cbd2a51053b659bd4f4e3c832d0bd772a926d4f3195e3",
+      "frame_rgba_sha256": [
+        "4e4340b5ed5ed49ff9f046705839e5499397b5dc70791bacb2db2391671864d6",
+        "826ff9e9e2f176f1105df8963c3b53ffa8f09ee4d212836d3e619bd14dc30f25",
+        "7dceacdb87250ca7e2bece81d0e60cfe3816256193f827b75eaec2fcacc182d2",
+        "c2c92c8cfda89e8e934d4995c2b3e6b515b62141e4e2799063aaf9cc16065ca4",
+        "87f3f5d7e6b74f157a4955bfd65417f4c49a3678b6bd75ceba9f611fd0d67c97",
+        "7611b32263384e3bbe9d1a69eff147e215f03b4e435cb6576c371c9bf9ef56a4"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "cbab164a9581b570f938f44faf5d96de453246b8ed7d4e3fc13e4bcd91b6c0f3",
+        "d495d08f6c51a1dd1bd986bbb69e0287757be59ad2ce55ee27c2be0220fd0235",
+        "0bcec43e0d2a492d26db3cbe38f0a6f398fa14ab118ef85325895b089e9aeef7",
+        "dc5668d2d49404a6a8220fa50a70643fedf3a2d4df68aeec47b83d3cac2e78a4",
+        "05b598471e49d4a60fb6cf19ba744a731c8337202980662a1490387da43d87b9",
+        "dd7bfaaeeae8af862c14fadf4f75138ba547a9894f9b27f8b0cb0882a7329072"
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
+        "sha256": "020fd6c34f3b9f52d804ad1b7eda2149ec91da97f031388f71bcca0c93681013"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r047/NE-attack.png",
+        "sha256": "020fd6c34f3b9f52d804ad1b7eda2149ec91da97f031388f71bcca0c93681013"
+      },
+      "geometry_sha256": "cb16e0ef7e394c84ecdec91c55d5f7b2513fe8aab4044fca227793043e37edf2",
+      "frame_rgba_sha256": [
+        "ca0f5ff527cf94cdb4ec733e7059ce5efb40e21398e34ab83cbc878a5e038be0",
+        "231f663269c3d118c56091cee6eaba81d243bdfda1df8fa79dac65f908890195",
+        "999c90f6ec14dc457e1b8c635e6c074e2bdfc271cdb7df6fe6b353c2c56a65a6",
+        "78c0dd92677449cbc564d64588712d56d3ddaf4624df657708e18c052c1c806b",
+        "166e384656b6af211427495e1a2e891ffeda924b879b50907dce3b037ef34bbd",
+        "7a769fabdf9be07c4c459e830f087555d28be6207a9339b0ab0d387d2cd53082"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "7ffc15595178d23fc79aacbf7f0e596c0fbc264249bd1f115decb02205a45f33",
+        "ad12f2802297e87f1dafb33ae371c790a14d244ccf236b72d74959e5f52f989c",
+        "8bd7f73c21561a41d8b0f10581f9b01e450c4a4cabe5e69da99876838589373b",
+        "8cf7b3d3d78f768b765a38e0916d012cd627803b857d57dc77b382207596d913",
+        "4fd48216a474093d46e80cca15425f50d503f75dd8f9f1d15d83c57e8d6aa69b",
+        "c7f5d62cbb14a1d6471e52dfac8f3ea76732ac197d33e5333935557a31432135"
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-death-v01.png",
+        "sha256": "136b0316e2833dee697807d0783df35b0d41de63899977ad05a608553e2f802d"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r036/NE-death.png",
+        "sha256": "136b0316e2833dee697807d0783df35b0d41de63899977ad05a608553e2f802d"
+      },
+      "geometry_sha256": "57868e33954ec0109e2e80501f37eafd318e13fdefe35752f32327bf15887940",
+      "frame_rgba_sha256": [
+        "955bd65294f60cf8fda3d281ac95c4fd2ed50acd62f34a7be9ff428b15783556",
+        "29e65e15cf757a7061bab2ab4f1f7277bb73197ba1eb9e7ec35f461820f8cc39",
+        "a6d5bbac751317944d6fcbc34d3906168d0f9d8e3933bf78209fc76bdac1e661",
+        "77a66411e833de56a2b0235935b3a6d0ecb2268b72e151a46133586b998c62d9",
+        "ec2bd7fee042a564beaff1d0a4dadb1f6abf751b7ce3fd07e238f55c047d65f1",
+        "bfc6e3ab9f13d04d019d0c2a356af770baa01181272c8d6ccbc0bcf7a5486446"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "7686da28c7f763486affd90d4c7d596e7fa3f5ac7f626d3d3f83242b5c63f962",
+        "d6c72779fe6cc2435e2499055d431498cd5de76496e29819e682c065bbf86186",
+        "162a88b1216bfccf517629df91392513652ea76e19dcf99bbe93e03133b44572",
+        "3931f457ef03a835e75b5eaf4eb16815f3b254e4c8cff9148756f658a163ec07",
+        "dd2bb451dec9173532c7395e5a83ca7ab3fed7389ab0a58d9d962da784096841",
+        "cfb71507317f32aad38b39bc0da55dddb543c37a3ef364ffdf055913c06f3021"
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v04composite01.png",
+        "sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/NE-hit.png",
+        "sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97"
+      },
+      "geometry_sha256": "9fa8e69ba7a3eea4c9f52118a273162b516ba12ae1461a8a20cb69d51e24ff08",
+      "frame_rgba_sha256": [
+        "541282e8b2c379d4b29f4c1972ef1ec749f982a9031fd17c7d674a4bcf62cfe5",
+        "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+        "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+        "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+        "13a1b30cfc727699ea586a1077cb1e216fd3ccf15094a68d742454c9a662b473",
+        "3cdb4dfdb8b37f714b3a552d9396983fb7afee1f0b112fd3115cf8d7b5acfa8f"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "1ba8d5e041c4c81d49fd8de781a13d274f30610b58f8ef7b03b59611d35d29f0",
+        "ad57e0f70bce4e1bcceee99ebbad59d7b38baf961f1911230da4cd66c6341eb3",
+        "fcabac0e0cb03d4dd687165913a1a878fb77effcc75514b3c054f734db09a2a7",
+        "b76954b352c7e5ae2db3873c237ebad3cb641d902d5fc9e22d0628de66e704ad",
+        "d6c1a2132fd0613d055199e57c09073dc2b5666b3fb657b4fe2ee9a9ae5cd371",
+        "f354832e64d738a377bbb3e8f370b4bcebbaa3e789fe1740a58ac85e4d2c7664"
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+        "sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r044/NE-idle.png",
+        "sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33"
+      },
+      "geometry_sha256": "0f60e40fc86f73c0bbf01215d3b7ff8516a3319a672ef67fab06866779c3c0b4",
+      "frame_rgba_sha256": [
+        "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511",
+        "1f838cef9966f40e0c9a5dda6bca5f3cdcb9db5cf4ffbcc293868685ed2033f9",
+        "9bc56e1034724be3165e3e4ec05b61fa899a680e9e7f37ff18a1fc4423b21fa7",
+        "023452ce745c98d9e221f9f8a6c7da04315ae2703cb7c507c1d6289c5cd7f058",
+        "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e",
+        "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "58e0787add12f1e91b8cd77871f1c4c2ae2dd58de218141697028e24aa83a03d",
+        "ca9b88d5625fd68d1ba3bd26c8b320f6eae148bbb7c285760e017f370f6e85cb",
+        "8b8124325e3b00079694c28cc56d20d063b27c9f26653f9dc954df27556fdfe9",
+        "1f924ffda3957bc0aeffacfdb159056f3269f169cc8e7dd55c558ce48401a6ae",
+        "1e86833020e29f4a4856fd4d00384b5aa65f4ac93ccefa95b47047b363f74cda",
+        "48185b000e0f4725d1c313bf49264e87f71421168b03e7ccfd445c8338a3ddf9"
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-run-v01.png",
+        "sha256": "91b6af3ca3bfdba82a37a70169cb1dc170454fbcd069b5aa25d8f8300af22a5f"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r012/NE-run.png",
+        "sha256": "91b6af3ca3bfdba82a37a70169cb1dc170454fbcd069b5aa25d8f8300af22a5f"
+      },
+      "geometry_sha256": "6748eb2f3f52b617dd4c2ee2a0171831f9b9f954a7584cf754aafa489e2249ec",
+      "frame_rgba_sha256": [
+        "ab74c3db9f777ebe585a003116b7891713dc5cfdfc2a12d53f4f1947100721d0",
+        "ffdbe370677744cf0c82c45a17790f4a221375e01ca3a1896bc9fb7143e63fb7",
+        "febb51a0d43f9d3817522123341e55c1a581988cfdf54fda5ce6b09184b0bc05",
+        "03cfa14242f02b644989514f3322a230c0952179d62952742e51d166499b8a39",
+        "bccf4e5e5811b65acfe0b88d90a0fd2b4d0d275a1f96e9164a64cac6fa00ed84",
+        "e98387bdec05b79778af1c53809528f59acf7bd369a115c490c83a26dc33cad3"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "93a575fda63a6deb26d2d1497e1aec6db92ad8890b26d305c294008fd2034b19",
+        "6c0fcb89867b7c324553a73689b6dc2a68a6176353a40f269d381863aafbe601",
+        "3536d592354bd46b6a4cf855e8c80abf0a68dbf0ddae728422efa8a52097252a",
+        "5b9a576359b533c16881d39e6fa321dc9d2e4e64d52af4af5de0a9ed114ca1de",
+        "fd7eada39b4a18fb3273c368712b37a8a5164c4bcd04f65732b7cb95cedeff72",
+        "45bd15d8dafe5caa025d0daa94db861f85a973047e67ce032301b3f46179d7c6"
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
+        "sha256": "8eaae7e2f362b5500e94d48ac8874735f5bbc0369433d6d16e0d6910dd2b4fea"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r011/NE-walk.png",
+        "sha256": "8eaae7e2f362b5500e94d48ac8874735f5bbc0369433d6d16e0d6910dd2b4fea"
+      },
+      "geometry_sha256": "1037f2de9bcafb7c399a0455b6e0a136ac37308811e436cf9638cc760299c05e",
+      "frame_rgba_sha256": [
+        "5bdcedfd1bd93206581462ca1fccb24ebaa247ed10981e2d8b41ed8d20868267",
+        "3b1079c4b01081c42b664dfcd9f3acc5a4a5f045a4bf412f5c44553c9a8f20b8",
+        "00c2e8b154620b42584dcf081ce07d47ffd498ab3f06d4f89bc117e637db4e1c",
+        "cd6f242bd61c45f845208f72bdc4a53b36147f2f825d89411a423e5b905bf303",
+        "d31fe3f587a4fffd1cff21cd5baecc8d8161f7bc69c9a0a9503f0b826a7fc46c",
+        "a62351edbe8ab2634735c57ae2b28ffb79b0b05aee938a5536e0e052cb44fc43"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "51d8072a60b8e65bbaaf28fe939f9cac60c513ce8987d1ff0cc16dc927369408",
+        "d82c892fd052952b14913eeac0f570cddba887508ad5cc0b8dae121d83427528",
+        "b7f868130c65466141b1e55952a2226978181106c4e72da12b3e4971eda484f1",
+        "0617d2e3c7b882d3624738f4f1826b87c9df60b13ce6a1e235c1fca4a1d41dba",
+        "983e4a97fe2a16c9bd121a1d65cbf80aa7b8ac2ae15226dcfb891575f42486fd",
+        "9149fbb98cba83d5fef16707274007b52ea7793c7446d23d2526ff3dfae16f15"
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
+        "sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r066/NW-attack.png",
+        "sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe"
+      },
+      "geometry_sha256": "8c081ef5046fe1ecbdd134032606bdfcc8ce23d9e59e04b31ec44eff82427d7d",
+      "frame_rgba_sha256": [
+        "c475de792e1b90aaa9198897083e7eecd0eefa4cf1aa3c6056f1d711b66b1665",
+        "a764c077900e05ca373832a9ce0657e55b601c609ecfd8c9e07fa47a90da7007",
+        "01951f6e37e739d4eb4215223279181126de8cc50409fa869bd2e285c593bfdf",
+        "17805fe6e4dd938ab62c26efd2e1eed17d64476330bb6e34420f88573c97ed42",
+        "f3f412163a789bbbf2e757263734d36e1f217d22a061d273c37e57e28362af8b",
+        "effc7576415b54dded94a6d86010ae7ad09893b276e2f135f7b57df0b359e3a3"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "68efb94e3711039c063227df1fcf04fa23534d50ded954e2e43464ca17e3a1f3",
+        "90cfb1bc0a9f252e5cb10ec6a28715d152d1ce40f32c6c7e504dcf4e54639f02",
+        "433172a2547b2b52da20bac06c1ae471d23d05dbc05299450e2c6afa3c91de00",
+        "84d7bd3f1d9dc2f7c3d6071f24db53b8df730af48e0982137c307b6d6ae3b3a3",
+        "680923000efd4fac09699f29df5afcd8e28fddbeb24529dcabe9fbeadfaa74ca",
+        "aae7fbf113a2bfb738ef738b83ff73f12bafe1e000a4097622e0bd505ba699cc"
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png",
+        "sha256": "e3e27205c904a33343bf828f6154a45da9b8cb407ff3a1e43c704975e26dd806"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r067/NW-death.png",
+        "sha256": "e3e27205c904a33343bf828f6154a45da9b8cb407ff3a1e43c704975e26dd806"
+      },
+      "geometry_sha256": "ccfc3e05bd20cc942779768441fb782c208bf2a9fd0cb4570f8f99af53e368b2",
+      "frame_rgba_sha256": [
+        "05965462bcbe4cea34ffe63e015127302ca815100fceb64d1fd5873f1b90d896",
+        "0b266522ec8a6a40d4d0e7f5901588246dcb687026f3fd3da6b134c0d4104ceb",
+        "ff7b8d094fb6b60e68b587590469468706bec33293a2e5ab817801cad49e7bf7",
+        "176482ea6901740065a4e36df3ee17ba1d4d9b14e12f6491145ca3582168ae0f",
+        "ad84662a6252baab1842a08a48646fffc8e9a24338e51a3ca22f2405b2d4ba1f",
+        "bd88a64eba15cbe6a348e071c0189c64a2a5cc9e4bd01c30800e4578130bcb6a"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "c3e8f14d693eb7ad8d6eeca63a1b3d9723c798816248f5074b6de4419759204b",
+        "8be16d778fabb38ab1bf9a8ec69e4b33141385e9db67cd531f97454559597eb2",
+        "f480f9b10f020d1bde1085df7c5d7a081a25271cc66b2f3a43e46d9864ddbae9",
+        "02c9dd03897d9b49dc004fb4a7519dd34c8f86cfc82d6ce09e33832519af1f69",
+        "82da601bbc66dcdc8e5422298ab6a987e18a51d1afe078ef9a1c12bca2302221",
+        "d3c022915d16c53aefa5d1264abd0a77b920fb91d610af73ef5acad760db08db"
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v02.png",
+        "sha256": "f1087d35ee8aa77a72bf45d49bb1677fef0528262972a9d3ede3d1d86a1b70c4"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r065/NW-hit.png",
+        "sha256": "f1087d35ee8aa77a72bf45d49bb1677fef0528262972a9d3ede3d1d86a1b70c4"
+      },
+      "geometry_sha256": "8ba71cf7d890e31a2061bb440227bf87df7d3a6942ce425b14113c355eafe6da",
+      "frame_rgba_sha256": [
+        "efe20a7ddc9e7fe8ca4e276f933898dede6e31419a8152809471aa526088a52f",
+        "ba2392062f32099e2f1b9628e5c9ead5365abda41a44e450b14991f3c89fe849",
+        "69453bea200f68aa755dea9397f753f41243a388f60b96b132e0da22809991d8",
+        "88201425971b17002c11485214c8e0f70116d95fcbfcb622b3f0ca422b370855",
+        "8b3cc0c55101bef863b03130185f8b2058e008da7d502fc6c125f4dfd4309959",
+        "007cc15df3c24e232760383548e5a029c49954ff07244d654e988fc57b483e69"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "706475f68cc98339b6d9facc8db8e94ccf57194821f8e0ad0dd34c94ddc2d6cb",
+        "50de3d968e667014a1844a9c7eaf2e76fb8f06151f7c0ee26c9abfdac55b1bf2",
+        "6172764f0b98f1df8238dabb5b6cf1748bf6c2f57264993ee93a44b0c9994fb9",
+        "74739ee0dd2ce5f4743823293518b6a474530b2f60012f38b590b214089ef3cc",
+        "d29ab74d4c5e946a45dde155939528be87f1f9aee12e07791ecf8e74bf74a724",
+        "52993113bb479f1b241d478c7ba4a2f72f72503c6c9131273dcbbef703dbc8e5"
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png",
+        "sha256": "2e080bad8ba69456c89e0ac55b9293d1d622f128eb6b2828667039e64a1444ad"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r059/NW-idle.png",
+        "sha256": "2e080bad8ba69456c89e0ac55b9293d1d622f128eb6b2828667039e64a1444ad"
+      },
+      "geometry_sha256": "2d30d1813bdf34ad2f9288efc125eb3eb839762e1cc3c5f4c9be111ff4375bd2",
+      "frame_rgba_sha256": [
+        "701bbf022af4edd9246a2c2f0e015a65f28b95b89466c92f7615203e8b2b327b",
+        "ec61a0703e817caf9002392cb7dc9db27cd0a3c3db140eee85bec17078a3bf12",
+        "02522f8096668c0a5c1c45655eb27ae5ac06e3647f1e00dc3cfc87ffd5d57024",
+        "f94e831a568126888512c35f06b9b9fa2639b888e8a32ad03201e4cd9509fc24",
+        "b9d09680f7a61f5115c0d154ea298c24eaa575d8bbf07eb631566605f84f85eb",
+        "4bd9426e40453627e06a41b4fb0a2e99904f270957c031f218e542bdd9077593"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "f33e6db43448fdace1ed3a9719cdcb29be44e3d72765bc25015e318536a6fde9",
+        "623c86b705fe82047f92532a9fcc57cd86ed1cf828d98b24de84e41ae156d91f",
+        "3732b8f457f3a3562b63aae679ffda4ce4b038e20cf8477d1b4512cdb0de8278",
+        "776b8a5ae5229c61cda4e92ad3deaea527c98fcf0427611188d9c56af8d804ce",
+        "ab17d30efb5bf600c27bd1ca66e5009e70303339f36c134a7922f55688fa223f",
+        "ab360a4be44079ab83b6da9cf6a87da3ccd0512273f639e53088abf100e8ccb4"
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
+        "sha256": "9dc7c0b492f690ae96e2ab9a76172aad20cfe5686adfa83eb2864ba33240bb38"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r061/NW-run.png",
+        "sha256": "9dc7c0b492f690ae96e2ab9a76172aad20cfe5686adfa83eb2864ba33240bb38"
+      },
+      "geometry_sha256": "b15df16ac56a7a79425113fa8088fa0739b4d4478bfe5f46fde571c27a4b127c",
+      "frame_rgba_sha256": [
+        "012554bcf5a035d7f8308c6ddb8ee1acf3cfcf57e41a013937138ab6c8d118a9",
+        "ffd1f6796c41057816d6f7a2f130eab580b43bf462f94f7461cccfb22a7474a6",
+        "70f80bc62f05530250c7f5d9d2f497e56c238dc776c689a24130463d2f5c79b3",
+        "7eee0d1aee542714f7215d49c41d05762dcf7aa953cf22c42a7dd59746906758",
+        "e3f7589ed952da2d9ca512c00896f62afaf511f6a86764edd53af1c935f3a556",
+        "7fe4c06c2d98d16efe18b9d6a6ccf0aafafbbdb74940b53aaa0e45163833cc8a"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "511223c13ff5bcb0b4bd074ee0dd1d09766cb84dfce229feed07a62b2c7e5673",
+        "f2e6a9f452afcf521a50adff5ecb6b75a4b8ceaf1c6ffbd6f1c7565e8ec7f6f2",
+        "a4eae723da88f1f0cca83afe25839b02f386dd774ef8620ca0d7b3180ef7490c",
+        "850b3297ff041ea85438a51f4a3b21257ad3964de001230c96b7a65aee6a084f",
+        "8d9cae8c313f25afbd62f36ab482ac97efe92275ea5a2ef331c6d3cd31daaa28",
+        "5aa37af3545bfb2318584091db1c8ccd40856d9a81518b75fa091bc4d7a4a264"
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v03.png",
+        "sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r060/NW-walk.png",
+        "sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c"
+      },
+      "geometry_sha256": "3aab7314c6670481f63a201fbce55fc107403d6f6922f376bac34f619d493754",
+      "frame_rgba_sha256": [
+        "7ec799a69822c86d2fd2410ec7228b690bceb23e92e1a95f954978ddf967618b",
+        "297cc4cbc5320b336135e12675d93d73717c7d98b6e514d0b134c8dead54a1aa",
+        "d8081a43f5bfabd63894bf3eb1c13abb4e6846b92d7faa1dc978bb9bdd3460fc",
+        "4cb199fecbc9ca2aee435160679f8cd639962b5e5e9cb122590b26fefbe84132",
+        "2b51f67d61d2b938b6ddc33cb690e5519c4810c6466f0383ba4dc7f151378975",
+        "233499445c20e01054b7505997b81fafa199e5b5bf03de9a223bdc23557c2292"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "f3393a1403165ba35b87591525bf7cce000872925298629b6bef13cc5171d8a8",
+        "3b11220e2d6245dcb61de698417b853061e726b6cb218d46b30d6f1fc54e8203",
+        "70735fc59824817329e4ffe02eb4e05db2f2766eb363d952e5d2d4bd45d90a01",
+        "2defc97df8ab98344d5171a1513baaf9331b1d73a2dc02af1ee281c413e32b25",
+        "a5b836d2199412e4609a3965f540499f61f08a5948e5c894ac5479f2a964dbd0",
+        "abc9b5df372d8b14c659bdf71dfc5c720b4bd6b2a0ecf4edc0853ca49161fda7"
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
+        "sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r072/S-attack.png",
+        "sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4"
+      },
+      "geometry_sha256": "bb8f7897dc645013107ff22afde795792c274ce5eb6c70a04fe09361a97a5348",
+      "frame_rgba_sha256": [
+        "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+        "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+        "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+        "f74b8a88fd048b59e184e777d57f90f3746dc968c16e0296655463903874987a",
+        "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+        "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "34626683b4a6fba1b94e079db31eec53bde1b22e116528d6ee5931cd124caf2b",
+        "93e90d9e095ca9490697326cd5d5e5fa7ffcce58a1eddd1bfb7d3317850862d3",
+        "1f3f058c1822135de4e61b35c21b73461a079d9ba5a7e6827238222cc02ed76d",
+        "6899a62f0e0e36198413adecd0a7de9dd6b29deff29066ce22a6b6ea2b93402c",
+        "5a3625dab56a06a40221b6206c882076678225af58c42beffc972493f9da66dc",
+        "aa7fdef20cf85d7fcb7ab8bf9206600da2056c075edc59679745b35150eb1bd5"
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-death-v01iso01.png",
+        "sha256": "ee165e2277abd2603d4aa08b9afcfb116e6d9b9074ccc879737ef49196d80cb7"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r031/S-death.png",
+        "sha256": "ee165e2277abd2603d4aa08b9afcfb116e6d9b9074ccc879737ef49196d80cb7"
+      },
+      "geometry_sha256": "dadec696c182ef96ee8eadaea145e3fce14749793d5404dcbf97f0b509674599",
+      "frame_rgba_sha256": [
+        "919940d7d31433fed1119a56db265063169d687d12d77cc3074ea8fe489e3603",
+        "3dfa6081f918abbc6ec10bae7fa2ad6937d1027577024af1b0ecefebd9553be7",
+        "9d5878a2da2eb8ccf58ced9e019d554ff7b5994abccb8a3fe8a65875be94ca88",
+        "a7393b5e7fcc9d3eb093f9dbc6ab4792761293918718e8d71a659038912d6a0e",
+        "9b9f00d877bfcb7f9e57ae102316d433325faa12cf315f5ab08a0697e1cc1626",
+        "6333b63377cf695f40c2324d0ad778a24730687b549173bbfb437282b273fd13"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "ff6bcc6cb5b2670619052e548a161555b8cdc98d17b83daa411fd844f404ede2",
+        "b2326fdf02548a5d6f9f0cb091dca72b9830abea43abea4321e07738c0cd4d32",
+        "7c11d38d447094819f49e7360a299e3d946545480ce0fb5c4887df4ab752f10c",
+        "45ba94d81ec5a2e653bd214eb5c824ba2fc332ea0ee3ab6df5a11706a9ca0c34",
+        "3d228c41818410fd209d2ed7236195289b32d59480f11a8a96cf12a85d18c5bb",
+        "83d719f088e80240d88baf7b05319d5bc1a49388cbfb5c1401f2f98e2a00344d"
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-hit-v01.png",
+        "sha256": "0d07e653197623f950c4fe1cbf8d0866841e922273c7e74b1ae325000941cb4a"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r023/S-hit.png",
+        "sha256": "0d07e653197623f950c4fe1cbf8d0866841e922273c7e74b1ae325000941cb4a"
+      },
+      "geometry_sha256": "0c620f2e6ed6988f7fc8f617ffa61306976638f0c0f5a5db1f1f91e886266b7f",
+      "frame_rgba_sha256": [
+        "6093e67e45d994a9fdd07932d1e529261ab799c0e586123aca5ee3ee4734155d",
+        "dc22b2afb09cbd086a8d90f34b9c4a34d852dfba6de30540b001ddcdda0fce47",
+        "d80c4991972a5e5ad61cdf55725d628b4b36e6cdd4a642086684ae355e3fe895",
+        "9f7dfe311a67d10f0f0ef5073cd04b7affbde5707501060f52fd649964d1d824",
+        "caddb46b7afa04a36f31e52cc84212ac8cd16b6d114d8ce15440234b89209606",
+        "a2f875380f7b975d989f62671c4ed464ea5e8eaffa3beb9e87c18529bd307aef"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "45f5a428c5e4ce78c3679eec21caadb6f4af5e7064e7d447672a98da9083bbf8",
+        "99ccaa15f53a6c9a403a66e4d381a7d4371b39a0b640dd526cc39b1d082c24d6",
+        "888b8491c18e80430b0dc64a43af75c6b3a2be96bd15c57ac6f3c0fe894d6eaf",
+        "9c071e07d8d6bd2ffbebebd4b18369a563b99a656094686e0993614f9c718460",
+        "bdbacfe5b81262d277cbaac8e574ee7db224aa33fcc22d608f91e09f44a87922",
+        "25111437d47f8ee33d5e8f4a68183f88e47ff2fbc6f7b799a9f2ab74bdca80a4"
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
+        "sha256": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r039/S-idle.png",
+        "sha256": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e"
+      },
+      "geometry_sha256": "6ef306b6b91e054da7a3e8987a62c542ae4930b9ddd70eacf04b6d4ec3af4c70",
+      "frame_rgba_sha256": [
+        "dd52337b11166b6f1053e8452c5407891c6a9b1da19164ceb37cbaaa0143cfe5",
+        "774d051b8beeea4f1f25904014538a3367892aca5c4177dd35dcb8710382263c",
+        "6f998af7e0b3f4cd61da0c268e43b4ac4d05e4177702fa3074306130d39ab85b",
+        "1b0ba6d08e32d9623bc44785aa81cf07c9313cc775041a1fcbd0ba21439f763e",
+        "dd8bdd746d40eeb0f67c38aa738e9352f2dd037f0849b5c30dc9530e9241a9d0",
+        "4458722ec6fcd28e21c806f4c620361e7223b799dd0f881041b802cdd4dd6727"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "12f1b36951dd43465d334e52bffb3fbe2fb20ae56e52fbfb070b4a791969b97d",
+        "138d14ff555fb5ee866a42cba425b97cbcd057a832f9b31e3d58d105e507d742",
+        "de890fa6a272a325905909dc8ecf05ed2747a8002972b210a6799b5a73605bec",
+        "d4beb5c27366d2b1736f4394e11a954adea40e0a9e216b735ed3c6f04bf8f9ec",
+        "24bc6c9863b4115a74f94ed4824df193f8b758e5a3fc68790eea55cff7ad71ba",
+        "8c00e09fb27a080e7a3e1e45f36cf979c80e7e2c03c6900112c06363c44a4384"
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
+        "sha256": "d34c9acd6dba4f03a8a911a4e5d7dfe1276dd906eb68964b2ccd5dd311b2bced"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r002/S-run.png",
+        "sha256": "d34c9acd6dba4f03a8a911a4e5d7dfe1276dd906eb68964b2ccd5dd311b2bced"
+      },
+      "geometry_sha256": "99f2710475afe675e691e3edd143e72bd45a64fa7ff8bf3c52f42ffe291063f0",
+      "frame_rgba_sha256": [
+        "40ac108ae2fef79cc01e7241a39da16722b01f4bf2d669f31512fcf08769ad45",
+        "f995de397c10494826f17fe3a56585a587e1a52ffc6f10b7ca664ce67ce2e5b5",
+        "2ff428c31303b8fe74b5007a8c377332fb6af3481965c70b6e1420c40e3d457c",
+        "da769571e266d9d3d0134b37158ad785517240ed22113300da834ffd7a50d35d",
+        "477d8987ffa129381ac2916170cb501c871f6ff41174466b8ba67b4e6c2fbd7c",
+        "98594beeabfc911a760a4a12fbe7a583618177723c4451e3635aedf4cf8feb5d"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "d9b45b3ceee62a6049e39ac9c3b61e31c51738d59e6f63565de86a1f563edbe2",
+        "a612e63bdd568747a99c5b818d414719e8e4b08cb25ed7dd321e83f04578430b",
+        "99a629c547135058148d9290f60aff38788f89b1a59532b1cf7976f9b0a9eca0",
+        "b3f91731aef1330141a3659a7f0b03905259587503fbed38abaaec984933f8cb",
+        "0e2758b2702925db6d8cc56c3d090bf5258c6d79a4a23d5d8029e2af59aac33f",
+        "2d54ff092c28fe49e3b9a49a12754b8681e8620d072911279336fca0c4c04b7a"
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
+        "sha256": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/S-walk.png",
+        "sha256": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86"
+      },
+      "geometry_sha256": "2493f9ddac350db7917f946864655c5236059599b04a7830b16399db12c6254e",
+      "frame_rgba_sha256": [
+        "6a1a6728ae82abe930df58685bc0296371bc3c5374aa2ed0417b831b16d08544",
+        "a8b029707879f48e8448a8a797150e8f1e965bf784309fa2c8d490f230e2b23b",
+        "dbbdabfd2ed343a90403f7a8d87b52135b364d45d2d25ca447d4e3e5ddb83e4b",
+        "9c526de11bff1ce641a87170b5868cef7937eef09a59bec2ea2d16932ba4b73d",
+        "937fdd30c647a72145db80c6f123fd7586f82137a8e382b1c3f994f984228d22",
+        "2b78c03941cc7cf3f3d6398cd6631dd793400cba33ab6a5d9501c1128e03ef25"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "2b5fac22162c9b6f45e5835652577186336e913851a21dc88080dd57ad3dccf7",
+        "ae75b1c78c350e2fe424fcfb31a6900255143f5402cd516ae652d00e6fcff407",
+        "ffd102e1d495811721f9560c4647defaa6987ff545078441f417945e612ad013",
+        "733fc82f8eb038df338cd75bc5e428bf9665c6b32d6b89aa552255be87f87613",
+        "70df298cd29edb8e895dab2fa2abefc6f7eeedd1f9ef3867fa99c17e26792d78",
+        "29348bef93f80a7026d13c7d3ad125619b16943f65e4afc6315ceb30198ce67d"
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-attack-v01.png",
+        "sha256": "edd8ffef1aceef92a2b25f87bd0c2fc34d31d5fbfdc2d8995b91eddd42134890"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r014/SE-attack.png",
+        "sha256": "edd8ffef1aceef92a2b25f87bd0c2fc34d31d5fbfdc2d8995b91eddd42134890"
+      },
+      "geometry_sha256": "e7755471a8293dcc83d41c793ae47f01b2ba29c07aa0553a0428bc1ba67115c1",
+      "frame_rgba_sha256": [
+        "24a3f4237cead7c53f5ba08a1e77eeec518abff6b574e044cf8096319fcfd08b",
+        "aaaa5ab703513c989180a2d21e2c90a242a41395d6750ff14adba994860bb02b",
+        "6ffc8ac7b017414df28a032a5c733a9151f59974fb988ca1a009a12348bae415",
+        "c5db3e2b29615256c0a166d78781fd4bdff820b0237536674f7fba0a7588fbb8",
+        "eb928343ec8a272551ce3ce75c4d6898496d9f4be2de699705b261374b7fea1b",
+        "0414339bc3a018dfca0595117dc0946d1e5d4735ff4bbfa136f781a7c6d8e325"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "0843a1f83c3c7616577689eb5cf7f9986e8c584031abf11f44f304e14ebfb394",
+        "84b8946cbbd25113ab683361e9e1b2c7d1d1e315e9a32693a19139b70c7b3679",
+        "0ea9a407aea785d192dba5bdd23040ea109503c14f18b3406052a85fed0f6abc",
+        "244112df91e83289c2dbda64ad4d97695d26195d28baac7d951ebe2ea7050602",
+        "a09650858b9081d563b16bad2f1e41960e3e40fc9527bd4b96cd0b5188cb393d",
+        "ced18eb3e81e048465211447b0cfd93faa3b7d6019f5d922e2ce52c186ae8e04"
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-death-v01iso01.png",
+        "sha256": "c87237c73ec9962e3c523fffc1b85c0e2ce84305ccfb6ed856ebec4750bd4d9a"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r030/SE-death.png",
+        "sha256": "c87237c73ec9962e3c523fffc1b85c0e2ce84305ccfb6ed856ebec4750bd4d9a"
+      },
+      "geometry_sha256": "3cbf5128601576a7f7dfa31f3f2f5486b6a6aed39428e172a3842e2e56af22bd",
+      "frame_rgba_sha256": [
+        "6c911c8106e8c013ed2d1320030a8055517e0e07aa800b0d1a575376106755f5",
+        "f4bd7fc2554e5ce0e04245675c64773b7f76b90a0b01781bed92f3e9ad856410",
+        "a02cb953ba91782731d88fe4a1acb6a25111e88819393caad79d2d2733bedfd3",
+        "fda11495db0c8ecbed307bc1eeffea72fc89b7f813c819f1ddaadd234b79922b",
+        "60e199be555f3f3df3a7ee40d9437d6ffaa939a9caef3eb3d1c0889f47e900f2",
+        "518d95ea86bf5b6d045d1a6a9c7b9e51dcc8f8168a25325c7683ac33e7bc2945"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "a65e1f17c876bcf938183163b2ece43eeb4d1d8abca8d9ed46821ff1ffdc12d8",
+        "2591c1640595decd819156e0607d271e222910cbefa19177d892b3bf6ecbdb50",
+        "940ea5a0fa2609bcf8cafbdd8b28f00e2cc36c995d6ce0f99315539b9dd9d47b",
+        "98255e5c267ccb2cdb73a611e67cc5109bbe5db2b3035058352378d0185b9c16",
+        "763f64711406f406e858d4382487f575193f9a85264157eef4d5ecfe802f6c6c",
+        "8733fbd6683dd386d0475e55e898d7d176e54975a785fc804658d96d34948dd7"
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png",
+        "sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/SE-hit.png",
+        "sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd"
+      },
+      "geometry_sha256": "3e2dd087cd27eb6e9b8e10dc090fb0281fdb49594b2b9a8d3041df81534a5e4f",
+      "frame_rgba_sha256": [
+        "301ad842f8f9a8adc8a888ee737e405379f9c7fdac6d045847afd22f9ca1953c",
+        "7c803a73237ecb7cce3d5ecfc72e5f84cb7e4a4eafc858705ef546cfd3bd5a97",
+        "e28661cea9660ff1a12c30a9c6b3fa8e12d939ab1c839d44b68ad078a1ac4516",
+        "e3010cd23696d6717d663e518a0188a8aaaa9e70bd822c4abc083ccdfbcb8924",
+        "f202d06a47ab5e47a26e4c54ce8119a0e71b9341a70c447c6536ef59644acf57",
+        "a99aabf947d3243ab5daa63c715f7f2ea1760273eb7b3eb2b7b9d4c3cc0d84a2"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "c2b698738711e590544b121a46995738f6f0e91f7527761ec648cc082297f3d8",
+        "35d49780eb8e1f04243d95b41cd71defe77f139a9f085641179e21202a152282",
+        "470576b4b436f35747e7edcabac142f97bf65c5fd87210786e5a03f8dc3c0b85",
+        "67cedb7bf80263b40dbb80769adb7b73a451c6ace4485ea7ec146123c89ae7b2",
+        "553b805be20d423587c05a59e30cb63e133e9a4474593b4c7b0af1aabce73b38",
+        "b64bc5494a8e4fb6ffd4fdbca511f349fdd4dff5f501888892782bc263157ef9"
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01iso01.png",
+        "sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r038/SE-idle.png",
+        "sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3"
+      },
+      "geometry_sha256": "cb1f033dd8e4161c70667ab0d020e26b8748d76db297d257fa4c357de0b2a379",
+      "frame_rgba_sha256": [
+        "e6f45f2edbfb4c4dc91f0b1bafe4d2946e9147a9c7fdc373a0535fa1f2b91180",
+        "e5ba8fc9d309bf2b0ebe0a3f6a0e6b9d475e5f36d901194f61aec555c138df45",
+        "0830afc514b811d345e735f43cf8175ae0d5961766c2afd4a9caddd40750c32b",
+        "a463aa1f1f117ca3e5d8fbb70bd55e2b7075031cfb3590d3a9458a9705ccc9c0",
+        "a3b0bb4609cbc927c270f8c2f2fce835c801fc36c63f46b034124909e99ffdf9",
+        "c7f0a841325fb65b62839c01c00ea526b9a345fc6d9d93c299c77710fccb0271"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "2d25d5cb64c8303b31c460767f234a2e050ab4323d4c887a4dc2dde846e3e755",
+        "c6a8ebe45021492c45119674c374ef8829e42241c737eb2b75b888bf004d872f",
+        "528aa22de999e65bea98c8350f49654ad1553c8deab0033d85be1e576b9a792b",
+        "ab14ffa4c429e30b50354043f588d29df16dadbb679d8f411aa50fbb048cd962",
+        "afb56a2a73e023621d9a397f83735ad07f27aeb7378632d5137459b417002ad1",
+        "25a32026724acb6e333cb8cc4f756a8fc1bffb14f932e30955c6cd99cffef4bf"
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
+        "sha256": "02bccf60ec96a28a1fc8ebe2f42dd7a5d4b8e2fc5a8a796a1fc369b88e1e46c1"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/SE-run.png",
+        "sha256": "02bccf60ec96a28a1fc8ebe2f42dd7a5d4b8e2fc5a8a796a1fc369b88e1e46c1"
+      },
+      "geometry_sha256": "e0a1e926ed1e9d4fdd87bdab49fd83f880fc720eeb3cf96d5d616866288943bd",
+      "frame_rgba_sha256": [
+        "371d9013510e88be4c968eff1ef7633ba1a71b1c2c595caef4076d38920a4e92",
+        "bd956577507265c850760ebc031cd61a2d300a86e7732cab84d88252227e4595",
+        "3acacba88dfd7be8728465bc0b7b78482e231f08a7598e83ab39bcb2234fb101",
+        "80e89326c26ea1ed2823cb1f40ade38cdc3052ea571fa983210cdfcece0932a3",
+        "2dfe1db1480f12dafd30483c06d20bd20c487542ed44419e1287421abae9684b",
+        "62b5a653693b9e00f2d6b3797633c0b9a48b51570aec695635b0d89fdcfbf507"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "f09aa7b500f9f9694d694164c0b20bedd72426ffab4d4236c1c3a4f93b6a6449",
+        "5921e4cf8475806a3f1dc06f2f784edaab7aed83e64613b933a1fe8af59625c6",
+        "5e4448ae2f5cd855eabb6d61dbddd52814310643f3d324d5e719afd52e8ea09c",
+        "0419af7c45e62db8776121e55fd46010fd1d8763fad6e5612018185cbbf4e80d",
+        "b0d8020f17a7d539949cdbc72d225ce689983a22fa72d10cbe5d8efa0b9b7bec",
+        "16480a6a705de1b9270d77abea88153dee2826fa52ff380563edfcb8031d4253"
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
+        "sha256": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/SE-walk.png",
+        "sha256": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b"
+      },
+      "geometry_sha256": "8c24b098b50c5a9f36180eacd30a3e51b51c2a7eb0be7eaf05a5d3c55d2db57a",
+      "frame_rgba_sha256": [
+        "5df0ac443c6bf6a18959b4c3617ad517bf0e5486aac68dd4706855ac2fde6c9f",
+        "bd39fdd363d37d6b53d279fa9e171a79c18ca00da1e7f128abec9b5f9eb3bced",
+        "ab4cffa050bbe8680f11e53d2576dff27b4e5eef8bdba4698b7455daa9b96074",
+        "ceef365330e5c26c53634f60fb8bab646c2ac89e6a5887c3386c39d4581a7a36",
+        "170275edbb9e1f4871d5ac94f05f8469a84d5390ca361070bcade4081b1fe31d",
+        "c766fa56cf775b50cd9ced1ebc534ca276661380b65d22632ac46e4030545498"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "b6ee205c5fc81ecb2d52cf698a578f06441ce310554934a35f335b93379bb5c9",
+        "46462eae21119f2969555811fe51e96e16e2928f8690d140f1ad5de247c35550",
+        "6d52b52ffcd5e67add63c2b857ee71e29267c8b0872c9fe1787251266a5ab380",
+        "ff888d3726300f763e41e7e04ffc246a4130311e5a8e80dabd38487caa28ac4d",
+        "c74bf992e72619bb63f74371d258540651d58e72ad6665f1f10d1f77f509bd1d",
+        "13fc60a516a9ce53500f5011f1a606101662cb35093954afcf553c291220d8b0"
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-attack-v01iso01.png",
+        "sha256": "1204082ac54491651ced77589fb8cf9198824ad9fb41322849b5108ec09ba544"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r016/SW-attack.png",
+        "sha256": "1204082ac54491651ced77589fb8cf9198824ad9fb41322849b5108ec09ba544"
+      },
+      "geometry_sha256": "b44e2676761ac46d53ae55cb6044ff90db20236420fdf83a92db4395867d73e0",
+      "frame_rgba_sha256": [
+        "7c0eb19cec1d6dcd080bb34982c6dcf922623902efefa5364f86493e8369163a",
+        "4ac4b0e085540ad7d8501b7f41dd5787f1789613ffd2bec7d55efb7d8ff318aa",
+        "1bce35f9aacc18bab54932c5e1b7301c3da9b2de66d6eb0b480ccf8d1a85a400",
+        "0a0abf062dedccbe48ed0f758eb4eca91e8d80b251b8014e7622ab9b06223bb4",
+        "ab212abda75e8603487a0cab7d76d22be5f792526131f4c3676d47faad8eea41",
+        "36a8a97272f8db0d4fced3b198ab696a21ed8fcca84b0fd6cedb4825f90750a5"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "0fb5efb8324afabc9db9aabe69c6ae616733006a8cad8d1e2e1d9e453b015d58",
+        "889fd425146ec2379a960dc19bbc9b8e9822d61904817f76cce88c245679d0ce",
+        "4d21731c3865718fc00caf040143775602ac652c6855d32e8759be38a8878ec4",
+        "a54fcd8a8b7d94083414510325a190f1a2c292d3fd0c7a065976497b0431fc90",
+        "132c931f45ea1228a109c506a4c4f60e6c5a7471db2371d85acf932915008080",
+        "dba9e3c30bc24ef79471ed14765b558b40527335419989eacce761b975acb8c2"
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-death-v01iso01.png",
+        "sha256": "b0c9e04bfec6409fc6759877ecde87081bcda1cc9843cc694b935118bc08c54b"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r032/SW-death.png",
+        "sha256": "b0c9e04bfec6409fc6759877ecde87081bcda1cc9843cc694b935118bc08c54b"
+      },
+      "geometry_sha256": "ec66a94f1145080c72ef47786c1439fe1f3be65cf330401c53ec9c629f6b3363",
+      "frame_rgba_sha256": [
+        "e0260f0d24b30d992bf613dd877ccb31687d575cd3c36ee9514420b62c25fdcf",
+        "282d7ef74bce5bca5062276134a1c21b718cbb2434f980455d65fdc2ac454407",
+        "14d3a85c2e36c24ec349f9c9be02cc589f65b9a8e273cc8def9f17d3be2e1f3e",
+        "724bc3f3cab116996aedbfba66231f0372e781c3a5f0a80f4b26352f7c5bc2c5",
+        "8eb266acfcafb3f5d1de01cd557dde43f769287860a75183dd86bc8c1591264b",
+        "0c918e2ae381ee1ebad14ec6cd6d53fca1cfb285b0a269e2e8d00fbdabe3e0ff"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "83a54ee9e15b8482ae46f41c99038492db70e4acefcc3fe652536cc61a1949be",
+        "27c924c19c9319da28e4fad467006a599065a9b4d7f99f4b0975b5bcf2fe605d",
+        "8d763886c2b87cadbcae110f84f42a9b0cedbd8c61cebaad10b3ecca2b45c5c6",
+        "a5cbe1ee14c4928641fbf841745192cdc8c363e5cffc8bf55a555a391aa45a80",
+        "b5f2dca44215fe6957707e1bcaa311d3ae3785b16120fcf024e4c7b0f732e476",
+        "c944b9dae2844457adc10b14406bdecb338d886b017d7dc8f440acc11ade4965"
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-hit-v01iso01.png",
+        "sha256": "241e2bc5b49a031f5538ed919380972b38a08c5eef5e3e1f67c6c0e0f816c3c5"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r024/SW-hit.png",
+        "sha256": "241e2bc5b49a031f5538ed919380972b38a08c5eef5e3e1f67c6c0e0f816c3c5"
+      },
+      "geometry_sha256": "c44f0be9aa8307b1b530ba248d76f76a7f5bdca921939375342adc3fa294ad0c",
+      "frame_rgba_sha256": [
+        "5daf6387793a38ae8c5e6fa91975278785c7e71e28b7f795ba6f29b0ee8242f1",
+        "addb3aaad518618d4744a243cd1eb6d40d3c92cf6b8626adb3bf7e9e0dea6819",
+        "bfd1f465fbd07ff5a24568641d92be6fd572231fb4dbfdda9d031010b6b83ac1",
+        "622bd3222dacc982b8b5dae46892f05d65e4a9ef29a355c55f2d72a55d963a2b",
+        "4d9daa93ca0cbe5bd1dedceb2cedab9d2c7974fcc587449a1bb589bb0f8548cb",
+        "70b78b237652ad4f37d2b4982bb84774b247b146c62ab8525d0d04406674beb6"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "a34da4a4161f713e3e8001535cfceb80a2e970f56214bb789785e1b3b7385bd8",
+        "f3d24541aa7b75b5a793419f4d6f2fa1e8a62467c1b443962af8f6f953a72815",
+        "70af84ffc2bbbf2704008e70e88fb1b0f897d48110e0ffdc437d6e0c7f06294f",
+        "318bb33b825b0a7d989aa04bf9519497912a65366bb077d2f4ab027a0596459d",
+        "6a9282dc796e367b1c2c1a9b128fae71fa485cac73709cc49feac39dd0b7fb89",
+        "602a94830ff62930c9a0635ac223210c09ac37001744130fbce871a5bb2827d2"
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png",
+        "sha256": "5d8a262b38675dde9de72b4422753a2389c833083f1e925b7303d2aec44e33b9"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r040/SW-idle.png",
+        "sha256": "5d8a262b38675dde9de72b4422753a2389c833083f1e925b7303d2aec44e33b9"
+      },
+      "geometry_sha256": "963c401ec9fa8e9cb20c754fedaf4f2e6ea465b531304d852e45a2e401d30f9a",
+      "frame_rgba_sha256": [
+        "890340b22460ee1f2dda7b538608805da53c580b96042a4b775a45e969e8b7ee",
+        "c8db9d353c49c38c747641ffe40814292b460235051b6befa6c9ee6ec2c3e8c2",
+        "c0d9dee0f631d8a53db655fe8000c665a3fc625a6960cf7de6de0fb13f29b2b2",
+        "c146eea0457ae3c6e7bec19b9e5d7df428a68e22caf97d41d9dc570d5cc2fdbe",
+        "51e0d3077a7d35f6b74d955587f92fdd75e7df595d701777322eccc208564f41",
+        "2bd4e5bd9d4f4f2da7b8b3568e59c427f71e501a191ca2a3c7a55312bd5afecd"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "2cbd112a43f50f039685068b6bc82547709e428dfe8f28c4ebc3c3a736706101",
+        "fdec6094f2469e8879061bb2dd9e542083fbc76f459b75152ffa8fab05899f49",
+        "68559d3ab9135a007bb7a18ad6260d54458856ad0411d5a0b7dfff1ab438c4e3",
+        "271ad39fef4e6664ee14d7b4733b578de442f259baece3542a49719fe7e9d8c9",
+        "cd8e1fe30f646f5768ed37844471dfbb28d550cd84d60d7a1893297394ef3f1b",
+        "34a8a53f9e4ca161c3ac5fb748c84644b6f9afd1021bffd4908a44cc9c4afeeb"
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
+        "sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r045/SW-run.png",
+        "sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462"
+      },
+      "geometry_sha256": "d208fca5ed3d2fd90e18836616a7b8d6abc7457e14b7a0a538796f054f0b4095",
+      "frame_rgba_sha256": [
+        "aaa31a22dde440ebf4fdbf36f30b0aa506d91109a10b81e7f4e9a76018f338e4",
+        "1863c1e57fb38ee9cd44a03cd7d593d8f6a64af5c798d0294ef3eec691230e22",
+        "bd443d16f80a7daa1615ea08b7af9a39468a261b1360a1d7a57cfd10ed33fb79",
+        "a85e9291f2962db3bb4bf3a621eef8f177ae9a7cc876d39e23f049134595f4f5",
+        "50709ccac90d1cca5aa3b988aff16fc1b176122702f28ce77a3bc003e25efe9e",
+        "280e91391c0be6ee583056f87bec305d7eb693a1804a9a13f6d41de7d0329625"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "619a363285a849620c21d09890cef4fdb6ddeb383dbe7087f1c93697078104a7",
+        "fc8309ed23ae680ac91d180f8d9ba5f4bc9af67a86a77fca99decbdbd3b4bbb2",
+        "c2a3672e745481b2dec7e070b410f0cc16fce136e295b89ed6f84c9bea60e63a",
+        "3b44b74c161d60c2435a4893cad896dd656a892a4d9d4764fd4880fd4a2f1322",
+        "9b95def3bbb485bf0d81ccdca6d94da98c427097426482ad82818bc9924b6fec",
+        "c56021bd41a4276bb918eb20124e17aa68a307e9ee131feb2402ac6dbe07e996"
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
+        "sha256": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r003/SW-walk.png",
+        "sha256": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a"
+      },
+      "geometry_sha256": "df98118ec282372c38c2d45e0599f97dbe0a2a6f54f1d927ff16b26823425eb0",
+      "frame_rgba_sha256": [
+        "71fca029f92cec3ca7b0cc15b69bd5a2d300936015e9a8b3be8dca39633b793b",
+        "a8bb1958a5263fe32faf453429bc9fe0f5756502e675d3e7ce5f06a00061afad",
+        "99f4f7a2be5f3a9e529bac64d352d41280e676937b1983abab6a0d8c4a70c986",
+        "20382362044d4f5b5592cb102f200a66f33f289368374a06e9363a178a4f5aa3",
+        "dbdc0bead3392cf1aa9292c58e954228288b3166bb449945dea5517e2bad1507",
+        "29dd5a0abda61fcdffc9b4714d6c82884a157ae20097eedb580e29c39c27bf25"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "fbd8eee922b895fd9b979c070962fd49137830342a5b8eecbeb70a9981ed88d1",
+        "85555ec3d0f5327132e8afbf9c0a9448ac827037567d0d2f83359c71c3834659",
+        "83b357afd7f10a68e8ab76346468189a7bb4666fa59682aeee1e91e84913b583",
+        "1dc3111f193c382662b88d1e200cf3bbeccdd8e3536688f259031fb64b629177",
+        "c519fb8361a30adcd47e69261c242cb924d2f5645f3ff4e819e139d9c2d56bb5",
+        "efc9d26a263789b7cd4a63f388dea3858dfbb372e5f22c0069034dabf2a0b9a3"
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "attack",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-attack-v01iso01.png",
+        "sha256": "5f0d75d86ed4608271b417f9a0a55916747a98df190dc5c8da69cb8a4a80f991"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r018/W-attack.png",
+        "sha256": "5f0d75d86ed4608271b417f9a0a55916747a98df190dc5c8da69cb8a4a80f991"
+      },
+      "geometry_sha256": "6d6eadb5c69109b8e702c42907d9fb4a904a1487524b0c9c246ac66b52133f94",
+      "frame_rgba_sha256": [
+        "63f59afa957e9173eacc33ea406aab6480ccc50c71c8923676557444c5a13f3e",
+        "4c22462cbff97f9954b2fa7eb9c8d8c210150f0c9953ac612cd30c486f03fd37",
+        "9e7f4b03e0a56d4b9e8189b2abe4cf5c86724b1a6c18a6c7f73b74adde89c7f9",
+        "e1e5f52d02a6157ce8488249d47a6aead2c4b997590d1024078d9b8ca2e6cb82",
+        "6ff6ca7cc55eed6a44bf5996a3bbc0dff25e6090549f21d8614c82fe7b37a380",
+        "d0a2b1ef0420e7212f89d45a53e435e0de7d5e26d578702957b94c3a282fa536"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "de5a5304663c3777fb8658a5e88ca935ef882eb49ed2cf576bef6c8202b57620",
+        "2f4c5b5c7abbda6ce19fb0e9a43a5818590991ba3074fe1e590c5020b03e4765",
+        "1aba7d2c1f1b5e0ba0e2611de9704e8761cd87d7d280eb9ca77d4fead8af6b1a",
+        "0f36fbabc97b545bb17968169bb65a789070187c914f63168cc5aaa3eea36d5f",
+        "e2bceb40148088d75f5931e211252ff8c35ffaf45a4b82d81bd650b813610b28",
+        "12e75d84f9c46561c189174bed67adcee92e78231af8ed0e94ba9ab30fb58a46"
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "death",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png",
+        "sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/W-death.png",
+        "sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8"
+      },
+      "geometry_sha256": "14bc398e70e615b98a798450f68f17ea6057cf8c98b5f97759ca5e117067de34",
+      "frame_rgba_sha256": [
+        "35c9279fc36900927df6dc97c48934064735d89aa28dbc63698fb29d1704db04",
+        "ad63b812b3de1d3ec244ed7cc72e40bfb6696978a4839e3eafe941568867ae12",
+        "076de48dbe057763c6897eb882cce7b8e0945ee0a415c40e4b58ca20c6d87ed4",
+        "f402c80726e76ee271bf352fe9bce69f444a232462d3b0ab65f048e7647f3def",
+        "4828885cc7c804696d85e6804021b97b4370c4616fb64876e1f525f268666def",
+        "54951274608f67353c3ad75a20adbc9a3560ce9e5681a808556fac34d19ad88c"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "9e7578fe4335e2e77f90fd615b349e74fd1ca4f9a8d1ee239f4efe15d3646a01",
+        "907c60e61ce3736c34dac948784eae190c12687b963459547ccaeeb44edec05d",
+        "b80f53ed50be12e93f790720480dfcdcf288ffc95d4eabdd14a9e9f7bc13fcfd",
+        "45cad6cb664a0ea378f552e9830d18529d71670e706349a77ed9692356e51b6a",
+        "a5428e3a0b09f2d28e4c04a55f5daa36e72368ee1756f023dabf6e3f00c4ffe2",
+        "d7c8eb9342708d054d89ed151a1556a87e8e038cbd04c7a7416e3c0140864da5"
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "hit",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-hit-v01iso01.png",
+        "sha256": "57b6bf7a71f7261b11b24373b0d38a1a9c5ba1dbf4ff488dd8e34f046866a787"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r025/W-hit.png",
+        "sha256": "57b6bf7a71f7261b11b24373b0d38a1a9c5ba1dbf4ff488dd8e34f046866a787"
+      },
+      "geometry_sha256": "1c6f4286011cc39ad7377cd4c2a97e3cbc5d22a3e65beabe95ac61d39eb75623",
+      "frame_rgba_sha256": [
+        "7921386e1a7f9da8f66a4262f24371ba6b141803a4112b238a634f81359061fd",
+        "e6f17e4cc56ce7d6638824f501cde0c3864cf74d584e45e03bfaca70c08ef16f",
+        "8889674c1f9defb228aa91534648c7b164a7c3509c241fda27c8b9b475461744",
+        "7bf3f2a7222a091f04f94adccb2942a8322a0994b2464533fb748e2fced8ee34",
+        "1e7c1da1d9c0f34e8c0cc818930afd9535581b488128881a3e84472a7e6f9280",
+        "4b2e786dfc4afe000fd90745f23beb4c911dfcc49260c7b64e9cb75f38adf384"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "5ae623a1774540ac02e43736e83aefa97d8bed663c89d73a53d4f831b74664e0",
+        "a8618b6fe6a9962f0fda936f010ebb91cc2d609ee6f40febb4d06844f2a69ea6",
+        "5288dff636fb9a426fd60af198fc67d84eda3887a1a83ac147368af1c6041bec",
+        "2ef82b285a16beadc58c4945cdc3cebcfe773357d5f7cffbf299dee9ab055c3b",
+        "3d1fcc9076ef1b038553af6e2ff778c86b4284d4646b986b8f4a96d72e7643da",
+        "f02c6b2f75f061ad0b583cbd2f920a22e96bbdfc71f0aba9b0490d1bce58340f"
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "idle",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+        "sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r049/W-idle.png",
+        "sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651"
+      },
+      "geometry_sha256": "0a7a826c1083b4cc0269e1e1a65187a54732df88709292b0663b45f52c46d8a7",
+      "frame_rgba_sha256": [
+        "ca145065264291b76f8cdf8b9feb71189e006936015f19ed305c0374e1f603c1",
+        "45eec84fe5ac4997c5b742ee2f7f0df9fd358b54bf7be5de1f55428c5cc763e8",
+        "04a8d86e750e5feb08eba1e05b4a89040fa9c1206dd4a97ccdb6450a0d0e51e9",
+        "f4de4dc641fe7c8c43967ad76af63164a5a9abac3a5e9331c9a7f42c56654d55",
+        "5ee807bb78bb5e940a91afa54f7a8e69e0811c24b447cf6727d9f10b31fad3df",
+        "9de9674c25ab56f93899dd025784e03a8aa75b808276353d9a1831b8afe79ebf"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "8db98176a78e02a43d3faefe7e367f1fce9a7a6e536c20eef1e4affce9715df6",
+        "7cb17041c174bc98c72799a7d1be22bc40843b2e1cb8c1f3df421095699a5ce5",
+        "0adbe9163561d6b6dbe635ec530795208c3075d47ce3e0bc295a8b044eb1d970",
+        "047f5c637ef55e63ad4d9394947cb8f0dc2d9b0b9cfc8c144ca8e692f32a760b",
+        "068a8809447214be3c24882bfc991528999be8f09061d13f1ed7ad394355f1fb",
+        "52fa862d5285e2c62191abdf22a1cfcf6f6052a6927df9c9f252759e76dfaefe"
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "run",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
+        "sha256": "3d50892007edc60ce2091584be01d9dfcd272b8a42f177eada40a209973fdd72"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r057/W-run.png",
+        "sha256": "3d50892007edc60ce2091584be01d9dfcd272b8a42f177eada40a209973fdd72"
+      },
+      "geometry_sha256": "8f856418fa879f47a5a6d7c0eb8d628e8de2caf35f6583563edc9af25ab2a064",
+      "frame_rgba_sha256": [
+        "240ba07ad49432e6449a0604ae5f830f506b6f51b50b640b9f0912e692cfd8b9",
+        "cea5c8bc12314120beeb45a75fdaf2854efc362b400408841686d4455aefd162",
+        "e4d06803c031753a57c7604b973aae212a875fb112b31c0a82906d1f02e77a09",
+        "e6a831ef00535824eb9a475fe0761db6604e9dee76c4c3e2b788ba0b5ce90453",
+        "5b43b2acba18fdea63846c68ae5483caa4aa93d28e77e692a702f00797e6f88d",
+        "41592ed378b6110401cebc84f68af5dd822e4cbaf8305fa178a169591bf764f0"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "a35d9be12efa228b68604f88693c59ac88f092253f2421f298bb0505d0a167ad",
+        "62cec77c4caf68bb991520586a10c9efe2615ea6710333cd711c3fa077f501fa",
+        "7be550b9ad9a11f57c380b8024177a101235b4103c3225110dff3699311b4c0e",
+        "ed2c4311dbb9846e8df8f02505f130f32054abf21b813eb353b0c5d0e3cbb379",
+        "762225dc97be3a1a2a25c870094788682a8bfe70c74fd568c17bac7912169af3",
+        "ceea4ba209f865a322d17f63f66cfce71cd7201ebd583c66321b4520f0a29167"
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "walk",
+      "source": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
+        "sha256": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264"
+      },
+      "texture": {
+        "path": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r055/W-walk.png",
+        "sha256": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264"
+      },
+      "geometry_sha256": "d0240d0f0e2de684ad97ef9d12f8fe35b7d0176d80b49e75ad4e9fd0cf21a86c",
+      "frame_rgba_sha256": [
+        "8b738320ac98f46b8bf95e30e42d21e0c39da1669e1162ff654d64a2a5aa5591",
+        "271d692badcc7159ecde99f486bef4abc4e4e732fb0781c1f762672703e74f49",
+        "e6dbd15f8aab6039c1dd2aa033777de0d38e82c08c09b796bf3fa6551ce5ca1f",
+        "a167fb420d6506c410502b938f95d6482c7c471fee17e41289224e3550831ba9",
+        "8189865272a7dda61de20b0f5552c74fe1fda7f15ff508787e001e7c924bda5a",
+        "d603f041e5adeb4d4da7d80072fc7586066df611c194655ef6ec8f49c508ba7d"
+      ],
+      "frame_region_margin_anchor_sha256": [
+        "7288c56ebaecf0faf7168f8dec53c64af598e7a8477169139e0b4c686d9698b4",
+        "f6b6bb62e561b4bf318e3d4abc4d96edbc9a313ea77455f19c583dc729d9b500",
+        "3fafdf70008783d4d67dac44bcff4063f496fbc0feece1ffe6e53e1b16a6f2eb",
+        "7361a35ab72e4a17bf8cf1f31e6fe281595f2c0e92b8223cd1e847a6b514065e",
+        "3d583997fd6c1091c8b1bf834bd8135da7aa8e5bce8729423a50be49d3518484",
+        "88cabb960ca67cf1031528205f33f27602acdf2aabf59555708987e4a6fb72b2"
+      ]
+    }
+  ],
+  "required_next": [
+    "Actual default Main 48-track behavioral PASS",
+    "Independent full 48-track quality proof pinned to these exact production resources",
+    "Proof-backed completion certificate before any approval count change"
+  ]
+}

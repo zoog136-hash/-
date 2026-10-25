@@ -1,0 +1,33 @@
+{
+  "schema": "pr122-413-retained-profile-integration-proposal-v1",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "key": "transform:413",
+  "approved_count": 2,
+  "approved_keys": [
+    "transform:393",
+    "transform:267"
+  ],
+  "canonical_profile": {
+    "path": "assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/NativeMotionProfile.tres",
+    "sha256": "8b2e9d17e95b3b369840a84c053015150528ec7e4ae6c2a09e15c389da03b281",
+    "frames_path": "res://assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/SpriteFrames.tres"
+  },
+  "canonical_profile_basis": {
+    "display_height": 110.0,
+    "source_reference_height": 464.0,
+    "pixel_scale": 0.23706896551724138,
+    "foot_offset_y": -30.344827586206897,
+    "sizing_review": "HOLD; native staging only",
+    "production_catalog_replaced": false
+  },
+  "tool_pins": {
+    "advance_pr122_native_locomotion.py": "972f2492a653ea948d7d15cee0c0a5888f7e64bcdc646f89dbebd12a9db274eb",
+    "stage_pr122_native_locomotion.py": "fd3518e21451668800367b2845d3f8c79c52ff9e6cc65d34eb2c079e10b24849",
+    "bind_pr122_native_locomotion_profiles.py": "ddc4643a78d01d5cbc0529ee31262e73095ff1e989ce71c6d70264c5eb448a62",
+    "checkpoint_pr122_native_clip.py": "72306d749937f9c5fefc0ef7d4cbcc7ac14210da2ec7c7dd161e99f841ce30ef",
+    "integrate_pr122_corrective_clip.py": "5271739c9e02d0a743856d4a6338b67dbb1b1fb3630f747fde5dd8690723d9cd",
+    "pr122_native_production_approvals.py": "2d0305cf49b3d944a2994111855046d37675ba72efa8180862ad5b78291f7706",
+    "pr122_reviewed_runtime_layout.py": "ebb9a0be9caf8c44c43f48aa2abb5e208bc26450a620538fc4e638c398a3e13b",
+    "pr122_reviewed_source_regions.py": "8d2745e5cae9412438c282811323dc4d0e80496fe73c4cc69dfed38078db8857"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "status": "ACTUAL_ORIGINAL_CLOTH_LAYER_JOINT_OCCLUSION_PENDING_QC",
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+    "bytes": 762243,
+    "canvas": [
+      1254,
+      1254
+    ]
+  },
+  "base": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v07-actual-layer-join.png",
+    "sha256": "abbe4157bec3b886e5678ca69f283cb9f8a359206f7e801360d841c17980a18e"
+  },
+  "source_original_skirt": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+    "sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+    "semantic_polygon": [
+      [
+        603,
+        579
+      ],
+      [
+        640,
+        578
+      ],
+      [
+        680,
+        584
+      ],
+      [
+        719,
+        600
+      ],
+      [
+        754,
+        623
+      ],
+      [
+        782,
+        652
+      ],
+      [
+        799,
+        674
+      ],
+      [
+        789,
+        686
+      ],
+      [
+        771,
+        694
+      ],
+      [
+        752,
+        694
+      ],
+      [
+        733,
+        692
+      ],
+      [
+        716,
+        689
+      ],
+      [
+        697,
+        688
+      ],
+      [
+        676,
+        688
+      ],
+      [
+        656,
+        684
+      ],
+      [
+        634,
+        678
+      ],
+      [
+        612,
+        675
+      ],
+      [
+        590,
+        671
+      ],
+      [
+        574,
+        665
+      ],
+      [
+        566,
+        655
+      ],
+      [
+        575,
+        631
+      ]
+    ]
+  },
+  "actual_cloth_projection": "native x fixed; source_y=target_y-55*sin(pi*clamp((x-575)/230))^1.3*smoothstep(clamp((target_y-560)/180)); waist/bothsideanchors fixed; original pleat/goldhem material projected once",
+  "native_C": 2560,
+  "whole_source_resampled": false,
+  "local_cloth_material_projection": true,
+  "new_colour_or_pleat_design": false,
+  "changed_pixels": 21368,
+  "outside_ROI_changed": 0,
+  "arm_nearboot_foreground_changed": 0,
+  "lowerbody_y775_down_exact": true,
+  "source_or_actor_approved": false,
+  "actor_approvals_added": 0
+}

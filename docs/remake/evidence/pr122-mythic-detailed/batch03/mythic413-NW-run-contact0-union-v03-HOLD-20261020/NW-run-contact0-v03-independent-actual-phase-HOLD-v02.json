@@ -1,0 +1,146 @@
+{
+  "schema": "independent-private-actual-NW-run-contact0-v03-gate-v2",
+  "status": "HOLD_CONTACT0_LEFT_FREE_ARM_COUNTERPHASE",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v03-union-service.png",
+    "sha256": "dc09e6bf29f0fca00ea691455732b9e54ac37e60239958624e4ccc20af13e852",
+    "bytes": 868108
+  },
+  "prior_gate": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v02-independent-actual-phase-HOLD-v02.json",
+    "sha256": "69d3f09ffbeda97db13b52f930b60d534657aa1519349c84c33fa027ed825295",
+    "bytes": 13504
+  },
+  "C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "source_dimensions": [
+    1254,
+    1254
+  ],
+  "source_status": "Actual source inspected in one narrow native arm+leg crop, not inferred from guide or author status.",
+  "actual_exact_alpha16_near_heel": {
+    "xy": [
+      491,
+      1195
+    ],
+    "x_range_at_lowest_y": [
+      491,
+      491
+    ],
+    "uncertainty_raw": [
+      1,
+      1
+    ],
+    "marker_authority": "Lowest gold alpha only; anatomical load-bearing heel/sole contact must be established separately. Do not assume this point is ground contact."
+  },
+  "canonical_NW_raw_ground_slope": 0.9,
+  "actual_forefoot_alpha16_bottom_samples": [
+    {
+      "xy": [
+        399,
+        1120
+      ],
+      "signed_below_heel_plane_raw": 7.799999999999997
+    },
+    {
+      "xy": [
+        410,
+        1147
+      ],
+      "signed_below_heel_plane_raw": 24.900000000000006
+    },
+    {
+      "xy": [
+        420,
+        1158
+      ],
+      "signed_below_heel_plane_raw": 26.9
+    },
+    {
+      "xy": [
+        430,
+        1164
+      ],
+      "signed_below_heel_plane_raw": 23.9
+    },
+    {
+      "xy": [
+        440,
+        1169
+      ],
+      "signed_below_heel_plane_raw": 19.9
+    },
+    {
+      "xy": [
+        450,
+        1172
+      ],
+      "signed_below_heel_plane_raw": 13.899999999999999
+    },
+    {
+      "xy": [
+        460,
+        1174
+      ],
+      "signed_below_heel_plane_raw": 6.900000000000002
+    },
+    {
+      "xy": [
+        470,
+        1171
+      ],
+      "signed_below_heel_plane_raw": -5.099999999999998
+    }
+  ],
+  "ground_assumption": "Canonical NW-foot-aligned residuals are diagnostic only. Natural outward shoe yaw changes the local projected sole ground line. These residuals cannot establish absolute penetration or reject an otherwise coherent toe-out landing.",
+  "actual_arm_read": {
+    "LEFT_near_shoulder_xy_approx": [
+      555,
+      382
+    ],
+    "LEFT_free_wrist_xy_approx": [
+      455,
+      594
+    ],
+    "uncertainty_raw": [
+      18,
+      18
+    ],
+    "finding": "Free LEFT arm remains visibly screenleft/downward of shoulder; opposite rear arm swing requested in correction was not implemented."
+  },
+  "single_blocking_defect": "LEFT free arm counterphase remains missing: free arm still projects visibly forward/down-left with LEFT front landing leg, instead of the requested opposite rear swing.",
+  "leg_note": "Leg is a plausible forward LEFT landing candidate with folded RIGHT recovery. Static heel/forefoot contact remains to be assessed from actual shoe yaw, true load-bearing heel/sole, morphology and body registration. Generic heelY1082 and NW slope0.9 are not strict anatomical authorities.",
+  "next_action": "Localized source-authored LEFT free-arm counterphase and coherent lower-leg/boot landing with natural toe-out preserved, using actual material pose guide and genuine regenerated joints/occlusion. Preserve outside-mask RGBA and fixed C2560. No arbitrary root/C change, no forced generic stiletto shortening, no requirement that shoe yaw equal body NW heading. Reinspect actual static candidate before paired LOAD/FLIGHT physical planting proof.",
+  "scope_limitations": [
+    "No source/physical/loop/actor approval",
+    "No repository/Git/Godot/source edit performed by this independent reviewer",
+    "No source image authored by reviewer",
+    "No new C fit or wholealpha normalization",
+    "No counts changed"
+  ],
+  "private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger.json",
+    "sha256": "1ac54b72444b672093df24d05bdb66baed76363219fe2404767d66f8357a28d6",
+    "bytes": 1850
+  },
+  "source_phase_approved": false,
+  "allow_dependent_LOAD_generation": false,
+  "actor_approval_added": 0,
+  "counts_changed": false,
+  "supersedes": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v03-independent-actual-phase-HOLD-v01.json",
+    "sha256": "191cc09b66330146aafc35c3a0a446cccbf7b919aca4baa771bad486999a3eb1",
+    "reason": "Incorporates root steering: canonical body heading does not constrain natural shoe toe-out; goldpoint is not automatically true contactsole."
+  },
+  "actual_shoe_review_requirements": [
+    "Identify actual weight-bearing heel/sole, separate from gold ornament or lowest alpha.",
+    "Infer natural shoe yaw from actual shape and its pose-control reference; do not equate body heading with foot heading.",
+    "Assess forefoot lift relative to that actual shoe-ground direction and body-relative front landing.",
+    "Judge anatomical hip-knee-tarsal chain at fixed body density.",
+    "Require opposite LEFT free-arm swing and RIGHT folded recovery.",
+    "Reserve full planting/ground/loop approval for paired actual source review."
+  ]
+}

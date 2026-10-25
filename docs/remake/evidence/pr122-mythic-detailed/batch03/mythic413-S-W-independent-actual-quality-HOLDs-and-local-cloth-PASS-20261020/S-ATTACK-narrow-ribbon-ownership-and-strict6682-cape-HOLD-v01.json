@@ -1,0 +1,72 @@
+{
+  "schema": "TWILIGHT_NARROW_SOURCE_OWNERSHIP_REVIEW_V1",
+  "reviewer": "mythic413_w_actual_quality_fresh_v01",
+  "review_utc": "2026-10-20T15:53:07.918496+00:00",
+  "actor": "Mythic413",
+  "direction": "S",
+  "action": "ATTACK",
+  "scope": "Two specifically assigned native local views only. No original fullbody/source basis audit or actual-six action approval.",
+  "ribbon": {
+    "material_contract_sha256": "636c701a61f8c312361a48070789a7dcb8dbf5a06e2dfc5a0816c0fc98f84f86",
+    "preview_sha256": "09da0ce0141552753667a667a319e4e4f1948f287d0a24a39d930b40c287001c",
+    "preview_bytes": 20088,
+    "ownership_status": "PASS_HEAD_RIBBON_OWNERSHIP_ONLY",
+    "native_unpadded_ROI": [
+      462,
+      354,
+      518,
+      414
+    ],
+    "finding": "Royal-blue triangular cloth is genuine headribbon and should remain on head/CORE. Separate lower navy/gold puffcap belongs to Rupper. Original arm occludes the exact hidden ribbon connection.",
+    "candidate_only": {
+      "nearest_edge_pair_author_finite_data": [
+        [
+          466,
+          400
+        ],
+        [
+          454,
+          394
+        ]
+      ],
+      "distance_px": 13.4,
+      "backing_cap_ROI": [
+        449,
+        385,
+        477,
+        412
+      ],
+      "candidate_width_px": [
+        14,
+        18
+      ],
+      "assessment": "Short same-blue backing cap between these existing edges is reasonable to test, behind original arm/ribbon with original RGBA preserved. No hidden attachment or posed SOURCE PASS yet."
+    }
+  },
+  "cape": {
+    "material_contract_sha256": "a744ab6c5ccc62225258b319b94e92a2b635d076e7166606cc8fae2b8eb36f76",
+    "preview_sha256": "f71dbfb8ad1e3481dcf9f9c2bcf93dd563042d5111b128d6a15d6e4b50ee0885",
+    "preview_bytes": 12442,
+    "source_visual_status": "HOLD",
+    "mask_pixels": 6682,
+    "returned_alpha100_coverage_author_data": 5173,
+    "probe_native250": [
+      150,
+      170,
+      193,
+      237
+    ],
+    "probe_source_unpadded": [
+      390,
+      910,
+      433,
+      977
+    ],
+    "finding": "Curved lower gold band terminates at angular right notch; adjacent navy/gold boundary is visibly truncated, so count/provenance cannot clear source continuity.",
+    "next_gate": "Inspect original actual gold-hem ownership at probe. Where genuine cloth boundary already exists outside mask, transfer ownership only to cape/CORE while preserving composite original RGBA. Restore only mask-covered gap into that unchanged boundary. No mask expansion/service repeat; unrelated straight staff metal must not become hem."
+  },
+  "actual_six_source_visual_status": "NOT_REVIEWED",
+  "actor_approvals_added": 0,
+  "detailed_actor_approval_count": "2/31",
+  "image_ledger_cumulative_bytes_at_review": 780945
+}

@@ -1,0 +1,3575 @@
+{
+  "schema": 1,
+  "source": "Existing approved native articulated motion reused for an exact same project-atlas body; no new source PNGs or native poses authored",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_1.png",
+    "region": [
+      947,
+      934,
+      315,
+      312
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 1,
+    "cell": 15,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "image_size": [
+      1263,
+      1246
+    ],
+    "region_rgba_sha256": "8bb91d69ba53dd7695ed8bb0dbf06aac304adff0a6444ca924f5033c569d83bd"
+  },
+  "target_keys": [
+    "monster:알비노 피닉스"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 1,
+      "cell": 15,
+      "body": "phoenix",
+      "variant": 6,
+      "width": 1.024,
+      "weapon": "staff",
+      "crest": 2,
+      "accent": "849bab"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": true
+    },
+    "attack_type": "magic",
+    "visual_height": 128
+  },
+  "target_references": {
+    "monster:알비노 피닉스": {
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "region": [
+        947,
+        934,
+        315,
+        312
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 1,
+      "cell": 15,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+      "image_size": [
+        1263,
+        1246
+      ],
+      "region_rgba_sha256": "8bb91d69ba53dd7695ed8bb0dbf06aac304adff0a6444ca924f5033c569d83bd"
+    }
+  },
+  "target_presentations": {
+    "monster:알비노 피닉스": {
+      "visual": {
+        "atlas": 1,
+        "cell": 15,
+        "body": "phoenix",
+        "variant": 6,
+        "width": 1.024,
+        "weapon": "staff",
+        "crest": 2,
+        "accent": "849bab"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": true
+      },
+      "attack_type": "magic",
+      "visual_height": 128
+    }
+  },
+  "sharing_rule": "One target adapter per pinned identical reference/body/weapon/attack contract. Height, bounded width and original tint are explicitly adapted. Multi-target importer guards remain unchanged.",
+  "authoring_instructions": "{\n  \"attack-E-SE-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 E PURE RIGHT profile: beak/bodyfacingRIGHT. COLUMN2 SE frontRIGHT: beak/bodyfacingdiagonallyDOWN-RIGHT.\\nTHREE ROWS = EXACTSIXBIRDS. ROW1 magicalstrikeWINDUP: wingjointsdrawBACK andbend, neckcoilsbackwhilebeakstillpointsitscolumnheading, talonsdrawin, tailcoilsbehind. ROW2 realattackCONTACT: neck/BEAKandchestTHRUST OUT IN EXACTFACINGDIRECTION, beakopensandwingspowerforward/downthroughshoulderjoints, talonsbracebeneathattachedbody andtailstreamsback. No newfireball/orb/spark/projectilepainting; this is the bird's actual bodily casting/strikinggesture. Contactmustclearlyreach AHEADofbodytoward itsheading. ForNcontactbirdreachesAWAY/UP, stillshowingnape/back/wingbacks; NEVERturnmouth/chesttofaceviewer. ForNE/NWcontactstaysrearoblique. ROW3 RECOVERY: neck/beakretract, beakpartlycloses,wingsrelaxpartway,tailrecurls. Threeindependentlyarticulatedbody/wing/tailposes. Windup/contact/recoverykeep EXACTSAMEdirectionineachcolumn.\\n\",\n  \"attack-N-NE-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 N FULL BACK: nape/back/wingbacks, headingAWAY/UP; NOfrontalbeak. COLUMN2 NE REAR-RIGHT: nape/back/wingbacks, headingUP-RIGHT.\\nTHREE ROWS = EXACTSIXBIRDS. ROW1 magicalstrikeWINDUP: wingjointsdrawBACK andbend, neckcoilsbackwhilebeakstillpointsitscolumnheading, talonsdrawin, tailcoilsbehind. ROW2 realattackCONTACT: neck/BEAKandchestTHRUST OUT IN EXACTFACINGDIRECTION, beakopensandwingspowerforward/downthroughshoulderjoints, talonsbracebeneathattachedbody andtailstreamsback. No newfireball/orb/spark/projectilepainting; this is the bird's actual bodily casting/strikinggesture. Contactmustclearlyreach AHEADofbodytoward itsheading. ForNcontactbirdreachesAWAY/UP, stillshowingnape/back/wingbacks; NEVERturnmouth/chesttofaceviewer. ForNE/NWcontactstaysrearoblique. ROW3 RECOVERY: neck/beakretract, beakpartlycloses,wingsrelaxpartway,tailrecurls. Threeindependentlyarticulatedbody/wing/tailposes. Windup/contact/recoverykeep EXACTSAMEdirectionineachcolumn.\\n\",\n  \"attack-N-NE-northfix-exact-prompt.txt\": \"EDIT THIS EXISTING 2COLUMN×3ROW SIX-POSE PHOENIXATTACKSHEET. Preserveexactfirebirdfeatherdesign,body/wings/tail/talons,all6differentwindup/contact/recoveryposesandgeneroussafeemptyspacing. Fix NORTHCOLUMN1HEAD direction: itsbeak/head currentlyturnsRIGHTtowardNE. EVERY LEFTCOLUMNpose is STRICTNORTH/FULLBACK headingAWAYandSCREENUP. ShowonlytheBACKOFHEAD/nape, no visible eye/frontface, no rightpointingsidebeak. Head/neckcenterlineshouldstayABOVEBETWEENTWOWINGROOTS. MiddlecontactN extendsneck/BEAKSTRAIGHTAWAYUP atSAME Xasbodycenter, NOTtowardright orviewer. Thefarbeakispartlyoccludedbehindcrown/nape; onlytipaboveheadmaypeek. Bodybackandwingbacksremainvisible. COLUMN2 NE REAR-RIGHT staysheadingAWAYUPRIGHT, NOTfront-right; showchieflynape/back/wingbacks. Allrowsfixedheadings, genuinewing/neck/tailjointdifferences. Keep TWO wings,TWOattachedbirdlegs,entirelongattachedtail,onebirdbody. Exact6completefigures2cols3rows. Wholebirdmax35%cellwidth40%cellheight with120pxhorizontal80pxverticalfullytransparentgaps. ALLbackgroundalpha0;nofog/matte/halo/ground/shadow/grid/text. Donotclipanyfeather/limb orchangeotherfeatures.\\n\",\n  \"attack-S-SW-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 S FULL FRONT: beak/chestfaceviewerDOWN. COLUMN2 SW frontLEFT: beak/bodyfacingdiagonallyDOWN-LEFT.\\nTHREE ROWS = EXACTSIXBIRDS. ROW1 magicalstrikeWINDUP: wingjointsdrawBACK andbend, neckcoilsbackwhilebeakstillpointsitscolumnheading, talonsdrawin, tailcoilsbehind. ROW2 realattackCONTACT: neck/BEAKandchestTHRUST OUT IN EXACTFACINGDIRECTION, beakopensandwingspowerforward/downthroughshoulderjoints, talonsbracebeneathattachedbody andtailstreamsback. No newfireball/orb/spark/projectilepainting; this is the bird's actual bodily casting/strikinggesture. Contactmustclearlyreach AHEADofbodytoward itsheading. ForNcontactbirdreachesAWAY/UP, stillshowingnape/back/wingbacks; NEVERturnmouth/chesttofaceviewer. ForNE/NWcontactstaysrearoblique. ROW3 RECOVERY: neck/beakretract, beakpartlycloses,wingsrelaxpartway,tailrecurls. Threeindependentlyarticulatedbody/wing/tailposes. Windup/contact/recoverykeep EXACTSAMEdirectionineachcolumn.\\n\",\n  \"attack-S-SW-spaced-exact-prompt.txt\": \"EDIT AND REPACK THIS EXISTING PHOENIX SPRITE ATLAS. Preserve its exact6COMPLETEarticulatedbirdfigures,2columns×3rows,existingpose/phaseorder,characterdesign,sourcecolors,twoattachedwings,twoattachedbirdlegs/talons,wholeverylongattachedfeathertail. Correct ONLY unsafeCROWDEDSPACING: SHRINK ALLFIGURES TOHALFSIZEuniformly andplacewithMUCHLARGERCLEARTRANSPARENTGUTTERS. MakepageMOSTLYEMPTY; eachwholebirdINCLUDINGwidestwingandtailtips atmost30%cellwidth35%cellheight. Atleast150cleartransparentpixelsbetweenwholebirdBOUNDINGBOXES horizontally and100vertically,largeouteremptyborder. Do notfillcells,truncatebodyparts,shortentailorremovefeathers. There must be nootherbirdpixelinsideanotherbird'scropboundingrectangle. Keep exact2columns×3rows, no additionalfigures, no repeatedstillsorreassigneddirections. COLUMN1isS FULLFRONT beak/chesttowardviewerDOWN;COLUMN2isSW FRONTLEFTfacingDOWNLEFTinEVERYrow. Keepthoseheadingswhileneck/wingsarticulate. Opaque paintedfeatherinteriorswithnarrowantialias; EVERYbackgroundpixelalpha0. Nohaze/matte/halo/ground/shadow/labels/grid. Preservecompletebodyandallsourcefeatures.\\nRowswindup,contactbeakandchestthrustDOWNtowardviewerorDOWNLEFTaccordingtocolumn,recovery. S/SWheadingstaysfixedallphases;noturntowardRIGHT.\\n\",\n  \"attack-W-NW-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 W PURE LEFT profile: beak/bodyfacingLEFT. COLUMN2 NW REAR-LEFT: nape/back/wingbacks, headingdiagonallyUP-LEFT.\\nTHREE ROWS = EXACTSIXBIRDS. ROW1 magicalstrikeWINDUP: wingjointsdrawBACK andbend, neckcoilsbackwhilebeakstillpointsitscolumnheading, talonsdrawin, tailcoilsbehind. ROW2 realattackCONTACT: neck/BEAKandchestTHRUST OUT IN EXACTFACINGDIRECTION, beakopensandwingspowerforward/downthroughshoulderjoints, talonsbracebeneathattachedbody andtailstreamsback. No newfireball/orb/spark/projectilepainting; this is the bird's actual bodily casting/strikinggesture. Contactmustclearlyreach AHEADofbodytoward itsheading. ForNcontactbirdreachesAWAY/UP, stillshowingnape/back/wingbacks; NEVERturnmouth/chesttofaceviewer. ForNE/NWcontactstaysrearoblique. ROW3 RECOVERY: neck/beakretract, beakpartlycloses,wingsrelaxpartway,tailrecurls. Threeindependentlyarticulatedbody/wing/tailposes. Windup/contact/recoverykeep EXACTSAMEdirectionineachcolumn.\\n\",\n  \"attack-W-NW-spaced-exact-prompt.txt\": \"EDIT AND REPACK THIS EXISTING PHOENIX SPRITE ATLAS. Preserve its exact6COMPLETEarticulatedbirdfigures,2columns×3rows,existingpose/phaseorder,characterdesign,sourcecolors,twoattachedwings,twoattachedbirdlegs/talons,wholeverylongattachedfeathertail. Correct ONLY unsafeCROWDEDSPACING: SHRINK ALLFIGURES TOHALFSIZEuniformly andplacewithMUCHLARGERCLEARTRANSPARENTGUTTERS. MakepageMOSTLYEMPTY; eachwholebirdINCLUDINGwidestwingandtailtips atmost30%cellwidth35%cellheight. Atleast150cleartransparentpixelsbetweenwholebirdBOUNDINGBOXES horizontally and100vertically,largeouteremptyborder. Do notfillcells,truncatebodyparts,shortentailorremovefeathers. There must be nootherbirdpixelinsideanotherbird'scropboundingrectangle. Keep exact2columns×3rows, no additionalfigures, no repeatedstillsorreassigneddirections. COLUMN1isW trueLEFTprofile;COLUMN2isNW REARLEFTinEVERYrow, nape/back/wingbacks ratherthanfrontface/chest. Keepthoseheadingswhileneck/wingsarticulate. Opaque paintedfeatherinteriorswithnarrowantialias; EVERYbackgroundpixelalpha0. Nohaze/matte/halo/ground/shadow/labels/grid. Preservecompletebodyandallsourcefeatures.\\nRowswindup,contactbeakandchestthrustLEFTorAWAYUPLEFTaccordingtocolumn,recovery. DonotturnNWtofaceviewer duringcontact.\\n\",\n  \"hit-death-E-SE-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 E PURE RIGHT profile: beak/bodyfacingRIGHT. COLUMN2 SE frontRIGHT: beak/bodyfacingdiagonallyDOWN-RIGHT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 HITRECOIL: neck/headtiltsBACK oppositeheading, shoulderwingscrumplein andtailwhipsbutstaysattached, talonsstillattached. ROW2 HITRECOVERY: bodypartlystraightens, wingsreopenpartwaywithdifferentelbowangles andtailrelaxes, sameheading. ROW3 DEATH1: strengthfails, head/beakdroops, BOTHwingsfoldtowardbody, attachedbirdlegs/talonsdroopwhilebodydescends. ROW4 DEATH2: completebirdfallsSIDEWAYS towardground, bodywingsandtailcollapsealonggroundprojection, everyfeather/limbattached. ROW5 FINALDEATH: LOWFLATGROUNDED COMPLETEPRONEDEADBIRD, beak/headrestontheside, wingsfoldedcrumpledagainstbody, bothattachedlegs/talonsliebesidebody, entirelongtailcurlsflatbehind. Notstanding, notflyingcorpse, notemptytile, no removedwing/tail. Distinctprogressionfromdroopingtofallingtoprone. Preserveeachcolumn'scompassheading evenwhilefallen: N/rearcorpseshowsnape/back/wings, notfrontalfacepastedup. Generousgutterstoallflatwings/tails.\\n\",\n  \"hit-death-N-NE-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 N FULL BACK: nape/back/wingbacks, headingAWAY/UP; NOfrontalbeak. COLUMN2 NE REAR-RIGHT: nape/back/wingbacks, headingUP-RIGHT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 HITRECOIL: neck/headtiltsBACK oppositeheading, shoulderwingscrumplein andtailwhipsbutstaysattached, talonsstillattached. ROW2 HITRECOVERY: bodypartlystraightens, wingsreopenpartwaywithdifferentelbowangles andtailrelaxes, sameheading. ROW3 DEATH1: strengthfails, head/beakdroops, BOTHwingsfoldtowardbody, attachedbirdlegs/talonsdroopwhilebodydescends. ROW4 DEATH2: completebirdfallsSIDEWAYS towardground, bodywingsandtailcollapsealonggroundprojection, everyfeather/limbattached. ROW5 FINALDEATH: LOWFLATGROUNDED COMPLETEPRONEDEADBIRD, beak/headrestontheside, wingsfoldedcrumpledagainstbody, bothattachedlegs/talonsliebesidebody, entirelongtailcurlsflatbehind. Notstanding, notflyingcorpse, notemptytile, no removedwing/tail. Distinctprogressionfromdroopingtofallingtoprone. Preserveeachcolumn'scompassheading evenwhilefallen: N/rearcorpseshowsnape/back/wings, notfrontalfacepastedup. Generousgutterstoallflatwings/tails.\\n\",\n  \"hit-death-S-SW-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 S FULL FRONT: beak/chestfaceviewerDOWN. COLUMN2 SW frontLEFT: beak/bodyfacingdiagonallyDOWN-LEFT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 HITRECOIL: neck/headtiltsBACK oppositeheading, shoulderwingscrumplein andtailwhipsbutstaysattached, talonsstillattached. ROW2 HITRECOVERY: bodypartlystraightens, wingsreopenpartwaywithdifferentelbowangles andtailrelaxes, sameheading. ROW3 DEATH1: strengthfails, head/beakdroops, BOTHwingsfoldtowardbody, attachedbirdlegs/talonsdroopwhilebodydescends. ROW4 DEATH2: completebirdfallsSIDEWAYS towardground, bodywingsandtailcollapsealonggroundprojection, everyfeather/limbattached. ROW5 FINALDEATH: LOWFLATGROUNDED COMPLETEPRONEDEADBIRD, beak/headrestontheside, wingsfoldedcrumpledagainstbody, bothattachedlegs/talonsliebesidebody, entirelongtailcurlsflatbehind. Notstanding, notflyingcorpse, notemptytile, no removedwing/tail. Distinctprogressionfromdroopingtofallingtoprone. Preserveeachcolumn'scompassheading evenwhilefallen: N/rearcorpseshowsnape/back/wings, notfrontalfacepastedup. Generousgutterstoallflatwings/tails.\\n\",\n  \"hit-death-W-NW-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 W PURE LEFT profile: beak/bodyfacingLEFT. COLUMN2 NW REAR-LEFT: nape/back/wingbacks, headingdiagonallyUP-LEFT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 HITRECOIL: neck/headtiltsBACK oppositeheading, shoulderwingscrumplein andtailwhipsbutstaysattached, talonsstillattached. ROW2 HITRECOVERY: bodypartlystraightens, wingsreopenpartwaywithdifferentelbowangles andtailrelaxes, sameheading. ROW3 DEATH1: strengthfails, head/beakdroops, BOTHwingsfoldtowardbody, attachedbirdlegs/talonsdroopwhilebodydescends. ROW4 DEATH2: completebirdfallsSIDEWAYS towardground, bodywingsandtailcollapsealonggroundprojection, everyfeather/limbattached. ROW5 FINALDEATH: LOWFLATGROUNDED COMPLETEPRONEDEADBIRD, beak/headrestontheside, wingsfoldedcrumpledagainstbody, bothattachedlegs/talonsliebesidebody, entirelongtailcurlsflatbehind. Notstanding, notflyingcorpse, notemptytile, no removedwing/tail. Distinctprogressionfromdroopingtofallingtoprone. Preserveeachcolumn'scompassheading evenwhilefallen: N/rearcorpseshowsnape/back/wings, notfrontalfacepastedup. Generousgutterstoallflatwings/tails.\\n\",\n  \"hit-death-W-NW-rearfix-exact-prompt.txt\": \"EDIT THIS EXISTING 2COLUMN×5ROW TEN-POSE PHOENIXHIT/DEATHSHEET. Keep EXACTcreature,colors,wholelongattachedtail,twowings,twoattachedbirdlegs/talons,andall5realmotionphases. Keep LEFTCOLUMN W trueLEFTprofile unchanged. CORRECT RIGHTCOLUMN toDISTINCT NW BACK-LEFT VIEW inALL5rows. PresentrightcolumnbirdasturningAWAYUPLEFT, so viewer chieflyseesBACKOFHEAD/NAPE,upperBACK andBACKSWINGFEATHERS; donotcopy WleftprofileontoNW. Beakpointstoupper-leftaway, frontchestandeyefacenotpresentedto camera. Tailbase/rearrumpisCLOSERTOcamera bottom-right, neck/headFARTHERAWAY top-left. These backbodyplanes muststaydistinctfromleftcolumnprofile duringrecoil/recovery/droop/fall. Rows1hitRECOIL,2hitRECOVERY,3deathDROOP/DESCENT,4deathSIDEFALL,5FINAL LOWFLATGROUNDED COMPLETEPRONECORPSE. Inrightcolumnfinalcorpse upperback/foldedwingbacksfaceviewer,headliesFARupperleft andtailtrailsNEARbottomright; doNOTshowidenticalleftsidechest/faceasW. Everybodypartremainsattached; noclipped/missingfeathers/talons, no flying/standingcorpse, noemptytile. Keep exactlyTENcompletefigures2cols5rows,wholebodymax30%cellwidth35%cellheight,HUGEcleartransparentgutters150horizontal100verticalpixelsandlargeouterborder. Opaquepaintedbirdwithnarrowantialias; allbackgroundalpha0,noglow/matte/floor/shadow/labels/grid. Preserve allotherartandphaseanatomy.\\n\",\n  \"hit-death-W-NW-spaced-exact-prompt.txt\": \"EDIT AND REPACK THIS EXISTING PHOENIX SPRITE ATLAS. Preserve its exact10COMPLETEarticulatedbirdfigures,2columns×5rows,existingpose/phaseorder,characterdesign,sourcecolors,twoattachedwings,twoattachedbirdlegs/talons,wholeverylongattachedfeathertail. Correct ONLY unsafeCROWDEDSPACING: SHRINK ALLFIGURES TOHALFSIZEuniformly andplacewithMUCHLARGERCLEARTRANSPARENTGUTTERS. MakepageMOSTLYEMPTY; eachwholebirdINCLUDINGwidestwingandtailtips atmost30%cellwidth35%cellheight. Atleast150cleartransparentpixelsbetweenwholebirdBOUNDINGBOXES horizontally and100vertically,largeouteremptyborder. Do notfillcells,truncatebodyparts,shortentailorremovefeathers. There must be nootherbirdpixelinsideanotherbird'scropboundingrectangle. Keep exact2columns×5rows, no additionalfigures, no repeatedstillsorreassigneddirections. COLUMN1isW trueLEFTprofile;COLUMN2isNW REARLEFTinEVERYrow, nape/back/wingbacks ratherthanfrontface/chest. Keepthoseheadingswhileneck/wingsarticulate. Opaque paintedfeatherinteriorswithnarrowantialias; EVERYbackgroundpixelalpha0. Nohaze/matte/halo/ground/shadow/labels/grid. Preservecompletebodyandallsourcefeatures.\\nRowshitRECOIL,hitRECOVERY,deathDROOPandDESCENT,deathSIDEFALL,finalLOWFLATGROUNDEDCOMPLETEDEADBIRD. Preserveall3realdeathprogressions; finalfoldedwings/beak/body/legs/tailrestonground,notflying/standing.\\n\",\n  \"idle-walk-E-SE-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 E PURE RIGHT profile: beak/bodyfacingRIGHT. COLUMN2 SE frontRIGHT: beak/bodyfacingdiagonallyDOWN-RIGHT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 suspendedneutralidle, broadwingsheldpartwayopenandtailcurledbehind. ROW2 actuallydifferentgentleidle: shoulder/elbowwingjoints flex, flightfeathersrelaxandattachedtailcurvesdifferently; bodyaltitudestable. ROW3 flyinglocomotionA UPSTROKE: bothwingsliftHIGH, elbowsbend, primaryfeatherfansUP abovebody, tailstreamsbehindthefacingdirection. ROW4 flyinglocomotionPASSING: wingjoints sweepTHROUGHHORIZONTAL, primaryfeathers spreadout; attachedbirdlegs/talonsdrawupslightly andtailchangescurve. ROW5 flyinglocomotionB DOWNSTROKE: bothwingspressDOWN besidebody, elbowsandprimaryfansvisiblylowerthanrow3, tailstreamsothercurve. Allthreeflightphasesshowclearwingjoint/featheranglechanges withpersistentbirdanatomy. Do notshowthreeidenticalspreadwings, nobodyslidingorshadingtrick. Wingsstayattachedatshoulders. Preservefulltailtipsandtalons inalltenfigures.\\n\",\n  \"idle-walk-N-NE-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 N FULL BACK: nape/back/wingbacks, headingAWAY/UP; NOfrontalbeak. COLUMN2 NE REAR-RIGHT: nape/back/wingbacks, headingUP-RIGHT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 suspendedneutralidle, broadwingsheldpartwayopenandtailcurledbehind. ROW2 actuallydifferentgentleidle: shoulder/elbowwingjoints flex, flightfeathersrelaxandattachedtailcurvesdifferently; bodyaltitudestable. ROW3 flyinglocomotionA UPSTROKE: bothwingsliftHIGH, elbowsbend, primaryfeatherfansUP abovebody, tailstreamsbehindthefacingdirection. ROW4 flyinglocomotionPASSING: wingjoints sweepTHROUGHHORIZONTAL, primaryfeathers spreadout; attachedbirdlegs/talonsdrawupslightly andtailchangescurve. ROW5 flyinglocomotionB DOWNSTROKE: bothwingspressDOWN besidebody, elbowsandprimaryfansvisiblylowerthanrow3, tailstreamsothercurve. Allthreeflightphasesshowclearwingjoint/featheranglechanges withpersistentbirdanatomy. Do notshowthreeidenticalspreadwings, nobodyslidingorshadingtrick. Wingsstayattachedatshoulders. Preservefulltailtipsandtalons inalltenfigures.\\n\",\n  \"idle-walk-N-NE-spaced-exact-prompt.txt\": \"EDIT THE ATTACHED EXISTING PHOENIX TEN-POSE 2COLUMN×5ROW SHEET. This is ONLY a spacing/presentationcorrection: preserve alltencomplete independentlyarticulatedbirdposes,exactgold/orangefeatherdesign,beak,twowings,twoattachedtalons,verylongattachedtail andexactphase/directionordering. REPACK THESE SAME TENFIGURES MUCHSMALLER insideHUGEEMPTYTRANSPARENTGUTTERS. WholebirdINCLUDINGmostextendedwingtips andalltailtips must occupyatmost30%cellwidth and35%cellheight. Atleast150fullytransparentpixels HORIZONTALLY and100pixels VERTICALLY between allcompletebirdBOUNDINGBOXES. Letthecanvasbemostlyempty, doNOTfillcells. Keep exact2columns5rows, no extrafigures, no missingbodyparts, nolargefigures. Actualzeroalphabackground, no amber/brownmatte/haze/halo/ground/shadow/grid/text. Do not shortenfeathers/tail, clipwings, mirrorpixels, replaceposeswithstillsorchangecharacter. Rowsneutralidle,articulatedidle,UPstroke,passingHORIZONTALstroke,DOWNstroke; preserve genuineelbow/wingchanges andtailcurvechanges.\\nCOLUMN1 staysN FULLBACK nape/back/wingbacks facingAWAY/UP inall5rows; no frontalbeak/chest. COLUMN2 staysNE BACK-RIGHT facingAWAY/UP-RIGHT inall5rows, chieflynape/backandwingbacks, notfront-right. Do not rotateNEtolookatviewer duringflaps.\\n\",\n  \"idle-walk-S-SW-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 S FULL FRONT: beak/chestfaceviewerDOWN. COLUMN2 SW frontLEFT: beak/bodyfacingdiagonallyDOWN-LEFT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 suspendedneutralidle, broadwingsheldpartwayopenandtailcurledbehind. ROW2 actuallydifferentgentleidle: shoulder/elbowwingjoints flex, flightfeathersrelaxandattachedtailcurvesdifferently; bodyaltitudestable. ROW3 flyinglocomotionA UPSTROKE: bothwingsliftHIGH, elbowsbend, primaryfeatherfansUP abovebody, tailstreamsbehindthefacingdirection. ROW4 flyinglocomotionPASSING: wingjoints sweepTHROUGHHORIZONTAL, primaryfeathers spreadout; attachedbirdlegs/talonsdrawupslightly andtailchangescurve. ROW5 flyinglocomotionB DOWNSTROKE: bothwingspressDOWN besidebody, elbowsandprimaryfansvisiblylowerthanrow3, tailstreamsothercurve. Allthreeflightphasesshowclearwingjoint/featheranglechanges withpersistentbirdanatomy. Do notshowthreeidenticalspreadwings, nobodyslidingorshadingtrick. Wingsstayattachedatshoulders. Preservefulltailtipsandtalons inalltenfigures.\\n\",\n  \"idle-walk-W-NW-exact-prompt.txt\": \"Author NEW2Dpainted isometricRPGanimation cutouts of the EXACT PHOENIX BIRD in the attached reference. Reference is a literal same-atlas wholebodycontext from existing projectart, not a sourcegameanimation. Preserve this exact creature: GOLDEN/ORANGE fiery FEATHERED BIRD, pointed sweptback flame-like feathercrest, curved sharp birdBEAK, strong feathered red-orange chest, TWO broad layered featherWINGS with orange-red outer and brightyellow innerflightfeathers, TWO attached dark reddish birdLEGS ending hooked birdTALONS, and ONE VERYLONG luxurious curled golden/orange featherTAIL with multiple attached streaming featherstrands. Featheranatomy stays birdlike. No humanoidtorso/hands/boots, no thirdwing, no neweyes, no weapon, no floatingorb or detachedprojectile. Allwing/tailfeathers are visibly attached to the bird; no detachedsparks,particles,smoke or externalglow. Bodycolors/design/proportions exactly from the supplied reference. Fullypainted opaque featherinteriors withnarrowantialiasededges, detailedclassic2DRPGstyle, no3D.\\n\\nThisbird is actually configured FLYING/floatingTRUE. Idle andtravel use GENUINE BIRD WINGJOINT/feather/tailarticulation, not groundedhumanoidsteps ortranslatedstills. Two birdlegs/talons stay attached; don'tinventwalkingfeet. Keep the same suspendedbody altitude/projection through livingloop, root/body translation minimal. Deathmust descend andend asgroundedcompletebirdcorpse. Allphasebodiesretainwholewings,tail,legs/beak.\\n\\nEXACTLY TWO equal COLUMNS, fixed directionineachcolumn inEVERYrow. Eachcell exactlyONE WHOLE separatedbird. PORTRAIT1024×1536canvas. BirdINCLUDING FULLWINGSPAN/longtail uses atmostCENTER40%cellwidth and55%cellheight; deliberatelySMALLfigures, HUGE EMPTY transparent gutters at least100pixelshorizontally and60pixelsvertically between entirebirdBOUNDINGBOXES. Wideoutertransparentborder. Do not fillcells orcropanytip. No body/wing/feathertip mayenter anotherfigure'sboundingrectangle. Allbackgroundpixels MUST beALPHA0: no brown/redhaze,matte,halo,shadow,backdrop,floor,line,text,grid orlabel. Pure cutouts only.\\n\\nFixed elevatedisometriccamera; truefront/back/side anatomy, not planarhorizontalflips. FrontSshows beak/faceandchestcentered, wingscorrectlysymmetric onoppositebody sides, tailbehindthebody. BackNshows theBACKOFHEAD/nape/backandwingbacks, NOfrontalbeak/face/chest pastedontheback. OppositeprofilesE/Wshowtruesidemuzzlewithbeakpointingright/left. Rearobliquesshowchieflyback; everyphase inacolumnkeepsthesameheading. Wingscanchangetheirflappose butnotspinbirdtothewrongdirection. Everyframehasrealnewwing/body/tailarticulation, NEVER repeatedstill/translation/shading-onlyvariation.\\n\\nCOLUMN1 W PURE LEFT profile: beak/bodyfacingLEFT. COLUMN2 NW REAR-LEFT: nape/back/wingbacks, headingdiagonallyUP-LEFT.\\nFIVE ROWS = EXACTTENBIRDS. ROW1 suspendedneutralidle, broadwingsheldpartwayopenandtailcurledbehind. ROW2 actuallydifferentgentleidle: shoulder/elbowwingjoints flex, flightfeathersrelaxandattachedtailcurvesdifferently; bodyaltitudestable. ROW3 flyinglocomotionA UPSTROKE: bothwingsliftHIGH, elbowsbend, primaryfeatherfansUP abovebody, tailstreamsbehindthefacingdirection. ROW4 flyinglocomotionPASSING: wingjoints sweepTHROUGHHORIZONTAL, primaryfeathers spreadout; attachedbirdlegs/talonsdrawupslightly andtailchangescurve. ROW5 flyinglocomotionB DOWNSTROKE: bothwingspressDOWN besidebody, elbowsandprimaryfansvisiblylowerthanrow3, tailstreamsothercurve. Allthreeflightphasesshowclearwingjoint/featheranglechanges withpersistentbirdanatomy. Do notshowthreeidenticalspreadwings, nobodyslidingorshadingtrick. Wingsstayattachedatshoulders. Preservefulltailtipsandtalons inalltenfigures.\\n\",\n  \"idle-walk-W-NW-spaced-exact-prompt.txt\": \"EDIT THE ATTACHED EXISTING PHOENIX TEN-POSE 2COLUMN×5ROW SHEET. This is ONLY a spacing/presentationcorrection: preserve alltencomplete independentlyarticulatedbirdposes,exactgold/orangefeatherdesign,beak,twowings,twoattachedtalons,verylongattachedtail andexactphase/directionordering. REPACK THESE SAME TENFIGURES MUCHSMALLER insideHUGEEMPTYTRANSPARENTGUTTERS. WholebirdINCLUDINGmostextendedwingtips andalltailtips must occupyatmost30%cellwidth and35%cellheight. Atleast150fullytransparentpixels HORIZONTALLY and100pixels VERTICALLY between allcompletebirdBOUNDINGBOXES. Letthecanvasbemostlyempty, doNOTfillcells. Keep exact2columns5rows, no extrafigures, no missingbodyparts, nolargefigures. Actualzeroalphabackground, no amber/brownmatte/haze/halo/ground/shadow/grid/text. Do not shortenfeathers/tail, clipwings, mirrorpixels, replaceposeswithstillsorchangecharacter. Rowsneutralidle,articulatedidle,UPstroke,passingHORIZONTALstroke,DOWNstroke; preserve genuineelbow/wingchanges andtailcurvechanges.\\nCOLUMN1 W trueLEFTprofilebeakpointsLEFTthroughall5rows. COLUMN2 NW BACKLEFTchieflynape/back/wingbacks, headingAWAY/UPLEFTthroughall5rows. PreserveoppositesidetotheotherEview, no wrongturns.\\n\"\n}\n\nhit-death-W-NW-independent-repair2-exact-prompt.txt EXACT ISSUED REPAIR PROMPT:\nEdit supplied TWO-column x FIVE-row10pose phoenix HIT/DEATH sprite sheet for a strict CAMERA DIRECTION REPAIR in the RIGHTCOLUMN only. This is the same original golden/orange fieryfeather bird fromsource, two attachedwings, two darktalonlegs, hookedbeak, longattachedcurledfeathertail. Original intricate red-orange/gold featherdetail, no humanlimbs/weapons/orbs or detachedparticles. Fullytransparentalpha; largeemptygutters; all10wholebirds fullyvisible, no crossing/overlap/clipping. No background, shadows, text, labels, grid or effects. This is newlyauthored2Danimation, not original recoveredframes.\n\nLEFTCOLUMN is W exactLEFTprofile. Its existing5different hit/death poses stay LEFTprofile. RIGHTCOLUMN MUST be NW BACK-LEFT threequarter, actual rearbody facingAWAY/UP-LEFT, clearly midway between Wprofile and pureNback. Currentrightcolumn shows too much bright FRONTBREAST and a nearlyhorizontalLEFTprofile deadbird. That is wrong. Reconstruct all5rightcolumn birds as genuine BACK anatomy like the BACK-left birds in rightcolumn of supplied idle/flight reference, not pasted profile or flatrotatedfrontbird.\n\nNW RIGHTCOLUMN ANATOMY: broad red-orange SCAPULAR/BACKfeathers and dorsalSPINEface viewer, BOTH wingBACKsurfaces attached on either side of the visible centralback. HIDE the rounded golden frontalbreast/belly behindthebody. Show swept rearcrest/NAPE, not a frontalface or fullsideeye. Hookedbeak points AWAY/UP-LEFT at the FARupperleftedge, mostlyforeshortened; keepfrontface/eye occluded except tiny far-sidebeakedge. Body pointsUPLEFT, longcurledtail trails DOWN-RIGHT towardviewer, never horizontalonlyLEFTprofile. Actual depths and rearfeatherplanes, not rotated/flipped copies. Retain original body/head/tail physicalscale.\n\nROW1 HIT RECOIL NW: rearbody tiltsback slightly, napejerks away/up-left, wingsrearplanesfolddefensively with distinct bentjoints; taildownright and talonsstillattached.\nROW2 HIT RECOVER NW: different backwingjoint lift/opening and torso untwist, nape pointsupleft, stillrearview with dorsalspinevisible and goldenbreasthidden.\nROW3 DEATH START NW: neckdroops towardFARupperleft, backtorso sinks, wingBACKsurfaces sag along sides, talonscurl, longtailstilldownright. Realfolded bird, samebodysize.\nROW4 DEATH COLLAPSE NW: birdfallsprone onto impliedground, wingsfoldlooselyover BACK and obscurefrontbreast; head restsfarUPLEFT oftorso, taildrapesnearDOWNRIGHT. Rearbody obvious, not profile.\nROW5 TERMINAL DEAD NW: completeprone LOWbird lyingonGROUND, closedlimp foldedwingscoveringback, rearcrest/headatFARUPPERLEFT ofbody, tailcurlalongGROUND towardNEARLOWERRIGHT. Silhouette is DIAGONAL with headUPLEFT and tailDOWNRIGHT, unlike W corpse horizontalHEADLEFT/TAILRIGHT. Goldenfrontbreast/face hidden by back-facing torso/wings. Do not just rotate Wcorpse: repaint dorsalbackfeatures, napeandback-wingoverlap appropriate totrueNWcamera. Relaxedtalonsrestagainstbelly/ground, bodylow and nonempty, nohovering/uprightstand/flamingcloud. Keepfulltailattachedvisible.\n\nExactly10complete trulyarticulatedphoenixposes, twoheadingcolumns/fiverows. All5NWheadings unambiguousBACK-LEFT; W5 remainoppositesideprofile. Originalmodelmass/scale and completealphasilhouettes, no3Dassets.\n\nhit-death-NW-isolated-repair3-exact-prompt.txt EXACT ISSUED REPAIR PROMPT:\nCreate newly authored transparentalpha2Dgame animation of the exact golden/orangePHOENIXbird in originalsource reference. Preserve twoattachedfeatheredwings, twoattacheddarktalonlegs, hookedbeak/sweptcrest and longattachedcurledfeathertail. Intricate sourcegold/orange/redfeathers, no3Dassets, no humanlimbs/equipment, no detachedeffects or extraobjects. Exactly FIVEcomplete small isolated wholebird poses in ONE vertical COLUMN by FIVE equal ROWS. Onefigurepercell, verylarge whollytransparentgutters, allwing/crest/beak/talon/tailtips fullyvisible insidecell. No crop/overlap or scatteredparts, no text/grid/shadows/background. Actualarticulatedwing/torso/neck/taloncurves, not copies, translations or uniformresizing. Oneconsistent body/head modelscale.\n\nALLFIVE are true NW BACK-LEFT camera view of bird facing AWAY/UP-LEFT. Main visible torso surface is the RED/DARKORANGE DORSALBACK with layered scapularfeathers and centralSPINE, absolutely NOT the rounded GOLDENFRONTBREAST. Show backs of bothwings overlapping either side of back, swept rearNAPE. Head/nape pointsaway/upleft and is partlyhiddenby its upperback in thisview. NO sideeye or frontalface, hookedbeaktip may peek only at far upperleftedge. Tail emergesfrom visiblebackhip and trails DOWN-RIGHT towardviewer. This is between pureBACK and LEFTprofile, but mostlyBACK: 70percent backplane,30percentleftside. Supplied pureNback and NWflight reference shows correct exposedrearbody. Do NOT render brightfrontbreast or a leftprofile bird. Do not merely rotate existingWbird; repaint authenticrearfeathers/hiddenbreast/wingoverlap.\nFIVEROWS topdown:1HITrecoil—backtwistsaway slightly and bentwingsrecoil;2HITrecover—opposite backtwist/winglift, napeupleft;3DEATHstart—neckdropsfarupleft, dorsaltorso sinks, wingsrearplanes sag, talonscurl;4DEATHcollapse—pronebirdonimpliedground, foldedwingscoverBACK, head atfarUPLEFT, tailnearDOWNRIGHT, no frontbreast;5FINALDEAD—complete LOWpronebird restingonGROUND, closedlimpfoldedwings onBACK, headfarUPLEFT partlyoccluded, attachedtailcurledalongfloornearDOWNRIGHT, relaxedtalonsbybelly. Corpseoriented DIAGONALHEADUPLEFT/TAILDOWNRIGHT, not horizontalleftprofile. Samephysicalbodymass/headsize evenwhenfallen. No hovering/uprightbird, no emptyframe or groundshadow replacingbody. Everypose physicallycontinuous and independent, originaltailfullyvisible. Alpha0background.\n\nhit-death-NW-isolated-spaced-repair4-exact-prompt.txt EXACT ISSUED REPAIR PROMPT:\nEdit the attached phoenix NW-only fivepose sheet for STRICT SPACING REPAIR. Keep the excellent trueBACK-left anatomy, same five genuinely different HIT/HIT/DEATH/DEATH/DEAD poses, intricateoriginalgoldredfeathers/twowings/twotalons/longattachedcurltail. Keep NWdorsalback/nape dominant and hidebrightfrontalbreast; bodyheadAWAY/UPLEFT and tailDOWNRIGHT. No sourceidentity or direction change, no Wprofile substitutes. Transparentalpha background, no text/grid/shadows/effects/extrafigures.\n\nCurrentfigures overlap/merge because they are too LARGE. Repaint ALLFIVE COMPLETE figures much SMALLER, about60percent currentlinear size, safely fitting within ONEcolumn/FIVEequalrows on1024x1536canvas. Each ENTIREbird includingwholewing/tail/crest/talons no more than400pxWIDE x190pxHIGH. Exactcellcenters x512 and y154,461,768,1075,1382. Keep at least100px entirelyTRANSPARENT verticalgap between every pair of fullbird silhouettes, including longtailtips. Firstwholebird pixels belowy55, lastwholebirdpixels abovey1477. Everytailtip/wingtip preserved but smaller, not clipped. No touchingmergedbodies or cropping. Exactly FIVEseparatedconnectedwholebirds, no joinedtailto nextpose. Completefigureswidth400/height190, hugeemptygutters; do not enlarge them to fillcanvaswidth.\n\nFive distinct phases unchanged: recoilbackwingsflex, recoveringwinglift, deathstartsneckdroop, collapsepronebackwingfold, terminaldeadLOWproneonGROUNDwithclosedlimpwings/headfarUPLEFT/taildownright. Same anatomicalbody/head scale inall5, do not makesingleframe miniaturized. NEWauthored2Dmotion; no recoveredoriginalclaim. Emptybackgroundalpha0. Keep all5backleftposes distinct and clear.\n\nhit-death-W-isolated-spaced-exact-prompt.txt EXACT ISSUED REPAIR PROMPT:\nCreate newly authored transparentalpha2Dgame animation of the exact golden/orangePHOENIXbird in originalsource reference. Preserve twoattachedfeatheredwings, twoattacheddarktalonlegs, hookedbeak/sweptcrest and longattachedcurledfeathertail. Intricate sourcegold/orange/redfeathers, no3Dassets, no humanlimbs/equipment, no detachedeffects or extraobjects. Exactly FIVEcomplete small isolated wholebird poses in ONE vertical COLUMN by FIVE equal ROWS. Onefigurepercell, verylarge whollytransparentgutters, allwing/crest/beak/talon/tailtips fullyvisible insidecell. No crop/overlap or scatteredparts, no text/grid/shadows/background. Actualarticulatedwing/torso/neck/taloncurves, not copies, translations or uniformresizing. Oneconsistent body/head modelscale.\n\nALLFIVE are true W exactLEFT sideprofiles: hookedbeak and oneeye faceLEFT, chestleft edge, nearwingplanesvisible, tailtrailsRIGHT. No front/back view or mirroredcopystills. FIVEROWS topdown:1HITrecoil headthrowsback and wingjointsflexdefensively;2HITrecoveryheadleft/down with changedjointlift and oppositewingbend;3DEATHstart neckdropsleft, wingssag, talonscurl;4DEATHcollapse torsofallsproneleft, wingsfoldandbodydescendstoground, tailreststowardright;5FINALDEAD complete LOWpronebirdonGROUND with headatLEFT, tailalongfloorRIGHT, limpfoldedwings and relaxedtalonsnearbelly. Samebody/headsize, actualwing/torsopitchchange not uniformlyscaledminiature. No hoveringcorpse/emptyframe/detachedfeathers. Originalgoldenbirdidentityandcompletecurltail remains. Transparentalpha.\nSTRICT SPARSITY:1024x1536portrait canvas,ONEcol/FIVErows, eachwholebird INCLUDING ALLtail/wingtips only400pxwide x190pxhigh. Centerfiguresat x512/y154,461,768,1075,1382. Atleast100pxtransparentverticalgap betweeneveryfullsilhouette, not justbetweenbodies. HUGEemptyspace, never enlargefigures tofillwidth. Exactly5separatedcompleteposes, never touchorclip. Firstfigurebelowy55, lastfigureabovey1477.",
+  "instruction_record_kind": "exact_prompts_for_twelve_direction_pair_sheets_and_spacing_heading_corrections",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Source-only reuse: identical authoritative project image/cell/body/weapon and original full104/112 pose contract. Every source SpriteFrames/region/margin/PNG byte is unchanged. Per-target native display width, height and tint preserve its presentation. Actual target Main, unique boss skills, gait/model/contact and independent final visual judgment remain pending."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        130,
+        34,
+        362,
+        276
+      ],
+      "margin": [
+        209,
+        326,
+        598,
+        684
+      ],
+      "source_anchor": [
+        401,
+        308
+      ],
+      "rgba_sha256": "c336a8ca2229083fb6a6da0cbe332eb9ee63e6958bbb5b58fc94b8a4400c5192",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        623,
+        28,
+        286,
+        295
+      ],
+      "margin": [
+        262,
+        307,
+        674,
+        665
+      ],
+      "source_anchor": [
+        841,
+        321
+      ],
+      "rgba_sha256": "86b1ae511007f36671236e10dcb3f0d383020e5af8557d64c69491d5a27a1aeb",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        106,
+        348,
+        401,
+        246
+      ],
+      "margin": [
+        172,
+        356,
+        559,
+        714
+      ],
+      "source_anchor": [
+        414,
+        592
+      ],
+      "rgba_sha256": "dd76b1539b3f1a96bdbbb8a7e92ebfacd8f350dfc6a984a6c397c6ac2867dd64",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        625,
+        346,
+        328,
+        249
+      ],
+      "margin": [
+        259,
+        353,
+        632,
+        711
+      ],
+      "source_anchor": [
+        846,
+        593
+      ],
+      "rgba_sha256": "92f4a6979f525d7222ebd4b0d6ff7eabfafdc40fabc93fecc588fa9c246af610",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        76,
+        598,
+        436,
+        319
+      ],
+      "margin": [
+        174,
+        283,
+        524,
+        641
+      ],
+      "source_anchor": [
+        382,
+        915
+      ],
+      "rgba_sha256": "425f18ff840bdaffb8e00e8049c580865bda48466500c25fe25fa0ca82fb1185",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        612,
+        604,
+        340,
+        334
+      ],
+      "margin": [
+        240,
+        268,
+        620,
+        626
+      ],
+      "source_anchor": [
+        852,
+        936
+      ],
+      "rgba_sha256": "07711898d446bebcb6f5406e647f1778119940d6d1265c6ae02e10fb03950958",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        59,
+        962,
+        469,
+        257
+      ],
+      "margin": [
+        143,
+        378,
+        491,
+        703
+      ],
+      "source_anchor": [
+        396,
+        1184
+      ],
+      "rgba_sha256": "cd98408e3276223b4083a3995baa9162c7e4a574ef39b2fd0a6779da2c5a71a1",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        595,
+        968,
+        409,
+        245
+      ],
+      "margin": [
+        232,
+        357,
+        551,
+        715
+      ],
+      "source_anchor": [
+        843,
+        1211
+      ],
+      "rgba_sha256": "9e71ce471d24c077e970a5eef0e500782f326022727e9ebf04f667293de11629",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        58,
+        1252,
+        470,
+        234
+      ],
+      "margin": [
+        190,
+        407,
+        490,
+        726
+      ],
+      "source_anchor": [
+        348,
+        1445
+      ],
+      "rgba_sha256": "65730ea855cde73c234197d48101430f9f70dd9716ac09fd18f88a92ebf80dd8",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        621,
+        1252,
+        371,
+        227
+      ],
+      "margin": [
+        253,
+        375,
+        589,
+        733
+      ],
+      "source_anchor": [
+        848,
+        1477
+      ],
+      "rgba_sha256": "73573a94ed864b2f69ac0f84d7464de267352cd527ac6f5a011bf841f39945e6",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        134,
+        31,
+        260,
+        265
+      ],
+      "margin": [
+        328,
+        343,
+        636,
+        631
+      ],
+      "source_anchor": [
+        254,
+        248
+      ],
+      "rgba_sha256": "bac7987892336b4ed804b70ae615462da2ee54b090526158951a217a281db247",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        647,
+        38,
+        279,
+        253
+      ],
+      "margin": [
+        393,
+        315,
+        617,
+        643
+      ],
+      "source_anchor": [
+        702,
+        283
+      ],
+      "rgba_sha256": "825c8aeec87f17ee717ea20c6566c7cabe00d2dbbf1a7f47820d1a42cd20969c",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        47,
+        334,
+        425,
+        241
+      ],
+      "margin": [
+        244,
+        368,
+        471,
+        655
+      ],
+      "source_anchor": [
+        251,
+        526
+      ],
+      "rgba_sha256": "2349946cea6567c03c490e74f42d87b57c064cfbc94ebf615ea15840cf966ddb",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        558,
+        337,
+        388,
+        243
+      ],
+      "margin": [
+        306,
+        354,
+        508,
+        653
+      ],
+      "source_anchor": [
+        700,
+        543
+      ],
+      "rgba_sha256": "a9a3bf4a5fd812fb848557f7bf7cbc04d6dcea43757a887569d9d993eed004f6",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        140,
+        615,
+        246,
+        316
+      ],
+      "margin": [
+        320,
+        302,
+        650,
+        580
+      ],
+      "source_anchor": [
+        268,
+        873
+      ],
+      "rgba_sha256": "9f87193f8fac3bf760ff0051c89ccf9fd673b3cb815b4844c8249681cf09899a",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        642,
+        625,
+        319,
+        308
+      ],
+      "margin": [
+        378,
+        301,
+        577,
+        588
+      ],
+      "source_anchor": [
+        712,
+        884
+      ],
+      "rgba_sha256": "741da8b350c17fd084ff610e209d597dab40ea0e1d0f79dfbe0959c2633f8310",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        43,
+        977,
+        437,
+        220
+      ],
+      "margin": [
+        218,
+        393,
+        459,
+        676
+      ],
+      "source_anchor": [
+        273,
+        1144
+      ],
+      "rgba_sha256": "ae4f03d475232e8a185b8ac2f51eb22085bdfc2256e066ca77b27ff69c7dcdf5",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        561,
+        988,
+        423,
+        214
+      ],
+      "margin": [
+        278,
+        390,
+        473,
+        682
+      ],
+      "source_anchor": [
+        731,
+        1158
+      ],
+      "rgba_sha256": "7c75214c71fd7f3d8d01fcc2adb961b0da127b3cc858817b6743537dd4ce9794",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        112,
+        1230,
+        309,
+        244
+      ],
+      "margin": [
+        292,
+        390,
+        587,
+        652
+      ],
+      "source_anchor": [
+        268,
+        1400
+      ],
+      "rgba_sha256": "65331922119aa69830489cc1fca53506d32eb6be16250bf805000c9fc3ce05c2",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        609,
+        1254,
+        378,
+        232
+      ],
+      "margin": [
+        310,
+        392,
+        518,
+        664
+      ],
+      "source_anchor": [
+        747,
+        1422
+      ],
+      "rgba_sha256": "b48409fe945a5feefb0994969748ad28af1019f82976b28bcc10862b40d3417a",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        159,
+        145,
+        220,
+        178
+      ],
+      "margin": [
+        267,
+        228,
+        420,
+        462
+      ],
+      "source_anchor": [
+        212,
+        317
+      ],
+      "rgba_sha256": "70016c3a990adc28f1c14bd1d418c9c0569da255be8abaabe6cd51ac057061c2",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        661,
+        151,
+        206,
+        177
+      ],
+      "margin": [
+        265,
+        234,
+        434,
+        463
+      ],
+      "source_anchor": [
+        716,
+        317
+      ],
+      "rgba_sha256": "073bb6c29f90b6c00b9c183e463e1b96e9d9cacd383cd8321859a9a72bcd075a",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        157,
+        420,
+        245,
+        172
+      ],
+      "margin": [
+        258,
+        245,
+        395,
+        468
+      ],
+      "source_anchor": [
+        219,
+        575
+      ],
+      "rgba_sha256": "0d77a17c4db0ed13c6aa9b81f036edc511a5f50231b3bb42fd1df433e029e70f",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        654,
+        428,
+        244,
+        165
+      ],
+      "margin": [
+        247,
+        256,
+        396,
+        475
+      ],
+      "source_anchor": [
+        727,
+        572
+      ],
+      "rgba_sha256": "f5c9812c9ae2721a00b283dcf80a8deb56e234c88a1be3d1f0d489a1a909361b",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        153,
+        669,
+        247,
+        229
+      ],
+      "margin": [
+        252,
+        192,
+        393,
+        411
+      ],
+      "source_anchor": [
+        221,
+        877
+      ],
+      "rgba_sha256": "f8bdab7e28667c96f62888f7c10ceebff2b84628c26f4ab70f3ed27cee134296",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        652,
+        685,
+        243,
+        225
+      ],
+      "margin": [
+        240,
+        218,
+        397,
+        415
+      ],
+      "source_anchor": [
+        732,
+        867
+      ],
+      "rgba_sha256": "504ac780ad1446e7230544fc95d9eb3e3e89c27bc9f0451dc56d9fc9b19d6360",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        153,
+        991,
+        268,
+        164
+      ],
+      "margin": [
+        253,
+        269,
+        372,
+        476
+      ],
+      "source_anchor": [
+        220,
+        1122
+      ],
+      "rgba_sha256": "61ac1c31f810478dff5ffba83c73a86d7cb14fbf47a0da8a0906f69a5c3a3113",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        630,
+        1000,
+        291,
+        151
+      ],
+      "margin": [
+        191,
+        271,
+        349,
+        489
+      ],
+      "source_anchor": [
+        759,
+        1129
+      ],
+      "rgba_sha256": "34f23ee4d1d77f126003734d3c7d6040a1ef4257f172707704b30643c4b64f13",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        152,
+        1240,
+        274,
+        150
+      ],
+      "margin": [
+        258,
+        280,
+        366,
+        490
+      ],
+      "source_anchor": [
+        214,
+        1360
+      ],
+      "rgba_sha256": "40ac579fea35a7d8da3b96d5c703e46ac272738abd1de62fb9e1e39793505de9",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        667,
+        1249,
+        246,
+        162
+      ],
+      "margin": [
+        231,
+        268,
+        394,
+        478
+      ],
+      "source_anchor": [
+        756,
+        1381
+      ],
+      "rgba_sha256": "97994811681ccc96a5f5e7b0798ee2c86f9bfb9c3f3cf1856d3d8d1f1759a684",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        178,
+        98,
+        253,
+        196
+      ],
+      "margin": [
+        216,
+        313,
+        467,
+        524
+      ],
+      "source_anchor": [
+        322,
+        235
+      ],
+      "rgba_sha256": "6b5dc908d3032c24f239f62ffb6066ef66f0ad5bc44dda63e198e60cbf2c07a9",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        667,
+        96,
+        218,
+        205
+      ],
+      "margin": [
+        254,
+        299,
+        502,
+        515
+      ],
+      "source_anchor": [
+        773,
+        247
+      ],
+      "rgba_sha256": "b721bdd36fc157ca73ca3d87e10595d07c618463dfa8166c3db86717474c16df",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        181,
+        376,
+        247,
+        197
+      ],
+      "margin": [
+        226,
+        315,
+        473,
+        523
+      ],
+      "source_anchor": [
+        315,
+        511
+      ],
+      "rgba_sha256": "100393569a84ff0cefb45095042eeedeaf43f57f625904ac0fd3cdc4d93a71e9",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        657,
+        373,
+        217,
+        202
+      ],
+      "margin": [
+        240,
+        299,
+        503,
+        518
+      ],
+      "source_anchor": [
+        777,
+        524
+      ],
+      "rgba_sha256": "06dd1c7b9b5a639ca2954e4fb79ee20421508b8ccefc9fd17d799253c23548c9",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        199,
+        658,
+        203,
+        243
+      ],
+      "margin": [
+        242,
+        266,
+        517,
+        477
+      ],
+      "source_anchor": [
+        317,
+        842
+      ],
+      "rgba_sha256": "8ad0c715c1c18b6855fa4dbfbae4603cc4226b27535b518d8897bee4ba343ee0",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        658,
+        662,
+        221,
+        239
+      ],
+      "margin": [
+        213,
+        262,
+        499,
+        481
+      ],
+      "source_anchor": [
+        805,
+        850
+      ],
+      "rgba_sha256": "b32ac914ca7158d275d8750bc1da75467a34d58ee8f523720ab9c5f64ce9b246",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        133,
+        970,
+        316,
+        199
+      ],
+      "margin": [
+        211,
+        320,
+        404,
+        521
+      ],
+      "source_anchor": [
+        282,
+        1100
+      ],
+      "rgba_sha256": "3e3b27015be48a824b3429831545aadbdef8017269306e6eeac5d8596cff0fd1",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        640,
+        969,
+        288,
+        207
+      ],
+      "margin": [
+        213,
+        305,
+        432,
+        513
+      ],
+      "source_anchor": [
+        787,
+        1114
+      ],
+      "rgba_sha256": "4cf5c98ef5dda4d05cd1feef586d23a89053d1f752232a297531f70ecf63a034",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        189,
+        1245,
+        227,
+        202
+      ],
+      "margin": [
+        264,
+        322,
+        493,
+        518
+      ],
+      "source_anchor": [
+        285,
+        1373
+      ],
+      "rgba_sha256": "04dc89e8d005154cae7718a6871e47574a18f90aac599eedc9fac8e71cf7aa98",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        663,
+        1251,
+        220,
+        199
+      ],
+      "margin": [
+        240,
+        311,
+        500,
+        521
+      ],
+      "source_anchor": [
+        783,
+        1390
+      ],
+      "rgba_sha256": "f8356f626ae9be51c642dd8fad8939c7416aaa12ff52adc1c10e74f8a9fa70f7",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        66,
+        35,
+        377,
+        467
+      ],
+      "margin": [
+        390,
+        424,
+        967,
+        877
+      ],
+      "source_anchor": [
+        348,
+        451
+      ],
+      "rgba_sha256": "bd42451d54fc2005da00c8fecb7d31ac2133e119e645d161c0d51143c76f7e52",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        616,
+        55,
+        362,
+        447
+      ],
+      "margin": [
+        413,
+        428,
+        982,
+        897
+      ],
+      "source_anchor": [
+        875,
+        467
+      ],
+      "rgba_sha256": "6478bf40850d234753f636e6fb7d12c2e7237917a5faf8005028473684f7694c",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        24,
+        542,
+        545,
+        435
+      ],
+      "margin": [
+        267,
+        437,
+        799,
+        909
+      ],
+      "source_anchor": [
+        429,
+        945
+      ],
+      "rgba_sha256": "9c55cca5a7e634c7843e04fb49bb6e4577e91aa4396b520ce54c9dd8d52e99c1",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        591,
+        539,
+        410,
+        458
+      ],
+      "margin": [
+        359,
+        409,
+        934,
+        886
+      ],
+      "source_anchor": [
+        904,
+        970
+      ],
+      "rgba_sha256": "aae0973ab95da38ff44dbed77b6b6fe0a557d7d7e60b5b6f34efa6ecc5fca576",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        66,
+        1002,
+        418,
+        464
+      ],
+      "margin": [
+        348,
+        439,
+        926,
+        880
+      ],
+      "source_anchor": [
+        390,
+        1403
+      ],
+      "rgba_sha256": "3575009d7f9392825809aa2fa9f89928e8b7c78227e3d26015f228859e04a936",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        623,
+        1009,
+        333,
+        464
+      ],
+      "margin": [
+        423,
+        446,
+        1011,
+        880
+      ],
+      "source_anchor": [
+        872,
+        1403
+      ],
+      "rgba_sha256": "7ffdd2ea2f587623b7700ddee7c73cb94f10ff7425400efc48fd2547f69abe8b",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        122,
+        132,
+        283,
+        375
+      ],
+      "margin": [
+        336,
+        301,
+        677,
+        585
+      ],
+      "source_anchor": [
+        266,
+        431
+      ],
+      "rgba_sha256": "e1bf62337e9c24ea39dd404bdd035dffe92adcad56300a966411d04c6869f71e",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        614,
+        152,
+        298,
+        345
+      ],
+      "margin": [
+        374,
+        303,
+        662,
+        615
+      ],
+      "source_anchor": [
+        720,
+        449
+      ],
+      "rgba_sha256": "0311598b16e0f8c59dbdae9551cb6163a75efd1965747a632f5efe6ed526f9e9",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        98,
+        630,
+        349,
+        325
+      ],
+      "margin": [
+        270,
+        330,
+        611,
+        635
+      ],
+      "source_anchor": [
+        308,
+        900
+      ],
+      "rgba_sha256": "2dbba2dcf74db4eaa4b747b4ebb2fa919d8d6209b30e8ead3a5bd55de01ba1b8",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        587,
+        628,
+        365,
+        310
+      ],
+      "margin": [
+        344,
+        317,
+        595,
+        650
+      ],
+      "source_anchor": [
+        723,
+        911
+      ],
+      "rgba_sha256": "d08be07152401c764fc5232f59786a5b46e5ed4630cb16c682126093b4ce919c",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        115,
+        1075,
+        321,
+        341
+      ],
+      "margin": [
+        310,
+        346,
+        639,
+        619
+      ],
+      "source_anchor": [
+        285,
+        1329
+      ],
+      "rgba_sha256": "6102319ca2bd75d4a7af28377ff646396cfdbcd7135028562b99027aa2ff4795",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        600,
+        1083,
+        324,
+        327
+      ],
+      "margin": [
+        367,
+        329,
+        636,
+        633
+      ],
+      "source_anchor": [
+        713,
+        1354
+      ],
+      "rgba_sha256": "4411b09465c3edc350b0467c5732c75b2bf255139f553e693c0d0f61c31c16cb",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        129,
+        141,
+        313,
+        350
+      ],
+      "margin": [
+        398,
+        304,
+        647,
+        610
+      ],
+      "source_anchor": [
+        211,
+        437
+      ],
+      "rgba_sha256": "960d0139837222fcd47e4e08a13584c0ef76a093f3c56089212a01e11efb7ed3",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        658,
+        148,
+        284,
+        346
+      ],
+      "margin": [
+        430,
+        320,
+        676,
+        614
+      ],
+      "source_anchor": [
+        708,
+        428
+      ],
+      "rgba_sha256": "52386a4d367a7066b5c49983069496cc8c92f396a8db25bc3afa22aa9b679049",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        106,
+        620,
+        385,
+        334
+      ],
+      "margin": [
+        381,
+        310,
+        575,
+        626
+      ],
+      "source_anchor": [
+        205,
+        910
+      ],
+      "rgba_sha256": "4eb17e436f35dee8e17514ea1f742207c3a446c1340ddb035398e0380e74b616",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        580,
+        687,
+        373,
+        273
+      ],
+      "margin": [
+        332,
+        387,
+        587,
+        687
+      ],
+      "source_anchor": [
+        728,
+        900
+      ],
+      "rgba_sha256": "1569bb22325f0897ab234e48d6fbd54128f37ff9a80f58110ada23f3f89943d1",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        128,
+        1077,
+        320,
+        338
+      ],
+      "margin": [
+        401,
+        319,
+        640,
+        622
+      ],
+      "source_anchor": [
+        207,
+        1358
+      ],
+      "rgba_sha256": "b1b569d6f2769d3417bb67db96309dd450fd924abdb9539149e3dc0ac94fb524",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        653,
+        1088,
+        297,
+        336
+      ],
+      "margin": [
+        425,
+        336,
+        663,
+        624
+      ],
+      "source_anchor": [
+        708,
+        1352
+      ],
+      "rgba_sha256": "ebed971da533bc26fac040d96479d8a40eb383b72de5c3ba7be42775a42bfd89",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        90,
+        21,
+        349,
+        506
+      ],
+      "margin": [
+        638,
+        631,
+        1219,
+        1062
+      ],
+      "source_anchor": [
+        236,
+        370
+      ],
+      "rgba_sha256": "8e6c225c45283e4e44ec88b3b24ead2790eb1c524d57ab0f28cc098e1c1cdfb7",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        571,
+        40,
+        384,
+        465
+      ],
+      "margin": [
+        512,
+        602,
+        1184,
+        1103
+      ],
+      "source_anchor": [
+        843,
+        418
+      ],
+      "rgba_sha256": "4379ea8be2125b439339ac2dcd4a988d213b4b24f758cc45277b59e3796a13c8",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        36,
+        554,
+        509,
+        464
+      ],
+      "margin": [
+        569,
+        668,
+        1059,
+        1104
+      ],
+      "source_anchor": [
+        251,
+        866
+      ],
+      "rgba_sha256": "0151eb516b0b12d906147afe2858c0af0f497c7f7eacce135123d453cd32c3ef",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        572,
+        536,
+        427,
+        459
+      ],
+      "margin": [
+        457,
+        618,
+        1141,
+        1109
+      ],
+      "source_anchor": [
+        899,
+        898
+      ],
+      "rgba_sha256": "702961ba1eb94a5874b199f3724422faae4a72e56a429c8b1a665903040486cb",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        70,
+        1043,
+        448,
+        439
+      ],
+      "margin": [
+        598,
+        707,
+        1120,
+        1129
+      ],
+      "source_anchor": [
+        256,
+        1316
+      ],
+      "rgba_sha256": "d2468fed95ad51f8ea9b68c6fd2de1af1429ad92e117c0aae12b4cc00fce0a65",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        572,
+        1065,
+        419,
+        411
+      ],
+      "margin": [
+        526,
+        684,
+        1149,
+        1157
+      ],
+      "source_anchor": [
+        830,
+        1361
+      ],
+      "rgba_sha256": "2ecc05dbb480137ff1c73c0e46ed44dac62baf1e10bcf2fa2b21eb8032f491e7",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        79,
+        66,
+        357,
+        263
+      ],
+      "margin": [
+        292,
+        489,
+        843,
+        937
+      ],
+      "source_anchor": [
+        387,
+        327
+      ],
+      "rgba_sha256": "eb8bfd4f25088cb13dd73d3b59886a9f5c75e65679ab88f41796bee0fc5ab8b9",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        601,
+        76,
+        343,
+        284
+      ],
+      "margin": [
+        351,
+        484,
+        857,
+        916
+      ],
+      "source_anchor": [
+        850,
+        342
+      ],
+      "rgba_sha256": "57dc0304791680ebf37aa38f0fe2240999e966f88a6268c0a42130cd3ff2ad1a",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        68,
+        343,
+        402,
+        342
+      ],
+      "margin": [
+        296,
+        410,
+        798,
+        858
+      ],
+      "source_anchor": [
+        372,
+        683
+      ],
+      "rgba_sha256": "9aad789e9fb1f65e5dfc1f74d35f58641fd4f04bb428ca3010a6c02e239c2406",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        600,
+        384,
+        356,
+        346
+      ],
+      "margin": [
+        360,
+        406,
+        844,
+        854
+      ],
+      "source_anchor": [
+        840,
+        728
+      ],
+      "rgba_sha256": "f797a72e9fa9b484674986a0e35b462c8a34223263c09a6655cdf583ff570f5f",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        70,
+        742,
+        405,
+        292
+      ],
+      "margin": [
+        323,
+        515,
+        795,
+        908
+      ],
+      "source_anchor": [
+        347,
+        977
+      ],
+      "rgba_sha256": "6c84c4993c8cf9c81f4a0f01d46d47638585bfbf6f0ef02aea5281f2a7ce0297",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        603,
+        743,
+        324,
+        294
+      ],
+      "margin": [
+        361,
+        506,
+        876,
+        906
+      ],
+      "source_anchor": [
+        842,
+        987
+      ],
+      "rgba_sha256": "6f99afa026ae8fccd59c00d944e88cd7dee18b26ded998e703d27d53c8c77520",
+      "sheet": 8
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        41,
+        1081,
+        440,
+        201
+      ],
+      "margin": [
+        325,
+        553,
+        760,
+        999
+      ],
+      "source_anchor": [
+        316,
+        1278
+      ],
+      "rgba_sha256": "0b9d3d26b425867337d5eb2c3760e2b4787e1c28ee948741554c7537ee8d31d0",
+      "sheet": 8
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        578,
+        1081,
+        395,
+        194
+      ],
+      "margin": [
+        409,
+        561,
+        805,
+        1006
+      ],
+      "source_anchor": [
+        769,
+        1270
+      ],
+      "rgba_sha256": "f768e5cf057999aa0bc1b160baba3d4b7ed94a47852121b190c43bec11ea4ba3",
+      "sheet": 8
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        40,
+        1370,
+        454,
+        118
+      ],
+      "margin": [
+        312,
+        636,
+        746,
+        1082
+      ],
+      "source_anchor": [
+        328,
+        1484
+      ],
+      "rgba_sha256": "9574cd1cae7b19b07b5670d02a9098eeaf377c0d62eac9e12d2cca4a8321753d",
+      "sheet": 8
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        576,
+        1373,
+        405,
+        121
+      ],
+      "margin": [
+        357,
+        633,
+        795,
+        1079
+      ],
+      "source_anchor": [
+        819,
+        1490
+      ],
+      "rgba_sha256": "397a107e40181211e375d902a514924f04e38c844ea4606730292b0c47e87128",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        114,
+        37,
+        308,
+        279
+      ],
+      "margin": [
+        483,
+        529,
+        916,
+        945
+      ],
+      "source_anchor": [
+        243,
+        273
+      ],
+      "rgba_sha256": "2943ddda12c9a9540e529b7afecde7b9ce7426da6b6f221d493d14c73274c585",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        600,
+        39,
+        355,
+        276
+      ],
+      "margin": [
+        502,
+        499,
+        869,
+        948
+      ],
+      "source_anchor": [
+        710,
+        305
+      ],
+      "rgba_sha256": "d7032f05c84b9d730dcc97dab8b07558bc904d0e8dd0b5c8acce3f19399347e4",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        94,
+        343,
+        358,
+        329
+      ],
+      "margin": [
+        403,
+        472,
+        866,
+        895
+      ],
+      "source_anchor": [
+        303,
+        636
+      ],
+      "rgba_sha256": "35fe022902cb93e0852c7d9a6f1975ac1301ab10887b6f16a20ee9c2dd23fea0",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        612,
+        337,
+        363,
+        338
+      ],
+      "margin": [
+        482,
+        437,
+        861,
+        886
+      ],
+      "source_anchor": [
+        742,
+        665
+      ],
+      "rgba_sha256": "0e7f3e628ac066134165faa7b0865a1330d71f268d7916194c00a669fd596d5d",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        143,
+        720,
+        258,
+        298
+      ],
+      "margin": [
+        495,
+        519,
+        966,
+        926
+      ],
+      "source_anchor": [
+        260,
+        966
+      ],
+      "rgba_sha256": "7c90a706f4efded62f3f34b0c84cb9e72c7374697d3f5dabe8f7a2ad782d1351",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        634,
+        736,
+        333,
+        262
+      ],
+      "margin": [
+        508,
+        534,
+        891,
+        962
+      ],
+      "source_anchor": [
+        738,
+        967
+      ],
+      "rgba_sha256": "974d491012b4cef066c4289f2ee6ef935906c69650cf583ffb4b3883077b45d8",
+      "sheet": 9
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        120,
+        1066,
+        360,
+        206
+      ],
+      "margin": [
+        478,
+        608,
+        864,
+        1018
+      ],
+      "source_anchor": [
+        254,
+        1223
+      ],
+      "rgba_sha256": "4800df7cff6d3ddf2f2b2b0800308f071c4f800d1f47dbe7268575029f90ffe7",
+      "sheet": 9
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        595,
+        1101,
+        372,
+        165
+      ],
+      "margin": [
+        498,
+        620,
+        852,
+        1059
+      ],
+      "source_anchor": [
+        709,
+        1246
+      ],
+      "rgba_sha256": "835091594885ceff7581d11d92bbc1801416a610c85aa1fee2c1c875e6869bd5",
+      "sheet": 9
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        62,
+        1366,
+        417,
+        128
+      ],
+      "margin": [
+        337,
+        641,
+        807,
+        1096
+      ],
+      "source_anchor": [
+        337,
+        1490
+      ],
+      "rgba_sha256": "95a9d87b4ea73b5630d2569cf10466669822f087d1e4f70ef6ca4f93a7e049f4",
+      "sheet": 9
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        560,
+        1369,
+        424,
+        130
+      ],
+      "margin": [
+        338,
+        642,
+        800,
+        1094
+      ],
+      "source_anchor": [
+        834,
+        1492
+      ],
+      "rgba_sha256": "a28544c1bd69e8b4f66cdffd349e80accaca38db695945b8938b583845171448",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        147,
+        30,
+        253,
+        292
+      ],
+      "margin": [
+        434,
+        534,
+        947,
+        908
+      ],
+      "source_anchor": [
+        313,
+        246
+      ],
+      "rgba_sha256": "d4c008dd5e501361304d2307279fd5aa9bce1f7405678f9b74a24e582dc11219",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        626,
+        32,
+        238,
+        291
+      ],
+      "margin": [
+        401,
+        517,
+        962,
+        909
+      ],
+      "source_anchor": [
+        825,
+        265
+      ],
+      "rgba_sha256": "02f3d50f48a2a54ac408046490df2690b4f0ba336816e43f30c4fe651608fa60",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        121,
+        351,
+        346,
+        305
+      ],
+      "margin": [
+        444,
+        523,
+        854,
+        895
+      ],
+      "source_anchor": [
+        277,
+        578
+      ],
+      "rgba_sha256": "7ffa4409de3be6f261ed8da329402267d3f69a6831d61785788ceae8c1c0aacb",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        608,
+        337,
+        343,
+        318
+      ],
+      "margin": [
+        377,
+        505,
+        857,
+        882
+      ],
+      "source_anchor": [
+        831,
+        582
+      ],
+      "rgba_sha256": "57a131141d2190721f58c22c2e4e08ef47e458ff030734afbe846cabed4596ac",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        137,
+        703,
+        249,
+        314
+      ],
+      "margin": [
+        473,
+        540,
+        951,
+        886
+      ],
+      "source_anchor": [
+        264,
+        913
+      ],
+      "rgba_sha256": "2f60f7d4f1a8ce3bcc48edfd0cfdcf7c9ceabe1df4bf232c7057972d36a8d5ec",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        596,
+        720,
+        281,
+        289
+      ],
+      "margin": [
+        412,
+        507,
+        919,
+        911
+      ],
+      "source_anchor": [
+        784,
+        963
+      ],
+      "rgba_sha256": "466df9bebb48d2045c1365be0675eb3ef878280e3b7af28b95e987576b54ed4d",
+      "sheet": 10
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        75,
+        1050,
+        394,
+        209
+      ],
+      "margin": [
+        375,
+        558,
+        806,
+        991
+      ],
+      "source_anchor": [
+        300,
+        1242
+      ],
+      "rgba_sha256": "0aa8949a3919b3887da49b6afc90df3f5d6425aca2e2f869f5a31be341c57e1d",
+      "sheet": 10
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        557,
+        1049,
+        395,
+        199
+      ],
+      "margin": [
+        347,
+        583,
+        805,
+        1001
+      ],
+      "source_anchor": [
+        810,
+        1216
+      ],
+      "rgba_sha256": "6789a42f52ce0a8393f8e7b76798db79699e5588bedc1f9f50b01f382ff8513e",
+      "sheet": 10
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        68,
+        1313,
+        411,
+        175
+      ],
+      "margin": [
+        333,
+        595,
+        789,
+        1025
+      ],
+      "source_anchor": [
+        335,
+        1468
+      ],
+      "rgba_sha256": "16a224230a2a8d7641e37506845f190804d77bc8bb3e593bcf7743c6e6dc2ed1",
+      "sheet": 10
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        547,
+        1327,
+        417,
+        142
+      ],
+      "margin": [
+        340,
+        633,
+        783,
+        1058
+      ],
+      "source_anchor": [
+        807,
+        1444
+      ],
+      "rgba_sha256": "8c8489df9d6aeafef84f377a323c1c56024aa4604bbeaa505f12670163c20b2c",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        279,
+        87,
+        473,
+        320
+      ],
+      "margin": [
+        676,
+        646,
+        1063,
+        1216
+      ],
+      "source_anchor": [
+        371,
+        401
+      ],
+      "rgba_sha256": "20860373ba3e0ee2182f785e523d5eb7e131b9ed223d087b15967e40b9bc5ceb",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        290,
+        418,
+        502,
+        325
+      ],
+      "margin": [
+        638,
+        637,
+        1034,
+        1211
+      ],
+      "source_anchor": [
+        420,
+        741
+      ],
+      "rgba_sha256": "597bd1bca9adfbb12ca403a879dcf2a4ed76566e023d83f7ce8c71303c5789e9",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        282,
+        791,
+        517,
+        273
+      ],
+      "margin": [
+        627,
+        734,
+        1019,
+        1263
+      ],
+      "source_anchor": [
+        423,
+        1017
+      ],
+      "rgba_sha256": "f724c3492b4073879490d615921742fadf93b2869d9245b7bae4c1841daba3f4",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        239,
+        1125,
+        589,
+        146
+      ],
+      "margin": [
+        450,
+        822,
+        947,
+        1390
+      ],
+      "source_anchor": [
+        557,
+        1263
+      ],
+      "rgba_sha256": "41ed291abaf3adc19a623621dfc357b853cc805aba684942cbdd1cc7c0f43c81",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        246,
+        1365,
+        555,
+        113
+      ],
+      "margin": [
+        513,
+        857,
+        981,
+        1423
+      ],
+      "source_anchor": [
+        501,
+        1468
+      ],
+      "rgba_sha256": "515474baf3eaa038d711d15a4c743f5da6cb43e58f96d970d42fd567062edba1",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        287,
+        40,
+        474,
+        312
+      ],
+      "margin": [
+        669,
+        762,
+        1206,
+        1368
+      ],
+      "source_anchor": [
+        458,
+        328
+      ],
+      "rgba_sha256": "876648b89f9393df0bffed6683b8fd2c7b0334631980d2933f434bf895247dcf",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        253,
+        354,
+        511,
+        340
+      ],
+      "margin": [
+        652,
+        741,
+        1169,
+        1340
+      ],
+      "source_anchor": [
+        441,
+        663
+      ],
+      "rgba_sha256": "06f36f6e0f5d9a7271bef3f8f6b7bbc48f288a4d46a2660001820ec2289a319d",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        307,
+        701,
+        465,
+        305
+      ],
+      "margin": [
+        689,
+        829,
+        1215,
+        1375
+      ],
+      "source_anchor": [
+        458,
+        922
+      ],
+      "rgba_sha256": "7ebc46b40ca99623d761fc8883682dfbf72c9938758b165b58c3b7deee641258",
+      "sheet": 12
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        308,
+        1015,
+        491,
+        251
+      ],
+      "margin": [
+        654,
+        846,
+        1189,
+        1429
+      ],
+      "source_anchor": [
+        494,
+        1219
+      ],
+      "rgba_sha256": "017bf7667d6589b08a7f000d219d514b43358f524d948943a004c4b15c97adc8",
+      "sheet": 12
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        309,
+        1294,
+        488,
+        221
+      ],
+      "margin": [
+        659,
+        882,
+        1192,
+        1459
+      ],
+      "source_anchor": [
+        490,
+        1462
+      ],
+      "rgba_sha256": "54b90dc74248dd53c0a6b143a29c035529a5418ea941736946928bdb0733b3e7",
+      "sheet": 12
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+          "sha256": "221f0328878b4787d6bc4811651e2b42eccb4e9f76d6057905b6d81f5c30e8d3",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+          "sha256": "68160d7dbac383af03cef663bc5e4c6f6c897cde51531affc0c2cb2c60eaecd8",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            896,
+            896
+          ],
+          "foot": [
+            448,
+            560
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+          "sha256": "1d674958eaba9936b6a86bd232672a5c7b8115db2adeeae95abb66fad607ad71",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+          "sha256": "ded5ed0ef6611f096cb34d469e2b6bd3c519fdf57e5f0506bf75838b2da8e1bb",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            720,
+            720
+          ],
+          "foot": [
+            360,
+            450
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+          "sha256": "221f0328878b4787d6bc4811651e2b42eccb4e9f76d6057905b6d81f5c30e8d3",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+          "sha256": "68160d7dbac383af03cef663bc5e4c6f6c897cde51531affc0c2cb2c60eaecd8",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            896,
+            896
+          ],
+          "foot": [
+            448,
+            560
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+          "sha256": "1d674958eaba9936b6a86bd232672a5c7b8115db2adeeae95abb66fad607ad71",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+          "sha256": "ded5ed0ef6611f096cb34d469e2b6bd3c519fdf57e5f0506bf75838b2da8e1bb",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            720,
+            720
+          ],
+          "foot": [
+            360,
+            450
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-4.png",
+          "sha256": "65c469a8bcb3de1608f1b940dc52c8410428e51021680aa688bf0d8d90414a0e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1344,
+            1344
+          ],
+          "foot": [
+            672,
+            840
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-5.png",
+          "sha256": "f5ffd2e1d46cd786c0d50dfb55c96fe99bf43343277699918a4813917ef676b1",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-6.png",
+          "sha256": "37cd2421bdb8915c4d3fce22d8cde8d13cf82f2229c471dbb1864a5c65165091",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-7.png",
+          "sha256": "2d0adbc3ebbfb411a4d0c1a0ff5747103bdce164dcd920a0465983548c714c79",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1568,
+            1568
+          ],
+          "foot": [
+            784,
+            980
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+          "sha256": "5d6dc91b7a60af044ea16b21345a31d61227568b4dd8b1abc597acb3c328c6a4",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1200,
+            1200
+          ],
+          "foot": [
+            600,
+            750
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+          "sha256": "cba8c2df34e3ffd7b0e430b7aa3d1edeb5cba693c20d8c918cdfb65ddee4ba2f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1224,
+            1224
+          ],
+          "foot": [
+            612,
+            765
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+          "sha256": "1ddb1bfff868982c6a42482f59d7fc3ee596545ba739bf1de91c8175ab80e183",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1200,
+            1200
+          ],
+          "foot": [
+            600,
+            750
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-11.png",
+          "sha256": "c28a63d161550c20000cff204ad4a242831e04d72f671a485f6dddf2d7e1999c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1536,
+            1536
+          ],
+          "foot": [
+            768,
+            960
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-12.png",
+          "sha256": "a81e1906f17bc0c0a72017308cccda1110fbd863123fc8d97d6b50edec9e27dd",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1680,
+            1680
+          ],
+          "foot": [
+            840,
+            1050
+          ],
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-12.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+          "sha256": "5d6dc91b7a60af044ea16b21345a31d61227568b4dd8b1abc597acb3c328c6a4",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1200,
+            1200
+          ],
+          "foot": [
+            600,
+            750
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+          "sha256": "cba8c2df34e3ffd7b0e430b7aa3d1edeb5cba693c20d8c918cdfb65ddee4ba2f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1224,
+            1224
+          ],
+          "foot": [
+            612,
+            765
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+          "sha256": "1ddb1bfff868982c6a42482f59d7fc3ee596545ba739bf1de91c8175ab80e183",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1200,
+            1200
+          ],
+          "foot": [
+            600,
+            750
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-11.png",
+          "sha256": "c28a63d161550c20000cff204ad4a242831e04d72f671a485f6dddf2d7e1999c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1536,
+            1536
+          ],
+          "foot": [
+            768,
+            960
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-12.png",
+          "sha256": "a81e1906f17bc0c0a72017308cccda1110fbd863123fc8d97d6b50edec9e27dd",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1680,
+            1680
+          ],
+          "foot": [
+            840,
+            1050
+          ],
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Anatomical projection/scale proposal: primarydirection canvases uniformly1.5larger than initialauthor values only to fit actualhip/talonroot anchor with fulltail retained. E/S/Wattack andE/Nhit canvases adjusted from manually measured sameheading eye/nape-to-hip landmarks, excludingchangingwing/tailheight. See independent-review.json for coordinates, uncertainty and residuals. Rootfinalreview required. Living anchorY is under actualdarktalons with8normalizedpixelhovergap capped inside sourcepose; death is localbody/winggroundsupport near attachedtalons, never automatically lowestmovingtail. Conservative darktalon detector candidates require root visualreview against annotated104. No PNG edits orthresholdchange. NewW/NW fivepose repair scales1024/1120 before1.5 expansion are provisional. All13sourcehead/core proportions must be independentlyconfirmed inactualMain beforecompletion; smallbeak/head landmarks have manualuncertainty.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-11.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-12.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 100.0,
+  "actual_Main": "NOT_RUN",
+  "completed_added": 0,
+  "independent_target_visual_review": "PENDING",
+  "source_visual_review_preserved": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Staticall104re-review of golden/orange originalproject phoenix. Twoattachedwings/twotalonlegs, hookedbeak/crest and longattachedcurlfeathertail preserved, no humanlimbs/weapons/orbs/detachedparticles. Original94frames independent ofauthor:8view flight/attack/hit/death geometry, truewingjoint/torsal/neck articulation and correctedNattackUP/nape reviewed. Originalselected NW5hit/deathfailedbecause brightfrontalbreast/profile remained close toW; pairedrepair2alsofailedvisually. Reviewer then AUTHORED newW5 and truebackleftNW5, isolatedNWinitial5mergedinto4strictFAIL; spacedNWrepair4strictPASS. NewNW now exposed dorsalredscapular/backspine/nape, hiddenbrightfrontbreast, corpseheadfarUPLEFT/tailDOWNRIGHT distinguishes Wprofile. Since Iauthored NEW10, rootindependentreviewofthese10 isREQUIRED; do not describe this as independent104approval yet. All13selectedsheets total104actual/used/unique mandatoryframes, no unused/source-slotinflation; allstrictanalyze/complete-visible-regionPASS withoutthresholdchange. Properalpha composition originalRGBfog hasalpha<=9outsidecrops, >10count0. AnatomicalrootX now actualattachedtalons/hipprojection instead ofdefaultcellcenter/longtailmidpoint. LivingrootYunderfeet with8normalizedhovergap cappedinsideactualpose; deathlocalbelly/winggroundsupport nearattachedtalons, notautomaticallylowestcurltailtip. All104annotatedprojectioncontacts reviewed, no grossdetectoroffbodyobserved, actualMain stillrequired. Primarycanvases enlargeduniformly1.5onlyforfulltailpadding aroundactualbodyroot, andselectedattack/hit canvases correctedby SAME-heading eye/nape-to-hip distances (manual±8sourcepx). E/S/W/Nattack normalizedcore distanceswithin~10percent ofsameheadingidle; wing/tailheight andcollapseddeathheight NOT scaleinputs. NewW/NW1024/1120prepaddingcanvasvaluesare fixed-normalizedvisual/head/talon-size proposals requiringrootconfirmation. Originalrecord magic/floatingtrue/height128/attackratio0.52 preserved. Optionalcastalias omitted, retainexistingmonsterattackfallback. This is readyforrootreview and actualMain, notcompleted. ROOT independently reviewed all104 normalized poses for identity, actual8view direction, articulation, core scale, connected body, complete death and source preservation. Repaired W/NW10 hit/death poses independently approved as true side/rear construction; revised anatomical core scale and actual talon/body projection approved for Main trial. Completion remains zero pending full actualMain plus independent Main visual review."
+  },
+  "retargeting": {
+    "source_id": "monster:피닉스",
+    "source_SpriteFrames": "assets/actors/eight_direction/original_based/phoenix_monster_boss/SpriteFrames.tres",
+    "source_SpriteFrames_SHA256": "aa4242bd5655e0887f6877bda71480e76b5325ba94fbcce1f9c1a84503697d13",
+    "source_provenance_SHA256": "8840a517040f9b7600e798ea4eb97babb3f9f6daee8123afe34f0b274e88dbe6",
+    "shared_texture_files": [
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-0.png",
+        "SHA256": "221f0328878b4787d6bc4811651e2b42eccb4e9f76d6057905b6d81f5c30e8d3"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-1.png",
+        "SHA256": "68160d7dbac383af03cef663bc5e4c6f6c897cde51531affc0c2cb2c60eaecd8"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-10.png",
+        "SHA256": "1ddb1bfff868982c6a42482f59d7fc3ee596545ba739bf1de91c8175ab80e183"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-11.png",
+        "SHA256": "c28a63d161550c20000cff204ad4a242831e04d72f671a485f6dddf2d7e1999c"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-12.png",
+        "SHA256": "a81e1906f17bc0c0a72017308cccda1110fbd863123fc8d97d6b50edec9e27dd"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-2.png",
+        "SHA256": "1d674958eaba9936b6a86bd232672a5c7b8115db2adeeae95abb66fad607ad71"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-3.png",
+        "SHA256": "ded5ed0ef6611f096cb34d469e2b6bd3c519fdf57e5f0506bf75838b2da8e1bb"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-4.png",
+        "SHA256": "65c469a8bcb3de1608f1b940dc52c8410428e51021680aa688bf0d8d90414a0e"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-5.png",
+        "SHA256": "f5ffd2e1d46cd786c0d50dfb55c96fe99bf43343277699918a4813917ef676b1"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-6.png",
+        "SHA256": "37cd2421bdb8915c4d3fce22d8cde8d13cf82f2229c471dbb1864a5c65165091"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-7.png",
+        "SHA256": "2d0adbc3ebbfb411a4d0c1a0ff5747103bdce164dcd920a0465983548c714c79"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-8.png",
+        "SHA256": "5d6dc91b7a60af044ea16b21345a31d61227568b4dd8b1abc597acb3c328c6a4"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/phoenix_monster_boss/poses-9.png",
+        "SHA256": "cba8c2df34e3ffd7b0e430b7aa3d1edeb5cba693c20d8c918cdfb65ddee4ba2f"
+      }
+    ],
+    "new_PNG_files": 0,
+    "new_native_poses": 0,
+    "original_native_poses_preserved": 104,
+    "source_presentation": {
+      "visual": {
+        "atlas": 1,
+        "cell": 15,
+        "body": "phoenix",
+        "variant": 2,
+        "width": 0.998,
+        "weapon": "staff",
+        "crest": 3,
+        "accent": "aa8aaf"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": true
+      },
+      "attack_type": "magic",
+      "visual_height": 128
+    },
+    "width_ratio": 1.0260521042084167,
+    "height_ratio": 1.0,
+    "tint_multipliers": [
+      0.983289411764706,
+      0.9920519607843138,
+      0.9981476470588235
+    ],
+    "target_profile": {
+      "name": "알비노 피닉스",
+      "layout": "directional8",
+      "motion_style": "slash",
+      "floating": true,
+      "prior_visual_profile": null,
+      "frames_path": "res://assets/actors/eight_direction/original_based/albino_phoenix_project_source/SpriteFrames.tres",
+      "pixel_scale": 1.28,
+      "color_tint": [
+        0.983289411764706,
+        0.9920519607843138,
+        0.9981476470588235,
+        1.0
+      ],
+      "sprite_offset": [
+        0.0,
+        -40.96
+      ],
+      "embedded_shadow": false,
+      "authored_motion_weight": 0,
+      "hit_recoil": 0,
+      "action_hit_frames": {
+        "attack": 1
+      },
+      "attack_hit_frame": 1,
+      "death_duration": 0.65,
+      "movement_fps": 6.25,
+      "authoring_reference": "res://assets/monsters/original/atlas_1.png",
+      "native_width_ratio": 1.0260521042084167
+    },
+    "source_actors_changed": false,
+    "transform_global_scale_changed": false,
+    "stats_speed_collision_AI_hitmarker_changed": false
+  },
+  "prior_candidate_review": {
+    "actual_Main": "NOT_RUN",
+    "independent_target_visual_review": "PENDING"
+  },
+  "current_local_completion": {
+    "status": "APPROVED",
+    "review": "docs/remake/evidence/pr122-remaining106/batch15/albino-phoenix-independent-review.json",
+    "Main_report": "docs/remake/evidence/pr122-remaining106/batch15/Main-reports/albino-phoenix.json",
+    "temporal_summary": "docs/remake/evidence/pr122-remaining106/batch15/temporal-summary.json",
+    "current_profile": {
+      "action_hit_frames": {
+        "attack": 1
+      },
+      "attack_hit_frame": 1,
+      "authored_motion_weight": 0,
+      "authoring_reference": "res://assets/monsters/original/atlas_1.png",
+      "color_tint": [
+        0.983289411764706,
+        0.9920519607843138,
+        0.9981476470588235,
+        1.0
+      ],
+      "death_duration": 0.65,
+      "embedded_shadow": false,
+      "floating": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/albino_phoenix_project_source/SpriteFrames.tres",
+      "hit_recoil": 0,
+      "layout": "directional8",
+      "motion_style": "slash",
+      "movement_cadence_width_ratio": 1.0260521042084167,
+      "movement_fps": 10.15625,
+      "name": "알비노 피닉스",
+      "native_width_ratio": 1.0260521042084167,
+      "pixel_scale": 1.28,
+      "prior_visual_profile": null,
+      "sprite_offset": [
+        0.0,
+        -40.96
+      ]
+    },
+    "new_source_frames": 0,
+    "final_CI": "REFER_FINAL_PR_HEAD_CHECKS",
+    "Android_device": "NOT_RUN"
+  }
+}

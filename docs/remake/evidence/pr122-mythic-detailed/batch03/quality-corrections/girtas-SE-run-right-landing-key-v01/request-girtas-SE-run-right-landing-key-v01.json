@@ -1,0 +1,282 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "SE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "SINGLE_DISTINCT_MISSING_RUN_KEY_SOLID_3D",
+  "expected_poses": 1,
+  "requested_poses": [
+    3
+  ],
+  "intended_game_phase": 3,
+  "intended_anatomical_support": "RIGHT",
+  "intended_air_lead": null,
+  "transparent_background": true,
+  "corrective_reason": "Existing SE run uses unfaithful old model/generic motion. Author a genuinely new faithful dedicated run key with constant-bone solid3D joint/depth guide; current SEidle upperbody/material references contain no old complete leg chain. No completed game pose is redone.",
+  "user_authorization": "User explicitly authorized production image tools while banning chat image attachments. Metadata-only tool handling; private fresh QC required.",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "references": [
+    "/workspace/scratch/girtas-SE-run-production-v01/guides/3D-SE-run-phase3-RIGHTsupport.png",
+    "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-upperbody-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-robe-MATERIAL-ONLY.png",
+    "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-sinuous-blade-MATERIAL-ONLY.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SE-run-production-v01/guides/3D-SE-run-phase3-RIGHTsupport.png": "62ca0c50e7946ddef67a1f5fd89bbd5993c03eb52e14872d5d98118bff715b9b",
+    "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-upperbody-NO-OLD-LEGS.png": "fdaff6bb3da344ea1b01be8a2913572449047f850c937d6ff5f3483de6676a95",
+    "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-robe-MATERIAL-ONLY.png": "6c2f35a4215e77c06f4c984d695bd0825e0c2a675b8f9ac9a3ad3ee9426d4ad3",
+    "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-sinuous-blade-MATERIAL-ONLY.png": "90ef447bd46ba91eedc1d345ce72bceb09a1d7b993d629d0c0ee8cf9fb62746e"
+  },
+  "prompt": "Dress the solid 3D MANNEQUIN IN IMAGE1 as the exact GIRTAS identity/equipment of IMAGE2 plus MATERIAL DETAILS in IMAGE3/4. Create exactly ONE newly drawn full-body GIRTAS SOUTHEAST RUN gamephase3: RIGHT NEAR landing. This is dedicated FAST RUN artwork, NOT a walk pose copied or a speed change. IMAGE1 is absolute 3D CAMERA, BONE LENGTH, joint/boot placement, depth and anatomical occlusion authority. Copy its exact pelvis, shoulder, head, LEFT BLUE and RIGHT ORANGE leg chains, foot support and real knee flex. IMAGE2 supplies ONLY faithful upperbody identity; old legs are deliberately ABSENT. Image3 is original LONG dark robe/goldtrim cloth material only. Image4 completes the original LONG sinuous blade curve only. NO old character legs or generic stance may override image1.\n\nThe NEAR anatomical RIGHT ORANGE leg is the ONLY grounded leading leg, its complete sole flat IN FRONT toward DOWNRIGHT. FAR anatomical LEFT BLUE knee drives HIGH forward and its shin folds back with complete boot floating ABOVE ground. This is the exact opposite support to phase0: nearRIGHT landing, farLEFT swing. Do not make farLEFT an extra planted foot.\n\nFixed SE front-RIGHT threequarter view: world travel/face/nose/chest/pelvis points DOWN-RIGHT toward camera. Anatomical RIGHT orange side is NEAR camera and appears imageLEFT; anatomical LEFT blue side is FAR/imageRIGHT. RIGHT/near hand PERMANENTLY holds exactly ONE original LONG SINUOUS GOLD-ORANGE blade, hand on near/imageLEFT side; LEFT/far hand remains EMPTY with complete fingers/gauntlet. Match image1 solid3D depth/occlusion, not blind screen labels. No hand swap. Keep head/skull/shoulder/waist rigid proportion coherent with image2; strong forward RUN lean, articulated counterarm motion, no distorted torso/head.\n\nExact faithful Girtas: visible PALE HUMAN FACE, long PALE SILVER HAIR, pointed gold crown, ornate black-and-gold armor, thin HARD STRAIGHT GOLD RADIAL BACK SPINES solid metal (NOT orange feather/flame fans or wings), original LONG DARK GOLD-TRIM ROBE/SKIRT with original hanging panel designs. Robe remains ankle/shin length and naturally splits/streams enough to show BOTH new complete thigh/knee/shin/ankle/boot chains and their actual movement. Do not replace with trousers, segmented pants or short skirt. Original very LONG CURVED SINUOUS gold blade maintained relative to body, never short broad sword. No red V mask, faceless helmet, invented shields, wings, third foot, extra arm, duplicated weapon. Armor/rays/crown/face/hair/weapon identity must remain high-detail source quality.\n\nONE high-detail finished RPG sprite, transparent RGBA, desired1024x1024 square. Entire crown, everythinray endpoint, every hair/cloth tip, BOTH complete boots, both hands/knuckles and whole long blade including sharp tip must have at least90px EMPTY alpha0 space on ALL FOUR canvas edges. Uniformly shrink WHOLE figure at generation to fit, never shorten/crop gear or cut fingers. Entire body+gear centrally fit <=800x800 native area; preserve rigid physical proportions. Opaque material/clean thin AA contours, no outer glow, soft haze, shadows, energy, floor, mannequin colors, bones, guide grid/lines, labels or text. Reference floor is only pose intent; final background fully transparent. Critical actual RIGHT NEAR landing: copy both distinct solid3D leg chains and genuine fast running joint articulation, not a generic static armored stance.",
+  "requested_at": "2026-10-19T15:35:03.585353+00:00",
+  "pose_guide_recipe_path": "/workspace/scratch/girtas-SE-run-production-v01/six-solid-guide-recipe.json",
+  "pose_guide_recipe_sha256": "6c067d9f06e71a19a1ba7eaa9392dea2d249e51d69df657e143b09e19ac81b8e",
+  "pose_guide_recipe": {
+    "phase": 3,
+    "support": "RIGHT",
+    "air_lead": null,
+    "camera": [
+      5,
+      7,
+      5
+    ],
+    "world_forward": "+Y -> screenDOWNRIGHT",
+    "anatomical_RIGHT": "+X near imageLEFT",
+    "anatomical_LEFT": "-X far imageRIGHT",
+    "guide_only_not_game_art": true,
+    "bone_lengths_constant": true,
+    "joints_and_projection": {
+      "pelvis": [
+        0.0,
+        0.0,
+        1.0700000524520874
+      ],
+      "shoulder_mid": [
+        0.0,
+        0.16564418375492096,
+        1.68819260597229
+      ],
+      "head_center": [
+        0.0,
+        0.24070170521736145,
+        1.968311071395874
+      ],
+      "LEFT": {
+        "hip": [
+          -0.18,
+          0,
+          1.07
+        ],
+        "knee": [
+          -0.18,
+          0.5977168188550473,
+          1.122293445648595
+        ],
+        "ankle": [
+          -0.18,
+          0.5471664880614057,
+          0.5445005207553826
+        ],
+        "boot_center": [
+          -0.18,
+          0.6271664880614056,
+          0.4895005207553826
+        ],
+        "boot_pitch": -0.15,
+        "boot_min_world_Z": 0.42436102001588294,
+        "support": false,
+        "leading_air": false,
+        "thigh_length": 0.6,
+        "shin_length": 0.58,
+        "arm": {
+          "shoulder": [
+            -0.31,
+            0.16564418375492096,
+            1.68819260597229
+          ],
+          "elbow": [
+            -0.31,
+            0.017727792145676158,
+            1.3709848805094627
+          ],
+          "wrist": [
+            -0.31,
+            -0.011033602961051037,
+            1.0422406301391867
+          ],
+          "permanent_weapon_hand": false
+        },
+        "projected_native_pixels": {
+          "hip": [
+            412.9654083251953,
+            353.0087585449219
+          ],
+          "knee": [
+            499.44337463378906,
+            392.1514663696289
+          ],
+          "ankle": [
+            492.12977600097656,
+            517.5362777709961
+          ],
+          "boot_center": [
+            503.7041931152344,
+            536.6911926269531
+          ]
+        }
+      },
+      "RIGHT": {
+        "hip": [
+          0.18,
+          0,
+          1.07
+        ],
+        "knee": [
+          0.18,
+          0.4516664147377014,
+          0.6750349402427673
+        ],
+        "ankle": [
+          0.18,
+          0.62,
+          0.12
+        ],
+        "boot_center": [
+          0.18,
+          0.7,
+          0.06
+        ],
+        "boot_pitch": 0,
+        "boot_min_world_Z": 0.0,
+        "support": true,
+        "leading_air": false,
+        "thigh_length": 0.6,
+        "shin_length": 0.58,
+        "arm": {
+          "shoulder": [
+            0.31,
+            0.16564418375492096,
+            1.68819260597229
+          ],
+          "elbow": [
+            0.31,
+            0.16564418375492096,
+            1.33819260597229
+          ],
+          "wrist": [
+            0.31,
+            0.05277753645745027,
+            1.0280940411129402
+          ],
+          "permanent_weapon_hand": true
+        },
+        "projected_native_pixels": {
+          "hip": [
+            340.56724548339844,
+            375.0553436279297
+          ],
+          "knee": [
+            405.91461181640625,
+            502.15452575683594
+          ],
+          "ankle": [
+            430.2691955566406,
+            641.0635528564453
+          ],
+          "boot_center": [
+            441.8436584472656,
+            661.3407096862793
+          ]
+        }
+      },
+      "projected_ground_under_pelvis": [
+        376.76634979248047,
+        604.1977157592773
+      ],
+      "projected_forward_plusY_delta": [
+        144.68053436279297,
+        85.12419319152832
+      ]
+    },
+    "output": "/workspace/scratch/girtas-SE-run-production-v01/guides/3D-SE-run-phase3-RIGHTsupport.png"
+  },
+  "reference_provenance_path": "/workspace/scratch/girtas-SE-run-production-v01/leg-free-material-reference-provenance.json",
+  "reference_provenance_sha256": "87987d4d19be3ff9acca3ebff3eab5e1ab870ecc3bb94205d4e3025b60866bc2",
+  "reference_provenance": {
+    "schema": "PR122_LEG_FREE_RUN_CONDITIONING_V1",
+    "key": "transform:267",
+    "direction": "SE",
+    "role": "run",
+    "crop_references": [
+      {
+        "path": "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-upperbody-NO-OLD-LEGS.png",
+        "sha256": "fdaff6bb3da344ea1b01be8a2913572449047f850c937d6ff5f3483de6676a95",
+        "source_path": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+        "source_sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+        "source_region_xywh": [
+          0,
+          0,
+          460,
+          300
+        ],
+        "rgba_sha256": "a5eb892bf3205b2d7931934a0f2a4e883de9fc8f5355f5c40a55ac3545bce4ee",
+        "pixel_operation": "ExactRGBA crop only; NO resize/mirror/recolor. No complete old leg chain supplied."
+      },
+      {
+        "path": "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-robe-MATERIAL-ONLY.png",
+        "sha256": "6c2f35a4215e77c06f4c984d695bd0825e0c2a675b8f9ac9a3ad3ee9426d4ad3",
+        "source_path": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+        "source_sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+        "source_region_xywh": [
+          220,
+          300,
+          90,
+          85
+        ],
+        "rgba_sha256": "e781826fc6302c488ad8d1d734b7e82f55c82dc8c4e4a00dcd336316c123e07f",
+        "pixel_operation": "ExactRGBA crop only; NO resize/mirror/recolor. No complete old leg chain supplied."
+      },
+      {
+        "path": "/workspace/scratch/girtas-SE-run-production-v01/SE-selected-idle-long-sinuous-blade-MATERIAL-ONLY.png",
+        "sha256": "90ef447bd46ba91eedc1d345ce72bceb09a1d7b993d629d0c0ee8cf9fb62746e",
+        "source_path": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+        "source_sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+        "source_region_xywh": [
+          0,
+          310,
+          175,
+          190
+        ],
+        "rgba_sha256": "ce2e08ec7c7c8cb695026f33c6cbb3b27757d1a55838cee74952dc01bdb56612",
+        "pixel_operation": "ExactRGBA crop only; NO resize/mirror/recolor. No complete old leg chain supplied."
+      }
+    ],
+    "private_coordinate_review_by": "/root/girtas_se_walk_author",
+    "review_basis": "Selected current SEidle exact crop privately reviewed; y0:300 upperbody, central cloth-only XYWH220,300,90,85 and blade-only XYWH0,310,175,190 exclude old complete hip-knee-boot chains. Solid3D PRIMARY supplies all new legs/support/flight.",
+    "selected_source_pins": {
+      "idle": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-idle-v03.png",
+        "sha256": "e3b15578727710866b76c6495ad1b538156b35d74820061c362713db48441071"
+      },
+      "walk": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-walk-v03composite01.png",
+        "sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d"
+      },
+      "walk_runtime_frames": {
+        "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r086/SpriteFrames.tres",
+        "sha256": "e986c0cc81b281fa36459065f1ec00de1d27792a69624d0011f97241366d974f"
+      }
+    },
+    "original_portrait": {
+      "path": "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+      "sha256": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+      "use": "Identity provenance only; NOT a full old-leg conditioning image."
+    }
+  }
+}

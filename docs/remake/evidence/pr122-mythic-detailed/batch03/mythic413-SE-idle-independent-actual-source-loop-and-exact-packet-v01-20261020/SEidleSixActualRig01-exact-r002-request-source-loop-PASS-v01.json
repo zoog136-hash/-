@@ -1,0 +1,106 @@
+{
+  "key": "transform:413",
+  "direction": "SE",
+  "role": "idle",
+  "version": "SEidleSixActualRig01",
+  "request_sha256": "c825a1b606302094ec2c6e92ccdc95fbee429ed8474810b850cbd25b309d5c20",
+  "raw_sha256": "cc29feb5010aa45c57961288fec931a688d52bdfbd6263eecc504b100ec2fff4",
+  "raw_bytes": 3874658,
+  "source_visual_status": "PASS",
+  "status": "EXACT_R002_REQUEST_RAW_SIX_SOURCE_AND_VISIBLE_LOOP_PASS",
+  "request": {
+    "path": "/workspace/scratch/mythic413-SE-idle-actual-packed-r002-20261020/request-SEidleSixActualRig01.json",
+    "sha256": "c825a1b606302094ec2c6e92ccdc95fbee429ed8474810b850cbd25b309d5c20",
+    "bytes": 3015
+  },
+  "raw": {
+    "path": "/workspace/scratch/mythic413-SE-idle-actual-packed-r002-20261020/thunder_female-SE-idle-six-actual-poses-r002.png",
+    "sha256": "cc29feb5010aa45c57961288fec931a688d52bdfbd6263eecc504b100ec2fff4",
+    "bytes": 3874658
+  },
+  "packing_proof": {
+    "path": "/workspace/scratch/mythic413-SE-idle-actual-packed-r002-20261020/thunder_female-SE-idle-six-actual-poses-r002.packing.json",
+    "sha256": "537835047d4fab966c08481111322698b49184140623cca62ea092e8985881a2",
+    "bytes": 5761
+  },
+  "independent_source_cycle_PASS": {
+    "path": "/workspace/scratch/mythic413-SE-idle-independent-qc-20261020-v01/SE-IDLE-v01-exact-six-actual-source-breathing-and-visible-loop-PASS-v01.json",
+    "sha256": "8f030865623e65bb781d9095fe33978481f8386eb267978334783f5b3dd8a377",
+    "bytes": 6717
+  },
+  "C": 2816,
+  "bodyunit": 2.75,
+  "common_unpadded_root": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "common_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "independent_lossless_checks": [
+    {
+      "phase": 0,
+      "full_stored_source_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 391613,
+      "alpha_positive_outside_region": 0,
+      "exact_common_root_and_shared_rounding": true
+    },
+    {
+      "phase": 1,
+      "full_stored_source_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 391629,
+      "alpha_positive_outside_region": 0,
+      "exact_common_root_and_shared_rounding": true
+    },
+    {
+      "phase": 2,
+      "full_stored_source_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 392628,
+      "alpha_positive_outside_region": 0,
+      "exact_common_root_and_shared_rounding": true
+    },
+    {
+      "phase": 3,
+      "full_stored_source_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 392534,
+      "alpha_positive_outside_region": 0,
+      "exact_common_root_and_shared_rounding": true
+    },
+    {
+      "phase": 4,
+      "full_stored_source_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 391573,
+      "alpha_positive_outside_region": 0,
+      "exact_common_root_and_shared_rounding": true
+    },
+    {
+      "phase": 5,
+      "full_stored_source_RGBA_changed": 0,
+      "alpha_positive_pixels_retained": 391817,
+      "alpha_positive_outside_region": 0,
+      "exact_common_root_and_shared_rounding": true
+    }
+  ],
+  "six_distinct_sources": true,
+  "visual_findings": [
+    "The fixed-root actual six poses show relaxed corset/rib expansion, a complete free LEFT arm/cuff/hand, head and neck lag and cloth follow-through.",
+    "Native0/3/5 collar, shoulder and cuff contours remain natural; no blocking old-arm remnant, detached cap or narrow joint bridge was observed.",
+    "The complete original RIGHT near grip/staff and full fixed lowerbody/boots retain their actual original RGBA. The body remains coherent at the5-to0 breathing seam.",
+    "The authored2pi-periodic sine/cosine node definitions match the restrained visible cycle, with six equal samples at5fps for1.2seconds."
+  ],
+  "visual_limitations": [
+    "The6.6 amplitude is a control parameter; independently measured source-point x-span expands5.442091native, not a falsely claimed full chest width.",
+    "This source/loop PASS requires separate actual Godot/game validation. Original stationary boots are unchanged; any hidden depth/sole model is a separate declared compatible construction.",
+    "No actor approvals, gameplay/profile changes or old-clip changes are included.",
+    "No additional image viewing was needed: every full1536px stored source, including alpha0 RGB and all nonzero alpha, equals the already-reviewed actual source.",
+    "The chosen once-neutral floor construction and its independent numeric evidence are a separate pending scoped addendum; this receipt asserts actual SOURCE/loop and exact packing only."
+  ],
+  "additional_images": 0,
+  "actor_approvals_added": 0,
+  "game_validation": "PENDING_ACTUAL_GODOT_RESOURCE_AND_MAIN_RUNTIME_CHECKS"
+}

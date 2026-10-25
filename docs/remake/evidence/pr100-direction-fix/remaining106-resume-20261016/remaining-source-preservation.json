@@ -1,0 +1,754 @@
+{
+  "observed_utc": "2026-10-16T03:31:39.251613+00:00",
+  "canonical_remaining": "docs/remake/evidence/pr100-direction-fix/original-based/final-handoff-20261015/remaining106.json",
+  "canonical_sha256": "e1255c89c294b5c6f988ac83fcb6b53ca3242bdd8c4901e1a0f372d1eb7c210c",
+  "completed": 392,
+  "remaining": 106,
+  "hold": 18,
+  "not_authored_or_not_connected": 88,
+  "references_verified": [
+    {
+      "id": "transform:393",
+      "name": "해방된 할파스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+      "sha256": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c"
+    },
+    {
+      "id": "transform:267",
+      "name": "지배자 기르타스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/d4c5f056d66c079ee53f766f.png",
+      "sha256": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+    },
+    {
+      "id": "transform:411",
+      "name": "신화-투사(여)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/23ddcb3e1e4a9f3c6f48124e.png",
+      "sha256": "c83eb1dd8aab0fc7b726a6c44f9a7fed43b4bb82d273ca5f5f1405fdb0fe8e77"
+    },
+    {
+      "id": "transform:242",
+      "name": "플래티넘 바포메트",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/de8b2ddefd09cd8ade958384.png",
+      "sha256": "94457571d8749778f1c2c2548288fa69f4bf5c87e7139a225647dc8787f302f8"
+    },
+    {
+      "id": "transform:142",
+      "name": "신화-투사(남)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/e8276e21323905849d6c9cd3.png",
+      "sha256": "d7d03cfffa0ff0b045a224ef2546ae9566faa642dafa8eff69b3fd46fc3a54ae"
+    },
+    {
+      "id": "transform:141",
+      "name": "신화-총사(여)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/dc95f84013483f22ba99d798.png",
+      "sha256": "978a51df5cb31131134d4f2dca4f66cd48c908db6b0b46be8a10bf3c568ca2c8"
+    },
+    {
+      "id": "transform:140",
+      "name": "신화-총사(남)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/28f3cc7da2ef8ab97ed03296.png",
+      "sha256": "e2cfc69f827a0836230bded49ec5c13aea90c5efadad9f0e69b6f6b7acf1e52e"
+    },
+    {
+      "id": "transform:139",
+      "name": "신화-다크엘프(여)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/672979626328d4a7e72a7762.png",
+      "sha256": "3fde39a02645010eb4ae6838cce62086810e6e2788d7303bf44b4b4e2d0ec8f3"
+    },
+    {
+      "id": "transform:138",
+      "name": "신화-다크엘프(남)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/22da970593e807d3e14de888.png",
+      "sha256": "0cd589996841afa8c1c251e5b1b68efdcfa461da7b9cd2cc75729e028b7a5d0e"
+    },
+    {
+      "id": "transform:375",
+      "name": "전설의 낚시왕 폴",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/be6f2f0c73cd7dffe54e98b6.png",
+      "sha256": "0ad4f88dfd6540dc6d441c5ef0726908b6f6add0b8d353dede6499354d2f74ab"
+    },
+    {
+      "id": "transform:339",
+      "name": "실렌의 파수꾼",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/0e6c8d847abc53e0f210f938.png",
+      "sha256": "401caa29182acec3478fae546407331156d03e511143075c4589afdbdebd2182"
+    },
+    {
+      "id": "transform:338",
+      "name": "그랑카인의 역린",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/fe823245b3bb47d25032af5d.png",
+      "sha256": "9fd4e015ee61eac96c7573428d6a59e5a242a3eb2520312965f5667eb8b6ed29"
+    },
+    {
+      "id": "transform:191",
+      "name": "하딘의 영혼",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/fc02cba251d675d0d26277a0.png",
+      "sha256": "6c9fe7082678728b28a2c5befd6cfada0be61512be3affe6c862c56bcb93dce8"
+    },
+    {
+      "id": "transform:166",
+      "name": "다크 하딘",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/8f548bbfb547f0acb2e157af.png",
+      "sha256": "49690ae0bfbfaa565665a19c6041da859f42301af2a5a92aeb763d3f1d2c287d"
+    },
+    {
+      "id": "transform:407",
+      "name": "화염의 엔트",
+      "status": "HOLD_기존보류",
+      "path": "res://assets/catalog/e452df267006c1029bae8dde.png",
+      "sha256": "e81a288db6310eb0ef312f2e0b8accd52816301828269d8c404bd69344e292db"
+    },
+    {
+      "id": "transform:406",
+      "name": "화염의 네루파",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/09aec526b6598da31fe8706e.png",
+      "sha256": "827ff749efd4af6105d43b9a69acb6474ed4f2634197980258630c4931da5db5"
+    },
+    {
+      "id": "transform:405",
+      "name": "화염의 페어리",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/64d25f3ba900292ba831c0b3.png",
+      "sha256": "5dd0e42a4ceab3527edc3f7e46b9adf9ac471645af0e5823388217d9eb740ddb"
+    },
+    {
+      "id": "transform:386",
+      "name": "벚꽃 소녀",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/8af2dd8be3cfb5b851b59d37.png",
+      "sha256": "406ded98472ee588eeacfafa77f34455be5172d65fbdeebca41bab5e3cd9646f"
+    },
+    {
+      "id": "transform:376",
+      "name": "베테랑 낚시꾼 폴",
+      "status": "HOLD_기존실패",
+      "path": "res://assets/catalog/77499baacaaa399548946cb3.png",
+      "sha256": "a90a0e93f8f4f3d9b9a0ee89b6502b9e70a0549eed8ffa354c16cf2eb0f42d66"
+    },
+    {
+      "id": "transform:360",
+      "name": "서커스단 카드 마술사",
+      "status": "HOLD_기존보류",
+      "path": "res://assets/catalog/e3588916ce3e7e64dff4cae3.png",
+      "sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7"
+    },
+    {
+      "id": "transform:359",
+      "name": "서커스단 트롬본 인형",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/ec230f19da2fd4dc5363ab53.png",
+      "sha256": "c7043809271cbb43fb9d177f11f974a877cbf9f4c58671cd6dd6368c5b8bbf91"
+    },
+    {
+      "id": "transform:358",
+      "name": "서커스단 드러머",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/ef11a31515ba49797bc7bb02.png",
+      "sha256": "cdc7f20987c47aea4e8b431cdabe494bcb59278a71d9efff5946e25bb72aba72"
+    },
+    {
+      "id": "transform:357",
+      "name": "서커스단 단장",
+      "status": "HOLD_기존보류",
+      "path": "res://assets/catalog/4f7cead373e7901052fa2b5c.png",
+      "sha256": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b"
+    },
+    {
+      "id": "transform:352",
+      "name": "알비노 뿔 개구리",
+      "status": "HOLD_기존보류",
+      "path": "res://assets/catalog/0ffb2e6843a5f87f54a2fd76.png",
+      "sha256": "b81b4eca8b25fe5d72ecb074cc6f449ff8a377138721f1a20b682c34c205052f"
+    },
+    {
+      "id": "transform:276",
+      "name": "메이드 안나",
+      "status": "HOLD_외형보행파일럿",
+      "path": "res://assets/catalog/f111979ea61b2aea33dae32f.png",
+      "sha256": "54b5307d60c5b8cbf422ee596173d09296034c974d06ae69c571483ef4e98448"
+    },
+    {
+      "id": "transform:269",
+      "name": "거대한 무덤 가디언",
+      "status": "HOLD_앵커외형수정",
+      "path": "res://assets/catalog/bace1006d136d422a1bb7fb9.png",
+      "sha256": "69428f91ad9635a546d465c93b5e7729879899c12afb97fbf31d724e135f4766"
+    },
+    {
+      "id": "transform:268",
+      "name": "천상의 수호 기사",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/03d946f9367717a52aca2ebf.png",
+      "sha256": "ac6c744d3024b070a7a3356cdd5cf3a8f6512bec02d30fffc5231fcc68098826"
+    },
+    {
+      "id": "transform:260",
+      "name": "각성 켄라우헬",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/8816dfeaabd5f82d37e06dd9.png",
+      "sha256": "ff2c536ec8479e964bce9ae7cfab61d9a2a4705efe552e1c085a84cd344ba3e8"
+    },
+    {
+      "id": "transform:231",
+      "name": "유니크 랜서",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/d3129a87e012cec4099d9a3d.png",
+      "sha256": "b0426616db7c09e1970c738fef9b1caad5d9892b59ff654c8d576010f90c5488"
+    },
+    {
+      "id": "transform:198",
+      "name": "토끼 소녀",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/0912019ed5caa32914f6699a.png",
+      "sha256": "eb0c2eeb137e2aed1294bd5806e873b633282f036bea8ce6ceab48f7c418a863"
+    },
+    {
+      "id": "transform:197",
+      "name": "사단장 하퍼",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/8285c5c41fcd1e6145c397e3.png",
+      "sha256": "71038b5762f948ce73dc7c1e97e13a108c47b4757a880454064ed0581b87b33f"
+    },
+    {
+      "id": "transform:182",
+      "name": "랜스 마스터(블루)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/f0e737c6db30210b1fa4b220.png",
+      "sha256": "50a114a762c36f0620499da421a773713495b4417a419ee88684cc223d186489"
+    },
+    {
+      "id": "transform:179",
+      "name": "랜스 마스터(레드)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/8bf952f2ddac970272de1acb.png",
+      "sha256": "eaeb21be40ef08dd95c900db83d272800781069832dd4ca902e4f6d680e78511"
+    },
+    {
+      "id": "transform:155",
+      "name": "데스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/394db77a53ca94ad44ed0042.png",
+      "sha256": "1977f46122b5465cf080f3ec8c12639dd07fcd1063b3e488d3ff599f00494f8e"
+    },
+    {
+      "id": "transform:123",
+      "name": "이실로테(총)",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/5a63357054f72a54d89e7b30.png",
+      "sha256": "97746bf25f41ed0660a5021df75fa5e8964f1d4dff25a3936d6d0f74850916b1"
+    },
+    {
+      "id": "transform:16",
+      "name": "각성:발록",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/49f044c2f50dcc0a68af9d16.png",
+      "sha256": "f12c319d1e385a94756bd0a3a2163007f49dbbe25c8ee09e07b639b6768bee34"
+    },
+    {
+      "id": "transform:11",
+      "name": "베레스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/73d5ffcf7bd47bbbd9ff5338.png",
+      "sha256": "b9488518b5f578fe6df165f1e536fa24a8148136b679c22f2cee6dfe9705098c"
+    },
+    {
+      "id": "transform:9",
+      "name": "헬바인",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/a237a9af26fd206d8bcb43b7.png",
+      "sha256": "dc967926567d7ef6864c8c4810070c3cfc739cfb815f9c99ecb17b07c16c9d3e"
+    },
+    {
+      "id": "transform:7",
+      "name": "바포메트",
+      "status": "HOLD_기존보류",
+      "path": "res://assets/catalog/626d89e940ee6d7cd7446881.png",
+      "sha256": "5fdd86892fb7ecf2776dd563c317458283dbcda492eb3da42ad400a767b7f490"
+    },
+    {
+      "id": "transform:4",
+      "name": "천상의 기사",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/catalog/8dad718d9d43087a10fc03d4.png",
+      "sha256": "298f88d539d2bd09d60bf4da92f484a486d25071804618f89d3cfcb53b0f1edc"
+    },
+    {
+      "id": "monster:바포메트",
+      "name": "바포메트",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:테베 아누비스",
+      "name": "테베 아누비스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:테베 호루스",
+      "name": "테베 호루스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:테베 오시리스",
+      "name": "테베 오시리스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:공포의 아그니",
+      "name": "공포의 아그니",
+      "status": "HOLD_시각검토대기",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "name": "얼음 여왕",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:베레스",
+      "name": "베레스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:아크모",
+      "name": "아크모",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:제로스",
+      "name": "제로스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:그림 리퍼",
+      "name": "그림 리퍼",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:말하는 섬 들개",
+      "name": "말하는 섬 들개",
+      "status": "HOLD_보행소형시험",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:검은숲 늑대",
+      "name": "검은숲 늑대",
+      "status": "HOLD_보행제작중",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:검은숲 거미",
+      "name": "검은숲 거미",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:에바 왕국 상어전사",
+      "name": "에바 왕국 상어전사",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:에바 왕국 심해어인",
+      "name": "에바 왕국 심해어인",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127"
+    },
+    {
+      "id": "monster:오만의 탑 공포의 악마",
+      "name": "오만의 탑 공포의 악마",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:지룡의 둥지 대지수호자",
+      "name": "지룡의 둥지 대지수호자",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:테베라스 아누비스 수호자",
+      "name": "테베라스 아누비스 수호자",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:테베라스 호루스 수호자",
+      "name": "테베라스 호루스 수호자",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:아틀란티스 심해창병",
+      "name": "아틀란티스 심해창병",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:아틀란티스 심연수인",
+      "name": "아틀란티스 심연수인",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:마계 악마전사",
+      "name": "마계 악마전사",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:천상계 성광기사",
+      "name": "천상계 성광기사",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:천상계 천사궁수",
+      "name": "천상계 천사궁수",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:가디언",
+      "name": "가디언",
+      "status": "HOLD_소스파일럿",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:공포의 레서 데몬",
+      "name": "공포의 레서 데몬",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/external_l1j/monsters/15758.png",
+      "sha256": "c56c49dcfcbf4e6e81ae6ca306dff032643376728e7eb3acf1c21b8e1762ad84"
+    },
+    {
+      "id": "monster:공포의 뱀파이어",
+      "name": "공포의 뱀파이어",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:공포의 켈베로스",
+      "name": "공포의 켈베로스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/external_l1j/monsters/15604.png",
+      "sha256": "266e56d24b0e0da19639eced5ff576123596655c421d25c723e20723142a3f0b"
+    },
+    {
+      "id": "monster:교만의 왕자 데우스",
+      "name": "교만의 왕자 데우스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:교만의 제노사이더",
+      "name": "교만의 제노사이더",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:교만의 제라키엘",
+      "name": "교만의 제라키엘",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:교만의 킬 하운드",
+      "name": "교만의 킬 하운드",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:그리미",
+      "name": "그리미",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:놀",
+      "name": "놀",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_5.png",
+      "sha256": "5abe098f0509d2d4810ebd4a42830916b1651959aa5b39c320a4f72756eb2284"
+    },
+    {
+      "id": "monster:로머",
+      "name": "로머",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:분노의 데스 도그",
+      "name": "분노의 데스 도그",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:분노의 데스 라이더",
+      "name": "분노의 데스 라이더",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:분노의 데스 리퍼",
+      "name": "분노의 데스 리퍼",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:분노의 데스 서번트",
+      "name": "분노의 데스 서번트",
+      "status": "HOLD_소스최종검토대기",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:사라만다",
+      "name": "사라만다",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/external_l1j/monsters/15561.png",
+      "sha256": "db6a8edb128094b279c4539b04a8beeb6a24c80c4430f5fa5668762cf08b02f3"
+    },
+    {
+      "id": "monster:스파이더",
+      "name": "스파이더",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:알비노 데몬",
+      "name": "알비노 데몬",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:알비노 드라이어드",
+      "name": "알비노 드라이어드",
+      "status": "HOLD_생성도구차단",
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127"
+    },
+    {
+      "id": "monster:알비노 디어",
+      "name": "알비노 디어",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "name": "알비노 몽크",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:알비노 변이된 골렘",
+      "name": "알비노 변이된 골렘",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:알비노 심해어",
+      "name": "알비노 심해어",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127"
+    },
+    {
+      "id": "monster:알비노 유니콘",
+      "name": "알비노 유니콘",
+      "status": "HOLD_임포터실패",
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127"
+    },
+    {
+      "id": "monster:알비노 이구아나",
+      "name": "알비노 이구아나",
+      "status": "HOLD_시각검토대기",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:알비노 피닉스",
+      "name": "알비노 피닉스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:알비노 피쉬맨",
+      "name": "알비노 피쉬맨",
+      "status": "HOLD_기존보류",
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127"
+    },
+    {
+      "id": "monster:에스카로스 치프",
+      "name": "에스카로스 치프",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:오만한 아스모데우스",
+      "name": "오만한 아스모데우스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/external_l1j/monsters/15598.png",
+      "sha256": "361e796dc6262104b38799d69dee73427084e8fcadcc3ec6336f4b9ef960b3d9"
+    },
+    {
+      "id": "monster:오만한 우그누스",
+      "name": "오만한 우그누스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:오만한 플레임 팽",
+      "name": "오만한 플레임 팽",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f"
+    },
+    {
+      "id": "monster:왜곡의 메두사",
+      "name": "왜곡의 메두사",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/external_l1j/monsters/2535.png",
+      "sha256": "998160c7a2005ee993d43ce2d7b3ce33d86d488e4521a290dc4dee90273d8240"
+    },
+    {
+      "id": "monster:왜곡의 제니스 퀸",
+      "name": "왜곡의 제니스 퀸",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:왜곡의 타란툴라",
+      "name": "왜곡의 타란툴라",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:욥니르",
+      "name": "욥니르",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "name": "잔혹한 아이리스",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:질투의 공주 이자벨",
+      "name": "질투의 공주 이자벨",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:질투의 아타바크",
+      "name": "질투의 아타바크",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+    },
+    {
+      "id": "monster:커스번",
+      "name": "커스번",
+      "status": "HOLD_초기소스시험",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    },
+    {
+      "id": "monster:탐욕의 엔트키아",
+      "name": "탐욕의 엔트키아",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127"
+    },
+    {
+      "id": "monster:탐욕의 여왕 벨리엘",
+      "name": "탐욕의 여왕 벨리엘",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+    },
+    {
+      "id": "monster:탐욕의 코아쿡",
+      "name": "탐욕의 코아쿡",
+      "status": "미제작_검증된8방향미연결",
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387"
+    }
+  ],
+  "new_completed": []
+}

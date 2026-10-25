@@ -1,0 +1,72 @@
+{
+  "schema": "TWILIGHT_NARROW_POSED_MATERIAL_CANDIDATE_HOLD_V1",
+  "reviewer": "mythic413_w_actual_quality_fresh_v01",
+  "review_utc": "2026-10-20T16:05:23.694179+00:00",
+  "actor": "Mythic413",
+  "direction": "W",
+  "source_visual_status": "HOLD",
+  "candidate_contract": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v05/W-IDLE2-HIT2-local-cloth-source-quality-candidates-v05.json",
+    "sha256": "016f8eb93f55fc7daa90cbdd1d750e24e1d65fadbd8611f3ba841ac5d7670b94"
+  },
+  "shared_material": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/common-own-W-native-LEFT-materials-v05/W-own-native-complete-LEFT-and-repaired-hidden-coat-BODY-readonly-handoff-v05.json",
+    "sha256": "96a0a607e324868a516ddbf487bbee7d8bdd5b17ccedf5807556dea58f4940fa",
+    "bytes": 8213
+  },
+  "candidate_pose_bindings": [
+    {
+      "role": "IDLE2",
+      "full": {
+        "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v05/W-IDLE2-own-cloth-v05-local-quality-only.png",
+        "sha256": "7836b56c4d7501731764c5409335aef9f00ea37b32c202c46f90454c07d9d70e",
+        "bytes": 791079
+      },
+      "lossless_crop": {
+        "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v05/W-IDLE2-own-cloth-v05-local-quality-only-native-seam-crop.png",
+        "sha256": "5cfa6537f5b867d87a246826714609c38553f559ddf111322e8b5575dc2571d7",
+        "bytes": 106680
+      },
+      "storage_crop": [
+        790,
+        610,
+        965,
+        980
+      ]
+    },
+    {
+      "role": "HIT2",
+      "full": {
+        "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v05/W-HIT2-own-cloth-v05-local-quality-only.png",
+        "sha256": "c7994f344c2b0fe8ed8879d1476129ec1162b27cf41f181db40666ba0c13786b",
+        "bytes": 769986
+      },
+      "lossless_crop": {
+        "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v05/W-HIT2-own-cloth-v05-local-quality-only-native-seam-crop.png",
+        "sha256": "c611271da835eede247a1ebed6aefce30797d5892d19c22a5c592f961c719513",
+        "bytes": 91107
+      },
+      "storage_crop": [
+        790,
+        610,
+        965,
+        980
+      ]
+    }
+  ],
+  "findings": [
+    "Gold smear of v04 has been removed.",
+    "IDLE2/HIT2 expose a broad uniform-blue angular flap ending in rounded/jagged lower tongue over existing cape.",
+    "25x60 donor stretched across about112x225 native support creates visible shade/pleat discontinuity. Geometry and outside-RGBA preservation do not establish material continuity."
+  ],
+  "next_gate": "No whole-six rerenders from this failed donor. Exact native250 raw[640,480,890,730] contains full observed original notch/shard and adjacent genuine cape context for separately authorized one local service repair. Preserve unchanged BODYv03/opaque original outside exact oldLEFT+pinky ownership mask and true cape outer transparency. Future local source must pass before both exact-six rerenders.",
+  "no_source_or_actor_approval": true,
+  "original_fullbody_basis_not_repeated": true,
+  "preview": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v05/private-W-IDLE2-HIT2-own-navy-cloth-seam-candidates-v05.jpg",
+    "sha256": "27aa1b4f04b1a5d836167917b3ac4880801ac77a52a014ad686b79431c74f796",
+    "bytes": 32050
+  },
+  "ledger_cumulative_bytes_at_review": 828071,
+  "actor_approvals_added": 0
+}

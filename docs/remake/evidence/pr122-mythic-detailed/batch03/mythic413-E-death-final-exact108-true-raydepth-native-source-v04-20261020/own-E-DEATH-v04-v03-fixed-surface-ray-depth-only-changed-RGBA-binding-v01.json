@@ -1,0 +1,537 @@
+{
+  "status": "PASS_TRUE_FIXED_SURFACE_OCCLUSION_ONLY_NO_ASSET_OR_GEOMETRY_CHANGES",
+  "old_contract": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v03/own-E-DEATH-six-actual-native-source-contract-v03.json",
+    "sha256": "569442cd53f18a0273960f96d37a5131a2d6c93e2c0571c83b8e414d497172f1",
+    "bytes": 142529
+  },
+  "new_contract": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/own-E-DEATH-six-actual-native-source-contract-v04.json",
+    "sha256": "18b832df83293eb8408650181a78d4bd5f37529666156b47a8c87d8615eaff7f",
+    "bytes": 163100
+  },
+  "defining_depth_selection_function": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/author-own-E-DEATH-exact-fixed-plane-self-occlusion-v04.py",
+    "sha256": "c4b84c8dda3a799577999fc7c0cc25cac04d59591001927389c885b3e89124a5",
+    "bytes": 6931
+  },
+  "all108_original_source_rasters_preserved_sha": true,
+  "all_parent_bones_source_controls_SO3_and_floor_values_exact": true,
+  "all6_actor_alpha_bitexact": true,
+  "rows": [
+    {
+      "phase": 0,
+      "changed_RGBA_pixels": 507,
+      "changed_RGBA_bbox": [
+        890,
+        1185,
+        1109,
+        1299
+      ],
+      "changed_RGBA_outside_actual_fixed_plane_occlusion_overlap": 0,
+      "full_actor_alpha_bitexact": true,
+      "all18_original_material_rasters_sha_unchanged": true,
+      "original_parent_bones_pose_source_controls_SO3_floor_unchanged": true,
+      "selection": [
+        {
+          "side": "R",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase0-01-R-thigh.png",
+            "sha256": "b1f6b64e0bc037d9b983006a1e1dd2bb40a7193f875076299f3a7f0b94cc02f9",
+            "bytes": 91845
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase0-02-R-calf.png",
+            "sha256": "3621395c39006b8b4f003223366037811e96be6762048ee2a2956bedfec7bd0a",
+            "bytes": 66942
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase0-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "76f0876997c16f53fe4e978b8a6c1eede95d9e12ec65e1c852d6cedf347860a0",
+            "bytes": 853091
+          },
+          "nearer_thigh_overlapping_pixels": 685,
+          "leg_pair_changed_RGBA_pixels": 639,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        },
+        {
+          "side": "L",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase0-06-L-thigh.png",
+            "sha256": "c95e9d67e1344b9bf7291f1dd9087927a03c9f68bad06ad4543eefdc3985188e",
+            "bytes": 100438
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase0-07-L-calf.png",
+            "sha256": "35f83d8e63f40a5a8c70c441ccd87d64236364f7b53a86f120e9ae17f4efdcbc",
+            "bytes": 60903
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase0-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "7c9fc9d23fda8a77a2eaaf8cd6c2609c733dbe7db8ab0d5e4b56554ca2d603da",
+            "bytes": 736691
+          },
+          "nearer_thigh_overlapping_pixels": 259,
+          "leg_pair_changed_RGBA_pixels": 250,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "changed_RGBA_pixels": 3276,
+      "changed_RGBA_bbox": [
+        855,
+        1223,
+        1144,
+        1395
+      ],
+      "changed_RGBA_outside_actual_fixed_plane_occlusion_overlap": 0,
+      "full_actor_alpha_bitexact": true,
+      "all18_original_material_rasters_sha_unchanged": true,
+      "original_parent_bones_pose_source_controls_SO3_floor_unchanged": true,
+      "selection": [
+        {
+          "side": "R",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase1-01-R-thigh.png",
+            "sha256": "8c63cb33c2de718c171a1151095d2fe802cee6404f37b2f20b35045e920dcabc",
+            "bytes": 91873
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase1-02-R-calf.png",
+            "sha256": "cb9c2a8875c3d7b1437a16b4bf44ac259a9241c97259e4da5fafff0d1e1521e5",
+            "bytes": 62868
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase1-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "243bf2b4e7c3ed4ec27ac61e3b5854accc40933d50ea40ec7300c9a21cc40cb2",
+            "bytes": 546147
+          },
+          "nearer_thigh_overlapping_pixels": 3295,
+          "leg_pair_changed_RGBA_pixels": 3238,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        },
+        {
+          "side": "L",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase1-06-L-thigh.png",
+            "sha256": "bab5a8f3ea38c0ee440890966a7d593dbe7eb9a462651b1cfde03ed8c5f64748",
+            "bytes": 102278
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase1-07-L-calf.png",
+            "sha256": "3c4a3589b1312bf2bae00405729ad092e5c3b24e62b37ea89dded08fe6f9fcf9",
+            "bytes": 72070
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase1-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "337aa18e588cf3f2039be87bf1751cc0bf083994cb50549a01d41670f0ba69d7",
+            "bytes": 744967
+          },
+          "nearer_thigh_overlapping_pixels": 956,
+          "leg_pair_changed_RGBA_pixels": 939,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "changed_RGBA_pixels": 6570,
+      "changed_RGBA_bbox": [
+        892,
+        1220,
+        1097,
+        1678
+      ],
+      "changed_RGBA_outside_actual_fixed_plane_occlusion_overlap": 0,
+      "full_actor_alpha_bitexact": true,
+      "all18_original_material_rasters_sha_unchanged": true,
+      "original_parent_bones_pose_source_controls_SO3_floor_unchanged": true,
+      "selection": [
+        {
+          "side": "R",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase2-01-R-thigh.png",
+            "sha256": "2d4e20d6e627eed47d46b56cdf29196704a13e63c45b9a0414165373074574be",
+            "bytes": 40159
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase2-02-R-calf.png",
+            "sha256": "1db9c7843f63f9bb09076214c34137246ef8e0fb3b9cdf11906d87de8016a7da",
+            "bytes": 38228
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase2-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "975faddf7956c3938318150a9bbe0057a46f20a6ce8c1a9f094d8cb00dc92226",
+            "bytes": 116609
+          },
+          "nearer_thigh_overlapping_pixels": 1658,
+          "leg_pair_changed_RGBA_pixels": 1645,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        },
+        {
+          "side": "L",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase2-06-L-thigh.png",
+            "sha256": "f99faa4bbf06057219bac0ed77d649332323dc9a2b1da5c1d8b1975b0312ef0d",
+            "bytes": 94372
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase2-07-L-calf.png",
+            "sha256": "8d896b909c2f809895632a65ae6d4b1736f0bb06fda5a5f11898c30e19edcf13",
+            "bytes": 89514
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase2-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "435fbef8329dbd05dc13e2b510d301a9cfb2cc0a510f1823f6f95aa2b67c7ac1",
+            "bytes": 390565
+          },
+          "nearer_thigh_overlapping_pixels": 5265,
+          "leg_pair_changed_RGBA_pixels": 5178,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "changed_RGBA_pixels": 0,
+      "changed_RGBA_bbox": null,
+      "changed_RGBA_outside_actual_fixed_plane_occlusion_overlap": 0,
+      "full_actor_alpha_bitexact": true,
+      "all18_original_material_rasters_sha_unchanged": true,
+      "original_parent_bones_pose_source_controls_SO3_floor_unchanged": true,
+      "selection": [
+        {
+          "side": "R",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase3-01-R-thigh.png",
+            "sha256": "bc40c006b8271f912dc7333effa4b9e8b82e54a2507466779f73d7a8729276d4",
+            "bytes": 103272
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase3-02-R-calf.png",
+            "sha256": "a110d260fab3cfcd7a858fe3a42c93682ee78133f564228420d6115987da2c74",
+            "bytes": 78700
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase3-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "e01e0dbcab63501dd216c92b1be3c0e13a729d4170f75bb10082b29846a8e674",
+            "bytes": 703434
+          },
+          "nearer_thigh_overlapping_pixels": 0,
+          "leg_pair_changed_RGBA_pixels": 0,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        },
+        {
+          "side": "L",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase3-06-L-thigh.png",
+            "sha256": "5d3ba859bf6e15a4c309317abb91d52dec0e0bccb3d304805f74b3d86ea2938e",
+            "bytes": 100877
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase3-07-L-calf.png",
+            "sha256": "148300b1e565ccc4607ef491aa5ac52a40cf4392381cf66efe9865e34bce97a8",
+            "bytes": 91418
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase3-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "66486fcbd309e8e6d404ed78561e8567e0da14e0fb446fd708cff83c8b644924",
+            "bytes": 743441
+          },
+          "nearer_thigh_overlapping_pixels": 0,
+          "leg_pair_changed_RGBA_pixels": 0,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "changed_RGBA_pixels": 0,
+      "changed_RGBA_bbox": null,
+      "changed_RGBA_outside_actual_fixed_plane_occlusion_overlap": 0,
+      "full_actor_alpha_bitexact": true,
+      "all18_original_material_rasters_sha_unchanged": true,
+      "original_parent_bones_pose_source_controls_SO3_floor_unchanged": true,
+      "selection": [
+        {
+          "side": "R",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase4-01-R-thigh.png",
+            "sha256": "da1c350f0fe32494052ef61ad80c6a54ddff6a2527be2d6899def516e8cb50d2",
+            "bytes": 82698
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase4-02-R-calf.png",
+            "sha256": "5b441e41cf436dccba76a3595f41b3befc46a619081fca4bf382ac1e8b18e561",
+            "bytes": 68293
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase4-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "f0d163a1b9703dbb2137fea7bb7625667554688b17cc7a686043a9b2c0b3b978",
+            "bytes": 894381
+          },
+          "nearer_thigh_overlapping_pixels": 0,
+          "leg_pair_changed_RGBA_pixels": 0,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        },
+        {
+          "side": "L",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase4-06-L-thigh.png",
+            "sha256": "125348a6daabe0f8918dc59f33c390e292b9255026e2b94e13cb2c7d322d2185",
+            "bytes": 81481
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase4-07-L-calf.png",
+            "sha256": "76b5ec2f0ae2d7d335cd465c5e7723d8decef8d15838e7b777fcfe36c32b807a",
+            "bytes": 77641
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase4-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "3cf89ab8f8dfb717d6530f49748dd9a97cb8cfa06f0f0c28c446bff91a4ed50a",
+            "bytes": 616633
+          },
+          "nearer_thigh_overlapping_pixels": 0,
+          "leg_pair_changed_RGBA_pixels": 0,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "changed_RGBA_pixels": 0,
+      "changed_RGBA_bbox": null,
+      "changed_RGBA_outside_actual_fixed_plane_occlusion_overlap": 0,
+      "full_actor_alpha_bitexact": true,
+      "all18_original_material_rasters_sha_unchanged": true,
+      "original_parent_bones_pose_source_controls_SO3_floor_unchanged": true,
+      "selection": [
+        {
+          "side": "R",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase5-01-R-thigh.png",
+            "sha256": "3757e19578656a2932ddaf0b23601025a6f803cd8d9732589e4a4c82e6141cca",
+            "bytes": 82523
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase5-02-R-calf.png",
+            "sha256": "3236274ca8ed4ac5356c44a5db852d4c81ad398ac615f77e0eccb964d9a9e35a",
+            "bytes": 65962
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase5-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "ecc1a03cc200c750489c9958e976441a496e52841cac60f17564e851d239455a",
+            "bytes": 968296
+          },
+          "nearer_thigh_overlapping_pixels": 0,
+          "leg_pair_changed_RGBA_pixels": 0,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        },
+        {
+          "side": "L",
+          "exact_thigh_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase5-06-L-thigh.png",
+            "sha256": "96286f4ac2bb366034df0b51577514acf9a4fb011d84f8c3925e4d86fa568a17",
+            "bytes": 80837
+          },
+          "exact_calf_raster": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/own-E-DEATH-v03-exact108-editable-native-parts-floor-v01/phase5-07-L-calf.png",
+            "sha256": "634823131247e82a1c9ba120052d7826e99a79799517c8c910a2b5612b784d6d",
+            "bytes": 82489
+          },
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase5-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "e93e96c791c80536ae428ad0c5de0d0ff23787bf3692672458c6cc6dcbb62ef5",
+            "bytes": 795026
+          },
+          "nearer_thigh_overlapping_pixels": 0,
+          "leg_pair_changed_RGBA_pixels": 0,
+          "unchanged_alpha": true,
+          "only_actual_overlapping_surfaces_changed": true,
+          "camera_projection": [
+            [
+              1.1111111111111112,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              -1.0
+            ]
+          ],
+          "camera_ray_from_positive_Y_plus_Z": true,
+          "tie_rule": "Original calf-over-thigh order retained for equal depth within1e-8."
+        }
+      ]
+    }
+  ],
+  "actor_approvals_added": 0
+}

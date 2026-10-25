@@ -1,0 +1,14 @@
+{
+  "request": {
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/twilight-pr122/assets/monsters/original/atlas_4.png"
+    ],
+    "prompt": "Author a high-quality 2D RPG game sprite source sheet for ONLY THE WHITE ALBINO STAG in the SECOND ROW, FOURTH COLUMN of this reference atlas (the white deer below the fiery black horse, above the white turtle). Do not use any other creature. Retain exactly its identity: natural quadruped stag anatomy, snowy white long neck/chest fur and pale grey-white pelt, RED eyes, small pointed white ears, small black/brown nose, light grey/brown branched large antlers with the same branch count and shape, slim but muscular four legs with brown hooves and short tail. No armor, weapons, magic, humans, saddle or decoration. Match original painterly game rendering, detailed clean shaded fur and antlers. Create exactly 16 COMPLETE separate full-body poses in a clean 8 COLUMNS by 2 ROWS grid on a fully transparent canvas. Columns must be TRUE independently drawn view directions, left-to-right: E (facing RIGHT profile), SE (toward bottom-right), S (toward bottom), SW (toward bottom-left), W (facing LEFT profile), NW (away toward top-left), N (away toward top), NE (away toward top-right). Rear views show rump/back of head/back of antlers and no pasted front eyes. Opposing views are true matching camera rotations, not mirrored fronts. ROW1: neutral IDLE breathing phase A, all four hooves support weight naturally. ROW2: subtle IDLE breathing phase B, new connected ribcage/neck/shoulder relaxation and small ear alertness change, all four hooves remain grounded; no scaling, no pasted duplicates. Preserve SAME antler count, face/pelt/neck/leg proportions and real model size in all 16. Keep all antler tips, hooves and tail INSIDE each cell with generous transparent padding and gaps. No clipped horns, detached limbs, halos, ground shadows, floor, text, frames or guides. All anatomy must remain connected into one complete animal. Same isometric RPG camera elevation as original. This is newly authored motion from an existing project reference; preserve the white stag's appearance precisely."
+  },
+  "original_output": "/workspace/generated_images/exec-bb92f3a0-7fe6-4a09-848c-8b8cdce10c0d.png",
+  "review": "HOLD: tight antler margins and camera consistency require review. Apparent saturated fringe in raw viewer is predominantly alpha 1-4/255; inspect real compositing before calling this an opaque fringe.",
+  "production_applied": false,
+  "completed_added": 0,
+  "Android_real_device": "NOT_RUN"
+}

@@ -1,0 +1,62 @@
+{
+  "status": "PASS_INDEPENDENT_ONCE_BODY_REGISTRATION_ARITHMETIC",
+  "actor_id": 413,
+  "direction": "W",
+  "registration": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/W-new-native-one-time-body-density-C2560-root-registration-v01.json",
+    "sha256": "d514580de87d960781ab292dbf1a667c2522757962ea4d2b75e0619c32ce4f74",
+    "bytes": 3983
+  },
+  "actual_source": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/W-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "bb5c7f586db032178e2a8bae0eb6923d2af1b39965e8ab39f0d3974e7b3a4f38",
+    "bytes": 790655
+  },
+  "canonical_N_source": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+    "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+    "bytes": 452591
+  },
+  "checks": {
+    "N_neck_waist_vector_native": [
+      4,
+      160
+    ],
+    "W_neck_waist_vector_native": [
+      -27,
+      213
+    ],
+    "exact_C": 2556.0,
+    "nearest64_C": 2560,
+    "fixed_bodyunit": 2.5,
+    "vertical_span_error_fraction": -0.0015624999999999112,
+    "full2D_span_crosscheck_fraction": 0.006112738978734322,
+    "once_hem_registered_root": [
+      646.0833333333334,
+      991.9227375838406
+    ],
+    "root_max_error_native": 0.0,
+    "stored_root_max_error_native": 0.0,
+    "normalized_crown_height_difference_fraction": -0.01989120093065655,
+    "normalized_neck_height_difference_fraction": -0.018002924134651876,
+    "actual_marker_source_alpha": {
+      "gold_bun_crown": 124,
+      "lower_neck_center_left_profile_proxy": 253,
+      "gold_waist_belt_center_left_profile_proxy": 253,
+      "visible_central_hem_proxy": 253
+    },
+    "raw_alpha100_top_margin_native": 20,
+    "same_top_margin_after_declared_storage128": 148,
+    "raw_top_margin_by_alpha_threshold_native": {
+      "8": 18,
+      "100": 20
+    }
+  },
+  "limits": [
+    "Left-profile collar and garment beltline vs back-view nape/ornament are uncertain anatomical proxies (+/-10native), not identical visible pixels.",
+    "Arithmetic confirms a single authored production convention, not unique hidden anatomy or physical sole/floor. No feet, alpha-height, perpose fit or source resampling enters C/root.",
+    "Raw tip top margin is18pixels at alpha>=8 and20pixels at alpha>=100. Both are below the original generation32pixel target; no importer threshold is changed. Declared128pixel storage padding retains every original pixel."
+  ],
+  "new_images_for_numeric_check": 0,
+  "actor_approvals_added": 0
+}

@@ -1,0 +1,34 @@
+{
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "attack",
+  "name": "지배자 기르타스",
+  "version": "v01",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-walk-v01.png": "a6c5708ebcbdd2d09383f651f27cb8cdc46da471f8fc57ad0659b8f5d51d1666",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png": "a31ce63849645182dc6242460c73ca0c0973caedbc5f9716913146531dbd8c8e"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG ATTACK animation sprites of EXACTLY 지배자 기르타스. The first original portrait is identity authority. The second saved SW native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for SW.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces SOUTHWEST / screen down-left, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: poised guard; 1: visible backswing / anticipation; 2: loaded compression; 3: active forward strike / CONTACT; 4: follow-through; 5: recovery toward guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nPhase3 must visibly extend the actual referenced weapon or natural striking limb toward the facing direction, at contact. Strong anticipation, release and follow-through; hands retain the same weapon throughout.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "poised guard",
+    "visible backswing / anticipation",
+    "loaded compression",
+    "active forward strike / CONTACT",
+    "follow-through",
+    "recovery toward guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "intended_contact_frame": 3,
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
+  "output_sha256": "a07e2a046f28e135613b35a4df94e5c3d0ce7ca6a7dc7beb642ab2623c37e1c0",
+  "output_bytes": 2304282,
+  "original_generated_file": "/workspace/generated_images/exec-0d66c912-27b4-4c3b-b2bc-d85e991dcbbd.png"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "zombie-lord-N-core8-v01",
+  "direction": "N",
+  "role": "core",
+  "rows": 8,
+  "directions_axis": "phase_grid4",
+  "reference_rows": [
+    0,
+    1
+  ],
+  "roles": {
+    "idle": [
+      0,
+      1
+    ],
+    "attack": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "hit": [
+      6,
+      7
+    ]
+  },
+  "request": {
+    "prompt": "Use the supplied EXACT project ZOMBIE LORD reference as the only character design. A massive corpulent undead boss, pale gray-green mottled stitched skin, HUGE round exposed distended belly as the center of mass, tiny hunched neck and broad snarling head with sparse dark hair, very thick heavy arms and oversized bare feet. Preserve rusted nails/spikes in shoulder/back, heavy gold-rusted chains draped around neck/shoulders/chest and attached wrist shackles, ragged gray-brown skirt/loincloth, ornate antique gold pointed waist plate/belt. Both hands are EMPTY heavy fists/claws with connected chains; do not invent a sword, axe, shield, cape, horns or wings. Keep the SAME exceptional belly volume, broad shoulder/hip proportions, face, chain hardware and original muted palette in every pose. High-detail painted rendered mythic-tier fantasy RPG sprite, fixed elevated orthographic isometric camera. Non-graphic monster art: old mottled scar/stitch texture, no fresh blood or internal organs. Ignore unrelated tiny fragments at reference crop edges; reconstruct the complete top of head and full intact toes, never crop them.\n\nCAMERA OVERRIDES REFERENCE FRONTAL VIEW: TRUE REAR view facing AWAY toward screenTOP. Camera directly BEHIND. ONLY back/nape/rear chains/spikes/rear skirt and rear legs. NO face, front chest, belly button or waistplate in ANY pose. Right anatomical side is screenRIGHT, LEFT is screenLEFT. Attack reaches AWAY into depth, not toward camera.\n\nExactly EIGHT DISTINCT full-body keyframes in FOUR columns and TWO rows, row-major sequence: row1 IDLE0, IDLE1, ATTACK0 windup, ATTACK1 contact; row2 ATTACK2 follow-through, ATTACK3 recover, HIT0 recoil, HIT1 recovery. IDLE0 planted relaxed low heavy stance, IDLE1 chest and great belly expand with heavy breathing and shoulders settle, hands down. ATTACK0 knees load and RIGHT fist retracts high BEHIND shoulder, left fist forward guarding; huge belly twists opposite. ATTACK1 decisive CONTACT: RIGHT arm powerfully EXTENDED punching far forward beyond head in exact facing direction, torso lunges, LEFT foot braces, RIGHT shoulder moves forward, belly lags; fists remain EMPTY and chains follow weight. ATTACK2 right fist continues heavy downward/front follow-through, shoulder/torso fully rotated and knees compressed, clearly different to contact. ATTACK3 elbow bends bringing right fist BACK to torso, rising to stance, clearly different from idle and follow-through. HIT0 takes a frontal blow: head shoulders and distended belly visibly RECOIL BACK opposite facing, elbows/fists pull up, knees brace, chains lag forward. HIT1 half-recovers forward/down with knees still compressed, arms lowering, distinct from recoil and from idle. This sheet has TWO idle, FOUR attack, TWO hit poses. Full original boss mass, attached chains, feet planted with weight, large articulated pose differences. No slim runner, no floating, no invented weapon.\n\nPure alpha0 transparent background. Every one of 8 complete separate bodies occupies only the central40% of its equally spaced cell, with huge transparent gutters between full bounding rectangles. Exactly one connected figure per cell. Preserve SAME physical body scale, giant belly width and chain hardware across every pose; articulate limbs, NEVER per-pose fitting or resizing. Never cut head, fist, chain, skirt or toes. No ground, castshadow, text, grid, labels, specks, haze or floating particles. Make every body SMALL within its cell, no more than50% of cell height, generous EMPTY vertical and horizontal gaps. Attacking fist/chain must fit completely inside that same cell.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/reference-project-crop.png"
+    ]
+  }
+}

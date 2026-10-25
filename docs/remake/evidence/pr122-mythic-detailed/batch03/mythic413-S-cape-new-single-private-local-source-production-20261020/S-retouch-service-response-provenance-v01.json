@@ -1,0 +1,47 @@
+{
+  "service": "image_gen__imagegen",
+  "actual_service_calls_this_task": 1,
+  "response_fields": [
+    "image_url",
+    "output_hint"
+  ],
+  "usage_returned": null,
+  "image_url_length": 1608030,
+  "image_url_sha256": "3b64227ae30515b0a4b8cce2c6c81712ece1bf9e258ee0ae98ccdb25d73b720e",
+  "raw_provider_image_saved_untouched": {
+    "status": "ONE_NEW_S_LOCAL_CAPE_RAW_PRESERVED_PENDING_BOUNDED_NATIVE_MAPPING_AND_INDEPENDENT_QA",
+    "path": "/workspace/scratch/mythic413-S-cape-private-local-production-fresh-20261020-v01/service-S-cape-local-retouch-raw-r001-untouched.png",
+    "sha256": "9311558dd606731d908d5b21627b54ed55254bfc737ac222e59e6680a12ab6ad",
+    "bytes": 1206006,
+    "actual_native_size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "logical_crop_size": [
+      250,
+      250
+    ],
+    "crop_native_rect_xyxy": [
+      240,
+      740,
+      490,
+      990
+    ],
+    "replacement_mask_pixels": 6682,
+    "raw_pixels_resampled": false,
+    "raw_original_outside_rgba_composition_performed": false,
+    "actual_service_calls": 1,
+    "retries": 0,
+    "image_or_Base64_forwarded_to_parent": false
+  },
+  "output_hint_sha256": "9fd5fc38ae2f735bea6a8860ab2e7a7ef99d5991f56a86ed35a51e88440d18ba",
+  "request_path": "/workspace/scratch/mythic413-S-cape-private-local-production-fresh-20261020-v01/actual-S-retouch-service-tool-arguments-v01.json",
+  "request_sha256": "91f2500b385ba0647afbd929ea9a9fdc6b36aa5799cea33f6a7956b0e605c600",
+  "local_save_transport_failure_only": {
+    "path": "/workspace/scratch/mythic413-S-cape-private-local-production-fresh-20261020-v01/service-S-cape-local-retouch-raw-r001.png",
+    "bytes": 0,
+    "reason": "Noninteractive stdin closed before data; zero-byte artifact preserved; actual identical provider bytes saved via chunks to new untouched path; no service retry."
+  },
+  "image_or_Base64_forwarded": false
+}

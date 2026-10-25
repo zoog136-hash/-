@@ -1,0 +1,61 @@
+{
+  "schema": "PR122-independent-final-exact-request-source-cycle-review-v1",
+  "status": "PASS_EXACT_FINAL_N_ATTACK_SIX_SOURCE_AND_VISIBLE_ONE_SHOT_CYCLE",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "attack",
+  "version": "NattackSixActualRig02",
+  "request_sha256": "f0072517af971eac916c17f6c175171d029968a5a667e5e6c6cdf792e536398b",
+  "request_path": "/workspace/scratch/mythic413-N-attack-actual-packed-r002-20261020/request-NattackSixActualRig02.json",
+  "raw_sha256": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+  "raw_bytes": 3327524,
+  "raw_path": "/workspace/scratch/mythic413-N-attack-actual-packed-r002-20261020/thunder_female-N-attack-six-actual-poses-r002.png",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/N-attack-six-actual-native-rig-manifest-v07.json",
+    "sha256": "a6203050cd25b15c88d839dbcbbabea7c37b137bcd99bc8e3f0a7a9a64ce5653",
+    "bytes": 8676
+  },
+  "actual_source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Nattack-v07-a62030-independent-actual-source-cycle-PASS-v01.json",
+    "sha256": "11052593abe64d9cecbcaf3f522b581e0d04151053a47481a17c1c38d6c1f794",
+    "bytes": 11607
+  },
+  "exact_source_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Nattack-v07-final-exact-request-source-binding-v01.json",
+    "sha256": "5ecad3bc43d0943f8bd1910d155355c15f221b96d26b4100c79efea7cf1376db",
+    "bytes": 6033
+  },
+  "physical_canvas": 1920,
+  "common_unpadded_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    0,
+    160
+  ],
+  "uniform_integer_root_rounding_delta": [
+    0.1875,
+    0.3079468121195532
+  ],
+  "impact_frame": 3,
+  "one_shot": true,
+  "visual_findings": [
+    "Six dedicated READY, WINDUP, COIL, STRIKE, FOLLOW and RECOVER phases show real torso weight shift, distinct joint articulation, the RIGHT staff swing and costume/ribbon follow-through.",
+    "Actual STRIKE3 remains the independently reviewed ac4cfa source. The five other poses preserve the same rear-N identity, bun/ribbon, blue/gold costume, white skirt and complete high-heeled boots.",
+    "The old LEFT sleeve/finger shell and old staff alpha thread are removed; original-material blue/gold overlap caps now join the actual moving LEFT cuff naturally in COIL2 and FOLLOW4. Existing opaque joint/hand pixels are preserved.",
+    "The complete anatomical RIGHT-held double-ended staff stays attached to its grip through the attack. Both observed heel cores and actual support tips remain stationary across all six poses.",
+    "RECOVER returns close to the dedicated READY guard as a one-shot attack; this is not a relabeled walking sequence or a whole-picture translation."
+  ],
+  "visual_limitations": [
+    "Exact final atlas preserves all six independently reviewed source RGBA pixels; integer root rounding is uniform, so it adds no relative stance drift.",
+    "This approves the actual six source images and visible one-shot attack cycle. Exact final atlas/request binding and Godot resource, Player and action/impact checks remain pending.",
+    "Fixed opaque heel material verifies visible stationary support; hidden anatomical depth and a unique original 3D skeleton are not reconstructed.",
+    "The source impact is phase3. Runtime phase durations and combat contact scheduling must be verified on the actual integrated clip; no production approval follows from this source gate alone.",
+    "Only this new N ATTACK source is approved here; detailed actor approvals remain unchanged."
+  ],
+  "images_forwarded": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

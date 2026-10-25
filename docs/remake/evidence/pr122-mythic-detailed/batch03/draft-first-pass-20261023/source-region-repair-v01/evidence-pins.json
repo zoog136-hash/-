@@ -1,0 +1,631 @@
+{
+  "tools": {
+    "tools/stage_pr122_native_locomotion.py": "ecdfe1438cef169668ed16f0f9c0842c74b19fb2ad1c5f96584dfbcec8343d09",
+    "tools/pr122_reviewed_runtime_layout.py": "c83cdd51673740d44bc2e95a241ea0f24a29d1212ea5d734c7be51ade2799bf2",
+    "tools/pr122_reviewed_source_regions.py": "35d527ae8f1f9770939c7649fe7ccacf340cc28efbcf1d4eff246994d899f9c3",
+    "tools/import_original_based_motion.py": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+    "tests/test_pr122_native_source_grid.py": "1c00eb6e05aefdc5cc1cb22dcefeb3742f489baa34e29f49f51cb5cb4aba5b76",
+    "tests/pr122_native_batch_candidate_test.gd": "7f9dc25ca13293bcca1c9c831e6ca05fc4eae616059c837f26869034c262ba04"
+  },
+  "evidence": {
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/fragment-repair-summary.json": "0e103bd8d086482a79afc962bf7975e0245efbc3532a9327e84e41e002d7514a",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/incremental-tests-final.log": "45629e08d8c41ba474e149425cf4477b6ed2d14afbd48b41a5dea35ddb36ae32",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/repair-summary.json": "85e2528be12935aff8e1d8a11d86c24cc426663dc053da8565781f7372eb822f",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/check-fragments.py": "14bbc5aaac627e7162ac7f9b8f83f0eeddf8911b7e979b0f5fcdadc4cfdd9f0f",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/integration-main-player-exit.json": "18a4f715a2a176e6c039ca25f803767b886c907c5199f54f73b16a5888eae161",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/grid-tests-final.log": "bfa162c0344e53e36740c42c0b6dabbcbd33697d8a89a4e494d03fe61202cb48",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/sizing-tests.log": "bba69393211f4e9c0af4bc3ed09a15509753129438f4a83e1fe47a01ef65333e",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/fragment-preflight.json": "3cabdd6066a47270efbf7e509f5d766dcbe9248b2a905fb79abd01c142f742a7",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/repair-fragments.py": "4cf78d01270327af2dd542c9b1377d55c52fdf925c29b4f2ce36c453b9d4169d",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/repair-extraction.py": "9196d552a49c665104457764c5c0d6d28a3670a7ccd59d6b6beeb350daeb974a",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/finalize.py": "cfeb522c03c5445bed6526a1dec6127a2411368f406ff57d869c4f3d03f8bb91",
+    "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/evidence/integration-main-player.log": "8b577731b2077d08716bdeaa40a456d38c8f766e9cad6e19a94ee5f75a189483"
+  },
+  "source_outputs": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_130/N-idle-whole-source.png",
+      "sha256": "237f08dac952eadc02ca8b426f1a970df67d63b6d5c2df0c7de94bfee80d65b7",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_130-N-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_130/S-death-whole-source.png",
+      "sha256": "911c5b6e3f95639dfc562525580bec88e3a09cc2efc48c81e16dfe3148dd762b",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_130-S-death-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_133/E-hit-whole-source.png",
+      "sha256": "1b69f6f94f8e53894c30a1070e09bef52efc2360488167bf08882557069c7612",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-E-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_133/NW-hit-whole-source.png",
+      "sha256": "d14b71e0cc02ed58460c35bbaaca4d8937799be4b1670bdfa7bc2783fe26bbda",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-NW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_133/S-death-whole-source.png",
+      "sha256": "ecb31fa6b634deb9862315d0cd7ab2e94778f31219dae14709be7123d541a9eb",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-S-death-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_133/SE-hit-whole-source.png",
+      "sha256": "b4bf7d25e03ebbbd0857810c426fefb2915ec54e96b28480aa7b6511db4c3fb3",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-SE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_133/SW-run-whole-source.png",
+      "sha256": "0baa9a3f60ef36072750f7b1a653f40adf9d0467de6c7925bf83d14f2a22c3fd",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-SW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_133/W-run-whole-source.png",
+      "sha256": "ba716a5bbb571ec8c13781e1fb9f665fc92e7824c417d4080a508fe061ccc464",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-W-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/E-hit-whole-source.png",
+      "sha256": "7ef0f802644ebfb2bf8990fceb0d714c78d3a58a3fdda826a20fa820d15a59da",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-E-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/E-run-whole-source.png",
+      "sha256": "bee91ccc65825b1838d2a3715e819add7c9f25e3e4354a0188bcde2956d1284f",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-E-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/N-attack-whole-source.png",
+      "sha256": "a3e49bda8aadfa82c866fb77966e9c1596563ec7b50de881a3cf636a0b616af2",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-N-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/N-hit-whole-source.png",
+      "sha256": "1089e14fc81b8916605e7f489e85d924a0f3dbd58608328026479cd4df407160",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-N-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/N-run-whole-source.png",
+      "sha256": "2cce6f069e1a0f0fbda0fde4da7632f4bd606fc2f54b936b136ccb91ec08d252",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-N-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/S-run-whole-source.png",
+      "sha256": "251305d2368ec533b4959b750b23c7fcca512f11b372520c2cbe59c5d7df6698",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-S-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/SE-attack-whole-source.png",
+      "sha256": "64a44f2b630b144a1e443b39b33ff026f43837d5299176b119dee4462684a893",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-SE-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/SE-hit-whole-source.png",
+      "sha256": "c5b34323c8e5bc9ca00a5d34aca3d330a578cb00689039475c3be4065efa25e6",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-SE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/SE-run-whole-source.png",
+      "sha256": "1bca6697bc1325d556eddd8ea0641d2229985e080a08575f5cf2fa76e4fc3f95",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-SE-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/W-attack-whole-source.png",
+      "sha256": "264ec36b82fbeaca6cd16479ab8bd3ca1da823008612a3c500f953d299c29537",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-W-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/W-hit-whole-source.png",
+      "sha256": "51084fa17ad560f68743c53dfce91de50839585ddad61cf567bda73731bdf744",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-W-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/E-hit-whole-source.png",
+      "sha256": "b0ff27166ae632ba07b41e1491e475f03b06270504b4c1db2e2d48efbce0e995",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-E-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/E-run-whole-source.png",
+      "sha256": "f057fd760e5be1b88552272052e206705d5bbfa0c267b629b9457acb5699144a",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-E-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/NW-hit-whole-source.png",
+      "sha256": "ed995f8c5fc07ec1ee36f2aa1f1ce539e93c2da28688242b3dbc168ea65b25c5",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-NW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/NW-run-whole-source.png",
+      "sha256": "a43ca3f3451c48150d20381921ebb1f07048d13e555eb04794f759a75e41640e",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-NW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/S-death-whole-source.png",
+      "sha256": "41e0f05000ec827ef05fbb8e72471d0afcbc7d304ece0a85cb75e4fcab8a15be",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-S-death-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/SE-attack-whole-source.png",
+      "sha256": "29f5e8fd4f918ae919447c2cdc62224e1a18e7ef2f3f5f08259e47efcd74c943",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-SE-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/SE-hit-whole-source.png",
+      "sha256": "b53d03163f074bf29dc659c98b2c162337b6f3a59f55802af26f725f92f72d64",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-SE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/SE-run-whole-source.png",
+      "sha256": "4dacc5d67297b6202d5235d3d1cd0b498b3f19ef8e751165ea8f737c41c150e4",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-SE-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/SW-run-whole-source.png",
+      "sha256": "c4ea8008368773cfe62bf860a03f612af68a08dfaae9b5339dcbf58ffc4de24d",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-SW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/E-hit-whole-source.png",
+      "sha256": "2571381e17d537aec6d66146059c82d2fcc1f060b52401fa3864a24ea0b981a2",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-E-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/E-run-whole-source.png",
+      "sha256": "796f8acad1cce27c5ea5340a6b13f10b5202e23edf0b51f62be5ebbef0b2f6ff",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-E-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/N-run-whole-source.png",
+      "sha256": "94556cd162709ba985e241020b966c9f4352943eec3ca676c3d5535688d61fe7",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-N-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/NE-hit-whole-source.png",
+      "sha256": "f4bb99ea8e27ff8059a84fba5b56517718307b7a5e49851550a01af6bc998df3",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-NE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/NE-idle-whole-source.png",
+      "sha256": "d27499403a1437f9ebb1915010187680ec7861c2263e35302de4a17bff8b23ac",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-NE-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/NE-run-whole-source.png",
+      "sha256": "8ba5978e3d608ff3ad2f58d26793a26f8c6780dff4937da2db8e0183fcfe7480",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-NE-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/S-hit-whole-source.png",
+      "sha256": "6b9269e53ae8ed4a5ac616b6ab13fc88791f94217c44b6e6b8d3fc43616a42e6",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-S-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/SE-hit-whole-source.png",
+      "sha256": "09779cdc796fd6939332d24b02525364ad0bc5d82fb09c3e30efec37365f50b4",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-SE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/SW-hit-whole-source.png",
+      "sha256": "17f33b52e32d954dc0d6081c280959de58fcdea2398750f0ac6c97b4f4111938",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-SW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/SW-idle-whole-source.png",
+      "sha256": "54860c243e98dbaee5336027f7d0df8bed1c86b44068772696448f27c201242b",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-SW-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/W-idle-whole-source.png",
+      "sha256": "527a3623699c08b8a462a8860bb199b969677d82158595a879488a224da0a441",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-W-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/W-run-whole-source.png",
+      "sha256": "0fdc860100bd8037cb2978e2cb6e6c75f547dda2b7557963415296934e06926b",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-W-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/E-hit-whole-source.png",
+      "sha256": "96d695d623ebeb0ed6f732594f537c665ac08886ab0c574035bb1b7f80abb99f",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-E-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/E-run-whole-source.png",
+      "sha256": "06caac045c7d9825dd5c27f9ef029b2520003920609e8f29eb3e1e89781c4d2f",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-E-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/N-hit-whole-source.png",
+      "sha256": "fe7e690e2a4e0ebf9b8270f3dd369d4e464639d23349716a499c3d4c75557529",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-N-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/NW-hit-whole-source.png",
+      "sha256": "41f1d89738ffa4618e9200d2a3f152f3e4fc52667d704db97615f6644c49d05a",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-NW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/S-death-whole-source.png",
+      "sha256": "216f544c56cd28f7b46b1335ee774713211bb81290c9c533046c0b5bdd6e0b73",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-S-death-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/SW-attack-whole-source.png",
+      "sha256": "7ea338b5945996cf615c0068bbb68c8f3bcb8a7840a1c6434451f94e6b23989f",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-SW-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/SW-run-whole-source.png",
+      "sha256": "d815095212aa2ecb94b3926092bd390c3ce888a37e0461b917a6713e318045f5",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-SW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/E-idle-whole-source.png",
+      "sha256": "2da074132414431c8f953630be947a1ed7b743a2e87084deefb7898e165aeff6",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-E-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/N-run-whole-source.png",
+      "sha256": "4d6e3ed3e935af02be6aefdde410264b1782aedeee220ff3ecf64898cf635d51",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-N-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/NE-idle-whole-source.png",
+      "sha256": "cd2245248842034fd265e18c028647917195bcfe5ad77e79dfa5a792afb42823",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-NE-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/SE-idle-whole-source.png",
+      "sha256": "7ef295f685ecc26dbe0b82cb0857f90b88247ecf8bfd791df8651770a39483ac",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-SE-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/SW-run-whole-source.png",
+      "sha256": "e555fba051c7857d20e36bfb9912d853519d3225f67e527b917aa4cc7c9bde4a",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-SW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/E-idle-whole-source.png",
+      "sha256": "37d0c4bf10360d93a022468ec4f679c29087554a26ca71e172596c33addb5b48",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-E-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/N-hit-whole-source.png",
+      "sha256": "26b03a71be0e9ed3f3149cfb44951ed2f72ef07152ef80138b3a1cb8736c8d8f",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-N-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/N-idle-whole-source.png",
+      "sha256": "2fb779d76ba8a102fb5f090f92fa63e6e88bb2fa564b4a03f2fdfaec1817f544",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-N-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/N-run-whole-source.png",
+      "sha256": "e03d68aca812ce3193407c301bf6e26a7d8eecf66f190935bc8df09411264afb",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-N-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/S-idle-whole-source.png",
+      "sha256": "1f57c1be4e928a144ca3f709a5daf7cb5a71e3b60a8f87dc6395f1646652802c",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-S-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/SE-hit-whole-source.png",
+      "sha256": "eb2628919c7cb9f55242b98d65ed0e7ad98b6ee10adb972ba1eb5b2d8900533a",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-SE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/SE-idle-whole-source.png",
+      "sha256": "c9fde78cdbab38c3c551621ee6c71d09dea623d4dbacae9b73ad9ed198406522",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-SE-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/SW-hit-whole-source.png",
+      "sha256": "e571a42ffea36df51abea0bf03dc59b3d2cbe32f3115fd3adb93018af41d1f3b",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-SW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/SW-run-whole-source.png",
+      "sha256": "dd50a1a492eb67df6b526fccdc152364e792b5c4e8f3c8e7aa4e80882281aa69",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-SW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/E-hit-whole-source.png",
+      "sha256": "e1648be5fa106bfbb8785457de5413d0d5556e5368e7a4fe87ebd21508ebb59d",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-E-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/E-run-whole-source.png",
+      "sha256": "401d7fb508ffba371319a9bdb9e72141492e94b35f1caa4ef5d9c74bcc40f49c",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-E-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/N-hit-whole-source.png",
+      "sha256": "87060fdf547ab5914c7f9c8d45478bc0e4f69f35edba2790aca7377be932aa87",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-N-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/N-run-whole-source.png",
+      "sha256": "44f1b69a4c25a392974c2c6f5e83d5a2475dfe785eb3f1dddaa39806b4620cbc",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-N-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/NE-run-whole-source.png",
+      "sha256": "de97a744d58a0b35748566708f072328f4cfb48018e89a98285a8383bba94e5e",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-NE-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/S-run-whole-source.png",
+      "sha256": "9febb146707b40dcd0e4e369d9dbce4353a8073bda9915660972e243a98036c5",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-S-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/SW-run-whole-source.png",
+      "sha256": "50fa487cc2cd0a30c8cae8066756818a0673cc1ba0cb00027c594f5f8d83b7ae",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-SW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/W-hit-whole-source.png",
+      "sha256": "4cbff1a452b909066be1abab46c40ec2cb9d184ce5899351af5f7ca75e2794ca",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-W-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/E-idle-whole-source.png",
+      "sha256": "378f4cf2232342dae0357bb8f4ece36bf4d63f4d40c0391436d867878854f341",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-E-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/N-idle-whole-source.png",
+      "sha256": "7723cbe733a9baada5ae9af5ec5ef6ae5e849a63e4b166302a89194da66b0e6f",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-N-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/N-run-whole-source.png",
+      "sha256": "3965df411fa3d8a39ed928f1672e72c5dc2b060bc00437bc9152310571874eb9",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-N-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/NE-idle-whole-source.png",
+      "sha256": "29f42afca03d10d2a61ba9eed79d9403b9266cad434a8fc7ebcc3ca847325004",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-NE-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/NW-idle-whole-source.png",
+      "sha256": "410d3eba037d016b1338b960e2e96ddb91b0b458a7ee0d0e5141cf1645dcc01a",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-NW-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/S-death-whole-source.png",
+      "sha256": "4c1570bbdeb86c2a31d675123b2186ef40547eea8b2b65acd6643f887f6312d8",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-S-death-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/S-idle-whole-source.png",
+      "sha256": "a62b7d64dfbe983c4256989567a040ad9e6e91a80a07fd9f9362153f1b046500",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-S-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/S-run-whole-source.png",
+      "sha256": "8d5a5096ae40564a2ce915431430b00a5d1eec63b8c25e4c6ba584881aeb368e",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-S-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/SE-hit-whole-source.png",
+      "sha256": "dda388db688e5527ae2d190ccb9558c9f67962f15b34ba28b1d011cb935afca1",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-SE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/W-idle-whole-source.png",
+      "sha256": "a8dc0e8ca7881b1a7d0e4a8ba856e109cb11d60daad0afbc6cecd7f2b761cd8c",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-W-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_367/E-run-whole-source.png",
+      "sha256": "c6b7fd9520fc1e21c959b57537495e912442ac30457c5b66bf1ab726b159c719",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_367-E-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_367/S-run-whole-source.png",
+      "sha256": "82513cadcb748c2ea788091b5e941c0584613eb369ec6f06b10ad63d0ed586a2",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_367-S-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_367/W-run-whole-source.png",
+      "sha256": "d689ed18f8c959093527aa975a74e57f04ea5316b6bace716710ef3775643f71",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_367-W-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_411/W-idle-whole-source.png",
+      "sha256": "6aedd306aaebe8493f2b6fe115815b92df22826ccc1fa4bca448717d82b62fda",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-W-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/E-hit-whole-source.png",
+      "sha256": "86b5618783d2b2f05e92b39e884ec0ae00263593a0514857289ce6c5f2bc4ec7",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-E-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/E-idle-whole-source.png",
+      "sha256": "6600734f630a76b40525b03421c745d4a686f795bf08c268ba8413ac204fc8e3",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-E-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/E-run-whole-source.png",
+      "sha256": "0fee951a556073c7ac5da48a5b295a8f8e41d177bcd62238746bbfe51f5161c4",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-E-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/N-hit-whole-source.png",
+      "sha256": "197e2977c9584ac1ac3d4120ff80f0029e9d97a899163e18cf8603e19463b942",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-N-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/NE-hit-whole-source.png",
+      "sha256": "37d1b04255152aa5378a7533a8ac8629333ed812ab3a4de2b997b6f764eb504e",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-NE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/NE-run-whole-source.png",
+      "sha256": "56937745581e7084beb7479d83aa4780c40ebc1675bec154c2bde8a08dc3aa89",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-NE-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/NW-hit-whole-source.png",
+      "sha256": "710cbe72c6a551adee50b49ce96a2fa8b90a6b2afec6d21e3bb833723b5182ca",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-NW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/NW-idle-whole-source.png",
+      "sha256": "ffc9dcbdcf9dc9686a21fafa0fcd1fe920d5bbe4af696d1bad84520dac6bbe28",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-NW-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/S-death-whole-source.png",
+      "sha256": "fb268c3107520e1ba09d77dfd10d86e851b93a41f59612208a834b686de409fd",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-S-death-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/S-hit-whole-source.png",
+      "sha256": "a6fd5e4e34c1dc5e615048e6f94947589933000ed2df42572f22d1b3a75fb0a7",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-S-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/S-idle-whole-source.png",
+      "sha256": "ef1ee9c4f5f22d214695053afab1e3c7366c41d19e151b3c0efc9a1e3ae43c93",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-S-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/SE-run-whole-source.png",
+      "sha256": "d978f713c87e43be6d410e000237ea0e9c8e6c8ca1c372778794511c42d916bc",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-SE-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/SW-idle-whole-source.png",
+      "sha256": "a4ee9dbb7d603ec4eab0cf93d8507621bc4512dd2b6e2381efaa0bb40b38ba77",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-SW-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_412/W-idle-whole-source.png",
+      "sha256": "bf4a3aad1dd36a55781ae16164aad057e096c8ff6fa7f836db2d5668b13d84de",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-W-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_135/S-attack-expanded-source.png",
+      "sha256": "e528cea29c2b314332e31484a12c59ac92459b4575ab0e7b6b4c399f8252d246",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_135-S-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/NW-idle-expanded-source.png",
+      "sha256": "46e7f6e70ddb02dfccbde2be0398960a017405defdc9c323bd99ad869c3988f4",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-NW-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_137/W-run-expanded-source.png",
+      "sha256": "f0297307a0d2861b8be9314c4ba54c02b163c9beb4d7a1adce985abe3ec3139d",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_137-W-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_139/NW-hit-expanded-source.png",
+      "sha256": "9e274ff6e32f38bdbc6642e8dffcfd2e73ef37b645d542016faed986c36e4af7",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_139-NW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/NW-run-expanded-source.png",
+      "sha256": "26faafcd5055fc5093b094041eb0109bf2ed7c869176cedecf003aeb9a3d484b",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-NW-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/S-hit-expanded-source.png",
+      "sha256": "74089f90b0886075dcd36af2624c8f5acbb6947876640753e517422c1439d6ef",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-S-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/S-idle-expanded-source.png",
+      "sha256": "cc62743d0af26c71bdbef318aac8c67803f9c1f88ffab18cc62ca31aae770e46",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-S-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/SE-idle-expanded-source.png",
+      "sha256": "89a14eb30405a79dcb3382500e24ce573a853863a4ea270b8acd83ff2c443ec4",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-SE-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/SE-run-expanded-source.png",
+      "sha256": "b8d7a2460322ee40c81c74b71401aefd39796a2b70cea34ad87af3d566650912",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-SE-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/SW-hit-expanded-source.png",
+      "sha256": "739f94bdda3c2bbe0db17281ba68c3004f743c09ada2fa53d23a3d06ea7dd5ef",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-SW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/W-attack-expanded-source.png",
+      "sha256": "c17693e15bff01614f5f656146e64d355a792ef95365ea2b2c04be2adaa2b680",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-W-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/W-hit-expanded-source.png",
+      "sha256": "26d3c1feacc6372654f7de64ef9f7a577c902491414891b7e7c13db86ab599de",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-W-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/W-idle-expanded-source.png",
+      "sha256": "44c43d3b3bc9b113e7d8d335ae92038f5660bc8765dce3c760f9f7a68d137a6d",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-W-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/W-run-expanded-source.png",
+      "sha256": "06313f5341aeae584c6c92f1095ae2c7a5712e394353b505682d43098d0e9cc3",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_141-W-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/NW-hit-expanded-source.png",
+      "sha256": "188ada7bd62d131b84204156a2608b6915c816b8793a24a4df220c6d60dad9d1",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-NW-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/S-hit-expanded-source.png",
+      "sha256": "0097add3343ca24eb9cc6c067870c66c2056a22abe208734301f76627735b6ca",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-S-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/SE-hit-expanded-source.png",
+      "sha256": "908213d816fc58685f05b91e829af50546c6e96c671f0921154388764544c6c4",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-SE-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_189/S-hit-expanded-source.png",
+      "sha256": "cb20c258014dfacbfa37584dfffe237af51d270f8360f95a55a6b789b3226e5f",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-S-hit-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_212/SE-idle-expanded-source.png",
+      "sha256": "8e1deb0207a9665b7d4dad81ade53fb9ebae1b738dcf12a5c2b28b52e0363b3e",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_212-SE-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/W-idle-expanded-source.png",
+      "sha256": "ab8f55d2c8940c828e625fb2aa766d6bfaef0f71b2e0c1e690a3abfa22cb545c",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-W-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/N-attack-expanded-source.png",
+      "sha256": "28294b3462bf1dd83c21e9d6e1b338ca7b2df84516094bb7f791ef7576baa4a5",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-N-attack-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_346/SW-idle-expanded-source.png",
+      "sha256": "0ff73fe1e194a51c7cb8b4364145da398ab1e6e9bfc0a75b4f99fdde5786f190",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-SW-idle-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_367/N-run-expanded-source.png",
+      "sha256": "6b7027b85b03c526000475975bab7f627ce2527cdf5d7b152b3fcb57440a49c8",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_367-N-run-draft-v01.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_411/NW-idle-expanded-source.png",
+      "sha256": "c1f3f736b41645f61f7274ae234a01debc09e4c4eba61266d6ae1d8e0001eb3d",
+      "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-NW-idle-draft-v01.png"
+    }
+  ]
+}

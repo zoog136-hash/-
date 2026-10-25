@@ -1,0 +1,17 @@
+{
+  "slug": "zeros",
+  "actor": "monster:제로스",
+  "clip": "NW-hit-v01",
+  "direction": "NW",
+  "role": "hit",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: NORTHWEST REAR three-quarter facing UP-LEFT. Show broad back, not front chest. Anatomical RIGHT weapon arm is FAR/screenRIGHT, LEFT empty hand near/screenLEFT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  }
+}

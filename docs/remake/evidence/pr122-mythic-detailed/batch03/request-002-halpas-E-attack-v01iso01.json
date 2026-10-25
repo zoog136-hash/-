@@ -1,0 +1,115 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "E",
+  "role": "attack",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png"
+  ],
+  "prompt": "Author six independently drawn, high-detail isometric RPG ATTACK sprites of EXACTLY 해방된 할파스 from the original portrait (identity authority) and saved EAST native locomotion references. Preserve the exact face, horns/helmet, black armor, crystalline wings, proportions, colors and actual existing weapon or natural striking anatomy. Do not invent a new weapon, add anatomy, swap weapon hands or turn it into another boss.\n\nTechnical transparent atlas: 1024x1536 pixels, EXACTLY TWO COLUMNS and THREE ROWS, six 512x512 cells in temporal order left-to-right then down. One entire character per cell. Keep the silhouette inside the central320x320 area with at least96 transparent pixels at every cell edge. Preserve head/torso scale relative to the references; fold/re-angle existing wings during the strike rather than shrinking the character or cropping equipment. No character rectangles overlap. More than70 percent of the atlas should remain empty transparent background.\n\nAll six face EAST/screen right, same isometric camera and coherent body scale. Six true attack phases: 0 poised guard; 1 visible backswing/anticipation; 2 loaded compression just before release; 3 unmistakable active forward strike/contact with the referenced weapon or striking limb extended toward the right; 4 controlled follow-through; 5 recovery toward guard. Phase3 is the intended game contact frame. Make the weapon, arm, torso, legs and wing response articulate together; do not merely translate/tilt/recolor one pose, copy locomotion frames, or change to another facing. Preserve floating/airborne anatomy and the actual equipment from the references.\n\nCrisp hard-edged cutout game sprites with detailed material shading INSIDE each character. Black armor/skin must be fully opaque. Existing colored energy stays contained in the original blade/wing shapes. NO long trail, diffuse aura, bloom, halo, fog, floor, shadow, scenery, panels, labels, numbers or grid. No detached ornaments or spare weapons. All anatomy, wing tips and weapon tips visible, no clipping. Outside the exact silhouette alpha0; edge antialiasing only one or two pixels.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "intended_contact_frame": 3,
+  "phase_contract": [
+    "guard",
+    "anticipation",
+    "load",
+    "active_contact",
+    "follow_through",
+    "recovery"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v02.png": "efa8ceadcb848c73293a71b09ab717dfe8a1f95b8aab5adc955316d2a88cb44f"
+  },
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-001-halpas-E-attack-v01.json",
+  "processing_proof": {
+    "source_sha256": "f071057d34855734829b12ca79f313c9be31d135a9a91ec926c0a3ac7d58be68",
+    "output_sha256": "ee982e57247119a40a7cc67e0bac9da4cd2b0267274a8d76de29dcac85d6e040",
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01.png",
+    "output": "/workspace/scratch/halpas-E-attack-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "removed_background_pixels": 96243,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 480942,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -30
+        ],
+        "pixels": 84017,
+        "foreground_pixels": 78608,
+        "rgba_sha256": "0439c9557ed401ef2eb74ba6a2fb692406d0ae209d2f2ccba5b711cfe590dbfa"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -34
+        ],
+        "pixels": 82305,
+        "foreground_pixels": 77259,
+        "rgba_sha256": "ebd8ab7e9c6dc9b4c0e83509b11e35dbf8e21ec1c27127f8f7d887ae65b59855"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          -3
+        ],
+        "pixels": 84269,
+        "foreground_pixels": 79798,
+        "rgba_sha256": "1e771f19b37cc7ad4025eece5d0c6dfadd6a7335cdebeb423fa1d5ab064503d9"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          9
+        ],
+        "pixels": 85287,
+        "foreground_pixels": 80004,
+        "rgba_sha256": "3182cc9901f2ae26983da7fbb23c2bc0c93edcb6fde273887f996a5ab89fd4d2"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          43
+        ],
+        "pixels": 93182,
+        "foreground_pixels": 87334,
+        "rgba_sha256": "73b480012d1cb868f6525d2589e34a1c0a92b20529cdc8ebf84146b081f4e608"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          46
+        ],
+        "pixels": 83155,
+        "foreground_pixels": 77939,
+        "rgba_sha256": "64d89dabe0a7d58663473e0637afc4f5e1e90de02c24af291376c51b9589dc00"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png",
+  "output_sha256": "ee982e57247119a40a7cc67e0bac9da4cd2b0267274a8d76de29dcac85d6e040",
+  "output_bytes": 1433391,
+  "original_generated_file": "/workspace/scratch/halpas-E-attack-v01iso01.png"
+}

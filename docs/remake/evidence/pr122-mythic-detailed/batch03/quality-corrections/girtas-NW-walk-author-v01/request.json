@@ -1,0 +1,36 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NW",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/girtas-NW-walk-author-v01/correct-NW-idle0-reference.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-walk-author-v01/correct-NW-idle0-reference.png": "1770f54481aff69242fb5940720d5a8c6fa442870fceb1c3839fae6769f75099"
+  },
+  "reference_provenance": {
+    "parent_raw": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+    "parent_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+    "exact_region": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "incorrect_old_NW_idle_not_used": true
+  },
+  "transparent_background": true,
+  "corrective_reason": "Current NWwalk wrong generic identity/locomotion source remains actor HOLD. Materially new faithful Girtas correct rear-left camera six alternating walking support phases from newly corrected NWidle only. SOURCE PASS requires actual anatomy/gait evidence; no approvals from source alone.",
+  "prompt": "Animate the EXACT same GIRTAS character in reference image into SIX DIFFERENT NORTHWEST walking keyframes, not idle poses. Camera/body facing UP-LEFT rear-left three-quarter exactly as reference. Elevated orthographic RPG game sprite. Preserve long PALE SILVER hair, same pointed gold crown/helmet, black/gold layered shoulder armor, thin HARD STRAIGHT GOLD RADIAL BACK SPIKES (metal rays, NOT feathers), long DARK ROBE with same detailed GOLD TRIM, boots, and ONE LONG SINUOUS GOLD/YELLOW blade. Near anatomical LEFT arm is on imageLEFT/lowerLEFT and its hand stays EMPTY. Far anatomical RIGHT arm is imageRIGHT/upperRIGHT, partly behind hair, and its hand continuously holds that same low outward blade. Exactly two arms, two legs, one head, one weapon. No extra raised hand, no third gripping arm, no mirror/hand swap, no pure-N symmetric back or W side camera. Keep every head, shoulder, pelvis and boot in same oblique rear-LEFT NW facing as reference.\n\nProduce a true alternating ordinary WALK cycle in six separate complete figures, reading order left-to-right then top-to-bottom. Forward travel direction is screen UPPER-LEFT; backward is screen LOWER-RIGHT. LEGS MUST SWITCH across two halfcycles: anatomicalLEFT is near/imageLEFT; anatomicalRIGHT is far/imageRIGHT. Robe must open naturally enough to see BOTH knees/ankles/feet and tell each distinct support phase, never replacing the long robe with trousers. No running, flying or two feet in air.\n0 LEFT HEEL CONTACT: nearLEFT leg reaches diagonally FORWARD/UPPERLEFT with heel lowered ready to plant, farRIGHT leg stretches BACK/LOWERRIGHT supported on toe. Normal walking long split stride. NearLEFT forward, farRIGHT back.\n1 LEFT MIDSTANCE/RIGHT PASSING: nearLEFT sole carries weight beneath/slightly behind pelvis; farRIGHT knee flexes forward passing close beside left calf, its boot lifted only slightly. Torso above stable planted left.\n2 LEFT TOE-OFF/RIGHT REACH: nearLEFT now trails BACK/LOWERRIGHT with heel raised toe on ground; farRIGHT leg reaches FORWARD/UPPERLEFT with heel almost touching. Both legs exchanged from0, no large air gap.\n3 RIGHT HEEL CONTACT: farRIGHT leg is clearly FORWARD/UPPERLEFT planting heel; nearLEFT is clearly BACK/LOWERRIGHT on its toe. This is OPPOSITE LEG PLACEMENT of0, not same silhouette repeated. Preserve same rear-left camera.\n4 RIGHT MIDSTANCE/LEFT PASSING: farRIGHT sole carries weight beneath/slightly behind pelvis; nearLEFT knee flexes forward passing close beside right calf, its boot lifted only slightly.\n5 RIGHT TOE-OFF/LEFT REACH: farRIGHT trails BACK/LOWERRIGHT heel lifted toe still on ground; nearLEFT reaches FORWARD/UPPERLEFT with heel almost touching, then smoothly returns to0. OPPOSITE LEG PLACEMENT of2.\n\nAll six are NEW DRAWN local joint articulations: anatomically valid alternating left and right weight support, hips counter-rotate subtly, shoulders counterbalance gently, long robe panels and hair trail softly. Metal back rays stay rigid attached to torso (never flap). Weapon remains LOW and follows farRIGHT wrist with subtle walking swing, left EMPTY hand gently counterswings; no attack. Keep same skull, armor and pelvis physical size all6. Preserve gear entirely; do not shorten blade or spikes to fit.\n\nTransparent PNG1024x1536, exact TWO512px columns and THREE512px rows, six complete figures one centered per cell. Full crown/hair/spikes/boots/robe/blade tips inside each cell with at least28px alpha0 border and wide empty gutters. Crisp fine detail fantasy RPG cutout, opaque armor/cloth/skin, thin AA edges, alpha0 background/gaps. No text, numbers, frames, guide marks, floor, shadow, glows/haze/particles or afterimages. Do not simply translate or recolor six idle copies. Six visibly distinct genuine walking support phases are essential.",
+  "requested_at": "2026-10-19T14:12:59.848765+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

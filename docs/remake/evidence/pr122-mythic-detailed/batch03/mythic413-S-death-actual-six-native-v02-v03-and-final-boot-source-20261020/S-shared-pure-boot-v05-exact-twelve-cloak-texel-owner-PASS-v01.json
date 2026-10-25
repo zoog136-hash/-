@@ -1,0 +1,134 @@
+{
+  "source_visual_status": "PASS",
+  "scope": "SHARED_S_BOOT_KNEE_OWNER_ONLY",
+  "input": {
+    "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-Rboot-exact-cloak-tab-owner-v05/own-S-native-source-owned-boot-only-complete-head-and-exact-cloak-tab-v05.json",
+    "sha256": "0b70116e2599b09ad9df22a814e8745072e357f5f46056feb7f656120477f967"
+  },
+  "materials": {
+    "R-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-Rboot-exact-cloak-tab-owner-v05/R-actual-complete-boot-skin-with-exact-adjacent-cloak-gold-tab-returned-to-cape-v05.png",
+      "sha256": "8dfef487c83bd48ffd233b5f775945dda4722156b9c4b76184c81c93dd6a19b7",
+      "bytes": 99857
+    },
+    "L-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-boot-only-and-complete-head-owners-v04/L-actual-own-S-complete-boot-skin-native-source-with-cape-excluded-v04.png",
+      "sha256": "ab1c33af8ae1227f3afb0b012c90096ca9719916971840f8f1a502f7c0eaab70",
+      "bytes": 105406
+    },
+    "head-face-bun-and-both-blue-ribbons": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-boot-only-and-complete-head-owners-v04/actual-own-S-complete-head-face-goldcurls-and-entire-original-blue-ribbons-native-v04.png",
+      "sha256": "1ab53f13a3d8b78d27009031d7e576f4290e6cb93f98a398586e5f803cac8f8d",
+      "bytes": 143314
+    }
+  },
+  "mattes": {
+    "R-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-Rboot-exact-cloak-tab-owner-v05/R-actual-complete-boot-skin-original-goldfins-owner-matte-excluding-exact-cloak-tab-v05.png",
+      "sha256": "1120a645345c1a46a55ec6796549a1f936856bb3f57509370b9def5943072773",
+      "bytes": 3804
+    },
+    "L-complete-native-leg": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-boot-only-and-complete-head-owners-v04/L-actual-own-S-boot-only-true-gold-sidefins-and-skin-semantic-matte-v04.png",
+      "sha256": "ae14e4e9a5f6801909b5b3c8001f8c1c6f0570847d5bf26dc95bd76b41d917ff",
+      "bytes": 3639
+    },
+    "head-face-bun-and-both-blue-ribbons": {
+      "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-native-boot-only-and-complete-head-owners-v04/actual-own-S-complete-head-face-and-ribbon-original-native-owner-matte-v04.png",
+      "sha256": "4f19a7ef7bd6cf6c17d94fbc3565a5fee6399ce4fb1cc70fd265de97890915d6",
+      "bytes": 3986
+    }
+  },
+  "actual_arm_erased_CORE": {
+    "path": "/workspace/scratch/mythic413-S-attack-author-20261020-v01/actual-own-S-native-original-cloak-point-exact-owner-restored-v09/actual-S-complete-CORE-genuine-original-smooth-cloak-point-fully-restored-v09.png",
+    "sha256": "d47b4b07532676f2d0bdbbb27b08811e8586cfa8cfdfbd1876377bbb27fb8caa",
+    "bytes": 714020
+  },
+  "visual_findings": [
+    "Existing native source-versus-matte knee crop preserves the shin diamond plates, black leather and genuine gold sidefins on both legs while excluding the adjacent broad cape bands.",
+    "The twelve RIGHT calf-edge gold texels follow the adjacent diagonal cape hem and belong to cloak CORE. They are returned to that owner, with retained RIGHT boot RGBA and LEFT boot/matte unchanged."
+  ],
+  "prior_visual_evidence": {
+    "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/private-own-S-source-versus-boot-only-knee-true-sidefins-v04.jpg",
+    "sha256": "f5f3df82934fa4b0d6fb4aedccdb46ee2f2a0d7ea95ed58c3f7a07685f0cd571",
+    "bytes": 73575,
+    "native_ROIs": [
+      [
+        475,
+        790,
+        595,
+        950
+      ],
+      [
+        680,
+        790,
+        800,
+        950
+      ]
+    ]
+  },
+  "independent_exact_pixel_checks": {
+    "changed_R_material_coordinates": [
+      [
+        578,
+        851
+      ],
+      [
+        579,
+        851
+      ],
+      [
+        578,
+        852
+      ],
+      [
+        579,
+        852
+      ],
+      [
+        578,
+        853
+      ],
+      [
+        579,
+        853
+      ],
+      [
+        578,
+        854
+      ],
+      [
+        578,
+        855
+      ],
+      [
+        578,
+        856
+      ],
+      [
+        578,
+        857
+      ],
+      [
+        578,
+        858
+      ],
+      [
+        578,
+        859
+      ]
+    ],
+    "changed_R_matte_coordinates_exact_same": true,
+    "twelve_source_RGBA_preserved_in_CORE": true,
+    "retained_R_RGBA_changed": 0,
+    "L_material_and_matte_unchanged": true,
+    "head_material_and_matte_unchanged": true
+  },
+  "new_images": 0,
+  "actor_approvals_added": 0,
+  "limits": [
+    "Local knee/boot-versus-cloak ownership approval only. Complete DEATH/RUN poses, feet support, cycle, floor, PACK and game remain separately reviewed.",
+    "Head references are pinned only as unchanged, not newly visually approved.",
+    "No original whole-body or once/C registration re-audit."
+  ]
+}

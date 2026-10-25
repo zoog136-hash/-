@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "cases": 12,
+  "controls": [
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/attempted-production-promotion.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "attempted-production-promotion.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/cropped-source-region.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "cropped-source-region.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/duplicate-body-missing-row.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "duplicate-body-missing-row.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/wrong-whole-PNG-SHA.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "wrong-whole-PNG-SHA.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/out-of-order-phase.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "out-of-order-phase.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-declared-direction.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "wrong-declared-direction.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-horizontal-axis.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "wrong-horizontal-axis.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-anchor-on-foot.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "airborne-anchor-on-foot.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-gap-over-limit.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "airborne-gap-over-limit.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/missing-run-contract.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "missing-run-contract.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/walk-speed-labelled-run.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "walk-speed-labelled-run.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-ground-margin.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "refusal_log": "wrong-ground-margin.txt"
+    }
+  ],
+  "source_guards_relaxed": false,
+  "production_applied": false,
+  "completed_added": 0
+}

@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "key": "monster:탐욕의 여왕 벨리엘",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "belial_idle",
+      "directions": [
+        "NE"
+      ],
+      "roles": [
+        "idle"
+      ],
+      "move_speed": 101.0,
+      "attack_seconds": 1.49,
+      "attack_range": 310.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:탐욕의 여왕 벨리엘",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/NativeMotionProfile.tres",
+      "slug": "belial_run",
+      "directions": [
+        "NE"
+      ],
+      "roles": [
+        "run"
+      ],
+      "move_speed": 101.0,
+      "attack_seconds": 1.49,
+      "attack_range": 310.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    }
+  ],
+  "output": "/workspace/runtime/boss-final-integration-belial",
+  "capture": true
+}

@@ -1,0 +1,115 @@
+{
+  "key": "transform:267",
+  "direction": "E",
+  "role": "attack",
+  "name": "지배자 기르타스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png": "84e17c6b4bbe6ee9f4268167529d7888959e6ce8af7465243466afb047345492"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG ATTACK animation sprites of EXACTLY 지배자 기르타스. The first original portrait is identity authority. The second saved E native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for E.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces EAST / screen right, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: poised guard; 1: visible backswing / anticipation; 2: loaded compression; 3: active forward strike / CONTACT; 4: follow-through; 5: recovery toward guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nPhase3 must visibly extend the actual referenced weapon or natural striking limb toward the facing direction, at contact. Strong anticipation, release and follow-through; hands retain the same weapon throughout.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "poised guard",
+    "visible backswing / anticipation",
+    "loaded compression",
+    "active forward strike / CONTACT",
+    "follow-through",
+    "recovery toward guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "intended_contact_frame": 3,
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-052-girtas-E-attack-v01.json",
+  "processing_proof": {
+    "source_sha256": "4fa77f65b11c1afd2288b85a65c2d7ce3213b33052cb4fd0c6c00de02982f64b",
+    "output_sha256": "a31ce63849645182dc6242460c73ca0c0973caedbc5f9716913146531dbd8c8e",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01.png",
+    "output": "/workspace/scratch/girtas-E-attack-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 149069,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 462477,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -24
+        ],
+        "pixels": 80470,
+        "foreground_pixels": 75888,
+        "rgba_sha256": "0033c13bf3f756acb6f1ec24f286fc4fffa9bf9b4d53831f1fe9acc935eb0e2b"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -31
+        ],
+        "pixels": 83368,
+        "foreground_pixels": 78216,
+        "rgba_sha256": "8eb6143cc2f6ff1f3768fc710ca152c4fb51f8496df48fd1b1274350d70d3675"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          5
+        ],
+        "pixels": 76623,
+        "foreground_pixels": 71968,
+        "rgba_sha256": "181cebfd50e409aebfae95e8e30ad83a5300c872af0783d4d7c7f49858940f96"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          13
+        ],
+        "pixels": 79993,
+        "foreground_pixels": 74666,
+        "rgba_sha256": "f91c0f715293bc64a28d4ba4558274ef639e1b0f8058757861b21beb59f56005"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          32
+        ],
+        "pixels": 88265,
+        "foreground_pixels": 82703,
+        "rgba_sha256": "f7c75a4d906e7b696c551afa84f8484ef0c16fdc7892efebc1c6c9d8132abf60"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          36
+        ],
+        "pixels": 83724,
+        "foreground_pixels": 79036,
+        "rgba_sha256": "63d038d75e8deb9983dab06d8dd2a75603dc718846414dab1e6dfb940173fc80"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png",
+  "output_sha256": "a31ce63849645182dc6242460c73ca0c0973caedbc5f9716913146531dbd8c8e",
+  "output_bytes": 1355316,
+  "original_generated_file": "/workspace/scratch/girtas-E-attack-v01iso01.png"
+}

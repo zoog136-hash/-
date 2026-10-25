@@ -1,0 +1,236 @@
+{
+  "status": "AUTHOR_CALIBRATION_PROPOSAL_REQUIRES_INDEPENDENT_QC",
+  "candidate_constant_native_C": 2560,
+  "candidate_native_to_baseline_density_factor": 2.5,
+  "never_perpose_alpha_normalization": true,
+  "source_NW_sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+  "baseline_N_source": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/thunder_female-N-walk-v01-service.png",
+  "baseline_N_sha256": "cfd051b8b3589dddca9e74af68162fc2f9fe1f5dbcaf5de5cdf3086f3772e1f8",
+  "baseline_N_scope": "backbody appearance/scale reference only; whole source physical/clock/clipping HOLD",
+  "baseline_native_C": 1024,
+  "method": "manual raw coordinate grid body nape/waist/shoulder/arm/leg segments; compare6 projected segments and choose one density2.5; alphaheight NOT fit criterion",
+  "baseline_N_points": {
+    "neck_nape": {
+      "xy": [
+        254,
+        127
+      ],
+      "uncertainty_px": [
+        5,
+        7
+      ],
+      "visibility": "rear nape under curls/collar"
+    },
+    "L_shoulder_near": {
+      "xy": [
+        218,
+        156
+      ],
+      "uncertainty_px": [
+        6,
+        6
+      ],
+      "visibility": "left shoulder trim/bare upperarm"
+    },
+    "R_shoulder_far": {
+      "xy": [
+        291,
+        154
+      ],
+      "uncertainty_px": [
+        6,
+        6
+      ],
+      "visibility": "right shoulder trim"
+    },
+    "L_elbow_near": {
+      "xy": [
+        201,
+        204
+      ],
+      "uncertainty_px": [
+        6,
+        7
+      ],
+      "visibility": "sleeve inferredhinge"
+    },
+    "L_wrist_free": {
+      "xy": [
+        182,
+        234
+      ],
+      "uncertainty_px": [
+        4,
+        4
+      ],
+      "visibility": "cuff/freehand"
+    },
+    "waist_belt_center": {
+      "xy": [
+        256,
+        211
+      ],
+      "uncertainty_px": [
+        5,
+        6
+      ],
+      "visibility": "belt diamond"
+    },
+    "pelvis_center": {
+      "xy": [
+        256,
+        260
+      ],
+      "uncertainty_px": [
+        9,
+        9
+      ],
+      "visibility": "under pleatedskirt"
+    },
+    "L_hip_near": {
+      "xy": [
+        241,
+        272
+      ],
+      "uncertainty_px": [
+        8,
+        10
+      ],
+      "visibility": "upper near femur under hem"
+    },
+    "L_knee_support": {
+      "xy": [
+        247,
+        355
+      ],
+      "uncertainty_px": [
+        7,
+        9
+      ],
+      "visibility": "boot inferred hinge"
+    },
+    "L_ankle_support": {
+      "xy": [
+        256,
+        440
+      ],
+      "uncertainty_px": [
+        5,
+        6
+      ],
+      "visibility": "ankle boot bend"
+    },
+    "L_heel_tip_contact": {
+      "xy": [
+        260,
+        480
+      ],
+      "uncertainty_px": [
+        3,
+        3
+      ],
+      "visibility": "heel point"
+    },
+    "L_forefoot_contact": {
+      "xy": [
+        246,
+        474
+      ],
+      "uncertainty_px": [
+        4,
+        4
+      ],
+      "visibility": "forefootsole"
+    }
+  },
+  "segment_comparisons": [
+    {
+      "segment": [
+        "neck_nape",
+        "waist_belt_center"
+      ],
+      "NW_projected_raw": 213.67732682715777,
+      "baseline_N_projected_raw": 84.02380615040002,
+      "ratio": 2.5430569813117243,
+      "C2560_normalized_NW_projected": 85.4709307308631,
+      "relative_to_baseline_at_C2560": 1.0172227925246897,
+      "caveat": "2D projected lengths, pose/camera/occlusion uncertainty; no exact3D equality assertion"
+    },
+    {
+      "segment": [
+        "L_shoulder_near",
+        "R_shoulder_far"
+      ],
+      "NW_projected_raw": 182.45547402037573,
+      "baseline_N_projected_raw": 73.02739212103907,
+      "ratio": 2.498452549393594,
+      "C2560_normalized_NW_projected": 72.98218960815029,
+      "relative_to_baseline_at_C2560": 0.9993810197574376,
+      "caveat": "2D projected lengths, pose/camera/occlusion uncertainty; no exact3D equality assertion"
+    },
+    {
+      "segment": [
+        "L_shoulder_near",
+        "L_elbow_near"
+      ],
+      "NW_projected_raw": 137.90576492663388,
+      "baseline_N_projected_raw": 50.92150822589606,
+      "ratio": 2.7082026776359718,
+      "C2560_normalized_NW_projected": 55.16230597065355,
+      "relative_to_baseline_at_C2560": 1.0832810710543888,
+      "caveat": "2D projected lengths, pose/camera/occlusion uncertainty; no exact3D equality assertion"
+    },
+    {
+      "segment": [
+        "L_elbow_near",
+        "L_wrist_free"
+      ],
+      "NW_projected_raw": 94.40338976964757,
+      "baseline_N_projected_raw": 35.510561809129406,
+      "ratio": 2.658459482479306,
+      "C2560_normalized_NW_projected": 37.76135590785903,
+      "relative_to_baseline_at_C2560": 1.0633837929917225,
+      "caveat": "2D projected lengths, pose/camera/occlusion uncertainty; no exact3D equality assertion"
+    },
+    {
+      "segment": [
+        "L_hip_near",
+        "L_knee_support"
+      ],
+      "NW_projected_raw": 190.1578291840754,
+      "baseline_N_projected_raw": 83.21658488546619,
+      "ratio": 2.2850953261996523,
+      "C2560_normalized_NW_projected": 76.06313167363017,
+      "relative_to_baseline_at_C2560": 0.9140381304798609,
+      "caveat": "2D projected lengths, pose/camera/occlusion uncertainty; no exact3D equality assertion"
+    },
+    {
+      "segment": [
+        "L_knee_support",
+        "L_ankle_support"
+      ],
+      "NW_projected_raw": 208.21623375712088,
+      "baseline_N_projected_raw": 85.47514258543241,
+      "ratio": 2.4359858019424623,
+      "C2560_normalized_NW_projected": 83.28649350284834,
+      "relative_to_baseline_at_C2560": 0.9743943207769848,
+      "caveat": "2D projected lengths, pose/camera/occlusion uncertainty; no exact3D equality assertion"
+    }
+  ],
+  "ratio_median": 2.520754765352659,
+  "ratio_minmax": [
+    2.2850953261996523,
+    2.7082026776359718
+  ],
+  "C2560_segment_error_range": [
+    -0.08596186952013907,
+    0.08328107105438876
+  ],
+  "candidate_clock_native_contact_delta": [
+    139.19289850280273,
+    125.27360865252246
+  ],
+  "candidate_fixed_packing": "raw1254pixels padded intoC2560, noresample; perpose packing art+anchor translated together, offset exact",
+  "existing_W_sanity": "same-density board visually comparable, no fabricated precise Wlandmarks; N/oldW bodyproportions not claimed exactsameview",
+  "uncertainty": "all Nlandmarks manual\u00b13\u201310px, NW\u00b13\u201330px; orientation/pose changes additionalforeshortening. Independentreviewcanreject/adjustfixedC once beforeauthoring subsequentposes."
+}

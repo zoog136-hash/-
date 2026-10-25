@@ -1,0 +1,35 @@
+{
+  "status": "LOSSLESS_SINGLE_POSE_CROP",
+  "source": "/workspace/scratch/girtas-W-idle-repair/girtas-W-idle-v02.png",
+  "source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+  "source_bytes": 2317850,
+  "source_visual_result": "/workspace/scratch/girtas-W-idle-repair/result.json",
+  "geometry": "/workspace/scratch/girtas-W-idle-repair/geometry-girtas-W-idle-v02.json",
+  "geometry_sha256": "fcde3e60fc3cbe9d1351da15225ffaa2e0fb1d545f99560d9c1197fabf035dd9",
+  "phase": 0,
+  "direction": "W",
+  "source_region": [
+    17,
+    12,
+    492,
+    472
+  ],
+  "source_anchor": [
+    256,
+    480
+  ],
+  "crop": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png",
+  "crop_size": [
+    492,
+    472
+  ],
+  "crop_sha256": "81a80c77b05148b2fa5e6b173135b8253fe5e0e3a232a3a1d559ab08ee58c10b",
+  "crop_bytes": 354494,
+  "crop_rgba_sha256": "2ab93ec9f60efba89aee09f6a1bc76e53fd5d467507749bb9f2f97c7f63e17e9",
+  "saved_geometry_rgba_sha256": "2ab93ec9f60efba89aee09f6a1bc76e53fd5d467507749bb9f2f97c7f63e17e9",
+  "operations": [
+    "Exact rectangular region crop only",
+    "RGBA pixel bytes identical to source region",
+    "No resize, alpha edit, recolor, rotation, mirroring, pose joining or generated content"
+  ]
+}

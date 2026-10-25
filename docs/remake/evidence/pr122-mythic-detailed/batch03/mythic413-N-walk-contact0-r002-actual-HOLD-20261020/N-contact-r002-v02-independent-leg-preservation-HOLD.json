@@ -1,0 +1,61 @@
+{
+  "status": "PASS_NARROW_FINAL_LEG_JOIN_AND_PROTECTED_RGBA_ONLY_SOURCE_PHASE_HOLD",
+  "actor": "transform:413",
+  "old_master": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/contact0-r001/N-contact0-service-raw1024.png",
+    "sha256": "a4f96847b5a786b96087f65e1c8736b657e19e719323b5cddca51cf75c2470a8",
+    "bytes": 489426
+  },
+  "new_actual_service_raw": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/contact0-r002-fixedC1920/N-contact0-r002-service-raw.png",
+    "sha256": "a8b3bd84cc4f50c19279e4eec5fc90d281eafde7f5b5e5aa6db1fec8016ecf21",
+    "bytes": 491338
+  },
+  "final_bounded_source": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/contact0-r002-fixedC1920/N-contact0-r002-left-forward-bounded-v02.png",
+    "sha256": "332ef97f0a973aa5329a25f02cf0139b29c92c38e4c2aaca6424379d741466cb",
+    "bytes": 452709
+  },
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "constant_C": 1920,
+  "native_unit_body_fit": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/N-contact-a4f96847-body-unit-C1920-independent-calibration-v01.json",
+    "sha256": "cd077d25bebcc7e754dc287f8327ffedd95ac7925d2246da9d80a011e618986b",
+    "bytes": 3659
+  },
+  "changed_RGBA_pixels": 12044,
+  "changed_bbox_xyxy": [
+    585,
+    650,
+    652,
+    876
+  ],
+  "semantic_ROI_xywh": [
+    585,
+    650,
+    67,
+    226
+  ],
+  "outside_ROI_RGBA_changed_pixels": 0,
+  "protected_upper_body_RIGHTstaff_other_leg_exact_RGBA": true,
+  "source_RGBA_resampled": false,
+  "actual_private_findings": [
+    "Finalv02 removes prior preserved darkboot islands; no visible rectangular cut or oldboot residual.",
+    "New leftboot/thigh contour and gold trim join coherently to preserved source; genuine leg shape changes are visible.",
+    "Visible goldheelcore shifts [628.5,857]\u2192[616.5,850], uncertainty\u00b13native; it is not certified as an actual floor contact point."
+  ],
+  "actual_phase_status": "HOLD_FINITE_ACTUAL_CURRENT0_TO1_TO2_REACH_AND_PLANTED_FEET_MODEL_PENDING",
+  "phase_caution": "Oldv05 targetheel797.16 is a conditional body/3D hypothesis; source850 remains52.84px different. Do not fake C/root shifts or blindlyrepeat sameedit. Test whether genuine samebone natural gait can meet132.8727273nativeY/phase; otherwise keepHOLD.",
+  "private_image_ledger_immutable": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-N-r002-view10-frozen.json",
+    "sha256": "8d66acd4a6973f2946ca3737e74e1f6b9390d1c53a3ba17433cfa59b928d363f",
+    "bytes": 5096
+  },
+  "source_approved": false,
+  "whole_cycle_status": "NOT_AVAILABLE",
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

@@ -1,0 +1,358 @@
+{
+  "schema": "PR122-independent-actual-attack-six-source-cycle-prepacking-v1",
+  "status": "PASS_ACTUAL_N_ATTACK_SIX_SOURCE_AND_ONE_SHOT_CYCLE_PREPACKING",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "attack",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/N-attack-six-actual-native-rig-manifest-v07.json",
+    "sha256": "a6203050cd25b15c88d839dbcbbabea7c37b137bcd99bc8e3f0a7a9a64ce5653",
+    "bytes": 8676
+  },
+  "all_six_independent_binding": [
+    {
+      "phase": 0,
+      "name": "READY0",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/thunder_female-N-attack-0-READY0-actual-native-rig-v07.png",
+        "sha256": "c32447a58a34c3453089d16b8e1e6656bd2beef43e113b29d91d78babdd2b272",
+        "bytes": 550472
+      },
+      "rgba_sha256": "d2cf6b84418bc19db2034d0ba717d2add9cfb334f29ec402b144acea3bc3987d",
+      "v06_changed_RGBA_pixels": 0,
+      "v06_change_bbox": null,
+      "v06_original_opaque255_changes": 0,
+      "alpha100_4connected_components_ge200": [
+        183799
+      ],
+      "independent_actual_fixed_heel_material": {
+        "LEFT": {
+          "rectangle": [
+            510,
+            1080,
+            550,
+            1133
+          ],
+          "reference_alpha_gt240_pixels": 1274,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1127,
+          "bottom_xrange": [
+            528,
+            529
+          ]
+        },
+        "RIGHT": {
+          "rectangle": [
+            700,
+            1150,
+            741,
+            1217
+          ],
+          "reference_alpha_gt240_pixels": 2112,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1211,
+          "bottom_xrange": [
+            717,
+            723
+          ]
+        }
+      }
+    },
+    {
+      "phase": 1,
+      "name": "WINDUP1",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/thunder_female-N-attack-1-WINDUP1-actual-native-rig-v07.png",
+        "sha256": "e02b58f0d5d1611801c36203bcdaf3676d75b2159131ec77a8ece464d391f0f8",
+        "bytes": 546536
+      },
+      "rgba_sha256": "b2c593659964a9fc7a06cc9606e3971bfce1b983c6bf21bd091480d44ad9b991",
+      "v06_changed_RGBA_pixels": 0,
+      "v06_change_bbox": null,
+      "v06_original_opaque255_changes": 0,
+      "alpha100_4connected_components_ge200": [
+        183641
+      ],
+      "independent_actual_fixed_heel_material": {
+        "LEFT": {
+          "rectangle": [
+            510,
+            1080,
+            550,
+            1133
+          ],
+          "reference_alpha_gt240_pixels": 1274,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1127,
+          "bottom_xrange": [
+            528,
+            529
+          ]
+        },
+        "RIGHT": {
+          "rectangle": [
+            700,
+            1150,
+            741,
+            1217
+          ],
+          "reference_alpha_gt240_pixels": 2112,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1211,
+          "bottom_xrange": [
+            717,
+            723
+          ]
+        }
+      }
+    },
+    {
+      "phase": 2,
+      "name": "COIL2",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/thunder_female-N-attack-2-COIL2-actual-native-rig-v07.png",
+        "sha256": "de7ee77299c77b8a1084fea8e3642c733b0d393ad4b86c28262926479d7151da",
+        "bytes": 545253
+      },
+      "rgba_sha256": "9ea823756cf674b4c0c8bac67761af20f69cda243f2571129dbb6d18524695d9",
+      "v06_changed_RGBA_pixels": 198,
+      "v06_change_bbox": [
+        588,
+        621,
+        606,
+        640
+      ],
+      "v06_original_opaque255_changes": 0,
+      "alpha100_4connected_components_ge200": [
+        181194
+      ],
+      "independent_actual_fixed_heel_material": {
+        "LEFT": {
+          "rectangle": [
+            510,
+            1080,
+            550,
+            1133
+          ],
+          "reference_alpha_gt240_pixels": 1274,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1127,
+          "bottom_xrange": [
+            528,
+            529
+          ]
+        },
+        "RIGHT": {
+          "rectangle": [
+            700,
+            1150,
+            741,
+            1217
+          ],
+          "reference_alpha_gt240_pixels": 2112,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1211,
+          "bottom_xrange": [
+            717,
+            723
+          ]
+        }
+      }
+    },
+    {
+      "phase": 3,
+      "name": "STRIKE3",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/thunder_female-N-attack-3-STRIKE3-actual-native-rig-v07.png",
+        "sha256": "ac4cfa58ee960842ac697f63b1419e8657a7c5ca91b3a06f622819badb4e27aa",
+        "bytes": 612791
+      },
+      "rgba_sha256": "82e2f2be105cad2fcd2f2627488c65bb0ebbfcafbf78c741aa6f5fe7287c4847",
+      "v06_changed_RGBA_pixels": 0,
+      "v06_change_bbox": null,
+      "v06_original_opaque255_changes": 0,
+      "alpha100_4connected_components_ge200": [
+        199999
+      ],
+      "independent_actual_fixed_heel_material": {
+        "LEFT": {
+          "rectangle": [
+            510,
+            1080,
+            550,
+            1133
+          ],
+          "reference_alpha_gt240_pixels": 1274,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1127,
+          "bottom_xrange": [
+            528,
+            529
+          ]
+        },
+        "RIGHT": {
+          "rectangle": [
+            700,
+            1150,
+            741,
+            1217
+          ],
+          "reference_alpha_gt240_pixels": 2112,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1211,
+          "bottom_xrange": [
+            717,
+            723
+          ]
+        }
+      }
+    },
+    {
+      "phase": 4,
+      "name": "FOLLOW4",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/thunder_female-N-attack-4-FOLLOW4-actual-native-rig-v07.png",
+        "sha256": "2ba685b4e005c32d6575f7af0fa06abcb82c427cb5d7b5c263f13a6ac3756050",
+        "bytes": 597121
+      },
+      "rgba_sha256": "422c6d6b9fd9511573e00798cfff6d3ce5a62a826f2b658eded1ebe7af8e9a1f",
+      "v06_changed_RGBA_pixels": 320,
+      "v06_change_bbox": [
+        541,
+        619,
+        563,
+        642
+      ],
+      "v06_original_opaque255_changes": 0,
+      "alpha100_4connected_components_ge200": [
+        196217
+      ],
+      "independent_actual_fixed_heel_material": {
+        "LEFT": {
+          "rectangle": [
+            510,
+            1080,
+            550,
+            1133
+          ],
+          "reference_alpha_gt240_pixels": 1274,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1127,
+          "bottom_xrange": [
+            528,
+            529
+          ]
+        },
+        "RIGHT": {
+          "rectangle": [
+            700,
+            1150,
+            741,
+            1217
+          ],
+          "reference_alpha_gt240_pixels": 2112,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1211,
+          "bottom_xrange": [
+            717,
+            723
+          ]
+        }
+      }
+    },
+    {
+      "phase": 5,
+      "name": "RECOVER5",
+      "source": {
+        "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/thunder_female-N-attack-5-RECOVER5-actual-native-rig-v07.png",
+        "sha256": "d1a57596feb785cf71de6ccd1b9c938fefaa2fe70444d746076c65f749e74c06",
+        "bytes": 551357
+      },
+      "rgba_sha256": "50fef3b425d9113e0fa8efe876c37753bba61e20f2067486efb2e57ef06fe969",
+      "v06_changed_RGBA_pixels": 0,
+      "v06_change_bbox": null,
+      "v06_original_opaque255_changes": 0,
+      "alpha100_4connected_components_ge200": [
+        184261
+      ],
+      "independent_actual_fixed_heel_material": {
+        "LEFT": {
+          "rectangle": [
+            510,
+            1080,
+            550,
+            1133
+          ],
+          "reference_alpha_gt240_pixels": 1274,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1127,
+          "bottom_xrange": [
+            528,
+            529
+          ]
+        },
+        "RIGHT": {
+          "rectangle": [
+            700,
+            1150,
+            741,
+            1217
+          ],
+          "reference_alpha_gt240_pixels": 2112,
+          "actual_opaque_RGBA_changes": 0,
+          "alpha100_bottom_y": 1211,
+          "bottom_xrange": [
+            717,
+            723
+          ]
+        }
+      }
+    }
+  ],
+  "C_fixed": 1920,
+  "common_rig_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    0,
+    160
+  ],
+  "source_canvas": [
+    1254,
+    1414
+  ],
+  "one_shot": true,
+  "impact_frame": 3,
+  "visual_findings": [
+    "Six dedicated READY, WINDUP, COIL, STRIKE, FOLLOW and RECOVER phases show real torso weight shift, distinct joint articulation, the RIGHT staff swing and costume/ribbon follow-through.",
+    "Actual STRIKE3 remains the independently reviewed ac4cfa source. The five other poses preserve the same rear-N identity, bun/ribbon, blue/gold costume, white skirt and complete high-heeled boots.",
+    "The old LEFT sleeve/finger shell and old staff alpha thread are removed; original-material blue/gold overlap caps now join the actual moving LEFT cuff naturally in COIL2 and FOLLOW4. Existing opaque joint/hand pixels are preserved.",
+    "The complete anatomical RIGHT-held double-ended staff stays attached to its grip through the attack. Both observed heel cores and actual support tips remain stationary across all six poses.",
+    "RECOVER returns close to the dedicated READY guard as a one-shot attack; this is not a relabeled walking sequence or a whole-picture translation."
+  ],
+  "visual_limitations": [
+    "This approves the actual six source images and visible one-shot attack cycle. Exact final atlas/request binding and Godot resource, Player and action/impact checks remain pending.",
+    "Fixed opaque heel material verifies visible stationary support; hidden anatomical depth and a unique original 3D skeleton are not reconstructed.",
+    "The source impact is phase3. Runtime phase durations and combat contact scheduling must be verified on the actual integrated clip; no production approval follows from this source gate alone.",
+    "Only this new N ATTACK source is approved here; detailed actor approvals remain unchanged."
+  ],
+  "static_source3_certificate": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Nattack-STRIKE3-ac4cfa-independent-static-source-PASS-v01.json",
+    "sha256": "725a5606c5d0d3ceb41bb6294e0007de97a2fbe6e7e71f6b0e10598496290b4a",
+    "bytes": 2735
+  },
+  "author_actual_joint_cap_proof": {
+    "path": "/workspace/scratch/mythic413-N-attack-author-20261020-v01/actual-six-rig-v07/N-attack-two-actual-native-LEFT-joint-cap-proof-v07.json",
+    "sha256": "846109eefc7a2e75ffe5c03805cc01633987b8e9c7bd10bed694eabe7e7d9f13",
+    "bytes": 2068
+  },
+  "private_ledger_snapshot": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-Nattack-final-jointcaps-view66-frozen.json",
+    "sha256": "88339400e847a4ae96bd9e19948a4cea2acd85c95e5e94cd5e250e3b9aa47a1d",
+    "bytes": 31764
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}
