@@ -1,12 +1,6 @@
 name: Ground full-matte audit
 on:
   workflow_dispatch:
-  push:
-    branches: [fix/ground-full-matte-20261015]
-    paths:
-      - '.github/workflows/ground-full-matte.yml'
-      - 'tools/ground_icons/**'
-      - 'tools/ground_matte/**'
   pull_request:
     branches: [main]
     paths:

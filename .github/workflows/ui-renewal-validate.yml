@@ -1,8 +1,6 @@
 name: UI Renewal Validate
 
 on:
-  push:
-    branches: ['feature/twilight-ui-renewal-restart-20261009', 'feature/twilight-lineagem-ui-visual-pass-20261009']
   pull_request:
     branches: [main, 'integration/twilight-complete-20261009']
     paths:

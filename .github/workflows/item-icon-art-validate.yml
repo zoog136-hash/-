@@ -1,8 +1,6 @@
 name: Item Codex Art Validate
 
 on:
-  push:
-    branches: ['feature/item-codex-icon-restyle-*']
   pull_request:
     branches: ['main']
     paths:

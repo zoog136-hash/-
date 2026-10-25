@@ -1,9 +1,6 @@
 name: TWILIGHT 25 Map Visual Styles
 
 on:
-  push:
-    branches:
-      - feature/twilight-25map-visual-style-toggle-20261010
   pull_request:
     branches:
       - main
@@ -21,14 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install official Godot 4.7.2
-        run: |
-          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
-          unzip -q /tmp/godot.zip -d /tmp
-          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+        uses: ./.github/actions/setup-godot-linux
       - name: Provision software OpenGL for frame-dependent regressions
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+        uses: ./.github/actions/setup-software-gl
       - name: Map visuals, topology and runtime regressions
         # Every PR also runs Integration's unfiltered suite; other events keep it here.
         env:

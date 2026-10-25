@@ -21,8 +21,6 @@ on:
       - 'tools/map_restore/test_png_review_compile.py'
       - 'tools/map_restore/png_layers.py'
       - '.github/workflows/aden-png-source-validate.yml'
-  push:
-    branches: [feature/aden-png-source-validation-20261018]
   workflow_dispatch:
 
 permissions:

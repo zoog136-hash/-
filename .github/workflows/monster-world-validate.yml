@@ -1,9 +1,6 @@
 name: Monster World Validate
 
 on:
-  push:
-    branches: ['feature/twilight-monster-world-overhaul-20261009']
-    paths-ignore: ['docs/**']
   pull_request:
     branches: [main]
   workflow_dispatch:

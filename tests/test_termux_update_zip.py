@@ -55,5 +55,91 @@ class ZipUpdaterTest(unittest.TestCase):
             self.assertFalse(list(root.glob('.twilight_update_backup_*')))
 
 
+    def test_truncated_subtree_falls_back_without_losing_files(self):
+        root_sha, assets_sha, sprite_sha, docs_sha = ('1'*40, '2'*40, '3'*40, '4'*40)
+        commit_sha = 'f'*40
+        blob_sha = 'a'*40
+        def blob(name):
+            return {'path': name, 'type': 'blob', 'mode': '100644',
+                    'sha': blob_sha, 'size': 4}
+        def directory(name, sha):
+            return {'path': name, 'type': 'tree', 'mode': '040000',
+                    'sha': sha}
+        base = updater.API + '/git/trees/'
+        replies = {
+            updater.API + '/commits/main': {'sha': commit_sha,
+                'commit': {'tree': {'sha': root_sha}}},
+            base + root_sha: {'sha': root_sha, 'truncated': False,
+                'tree': [blob('project.godot'), blob('Main.tscn'),
+                         directory('assets', assets_sha),
+                         directory('docs', docs_sha)]},
+            # Simulate the HTTP 200 partial response that broke the phone.
+            base + assets_sha + '?recursive=1': {'sha': assets_sha,
+                'truncated': True, 'tree': [blob('partial-only.png')]},
+            base + assets_sha: {'sha': assets_sha, 'truncated': False,
+                'tree': [directory('sprites', sprite_sha)]},
+            base + sprite_sha + '?recursive=1': {'sha': sprite_sha,
+                'truncated': False, 'tree': [blob('hero.png')]},
+        }
+        accessed = []
+        def fake_get(url):
+            accessed.append(url)
+            return replies[url]
+        with mock.patch.object(updater, 'fetch_json', side_effect=fake_get):
+            commit, inventory = updater.get_inventory()
+        self.assertEqual(commit, commit_sha)
+        self.assertEqual(set(inventory),
+                         {'project.godot', 'Main.tscn',
+                          'assets/sprites/hero.png'})
+        self.assertNotIn('assets/partial-only.png', inventory)
+        self.assertNotIn(base + docs_sha + '?recursive=1', accessed)
+
+    def test_incomplete_direct_tree_still_fails_closed(self):
+        root_sha = '1'*40
+        replies = {
+            updater.API + '/commits/main': {
+                'sha': 'a'*40, 'commit': {'tree': {'sha': root_sha}}},
+            updater.API + '/git/trees/' + root_sha: {
+                'sha': root_sha, 'truncated': True, 'tree': []},
+        }
+        with mock.patch.object(updater, 'fetch_json',
+                               side_effect=lambda url: replies[url]):
+            with self.assertRaisesRegex(RuntimeError, 'Incomplete direct'):
+                updater.get_inventory()
+
+    def test_old_docs_stay_when_mobile_scope_is_narrowed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'project.godot').write_bytes(b'game')
+            (root/'Main.tscn').write_bytes(b'scene')
+            (root/'docs').mkdir()
+            (root/'docs/old-report.txt').write_bytes(b'preserved')
+            (root/'scripts').mkdir()
+            (root/'scripts/removed.gd').write_bytes(b'retired')
+            (root/updater.STATE_FILE).write_text(
+                '{"tracked_files":["project.godot","Main.tscn",'
+                '"docs/old-report.txt","scripts/removed.gd"]}')
+            data = {'project.godot': b'game', 'Main.tscn': b'scene'}
+            inventory = {name: record(data[name]) for name in data}
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=('a'*40, inventory)):
+                updater.update(root, assume_yes=True)
+            self.assertEqual((root/'docs/old-report.txt').read_bytes(),
+                             b'preserved')
+            self.assertFalse((root/'scripts/removed.gd').exists())
+            backups = list(root.glob('.twilight_update_backup_*'))
+            self.assertEqual(len(backups), 1)
+            self.assertEqual(
+                (backups[0]/'scripts/removed.gd').read_bytes(), b'retired')
+
+    def test_runtime_path_scope(self):
+        for path in ('project.godot', 'Main.tscn', 'assets/terrain.png',
+                     'external_map_packs/native_png_v5/index.json',
+                     'scripts/world.gd', 'tools/android/termux_update_zip.py'):
+            self.assertTrue(updater.is_runtime_path(path), path)
+        for path in ('docs/archive.png', '.github/workflows/ci.yml',
+                     'tests/world_test.gd', 'samples/example.txt'):
+            self.assertFalse(updater.is_runtime_path(path), path)
+
 if __name__ == '__main__':
     unittest.main()
