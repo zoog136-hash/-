@@ -80,6 +80,40 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Non-archive runtime resource excluded'):
                 audit_authoring_exclusions(root)
 
+    def test_aden_authoring_inputs_have_runtime_pack_and_live_reference_guards(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            preset = root / "export_presets.cfg"
+            preset.write_text(preset.read_text().replace(
+                DRAFT_EXPORT_PATTERN, DRAFT_EXPORT_PATTERN + ",assets/maps/aden_city_region/*"))
+            layout = root / "assets/maps/aden_city_region/layout.json"
+            layout.parent.mkdir(parents=True)
+            layout.write_text('{"status": "REGISTERED_DISTRICT_REVIEW_NOT_PRODUCTION"}')
+            original_png = layout.parent / "source/unused.png"
+            original_png.parent.mkdir(parents=True)
+            original_png.write_bytes(b"authoring input placeholder")
+            with self.assertRaisesRegex(ValueError, "runtime pack manifest is missing"):
+                audit_authoring_exclusions(root)
+
+            runtime = root / "data/maps/aden_mobile_pack.json"
+            runtime.parent.mkdir(parents=True)
+            runtime.write_text('{"schema": 1, "map_id": "aden_world", "manifest_sha256": "'
+                               + ("a" * 64) + '"}')
+            self.assertEqual(audit_authoring_exclusions(root)['production_resources_excluded'], 0)
+
+            new_catalog = layout.parent / "unexpected_live_catalog.json"
+            new_catalog.write_text("{}")
+            with self.assertRaisesRegex(ValueError, "Runtime catalog excluded"):
+                audit_authoring_exclusions(root)
+            new_catalog.unlink()
+
+            live = root / "scripts/load_authoring.gd"
+            live.parent.mkdir(parents=True)
+            live.write_text('load("res://assets/maps/aden_city_region/layout.json")')
+            with self.assertRaisesRegex(ValueError, "Exported code/resource references excluded Aden"):
+                audit_authoring_exclusions(root)
+
     def test_unknown_archive_contents_fail_closed(self):
         for change in ('extra_png', 'different_source', 'different_type'):
             with self.subTest(change=change), tempfile.TemporaryDirectory() as directory:
