@@ -2,12 +2,6 @@ name: PR122 unicorn microrepair (unapproved source only)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [feature/twilight-remaining106-20261016]
-    paths:
-      - tools/pr122_unicorn_alpha_microrepair.py
-      - tests/test_pr122_unicorn_alpha_microrepair.py
-      - .github/workflows/pr122-unicorn-alpha-microrepair.yml
   pull_request:
     paths:
       - tools/pr122_unicorn_alpha_microrepair.py

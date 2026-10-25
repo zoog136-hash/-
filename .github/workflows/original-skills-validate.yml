@@ -2,8 +2,6 @@ name: Original Skill Migration Validation
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: ['feature/original-lineagem-skill-complete-*']
   workflow_dispatch:
 # Manual audits stay independent; newer automatic revisions release old runners.
 concurrency:

@@ -2,7 +2,7 @@ name: Godot Validate
 
 on:
   push:
-    branches: [main, 'codex/world-regions-*']
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:

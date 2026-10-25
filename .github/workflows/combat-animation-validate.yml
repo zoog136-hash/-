@@ -1,9 +1,6 @@
 name: Combat Animation Validate
 
 on:
-  push:
-    branches: ['feature/combat-animation-overhaul', 'feature/combat-animation-followup']
-    paths-ignore: ['docs/**']
   pull_request:
     branches: [main]
   workflow_dispatch:

@@ -1,8 +1,6 @@
 name: Twilight Skill Mechanism
 
 on:
-  push:
-    branches: ['codex/skill-system-*']
   pull_request:
     branches: [main]
   workflow_dispatch:

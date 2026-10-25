@@ -1,8 +1,6 @@
 name: Twilight Catalog Effects Validation
 
 on:
-  push:
-    branches: ['codex/catalog-options-runtime-*']
   pull_request:
     branches: [main, 'codex/item-options-runtime-*']
     paths:
