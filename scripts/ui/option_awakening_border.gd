@@ -2,6 +2,7 @@ extends Control
 
 # Persistent option-awakening status, not a combat proc. Colors, badge design
 # and shimmer timing are authored TWILIGHT presentation, not measured NC art.
+const OVERLAY = preload("res://scripts/ui/option_lightning_overlay.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 var grade: String = "영웅"
 var awakened: bool = false
@@ -10,11 +11,18 @@ var low_detail: bool = false
 var intensity: float = 0.85
 var clock: float = 0.0
 var redraw_elapsed: float = 0.0
+var electricity: Control
 
 func _ready() -> void:
 	name = "OptionAwakeningBorder"
+	# Only the electrical draw is colored; the gold status frame remains intact.
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	electricity = OVERLAY.new()
+	electricity.name = "AwakeningElectricity"
+	add_child(electricity)
+	electricity.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	resized.connect(queue_redraw)
 	_refresh_activity()
 
@@ -32,6 +40,7 @@ func apply_settings(settings: Dictionary) -> void:
 func _refresh_activity() -> void:
 	visible = awakened
 	set_process(awakened and not reduced_motion and intensity > 0.0)
+	_sync_electricity()
 	queue_redraw()
 
 func _process(delta: float) -> void:
@@ -39,7 +48,11 @@ func _process(delta: float) -> void:
 	redraw_elapsed += delta
 	if redraw_elapsed >= (0.1 if low_detail else 1.0 / 30.0):
 		redraw_elapsed = 0.0
+		_sync_electricity()
 		queue_redraw()
+
+func _sync_electricity() -> void:
+	if is_instance_valid(electricity): electricity.sync(grade, clock, reduced_motion, intensity)
 
 func _draw() -> void:
 	if not awakened or minf(size.x, size.y) < 20.0:
@@ -61,9 +74,3 @@ func _draw() -> void:
 	draw_polyline(diamond, UI.GOLD, 1.4, true)
 	draw_line(badge + Vector2(-4,0), badge + Vector2(-1,4), Color("fff3d5"), 1.6, true)
 	draw_line(badge + Vector2(-1,4), badge + Vector2(5,-4), Color("fff3d5"), 1.6, true)
-	if not reduced_motion and intensity > 0.0:
-		var phase: float = fposmod(clock / 4.0, 1.0)
-		var line_y: float = bounds.position.y + phase * bounds.size.y
-		var strength: float = sin(phase * PI) * 0.55 * intensity
-		draw_line(Vector2(bounds.position.x, line_y), Vector2(bounds.position.x, minf(line_y + 16, bounds.end.y)), Color(Color.WHITE, strength), 2.2, true)
-		draw_line(Vector2(bounds.end.x, bounds.end.y - phase * bounds.size.y), Vector2(bounds.end.x, maxf(bounds.position.y, bounds.end.y - phase * bounds.size.y - 16)), Color(Color.WHITE, strength), 2.2, true)
