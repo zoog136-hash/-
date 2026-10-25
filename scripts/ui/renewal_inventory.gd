@@ -70,6 +70,8 @@ func _ready() -> void:
 	detail_panel.z_index = 10
 	detail_panel.custom_minimum_size = Vector2(300,0)
 	detail_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color("181714"),UI.BRONZE,12))
+	detail_grade.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	detail_type.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var detail_stack: VBoxContainer = detail_panel.get_child(0)
 	var close_row := HBoxContainer.new()
 	close_row.add_child(UI.label("아이템 정보",15,UI.GOLD))
@@ -152,7 +154,9 @@ func _input(_event: InputEvent) -> void:
 
 func _select_item(reference: String) -> void:
 	gesture_dragged = false
+	var previous: String = selected_item
 	super._select_item(reference)
+	_refresh_slot_states([previous,reference])
 	# A selection never opens details, including when changing the selected item.
 	detail_active = false
 	_reflow()
@@ -327,18 +331,24 @@ func _refresh_inventory_grid() -> void:
 		var equipped: bool = _is_item_equipped(reference)
 		var amount: int = 1 if _ref_instance_id(reference) != "" else int(inventory.get(item_name, 0))
 		var count := UI.label("E" if equipped else "×%d" % amount, 12, UI.GOLD if equipped else UI.TEXT)
-		count.position = Vector2(33,49)
-		count.size = Vector2(36,20)
+		count.name = "InventoryQuantity"
+		var locked: bool = bool(character_state.get("item_locks",{}).get(reference,false))
+		count.position = Vector2(24 if locked else 4,49)
+		count.size = Vector2(44 if locked else 64,20)
+		count.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		count.tooltip_text = "장착 중" if equipped else "보유 "+UI.number_text(amount)+"개"
 		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		button.add_child(count)
 		if bool(character_state.get("item_locks",{}).get(reference,false)):
 			var lock_mark := TextureRect.new()
+			lock_mark.name = "InventoryLocked"
 			lock_mark.texture = UI.icon("lock")
 			lock_mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			lock_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			lock_mark.size = Vector2(18,18)
 			lock_mark.position = Vector2(4,48)
 			button.add_child(lock_mark)
+	_refresh_slot_states()
 	# Empty cells are real noninteractive slots, so the 4-column silhouette survives filtering.
 	var count: int = item_grid.get_child_count()
 	for i: int in range(maxi(0,20-count)):
@@ -408,13 +418,17 @@ func _refresh_detail(item_reference: String) -> void:
 			var delta: int = int(item.get(pair[0], 0)) - int((current as Dictionary).get(pair[0], 0))
 			if delta != 0:
 				detail_text.text += "\n%s  %s%d" % [pair[1], "+" if delta > 0 else "", delta]
+	var locked: bool = bool(character_state.get("item_locks",{}).get(item_reference,false))
 	if lock_button != null:
-		lock_button.text = "잠금 해제" if bool(character_state.get("item_locks",{}).get(item_reference,false)) else "잠금"
+		lock_button.text = "잠금 해제" if locked else "잠금"
+		lock_button.icon = UI.icon("lock") if locked else null
+		lock_button.tooltip_text = "아이템 잠금 상태를 해제합니다" if locked else "선택한 아이템을 잠급니다"
 	if _is_item_equipped(item_reference):
 		detail_action.text = "해제"
 		detail_action.disabled = false
 		detail_action.tooltip_text = "선택한 장비의 장착을 해제합니다"
 	detail_type.text = str(item.get("type","")) + (" · 각인" if _is_engraved(item,item_name) else "")
+	detail_type.text += " · 선택됨"+(" · 잠금" if locked else "")
 	if detail_icon.get_meta("item_visual",{}).get("status","") == "self_authored_substitute":
 		detail_type.text += " · 대체 아이콘 ◇"
 
@@ -422,3 +436,16 @@ func _activate_selected() -> void:
 	if selected_item.is_empty(): return
 	if _is_item_equipped(selected_item): controller.get_parent()._unequip_item_reference(selected_item)
 	else: item_activate_requested.emit(selected_item)
+
+func _refresh_slot_states(references: Array = []) -> void:
+	# Hover/press must not erase the persistent selected-item border.
+	for reference: String in (slot_buttons.keys() if references.is_empty() else references):
+		if not slot_buttons.has(reference): continue
+		var button: Button = slot_buttons[reference]
+		var selected: bool = reference == selected_item
+		var grade_name: String = str(_find_item_record(reference).get("grade","일반"))
+		for state: String in ["hover","pressed"]:
+			var style: StyleBoxFlat = _slot_style_for_grade(grade_name,selected)
+			if state == "hover": style.bg_color = style.bg_color.lightened(.035)
+			if state == "pressed": style.bg_color = style.bg_color.darkened(.08)
+			button.add_theme_stylebox_override(state,style)

@@ -1,0 +1,173 @@
+{
+  "baseline_playable_sha256": "ac4098897dcc94942393189420e0d4c4447217eca4e75cea47c3c222f5ebcb6e",
+  "current_playable_sha256": "94e3e4f91c036608dbb0cedc4c0ea8ce481dbbbc0ffa2be48a52bc9430c48ffc",
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "results": [
+    {
+      "after_calls": {
+        "inside_navigable_area": {
+          "count": 1441037,
+          "us": 440831
+        },
+        "inside_shape": {
+          "count": 5930,
+          "us": 2162
+        },
+        "is_safe": {
+          "count": 7327,
+          "us": 78055
+        },
+        "navigation_snapshot": {
+          "count": 2,
+          "us": 285854
+        },
+        "region_at": {
+          "count": 7327,
+          "us": 70137
+        },
+        "spawn_contains": {
+          "count": 6915,
+          "us": 258915
+        }
+      },
+      "after_configure_png_us": 2255682,
+      "after_timings": {
+        "base_configure_us": 2206711,
+        "configure_png_us": 2255675,
+        "reachability_us": [
+          7132,
+          6925
+        ]
+      },
+      "before_calls": {
+        "inside_navigable_area": {
+          "count": 1441037,
+          "us": 436752
+        },
+        "inside_shape": {
+          "count": 5930,
+          "us": 2073
+        },
+        "is_safe": {
+          "count": 7363,
+          "us": 77946
+        },
+        "navigation_snapshot": {
+          "count": 2,
+          "us": 276565
+        },
+        "region_at": {
+          "count": 7363,
+          "us": 69883
+        },
+        "spawn_contains": {
+          "count": 6915,
+          "us": 257897
+        }
+      },
+      "before_configure_png_us": 2228941,
+      "before_timings": {
+        "base_configure_us": 2180638,
+        "configure_png_us": 2228937,
+        "reachability_us": [
+          7945,
+          7684
+        ]
+      },
+      "cells": 1434265,
+      "equivalence": {
+        "data": true,
+        "ordered_spawn_cells": true,
+        "prepared_spawns": true,
+        "reachable": true,
+        "signature": true,
+        "solid_runs": true
+      },
+      "map": "aden_world"
+    },
+    {
+      "after_calls": {
+        "inside_navigable_area": {
+          "count": 387180,
+          "us": 175990
+        },
+        "inside_shape": {
+          "count": 89364,
+          "us": 29056
+        },
+        "is_safe": {
+          "count": 21916,
+          "us": 333332
+        },
+        "navigation_snapshot": {
+          "count": 2,
+          "us": 58392
+        },
+        "region_at": {
+          "count": 21916,
+          "us": 310002
+        },
+        "spawn_contains": {
+          "count": 138685,
+          "us": 1022651
+        }
+      },
+      "after_configure_png_us": 2263691,
+      "after_timings": {
+        "base_configure_us": 1932157,
+        "configure_png_us": 2263681,
+        "reachability_us": [
+          15156,
+          14375
+        ]
+      },
+      "before_calls": {
+        "inside_navigable_area": {
+          "count": 387180,
+          "us": 183867
+        },
+        "inside_shape": {
+          "count": 89364,
+          "us": 28849
+        },
+        "is_safe": {
+          "count": 138685,
+          "us": 2053201
+        },
+        "navigation_snapshot": {
+          "count": 2,
+          "us": 57493
+        },
+        "region_at": {
+          "count": 138685,
+          "us": 1904807
+        },
+        "spawn_contains": {
+          "count": 138685,
+          "us": 1028198
+        }
+      },
+      "before_configure_png_us": 4115836,
+      "before_timings": {
+        "base_configure_us": 3779900,
+        "configure_png_us": 4115830,
+        "reachability_us": [
+          14826,
+          14148
+        ]
+      },
+      "cells": 285915,
+      "equivalence": {
+        "data": true,
+        "ordered_spawn_cells": true,
+        "prepared_spawns": true,
+        "reachable": true,
+        "signature": true,
+        "solid_runs": true
+      },
+      "map": "escaros_world"
+    }
+  ],
+  "scope": "same plan/manifest in same process; only base PlayableField baseline source differs; detailed counters add overhead and nested times must not be summed"
+}

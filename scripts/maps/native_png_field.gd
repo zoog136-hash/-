@@ -10,6 +10,10 @@ var artwork_scale: float=1.0
 var precise_routes: AStar2D
 
 func path(from: Vector2, to: Vector2) -> PackedVector2Array:
+	# Immutable graph failures also avoid repeating the long direct-line probe.
+	# Other graph implementations retain the normal path below.
+	if precise_routes!=null and precise_routes.has_method("has_failed_route") and precise_routes.has_failed_route(from,to):
+		return PackedVector2Array()
 	if walkable(from) and walkable(to):
 		var start: Vector2i=world_to_cell(from)
 		var finish: Vector2i=world_to_cell(to)

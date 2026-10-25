@@ -1,11 +1,11 @@
 {
   "scope": "latest per-check results across targeted runs, not one full-suite pass",
-  "unique_checks": 16,
-  "latest_pass": 16,
+  "unique_checks": 21,
+  "latest_pass": 21,
   "checks": {
     "boot": {
       "status": "PASS",
-      "summary": "evidence/raster-regression/summary.json"
+      "summary": "followup/regression/summary.json"
     },
     "card_draw_fusion_test": {
       "status": "PASS",
@@ -53,7 +53,7 @@
     },
     "ui_renewal_integration_test": {
       "status": "PASS",
-      "summary": "evidence/integration/summary.json"
+      "summary": "evidence/detail-states/logs/runner/summary.json"
     },
     "warehouse_persistence_test": {
       "status": "PASS",
@@ -61,11 +61,31 @@
     },
     "auto_selection_order_test": {
       "status": "PASS",
-      "summary": "evidence/compact-final/summary.json"
+      "summary": "followup/regression/summary.json"
     },
     "presentation_catalog_compact_test": {
       "status": "PASS",
       "summary": "evidence/ui/logs/runner-final/summary.json"
+    },
+    "native_png_route_recovery_test": {
+      "status": "PASS",
+      "summary": "followup/regression/summary.json"
+    },
+    "native_route_failure_cache_test": {
+      "status": "PASS",
+      "summary": "followup/regression/summary.json"
+    },
+    "spawn_safe_memo_test": {
+      "status": "PASS",
+      "summary": "followup/regression/summary.json"
+    },
+    "shop_authority_test": {
+      "status": "PASS",
+      "summary": "evidence/detail-states/logs/runner/summary.json"
+    },
+    "presentation_detail_states_test": {
+      "status": "PASS",
+      "summary": "evidence/detail-states/logs/runner-final/summary.json"
     }
   },
   "full_ci": "HELD_BY_LATEST_USER_INSTRUCTION",
@@ -83,5 +103,6 @@
     "same_instance_benchmark": "performance/minimap-raster.json",
     "pixel_parity": "performance/raster-pixel-comparison.json",
     "resource_integrity": "evidence/raster-resource-integrity.log"
-  }
+  },
+  "followup_scope": "5/5 final navigation/spawn/boot; UI detail final1/1 plus existing shop authority and UI integration; aggregated latest per-check results, not full CI"
 }

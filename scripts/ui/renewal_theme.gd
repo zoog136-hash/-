@@ -209,3 +209,12 @@ static func clear_item_visual(view: TextureRect) -> void:
 
 static func set_reduced_motion(enabled: bool) -> void:
 	preload("res://scripts/ui/item_visual.gd").set_reduced_motion(enabled)
+
+# Display-only grouping; callers retain integer IDs/prices/quantities.
+static func number_text(value: int) -> String:
+	var digits: String = str(absi(value))
+	var grouped: String = ""
+	for index: int in range(digits.length()):
+		if index > 0 and (digits.length()-index)%3 == 0: grouped += ","
+		grouped += digits[index]
+	return ("-" if value < 0 else "")+grouped

@@ -167,6 +167,11 @@ func configure(definition: Dictionary) -> void:
 		return
 	_build_reachability()
 	spawn_cells.clear()
+	# Overlapping encounter regions inspect the same cell repeatedly. Geometry
+	# stays fixed during configure: memoize only this build's safe-zone predicate.
+	# 0=unknown, 1=safe, 2=not safe; discarded on return, never across maps.
+	var safe_cells:=PackedByteArray()
+	safe_cells.resize(width*height)
 	for region: Dictionary in data.get("monster_spawn", []):
 		var a: Array = region["rect"]
 		var box := Rect2(float(a[0]), float(a[1]), float(a[2]), float(a[3]))
@@ -175,9 +180,12 @@ func configure(definition: Dictionary) -> void:
 		var hi: Vector2i = world_to_cell(box.end)
 		for y: int in range(maxi(0, lo.y), mini(height, hi.y)):
 			for x: int in range(maxi(0, lo.x), mini(width, hi.x)):
+				var key: int=y*width+x
+				if reachable[key]==0:continue
 				var cell := Vector2i(x, y)
 				var point: Vector2 = cell_to_world(cell)
-				if reachable[y * width + x] != 0 and not is_safe(point) and spawn_contains(region,point):
+				if safe_cells[key]==0:safe_cells[key]=1 if is_safe(point) else 2
+				if safe_cells[key]==2 and spawn_contains(region,point):
 					cells.append(cell)
 		spawn_cells[str(region["id"])] = _spaced_dense_cells(region, cells)
 	_remember_navigation(signature,navigation_snapshot())
