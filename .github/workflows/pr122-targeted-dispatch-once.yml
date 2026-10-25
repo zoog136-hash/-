@@ -1,0 +1,102 @@
+name: PR122 targeted CI dispatch once
+run-name: Request two PR122 checks at d76a098b
+
+# This helper is never merged. Its commit skips push/PR CI; create is explicit.
+on:
+  create:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: pr122-two-checks-dispatch-d76a098b
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      github.repository == 'zoog136-hash/-' &&
+      github.event.ref_type == 'branch' &&
+      github.ref == 'refs/heads/validation/pr122-two-checks-dispatch-d76a098b-20261025'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch only the two repaired workflows at the unchanged PR122 HEAD
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64
+          import json
+          import os
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          REPO = 'zoog136-hash/-'
+          BRANCH = 'feature/twilight-remaining106-20261016'
+          SHA = 'd76a098b96f33efcccf2721ca3b8102bac8dcc75'
+          WORKFLOWS = ('skill-mechanism-validate.yml', 'twilight-npc-teleport.yml')
+          API = 'https://api.github.com/repos/' + REPO
+          headers = {
+              'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+              'Content-Type': 'application/json',
+          }
+
+          def api(path, payload=None):
+              data = None if payload is None else json.dumps(payload).encode()
+              req = urllib.request.Request(API + path, data=data, headers=headers,
+                                           method='GET' if payload is None else 'POST')
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      body = response.read()
+                      return response.status, json.loads(body) if body else None
+              except urllib.error.HTTPError as error:
+                  raise SystemExit('GitHub request failed: HTTP %s for %s' % (error.code, path)) from None
+
+          def require_current_head():
+              _, ref = api('/git/ref/heads/' + BRANCH)
+              if ref['object']['sha'] != SHA:
+                  raise SystemExit('PR122 HEAD moved; refusing to dispatch a different revision.')
+
+          if os.environ.get('GITHUB_REPOSITORY') != REPO:
+              raise SystemExit('Unexpected repository; no workflows dispatched.')
+          require_current_head()
+          for workflow in WORKFLOWS:
+              path = '/contents/.github/workflows/' + workflow + '?ref=' + SHA
+              _, config = api(path)
+              source = base64.b64decode(config['content']).decode('utf-8')
+              if 'timeout-minutes: 60' not in source or 'cancel-in-progress: false' not in source:
+                  raise SystemExit('The repaired settings are missing from ' + workflow)
+
+          rows = []
+          for workflow in WORKFLOWS:
+              require_current_head()
+              query = urllib.parse.urlencode({'head_sha': SHA, 'event': 'workflow_dispatch', 'per_page': 100})
+              _, previous = api('/actions/workflows/' + workflow + '/runs?' + query)
+              existing = [r for r in previous['workflow_runs']
+                          if r['head_sha'] == SHA and
+                          (r['status'] != 'completed' or r['conclusion'] == 'success')]
+              if existing:
+                  row = {'workflow': workflow, 'result': 'already_requested',
+                         'run_id': existing[0]['id'], 'sha': SHA}
+              else:
+                  status, _ = api('/actions/workflows/' + workflow + '/dispatches', {'ref': BRANCH})
+                  if status != 204:
+                      raise SystemExit('Unexpected dispatch response for ' + workflow + ': ' + str(status))
+                  row = {'workflow': workflow, 'result': 'accepted', 'http_status': status, 'sha': SHA}
+              rows.append(row)
+              print(json.dumps(row), flush=True)
+          require_current_head()
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write('## PR122 targeted CI requests\n\n')
+              summary.write('Target HEAD: `' + SHA + '`\n\n')
+              summary.write('Only Skill Mechanism and NPC Teleport were requested. No source, ref or other PR was modified.\n\n')
+              for row in rows:
+                  summary.write('- `' + row['workflow'] + '`: ' + row['result'] + '\n')
+          PY
