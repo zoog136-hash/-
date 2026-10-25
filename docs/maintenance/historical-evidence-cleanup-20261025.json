@@ -1,0 +1,170 @@
+{
+  "base": "f24c0a8372adc33dda4dcf76735b90ec7e537aba",
+  "deleted_count": 6,
+  "deleted_bytes": 6705766,
+  "tracked_before_bytes": 27042389803,
+  "docs_before_bytes": 21332719810,
+  "deleted": [
+    {
+      "path": "docs/hunting-paths-20261012/evidence/after-hunting-all-25.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b94c35f8ce25e4fb7448a689135153ac67bed7bc",
+      "size": 879226,
+      "url": "https://api.github.com/repos/zoog136-hash/-/git/blobs/b94c35f8ce25e4fb7448a689135153ac67bed7bc",
+      "sha256": "7c2ccccbc79ca22ed8315c78a442b46ae0facec8435d6f47e31a7b135677d1ea",
+      "reason": "obsolete rendered contact sheet; producer writes output, no consumer reads it"
+    },
+    {
+      "path": "docs/hunting-paths-20261012/evidence/before-boundary-all-25.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "804f43db52278336288f674c95511a1d2da7cb91",
+      "size": 828476,
+      "url": "https://api.github.com/repos/zoog136-hash/-/git/blobs/804f43db52278336288f674c95511a1d2da7cb91",
+      "sha256": "72966e6df60889de63e61ddc626f0e1d5f72fb8c6567f0299ee475ed2f2be36d",
+      "reason": "obsolete rendered contact sheet; producer writes output, no consumer reads it"
+    },
+    {
+      "path": "docs/hunting-paths-20261012/evidence/before-hunting-all-25.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "76d3447f524149e22cfbc5df932b88281011c7f2",
+      "size": 848397,
+      "url": "https://api.github.com/repos/zoog136-hash/-/git/blobs/76d3447f524149e22cfbc5df932b88281011c7f2",
+      "sha256": "c1ae816c1e0e5ce0925c2622c865e49b0db88eeacf273eb2598f3745b9c8dac2",
+      "reason": "obsolete rendered contact sheet; producer writes output, no consumer reads it"
+    },
+    {
+      "path": "docs/hunting-paths-20261012/evidence/before-whole-all-25.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "975879a1f2f67381042addcb6952338af1eb0650",
+      "size": 498054,
+      "url": "https://api.github.com/repos/zoog136-hash/-/git/blobs/975879a1f2f67381042addcb6952338af1eb0650",
+      "sha256": "1ddbe22ff9d81829e4ba8631874211e930192b0806ed7d0b8fc9ab73660b43e1",
+      "reason": "obsolete rendered contact sheet; producer writes output, no consumer reads it"
+    },
+    {
+      "path": "docs/screenshots/01-village.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f96a86d538e7f9a67998406926304f14af61b36",
+      "size": 1987684,
+      "url": "https://api.github.com/repos/zoog136-hash/-/git/blobs/0f96a86d538e7f9a67998406926304f14af61b36",
+      "sha256": "94c9f9b4365b934c56e840632e63c5ebf6d6e75cadb0acbe5640a6d6afe2cf58",
+      "reason": "historical gameplay screenshot; no runtime/source/manifest consumer; same basenames in other folders preserved"
+    },
+    {
+      "path": "docs/screenshots/03-bridge.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "504d1bf5503daafd84de19d4c25991df4835a346",
+      "size": 1663929,
+      "url": "https://api.github.com/repos/zoog136-hash/-/git/blobs/504d1bf5503daafd84de19d4c25991df4835a346",
+      "sha256": "17f91ca386f4b4c9ef2748540e4e4cde99e31d9e50416ffef161d64d53b3bafe",
+      "reason": "historical gameplay screenshot; no runtime/source/manifest consumer; same basenames in other folders preserved"
+    }
+  ],
+  "accounting": "Git tracked blob bytes; history/object database and clone size are not reduced by an ordinary deletion commit.",
+  "accounting_totals": {
+    "report_added_bytes": 13590,
+    "tracked_after_bytes": 27035697627,
+    "docs_after_bytes": 21326027634,
+    "net_reduction_bytes": 6692176
+  },
+  "retained_reference_classes": {
+    "classification_limits": "Conservative observed-reference classes, not proof that every retained file is necessary. Tool mentions can be producers, so class 1 is an upper bound pending consumer-level audit. Class 2 has historical docs/JSON mentions only after excluding a historical whole-tree snapshot; current scope does not authorize deleting linked records. Class 3 needs per-member current approval/restore dependency review.",
+    "classes": {
+      "historical_record_mentions_only_observed": {
+        "files": 1646,
+        "bytes": 1173964313
+      },
+      "dependency_or_tool_rule_observed": {
+        "files": 2379,
+        "bytes": 4801612626
+      },
+      "active_approval_or_restore_scope_uncertain": {
+        "files": 13865,
+        "bytes": 14663271575
+      }
+    },
+    "largest_groups": {
+      "historical_record_mentions_only_observed": [
+        [
+          "docs/map-remake-20261015/expansion25",
+          294460899
+        ],
+        [
+          "docs/map-remake-20261015/evidence",
+          293827657
+        ],
+        [
+          "docs/remake/evidence",
+          120466338
+        ],
+        [
+          "docs/hunting-paths-20261012/evidence",
+          86126408
+        ],
+        [
+          "docs/aden-world-expansion-20261016/evidence",
+          74402860
+        ],
+        [
+          "docs/ui-rebuild-20261012/evidence",
+          46210826
+        ],
+        [
+          "docs/object-placement-20261011/evidence",
+          42101439
+        ],
+        [
+          "docs/playable-maps-20261011/reference-v2",
+          40780853
+        ]
+      ],
+      "dependency_or_tool_rule_observed": [
+        [
+          "docs/remake/evidence",
+          4773283129
+        ],
+        [
+          "docs/monster-world-evidence/crowd-192.png",
+          2032684
+        ],
+        [
+          "docs/monster-world-evidence/dense-aden_world.png",
+          2023284
+        ],
+        [
+          "docs/monster-world-evidence/crowd-96.png",
+          2000806
+        ],
+        [
+          "docs/monster-world-evidence/map-aden_world.png",
+          1996997
+        ],
+        [
+          "docs/monster-world-evidence/crowd-32.png",
+          1977398
+        ],
+        [
+          "docs/monster-world-evidence/map-escaros_01.png",
+          1762644
+        ],
+        [
+          "docs/playable-maps-20261011/aden-building-v1",
+          1731493
+        ]
+      ],
+      "active_approval_or_restore_scope_uncertain": [
+        [
+          "docs/remake/evidence",
+          14663271575
+        ]
+      ]
+    },
+    "archive_alternative_source_check": "Selected shipping assets are not proven lossless replacements for authoring archives. Tomb269 base+delta and unicorn base05 have CI restore consumers; batch17 162 parts include 4606 PNG originals. No alternate complete member-SHA-matched durable source was demonstrated; all archives retained."
+  }
+}
