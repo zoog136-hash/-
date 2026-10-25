@@ -138,7 +138,7 @@ def normalize_cached_direct(path, before, expanded):
         name = 'Install Godot 4.7.2'
         old = ("curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\n"
                "unzip -q godot.zip\nchmod +x Godot_v4.7.2-stable_linux.x86_64\n")
-        updated = cached_script(ENGINE_MAIN_INSTALL, symlink=True)
+        updated = "set -euo pipefail\n" + cached_script(ENGINE_MAIN_INSTALL, symlink=True)
     else:
         name = 'Install Godot 4.7.2 and software GL'
         old = ENGINE_MAIN_INSTALL
