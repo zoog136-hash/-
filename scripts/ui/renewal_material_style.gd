@@ -21,7 +21,7 @@ static func from_flat(base: StyleBoxFlat, inset: bool = false) -> StyleBoxTextur
 			textures[key] = ImageTexture.create_from_image(image)
 	var result := StyleBoxTexture.new()
 	result.texture = textures.get(key)
-	result.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+	result.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
 	result.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
 	for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:
 		result.set_texture_margin(side,4)

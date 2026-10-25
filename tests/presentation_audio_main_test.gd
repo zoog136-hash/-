@@ -23,6 +23,15 @@ func run() -> void:
 	var audio: Node = world.presentation_audio
 	check(root.get_tree().get_nodes_in_group("presentation_audio").size() == 1, "one live event sink")
 	audio.clear()
+	var before_strike: int = audio.played
+	world.player.attack_strike.emit(-10)
+	check(audio.played == before_strike, "unmatched marker stays silent")
+	world.pending_attack = {"id":-11,"normal":false}
+	# Audio observes before the existing resolver; clear fake pending state
+	# with the production cancellation signal instead of invoking a fake attack.
+	world._cancel_player_attack(-11)
+	world.player.attack_strike.emit(-11)
+	check(audio.played == before_strike, "cancelled attack stays silent")
 	var before_inventory: int = int(world.inventory.get("HP 물약", 0))
 	var drop: Button = world._spawn_ground_drop("HP 물약", world.player.global_position)
 	check(is_instance_valid(drop) and audio.last_event == "drop", "successful ground spawn emits drop feedback")

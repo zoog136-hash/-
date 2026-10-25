@@ -1232,6 +1232,9 @@ func _build_catalog_panel() -> void:
 	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_scroll.add_child(right)
 	var preview_row := HBoxContainer.new()
+	preview_row.name = "CatalogPreviewRow"
+	# Keep art and description visible while the action column scrolls on phones.
+	preview_row.custom_minimum_size.y = 190
 	preview_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right.add_child(preview_row)
 	catalog_preview.reparent(preview_row)
@@ -1544,6 +1547,7 @@ func _fit_catalog_browser_layout() -> void:
 	catalog_list.custom_minimum_size.x = 0
 	catalog_list.max_columns = 4
 	catalog_list.fixed_column_width = 116
+	catalog_body_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	catalog_body_actions.custom_minimum_size.x = 0 if compact else 520
 	var actions_content: Control = catalog_body_actions.get_child(0)
 	actions_content.custom_minimum_size.x = 0 if compact else 500

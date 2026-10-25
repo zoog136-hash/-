@@ -327,8 +327,9 @@ func _ready() -> void:
 	presentation_audio = PRESENTATION_AUDIO.new()
 	add_child(presentation_audio)
 	# Observe the existing released attack event; never drive its frame or timing.
-	player.attack_strike.connect(func(_cycle: int) -> void:
-		presentation_audio.play_world("attack", player.global_position))
+	player.attack_strike.connect(func(cycle: int) -> void:
+		if int(pending_attack.get("id", -1)) == cycle and bool(pending_attack.get("normal", false)):
+			presentation_audio.play_world("attack", player.global_position))
 	_connect_signals()
 	if hud.has_signal("consumable_auto_settings_changed"):
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
@@ -2253,22 +2254,23 @@ func _nearest_visible_monster(max_distance: float) -> TwilightMonster:
 	return best
 
 func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
-	var best: TwilightMonster = null
-	var best_distance: float = max_distance
+	# Preserve strict distance and scene-order ties, but ask expensive navigation
+	# about the nearest candidates first. No cached failures can hide a newly
+	# opened route or a moving target. All-unreachable searches still test all.
+	var candidates: Array[Dictionary] = []
 	for node: Node in monsters_root.get_children():
-		if not (node is TwilightMonster):
-			continue
+		if not (node is TwilightMonster): continue
 		var monster: TwilightMonster = node
-		if monster.dead:
-			continue
+		if monster.dead: continue
 		var distance: float = player.global_position.distance_to(monster.global_position)
-		if distance >= best_distance:
-			continue
-		if find_world_path(player.global_position, monster.global_position).is_empty():
-			continue
-		best_distance = distance
-		best = monster
-	return best
+		if distance >= max_distance: continue
+		candidates.append({"monster":monster,"distance":distance,"order":candidates.size()})
+	candidates.sort_custom(func(a: Dictionary,b: Dictionary) -> bool:
+		return int(a.order)<int(b.order) if a.distance==b.distance else a.distance<b.distance)
+	for candidate: Dictionary in candidates:
+		var monster: TwilightMonster = candidate.monster
+		if not find_world_path(player.global_position,monster.global_position).is_empty(): return monster
+	return null
 
 func _select_monster(monster: TwilightMonster) -> void:
 	if is_instance_valid(world_interactions): world_interactions.select_monster(monster)
