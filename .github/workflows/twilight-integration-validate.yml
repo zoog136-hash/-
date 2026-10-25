@@ -2,7 +2,7 @@ name: TWILIGHT Integration Validate
 
 on:
   push:
-    branches: ['main', 'integration/twilight-complete-20261009']
+    branches: [main]
   pull_request:
     branches: ['main', 'integration/twilight-complete-20261009']
   workflow_dispatch:
@@ -25,16 +25,34 @@ jobs:
     steps:
       - name: Check out integration candidate
         uses: actions/checkout@v4
+      - name: Restore pinned Godot engine cache
+        id: engine-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
       - name: Install Godot 4.7.2 and software GL
         shell: bash
         run: |
           set -euo pipefail
-          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
-          unzip -q /tmp/godot.zip -d /tmp
-          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          if ! { test -x /tmp/Godot_v4.7.2-stable_linux.x86_64 && /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'; }; then
+            rm -f /tmp/Godot_v4.7.2-stable_linux.x86_64
+            curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+            unzip -q /tmp/godot.zip -d /tmp
+            chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          fi
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'
           sudo apt-get update -qq
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
           /tmp/Godot_v4.7.2-stable_linux.x86_64 --version
+      - name: Save verified Godot engine cache on trusted main
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.engine-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
       - name: Full project regression, import, boot and all smoke tests
         shell: bash
         run: |

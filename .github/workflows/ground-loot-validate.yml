@@ -1,8 +1,6 @@
 name: Ground Loot Validate
 
 on:
-  push:
-    branches: ['feature/ground-loot-pickup-*']
   pull_request:
     branches: [main]
   workflow_dispatch:

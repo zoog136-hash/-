@@ -1,8 +1,6 @@
 name: TWILIGHT renewed-map spawn validation
 
 on:
-  push:
-    branches: [feature/renewed-map-spawns-20261012]
   pull_request:
     paths:
       - 'data/maps/**'
