@@ -42,6 +42,7 @@ func _run() -> void:
 		root.size=extent
 		DisplayServer.window_set_size(extent)
 		for mode: String in ["emblems","guardians"]:
+			if OS.get_environment("GROWTH_CAPTURE_SECTION")=="emblems" and mode!="emblems": continue
 			world.hud.open_growth(mode)
 			for i: int in range(8): await process_frame
 			await RenderingServer.frame_post_draw
@@ -56,6 +57,12 @@ func _run() -> void:
 		emblem_view.scroll.scroll_vertical=0
 		await motion(directory,"emblem-frames")
 		if emblem_view.card_faces.size()!=0: quit(1); return
+		if OS.get_environment("GROWTH_CAPTURE_SECTION")=="emblems":
+			world.queue_free()
+			await process_frame
+			print("GROWTH_CAPTURE_EMBLEMS_OK ",RenderingServer.get_video_adapter_name())
+			quit()
+			return
 		var activation: Dictionary=world.growth.execute("activate","joe_2",1,int(world.growth.state.revision))
 		print("CAPTURE_ACTIVATE ",activation)
 		if not activation.ok: quit(1); return
@@ -66,6 +73,22 @@ func _run() -> void:
 		await motion(directory,"guardian-frames")
 		if int(world.growth.state.revision)!=revision or world.growth.state.pending.is_empty(): quit(1); return
 		root.get_texture().get_image().save_png(directory+"/guardian-cards-waiting.png")
+		# A held/cancelled native touch shows feedback without selecting a card.
+		var held: Control=view.find_child("GuardianCard_0",true,false)
+		var touch:=InputEventScreenTouch.new()
+		touch.index=96
+		touch.position=held.get_global_transform_with_canvas()*(held.size/2)
+		touch.pressed=true
+		root.push_input(touch,true)
+		await create_timer(.16).timeout
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png(directory+"/guardian-card-touch-held.png")
+		touch=touch.duplicate()
+		touch.pressed=false
+		touch.canceled=true
+		root.push_input(touch,true)
+		await process_frame
+		if int(world.growth.state.revision)!=revision or world.growth.state.pending.is_empty(): quit(1); return
 		var loser: int=(int(world.growth.state.searches.joe_2.winner)+1)%3
 		tap(view.find_child("GuardianCard_"+str(loser),true,false))
 		await motion(directory,"guardian-frames")

@@ -1,6 +1,7 @@
 extends Control
 const Art = preload("res://scripts/growth/growth_art.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Palette = preload("res://scripts/growth/growth_palette.gd")
 var runtime
 var nodes: Array = []
 var buttons: Dictionary = {}
@@ -17,15 +18,19 @@ func configure(rt, rows: Array, hud: Node, scroll: ScrollContainer, chosen: Stri
 		button.name="GuardianNode_"+id
 		button.scroll_host=hud.workspace; button.scroll_area=scroll
 		button.size=Vector2(76,76)
-		button.modulate=Color.WHITE if runtime.state.nodes.has(id) else Color(.48,.48,.6)
+		# Dim only the socket, so unopened node names remain readable.
+		button.self_modulate=Color.WHITE if runtime.state.nodes.has(id) else Color(.58,.58,.67)
 		button.icon=Art.sigil(8 if runtime.state.nodes.has(id) else 7)
 		button.expand_icon=true
 		button.add_theme_constant_override("icon_max_width",38 if row.kind=="stat" else 60)
 		button.add_theme_stylebox_override("normal",UI.box(Color(0,0,0,0),Color(0,0,0,0),2))
+		button.add_theme_stylebox_override("hover",Palette.plate(Color(1,.85,.6,.035),Color("8d7857"),2))
+		button.add_theme_stylebox_override("pressed",Palette.plate(Color(1,.85,.6,.07),Palette.GOLD,2))
 		button.pressed.connect(func() -> void: on_select.call(id))
 		button.tooltip_text=str(row.name)
 		add_child(button); buttons[id]=button
 		var label:=UI.label(str(row.name).replace(" · 배치 미확인",""),14)
+		label.add_theme_color_override("font_color",Palette.GOLD if runtime.state.nodes.has(id) else Palette.MUTED)
 		label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		label.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 		label.position=Vector2(-22,78);label.size=Vector2(120,22)
