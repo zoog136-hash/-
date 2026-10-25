@@ -3,6 +3,7 @@ class_name TwilightActorMotion
 
 const PROFILE = preload("res://scripts/animation/animation_profile.gd")
 const TRANSFORM_MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
+const FRAME_REGISTRATION = preload("res://scripts/animation/reviewed_frame_registration.gd")
 const CLASS_DIRECTIONS = ["walk_down", "walk_up", "walk_left", "walk_right"]
 const SHEET_DIRECTIONS = ["dir_down", "dir_up", "dir_left", "dir_right"]
 signal strike(sequence: int)
@@ -57,6 +58,7 @@ var _resolved_state: String = ""
 var _resolved_facing: int = -1
 var _resolved_key: String = ""
 var _resolved_role: String = "legacy"
+var _resolved_frame_index: int = 0
 var _resolved_directional: bool = false
 var _legacy_frames: bool = false
 
@@ -231,6 +233,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		_set_state("turn" if turn_clock > 0.0 else "idle", delta)
 
 func apply(sprite: Node2D, base_scale: Vector2) -> void:
+	FRAME_REGISTRATION.restore_offset(sprite)
 	if not is_instance_valid(sprite): return
 	sprite.self_modulate = profile.color_tint
 	if impact_pose_pending and not dead:
@@ -339,6 +342,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 		var pose: Texture2D = (sprite as Sprite2D).texture if sprite is Sprite2D else source.get_frame_texture((sprite as AnimatedSprite2D).animation, (sprite as AnimatedSprite2D).frame)
 		if pose != null and reference_canvas.x > 0. and reference_canvas.y > 0. and pose.get_width() > 0 and pose.get_height() > 0:
 			sprite.scale *= reference_canvas / pose.get_size()
+	FRAME_REGISTRATION.apply(sprite, source, _resolved_key, _resolved_frame_index, base_scale)
 	impact_pose_pending = false
 
 func _available_death_key(frames: SpriteFrames, requested: int) -> String:
@@ -512,6 +516,7 @@ func apply_frames(sprite: Node2D) -> void:
 		var progress: float = state_clock * float(track.fps) / ends[-1]
 		frame_value = _weighted_frame(track, fposmod(progress, 1.0) if track.loop else minf(progress, 1.0))
 	var mirrored: bool = profile.layout == "still" and not _resolved_directional and direction.x < -0.1
+	_resolved_frame_index = frame_value
 	if profile.layout == "class5" and presenting_attack and not _resolved_directional: mirrored = facing4 == 2
 	if sprite is AnimatedSprite2D:
 		var animated: AnimatedSprite2D = sprite as AnimatedSprite2D
