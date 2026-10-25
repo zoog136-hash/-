@@ -6,12 +6,12 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from android_animation_export_scope import DRAFT_EXPORT_PATTERN, DRAFT_ROOT, audit_authoring_exclusions
+from android_animation_export_scope import ADEN_PREVIEW_RENDERER, DRAFT_EXPORT_PATTERN, DRAFT_ROOT, audit_authoring_exclusions
 
 
 class AndroidAnimationExportScopeTest(unittest.TestCase):
     def fixture(self, root):
-        (root / "export_presets.cfg").write_text('exclude_filter="docs/*,' + DRAFT_EXPORT_PATTERN + '"\n')
+        (root / "export_presets.cfg").write_text('exclude_filter="docs/*,' + DRAFT_EXPORT_PATTERN + ',' + ADEN_PREVIEW_RENDERER + '"\n')
         (root / "data").mkdir()
         for name in ("combat_animation_profiles.json", "animation_presentation.json", "catalog_v19.json"):
             (root / "data" / name).write_text('{}\n')
@@ -127,6 +127,34 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
                     archive.write_text(archive.read_text().replace('type="SpriteFrames"', 'type="Resource"'))
                 with self.assertRaises(ValueError):
                     audit_authoring_exclusions(root)
+
+    def test_authoring_preview_is_excluded_only_with_no_runtime_references(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            preview = root / ADEN_PREVIEW_RENDERER
+            preview.parent.mkdir(parents=True)
+            preview.write_text(
+                'extends Node2D\\nvar source = "res://assets/maps/aden_modular_pilot/compiled/"\\n'
+            )
+            self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
+
+            scene = root / "Main.tscn"
+            scene.write_text('path="res://' + ADEN_PREVIEW_RENDERER + '"\\n')
+            with self.assertRaisesRegex(ValueError, "excluded Aden preview renderer"):
+                audit_authoring_exclusions(root)
+            scene.unlink()
+
+            catalog = root / "data/runtime_preview.json"
+            catalog.write_text('{"script": "res://' + ADEN_PREVIEW_RENDERER + '"}\\n')
+            with self.assertRaisesRegex(ValueError, "excluded Aden preview renderer"):
+                audit_authoring_exclusions(root)
+            catalog.unlink()
+
+            preset = root / "export_presets.cfg"
+            preset.write_text(preset.read_text().replace("," + ADEN_PREVIEW_RENDERER, ""))
+            with self.assertRaisesRegex(ValueError, "must explicitly exclude"):
+                audit_authoring_exclusions(root)
 
 
 if __name__ == '__main__':

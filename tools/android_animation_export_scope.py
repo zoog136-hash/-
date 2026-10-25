@@ -19,6 +19,8 @@ REQUIRED_RUNTIME_JSON = (
 # runtime streams from the separate aden_mobile_pack.json and encoded .bin data.
 ARCHIVED_SOURCE_MANIFEST = "assets/maps/aden_city_region/compiled/manifest.json"
 ADEN_RUNTIME_MANIFEST = "data/maps/aden_mobile_pack.json"
+# Editor-only map review script. Never ship it in Android with its excluded PNG inputs.
+ADEN_PREVIEW_RENDERER = "scripts/maps/aden_modular_preview_renderer.gd"
 # These five trees are offline map-composition inputs, never gameplay catalogs.
 # Keep the authoring allowlist exact: newly added JSON must be reviewed.
 ADEN_AUTHORING_ROOTS = (
@@ -65,6 +67,8 @@ def audit_authoring_exclusions(root: Path) -> dict:
     if len(filters) != 1 or DRAFT_EXPORT_PATTERN not in filters[0].split(","):
         raise ValueError("Android preset must explicitly exclude only the archived draft001 scope")
     excluded_patterns = filters[0].split(",")
+    if (root / ADEN_PREVIEW_RENDERER).is_file() and ADEN_PREVIEW_RENDERER not in excluded_patterns:
+        raise ValueError("Android preset must explicitly exclude the authoring-only Aden preview renderer")
     archived_map_json = {name for name in ADEN_AUTHORING_JSON if (root / name).is_file()
                          and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
     excluded = []
@@ -106,6 +110,8 @@ def audit_authoring_exclusions(root: Path) -> dict:
         excluded_by_preset = any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns)
         if forbidden.search(content):
             raise ValueError("Runtime or selected staging manifest references excluded draft001: " + relative)
+        if not excluded_by_preset and ADEN_PREVIEW_RENDERER in content:
+            raise ValueError("Exported runtime catalog references excluded Aden preview renderer: " + relative)
         if not excluded_by_preset and any(("res://" + name) in content for name in archived_map_json):
             raise ValueError("Exported runtime catalog references excluded Aden authoring JSON: " + relative)
         if excluded_by_preset:
@@ -132,6 +138,8 @@ def audit_authoring_exclusions(root: Path) -> dict:
         if relative in paths or not path.is_file():
             continue
         if any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns):
+            if relative == ADEN_PREVIEW_RENDERER and path.suffix == ".gd" and not path.is_symlink():
+                continue
             # Original-resolution map PNGs across the five authoring-only
             # districts are compilation inputs, not APK gameplay assets.
             if path.suffix == ".png" and any(relative.startswith(folder) for folder in ADEN_AUTHORING_ROOTS):
@@ -141,6 +149,8 @@ def audit_authoring_exclusions(root: Path) -> dict:
             runtime_text = path.read_text(encoding="utf-8")
             if forbidden.search(runtime_text):
                 raise ValueError("Exported code/resource references excluded draft001: " + relative)
+            if ADEN_PREVIEW_RENDERER in runtime_text:
+                raise ValueError("Exported code/resource references excluded Aden preview renderer: " + relative)
             if any(("res://" + folder) in runtime_text for folder in ADEN_AUTHORING_ROOTS):
                 raise ValueError("Exported code/resource references excluded Aden authoring input: " + relative)
         checked += 1
