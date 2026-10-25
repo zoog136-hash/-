@@ -1,3 +1,5 @@
+> Latest follow-up: see `legendary-registration-progress/README.md` and `batch-review-state.json`. All 40 actors have pinned registration **proposals**, not accepted registrations. 33 correction drafts plus 4 targeted revisions are preserved separately; production connections and final approvals added by this checkpoint remain **0**. CI is explicitly excluded. The remaining 39-actor integration task is still unfinished.
+
 # PR122 별도 최종 승인 검증 — HOLD 유지
 
 **최신 비-CI 후속:** [신화 HOLD 8클립 수정·전설 40종 캡처 검증](hold-repair-batch/README.md). 신화 8/8클립·48/48포즈 실제 Main 통과, 전설 NW 피격 40/40클립·240/240포즈 국소 재생/캡처 통과. 누적 확정 실패 수정 18클립. 기본 게임 신규 연결·최종 품질 승인 0이며 전체 PR158 완료가 아니다. CI는 사용자 요청으로 실행·조회·감시하지 않았다.
