@@ -1,0 +1,10 @@
+name: setup-godot-linux
+description: Install the pinned Godot 4.7.2 Linux engine at the existing /tmp path
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+        unzip -q /tmp/godot.zip -d /tmp
+        chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
