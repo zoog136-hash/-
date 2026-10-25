@@ -15,6 +15,10 @@ REQUIRED_RUNTIME_JSON = (
     "data/combat_animation_profiles.json", "data/animation_presentation.json",
     "data/catalog_v19.json",
 )
+# Archived original PNG build metadata is excluded from the APK. The actual
+# runtime streams from the separate aden_mobile_pack.json and encoded .bin data.
+ARCHIVED_SOURCE_MANIFEST = "assets/maps/aden_city_region/compiled/manifest.json"
+ADEN_RUNTIME_MANIFEST = "data/maps/aden_mobile_pack.json"
 
 
 def audit_authoring_exclusions(root: Path) -> dict:
@@ -66,10 +70,23 @@ def audit_authoring_exclusions(root: Path) -> dict:
         relative = path.relative_to(root).as_posix()
         content = path.read_text(encoding="utf-8")
         json.loads(content)
-        if any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns):
-            raise ValueError("Runtime catalog excluded by Android preset: " + relative)
+        excluded_by_preset = any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns)
         if forbidden.search(content):
             raise ValueError("Runtime or selected staging manifest references excluded draft001: " + relative)
+        if excluded_by_preset:
+            # Only this exact authoring-time PNG manifest can be missing from
+            # the APK, not a catalog used by the running game.
+            if relative != ARCHIVED_SOURCE_MANIFEST:
+                raise ValueError("Runtime catalog excluded by Android preset: " + relative)
+            runtime = root / ADEN_RUNTIME_MANIFEST
+            if not runtime.is_file() or any(fnmatch.fnmatchcase(ADEN_RUNTIME_MANIFEST, pattern)
+                                            for pattern in excluded_patterns):
+                raise ValueError("Aden runtime pack manifest is missing from Android export")
+            pack = json.loads(runtime.read_text(encoding="utf-8"))
+            if pack.get("schema") != 1 or pack.get("map_id") != "aden_world" or not re.fullmatch(
+                    r"[0-9a-f]{64}", str(pack.get("manifest_sha256", ""))):
+                raise ValueError("Invalid Aden runtime pack manifest")
+            continue
         checked += 1
     files = [root / "Main.tscn", root / "project.godot"]
     for top in ("assets", "scenes", "scripts"):
