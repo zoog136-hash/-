@@ -125,6 +125,45 @@ def validate_cached_setup_action(action):
     return ENGINE_INSTALL
 
 
+# Import artifacts from the default-branch-only cache are revalidated by the
+# unchanged real --import and full Godot checks. No PR can seed this cache.
+IMPORT_CACHE_PATHS = ".godot/imported\\n**/*.import"
+IMPORT_CACHE_KEY = "twilight-godot-import-4.7.2-linux-compat-main-v1"
+IMPORT_EXTRA_NAMES = (
+    "Restore trusted Godot imported resources",
+    "Start Godot import timing",
+    "Report Godot import time and enforce cache size limit",
+    "Save fully validated Godot import cache on trusted main",
+)
+IMPORT_MAIN_ONLY = "${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.imported-cache.outputs.cache-hit != 'true' && steps.import-metrics.outputs.cacheable == 'true' }}"
+
+
+def assert_import_cache_contract(steps):
+    by_name = {step.get('name'): step for step in steps if step.get('name') in IMPORT_EXTRA_NAMES}
+    assert set(by_name) == set(IMPORT_EXTRA_NAMES), 'Missing imported-resource cache step'
+    assert by_name[IMPORT_EXTRA_NAMES[0]] == {
+        'name': IMPORT_EXTRA_NAMES[0], 'id': 'imported-cache',
+        'uses': 'actions/cache/restore@v4', 'continue-on-error': True,
+        'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY}}
+    assert by_name[IMPORT_EXTRA_NAMES[1]] == {
+        'name': IMPORT_EXTRA_NAMES[1], 'shell': 'bash',
+        'run': 'date +%s > "$RUNNER_TEMP/twilight-import-start"\\n'}
+    report = by_name[IMPORT_EXTRA_NAMES[2]]
+    assert set(report) == {'name', 'id', 'shell', 'run'}
+    assert report['id'] == 'import-metrics' and report['shell'] == 'bash'
+    for fragment in (
+        'set -euo pipefail', 'TWILIGHT_IMPORT_SECONDS=', 'TWILIGHT_IMPORTED_BYTES=',
+        'TWILIGHT_CACHE_RESTORED=', 'du -sb .godot/imported',
+        'bytes > 0 && bytes < 1610612736', 'echo "cacheable=false"',
+        'echo "cacheable=true"', '>> "$GITHUB_OUTPUT"'):
+        assert fragment in report['run'], 'Missing import cache metric/gate: ' + fragment
+    assert by_name[IMPORT_EXTRA_NAMES[3]] == {
+        'name': IMPORT_EXTRA_NAMES[3], 'if': IMPORT_MAIN_ONLY,
+        'uses': 'actions/cache/save@v4', 'continue-on-error': True,
+        'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY}}
+    return [step for step in steps if step.get('name') not in IMPORT_EXTRA_NAMES]
+
+
 def normalize_cached_direct(path, before, expanded):
     if path not in ('.github/workflows/godot-validate.yml',
                     '.github/workflows/twilight-integration-validate.yml'):
@@ -134,6 +173,8 @@ def normalize_cached_direct(path, before, expanded):
     original_steps = before['jobs'][before_jobs[0]]['steps']
     current_steps = expanded['jobs'][before_jobs[0]]['steps']
     expected = copy.deepcopy(original_steps)
+    if path.endswith('godot-validate.yml'):
+        current_steps = assert_import_cache_contract(current_steps)
     if path.endswith('godot-validate.yml'):
         name = 'Install Godot 4.7.2'
         old = ("curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\n"

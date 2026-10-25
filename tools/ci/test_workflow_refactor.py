@@ -1,7 +1,7 @@
 """Guard against hiding changed CI coverage behind a shared setup action."""
 import copy
 import unittest
-from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE
+from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE
 
 
 class RefactorContractTest(unittest.TestCase):
@@ -104,6 +104,28 @@ class GodotCacheContracts(unittest.TestCase):
         with self.assertRaises(AssertionError):
             normalize_cached_direct('.github/workflows/godot-validate.yml', before, after)
 
+
+
+class ImportCacheSafetyContract(unittest.TestCase):
+    def test_default_branch_is_the_only_writer(self):
+        self.assertIn("github.ref == 'refs/heads/main'", IMPORT_MAIN_ONLY)
+        self.assertIn("github.event_name == 'push'", IMPORT_MAIN_ONLY)
+        self.assertIn("success()", IMPORT_MAIN_ONLY)
+        self.assertIn("steps.import-metrics.outputs.cacheable == 'true'", IMPORT_MAIN_ONLY)
+        self.assertIn("steps.imported-cache.outputs.cache-hit != 'true'", IMPORT_MAIN_ONLY)
+
+    def test_import_cache_excludes_gameplay_and_secrets(self):
+        self.assertIn(".godot/imported", IMPORT_CACHE_PATHS)
+        self.assertIn("**/*.import", IMPORT_CACHE_PATHS)
+        for banned in ("docs/", "assets/maps", "data/maps", "editor_data",
+                       "secrets", "android/", ".git"):
+            self.assertNotIn(banned, IMPORT_CACHE_PATHS)
+        self.assertTrue(IMPORT_CACHE_KEY.startswith('twilight-godot-import-4.7.2'))
+
+    def test_existing_check_names_are_preserved(self):
+        self.assertEqual(len(IMPORT_EXTRA_NAMES), 4)
+        self.assertNotIn("Import and parse project", IMPORT_EXTRA_NAMES)
+        self.assertNotIn("Boot main scene", IMPORT_EXTRA_NAMES)
 
 
 if __name__ == '__main__':
