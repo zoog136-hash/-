@@ -96,7 +96,7 @@ class GodotCacheContracts(unittest.TestCase):
         after['jobs']['validate']['steps'][0]['run'] = after['jobs']['validate']['steps'][0]['run'].replace(
             'curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\n'
             'unzip -q godot.zip\nchmod +x Godot_v4.7.2-stable_linux.x86_64\n',
-            cached_script(ENGINE_MAIN_INSTALL, symlink=True))
+            "set -euo pipefail\n" + cached_script(ENGINE_MAIN_INSTALL, symlink=True))
         after['jobs']['validate']['steps'].insert(0, copy.deepcopy(ENGINE_CACHE_RESTORE))
         after['jobs']['validate']['steps'].insert(2, copy.deepcopy(ENGINE_CACHE_SAVE))
         self.assertEqual(normalize_cached_direct('.github/workflows/godot-validate.yml', before, after), before)
