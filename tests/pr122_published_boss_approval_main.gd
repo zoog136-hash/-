@@ -115,7 +115,7 @@ func run() -> void:
 			if "monster:" + str(value.get("name", "")) == expected.key:
 				record = value.duplicate(true)
 		if not check(not record.is_empty(), "Real monster DB contains " + str(expected.key)): continue
-		var row := {"key": expected.key, "frames": expected.frames, "directions": [], "captures": [], "required_requests": 0, "seen_clips": {}, "attack_release_events": 0}
+		var row := {"key": expected.key, "frames": expected.frames, "directions": [], "captures": [], "required_requests": 0, "seen_clips": {}, "attack_release_events": 0, "anchor_checks": 0}
 		for d in range(8):
 			# A fresh actual Monster for each irreversible south/shared death.
 			var actor = monster_scene.instantiate()
@@ -123,6 +123,8 @@ func run() -> void:
 			actor.position = world.player.position + Vector2(170,60)
 			actor.setup(record, world.player, world, world._monster_texture(record))
 			actor.set_physics_process(false)
+			var original_body_position: Vector2 = actor.position
+			var original_collision: Transform2D = actor.get_node("CollisionShape2D").transform
 			check(actor.motion.profile.frames_path == expected.frames, "Default catalog selects reviewed frames " + str(expected.key))
 			check(actor.motion.frame_source.resource_path == expected.frames, "Actual Monster owns default SpriteFrames")
 			check(actor.max_hp == int(record.hp), "Boss HP preserved")
@@ -156,6 +158,12 @@ func run() -> void:
 					actor.motion.advance(1.0/120.0,velocity)
 					if role == "idle": actor.motion.state = "idle"
 					actor.motion.apply(actor.sprite, actor.animation_base_scale)
+					check(actor.position == original_body_position and actor.get_node("CollisionShape2D").transform == original_collision, "Animation preserves physical body and collision foot")
+					check(actor.sprite.position.is_equal_approx(actor.motion.profile.sprite_offset) and is_zero_approx(actor.sprite.rotation), "Published authored anchor has no procedural drift")
+					if actor.sprite.texture != null:
+						var canvas: Vector2 = actor.motion.frame_source.get_meta("twilight_canvas_size")
+						check((actor.sprite.scale * actor.sprite.texture.get_size()).is_equal_approx(actor.animation_base_scale * canvas), "Mixed-resolution poses preserve reference canvas scale")
+					row.anchor_checks += 1
 					if actor.motion._resolved_key == clip:
 						var frame = actor.sprite.texture
 						if frame != null: seen[frame.get_instance_id()] = true

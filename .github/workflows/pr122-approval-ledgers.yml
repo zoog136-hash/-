@@ -7,6 +7,8 @@ on:
       - 'assets/actors/eight_direction/monster_boss_repair/**/published-*/**'
       - 'tools/reconcile_pr122_boss_connections.py'
       - 'tools/build_approval_plan.py'
+      - 'tools/run_pr122_approval_validation.py'
+      - 'tests/pr122_published_boss_approval_main.gd'
       - 'tools/analyze_pr122_approval_audit.py'
       - 'tests/pr122_approval_resource_audit.gd'
       - 'tests/test_pr122_approval_analysis.py'

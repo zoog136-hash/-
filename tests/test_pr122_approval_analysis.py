@@ -25,4 +25,12 @@ class AnalysisClassificationTest(unittest.TestCase):
         self.assertEqual(len(summary['staging_pin_mismatches']),1)
         self.assertEqual(summary['new_quality_approvals'],0)
 
+    def test_missing_profile_remains_in_denominator_and_failures(self):
+        self.report['resources'][0]['entries']=[dict(entry_id='actor',category='mythic',scope='staging',failures=['PROFILE_LOAD_FAILED'],resolved=[dict(required=True,role_available=False,existing_runtime_walk_fallback=False) for _ in range(33)])]
+        summary,_=analyze(self.root,self.plan,self.report)
+        self.assertEqual(summary['counts']['mythic:staging']['required_requests'],33)
+        self.assertEqual(summary['counts']['mythic:staging']['missing_requests'],33)
+        self.assertEqual(summary['entry_failures'][0]['error'],'PROFILE_LOAD_FAILED')
+        self.assertEqual(summary['new_quality_approvals'],0)
+
 if __name__=='__main__':unittest.main()

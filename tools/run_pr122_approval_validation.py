@@ -55,7 +55,7 @@ def run(root,out,godot,mode,plan,xvfb):
             result=subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=900 if mode=='resources' else 240)
         lines=(out/'godot.log').read_text().splitlines()
         errors=[line for line in lines if any(s in line for s in ['SCRIPT ERROR','Parse Error','ERROR:'])]
-        report=dict(mode=mode,returncode=result.returncode,elapsed_seconds=round(time.monotonic()-started,2),engine=subprocess.check_output([str(godot),'--version'],text=True).strip(),errors=errors,source_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),isolated_user_data=True,native_import_test=False,new_art_approvals=0)
+        report=dict(mode=mode,returncode=result.returncode,elapsed_seconds=round(time.monotonic()-started,2),engine=subprocess.check_output([str(godot),'--version'],text=True,env=env).strip(),errors=errors,source_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),isolated_user_data=True,native_import_test=False,new_art_approvals=0)
         (out/'process.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
         print(json.dumps({k:v for k,v in report.items() if k!='errors'},ensure_ascii=False));print('engine_errors',len(errors))
         return 1 if errors or result.returncode else 0

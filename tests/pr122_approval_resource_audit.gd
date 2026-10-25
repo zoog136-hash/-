@@ -68,9 +68,13 @@ func _resolve(entry: Dictionary, frames: SpriteFrames) -> Dictionary:
 			profile.set(key, value)
 		profile.profile_id = entry.id
 	else:
-		profile = ResourceLoader.load(entry.native_profile, "", ResourceLoader.CACHE_MODE_IGNORE)
+		if not str(entry.get("native_profile", "")).is_empty():
+			profile = ResourceLoader.load(entry.native_profile, "", ResourceLoader.CACHE_MODE_IGNORE)
 	if profile == null or not profile is Profile:
 		result.failures.append("PROFILE_LOAD_FAILED")
+		for role: String in ["idle", "run", "attack", "hit", "death"]:
+			for direction: int in range(8):
+				result.resolved.append({"requested_role": role, "requested_direction": direction, "required": role != "death" or direction == 2, "role_available": false, "existing_runtime_walk_fallback": false, "frame_failure": "PROFILE_LOAD_FAILED"})
 		return result
 	if profile.frames_path != entry.frames:
 		result.failures.append("PROFILE_FRAMES_BINDING_MISMATCH")

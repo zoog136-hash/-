@@ -8,7 +8,7 @@ def analyze(root,plan,report):
     @lru_cache(maxsize=4)
     def picture(path):
         with Image.open(root/path.removeprefix('res://')) as im:return im.convert('RGBA')
-    files={};clips=[];failures=[];pins=[];totals=collections.defaultdict(collections.Counter)
+    files={};clips=[];failures=[];entry_failures=[];pins=[];totals=collections.defaultdict(collections.Counter)
     for resource in report['resources']:
         for error in resource['failures']:failures.append(dict(resource=resource['frames'],error=error))
         for name,clip in resource['clips'].items():
@@ -38,6 +38,7 @@ def analyze(root,plan,report):
             clips.append(row)
             for error in bad:failures.append(dict(resource=resource['frames'],clip=name,error=error))
         for e in resource['entries']:
+            for error in e.get('failures',[]):entry_failures.append(dict(id=e.get('entry_id'),scope=e['scope'],resource=resource['frames'],error=error))
             count=totals[e['category']+':'+e['scope']];count['entries']+=1
             for r in e.get('resolved',[]):
                 if not r['required']:continue
@@ -52,9 +53,9 @@ def analyze(root,plan,report):
             expected=e.get('recorded_frames_sha256')
             if expected and e.get('recorded_frames')==e['frames'] and expected!=group['sha256']:
                 pins.append(dict(id=e['id'],register=e['register'],frames=e['frames'],expected=expected,actual=group['sha256']))
-    return dict(schema='pr122-approval-audit-summary-v1',source_head=plan['head'],counts={k:dict(v) for k,v in totals.items()},unique_resources=len(report['resources']),unique_clips=len(clips),unique_texture_files=len(files),technical_failures=failures,staging_pin_mismatches=pins,visual_review_flagged_clips=sum(bool(c['visual_review_flags']) for c in clips),new_quality_approvals=0,limitations=['Region edge is a review flag, not automatically clipping','No semantic heading/pose/foot-contact approval from alpha bounds','Deterministic ActorMotion replay is not final Main combat/contact approval','Excluded unique assets retain their previous approvals; no reauthoring','Parallel hero/legendary branch candidates remain unmerged dependencies']),dict(clips=clips,textures=files)
+    return dict(schema='pr122-approval-audit-summary-v1',source_head=plan['head'],counts={k:dict(v) for k,v in totals.items()},unique_resources=len(report['resources']),unique_clips=len(clips),unique_texture_files=len(files),technical_failures=failures,entry_failures=entry_failures,staging_pin_mismatches=pins,visual_review_flagged_clips=sum(bool(c['visual_review_flags']) for c in clips),new_quality_approvals=0,limitations=['Region edge is a review flag, not automatically clipping','No semantic heading/pose/foot-contact approval from alpha bounds','Deterministic ActorMotion replay is not final Main combat/contact approval','Excluded unique assets retain their previous approvals; no reauthoring','Parallel hero/legendary branch candidates remain unmerged dependencies']),dict(clips=clips,textures=files)
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--plan',type=Path,required=True);p.add_argument('--report',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
     summary,details=analyze(a.root,json.loads(a.plan.read_text()),json.loads(a.report.read_text()))
-    a.output.write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n');a.output.with_name('clip-findings.json').write_text(json.dumps(details,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in summary.items() if k not in ['technical_failures','staging_pin_mismatches']},ensure_ascii=False));print('technical_failures',len(summary['technical_failures']),'pin_mismatches',len(summary['staging_pin_mismatches']))
+    a.output.write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n');a.output.with_name('clip-findings.json').write_text(json.dumps(details,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in summary.items() if k not in ['technical_failures','entry_failures','staging_pin_mismatches']},ensure_ascii=False));print('technical_failures',len(summary['technical_failures']),'pin_mismatches',len(summary['staging_pin_mismatches']))
