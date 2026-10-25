@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-build-authored-clip-request-v05.py", line 163, in <module>
+    if __name__ == '__main__': main()
+                               ^^^^^^
+  File "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-build-authored-clip-request-v05.py", line 131, in main
+    expanded, region_proof = regions.apply_reviewed_regions(atlas, base, source_regions)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/pr122_reviewed_source_regions.py", line 200, in apply_reviewed_regions
+    fresh = importer.analyze(path, rows_count=6, reference_rows=[0, 3],
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/import_original_based_motion.py", line 266, in analyze
+    raise ValueError("Reviewed source anchor must lie inside its pose")
+ValueError: Reviewed source anchor must lie inside its pose

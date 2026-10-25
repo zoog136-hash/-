@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "N",
+  "role": "walk",
+  "version": "v01",
+  "source_batch": "batch03",
+  "asset_type": "four_missing_walk_halfcycle_sources",
+  "status": "HOLD_PARTIAL_SALVAGE",
+  "source_visual_status": "HOLD",
+  "geometry_status": "PASS",
+  "complete_source_coverage_status": "PASS",
+  "raw_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/girtas-N-walk-missing-halfcycles-v01.png",
+  "raw_sha256": "652ce91fca7259bee8ac74abded16184653ecd93899deab542a30ecd4aee6038",
+  "raw_bytes": 1618793,
+  "request_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/request-girtas-N-walk-missing-halfcycles-v01.json",
+  "request_sha256": "4af3b2f512e251cc53581236ceff501db2f9a7c320b419387e78465a18be122d",
+  "generation_attempts": 1,
+  "expected_poses": 4,
+  "individual_phase_assessments": [
+    {
+      "source_row": 0,
+      "suggested_game_phase": 1,
+      "individual_status": "PASS_CANDIDATE",
+      "actual_support": "LEFT",
+      "swing": "RIGHT knee flexed/lifted passing, visible sole/short shin",
+      "limitation": "Confirm passing articulation vs existing contact0 in assembly playback."
+    },
+    {
+      "source_row": 1,
+      "suggested_game_phase": 2,
+      "individual_status": "PASS_CANDIDATE",
+      "actual_support": "LEFT",
+      "swing": "RIGHT short/forward away under hem, straighter/less exposed passing calf",
+      "limitation": "Advance candidate, not finalloop approval."
+    },
+    {
+      "source_row": 2,
+      "suggested_game_phase": null,
+      "individual_status": "HOLD_REDUNDANT_WRONG_HALF",
+      "actual_support": "LEFT",
+      "swing": "RIGHT short/up",
+      "limitation": "Does not provide required opposite LEFT-passing phase4; preserve unused."
+    },
+    {
+      "source_row": 3,
+      "suggested_game_phase": 5,
+      "individual_status": "PASS_CANDIDATE",
+      "actual_support": "RIGHT",
+      "swing": "LEFT short/forward away under hem",
+      "limitation": "Late advance candidate; distinct LEFT-passing phase4 still missing."
+    }
+  ],
+  "candidate_final_mapping": [
+    {
+      "phase": 0,
+      "source": "existing Nwalk0 lossless key"
+    },
+    {
+      "phase": 1,
+      "source_row": 0
+    },
+    {
+      "phase": 2,
+      "source_row": 1
+    },
+    {
+      "phase": 3,
+      "source": "existing Nwalk2 reused opposite key"
+    },
+    {
+      "phase": 4,
+      "source": "MISSING LEFT-passing/RIGHT-support"
+    },
+    {
+      "phase": 5,
+      "source_row": 3
+    }
+  ],
+  "individual_crop_proof_path": "/workspace/scratch/girtas-N-walk-missing-halfcycles-v01/individual-row-crop-proof.json",
+  "visual_findings": [
+    "All4 preserve pure N/back with no face/frontstar, original pale back hair/thin gold radial spines/long dark goldtrim skirt, same anatomicalRIGHT/imageRIGHT sinuous weapon and emptyLEFT hand.",
+    "Actual source0/1/2 retainLEFT long/down support andRIGHT short/lifted; source3 usesRIGHT long/down support andLEFT short. Exact request retained even though model did not follow its original pair ordering.",
+    "Individually salvage source0 asRIGHT-passing firsthalf candidate,source1 asRIGHT-advance firsthalf candidate,source3 asLEFT-advance oppositehalf candidate. source2 preservedHOLD redundantfirsthalf; missing LEFTpassing/RIGHTsupport phase4 remains.",
+    "Private partial0..5 comparison used display-only fixed ratio1254/1024; head/crown, shoulders/torso, waist/hip and boots appear coherent in physical proportions after common ratio, with cloth/ray silhouette pose changes. No sourcePNG resampled.",
+    "Strict4source geometry and all alpha>100 pixels covered by geometry PASS; each row losslessly cropped with exactRGBA/region/sourceSHA proof."
+  ],
+  "visual_limitations": [
+    "Whole required fourpose set and final6loop are HOLD because phase4 missing; no final seam4->5 or fullcycle approval.",
+    "3salvage rows are individual role-fitting source candidates, require assembly playback/root review before accepting genuine six-phase progression.",
+    "Image resolution1254 versus old1024 gives1.224609375 factor; medianbboxheight607.5 versus493 agrees within~0.6%, but bbox alone is insufficient. Private head/torso/hip/boot comparison supports approximate uniform pixel increase; fullray/robe pose envelopes differ and precise anatomical landmark review remains required.",
+    "Existing contact keys remain exact lossless crops; all raw4source pixels and unusedrow2 preserved; no resampling/cutoff/hand mirror."
+  ],
+  "resolution_review": {
+    "new_image_size": [
+      1254,
+      1254
+    ],
+    "old_cell_sheet_width": 1024,
+    "resolution_ratio": 1.224609375,
+    "possible_virtual_canvas": 1254,
+    "possible_foot": [
+      627,
+      783.75
+    ],
+    "uniform_proportion_status": "PRIVATE_VISUALLY_COHERENT_NOT_FINAL_MEASURED_APPROVAL"
+  },
+  "new_approvals": 0,
+  "main_chat_images_shared": false,
+  "repo_mutations": false
+}

@@ -1,0 +1,56 @@
+{
+  "status": "EXISTING_CANDIDATE_STAGED_RUNTIME_PASS_SOURCE_VISUAL_HOLD",
+  "mode": "Wattack",
+  "revision": "r046",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-attack-WattackCuffNative04.png",
+  "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+  "clips_added": 1,
+  "poses_connected": 6,
+  "frames_rerendered": 0,
+  "existing_tracks_preserved": 44,
+  "analysis_calls": 4,
+  "analysis_scope": {
+    "reused": 44,
+    "fresh": 1,
+    "analyzed": 0
+  },
+  "profile_literal_changes": [
+    "frames_path"
+  ],
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "production_connected": false,
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "active_actor_approved": 2,
+  "active_actor_total": 19,
+  "checks": {
+    "resource": {
+      "path": "/workspace/scratch/pr122-413-shared-inputs-incremental-20261023-v01/r046.resource.log",
+      "sha256": "7fd351c71b791b1c9a31fd2ac714910df76d2949b0d38b1049e9f43f5f442f61",
+      "status": "PASS"
+    },
+    "player": {
+      "path": "/workspace/scratch/pr122-413-shared-inputs-incremental-20261023-v01/r046.player.log",
+      "sha256": "284d17574129f878edb5c4f796a6d5811a22fe2bf72bdf4c64d27d4484271f04",
+      "status": "PASS"
+    },
+    "action": {
+      "path": "/workspace/scratch/pr122-413-shared-inputs-incremental-20261023-v01/r046.action.log",
+      "sha256": "5a2ce93c59f311817c3f3ceca74a9eb042d89f05f8563e0da10c3584aa22b074",
+      "status": "PASS"
+    },
+    "main-attack": {
+      "path": "/workspace/scratch/pr122-413-shared-inputs-incremental-20261023-v01/r046.main-attack.log",
+      "sha256": "beb6f9a94ca6f59aac4fb7cab67f549829a63aea3ec408b404351b33436a07b8",
+      "status": "PASS"
+    }
+  },
+  "unchanged_death_runtime_reuse": {
+    "source_death_tracks_sha256": "b37a89b819c5b87dd2d1d19480ae9d93c80f0cf667f05829c9e93d7a99674f01",
+    "profile_except_frames_path_sha256": "e91ce8e675f7cb75d9ed35ca7f3f860d818ad8c4c76c8e6c32444a2f9c463d5c",
+    "runtime_code_sha256": "a1b215e2ac05b38d00b4cc9adcc7631dbc2ebb1d92aab5d6b2704099ccb1f1bb",
+    "scope_policy_sha256": "2e6ce7e718f85d41c3694368937c874dffa9fd649cb6bf2f744bbd0756020882",
+    "proof": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-S-death-r045-staged-20261023/r045.main-death-proof.json",
+    "status": "PASS_REUSED_EXACT_UNCHANGED_DEATH_INPUTS"
+  }
+}

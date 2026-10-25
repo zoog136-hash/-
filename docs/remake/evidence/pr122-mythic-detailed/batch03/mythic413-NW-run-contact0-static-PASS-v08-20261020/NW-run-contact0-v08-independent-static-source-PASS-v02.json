@@ -1,0 +1,126 @@
+{
+  "schema": "independent-private-actual-NW-run-contact0-v08-static-source-gate-v2",
+  "status": "PASS_STATIC_CONTACT0_SOURCE_FOR_DEPENDENT_LOAD_AUTHORING_ONLY",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+    "bytes": 762243
+  },
+  "construction_provenance": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-original-cloth-occlusion-provenance-v04.json",
+    "sha256": "a137d9466d6819dedffaba8c99c4378f3d6954b3667862c5958647770643d1b8",
+    "bytes": 2314
+  },
+  "body_unit_calibration": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NW-run-915b1-body-unit-C2560-independent-calibration-v01.json",
+    "sha256": "d8e9560dd129de71b54ee7d126a75c2d620e044f1e89be317dfb296ac40808a6",
+    "bytes": 6980
+  },
+  "appearance_master": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+    "sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+    "bytes": 817927
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "raw_canvas": [
+    1254,
+    1254
+  ],
+  "independent_pixel_checks": {
+    "changed_pixels_vs_v07": 21368,
+    "outside_finite_cloth_ROI_changed_pixels": 0,
+    "actual_new_arm_nearboot_foreground_changed_pixels": 0,
+    "entire_lowerbody_y775_down_changed_pixels": 0,
+    "ROI_xyxy": [
+      560,
+      570,
+      810,
+      775
+    ]
+  },
+  "actual_private_inspection": {
+    "full_figure": true,
+    "native_cloth_join": true,
+    "images_forwarded_to_root": false,
+    "ledger": {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-contact0-v08-frozen.json",
+      "sha256": "e770aeaf86e99e226d90fd53aab2ee074e8444527fbc316ee2e097544d120bc2",
+      "bytes": 6568
+    }
+  },
+  "static_source_findings": {
+    "identity": "True rear NW/back/bun/blueribbon, original bluegold crossed-back bodice/necktrim/waist identity, whitepleated skirt with original goldhem material, black thighboots, anatomical RIGHT far connected doubleended goldturquoise staff and LEFT free hand retained.",
+    "arm_counterphase": "Actual near LEFT free arm now visibly rear toward hip, opposite the forward near LEFT landing intention.",
+    "near_leg": "Connected hip/knee/boot chain and coherent heel-first landing intention with naturally outward shoe yaw; no body-NW foot-heading equality imposed.",
+    "far_leg": "Folded RIGHT recovery behind near leg; sole/heel visibly raised. Original pleated-cloth layer now provides coherent hip-joint occlusion and plausible actual farleg emergence.",
+    "closed_defects": [
+      "Original visible garment identity restored.",
+      "Doubled hem removed.",
+      "Exposed skin-tongue/black-cap joint no longer reads as a disconnected upperhip patch in the full figure/native joint."
+    ],
+    "construction_policy": "User-authorized actual-part layer rigging and real joint/material/occlusion retouch judged by final art quality. This source is not represented as an unedited service return."
+  },
+  "actual_support_locator": {
+    "anatomical_read": "Connected structural gold stiletto under rear underside of black shoe; true load-bearing heel candidate assessed visually, not inferred solely from lowest gold alpha.",
+    "alpha16_support_bottom": {
+      "x_range": [
+        580,
+        587
+      ],
+      "y": 1191,
+      "center_x": 583.5
+    },
+    "alpha128_bottom_y": 1190,
+    "annotation_uncertainty_raw": [
+      4,
+      2
+    ],
+    "shoe_yaw": "Natural toe-out allowed; forefoot lift evaluated in the actual shoe pose. Canonical NW slope0.9 remains diagnostic only.",
+    "actual_ground_root": "NOT_PINNED_BY_THIS_STATIC_GATE"
+  },
+  "body_unit_rule": "One retained C2560/factor2.5 from independent master body calibration. Original torso/gear density and native fullcanvas retained; local cloth/art-layer pose change is not body rescaling. No per-pose alpha normalization or root/C change to conceal bad anatomy.",
+  "next_authorized_stage": {
+    "action": "Produce actual LOAD1 now, then FLIGHT2, retaining body density and source-material identity.",
+    "required_planted_heel_source_relative_root_delta_0_to_1": [
+      139.1928985028027,
+      125.27360865252244
+    ],
+    "Player_source_to_world_xy": [
+      0.08534482758612,
+      0.0948275862068
+    ],
+    "contact_raw_heel_if_no_packing": [
+      583.5,
+      1191
+    ],
+    "load_raw_heel_if_no_packing": [
+      722.6928985028027,
+      1316.2736086525224
+    ],
+    "packing_rule": "Any wholepose raw art translation must translate raw root anchor equally with exact inverse placement. Preserve real body bob/joint changes and fit all staff/feet without clipping.",
+    "required_next_reviews": [
+      "Actual LOAD compression/anatomical chain/gear",
+      "Actual paired contact-to-load body registration and planted support under native movement",
+      "Actual FLIGHT feet-air and full cycle/loop at correct run clock"
+    ]
+  },
+  "limits": [
+    "This static gate is not physical planting, absolute ground/root, flight, cycle, footprint/runtime or actor approval.",
+    "No actor approval count or repository state changed by reviewer.",
+    "No old-ten reapproval or broad resource scan."
+  ],
+  "static_source_phase_approved": true,
+  "physical_planting_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false,
+  "supersedes": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v08-independent-static-source-PASS-v01.json",
+    "sha256": "a71782494c8b8e1cf670aac457585b404b87a530fbfb08d54a4edb1feef02cbf",
+    "reason": "Pins immutable CONTACT0-stage image ledger before future LOAD/FLIGHT reviews."
+  }
+}

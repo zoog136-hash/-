@@ -1,0 +1,503 @@
+{
+  "status": "AUTHORED_NE_WALK_PELVIS_AND_PROJECTED_GROUND_ROOT_CANDIDATE_NEEDS_INDEPENDENT_PHYSICAL_QC",
+  "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+  "reference_correct_NEidle_source_path": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png",
+  "reference_correct_NEidle_source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+  "reference_C": 832,
+  "reference_visible_posterior_waist_landmark_manual": [
+    350,
+    225
+  ],
+  "reference_inferred_pelvis_axis_manual": [
+    337,
+    246
+  ],
+  "reference_actual_two_sole_centroid_ground_root": [
+    337,
+    407
+  ],
+  "reference_pelvis_axis_is_anatomical_authoring_not_measured_hidden_bone": true,
+  "reference_ground_root_actual_support_proof": "/workspace/scratch/girtas-NE-idle-repair-v03/rigid-scale-two-sole-ground-root-proposal.json",
+  "reference_ground_root_actual_support_proof_sha256": "46b08dfc6608ff3ea1b165d05bc44985bd5b61d6c5bf466398c6916c42387a25",
+  "reference_near_far_projected_rest_sole_depth_canonical_range": [
+    23.384615384615383,
+    27.076923076923077
+  ],
+  "scale_measurement_proof": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/rigid-scale-measurement-proof-v04.json",
+  "scale_measurement_proof_sha256": "e4f6d90f55ef0d5300008ce6268586995af8cc433cc4e8290fffba0308b084cf",
+  "poseCs": [
+    1936,
+    1552,
+    1568,
+    2432,
+    1504,
+    1936
+  ],
+  "poses": [
+    {
+      "phase": 0,
+      "support": "FAR_LEFT",
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-forward-contact-3d-key-v03/girtas-NE-walk-left-forward-contact-3d-key-v03.png",
+      "source_sha256": "c571d32c6d83b2f56136980bf08125a6a622794205b9943cd1ce720400341f59",
+      "C": 1936,
+      "visible_posterior_waist_upperrobe_junction_manual_native": [
+        680,
+        565
+      ],
+      "manual_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_native": [
+        650,
+        613.8653846153846
+      ],
+      "inferred_pelvis_is_authored_anatomical_axis_not_visible_bone_measurement": true,
+      "new_authored_waist_to_ground_height_canonical": 224,
+      "new_authored_pelvis_to_ground_height_canonical": 198.15384615384616,
+      "source_ground_root": [
+        650,
+        988
+      ],
+      "atlas_ground_root": [
+        682,
+        1143
+      ],
+      "source_feet": [
+        {
+          "foot": "FAR_LEFT",
+          "ROI_xyxy": [
+            730,
+            850,
+            850,
+            1000
+          ],
+          "last_strong_native_y": 967,
+          "bottom4row_centroid_native": [
+            757.04,
+            964.8933333333333
+          ],
+          "source_groundroot_relative_canonical": [
+            56.61619834710742,
+            -12.221707988980725
+          ],
+          "source_groundroot_relative_world_preview": [
+            12.761847988101625,
+            -2.7548931942426678
+          ]
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "ROI_xyxy": [
+            490,
+            1040,
+            680,
+            1190
+          ],
+          "last_strong_native_y": 1178,
+          "bottom4row_centroid_native": [
+            534.85,
+            1176.1785714285713
+          ],
+          "source_groundroot_relative_canonical": [
+            -60.90578512396693,
+            99.53246753246748
+          ],
+          "source_groundroot_relative_world_preview": [
+            -13.728763040264408,
+            22.435597189737962
+          ]
+        }
+      ],
+      "rigid_hair_root_world_y_preview": -93.59165424756894,
+      "rigid_crown_world_y_preview": -112.19076005982467,
+      "waist_world_y_preview": -50.432190760154974
+    },
+    {
+      "phase": 1,
+      "support": "FAR_LEFT",
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-halfcycles-v01/girtas-NE-walk-left-halfcycles-v01.png",
+      "source_sha256": "033826172c6cf0865decb1133cf315af4fc8a320bb85de673e004b6bc6f0ae79",
+      "C": 1552,
+      "visible_posterior_waist_upperrobe_junction_manual_native": [
+        515,
+        435
+      ],
+      "manual_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_native": [
+        491,
+        474.1730769230769
+      ],
+      "inferred_pelvis_is_authored_anatomical_axis_not_visible_bone_measurement": true,
+      "new_authored_waist_to_ground_height_canonical": 218,
+      "new_authored_pelvis_to_ground_height_canonical": 192.15384615384616,
+      "source_ground_root": [
+        491,
+        765
+      ],
+      "atlas_ground_root": [
+        2258,
+        1093
+      ],
+      "source_feet": [
+        {
+          "foot": "FAR_LEFT",
+          "ROI_xyxy": [
+            335,
+            720,
+            540,
+            887
+          ],
+          "last_strong_native_y": 859,
+          "bottom4row_centroid_native": [
+            469.65989847715736,
+            857.0812182741117
+          ],
+          "source_groundroot_relative_canonical": [
+            -14.0800669841436,
+            60.754618242712894
+          ],
+          "source_groundroot_relative_world_preview": [
+            -3.1737855906941084,
+            13.694688538342328
+          ]
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "ROI_xyxy": [
+            535,
+            620,
+            730,
+            800
+          ],
+          "last_strong_native_y": 776,
+          "bottom4row_centroid_native": [
+            610.0862068965517,
+            774.0862068965517
+          ],
+          "source_groundroot_relative_canonical": [
+            78.57234269463208,
+            5.995023107003212
+          ],
+          "source_groundroot_relative_world_preview": [
+            17.71097888611859,
+            1.351337175761476
+          ]
+        }
+      ],
+      "rigid_hair_root_world_y_preview": -91.91144160909724,
+      "rigid_crown_world_y_preview": -110.94811559933099,
+      "waist_world_y_preview": -49.078925131071344
+    },
+    {
+      "phase": 2,
+      "support": "FAR_LEFT",
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-halfcycles-v01/girtas-NE-walk-left-halfcycles-v01.png",
+      "source_sha256": "033826172c6cf0865decb1133cf315af4fc8a320bb85de673e004b6bc6f0ae79",
+      "C": 1568,
+      "visible_posterior_waist_upperrobe_junction_manual_native": [
+        1330,
+        435
+      ],
+      "manual_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_native": [
+        1306,
+        474.5769230769231
+      ],
+      "inferred_pelvis_is_authored_anatomical_axis_not_visible_bone_measurement": true,
+      "new_authored_waist_to_ground_height_canonical": 228,
+      "new_authored_pelvis_to_ground_height_canonical": 202.15384615384616,
+      "source_ground_root": [
+        1306,
+        784
+      ],
+      "atlas_ground_root": [
+        703,
+        2662
+      ],
+      "source_feet": [
+        {
+          "foot": "FAR_LEFT",
+          "ROI_xyxy": [
+            1030,
+            710,
+            1250,
+            837
+          ],
+          "last_strong_native_y": 833,
+          "bottom4row_centroid_native": [
+            1161.9068322981366,
+            831.2732919254659
+          ],
+          "source_groundroot_relative_canonical": [
+            -94.10166053999244,
+            30.872353910508313
+          ],
+          "source_groundroot_relative_world_preview": [
+            -21.211439875858076,
+            6.958932233939213
+          ]
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "ROI_xyxy": [
+            1400,
+            660,
+            1620,
+            820
+          ],
+          "last_strong_native_y": 807,
+          "bottom4row_centroid_native": [
+            1483.3809523809523,
+            805.2380952380952
+          ],
+          "source_groundroot_relative_canonical": [
+            115.84062196307089,
+            13.869776482021345
+          ],
+          "source_groundroot_relative_world_preview": [
+            26.11161560647929,
+            3.1263840430844936
+          ]
+        }
+      ],
+      "rigid_hair_root_world_y_preview": -93.91769822700931,
+      "rigid_crown_world_y_preview": -112.90732686538581,
+      "waist_world_y_preview": -51.37504182010384
+    },
+    {
+      "phase": 3,
+      "support": "NEAR_RIGHT",
+      "source_path": "/workspace/scratch/girtas-NE-walk-right-contact-from-reach-key-v02/girtas-NE-walk-right-contact-from-reach-key-v02.png",
+      "source_sha256": "c5f00361ecef96330a02b78879c2cc1c0e7173fe0ef479964ab34e40bec050f9",
+      "C": 2432,
+      "visible_posterior_waist_upperrobe_junction_manual_native": [
+        560,
+        655
+      ],
+      "manual_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_native": [
+        522,
+        716.3846153846154
+      ],
+      "inferred_pelvis_is_authored_anatomical_axis_not_visible_bone_measurement": true,
+      "new_authored_waist_to_ground_height_canonical": 224,
+      "new_authored_pelvis_to_ground_height_canonical": 198.15384615384616,
+      "source_ground_root": [
+        522,
+        1187
+      ],
+      "atlas_ground_root": [
+        2199,
+        2863
+      ],
+      "source_feet": [
+        {
+          "foot": "FAR_LEFT",
+          "ROI_xyxy": [
+            190,
+            1060,
+            410,
+            1250
+          ],
+          "last_strong_native_y": 1240,
+          "bottom4row_centroid_native": [
+            294.6629213483146,
+            1238.2134831460673
+          ],
+          "source_groundroot_relative_canonical": [
+            -95.72087522176226,
+            21.563571850975723
+          ],
+          "source_groundroot_relative_world_preview": [
+            -21.576426791831476,
+            4.860641195925851
+          ]
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "ROI_xyxy": [
+            730,
+            1060,
+            950,
+            1245
+          ],
+          "last_strong_native_y": 1217,
+          "bottom4row_centroid_native": [
+            784.8116883116883,
+            1215.1883116883116
+          ],
+          "source_groundroot_relative_canonical": [
+            110.65755297334243,
+            11.868762816131206
+          ],
+          "source_groundroot_relative_world_preview": [
+            24.943300875185827,
+            2.6753358806903718
+          ]
+        }
+      ],
+      "rigid_hair_root_world_y_preview": -92.25194132890611,
+      "rigid_crown_world_y_preview": -111.2338222607798,
+      "waist_world_y_preview": -50.491803278784005
+    },
+    {
+      "phase": 4,
+      "support": "NEAR_RIGHT",
+      "source_path": "/workspace/scratch/girtas-NE-walk-right-halfcycles-v01/girtas-NE-walk-right-halfcycles-v01.png",
+      "source_sha256": "0d779a5d5079779a79e2e9b4013586101e9f6ec436e3238fe54a569272fa9a38",
+      "C": 1504,
+      "visible_posterior_waist_upperrobe_junction_manual_native": [
+        500,
+        432
+      ],
+      "manual_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_native": [
+        476,
+        469.96153846153845
+      ],
+      "inferred_pelvis_is_authored_anatomical_axis_not_visible_bone_measurement": true,
+      "new_authored_waist_to_ground_height_canonical": 218,
+      "new_authored_pelvis_to_ground_height_canonical": 192.15384615384616,
+      "source_ground_root": [
+        476,
+        752
+      ],
+      "atlas_ground_root": [
+        715,
+        4153
+      ],
+      "source_feet": [
+        {
+          "foot": "FAR_LEFT",
+          "ROI_xyxy": [
+            280,
+            650,
+            440,
+            825
+          ],
+          "last_strong_native_y": 796,
+          "bottom4row_centroid_native": [
+            347.8809523809524,
+            793.8333333333334
+          ],
+          "source_groundroot_relative_canonical": [
+            -87.22998986828772,
+            28.482269503546124
+          ],
+          "source_groundroot_relative_world_preview": [
+            -19.662497716249575,
+            6.4201836995819646
+          ]
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "ROI_xyxy": [
+            450,
+            740,
+            655,
+            849
+          ],
+          "last_strong_native_y": 845,
+          "bottom4row_centroid_native": [
+            522.6666666666666,
+            843.1347517730496
+          ],
+          "source_groundroot_relative_canonical": [
+            31.773049645390046,
+            62.04919269654443
+          ],
+          "source_groundroot_relative_world_preview": [
+            7.161957911884249,
+            13.986498353755724
+          ]
+        }
+      ],
+      "rigid_hair_root_world_y_preview": -91.00802232315779,
+      "rigid_crown_world_y_preview": -110.03836763187881,
+      "waist_world_y_preview": -49.110568538634894
+    },
+    {
+      "phase": 5,
+      "support": "NEAR_RIGHT",
+      "source_path": "/workspace/scratch/girtas-NE-walk-left-forward-precontact-from-3d0-key-v03/girtas-NE-walk-left-forward-precontact-from-3d0-key-v03.png",
+      "source_sha256": "804f2b33b763713d2d930fe16782f56019123ebbb541b25f06ddc2fc6ef80543",
+      "C": 1936,
+      "visible_posterior_waist_upperrobe_junction_manual_native": [
+        675,
+        565
+      ],
+      "manual_landmark_uncertainty_canonical": 12,
+      "inferred_pelvis_axis_native": [
+        645,
+        613.8653846153846
+      ],
+      "inferred_pelvis_is_authored_anatomical_axis_not_visible_bone_measurement": true,
+      "new_authored_waist_to_ground_height_canonical": 228,
+      "new_authored_pelvis_to_ground_height_canonical": 202.15384615384616,
+      "source_ground_root": [
+        645,
+        996
+      ],
+      "atlas_ground_root": [
+        2215,
+        4219
+      ],
+      "source_feet": [
+        {
+          "foot": "FAR_LEFT",
+          "ROI_xyxy": [
+            735,
+            835,
+            875,
+            995
+          ],
+          "last_strong_native_y": 963,
+          "bottom4row_centroid_native": [
+            796.7808219178082,
+            961.2054794520548
+          ],
+          "source_groundroot_relative_canonical": [
+            80.28076531189856,
+            -18.403713347673516
+          ],
+          "source_groundroot_relative_world_preview": [
+            18.096074148208075,
+            -4.148378008704743
+          ]
+        },
+        {
+          "foot": "NEAR_RIGHT",
+          "ROI_xyxy": [
+            490,
+            1040,
+            680,
+            1210
+          ],
+          "last_strong_native_y": 1192,
+          "bottom4row_centroid_native": [
+            571.4090909090909,
+            1190.0
+          ],
+          "source_groundroot_relative_canonical": [
+            -38.924117205108956,
+            102.61157024793388
+          ],
+          "source_groundroot_relative_world_preview": [
+            -8.77387887821738,
+            23.12965722806162
+          ]
+        }
+      ],
+      "rigid_hair_root_world_y_preview": -94.66467958289137,
+      "rigid_crown_world_y_preview": -113.97913561869541,
+      "waist_world_y_preview": -51.385991058219375
+    }
+  ],
+  "authoring_method": "Calibrate rigidmodelC againstactualcorrectNEidle. Manually trace sameposteriorcuirass-to-longrobe waistjunction, inferpelvisaxis byreferencefixedbodyoffset, project worldvertical toground withsameX. Authorexplicittinywalkload/tipoffpelvisheightcycle [224,218,228]waistcanonical (reference224). Rootisgroundprojection ofauthoredpelvis, NOTlowestsole orcropcenter. Actualsourcefootpoints independentlyrecorded; localfootY includesnear/far+fore/aftprojection andheel/toeroll, notverticalAIRheight.",
+  "physical_authorship_scope": "NEW2Dgameanimation projectedrootmetadata, notclaimthattransparentPNGscontainafloor orthatgenericguide.57m bonesareexactcharacteranatomy. Source0/5 useexactNE3D+YUPRIGHT/nearRIGHT projectiontofixforwardstride; finalbodyproportions comefrompaintedcharacter+rigidC notmannequinbbox.",
+  "pixel_scale_preview": 0.225409836066,
+  "preview_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r092/NativeMotionProfile.tres",
+  "preview_profile_sha256": "3e9dcb1afd3186ef860d51a2db9b9b51a38c7c6ab46f5e26e158c85fe4bf9589",
+  "validation_requirement": "Independentactualcommonphysical7panel mustacceptskull/waist/pelvis/gait/supportprojection/0\u21925\u21920. Ifitfails, keepHOLD; do notnormalizeheadheight orerasefootsupport evidence.",
+  "source_pixels_unchanged": true,
+  "resampled": false,
+  "actor_approval": false
+}

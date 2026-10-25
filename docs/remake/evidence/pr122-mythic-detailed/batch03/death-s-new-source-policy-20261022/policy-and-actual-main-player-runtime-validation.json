@@ -1,0 +1,74 @@
+{
+  "status": "NEW_DEATH_S_SCOPE_AND_ACTUAL_MAIN_PLAYER_RUNTIME_CONTRACT_PASS",
+  "head_before": "a933398d3855e983fd4c8f44fc7f146d1f5d546f",
+  "new_death_source_directions": [
+    "S"
+  ],
+  "preserved_approved_actor_keys": [
+    "transform:267",
+    "transform:393"
+  ],
+  "all_existing_413_tracks_unchanged": true,
+  "existing_413_connected_death_directions": [
+    "E",
+    "SE",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_413_S_quality_and_physical_fit": "HOLD_NOT_APPROVED",
+  "new_413_source_art_created_in_this_policy_commit": false,
+  "actual_Main_Player_runtime_test": {
+    "directions": 8,
+    "poses": 6,
+    "one_shot": true,
+    "terminal_frame_hold": true,
+    "dead_attack_move_recovery_blocked": true,
+    "fixture_override": true,
+    "fixture_source": "existing real approved S art reused only in memory; production assets/catalog unchanged",
+    "production_character_approval": false
+  },
+  "python_unique_tests_passed": 28,
+  "existing_actor_motion_regression": "PASS",
+  "previous_approved_quality_revalidation_run": false,
+  "full_or_manual_ci": false,
+  "logs": [
+    {
+      "path": "/workspace/scratch/pr122-death-s-only-20261022-v01/motion-scope-tests.log",
+      "bytes": 112,
+      "sha256": "d6fd68b9fce6ac8d8c8711a56be51e9d2b75a6137a51e83fb92dd917b7ca0e0c",
+      "result": "OK"
+    },
+    {
+      "path": "/workspace/scratch/pr122-death-s-only-20261022-v01/motion-queue-tests.log",
+      "bytes": 98,
+      "sha256": "353239c6a391a5fe2e900b988e30c68aa3a27170e16d3a962ba3592c634b44fa",
+      "result": "OK"
+    },
+    {
+      "path": "/workspace/scratch/pr122-death-s-only-20261022-v01/production-gate-regression.log",
+      "bytes": 112,
+      "sha256": "4fe6a79ef01fe865b5f47ea9512cd4312b41ae89c7281b9bc13ae1f24da937a3",
+      "result": "OK"
+    },
+    {
+      "path": "/workspace/scratch/pr122-death-s-only-20261022-v01/death-scope-final.log",
+      "bytes": 104,
+      "sha256": "e11bbb630c1a6ea91f4322ac92d7ce2a6c043ad84d3e41ecf0d0f5a73e9c9fd0",
+      "result": "OK"
+    },
+    {
+      "path": "/workspace/scratch/pr122-death-s-only-20261022-v01/actual-player-main-eight-death-inputs.log",
+      "bytes": 267,
+      "sha256": "4f35f986195e78e000f1ff51d30fc387cebd7fe5f7788c760787c695ca84557c",
+      "result": "failures=0"
+    },
+    {
+      "path": "/workspace/scratch/pr122-death-s-only-20261022-v01/existing-actor-motion-regression.log",
+      "bytes": 137,
+      "sha256": "2d27d5439042e6869e71dad743e5778487ae00836d5800eece09fffaec156efa",
+      "result": "ACTOR_MOTION_OK"
+    }
+  ],
+  "actor_approvals_added": 0
+}

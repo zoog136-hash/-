@@ -1,0 +1,86 @@
+{
+  "status": "PASS_ONE_CONSTANT_NATIVE_BODY_UNIT_C2048_CALIBRATION_ONLY",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/thunder_female-NW-walk-contact0-v01-service.png",
+    "sha256": "dc5da66b30171bdff9ab4c25cf5a22327debe8c8b41088693824433cb4e684db",
+    "bytes": 587417
+  },
+  "body_landmarks": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/actual-contact0-author-anatomical-landmarks-approx-v01.json",
+    "sha256": "9b748bb579314d212e5ef4ce06127658cdf8242b16e90de1b60c421190cd6de1",
+    "bytes": 6891
+  },
+  "retained_W_E_reference": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/body-reference-measurements/existing-W-E-body-landmarks-approx-v01.json",
+    "sha256": "ac962ad6116e8222a007d170cb924c3d855d925cfe12de8877717a31fbb325f1",
+    "bytes": 6419
+  },
+  "native_unit_factor": 2.0,
+  "constant_virtual_canvas": [
+    2048,
+    2048
+  ],
+  "fit_basis": "Actual torso against both retainedW/E, upperarm, shoulder foreshortening and head-to-visible-thighroot span. No fullalpha or weaponheight fit; no source resampling.",
+  "torso_bridges": {
+    "W": {
+      "length": 85.00588214941364,
+      "normalized_new": 81.01388769834466,
+      "relative_error": -0.04696139079001971
+    },
+    "E": {
+      "length": 83.0,
+      "normalized_new": 81.01388769834466,
+      "relative_error": -0.02392906387536553
+    }
+  },
+  "shoulder_normalized": 58.619535992704684,
+  "N_back_shoulder_width": 73.02739212103907,
+  "shoulder_camera_caveat": "NW rear rotation naturally foreshortens shoulder width; no exact3D equality claim.",
+  "upperarm_normalized": 53.66796064692602,
+  "N_back_upperarm": 50.92150822589606,
+  "upperarm_relative_error": 0.053935017180682276,
+  "forearm_normalized": 53.2634959423431,
+  "N_back_forearm": 35.510561809129406,
+  "forearm_projection_relative_difference": 0.4999339134265568,
+  "forearm_caveat": "Large2D projected difference from oldN0 is explicit; pose/depth/elbow uncertainty is not a validated3D bone fit.",
+  "head_to_visible_thighroot_body_span": {
+    "N_back_crown_alpha16_y": 53,
+    "NW_walk_crown_alpha16_y": 277,
+    "reference_body_span": 219,
+    "new_normalized_body_span": 214.5,
+    "relative_error": -0.020547945205479423,
+    "semantics": "Head-region top excluding staff to visible left upperthighroot; auxiliary body scale span, not fullsourcealphaheight."
+  },
+  "retained_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/NativeMotionProfile.tres",
+    "sha256": "8b2e9d17e95b3b369840a84c053015150528ec7e4ae6c2a09e15c389da03b281",
+    "bytes": 968
+  },
+  "Player_source_to_world_factors_xy": [
+    0.10668103448265,
+    0.1185344827585
+  ],
+  "NW_required_planted_source_relative_root_delta": [
+    111.35431880224218,
+    100.21888692201796
+  ],
+  "virtual_foot": [
+    1024,
+    1280
+  ],
+  "private_ledger_immutable": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NWwalk-contact0-view08-frozen.json",
+    "sha256": "a33d9793ec2a40fab27bd9df3029b46deaa3a9a33822c87ec1a0786f0788f77f",
+    "bytes": 4193
+  },
+  "source_quality_findings": [
+    "Correct rearNW identity and anatomicalRIGHTfar grip; LEFTnear free.",
+    "NearLEFT leg genuinely lies forward relative ownhip and farRIGHT departsrear; heel/toe-up contact intention plausible.",
+    "Visible gold pointedtoe extremity is not a sole-ground contact; actualgroundZ remainsunproven."
+  ],
+  "source_phase_status": "HOLD_FREE_LEFT_ARM_COUNTERPHASE_UNRESOLVED: actualshoulder589458\u2192wrist482640 isforward, v07intendedbackswing. Need genuinearmcorrection or physicallysupportedcarry/abduction model beforecallingcompletecontact0.",
+  "source_approved": false,
+  "whole_cycle_status": "NOT_AVAILABLE",
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

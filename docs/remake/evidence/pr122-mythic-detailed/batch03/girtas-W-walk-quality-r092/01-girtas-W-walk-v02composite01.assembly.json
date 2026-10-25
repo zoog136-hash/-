@@ -1,0 +1,766 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:267",
+  "role": "walk",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "W",
+  "metadata_sha256": "33df36b7c067a07dbb59fb809a4a1585f582ca5b97c71bf9ed2d991497c5c850",
+  "metadata_path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/pose-map-complete-owned-regions-v02.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.png",
+  "output_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+  "output_canvas": [
+    3072,
+    4608
+  ],
+  "cell_size": [
+    1536,
+    1536
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+      "source_sha256": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+      "source_pose": 0,
+      "source_region": [
+        16,
+        8,
+        1220,
+        1176
+      ],
+      "rgba_sha256": "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4",
+      "visible_pose_sha256": "a201eab4c64bb2b5d9a345fc7e358897b1a12794c82f49c686dc6b33a157d081",
+      "newly_authored": true,
+      "review_basis": "Gamephase0: IndependentnearLEFTfrontcontact hip/thigh/knee/heel proven332755c6; farRIGHTreartoe, longrobe/identityPASS. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks.",
+      "output_region": [
+        158,
+        180,
+        1220,
+        1176
+      ],
+      "translation": [
+        142,
+        172
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 416130
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+      "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+      "source_pose": 0,
+      "source_region": [
+        5,
+        63,
+        759,
+        843
+      ],
+      "rgba_sha256": "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2",
+      "visible_pose_sha256": "5a9de373e74a3b47ab0a86501d8746afe5fb2f59af01bbd9e8cc16f89be5be67",
+      "newly_authored": true,
+      "review_basis": "Gamephase1: IndependentnearLEFTflat support/farRIGHTliftedpassing626b817e; modelandownershipPASS. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks.",
+      "output_region": [
+        1924,
+        346,
+        759,
+        843
+      ],
+      "translation": [
+        1919,
+        283
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 203362
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+      "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+      "source_pose": 1,
+      "source_region": [
+        763,
+        62,
+        759,
+        844
+      ],
+      "rgba_sha256": "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4",
+      "visible_pose_sha256": "6ecb4d5b304699fc25d5e3b63c8668ac06804951b2206951dba8ee913485ace7",
+      "newly_authored": true,
+      "review_basis": "Gamephase2: IndependentnearLEFTtrailingtoe/farRIGHTreachheelhover626b817e; notwholebodyAIR. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks.",
+      "output_region": [
+        388,
+        1882,
+        759,
+        844
+      ],
+      "translation": [
+        -375,
+        1820
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 236862
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png",
+      "source_sha256": "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b",
+      "source_pose": 0,
+      "source_region": [
+        22,
+        19,
+        1198,
+        1116
+      ],
+      "rgba_sha256": "135ba522ba967e2fac2eb6e50bfbd5f6feb10b99b4c37f3ec5bd2c3a40b2b04c",
+      "visible_pose_sha256": "2174505474c8e4486b64f9245ee2bdc97d0438f4f3fd345c500fc3f443543cd4",
+      "newly_authored": true,
+      "review_basis": "Gamephase3: IndependentfarRIGHTfrontcontact hip/thigh/frontheel vsnearLEFTrear; exactindependentreview897ec1e2010eb0ea; oppositeLEFT0 proven. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks.",
+      "output_region": [
+        1705,
+        1746,
+        1198,
+        1116
+      ],
+      "translation": [
+        1683,
+        1727
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 407994
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+      "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+      "source_pose": 0,
+      "source_region": [
+        23,
+        126,
+        681,
+        780
+      ],
+      "rgba_sha256": "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c",
+      "visible_pose_sha256": "35ef650a9ad378069fe5dc9c96a631a43c8e56008b4716db2cd58bcf7d88c6c3",
+      "newly_authored": true,
+      "review_basis": "Gamephase4: OriginalRIGHT4 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTflat+LEFTforegroundpassing, strict2geometryPASS; final layout/full6 independent review pending. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks.",
+      "output_region": [
+        427,
+        3450,
+        681,
+        780
+      ],
+      "translation": [
+        404,
+        3324
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 166785
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+      "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+      "source_pose": 1,
+      "source_region": [
+        792,
+        128,
+        688,
+        769
+      ],
+      "rgba_sha256": "6d0e06b35be990ca689d7c550eea30d2dfc62d3ad7db196e732ada706d6648dc",
+      "visible_pose_sha256": "6e0da4393ca6a5134a523e29313d718daf2114dc99f6fbb6f0c4d67dfa7a2349",
+      "newly_authored": true,
+      "review_basis": "Gamephase5: OriginalRIGHT5 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTreartoe+LEFTforeheelhover, strict2geometryPASS; final layout/full6 independent review pending. Explicitoutwardcomplete-ownedalpha>16crop; source unchanged/strictowner checks.",
+      "output_region": [
+        1960,
+        3455,
+        688,
+        769
+      ],
+      "translation": [
+        1168,
+        3327
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 181264
+    }
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      3072,
+      4608
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "W",
+        "region": [
+          158,
+          180,
+          1220,
+          1176
+        ],
+        "margin": [
+          414,
+          108,
+          828,
+          872
+        ],
+        "source_anchor": [
+          768,
+          1352
+        ],
+        "rgba_sha256": "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4"
+      },
+      {
+        "row": 1,
+        "direction": "W",
+        "region": [
+          1924,
+          346,
+          759,
+          843
+        ],
+        "margin": [
+          644,
+          441,
+          1289,
+          1205
+        ],
+        "source_anchor": [
+          2304,
+          1185
+        ],
+        "rgba_sha256": "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2"
+      },
+      {
+        "row": 2,
+        "direction": "W",
+        "region": [
+          388,
+          1882,
+          759,
+          844
+        ],
+        "margin": [
+          644,
+          440,
+          1289,
+          1204
+        ],
+        "source_anchor": [
+          768,
+          2722
+        ],
+        "rgba_sha256": "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4"
+      },
+      {
+        "row": 3,
+        "direction": "W",
+        "region": [
+          1705,
+          1746,
+          1198,
+          1116
+        ],
+        "margin": [
+          425,
+          168,
+          850,
+          932
+        ],
+        "source_anchor": [
+          2304,
+          2858
+        ],
+        "rgba_sha256": "135ba522ba967e2fac2eb6e50bfbd5f6feb10b99b4c37f3ec5bd2c3a40b2b04c"
+      },
+      {
+        "row": 4,
+        "direction": "W",
+        "region": [
+          427,
+          3450,
+          681,
+          780
+        ],
+        "margin": [
+          683,
+          504,
+          1367,
+          1268
+        ],
+        "source_anchor": [
+          768,
+          4226
+        ],
+        "rgba_sha256": "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c"
+      },
+      {
+        "row": 5,
+        "direction": "W",
+        "region": [
+          1960,
+          3455,
+          688,
+          769
+        ],
+        "margin": [
+          680,
+          515,
+          1360,
+          1279
+        ],
+        "source_anchor": [
+          2304,
+          4220
+        ],
+        "rgba_sha256": "6d0e06b35be990ca689d7c550eea30d2dfc62d3ad7db196e732ada706d6648dc"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 1140.0,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": null,
+  "region_height_span": [
+    769,
+    1176
+  ],
+  "possible_region_height_mismatch": true,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed.",
+  "finalization": "EXISTING_IMMUTABLE_ATLAS_WITH_REVIEWED_OUTPUT_REGIONS",
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "base_geometry_sha256": "2eb6cfc0a44e90d912dd4f6614474e801985c4fa250dbda8be77c55acedbf73f",
+    "direction": "W",
+    "review_basis": "Exact immutable 1536-cell six-source atlas; expand only automatic crop bounds outward to preserve ALL original alpha>16 body-owned fringe; actual topology+nearest-body guard unchanged, source colors/alpha/coordinates untouched. All six source motions separately independently reviewed. This is geometry-only, no actor/runtime approval.",
+    "regions": [
+      [
+        158,
+        180,
+        1220,
+        1176
+      ],
+      [
+        1924,
+        346,
+        759,
+        843
+      ],
+      [
+        388,
+        1882,
+        759,
+        844
+      ],
+      [
+        1705,
+        1746,
+        1198,
+        1116
+      ],
+      [
+        427,
+        3450,
+        681,
+        780
+      ],
+      [
+        1960,
+        3455,
+        688,
+        769
+      ]
+    ],
+    "nearest_owner_sha256": "ae044b57c5bea7d78a4765cf1c7387fd5fd3aad7a202ce60fd393edfd183a2e4",
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+  },
+  "source_region_proof": {
+    "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+    "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+    "source_RGBA_sha256": "49ea4d363db60f1f00f149b0bb05ec6e21a04f4029c7263a11011719338786aa",
+    "base_geometry_sha256": "2eb6cfc0a44e90d912dd4f6614474e801985c4fa250dbda8be77c55acedbf73f",
+    "derived_geometry_sha256": "066a48504377a5d4979522a03af919cefef4b7f0f31461090d829291be27c668",
+    "review_sha256": "86ef6b9da7e6d8a775d1b1d75a3461820b29a424f694b0dd010459459943695a",
+    "review_basis": "Exact immutable 1536-cell six-source atlas; expand only automatic crop bounds outward to preserve ALL original alpha>16 body-owned fringe; actual topology+nearest-body guard unchanged, source colors/alpha/coordinates untouched. All six source motions separately independently reviewed. This is geometry-only, no actor/runtime approval.",
+    "source_unchanged": true,
+    "canonical_canvas_foot_anchors_unchanged": true,
+    "all_alpha_gt16_covered_exactly_once": true,
+    "foreign_foreground_pixels": 0,
+    "alpha_gt16_pixels": 1612397,
+    "added_alpha_gt16_pixels": 4,
+    "all_alpha_positive_covered": true,
+    "expanded_regions": [
+      [
+        158,
+        180,
+        1220,
+        1176
+      ],
+      [
+        1924,
+        346,
+        759,
+        843
+      ],
+      [
+        388,
+        1882,
+        759,
+        844
+      ],
+      [
+        1705,
+        1746,
+        1198,
+        1116
+      ],
+      [
+        427,
+        3450,
+        681,
+        780
+      ],
+      [
+        1960,
+        3455,
+        688,
+        769
+      ]
+    ],
+    "default_importer_repacker_unchanged": true,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "ae044b57c5bea7d78a4765cf1c7387fd5fd3aad7a202ce60fd393edfd183a2e4",
+    "foreground_owner_sha256": "fd3892a4bc6351d4dd44095c6804c9bf81021bac9201a9f2213615f4fae4e370",
+    "detached_pixels": 24,
+    "detached_fragments": [
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          799,
+          259,
+          800,
+          260
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 1321.780995475423,
+        "owner_margin_min": 1318.780995475423
+      },
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          2350,
+          402,
+          2351,
+          403
+        ],
+        "nearest_max": 4.47213595499958,
+        "second_nearest_min": 1122.2481900185894,
+        "owner_margin_min": 1117.7760540635898
+      },
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          2494,
+          664,
+          2495,
+          665
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 1095.0474875547636,
+        "owner_margin_min": 1092.2190604300174
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          1003,
+          704,
+          1004,
+          705
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 955.6735844418846,
+        "owner_margin_min": 952.8451573171384
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          880,
+          1128,
+          881,
+          1129
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 763.7080594049012,
+        "owner_margin_min": 761.4719914274013
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          817,
+          1937,
+          818,
+          1938
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 637.8777312306803,
+        "owner_margin_min": 634.8777312306803
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          2564,
+          1998,
+          2565,
+          1999
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 831.5293139751599,
+        "owner_margin_min": 829.29324599766
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          2624,
+          2127,
+          2625,
+          2128
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 967.9938016330476,
+        "owner_margin_min": 965.7577336555478
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          2675,
+          2162,
+          2676,
+          2163
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 1012.0997974508246,
+        "owner_margin_min": 1010.0997974508246
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          2704,
+          2165,
+          2705,
+          2166
+        ],
+        "nearest_max": 13.0,
+        "second_nearest_min": 1021.5674231297708,
+        "owner_margin_min": 1008.5674231297708
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1014,
+          2208,
+          1015,
+          2209
+        ],
+        "nearest_max": 11.661903789690601,
+        "second_nearest_min": 766.7541979017786,
+        "owner_margin_min": 755.092294112088
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          2652,
+          2218,
+          2653,
+          2219
+        ],
+        "nearest_max": 10.770329614269007,
+        "second_nearest_min": 1062.491882321931,
+        "owner_margin_min": 1051.7215527076619
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1002,
+          2230,
+          1003,
+          2231
+        ],
+        "nearest_max": 5.0,
+        "second_nearest_min": 768.6689794703569,
+        "owner_margin_min": 763.6689794703569
+      },
+      {
+        "row": 2,
+        "pixels": 4,
+        "bbox": [
+          883,
+          2290,
+          886,
+          2292
+        ],
+        "nearest_max": 5.830951894845301,
+        "second_nearest_min": 858.1246995629481,
+        "owner_margin_min": 852.2937476681028
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          884,
+          2293,
+          885,
+          2294
+        ],
+        "nearest_max": 4.123105625617661,
+        "second_nearest_min": 858.5202385500297,
+        "owner_margin_min": 854.3971329244121
+      },
+      {
+        "row": 3,
+        "pixels": 2,
+        "bbox": [
+          2533,
+          2371,
+          2534,
+          2373
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 1090.4760428363386,
+        "owner_margin_min": 1087.4760428363386
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          730,
+          3731,
+          731,
+          3732
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 1029.6115772464877,
+        "owner_margin_min": 1027.375509268988
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          2465,
+          3788,
+          2466,
+          3789
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 937.1045832776617,
+        "owner_margin_min": 934.8685153001619
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          2183,
+          3831,
+          2184,
+          3832
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 973.5594486213978,
+        "owner_margin_min": 971.323380643898
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          2462,
+          4104,
+          2463,
+          4105
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 1253.1153179177086,
+        "owner_margin_min": 1251.1153179177086
+      }
+    ],
+    "minimum_required_owner_margin": 32.0
+  },
+  "original_failed_receipt": {
+    "path": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/girtas-W-walk-v02composite01.assembly-error.json",
+    "sha256": "46dce5eeacdfc696aa931826b6826006380f1f5b78a1fb236fb61351ffa39c67"
+  },
+  "atlas_and_original_error_unchanged": true
+}

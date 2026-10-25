@@ -1,0 +1,672 @@
+{
+  "schema": "PR122-actual-new-E-six-attack-native-rig-v1",
+  "status": "ACTUAL_E_ATTACK6_CREATED_HOLD_ONLY_REVEALED_CAPE_AND_SOURCE_QC",
+  "source": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "35883c6c11693141bd3988c47399298a1cd37152ba12403e9d94678ab75fbf62",
+    "bytes": 974323
+  },
+  "shared_once_registration_exact_JSON": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "393e66b3d965b2286fc2a1bea1ac561444f9463b2b30de140f3b06ee0f46d886",
+    "bytes": 3295
+  },
+  "shared_materials": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/common-own-E-native-arm-staff-materials-v03r1/E-own-native-complete-arm-staff-and-LEFT-only-body-readonly-handoff-v03.json",
+    "sha256": "6836606104129d227dbb443642db2814298b87d6be361da5a226dedb716e8548",
+    "bytes": 10267
+  },
+  "C": 2816.0,
+  "bodyunit": 2.75,
+  "common_rig_root_in_unpadded_frame": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "native_canvas": [
+    1792,
+    1792
+  ],
+  "native_source_canvas": [
+    1254,
+    1254
+  ],
+  "source_or_fixed_boot_resampling_or_perpose_fit": false,
+  "whole_actor_mirrored": false,
+  "one_shot": true,
+  "role_seconds_preserved": 0.42,
+  "fps": 14.285714285714286,
+  "intended_contact_frame": 3,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "READY",
+      "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/thunder_female-E-attack-0-READY-actual-native-v01-capeHOLD.png",
+      "sha256": "d154b142420be67807a159dad7037a93c48f76bad84687bfa38a5ee2d924c902",
+      "native_size": [
+        1792,
+        1792
+      ],
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_rig_root_in_unpadded_frame": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "actual_rig_nodes_unpadded_native": {
+        "name": "READY",
+        "ang": 0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          550,
+          471
+        ],
+        "rw": [
+          428,
+          505
+        ],
+        "le": [
+          808,
+          513
+        ],
+        "lw": [
+          953,
+          596
+        ],
+        "staff": 0,
+        "cloth": 0
+      },
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase0-actual-LEFT-far-upper-arm-node.png",
+          "sha256": "2750b943ad432bd3a5fcf33e892e70ddfc675a7bf4067f8f3de16c09158bbcd2",
+          "bytes": 22774
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase0-actual-LEFT-far-complete-forearm-hand-node.png",
+          "sha256": "2956a7b417c299afbcce268942312f2d5ad96922d78fff49bd81a3153922e573",
+          "bytes": 54196
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase0-actual-head-spine-coat-fixed-native-boots-node.png",
+          "sha256": "956eb55dc874f1c63dc94fb06fc62618f72ff44c5d18761ef27e9db7bf76094c",
+          "bytes": 767944
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase0-actual-RIGHT-near-upper-arm-node.png",
+          "sha256": "b54cc7d58847ffed092c9a7351700e3993ac965b0b429c471f2b6fd58a0dcbcd",
+          "bytes": 46445
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase0-actual-complete-rigid-RIGHT-near-staff-node.png",
+          "sha256": "8d48d45ff80ca9eee35d45cb8f8d13d231206d54d38c27c378e7668557011e91",
+          "bytes": 152819
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase0-actual-RIGHT-near-complete-forearm-grip-hand-node.png",
+          "sha256": "25ac3284dfb8c06378da27bf6c88fbc2044ea9b7ccd2335d3931343211cfbd8f",
+          "bytes": 54719
+        }
+      ],
+      "RIGHT_exact_same_forearm_affine_grip_target": [
+        385.99999999999994,
+        506.0
+      ],
+      "RIGHT_rigid_staff_matrix": [
+        [
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 0.0,
+      "native_original_full_staff_top_tip_target": [
+        386.0,
+        8.0
+      ],
+      "strong_components_ge200": [
+        365291
+      ],
+      "edge_alpha16_pixels": 0,
+      "status": "ACTUAL_NEW_E_ATTACK6_HOLD_REVEALED_CAPE_FABRIC_AND_INDEPENDENT_SOURCE_CYCLE_QC"
+    },
+    {
+      "phase": 1,
+      "name": "WINDUP",
+      "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/thunder_female-E-attack-1-WINDUP-actual-native-v01-capeHOLD.png",
+      "sha256": "8c31e4740a3efd2465ddc658e7c0d7147257c535139ac116de15c9643d9db241",
+      "native_size": [
+        1792,
+        1792
+      ],
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_rig_root_in_unpadded_frame": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "actual_rig_nodes_unpadded_native": {
+        "name": "WINDUP",
+        "ang": -4,
+        "delta": [
+          -8,
+          8
+        ],
+        "re": [
+          587,
+          490
+        ],
+        "rw": [
+          525,
+          378
+        ],
+        "le": [
+          786,
+          522
+        ],
+        "lw": [
+          933,
+          598
+        ],
+        "staff": -32,
+        "cloth": 7
+      },
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase1-actual-LEFT-far-upper-arm-node.png",
+          "sha256": "baef804f29f670798dd8ae15c1179180e33ce26a8e9b21de2e1b39fd67a319e2",
+          "bytes": 24525
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase1-actual-LEFT-far-complete-forearm-hand-node.png",
+          "sha256": "89e8f9ea3b43722b54890ed344ff1a623ff829fc96085924e1e7bb39fb3d7833",
+          "bytes": 53904
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase1-actual-head-spine-coat-fixed-native-boots-node.png",
+          "sha256": "384095ae29f1d8de89aaaadae419d314ad8de436cb6bbe932ce3cec016124117",
+          "bytes": 750833
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase1-actual-RIGHT-near-upper-arm-node.png",
+          "sha256": "c918a82453c41a6f916f036fe87024713ccd19fab5076fb3fd5c33ff993fcd02",
+          "bytes": 44740
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase1-actual-complete-rigid-RIGHT-near-staff-node.png",
+          "sha256": "932fa7f134d4e9a588a7ede0abf2d9e8c9fb763cee37fa4953e550dbc1ba3439",
+          "bytes": 168245
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase1-actual-RIGHT-near-complete-forearm-grip-hand-node.png",
+          "sha256": "ec8c09854d27a90fed511a08fe6803018ab4659fecaef7c9ed9cc43bc1b8bcae",
+          "bytes": 59106
+        }
+      ],
+      "RIGHT_exact_same_forearm_affine_grip_target": [
+        514.0844526126307,
+        336.9897964718734
+      ],
+      "RIGHT_rigid_staff_matrix": [
+        [
+          0.848048096156426,
+          0.5299192642332049
+        ],
+        [
+          -0.5299192642332049,
+          0.848048096156426
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 1.1102230246251565e-16,
+      "native_original_full_staff_top_tip_target": [
+        250.18465902449464,
+        -85.33815541402674
+      ],
+      "strong_components_ge200": [
+        321994,
+        432,
+        7012
+      ],
+      "edge_alpha16_pixels": 0,
+      "status": "ACTUAL_NEW_E_ATTACK6_HOLD_REVEALED_CAPE_FABRIC_AND_INDEPENDENT_SOURCE_CYCLE_QC"
+    },
+    {
+      "phase": 2,
+      "name": "COIL",
+      "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/thunder_female-E-attack-2-COIL-actual-native-v01-capeHOLD.png",
+      "sha256": "de4b1066d4c92e43463a0dac62df611f207f2144ca8e107b1463dfd21a2d9884",
+      "native_size": [
+        1792,
+        1792
+      ],
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_rig_root_in_unpadded_frame": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "actual_rig_nodes_unpadded_native": {
+        "name": "COIL",
+        "ang": -7,
+        "delta": [
+          -13,
+          16
+        ],
+        "re": [
+          570,
+          505
+        ],
+        "rw": [
+          530,
+          384
+        ],
+        "le": [
+          780,
+          524
+        ],
+        "lw": [
+          925,
+          606
+        ],
+        "staff": -38,
+        "cloth": 12
+      },
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase2-actual-LEFT-far-upper-arm-node.png",
+          "sha256": "eafc21010c5c6ac8cc078736a4dcdb35597c800aacd55084dc4c606782b3b842",
+          "bytes": 24928
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase2-actual-LEFT-far-complete-forearm-hand-node.png",
+          "sha256": "a828226aee5767b7cfc4c39fd44d3d27aad503d9993e6dc282993c45bf7ca4d7",
+          "bytes": 54114
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase2-actual-head-spine-coat-fixed-native-boots-node.png",
+          "sha256": "e9df358541f08a4192d0be289ede8eaf8577143a18bdba1f6051a6dce64ab0fd",
+          "bytes": 743179
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase2-actual-RIGHT-near-upper-arm-node.png",
+          "sha256": "0ef809289ca18cd3e127ab869b774428cb180f4d7ba1cb48936a8eaf86aa027c",
+          "bytes": 44440
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase2-actual-complete-rigid-RIGHT-near-staff-node.png",
+          "sha256": "df5b634af599a6697957867a8463a4027832f8ba2691ff906bae6bfa0f3f81c8",
+          "bytes": 174320
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase2-actual-RIGHT-near-complete-forearm-grip-hand-node.png",
+          "sha256": "e111e71a9938f0270dc74eeb51f1b12ac63f84139ca2cb249a796593d817393e",
+          "bytes": 58204
+        }
+      ],
+      "RIGHT_exact_same_forearm_affine_grip_target": [
+        526.927997752794,
+        341.85325871365353
+      ],
+      "RIGHT_rigid_staff_matrix": [
+        [
+          0.7880107536067219,
+          0.6156614753256583
+        ],
+        [
+          -0.6156614753256583,
+          0.7880107536067219
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 1.1102230246251565e-16,
+      "native_original_full_staff_top_tip_target": [
+        220.32858304061608,
+        -50.57609658249399
+      ],
+      "strong_components_ge200": [
+        319306,
+        512,
+        434,
+        6973
+      ],
+      "edge_alpha16_pixels": 0,
+      "status": "ACTUAL_NEW_E_ATTACK6_HOLD_REVEALED_CAPE_FABRIC_AND_INDEPENDENT_SOURCE_CYCLE_QC"
+    },
+    {
+      "phase": 3,
+      "name": "STRIKE3",
+      "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/thunder_female-E-attack-3-STRIKE3-actual-native-v01-capeHOLD.png",
+      "sha256": "ff0179fca21bac27df6d6cfd29519c92496035ed5a30481e5daa3ecba3edd8f6",
+      "native_size": [
+        1792,
+        1792
+      ],
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_rig_root_in_unpadded_frame": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "actual_rig_nodes_unpadded_native": {
+        "name": "STRIKE3",
+        "ang": 4,
+        "delta": [
+          20,
+          -10
+        ],
+        "re": [
+          787,
+          400
+        ],
+        "rw": [
+          913,
+          430
+        ],
+        "le": [
+          836,
+          508
+        ],
+        "lw": [
+          844,
+          680
+        ],
+        "staff": 90,
+        "cloth": -10
+      },
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase3-actual-LEFT-far-upper-arm-node.png",
+          "sha256": "2b920b4b671bdf5a5a8681cf8fb2ff51554e204d55b006cbd6eeb39090308b13",
+          "bytes": 23599
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase3-actual-LEFT-far-complete-forearm-hand-node.png",
+          "sha256": "1f3e39688e2f1d69b059d1c4e31763d9b64fc7af1557cee95e5704b2e0af24bc",
+          "bytes": 55765
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase3-actual-head-spine-coat-fixed-native-boots-node.png",
+          "sha256": "08ab14a9a53cbf96c579b094aa1d3772a3ead692389052de8a9811ce936cf451",
+          "bytes": 770958
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase3-actual-RIGHT-near-upper-arm-node.png",
+          "sha256": "ded9c065451407685832c441f2fd8f650a1ffbdc0d68a00d6110d6ae3bdd58b6",
+          "bytes": 48972
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase3-actual-complete-rigid-RIGHT-near-staff-node.png",
+          "sha256": "cd346588987cf8e9a3c86cdeaea7f623cdf0c3a7a9b0dc6d9a1e12e66f843538",
+          "bytes": 139854
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase3-actual-RIGHT-near-complete-forearm-grip-hand-node.png",
+          "sha256": "4711931bf37e01095d73f2443213f8eb57bf0f293a4f94f0ee6daf9aa8f93e0a",
+          "bytes": 58712
+        }
+      ],
+      "RIGHT_exact_same_forearm_affine_grip_target": [
+        951.1294947355544,
+        449.67866575156927
+      ],
+      "RIGHT_rigid_staff_matrix": [
+        [
+          6.123233995736766e-17,
+          -1.0
+        ],
+        [
+          1.0,
+          6.123233995736766e-17
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 0.0,
+      "native_original_full_staff_top_tip_target": [
+        1449.1294947355545,
+        449.6786657515692
+      ],
+      "strong_components_ge200": [
+        339309,
+        432,
+        513,
+        7153
+      ],
+      "edge_alpha16_pixels": 0,
+      "status": "ACTUAL_NEW_E_ATTACK6_HOLD_REVEALED_CAPE_FABRIC_AND_INDEPENDENT_SOURCE_CYCLE_QC"
+    },
+    {
+      "phase": 4,
+      "name": "FOLLOW",
+      "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/thunder_female-E-attack-4-FOLLOW-actual-native-v01-capeHOLD.png",
+      "sha256": "acf9103d9012f606a7a38beb4d01f9c7378200fb6e9312535e6812a123cc84b8",
+      "native_size": [
+        1792,
+        1792
+      ],
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_rig_root_in_unpadded_frame": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "actual_rig_nodes_unpadded_native": {
+        "name": "FOLLOW",
+        "ang": 6,
+        "delta": [
+          28,
+          -3
+        ],
+        "re": [
+          802,
+          411
+        ],
+        "rw": [
+          932,
+          433
+        ],
+        "le": [
+          850,
+          515
+        ],
+        "lw": [
+          855,
+          686
+        ],
+        "staff": 98,
+        "cloth": -18
+      },
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase4-actual-LEFT-far-upper-arm-node.png",
+          "sha256": "1cbe430e4d9cd0089e31b6cbddcaba011b3fcad32b389495e4f41e7e7f94b176",
+          "bytes": 23001
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase4-actual-LEFT-far-complete-forearm-hand-node.png",
+          "sha256": "65627dd12b00f754fc86b4c53574f04cc91400e480669f772a5d1ece7cbd0678",
+          "bytes": 55572
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase4-actual-head-spine-coat-fixed-native-boots-node.png",
+          "sha256": "0a2b8de42ec0c86d670f9f902e6ee853be65611b60f018ebcf4ae2608959426c",
+          "bytes": 771524
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase4-actual-RIGHT-near-upper-arm-node.png",
+          "sha256": "f6a73a7c5d0f9f84de9487dd3d4e23f48a693f2b878aa0fce8ad2ad6a63181be",
+          "bytes": 48531
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase4-actual-complete-rigid-RIGHT-near-staff-node.png",
+          "sha256": "021dad0da3e6c3a2327cde6858809c60b05dccd474ce1f6a905e0dd41ed88832",
+          "bytes": 151665
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase4-actual-RIGHT-near-complete-forearm-grip-hand-node.png",
+          "sha256": "b18e8b52f4f60c8d5929c7a1031d7a73e945b11187c5181f6a181082055b17dc",
+          "bytes": 59108
+        }
+      ],
+      "RIGHT_exact_same_forearm_affine_grip_target": [
+        972.0836041386231,
+        450.2419537807276
+      ],
+      "RIGHT_rigid_staff_matrix": [
+        [
+          -0.13917310096006535,
+          -0.9902680687415704
+        ],
+        [
+          0.9902680687415704,
+          -0.13917310096006535
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 1.229457450725973e-17,
+      "native_original_full_staff_top_tip_target": [
+        1465.2371023719252,
+        519.5501580588402
+      ],
+      "strong_components_ge200": [
+        335875,
+        429,
+        508,
+        7224
+      ],
+      "edge_alpha16_pixels": 0,
+      "status": "ACTUAL_NEW_E_ATTACK6_HOLD_REVEALED_CAPE_FABRIC_AND_INDEPENDENT_SOURCE_CYCLE_QC"
+    },
+    {
+      "phase": 5,
+      "name": "RECOVER",
+      "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/thunder_female-E-attack-5-RECOVER-actual-native-v01-capeHOLD.png",
+      "sha256": "6621da473e66928d98369120eb3ab0f4a4a0ecf91e9873292d473727b87192b5",
+      "native_size": [
+        1792,
+        1792
+      ],
+      "physical_C": 2816.0,
+      "bodyunit": 2.75,
+      "common_rig_root_in_unpadded_frame": [
+        738.7916666666666,
+        1098.2150113422247
+      ],
+      "storage_translation": [
+        128,
+        128
+      ],
+      "actual_rig_nodes_unpadded_native": {
+        "name": "RECOVER",
+        "ang": 0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          552,
+          470
+        ],
+        "rw": [
+          430,
+          506
+        ],
+        "le": [
+          810,
+          514
+        ],
+        "lw": [
+          955,
+          597
+        ],
+        "staff": -2,
+        "cloth": -3
+      },
+      "actual_composition_nodes": [
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase5-actual-LEFT-far-upper-arm-node.png",
+          "sha256": "5ecc80145c16a4440984382686ae94fdd7ceacd5b889d9c2bbab54c998a29d07",
+          "bytes": 23751
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase5-actual-LEFT-far-complete-forearm-hand-node.png",
+          "sha256": "09a4109805b2bf05f13ff6c2ee0d47a8cd63f6128b726cc378d2e7ef42d21758",
+          "bytes": 54201
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase5-actual-head-spine-coat-fixed-native-boots-node.png",
+          "sha256": "e9f555b87388a2f5b320ac23f7e5882a795ce7f97f4335249fdc0d788af4faaf",
+          "bytes": 768525
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase5-actual-RIGHT-near-upper-arm-node.png",
+          "sha256": "24def533e8a339696c73b6fc1e7f3379817013374dd6730ea57d0b698c831558",
+          "bytes": 48141
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase5-actual-complete-rigid-RIGHT-near-staff-node.png",
+          "sha256": "430d863d1531bb2ff26e2540aab8d8bbbeb87e8fe2018eb358da10ae73985f60",
+          "bytes": 158354
+        },
+        {
+          "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-ATTACK6-native-articulated-rig-v01/phase5-actual-RIGHT-near-complete-forearm-grip-hand-node.png",
+          "sha256": "aa90fc6eb3073d76b1121dfaf96818ee9028793c0c6647722c6253e802029e95",
+          "bytes": 56282
+        }
+      ],
+      "RIGHT_exact_same_forearm_affine_grip_target": [
+        387.8498658722529,
+        507.6862107372094
+      ],
+      "RIGHT_rigid_staff_matrix": [
+        [
+          0.9993908270190958,
+          0.03489949670250097
+        ],
+        [
+          -0.03489949670250097,
+          0.9993908270190958
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 2.1632406296408585e-18,
+      "native_original_full_staff_top_tip_target": [
+        370.4699165144075,
+        9.989578881699742
+      ],
+      "strong_components_ge200": [
+        354408,
+        506,
+        7085
+      ],
+      "edge_alpha16_pixels": 0,
+      "status": "ACTUAL_NEW_E_ATTACK6_HOLD_REVEALED_CAPE_FABRIC_AND_INDEPENDENT_SOURCE_CYCLE_QC"
+    }
+  ],
+  "cape_pending_actual_new_material": "Do not adopt code-only failed plate. Local new actual retouch service pending. Raw original source3588 and all held variants preserved.",
+  "actor_approvals_added": 0
+}

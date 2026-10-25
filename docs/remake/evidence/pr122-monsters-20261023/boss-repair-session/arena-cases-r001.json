@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "key": "monster:커츠",
+      "slug": "kurtz",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r001/NativeMotionProfile.tres",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "roles": [
+        "run",
+        "death"
+      ],
+      "attack_range": 58.0
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "slug": "zombie_lord",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/NativeMotionProfile.tres",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "roles": [
+        "idle",
+        "run",
+        "attack",
+        "hit",
+        "death"
+      ],
+      "attack_range": 58.0
+    }
+  ]
+}

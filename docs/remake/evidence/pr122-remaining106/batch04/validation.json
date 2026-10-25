@@ -1,0 +1,111 @@
+{
+  "observed_utc": "2026-10-18T02:19:25.498421+00:00",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "merge_commit": "4828c5050e71c9bef4bb6c248b4d8e1b15ef83a2",
+  "post_clearance_10_transform": {
+    "cases": 10,
+    "checks": 669518,
+    "native_phases": 1032,
+    "failures": [],
+    "headless": true,
+    "new_OpenGL_or_device_approval": false
+  },
+  "targeted_runner": {
+    "total": 2,
+    "passed": 2,
+    "failed": [],
+    "skipped": [],
+    "not_run": [],
+    "checks": [
+      "original_based_transform_temporal_main_test",
+      "qa_rendered_prop_clearance_test"
+    ],
+    "validation_scopes": {
+      "original_based_transform_temporal_main_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+      "qa_rendered_prop_clearance_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+    },
+    "selection": "qa_rendered_prop_clearance_test,original_based_transform_temporal_main_test"
+  },
+  "prop_negative_control_checks": 8,
+  "ZIP": {
+    "path": "post-clearance-regression.zip",
+    "sha256": "5b8e5eb2775326db0b4c67be61f4643baeb22bf70a0e0caec301223638448c7e",
+    "bytes": 1305102,
+    "all_CRC_and_member_SHA_match": true,
+    "members": [
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/albino-giant-crab.json",
+        "sha256": "0f0ae36ff2229b15d37437a1d3db5ce720fc10bb4ad6f86981a04f2b9930b753",
+        "bytes": 2424494
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/ancient-penguin.json",
+        "sha256": "9a91fdd4f452f762e5f30738450d8d05d0501d98f058aab577738e2b45be98ce",
+        "bytes": 2429838
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/kraken-transform.json",
+        "sha256": "e642b93af0d7cf41587011502a56ca49bc345767b3e74189274f89c512e1056d",
+        "bytes": 2427851
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/pan.json",
+        "sha256": "1ff5a195592dcebe7e2185ed98560003a188f992d02eabc2a66452cbd8b4b3ca",
+        "bytes": 2433334
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/reaper-female.json",
+        "sha256": "fb4ff82428ac563a7b868554f0de39654396c54783142f25e349f26a0941696b",
+        "bytes": 2401096
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/reaper-male.json",
+        "sha256": "b452967eba8bdf707bfb544365f84d29ed2d61eeeb59615d18dab1077c9336e1",
+        "bytes": 2384341
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/spear-captain.json",
+        "sha256": "ddebe0a6b7c07a6b013ed66e27e05290d4bb6e3b204643428019f0525e204e6c",
+        "bytes": 2404827
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/spear-guard-green.json",
+        "sha256": "d703461c855ef13b1e193d364ccc1175baacec86a964c5e3d484a81f80c502cb",
+        "bytes": 2432400
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/spear-guard-red.json",
+        "sha256": "d9ae77b506cd9be530672fc4a8d8fe83968588e44433bc24877cfa9fffbc7cd5",
+        "bytes": 2433035
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch-cases/spear-guard.json",
+        "sha256": "07c8155f703b0d72f46dd9ee44c7de9c7da7dbf46b887d52d7f250f4efa5fd2a",
+        "bytes": 2418709
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.batch.json",
+        "sha256": "696a93733fe15f648c4b62f633d024eea052ef6afffbd460c22e262fa8600c21",
+        "bytes": 12665
+      },
+      {
+        "path": "original_based_transform_temporal_main_test.log",
+        "sha256": "d0da200b7d91e3b55c344b2e9b2f23e47e2186c9ed8a1c407b91be68d680f07d",
+        "bytes": 29863
+      },
+      {
+        "path": "qa_rendered_prop_clearance_test.log",
+        "sha256": "ce95300606fafef55c9241ee6a19e63f815d6d9754375948a8925b3bd26e7afa",
+        "bytes": 222
+      },
+      {
+        "path": "summary.json",
+        "sha256": "e450cf0d01a4a6d06eeae5bc9f783e66f902342fd2419b260d2a2df2a215a962",
+        "bytes": 503
+      }
+    ]
+  },
+  "latest_HEAD_CI": "pending push/dispatch; no previous-commit success promoted",
+  "Android_real_device": "NOT_RUN",
+  "completed_added": 0
+}

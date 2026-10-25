@@ -1,0 +1,77 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "SE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_faithful_locomotion_contact_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 0,
+  "intended_anatomical_support": "RIGHT",
+  "references": [
+    "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+    "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/near-right-down-left-support-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+    "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/near-right-down-left-support-production-guide.png": "f481e1e2fca7455798d0635ec411dd3806e1d6a5abb6777b5810f504a0f98c1f"
+  },
+  "transparent_background": true,
+  "corrective_reason": "First RIGHTtarget ambiguously copied FAR/imageRIGHT advancing boot. New material constraint masks leg area only in reference guide and explicitly requires nearRIGHT lowerLEFT weightbearing leg and farLEFT upperRIGHT trail. No failedposedsource used.",
+  "prompt": "Edit FIRST image exact SELECTED GIRTAS SE IDLE into ONE grounded SOUTH-EAST WALK CONTACT: the ANATOMICAL RIGHT NEAR LEG is the long LOWER-LEFT planted leg, the FAR LEFT leg is shorter UPPER-RIGHT trailing leg. SECOND image is a precise pelvis-to-knee-to-ankle pose diagram, not final art. It masks the old legs to force actually NEW anatomical geometry; keep original clothing and model. DO NOT draw an advancing boot at lowerRIGHT. The LONG SUPPORT BOOT MUST BE ON IMAGE LEFT of the other boot. Exactly ONE sprite only.\n\nVERY EXPLICIT IMAGE-SPACE TARGET: the weapon is in anatomicalRIGHT hand at IMAGELEFT. Directly BELOW that weapon-side HIP, the RIGHT NEAR thigh comes down LEFTWARD to a softly bent knee; its shin then goes nearly DOWN to the RIGHT BOOT at LOWER IMAGELEFT. This is the long weightbearing leg. The RIGHT sole is the LOWEST boot in image, left of center, firmly landing. The other FAR LEFT thigh under FREE imageRIGHT hand swings BEHIND: its knee and boot are visibly UP AND RIGHT of the near support boot. LEFT boot shorter/high trailing heel up, LEFT toes barely touch the receding ground plane. Do not move or cross the near RIGHT support boot to bottomRIGHT, do not make far LEFT boot the long down leg. Actual target GREEN RIGHT chain is hip[290,380]\u2192knee[265,455]\u2192ankle[250,565]\u2192boottoe[280,573]; far MAGENTA LEFT chain is hip[350,375]\u2192knee[393,450]\u2192ankle[418,505]\u2192boottoe[445,512]. Use those as relative projected joint positions, not paint colors. LEFT is the upperRIGHT trail leg. RIGHT is the lowerLEFT support leg. No two-feet-flight.\n\nKeep FIXED actual SE front3/4 camera: pale face and front chest visible looking SCREEN DOWNRIGHT exactly as neutral source. Anatomical RIGHT is NEAR/imageLEFT with weapon, LEFT is FAR/imageRIGHT with empty hand. Two real hip-knee-shin-ankle chains, two boots exactly; part/fold the EXISTING long DARK goldtrim robe panels enough to see the actual support knee and boot. Do not replace the long skirt with pants, do not hide all evidence of leg side under solid cone. Slight torso/pelvis WALK counterrotation and natural arm/cloth counter-motion, not run, jump, attack or crouch. The nearRIGHT sole is landing while opposite LEFT heel lifts behind; body weight transfers over nearRIGHT leg.\n\nIDENTITY exact primary: original pale uncovered face, long PALE hair, crown/horns, thin hard straight GOLD radial spines, dark black-gold armor, long DARK layered GOLD-trim robe, original long SINUOUS glowing-inside orange-gold weapon continuously in RIGHT near hand at IMAGELEFT, freeLEFT empty at IMAGERIGHT. Preserve full gear/spine counts/proportions/materials. No red mask/V, wings/flames/feather fan, broad sword, hand swap, extra arm/hand/leg or new equipment.\n\nOutput ONE finished whole figure, transparent requested1024x1024 PNG, body500-600px and gear envelope<=800px leaving96px alpha0 margins on ALL sides, including blade tip/spines/boots. Full original geometry inside canvas, no cropped tip. Hard opaque weapon silhouette, only1px edge antialias and no outward bloom/haze/particles/blur. No diagram/coloredchains/text/arrows/floor/shadow/ground/grid/duplicate poses. Final absolute check: LONG anatomicalRIGHT weapon-side leg PLANTED DOWN on IMAGELEFT; FAR LEFT boot UP-RIGHT behind; same front3/4 SE face/camera.",
+  "requested_at": "2026-10-19T12:56:17.965334+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_proof": {
+    "source": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+    "source_sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+    "reference_only_mask_rectangle": [
+      195,
+      375,
+      495,
+      625
+    ],
+    "RIGHT_near_support_chain": [
+      [
+        290,
+        380
+      ],
+      [
+        265,
+        455
+      ],
+      [
+        250,
+        565
+      ],
+      [
+        280,
+        573
+      ]
+    ],
+    "LEFT_far_trailing_chain": [
+      [
+        350,
+        375
+      ],
+      [
+        393,
+        450
+      ],
+      [
+        418,
+        505
+      ],
+      [
+        445,
+        512
+      ]
+    ],
+    "final_sprite_resampling": false
+  }
+}

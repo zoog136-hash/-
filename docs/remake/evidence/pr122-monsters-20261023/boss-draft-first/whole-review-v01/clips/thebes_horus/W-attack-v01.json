@@ -1,0 +1,254 @@
+{
+  "actor": "monster:테베 호루스",
+  "slug": "thebes_horus",
+  "clip": "W-attack-v01",
+  "role": "attack",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/W-attack-v01.png",
+  "source_sha256": "cc53f8a9157a7447dffb60570150f27a762a743d26e47fb8ae09965a8d95d025",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      72773,
+      72633,
+      69482,
+      68420,
+      68333,
+      65130
+    ]
+  },
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "W",
+        "region": [
+          128,
+          11,
+          296,
+          505
+        ],
+        "margin": [
+          512,
+          299,
+          984,
+          775
+        ],
+        "source_anchor": [
+          256,
+          512
+        ],
+        "rgba_sha256": "768053ef3a87a5f7b1a1af5388e53e364c7211729472e819e37282362fc3153b",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "W",
+        "region": [
+          547,
+          9,
+          354,
+          504
+        ],
+        "margin": [
+          419,
+          300,
+          926,
+          776
+        ],
+        "source_anchor": [
+          768,
+          509
+        ],
+        "rgba_sha256": "da34a9aee8c13f03c901f692665e11b127d7d9c366d2f8efb1f054788c8ec366",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "W",
+        "region": [
+          963,
+          52,
+          541,
+          461
+        ],
+        "margin": [
+          323,
+          343,
+          739,
+          819
+        ],
+        "source_anchor": [
+          1280,
+          509
+        ],
+        "rgba_sha256": "c1270e0fbebdb1b9e17009b3a47590d6b3dad0f725151e6add003cc999679dd5",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "W",
+        "region": [
+          70,
+          544,
+          492,
+          465
+        ],
+        "margin": [
+          454,
+          339,
+          788,
+          815
+        ],
+        "source_anchor": [
+          256,
+          1005
+        ],
+        "rgba_sha256": "751987bef5e4523c24b085f6d560847006724ce454461aea8e76200c499e363f",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "W",
+        "region": [
+          581,
+          540,
+          378,
+          469
+        ],
+        "margin": [
+          453,
+          335,
+          902,
+          811
+        ],
+        "source_anchor": [
+          768,
+          1005
+        ],
+        "rgba_sha256": "a2f2cfa4e073ef6a9389f8c159c918870a1c5ef7c85363a2df4938442fe74647",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "W",
+        "region": [
+          1140,
+          521,
+          314,
+          498
+        ],
+        "margin": [
+          500,
+          306,
+          966,
+          782
+        ],
+        "source_anchor": [
+          1280,
+          1015
+        ],
+        "rgba_sha256": "1db8509cbc60a136c2a199ad25a9a6c077093121546b1b0f2469647277475cf8",
+        "canvas_size": [
+          1280,
+          1280
+        ],
+        "foot": [
+          640,
+          800
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 479.0,
+    "canvas_size": [
+      1280,
+      1280
+    ],
+    "foot": [
+      640,
+      800
+    ],
+    "strict_source_analysis_canvas": 2048
+  },
+  "foreground_ownership": {
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "20f19731e95ffc390a8b74083734678b410e51b1c1b611fd25a3180300e2d88d",
+    "foreground_owner_sha256": "31bb3c89754e554da28abf784276aafbae8430f961acdfda6a0205278655a99d",
+    "detached_pixels": 2,
+    "detached_fragments": [
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          659,
+          257,
+          660,
+          258
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 250.08198655640913,
+        "owner_margin_min": 247.84591857890933
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          392,
+          315,
+          393,
+          316
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 167.0449041425688,
+        "owner_margin_min": 164.21647701782263
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "omitted_pixels": 0,
+    "foreign_owner_pixels": 0
+  },
+  "status": "STRUCTURAL_PASS",
+  "visual_review": "AWAITING_SINGLE_WHOLE_SCOPE_VISUAL_PASS"
+}

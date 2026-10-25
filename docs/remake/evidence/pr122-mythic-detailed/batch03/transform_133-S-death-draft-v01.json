@@ -1,0 +1,88 @@
+{
+  "name": "신화-군주(여)",
+  "grade": "신화",
+  "reference": "res://assets/catalog/81c72118cd071c065a6091e1.png",
+  "key": "transform:133",
+  "role": "death",
+  "direction": "S",
+  "reference_sha256": "417cf4c9e266a61aeec87dca108b20c9b1905e515528f52019208369d50dfe26",
+  "additional_reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-S-attack-draft-v01.png": "cacdacc0d57975773e49a5556df12c15e720bf36dc0de2ddeaa171b2ae4b12c3"
+  },
+  "policy": "Produce first animation drafts across remaining actors before further polish; preserve approved Unique and 413 work; new death S only; no new mythic walk; no chat image output.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new SOUTH DEATH animation for transform:133, 신화-군주(여). Use the first original catalog reference as authoritative exact identity, anatomy, face, hair, costume, original armor colors, ornaments, complete original equipment and footwear. The second saved attack draft is only an identity/style reference, not a pose or clipping template. Produce ONE transparent PNG containing exactly SIX different full-body SOUTH-facing DEATH poses in THREE equal columns and TWO equal rows, reading order. Required progression 0: fatal hit / unstable; 1: loss of balance; 2: body falling / knees collapsing; 3: ground impact; 4: settling; 5: fully fallen motionless corpse. This is one irreversible death sequence: lose balance, collapse naturally, fall to the ground, settle, end as a fully fallen motionless corpse. The final pose must remain dead and visibly lying on the ground, never sitting up, kneeling to recover, standing, disappearing, respawning, or transitioning to an attack. Preserve the same full character, every original limb and equipment throughout; let only the actual held weapon drop naturally beside the corpse without duplication, floating props or inventing equipment. No blood, gore, dismemberment, wounds, funeral symbols or text. Keep the original painted game sprite style, camera, body scale and common floor across cells; do not shrink the fallen poses. Fully preserve wings or tails only if actually present. Every whole figure, full weapon, head, hair ornament and foot must remain inside its own cell with generous transparent gutters and no overlap into neighboring cells or clipping. Do not generate mirrored or translated duplicates, palette changes, a static fade or a generic substitute. No opaque background, scenery, grid drawing, labels, logos or extra figures. Only SOUTH death is needed; do not generate other directions. This is an unapproved first animation draft for local game production; output only the single six-pose sprite sheet.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/81c72118cd071c065a6091e1.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-S-attack-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_133-S-death-draft-v01.png",
+  "source_sha256": "ecb31fa6b634deb9862315d0cd7ab2e94778f31219dae14709be7123d541a9eb",
+  "source_bytes": 2075587,
+  "generated_original_path": "/workspace/generated_images/exec-74e232cb-0e6f-40b1-91da-ec6b3a1a697a.png",
+  "output_spriteframes": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/draft001/S-death-SpriteFrames.tres",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "rgba_sha256": "93ab2577ca4bdfafe1cda3ad91c2c72283ce08bb3aa877aea0b4fc3056879653",
+      "visible_pixels": 65053,
+      "border_alpha_pixels": 131
+    },
+    {
+      "index": 1,
+      "rgba_sha256": "a5ba85391b6896643aaac50221003a78336eb8e294ce2a95aee35a7a66c48482",
+      "visible_pixels": 59077,
+      "border_alpha_pixels": 66
+    },
+    {
+      "index": 2,
+      "rgba_sha256": "b77a6128a3fdb91325073b67eb00904ee866fa7711cc9e5511c5008cafd1a0c0",
+      "visible_pixels": 42642,
+      "border_alpha_pixels": 691
+    },
+    {
+      "index": 3,
+      "rgba_sha256": "95d8364205cbac39dae184f1bb1f7dcb38135f862bc2ad05b859c476c36a0701",
+      "visible_pixels": 61778,
+      "border_alpha_pixels": 128
+    },
+    {
+      "index": 4,
+      "rgba_sha256": "168ce2a97feed9f7d2e9fa6fccd180b4b8fcbfb2ea9b0c63ff63e50b0e4e980b",
+      "visible_pixels": 64791,
+      "border_alpha_pixels": 143
+    },
+    {
+      "index": 5,
+      "rgba_sha256": "046656ce137437d2486afdf675fd20b5878e28ce54352e20183f252f0c81c995",
+      "visible_pixels": 66728,
+      "border_alpha_pixels": 794
+    }
+  ],
+  "geometry_review": "NOT_RUN",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "compiler_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "generation_request_sha256": "b22737040554940cf0d2dc0192438f44e98227d227b784f9672ca586e5fd682e",
+  "generation_service": "image_gen.imagegen",
+  "Godot_resource_six_pose_playback": "PASS_ONCE"
+}

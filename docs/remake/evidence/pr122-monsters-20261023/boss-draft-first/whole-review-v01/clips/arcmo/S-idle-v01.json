@@ -1,0 +1,25 @@
+{
+  "actor": "monster:아크모",
+  "slug": "arcmo",
+  "clip": "S-idle-v01",
+  "role": "idle",
+  "direction": "S",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/S-idle-v01.png",
+  "source_sha256": "0c4d94d990d891586888d53d88c5235f19faf056b9e5d79ca5ea2c9c019eeb09",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      105137,
+      103198,
+      101504,
+      98262,
+      97806,
+      95484
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

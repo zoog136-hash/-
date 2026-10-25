@@ -1,0 +1,32 @@
+{
+  "name": "진 드래곤 슬레이어",
+  "grade": "신화",
+  "reference": "res://assets/catalog/91797a43d00c9efdab401444.png",
+  "key": "transform:399",
+  "role": "death",
+  "direction": "S",
+  "reference_sha256": "ada9edb58135b3d3ef6f9957083848cdeca6aefcd2a585214b6011de1187a2d2",
+  "additional_reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png": "4a1fdb45dbd24205342a241e2e7e6e19308653c3a5ee301c261cb936de400125"
+  },
+  "policy": "Produce first animation drafts across remaining actors before further polish; preserve approved Unique and 413 work; new death S only; no new mythic walk; no chat image output.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new SOUTH DEATH animation for transform:399, 진 드래곤 슬레이어. Use the first original catalog reference as authoritative exact identity, anatomy, face, hair, costume, original armor colors, ornaments, complete original equipment and footwear. The second saved attack draft is only an identity/style reference, not a pose or clipping template. Produce ONE transparent PNG containing exactly SIX different full-body SOUTH-facing DEATH poses in THREE equal columns and TWO equal rows, reading order. Required progression 0: fatal hit / unstable; 1: loss of balance; 2: body falling / knees collapsing; 3: ground impact; 4: settling; 5: fully fallen motionless corpse. This is one irreversible death sequence: lose balance, collapse naturally, fall to the ground, settle, end as a fully fallen motionless corpse. The final pose must remain dead and visibly lying on the ground, never sitting up, kneeling to recover, standing, disappearing, respawning, or transitioning to an attack. Preserve the same full character, every original limb and equipment throughout; let only the actual held weapon drop naturally beside the corpse without duplication, floating props or inventing equipment. No blood, gore, dismemberment, wounds, funeral symbols or text. Keep the original painted game sprite style, camera, body scale and common floor across cells; do not shrink the fallen poses. Fully preserve wings or tails only if actually present. Every whole figure, full weapon, head, hair ornament and foot must remain inside its own cell with generous transparent gutters and no overlap into neighboring cells or clipping. Do not generate mirrored or translated duplicates, palette changes, a static fade or a generic substitute. No opaque background, scenery, grid drawing, labels, logos or extra figures. Only SOUTH death is needed; do not generate other directions. This is an unapproved first animation draft for local game production; output only the single six-pose sprite sheet.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/91797a43d00c9efdab401444.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "HOLD_GENERATION_OUTPUT_PATH_UNAVAILABLE",
+  "generation_error_observed": "Generated local path unavailable",
+  "environment_event": "unavailable",
+  "scoped_recovery_unassigned_png_count": 0,
+  "retried": false,
+  "source": null,
+  "source_visual_status": "NOT_REVIEWED",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "last_verified_remote": "a573f71e29e7e2b5d7d787e5d5ac2117cee03287",
+  "generation_request_sha256": "3e66fb7ce7550e2874c67360ae175c8d3c18164c94646ecfb1bff696dcf03453"
+}

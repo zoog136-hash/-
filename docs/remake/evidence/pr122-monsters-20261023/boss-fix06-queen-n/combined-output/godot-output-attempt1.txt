@@ -1,0 +1,43 @@
+Fontconfig error: No writable cache directories
+ERROR: Could not create directory: '/home/agent/.local/share/godot'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+ERROR: Error attempting to create data dir: /home/agent/.local/share/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD.
+   at: ensure_user_data_dir (core/os/os.cpp:442)
+ERROR: Could not create directory: 'user://logs'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+ERROR: Failed to open log file for writing: user://logs/godot.log
+   at: rotate_file (core/io/logger.cpp:169)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: No loader found for resource: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase1-RIGHT-midstance-v01.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:27)
+ERROR: No loader found for resource: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase4-LEFT-midstance-v01.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:27)
+ERROR: No loader found for resource: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase5-RIGHT-forward-flight-v01.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:27)
+ERROR: No loader found for resource: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combat-r002/sw-attack-r001/queen-SW-contact1-left-hand-v01.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:332)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:27)
+ERROR: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/SpriteFrames.tres:372 - Parse Error: [ext_resource] referenced non-existent resource at: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase1-RIGHT-midstance-v01.png.
+   at: _printerr (scene/resources/resource_format_text.cpp:41)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:27)
+ERROR: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/SpriteFrames.tres:372 - Parse Error: [ext_resource] referenced non-existent resource at: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase1-RIGHT-midstance-v01.png.
+   at: _printerr (scene/resources/resource_format_text.cpp:41)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:27)
+ERROR: Failed loading resource: res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/SpriteFrames.tres.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:27)
+SCRIPT ERROR: Assertion failed.
+          at: _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:28)
+          GDScript backtrace (most recent call first):
+              [0] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/combined-output/playback.gd:28)

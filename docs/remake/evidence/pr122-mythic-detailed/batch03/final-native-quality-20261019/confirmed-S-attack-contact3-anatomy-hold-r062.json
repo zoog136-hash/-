@@ -1,0 +1,51 @@
+{
+  "schema": "pr122-independent-native-quality-findings-v1",
+  "actor": "transform:393",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r062/SpriteFrames.tres",
+  "selected_frames_sha256": "791ed1b4ceee93bcc23b5319e601d9a49e90ea18fe4d284d714ef5a2b566464b",
+  "status": "HOLD",
+  "actor_approved": false,
+  "counts_changed": false,
+  "findings": [
+    {
+      "direction": "S",
+      "role": "attack",
+      "status": "HOLD_SOURCE_EXTRA_ARM_AT_CONTACT",
+      "phases": [
+        3
+      ],
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v01.png",
+      "source_sha256": "a93e0ad569a6ecef1a43c661ade25598899d1f5e075978f872942e0df4f71123",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r015/S-attack.png",
+      "phase3_region": [
+        543,
+        525,
+        415,
+        453
+      ],
+      "phase3_rgba_sha256": "6d1b4b0f037b27df003fd593f708d634c33fbfc1b6233dd4c57260529386ffee",
+      "basis": "South contact3 has a closed empty hand at image-left on a complete shoulder-to-elbow-to-hand chain, a separate open/clawed empty hand hanging at image-right on a second complete shoulder-to-elbow chain, AND the third front-center black hand gripping the gold blade guard/handle. The central weapon arm and hanging image-right empty arm branch from the same shoulder region. All three hand endpoints are visible simultaneously. Keep the real downwards S contact and repair only the extra free arm branch; other phases may be reused after review.",
+      "hand_locations_in_region_approx": {
+        "left_empty_fist": [
+          187,
+          201
+        ],
+        "right_empty_claw": [
+          341,
+          290
+        ],
+        "front_center_weapon_grip": [
+          250,
+          250
+        ]
+      },
+      "fix_type": "new_contact_pose_required",
+      "metadata_only_fix_possible": false
+    }
+  ],
+  "private_evidence_panels": [
+    "r062-all-attack-phase3-source-detail.jpg",
+    "r062-S-attack-phase3-source-detail.jpg"
+  ],
+  "reviewer": "halpas_final_native_quality"
+}

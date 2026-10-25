@@ -1,0 +1,69 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "attack",
+  "version": "v03",
+  "source_batch": "batch03",
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "operation": "image_edit_composition_and_alpha",
+  "references": [
+    "/workspace/scratch/girtas-E-attack-repair/girtas-E-attack-v02.png",
+    "/workspace/scratch/girtas-E-attack-layout-repair-v03/reference-true-E-idle-pose0.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-attack-repair/girtas-E-attack-v02.png": "d09f7ec45788acdad96a23bfd74fd76a880c1d65d754a3d34cf7f56bf90ba1bf",
+    "/workspace/scratch/girtas-E-attack-layout-repair-v03/reference-true-E-idle-pose0.png": "84c937fcd689c615c716ae6ae2b11079a9088edf3597b4dfcc804c99cab4804a",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "intended_contact_frame": 3,
+  "phase_contract": [
+    "guard",
+    "anticipation",
+    "load",
+    "active_contact",
+    "follow_through",
+    "recovery"
+  ],
+  "corrective_reason": "Existing visually PASS original-faithful E attack v02 cannot pass unchanged strict lossless separation because followthrough4 overlaps neighbor bounding rectangle and outside glow/haze creates alpha>16 bridges. One EDIT of that existing six-pose artwork: common whole-model downscale/recomposition and outside-glow removal; no new action design, no blade shortening. Original source unchanged.",
+  "user_authorization": "Production image editing authorized; no images attached or forwarded into main chat. Exactly one composition-repair edit attempt for this role.",
+  "requested_at": "2026-10-19T11:08:49.613086+00:00",
+  "prompt": "EDIT THE FIRST SUPPLIED EXISTING IMAGE. This is a COMPOSITION/TRANSPARENCY REPAIR of its exact SIX already-authored EAST attack poses, not a new animation or redesign. Keep all six existing poses, their order, anatomy, equipment, camera, timing and articulated motions. Do not replace them with idle poses. Reference2 is ONE correct E idle identity/heading cutout only, not a new pose to duplicate; reference3 is the tiny original identity portrait only. The FIRST image is the absolute authority for the six attack poses to preserve.\n\nThe original sheet is too tightly packed and has soft gold/orange outside-glow/haze connecting adjacent figures. Fix ONLY its composition and background alpha: uniformly SHRINK THE ENTIRE SIX-FIGURE MODEL by ONE COMMON scale factor, with every piece of equipment and the full entire sinuous weapon included, then center the same existing complete poses into SIX spacious separate cells. The complete figure plus all gear in every pose must fit a300x300 (at most320x320) whole-silhouette bounding box inside its512x512cell. Same common figure scale throughout, not different scale per pose. Preserve body/limb proportions, physical weapon length/curve and thin radial spike lengths. Do NOT shorten a weapon, delete a ray, shrink the blade independently, crop a boot, simplify armor or change pose to force a fit. Make all six whole figures smaller together, leaving generous totally TRANSPARENT gutters.\n\nEXACT SIX EXISTING PHASES TO RETAIN LEFT-TO-RIGHT TOP-TO-BOTTOM:\n0 SAME E/right-facing guard, original anatomical RIGHT hand lowering its long thin descending sinuous gold/orange weapon, free LEFT hand near front chest, existing legs/robe/spines.\n1 SAME first E anticipation pose: original right weapon arm lifted above/behind its same shoulder; thin sinuous weapon arcs back/left while head/chest/hips still face RIGHT. Preserve the original free left arm and equipment.\n2 SAME deeper E load/coil pose: raised original right arm and same wavy weapon, existing bent leading knee and torso load. Do not replace with a front or north-facing body.\n3 SAME authoritative E ACTIVE CONTACT: original right arm extended toward SCREEN RIGHT, SAME thin repeated S-curved sinuous weapon pointed RIGHT at contact, existing extended shoulder/torso and legs. Preserve the projected curved contour and taper seen in this exact original pose; no short broad sword, straight rod or added weapon. This remains contact FRAME3.\n4 SAME follow-through: arm and full original sinuous weapon extend DOWN-RIGHT, hair/long skirt and torso lag from the contact. Preserve that existing distinct articulated pose, but separate it spatially from neighbor5 by shrinking the whole figure uniformly.\n5 SAME E guard/recovery: original right hand returns to low descending original long sinuous blade, existing free left arm and original equipment/body.\n\nIDENTITY AND DIRECTION MUST STAY EXACT: every face/nose, chest/waist, hip and foot remains EAST/right at the same established camera. Exposed pale human face, long pale hair, original crown, thin hard rigid GOLD radial back spines, long DARK gold-edged skirt-like armor, original black/gold boots, long thin sinuous single weapon and original anatomical RIGHT weapon hand. Exactly TWO arms/hands and TWO legs per pose; no extra fists, missing limbs or mirror-swapped weapon. No closed redmask, flame-feather fan, fitted segmented pants replacing skirt, broad short blade or new gear. Do not adopt the original portrait direction instead of the first image pose directions.\n\nTechnical edited output: exactly1024x1536 PNG, TWO512px COLUMNS and THREE512px ROWS, exactly six complete isolated figures. Safe areas: column1 x106..406,column2 x618..918; row1 y106..406,row2 y618..918,row3 y1130..1430. All visible physical parts inside those central300px areas; at least96px, preferably106px, clear alpha0 gutter on every cell edge. No figure bounding rectangle or any pixels belonging to one pose may cross a cell boundary or overlap another figure. The source soft outside glow MUST BE REMOVED COMPLETELY: all background and every gap are true alpha0, including faint haze/feathered orange edge clouds between poses. Keep only1-2px silhouette antialiasing. Gold/orange luminosity is confined INSIDE the existing SOLID physical sinuous weapon contour and original armor/spike material. The weapon must stay visibly bright, narrow, hard-edged, curved and COMPLETE without any outer glow cloud or bridge. Do not remove the physical gold rays as if they were glow. Preserve crisp rich dark armor and fine gold trim. NO ground, castshadow, bloom, halo, aura, diffuse glow, haze, fog, particles, trails, blur, text, numbering, grid, panels or background colors. The result is the SAME SIX original E attack poses, coherently uniformly smaller, wholly complete and separated by wide absolutely empty alpha0 gaps.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six original E attack phase constructions/order are retained: low guard0, raised same-hand anticipation1, bent-knee load2, E/right extended contact3, down-right follow-through4 and low recovery5. None was replaced by idle or another direction.",
+      "Every pale face/head, torso/pelvis and leg heading remains E/right. Long pale hair, crown, narrow hard gold radial spikes, long dark goldtrim skirt and original armor/boots remain original-faithful.",
+      "Exactly TWO arm/hand chains in each pose; original anatomicalRIGHT retains the single long thin sinuous orange-gold weapon throughout. Contact3 still extends RIGHT with repeated narrow S-curves and taper, not a short broad blade, and the free left arm is distinct.",
+      "Outside diffuse glow/haze is substantially removed. At alpha>16 the edited raw has SIX complete separate connected foreground bodies, compared with the prior blocking bridge. No opaque source outer-edge clipping.",
+      "Raw nominal bounding rectangles still overlap, so raw strict extraction remains HOLD. One unchanged LOSSLESS repack succeeds: six distinct complete frames, all alpha>16 foreground RGBA preserved, no resampling/recoloring/new poses, maximum removed distant background alpha16. Strict original importer and complete-pose ownership check PASS for the derivative."
+    ],
+    "visual_limitations": [
+      "Image editing regenerates pixels and cannot claim byte-identical original v02 engraving; six existing pose constructions and major identity were visually retained. Original v02 remains immutable.",
+      "The requested300px central figures/gutters were not achieved by the raw image edit. Only the losslessly repacked derivative is strict-geometry PASS; raw source itself must not be selected without that step.",
+      "Source-art and extraction PASS only. Runtime body scale/foot lock, attack clock/contact3 marker, actual game/Main integration and final actor approval remain pending."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "4e8b3d3895d2ef53e74eacaad55505193bd75f36727f17e978ff99015c56c788",
+    "raw_bytes": 2247486,
+    "request_sha256": "92d3d769d3315c71522827ca615ff9afe71339ab356161cc74e4e9484737dbe1",
+    "review_sha256": "72c9b3e8f5982bfd2c715f322064d9e69a810b9038b7fdd85eea2850de75be82"
+  },
+  "available_repository_reference_sources": {
+    "d09f7ec45788acdad96a23bfd74fd76a880c1d65d754a3d34cf7f56bf90ba1bf": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v02.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-84c937fcd689c615c716ae6ae2b11079a9088edf3597b4dfcc804c99cab4804a.png",
+      "sha256": "84c937fcd689c615c716ae6ae2b11079a9088edf3597b4dfcc804c99cab4804a",
+      "bytes": 410814,
+      "original_reference": "/workspace/scratch/girtas-E-attack-layout-repair-v03/reference-true-E-idle-pose0.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v03.png",
+  "output_sha256": "4e8b3d3895d2ef53e74eacaad55505193bd75f36727f17e978ff99015c56c788",
+  "output_bytes": 2247486,
+  "original_generated_file": "/workspace/scratch/girtas-E-attack-layout-repair-v03/girtas-E-attack-v03.png"
+}

@@ -1,0 +1,42 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "NEW_single_true_NE_run_opposite_landing_constant_bone_primary",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phases": [
+    0
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-RUN-LEFT-landing0-fixedbone-3d-guide.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-head-hair-spines-central-cuirass-NO-POSED-ARMS-NO-LEGS.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-near-pauldron-material-only.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-long-robe-gold-trim-material-only.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-RIGHT-sinuous-weapon-material-only.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-RUN-LEFT-landing0-fixedbone-3d-guide.png": "878d67cd3daef216c2e2c04772113c45de2a85a17db85d5637e3ce1d1e445ffd",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-head-hair-spines-central-cuirass-NO-POSED-ARMS-NO-LEGS.png": "18b6be587faa98d3b1564284ad5a7bf537e1595237464ae18e23a6ca2fd790a1",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-near-pauldron-material-only.png": "a0fe40c6fbfb15d7c97f8a0c3c3fa21fe18d80245f03dcfc3bcad24b37da33fa",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-long-robe-gold-trim-material-only.png": "3634131b43459fec746ca6b72ebe4dd447108e88831fb185cff6c230a253059f",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-RIGHT-sinuous-weapon-material-only.png": "fba50d589080cfec6e5e794a09dced995487373eacd83e7fa1aa1ac6c3a613a0"
+  },
+  "transparent_background": true,
+  "prompt": "Author exactly ONE NEW detailed GIRTAS NORTHEAST RUN landing gamephase0, anatomical LEFT FORWARD supporting heel/sole, opposite RIGHT HIGH FOLDED RECOVERY BOOT IN AIR. FIRST colored constant-bone 3D mannequin is ONLY whole-body/arms/legs/camera POSE authority. DRESS that actual joint articulation in faithful original Girtas equipment. The SECOND original head/hair/rays/centralcuirass has oldposed ARMS and LEGS removed; THIRD only original nearpauldron material; FOURTH longdarkgoldtrimrobe material; FIFTH original longRIGHTsinuousblade detail. Identity fragments are NOT old-standing/walk pose templates. Keep actual Girtas skull/pauldron/waist/limb proportions and original heavy longrobe; the guide's generic meters are not permission to make giant legs or a tiny chest. Do NOT output the mannequin or its colors.\n\nTRUE RUN, not walk: LEFT hip→thigh→softknee→shin→leadingBOOT actually extends FORWARD world+Y, projected NE UP-RIGHT, heel/sole just landing accepting bodyweight; opposite RIGHT hip→thigh→deeplyFOLDEDknee→shin→HIGHheel/boot is visibly AIRBORNE behind the pelvis, sole far above this same landing ground. OnlyONEfoot touches; NO rear toe onground, NO walkdouble-support, NO secondfootflatunderbody, NO cloth-onlymotion. Modest athletic forward torso lean towardNE (~10–15degrees), compact bent elbows and genuine opposing arms: opposite RIGHT arm FORWARD, same LEFT arm BACK. Exactly guidecoloredhipownership and occlusion. FootscreenX order MAY CROSS; never force LEFTbootimageLEFT or RIGHTbootimageRIGHT. Trace entire matching thigh/knee/shin from ownhip, exactly2legs/2boots with no disconnected thirdlimb. Guide MAGENTA=anatomical FAR LEFT hip/imageLEFT; GREEN=NEAR RIGHT hip/imageRIGHT, +Y forwardUPRIGHT forBOTHlegs. The RIGHT recoveryboot's elevatedsole must be actual folded leg geometry, not merelyupturnedsoleangle.\n\nFixed trueNE rearRIGHT threequarter camera: predominant BACK/silverhair/dorsalarmor, nearRIGHTgoldpauldron andweaponarm IMAGE RIGHT visible larger than foreshortened FARLEFT; oblique shoulders/hips/boots, not symmetricalpureN or pureEside/frontface. Same originalpale/silverlonghair, originalgoldhorncrown, thin HARDstraightGOLD radialspines (not feather/firefan), black/goldheavyarmor, LONGdarkgoldtrimlayeredROBE down toankles. Robe parts/folds naturally around actual runningknees/boots and streams slightlybehind, but never becomes segmentedpants, shortskirt, wings or barehumanthighs. Hardarmor remainsrigid. FulloriginalONE longSINUOUS orangegoldweapon continuously held in anatomical NEAR RIGHT hand; same fullsinuouscurve/length and originalhandattachment duringarmcounter-swing, no shortenedbroadsword. FARLEFT emptyhand, exactly2arms/hands, no transfer orthirdarm. Rich handpaintedgameart originalgoldfiligree andhairstrands, no generic simplifiedmannequin styling, no redmask/newgear.\n\nOUTPUT exactlyONE entire isolated figure transparent requested1024squareRGBA. Fullgear≤800px/body~500–600px, clear≥96px alpha0 outside everyspine/blade/robe/boot; no clipping or shorteninggear. Sharp opaque anatomy/materials, internalbladeglowonly. No floor/groundplane/shadow/aura/outwardhaze/particles/motionblur/afterimages/text/labels/grid/guides/colors/duplicates. Do not include a floor from FIRSTguide. Final actualcheck: LEFT FORWARD grounded landing with weight/softknee, RIGHT HIGHFOLDED trueAIR recovery, contralateral bentarms, forwardNElean, faithfuloriginallongrobe/rightblade/palehair/hardgoldrays.",
+  "corrective_reason": "Root authorized actualUniqueNErun six after frozen fullNEwalk/source586d. First2newopposite landingkeys only beforefreshpairQC; originalposedarms/legs removed from identityrefs, real3Dguideprimary. No walkRGBAreuse, no oldwrongNEcamera or backwardwalk0/5.",
+  "fixedbone_3d_proof_path": "/workspace/scratch/girtas-NE-run-production-v01/fixedbone-NE-run-opposite-landing-3d-proof.json",
+  "fixedbone_3d_proof_sha256": "75345a912d859dc5243167d0324243a10ebbb9e014713f3618952e03b265ccff",
+  "identity_crop_proofs_path": "/workspace/scratch/girtas-NE-run-production-v01/identity-reference-arm-leg-removal-proofs.json",
+  "identity_crop_proofs_sha256": "8388a931cd8dcb200c27ad7be2276eec0c590d9c8ae4c65c3ac47fc98297688a",
+  "user_authorization": "Continue PR122 actual animation production. Private production generation authorized, no images/mainchat, preserve allpriorart/approval/colorprofiles.",
+  "requested_at": "2026-10-19T16:07:04.416554+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_poses": 0,
+  "actor_approval": false,
+  "generation_budget": "First independent opposite landing pair0/3; no repeated identical completed failure; next4onlyafteractualfreshQC."
+}

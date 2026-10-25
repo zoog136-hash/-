@@ -1,0 +1,64 @@
+{
+  "schema": "PR122-independent-final-exact-request-source-cycle-review-v1",
+  "status": "PASS_EXACT_FINAL_NW_ATTACK_SIX_SOURCE_AND_ONE_SHOT_STRIKE3_CYCLE",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "attack",
+  "version": "NWattackSixActualRig01",
+  "request_sha256": "fd1e017144e8c7a68c5dd7e9b029f891bfa49e28a7e9cc6edbf94e76a7d75a6c",
+  "request_path": "/workspace/scratch/mythic413-NW-attack-actual-packed-r001-20261020/request-NWattackSixActualRig01.json",
+  "raw_sha256": "388375c86d12d4034a2792baca8f7b36c0f2c74b3638e696a7c313c042f5f97d",
+  "raw_bytes": 2834041,
+  "raw_path": "/workspace/scratch/mythic413-NW-attack-actual-packed-r001-20261020/thunder_female-NW-attack-six-actual-poses-r001.png",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v07/NW-ATTACK6-actual-directional-rig-contract-v07.json",
+    "sha256": "5a4355ef3f6a7a11985911e2eacc5141910a16aaf22478775cb215e51cc7c332",
+    "bytes": 13740
+  },
+  "actual_source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NWattack-v07-5a4355-independent-actual-source-cycle-PASS-v01.json",
+    "sha256": "eb9572b7774873605561236d4f326960aa8594ea41b6db3c5665480f2e45569e",
+    "bytes": 18892
+  },
+  "exact_source_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NWattack-v07-final-exact-request-source-binding-v01.json",
+    "sha256": "f8fa5cf659129812a70c54cf3bdc4bf3edf03713fbe038604ecc6f7cd429efff",
+    "bytes": 5882
+  },
+  "physical_canvas": 2048,
+  "common_unpadded_root": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "uniform_integer_root_rounding_delta": [
+    0,
+    -0.2999999999999545
+  ],
+  "loop": false,
+  "impact_frame": 3,
+  "one_shot": true,
+  "resource_role_seconds": 0.42,
+  "visual_findings": [
+    "Dedicated READY/WINDUP/COIL, NW-directed STRIKE3, FOLLOW and RECOVER poses articulate actual torso/knees/nearLEFT counterarm and farRIGHT staff arm rather than relabeling an existing clip.",
+    "The rearNW unique head/bun/ribbon, gold-blue costume, white skirt and complete high-heeled boots remain coherent. Both real flat shoes preserve their initial native yaw and fixed support material across all six poses.",
+    "Complete far anatomicalRIGHT hand/forearm and rigid double-ended staff stay connected. All six reviewed grip/staff nodes transfer byte-exactly from the native reviewed grip sequence, with orthonormal staff rotations.",
+    "The new continuous RIGHT calf uses actual owned calf-to-flatshoe material and closes the earlier sawtooth/cut contour. The isolated dark old-underarm fragment now follows the real underarm cap; old LEFT fingertip traces are removed while preserving the complete moving hand.",
+    "STRIKE3 reaches the NW quadrant with the actual blade endpoint around[136.294,219.771]; recovery returns toward the ready guard without a body/equipment pop."
+  ],
+  "visual_limitations": [
+    "Final atlas/request preserves all six reviewed actual source RGBA pixels. Uniform root rounding adds no relative fixed-stance drift.",
+    "This approves actual source appearance and visible one-shot attack cycle. Final exact atlas/request binding and actual scoped Godot/Player/impact scheduling remain pending.",
+    "Visible stationary complete-shoe material is independently fixed; hidden3D anatomy and finite foot volume are not uniquely reconstructed. Foot perimeter yaw is retained rather than forced to a common heading slope.",
+    "One3px source bow-edge alpha fragment remains in WINDUP1; it is not a detached hand/armor or additional strong body. No alpha threshold or gameplay validation was relaxed.",
+    "The initial RIGHT flatshoe placement changed once by1nativeY before this final shared stance. It is constant across all six final frames and is not a perpose foot/root fit.",
+    "Only this new NW ATTACK source cycle is approved here; detailed actor approvals remain unchanged."
+  ],
+  "images_forwarded": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

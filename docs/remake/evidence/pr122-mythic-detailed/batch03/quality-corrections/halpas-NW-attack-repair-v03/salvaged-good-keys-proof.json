@@ -1,0 +1,89 @@
+{
+  "schema": "pr122-salvaged-good-keys-v1",
+  "key": "transform:393",
+  "direction": "NW",
+  "role": "attack",
+  "raw_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+  "source_geometry": "UNCHANGED_STRICT6_COMPLETE_REGION_PASS",
+  "valid_source_phases": [
+    0,
+    1,
+    5
+  ],
+  "invalid_source_phases": [
+    2,
+    3,
+    4
+  ],
+  "keys": [
+    {
+      "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+      "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+      "source_pose": 0,
+      "role_phase": "guard",
+      "source_region": [
+        41,
+        26,
+        475,
+        454
+      ],
+      "path": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase0-guard-lossless.png",
+      "sha256": "8f5f708dacf7e3609c00a7c7be665af311df03c5d270240cfe77bd9f11f75cef",
+      "rgba_sha256": "c475de792e1b90aaa9198897083e7eecd0eefa4cf1aa3c6056f1d711b66b1665",
+      "size": [
+        475,
+        454
+      ],
+      "pixel_processing": "exactRGBA rectangularcrop only, noresample/mask/recolor",
+      "source_visual_status": "PASS_SINGLE_KEY_ONLY",
+      "review_basis": "NWbody+samefarRIGHTweaponarm connected+nearLEFTempty, exactly2arms, completegear."
+    },
+    {
+      "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+      "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+      "source_pose": 1,
+      "role_phase": "raise",
+      "source_region": [
+        543,
+        22,
+        432,
+        461
+      ],
+      "path": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png",
+      "sha256": "5f05cd3d83c07457a4c328ab41c4e5bd53ba088b59c5b3b86ed8e8b46c1553b5",
+      "rgba_sha256": "a764c077900e05ca373832a9ce0657e55b601c609ecfd8c9e07fa47a90da7007",
+      "size": [
+        432,
+        461
+      ],
+      "pixel_processing": "exactRGBA rectangularcrop only, noresample/mask/recolor",
+      "source_visual_status": "PASS_SINGLE_KEY_ONLY",
+      "review_basis": "NWbody+samefarRIGHTweaponarm connected+nearLEFTempty, exactly2arms, completegear."
+    },
+    {
+      "source_path": "/workspace/scratch/halpas-NW-attack-repair-v03/halpas-NW-attack-v03.png",
+      "source_sha256": "c4e01ab58554c8d25ed83ef7c35d7df05529aa85d66a14bd4d712dac0a103eb2",
+      "source_pose": 5,
+      "role_phase": "recover",
+      "source_region": [
+        544,
+        1047,
+        471,
+        453
+      ],
+      "path": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase5-recover-lossless.png",
+      "sha256": "21aa1040c8de9b789d4fec163602d9ef80d5e03c4eb4c6bb794e97cadbacc21a",
+      "rgba_sha256": "effc7576415b54dded94a6d86010ae7ad09893b276e2f135f7b57df0b359e3a3",
+      "size": [
+        471,
+        453
+      ],
+      "pixel_processing": "exactRGBA rectangularcrop only, noresample/mask/recolor",
+      "source_visual_status": "PASS_SINGLE_KEY_ONLY",
+      "review_basis": "NWbody+samefarRIGHTweaponarm connected+nearLEFTempty, exactly2arms, completegear."
+    }
+  ],
+  "full_clip_status": "HOLD",
+  "approval_change": 0,
+  "created_at": "2026-10-19T12:30:57.580567+00:00"
+}

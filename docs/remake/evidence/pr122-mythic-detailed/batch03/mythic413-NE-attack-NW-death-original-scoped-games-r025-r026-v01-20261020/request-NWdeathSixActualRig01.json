@@ -1,0 +1,123 @@
+{
+  "status": "REQUESTED_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "death",
+  "version": "NWdeathSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+    "base_geometry_sha256": "60ca913c500958bd6253e756e3a537dd71aa7b9b16f80441067ca9b6e13ae2b0",
+    "direction": "NW",
+    "regions": [
+      [
+        568,
+        140,
+        622,
+        1108
+      ],
+      [
+        2080,
+        202,
+        632,
+        1046
+      ],
+      [
+        481,
+        1880,
+        673,
+        904
+      ],
+      [
+        1956,
+        2046,
+        724,
+        731
+      ],
+      [
+        355,
+        3854,
+        779,
+        471
+      ],
+      [
+        1883,
+        3854,
+        780,
+        481
+      ]
+    ],
+    "nearest_owner_sha256": "f31388a50c09e53675bc9c1c59de1ada63b2e178cd81b57adc6c22f7489919de",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof cf338feabc88246e6547e3f720ba29243786c69724bb8b6e92b92aae6ca1813c"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "f20e76f7079295b6e220418c16b04b56675b45f5734015457c691554516b40ed",
+    "direction": "NW",
+    "role": "death",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        769,
+        1186
+      ],
+      [
+        2305,
+        1186
+      ],
+      [
+        769,
+        2722
+      ],
+      [
+        2305,
+        2722
+      ],
+      [
+        769,
+        4258
+      ],
+      [
+        2305,
+        4258
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "cf338feabc88246e6547e3f720ba29243786c69724bb8b6e92b92aae6ca1813c",
+  "authored_common_root_float": [
+    641,
+    1058.3
+  ],
+  "common_root_integer": [
+    641,
+    1058
+  ],
+  "common_root_rounding_delta": [
+    0,
+    -0.2999999999999545
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0
+}

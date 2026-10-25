@@ -1,0 +1,116 @@
+{
+  "status": "CORRECTIVE_TARGET_GUIDE_ONLY_NOT_SOURCE_APPROVAL",
+  "raw1254fixed": true,
+  "native_C": 2560,
+  "unitfactor": 2.5,
+  "independent_Cfit_proof": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NW-run-915b1-body-unit-C2560-independent-calibration-v01.json",
+  "Cfit_sha256": "d8e9560dd129de71b54ee7d126a75c2d620e044f1e89be317dfb296ac40808a6",
+  "good_master_sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+  "target_points_raw": {
+    "head_skull_center": [
+      598,
+      271
+    ],
+    "head_bun_center": [
+      617,
+      211
+    ],
+    "neck_nape": [
+      622,
+      340
+    ],
+    "L_shoulder_near": [
+      559,
+      383
+    ],
+    "R_shoulder_far": [
+      740,
+      406
+    ],
+    "L_elbow_near": [
+      486,
+      500
+    ],
+    "L_wrist_free": [
+      430,
+      576
+    ],
+    "R_elbow_far": [
+      820,
+      498
+    ],
+    "R_wrist_grip": [
+      906,
+      433
+    ],
+    "waist_belt_center": [
+      675,
+      547
+    ],
+    "pelvis_center": [
+      669,
+      653
+    ],
+    "L_hip_near": [
+      620,
+      684
+    ],
+    "L_knee_support": [
+      488,
+      745
+    ],
+    "L_ankle_support": [
+      496,
+      937
+    ],
+    "L_forefoot_contact": [
+      463,
+      1035
+    ],
+    "L_heel_tip_contact": [
+      525,
+      1062
+    ],
+    "R_hip_far": [
+      706,
+      699
+    ],
+    "R_knee_recovery": [
+      702,
+      813
+    ],
+    "R_ankle_recovery": [
+      775,
+      861
+    ],
+    "R_toe_recovery": [
+      791,
+      982
+    ],
+    "R_heel_tip_recovery": [
+      811,
+      902
+    ],
+    "staff_upper_endpoint": [
+      907,
+      16
+    ],
+    "staff_lower_endpoint": [
+      932,
+      1110
+    ]
+  },
+  "fixed_body_pose": "upperbody/Rfargrip/LEFTfreearm preserved; onlynearLEFTleggeometrychanges",
+  "heel_from_nearhip_dx": -95,
+  "heel_forward_vs_root_dx": -144,
+  "original_boot_preservation": "rigid lowerboot foot translation approx[-245,-126], heel/toe vectorpreserved[-62,-27], real newjoint deformationserviceauthored",
+  "left_projected_target_segments": {
+    "thigh": 145.41320435228707,
+    "shin": 192.16659439142902
+  },
+  "no_2Dbone_equality_claim": "3Dfixedbone sourceart willbeindependentlyreviewed; projectedjointchanges areforeshortenednewRUNcontact",
+  "phase0_ground": "LEFT goldheelpoint lands, leftforefoottoe27pxhigher; RIGHT toe/heel liftedbehind",
+  "anchor_world_rule": "sourceC2560constant, rootplaneanchorprovisional[669,1115.2187144631857] fromscaledfiniteguidepelvisfit; independentactualrootreviewrequired",
+  "service_scope": "preserve1254nativepixelscale/noresample, correctactualLleg only",
+  "source_status": "915b1 fullphysicalHOLD; guide cannotselfapprove"
+}

@@ -1,0 +1,66 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "W",
+  "role": "idle",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
+    "/workspace/scratch/halpas-E-idle-repair/halpas-E-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e",
+    "/workspace/scratch/halpas-E-idle-repair/halpas-E-idle-v02.png": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007"
+  },
+  "transparent_background": true,
+  "canonical_forward": [
+    -1,
+    0
+  ],
+  "anatomical_weapon_hand": "RIGHT; far arm in this new WEST view, never mirror EAST",
+  "body_height_target_pixels": [
+    300,
+    330
+  ],
+  "phase_contract": [
+    "neutral",
+    "inhale",
+    "inhale_peak",
+    "exhale",
+    "recovery",
+    "neutral_return"
+  ],
+  "corrective_reason": "Existing W idle lacks clear projected LEFT/cardinal distinction from SW. Construct a genuinely new left-lateral model from original+N/S+new true E proportions, preserving anatomical RIGHT weapon hand with opposite occlusion, not mirroring.",
+  "user_authorization": "Production image tools authorized; private bounded previews only, no images or links in main chat. One imagegen attempt.",
+  "requested_at": "2026-10-19T10:40:11.895212+00:00",
+  "prompt": "Create a NEW WEST idle sprite animation of the exact SAME unique boss 해방된 할파스 / Halpas. Six independently drawn complete full-body poses. Reference1 is the original identity portrait; reference2 the correct BACK model; reference3 the correct FRONT model. Reference4 is the newly constructed genuine EAST lateral view, supplied ONLY as an anatomical/proportion guide to the opposite side. Construct a real NEW LEFT-facing model with correct far/near occlusion. NEVER horizontally mirror the east image: that would swap the anatomical weapon hand. Preserve the same physical character, camera elevation, helmet/horns, black-and-gold armor, actual two crystalline purple wings, burgundy cape and single established crystal blade.\n\nEXACT COMPASS: WEST is screen STRAIGHT LEFT, forward vector(-1,0). It is NOT SOUTHWEST/down-left and NOT front-left facing toward the viewer. In ALL SIX poses the nose/visor points horizontally LEFT; sternum, pelvis, knee joints and visible boot toes face LEFT, consistently. Render a true left-lateral elevated-camera view: front chest and far shoulder/hip are foreshortened/occluded, with natural top-plane visibility from the SAME elevated orthographic isometric game camera as the references. Do not turn the face, torso or pelvis towards screen-bottom/camera. A little upper chest from camera elevation is acceptable, but no broad front-facing breastplate or southeast/southwest three-quarter model. Remain left-facing throughout, without view rotations, spins or head turns.\n\nHANDEDNESS IS CRITICAL. The established weapon remains in the character's ANATOMICAL RIGHT hand, just as on the new east model. When that SAME character faces WEST/LEFT, the RIGHT weapon arm is now the FAR arm relative to this camera; the near LEFT arm is the unarmed arm. Reconstruct this new depth/occlusion: show the unarmed left fist on the near side, the right weapon arm on the far side, with the same blade naturally visible ahead toward LEFT as its far-side hand extends slightly beyond the front silhouette. Do not put the blade in the near left hand, do not add another weapon, and do not mirror the old right-facing image. Keep the same two arms, two legs, wing attachments, armor landmarks and original equipment. Cape and crystalline wings attach behind the shoulders toward screen-RIGHT, with correct overlap of the two existing wings, never a frontal symmetrical V.\n\nThis is six-phase grounded IDLE: both existing boots stay planted in a stable same left-facing stance and baseline, with no walking/running stride or drifting whole figure. Phase order left-to-right then down:0 neutral guard;1 gentle inhale, shoulder lift and small wing-joint tension;2 inhale peak, local feather opening and elbow/cloth response;3 exhale and subtle pelvis/knee weight release, wing flex and delayed cape fold;4 opposite small weight/cape recovery while keeping both feet stable;5 smooth return toward0. Six genuinely articulated breathing/wing/cloth poses, NOT shifted copies, rigid transforms or duplicate stills. Same identity, equipment, anatomical hand, physical proportions, heading, scale and elevated camera in every phase. The0→1→2→3→4→5→0 loop should read as calm living-boss breathing.\n\nPIXEL SCALE AND LAYOUT: output1024x1536 transparent PNG, EXACTLY TWO COLUMNS and THREE ROWS, six figures only, one per512x512 cell. Physical helmet-crown-to-boot height about300pixels (target300-330, never400). Fourth east reference is oversized in source pixels: do NOT copy its pixel size. Use its physical proportions, with the new WEST character small on the sheet. Entire silhouette including full horns, wing tips, cape tips, boots and blade must fit inside the CENTRAL320x320 of each cell, leaving at least96pixels completely empty transparent gutter on every cell edge. Fold the existing resting wings anatomically behind the side-view body to fit, preserving every original wing part and crystal shape. Do not crop, shorten or erase equipment to meet the layout. Uniform scale across all six; no source-body bounding rectangles may overlap neighboring cells.\n\nDetailed crisp production RPG cutouts. Opaque black armor/skin, precise gold trim, material shading inside the silhouette. Outside the complete character and inside limb/wing gaps is transparent alpha0 with only1-2px edge antialiasing. Purple color stays INSIDE the existing solid crystalline wing/blade. NO floor or platform, shadows, drop shadows, aura, halo, bloom, haze, fog, smoke, light trails, diffuse glow, motion blur, text, numbers, grid lines, captions or background panels. Prioritize exact horizontal LEFT facing and the original anatomical RIGHT weapon hand with correct new opposite-side occlusion.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v01iso01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six visor/nose, foreshortened sternum, pelvis, knees and planted boot toes face true screen-LEFT; clearly distinct from old SW front-left diagonal model.",
+      "Near arm is the unarmed left fist, visibly hanging on the near side; established weapon is held by far right arm with hand/blade visible ahead to LEFT, preserving anatomical right-handed occlusion instead of mirroring the EAST view.",
+      "Existing black/gold helmet and plates, burgundy cape, two crystalline wings and the single blade remain coherent with N/S/E model; far parts naturally occlude in the opposite-side view.",
+      "Six gentle living-idle changes in shoulder/wing-joint tension, feather spread, cape folds and local body weight while both boots remain in a grounded same-heading stance.",
+      "All six figures appear complete and uncropped. No specific anatomical ratio or elevated-camera mismatch seen; source pixel body size is larger than request/reference target and requires separate runtime compensation."
+    ],
+    "visual_limitations": [
+      "Source compass/art PASS only; source-scale validation and final approval remain HOLD.",
+      "Strict geometry, SpriteFrames, lossless runtime layout, actual Player/Main tests and render review remain for root."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651",
+    "raw_bytes": 2317279,
+    "request_sha256": "13830eb65efd4e2ee2ce76b30dc3555e3c3c822b3ff31ab06887b8428afc5101",
+    "review_sha256": "983482bd104803f8ccf757e22fc0fd5c7659591a4819861a913444da57dcff99"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+  "output_sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651",
+  "output_bytes": 2317279,
+  "original_generated_file": "/workspace/scratch/halpas-W-idle-repair/halpas-W-idle-v02.png"
+}

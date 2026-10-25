@@ -1,0 +1,80 @@
+{
+  "schema": "PR122_W_RUN_NEW_LOAD1_AIR2_INDEPENDENT_SOURCE_QC_V1",
+  "utc": "2026-10-19T15:53:18.814066+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "SOURCE_LOAD1_AIR2_PASS",
+  "scope": "Only newly authored Wrun load1 and AIR2 source roles and visible actual limb chains/identity. Prior contact0/3 PASS statuses are inherited and untouched; whole6/physical/runtime not approved.",
+  "actor_approval_increment": 0,
+  "source_pins": [
+    {
+      "phase": 1,
+      "raw_path": "/workspace/scratch/girtas-W-run-load1-3D-v01/girtas-W-run-load1-3D-v01.png",
+      "raw_sha256": "99303c22adbe291f1c6a0f60fcca7c02919688095f957152f613e822a523e1f3",
+      "raw_bytes": 1318315,
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-W-run-load1-3D-v01/request.json",
+      "request_sha256": "8b551c6da2e22b33e4df353dc5d4c3b2b6b2bacc7d2a957e45ba75a795df354b",
+      "receipt_path": "/workspace/scratch/girtas-W-run-load1-3D-v01/generation-receipt.json",
+      "receipt_sha256": "bed8b24aabcf1ae2bc664daf8d39852a8046c2c0e612b47c7ef73d9b2d099131",
+      "geometry_path": "/workspace/scratch/girtas-W-run-load1-3D-v01/geometry-partial1-base2048.json",
+      "geometry_sha256": "cb562602cb22d9d1e7fa81f1a3908f373c09c69058d7ab273ddf44ec7899226c",
+      "reference_pins": {
+        "/workspace/scratch/girtas-W-run-LEFT-halfcycles-3D-v02/3D-W-RUN-LEFT-game1-authority.png": "a81230f6f30079c798e4c9b5352e4978b312e16e6e97502786b11c7b1db11033",
+        "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-head-rigid-torso-rays-NO-OLD-ARMS-OR-LEGS.png": "fb8e5354e393d3f4f2eee1c3d79a9c0e4622e688028353202d8d904e67744926",
+        "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png": "a18e7741173cd3d8705d6c2329534a5681089ad7d9809659a148880ed7e57035",
+        "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+      },
+      "strong_outer_boundary_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    },
+    {
+      "phase": 2,
+      "raw_path": "/workspace/scratch/girtas-W-run-AIR2-3D-v01/girtas-W-run-AIR2-3D-v01.png",
+      "raw_sha256": "5aae1a16e9036a15e90f9a8bb40dd575cfdc3c1b5fed096ff2c8811fc2b5b284",
+      "raw_bytes": 1322799,
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-W-run-AIR2-3D-v01/request.json",
+      "request_sha256": "e3793f3f2f8e169fa01b4dadf66ee5c77f7000992685d510353e15407f2a155a",
+      "receipt_path": "/workspace/scratch/girtas-W-run-AIR2-3D-v01/generation-receipt.json",
+      "receipt_sha256": "742d2e40ba1b6ec45705a1088ef4cb36d05d958c2b2fe478032d945167abc7ff",
+      "geometry_path": "/workspace/scratch/girtas-W-run-AIR2-3D-v01/geometry-partial1-base2048.json",
+      "geometry_sha256": "eb2945e486ac7382dc7e8deb70a81836d0ee9c9c83ce6f6a09ca68cad42849b9",
+      "reference_pins": {
+        "/workspace/scratch/girtas-W-run-LEFT-halfcycles-3D-v02/3D-W-RUN-LEFT-game2-authority.png": "6a5ee3a44a0c2025c1da4b536fe0894f21e1062dd87bd761879fa8e4b918859a",
+        "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-head-rigid-torso-rays-NO-OLD-ARMS-OR-LEGS.png": "fb8e5354e393d3f4f2eee1c3d79a9c0e4622e688028353202d8d904e67744926",
+        "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png": "a18e7741173cd3d8705d6c2329534a5681089ad7d9809659a148880ed7e57035",
+        "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+      },
+      "strong_outer_boundary_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    }
+  ],
+  "findings": {
+    "load1": "Actual nearLEFT thigh leads from visible near hip into forward bent knee, then shin back/down to a broad complete flat supporting boot. Knee/hip are distinctly compressed, rather than straight landing. FarRIGHT thigh/leg folds behind and ends in a separate down-pointing recovery boot, visibly clear of support sole.",
+    "AIR2": "Actual farRIGHT thigh emerges on the far/front side of the pelvis and drives forward/image-left into raised knee and a separate leading boot. NearLEFT chain leaves the near/right side of the hip and extends rear/image-right to its separate trailing boot. Both complete boots are drawn in flight configuration; source transparency alone does not certify floor clearance.",
+    "identity_camera_gear": "Faithful W left-facing side camera, pale human face/long pale hair, hard gold rays/crown and pauldron, long dark gold-trim robe, and complete long sinuous blade in far permanentRIGHT hand retained. No material new body/gear/endpoints defect visible.",
+    "proportion_limits": "Pose flex/foreshortening and cloth occlusion are allowed. No exact hidden bone lengths or selected runtime source-to-canonical scale certified from this JPEG; final physical candidate must compare rigid head/pauldron/waist and actual hip\u2192knee\u2192shin/boot against selected source."
+  },
+  "remaining_HOLD": [
+    "New opposite load4/AIR5 and whole6 genuine alternation/source consistency pending.",
+    "Common scale/rigid body fit, perposeC, support roots, ground nonpenetration and positive two-sole authored AIR arc pending.",
+    "Actual compiledSpriteFrames, Player routing/Godot and actor quality pending. Actor267 remains0/defaultcatalogOFF."
+  ],
+  "private_preview_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_preview_ledger_sha256": "78e1324a0d952f7cbe670af99662c99341e34013b31e69ddc84926f535424561",
+  "repository_mutations": false
+}

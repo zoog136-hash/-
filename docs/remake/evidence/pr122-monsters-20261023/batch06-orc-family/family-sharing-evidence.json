@@ -1,0 +1,118 @@
+{
+  "keys": [
+    "monster:로머",
+    "monster:에스카로스 치프"
+  ],
+  "same_reference": {
+    "path": "res://assets/monsters/original/atlas_0.png",
+    "region": [
+      634,
+      0,
+      317,
+      309
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 0,
+    "cell": 2,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+    "image_size": [
+      1269,
+      1239
+    ],
+    "region_rgba_sha256": "a28db9425a5212729ea475b3c5942cd2f2b9f212b0655976b3f06f8d6e054b9a"
+  },
+  "target_evidence": {
+    "monster:로머": {
+      "key": "monster:로머",
+      "name": "로머",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          0,
+          317,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 2,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "a28db9425a5212729ea475b3c5942cd2f2b9f212b0655976b3f06f8d6e054b9a"
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 0,
+          "cell": 2,
+          "body": "orc_captain",
+          "variant": 1,
+          "width": 1.05,
+          "weapon": "sword",
+          "crest": 3,
+          "accent": "aa8aaf"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    "monster:에스카로스 치프": {
+      "key": "monster:에스카로스 치프",
+      "name": "에스카로스 치프",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          0,
+          317,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 2,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "a28db9425a5212729ea475b3c5942cd2f2b9f212b0655976b3f06f8d6e054b9a"
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 0,
+          "cell": 2,
+          "body": "orc_captain",
+          "variant": 1,
+          "width": 1.05,
+          "weapon": "sword",
+          "crest": 2,
+          "accent": "849bab"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    }
+  },
+  "basis": "Identical original atlas region/RGBA, body, weapon, width, height, combat and motion presentation. Only fallback crest/accent differ.",
+  "new_source": "New shared native orc-captain rig from textual brief; no palette-only substitution or claim of individual unique art.",
+  "review": "HOLD: original reference identity, source-plane anatomy/support/contact and default Main visual review pending",
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

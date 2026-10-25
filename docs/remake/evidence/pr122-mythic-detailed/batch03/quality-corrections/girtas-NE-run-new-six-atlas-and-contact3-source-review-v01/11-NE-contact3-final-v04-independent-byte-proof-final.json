@@ -1,0 +1,46 @@
+{
+  "schema": "pr122-independent-source-byte-check-v1",
+  "utc": "2026-10-20T06:49:19.979100+00:00",
+  "key": "transform:267",
+  "phase": 3,
+  "original_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+  "original_sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+  "source_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-v04.png",
+  "source_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+  "mask_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/semantic-complete-lowerbody-edit-mask-v04.png",
+  "mask_sha256": "fc3c51ac70bfdde5ea88335b0316427335bc99d7dd49caad38c66298f0e32ac5",
+  "outside_mask_changed_pixels": 0,
+  "uppercore_before_y586_changed_pixels": 0,
+  "farLEFT_protected_ROI_changed_pixels": 0,
+  "weapon_corridor_changed_pixels": 0,
+  "total_changed_pixels": 102318,
+  "alpha16_bbox": [
+    39,
+    19,
+    1248,
+    1067
+  ],
+  "image_edge_alpha16_counts": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "previous_upperthigh_cut_ROI_new_alpha_outside_mask": 2864,
+  "raw_alpha_complete": true,
+  "fixed_pose_canvas_size": 1776,
+  "source_verdict": "INDEPENDENT_SOURCE_SCOPE_PASS",
+  "actor_approval_increment": 0,
+  "semantic_upperthigh_non_weapon_raw_alpha_outside_mask": 0,
+  "old_boot_vacated_ROI_xyxy": [
+    900,
+    1080,
+    1116,
+    1160
+  ],
+  "old_boot_original_alpha16_pixels": 6759,
+  "old_boot_final_alpha16_pixels": 0,
+  "whole_alpha16_within_exact_crop": true,
+  "crop_RGBA_sha256": "0f52f65cdbed80692d007cbe8d300a5c4a93368dd297007aab6e641cb21493ec",
+  "nonspecific_old_rectangular_raw_alpha_metric_note": "The earlier broad rectangular raw-alpha outside-mask count includes intentionally protected original weapon corridor; this is not a leg cut. Explicit semantic non-weapon upperthigh coverage is independently zero missing pixels."
+}

@@ -2,12 +2,13 @@ extends RefCounted
 class_name TwilightActorMotion
 
 const PROFILE = preload("res://scripts/animation/animation_profile.gd")
+const TRANSFORM_MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
 const CLASS_DIRECTIONS = ["walk_down", "walk_up", "walk_left", "walk_right"]
 const SHEET_DIRECTIONS = ["dir_down", "dir_up", "dir_left", "dir_right"]
 signal strike(sequence: int)
 signal cancelled(sequence: int)
 
-var profile: TwilightAnimationProfile = PROFILE.new()
+var profile: PROFILE = PROFILE.new()
 var state: String = "idle"
 var direction: Vector2 = Vector2.DOWN
 var facing8: int = 2 # clockwise: E, SE, S, SW, W, NW, N, NE
@@ -41,11 +42,17 @@ var hit_direction: Vector2 = Vector2.ZERO
 var hit_strength: float = 1.0
 var action_role: String = ""
 var hit_duration: float = 0.085
+# Authored hit playback has its own visual envelope. The existing reaction,
+# tint, physics and combat clocks retain their original short duration.
+var _native_hit_clock: float = 0.0
+var _native_hit_duration: float = 0.0
+var _native_hit_profile: PROFILE = null
+var _native_hit_source: SpriteFrames = null
 var state_clock: float = 0.0
 var frame_source: SpriteFrames = null # optional authored frames for an existing Sprite2D
 var _tracks: Dictionary = {}
 var _track_source: SpriteFrames = null
-var _resolved_profile: TwilightAnimationProfile = null
+var _resolved_profile: PROFILE = null
 var _resolved_state: String = ""
 var _resolved_facing: int = -1
 var _resolved_key: String = ""
@@ -58,7 +65,7 @@ func _set_state(value: String, delta: float = 0.0) -> void:
 	state = value
 
 func face(vector: Vector2) -> void:
-	if vector.length_squared() < 0.01: return
+	if dead or vector.length_squared() < 0.01: return
 	var next: int = posmod(int(round(vector.angle() / (PI / 4.0))), 8)
 	if next != facing8: turn_clock = 0.09
 	facing8 = next
@@ -74,6 +81,7 @@ func begin_attack(total: float, aim: Vector2, style: String = "", marker: float 
 	cancel_attack()
 	# A cancellation subscriber may kill this actor or start a replacement action.
 	if dead or sequence != previous_sequence: return -1
+	_clear_native_hit_presentation()
 	face(aim)
 	sequence += 1
 	attack_elapsed = 0.0
@@ -117,6 +125,15 @@ func cancel_attack() -> void:
 	if not dead: _set_state("idle")
 	if was_active: cancelled.emit(cancelled_sequence)
 
+func _clear_native_hit_presentation() -> void:
+	_native_hit_clock = 0.0
+	_native_hit_duration = 0.0
+	_native_hit_profile = null
+	_native_hit_source = null
+
+func _native_hit_presenting() -> bool:
+	return _native_hit_clock > 0.0 and _native_hit_profile == profile and _native_hit_source == _track_source
+
 func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	if dead: return
 	# Repeated hits replace a bounded envelope, never accumulate displacement.
@@ -126,10 +143,20 @@ func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	hit_direction = incoming.normalized() if incoming.length_squared() > 0.001 else -direction
 	# Pose freeze only: physics, cooldowns and attack markers are never paused.
 	visual_hold = 0.028 if critical and not reduced_motion else 0.0
+	_clear_native_hit_presentation()
+	# Form setup resolves this cache before damage can request an authored hit.
+	if _track_source != null and _resolved_profile == profile and bool(_track_source.get_meta("twilight_native_locomotion_staging", false)):
+		var key: String = "hit_" + str(facing8)
+		if _track_source.has_animation(key) and _track_source.get_frame_count(key) > 0:
+			_native_hit_duration = maxf(hit_duration, presentation_seconds(_track_source, key, hit_duration))
+			_native_hit_clock = _native_hit_duration
+			_native_hit_profile = profile
+			_native_hit_source = _track_source
 
 func die() -> void:
 	if dead: return
 	dead = true
+	_clear_native_hit_presentation()
 	death_clock = 0.0
 	state_clock = 0.0
 	state = "death"
@@ -143,6 +170,9 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		if _impact_pose_age > 0.2: impact_pose_pending = false
 	idle_clock += delta
 	hit_clock = maxf(0.0, hit_clock - delta)
+	if _native_hit_profile != null and _native_hit_profile != profile:
+		_clear_native_hit_presentation()
+	_native_hit_clock = maxf(0.0, _native_hit_clock - delta)
 	turn_clock = maxf(0.0, turn_clock - delta)
 	visual_hold = maxf(0.0, visual_hold - delta)
 	if dead:
@@ -151,7 +181,12 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		return
 	move_ratio = real_velocity.length() / maxf(1.0, profile.reference_speed)
 	locomotion_weight = move_toward(locomotion_weight, minf(move_ratio, 1.5) if not active else 0.0, delta * 12.0)
-	gait += delta * profile.movement_fps * move_ratio
+	var cadence: float = profile.movement_fps
+	if not is_equal_approx(profile.movement_cadence_width_ratio, 1.0) and real_velocity.length_squared() > 0.001:
+		var movement_direction := real_velocity.normalized()
+		var stride_scale := Vector2(movement_direction.x * profile.movement_cadence_width_ratio, movement_direction.y).length()
+		cadence /= maxf(0.1, stride_scale)
+	gait += delta * cadence * move_ratio
 	if active:
 		var advancing_sequence: int = sequence
 		var struck_this_tick: bool = false
@@ -183,9 +218,13 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 	if impact_pose_pending:
 		_set_state("attack")
 		return
+	if _native_hit_presenting():
+		# Display the real hit without stopping movement or delaying an attack.
+		_set_state("hit", delta)
+		return
 	if move_ratio > 0.01:
 		face(real_velocity)
-		_set_state("run" if move_ratio > 1.12 or (profile.reference_speed >= 180.0 and move_ratio >= 0.92) else "walk", delta)
+		_set_state("run" if not TRANSFORM_MOVEMENT_SCOPE.requires_walk(profile.profile_id) or move_ratio > 1.12 or (profile.reference_speed >= 180.0 and move_ratio >= 0.92) else "walk", delta)
 	elif hit_clock > 0.0:
 		_set_state("hit", delta)
 	else:
@@ -216,7 +255,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	var offset: Vector2 = Vector2.ZERO
 	if dead:
 		var fall: float = clampf(death_clock / 0.35, 0.0, 1.0)
-		# Authored death art already contains its fall; retain the shared fade only.
+		# Authored death art supplies the fall and holds its terminal pose.
 		if source == null or _resolved_role not in ["death", "corpse"]:
 			lean = fall * profile.death_tilt * (-1.0 if direction.x < 0.0 else 1.0)
 			offset.y = 9.0 * fall
@@ -283,7 +322,8 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	sprite.rotation = lean
 	sprite.position = (anchor * stretch).rotated(lean) + offset + Vector2(0, bob)
 	var tint: Color = Color(1.45, 0.8, 0.7) if hit_clock > 0.0 else Color.WHITE
-	if dead: tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
+	if dead and (source == null or _resolved_role not in ["death", "corpse"]):
+		tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
 	sprite.modulate = tint
 	if sprite is AnimatedSprite2D:
 		apply_frames(sprite)
@@ -301,8 +341,21 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 			sprite.scale *= reference_canvas / pose.get_size()
 	impact_pose_pending = false
 
+func _available_death_key(frames: SpriteFrames, requested: int) -> String:
+	# Keep existing directional art; only missing views share the S source.
+	var directions: Array[int] = [requested, 2]
+	for distance: int in range(1, 5):
+		directions.append(posmod(requested + distance, 8))
+		directions.append(posmod(requested - distance, 8))
+	for index: int in directions:
+		var key := "death_" + str(index)
+		if frames.has_animation(key) and frames.get_frame_count(key) > 0:
+			return key
+	return ""
+
 func _resolve_frames(frames: SpriteFrames) -> void:
 	if _track_source != frames or _resolved_profile != profile:
+		_clear_native_hit_presentation()
 		_track_source = frames
 		_tracks.clear()
 		_resolved_state = ""
@@ -314,12 +367,37 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	_resolved_key = ""
 	_resolved_role = "legacy"
 	_resolved_directional = false
+	if bool(frames.get_meta("twilight_native_locomotion_staging", false)):
+		# Movement/combat retain exact views. Death alone may reuse a real
+		# existing source under the user's new-source-only S policy.
+		# Recovery/corpse continue attack/death; a stationary turn presents the
+		# actual idle at its new facing. None creates a new authored track.
+		var native_role: String = "attack" if state == "recovery" else ("death" if state == "corpse" else ("idle" if state == "turn" else state))
+		var native_key: String = native_role + "_" + str(facing8)
+		# New monster art has RUN and intentionally no new WALK. Preserve a
+		# real existing WALK; otherwise present the same-facing authored RUN
+		# while movement speed still controls its cadence and world position.
+		if native_role == "walk" and profile.profile_id.begins_with("monster:") and not frames.has_animation(native_key):
+			var running_key: String = "run_" + str(facing8)
+			if frames.has_animation(running_key) and frames.get_frame_count(running_key) > 0:
+				native_role = "run"
+				native_key = running_key
+		if native_role == "death":
+			native_key = _available_death_key(frames, facing8)
+		_resolved_role = "unavailable"
+		if frames.has_animation(native_key) and frames.get_frame_count(native_key) > 0:
+			_resolved_key = native_key
+			_resolved_role = native_role
+			_resolved_directional = true
+		return
 	var roles: Array[String] = [state]
 	if presenting_attack and state in ["attack", "recovery"]:
 		if attack_style == "bow": roles.push_front("ranged_attack")
 		elif attack_style == "magic": roles.push_front("cast")
 		if not action_role.is_empty(): roles.push_front(action_role)
 	match state:
+		"walk":
+			if profile.profile_id.begins_with("monster:"): roles.append("run")
 		"recovery": roles.append("attack")
 		"run": roles.append("walk")
 		"turn": roles.append("idle")
@@ -335,6 +413,13 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 				_resolved_key = key
 				_resolved_role = role
 				_resolved_directional = index in [0, 2, 3]
+				return
+		if role == "death":
+			var shared_death := _available_death_key(frames, facing8)
+			if not shared_death.is_empty():
+				_resolved_key = shared_death
+				_resolved_role = "death"
+				_resolved_directional = true
 				return
 	# Keep existing class/directional/single-image art as the final fallback.
 	match profile.layout:
@@ -380,6 +465,7 @@ func apply_frames(sprite: Node2D) -> void:
 	var frames: SpriteFrames = (sprite as AnimatedSprite2D).sprite_frames if sprite is AnimatedSprite2D else frame_source
 	if frames == null: return
 	if _track_source != frames or _resolved_profile != profile:
+		_clear_native_hit_presentation()
 		_track_source = frames
 		_resolved_profile = profile
 		_tracks.clear()
@@ -390,11 +476,18 @@ func apply_frames(sprite: Node2D) -> void:
 		return
 	_resolve_frames(frames)
 	var key: String = _resolved_key
-	if key.is_empty(): return
+	# A partial native library must never invent an unavailable role/direction
+	# or send an invalid animation name to the sprite during a form switch.
+	if key.is_empty() or not frames.has_animation(key) or frames.get_frame_count(key) == 0: return
 	var track: Dictionary = _track(frames, key)
 	var count: int = track.count
 	var frame_value: int = 0
-	if presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
+	var source_timed: bool = frames.has_meta("twilight_source_tracks")
+	if source_timed and presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
+		# Fit the whole source timeline to the existing combat interval, retaining
+		# every relative duration. The authoritative strike clock is untouched.
+		frame_value = _weighted_frame(track, attack_elapsed / maxf(.001, attack_duration))
+	elif presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
 		var marker_frame: int = clampi(profile.hit_frame_for(_resolved_role), 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))
@@ -406,9 +499,14 @@ func apply_frames(sprite: Node2D) -> void:
 	elif dead and _resolved_role == "death":
 		frame_value = _weighted_frame(track, death_clock / maxf(.01, profile.death_duration))
 	elif _resolved_role == "hit":
-		frame_value = _weighted_frame(track, 1.0 - hit_clock / hit_duration)
+		var hit_progress: float = 1.0 - _native_hit_clock / _native_hit_duration if _native_hit_presenting() else 1.0 - hit_clock / hit_duration
+		frame_value = _weighted_frame(track, hit_progress)
 	elif move_ratio > 0.01 and not presenting_attack and _resolved_role in ["walk", "run", "legacy"]:
-		frame_value = _weighted_frame(track, fposmod(gait, float(count)) / float(count))
+		if source_timed:
+			var ends: PackedFloat64Array = track.ends
+			frame_value = _weighted_frame(track, fposmod(gait, ends[-1]) / ends[-1])
+		else:
+			frame_value = _weighted_frame(track, fposmod(gait, float(count)) / float(count))
 	elif _resolved_role != "legacy":
 		var ends: PackedFloat64Array = track.ends
 		var progress: float = state_clock * float(track.fps) / ends[-1]

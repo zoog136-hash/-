@@ -1,0 +1,51 @@
+{
+  "status": "FROZEN_COMMON_SOURCE0_RIG_REGISTRATION_ALL_SIX_POSES",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "walk_5",
+  "physical_canvas": 2048,
+  "body_unit_factor": 2,
+  "rig_root_in_unpadded_frame": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "source_native_canvas": [
+    1254,
+    1254
+  ],
+  "source0": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-bounded-v02.png",
+  "source0_sha256": "0874d56a0adf0d76b5e91c565ec41d601d8bbb76457c64e703a89dba54cf0645",
+  "one_time_source0_basis": {
+    "rig_x": 641,
+    "definition": "One source0 body/hip-axis origin: midpoint of existing approximate hidden LEFT/RIGHT hip-reference x612 and670. Hidden anatomical points remain inferred, not exact anatomy claims.",
+    "source0_ground_heel": [
+      514,
+      944
+    ],
+    "NW_ground_direction_native_slope": 0.9,
+    "rig_y_definition": "944 + .9*(641-514) =1058.3; one source0 rig-ground origin convention, frozen globally",
+    "scope": "Initial anatomical root-origin convention only, not a new approval or complete3D reconstruction"
+  },
+  "constant_rule": "Same exact [641,1058.3] for all six native poses; never inferred/refit from later pose heel/toe/alpha/crop/bob",
+  "pose_upperbody_offsets_relative_common_root": {
+    "0": [
+      0,
+      0
+    ],
+    "1": [
+      0,
+      0
+    ],
+    "2": [
+      0,
+      -6
+    ]
+  },
+  "frame_extension_rule": "Any storage-only canvas extension/crop recorded separately as storage_translation; rootunpacked remains constant",
+  "C_fixed_independent_calibration_sha256": "a18d90b02183bd33567f2992b7f1079de306e620a601a85168297281076ab013",
+  "approval_added": 0
+}

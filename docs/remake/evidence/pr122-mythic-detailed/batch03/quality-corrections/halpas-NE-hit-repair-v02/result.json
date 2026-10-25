@@ -1,0 +1,55 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_RIGHT_ARM_OWNERSHIP_NOT_APPROVED",
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "version": "v02",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "request_path": "/workspace/scratch/halpas-NE-hit-repair-v02/request.json",
+  "request_sha256": "c42d07dbfbd87847cd706b0af7d02eec8b05789061b6a284ef99789e4a4737e8",
+  "original_generated_file": "/workspace/generated_images/exec-07e71d38-0f8a-4620-a8c2-500a0e22421d.png",
+  "raw_path": "/workspace/scratch/halpas-NE-hit-repair-v02/halpas-NE-hit-v02.png",
+  "raw_png": "/workspace/scratch/halpas-NE-hit-repair-v02/halpas-NE-hit-v02.png",
+  "raw_sha256": "8d2a20212cfcc011508f4784f0b433bedc80f8c12d27e9a3ca87719baae40fa3",
+  "raw_bytes": 2578812,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "private_preview": "/workspace/scratch/halpas-NE-hit-repair-v02/generated-private.jpg",
+  "private_preview_bytes": 325345,
+  "source_visual_status": "HOLD",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "chat_image_attachments": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T13:07:08.846694+00:00",
+  "geometry_validation": "HOLD",
+  "geometry_reason": "A pose rectangle includes another body; cannot safely crop",
+  "outer_edge_alpha100_count": 0,
+  "reviewed_at": "2026-10-19T13:07:36.295388+00:00",
+  "valid_source_phases": [],
+  "invalid_source_phases": [
+    1,
+    2
+  ],
+  "unapproved_source_phases": [
+    0,
+    3,
+    4,
+    5
+  ],
+  "visual_findings": [
+    "NE rear-right camera is retained throughout with helmet rear/spinal armor and no frontal pink chest. Identity, cape, wings and blade colors remain faithful.",
+    "Peak1/2 fail the required continuous low RIGHT weapon arm: visible imageRIGHT shoulder/upperarm instead bends upward into EMPTY fist, while original low blade remains separately beside hip with no continuous gripping RIGHT wrist. This is precisely unsafe arm/weapon ownership; correct direction alone cannot pass.",
+    "Guard-like0/3/4/5 also show an additional empty dangling hand below the low blade/hip, with unclear arm origin behind torso/cape. Those are not declared valid salvage without independent two-arm/grip tracing. No full cycle or actor approval.",
+    "Original raw PNG/request/receipt preserved unchanged. Strict geometry is independently HOLD for a crop rectangle including another body; no repack attempted because visible animation/anatomy already fails."
+  ],
+  "visual_limitations": [
+    "Single materially new full-six source attempt consumed. No identical retry; proceed SE role. Parent may independently adjudicate exact guard-key salvage or author a localized different correction after reviewing ownership."
+  ]
+}

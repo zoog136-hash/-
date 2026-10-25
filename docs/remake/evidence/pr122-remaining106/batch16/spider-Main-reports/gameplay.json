@@ -1,0 +1,43 @@
+{
+	"cases": [
+		{
+			"checks": 1724,
+			"failures": [],
+			"folder": "spider_project_batch16_authored",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "스파이더",
+			"physics_ticks": 1406,
+			"pose_samples": 128,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/spider-project/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch16/Spider-Main-QA-v01/gameplay-cases/spider-project.json",
+			"screenshots": 222,
+			"slug": "spider-project"
+		},
+		{
+			"checks": 1484,
+			"failures": [],
+			"folder": "albino_iguana_monster_authored",
+			"full_pose_capture": true,
+			"monster_directions": 8,
+			"name": "알비노 이구아나",
+			"physics_ticks": 1231,
+			"pose_samples": 112,
+			"preserved_saves": [
+				"user://pr100-batch-preserved/preserved-iguana-baseline/twilight_v20_save.json"
+			],
+			"report": "/workspace/runtime/batch16/Spider-Main-QA-v01/gameplay-cases/preserved-iguana-baseline.json",
+			"screenshots": 190,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 3208,
+	"config": "res://tests/fixtures/pr122_batch16_spider.json",
+	"engine_processes": 1,
+	"failures": [],
+	"process_id": 19048,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/runtime/batch16/Spider-Main-QA-v01/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

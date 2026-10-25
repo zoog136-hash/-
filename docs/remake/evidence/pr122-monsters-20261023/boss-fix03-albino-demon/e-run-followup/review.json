@@ -1,0 +1,105 @@
+{
+  "schema": "pr122-albino-demon-E-run-followup-v1",
+  "id": "monster:알비노 데몬",
+  "date": "2026-10-23",
+  "frozen": true,
+  "scope": "One newly generated E RUN source only; no direction expansion",
+  "generation_attempts": 1,
+  "geometry_retries": 0,
+  "quality_retries": 0,
+  "current_review": "HOLD",
+  "selected_for_new_revision": false,
+  "native_r003_created": false,
+  "new_approvals": 0,
+  "new_completed_bosses": 0,
+  "new_native_clips": 0,
+  "generated_poses": 6,
+  "selected_poses": 0,
+  "source": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/raw/albino-demon-E-run6-side-v01.png",
+    "bytes": 1546883,
+    "sha256": "453db496c392f8170be42b2635dfa438b78e3014c058f256dc7ecdeb0de6d2a2"
+  },
+  "source_record": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/source-record-v01.json",
+    "bytes": 4603,
+    "sha256": "1558ab0e9970ce2e367211d18ad44d58ca6dbf9d079cb75d8819f42c84470a9f"
+  },
+  "exact_request": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/request-v01.json",
+    "bytes": 3996,
+    "sha256": "1f9a9dbaf9564d835f1d3e7236dcb54f221f809a97225dbc11365107553f01fc"
+  },
+  "geometry_check": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/source-check-v01.json",
+    "bytes": 3136,
+    "sha256": "8206e07792c4f946ced1d473ad9913698bfd04812cf5decfcc075448b5e8172b"
+  },
+  "physical_phase_mapping": {
+    "top_left": 0,
+    "middle_left": 1,
+    "bottom_left": 2,
+    "top_right": 3,
+    "middle_right": 4,
+    "bottom_right": 5
+  },
+  "inspection": "Actual private tool vision of the complete six-pose PNG and exact existing project reference, followed by an independent private source-image review. No images/Base64 were forwarded to parent/user.",
+  "examined_views": [
+    "E"
+  ],
+  "examined_roles": [
+    "run"
+  ],
+  "examined_poses": 6,
+  "findings": [
+    {
+      "criterion": "reference_identity",
+      "result": "PASS_WITHIN_STATIC_SCOPE",
+      "observation": "The new source preserves red demon muscle, swept black horns, heavy spiked armor, attached tail, actual axe in the visible near hand and opposite empty claw. No golem source or palette-only swap was used."
+    },
+    {
+      "criterion": "strict_E_camera",
+      "result": "HOLD",
+      "observation": "The face/snout is more strongly right-facing in profile, but the frontal skull-belt face and frontal chest plane remain visible. This is a partial camera change and does not establish the requested pure right-flank view."
+    },
+    {
+      "criterion": "opposite_anatomical_support",
+      "result": "HOLD",
+      "observation": "Top-left logical phase0 and top-right logical phase3 show a similar forward low planted leg and a rear trailing lifted foot. The requested phase3 far-LEFT toeplant with near-RIGHT knee/foot clearly raised is not established; differing pixel hashes and small body/axe changes do not prove opposite support."
+    },
+    {
+      "criterion": "complete_pose_geometry",
+      "result": "PASS_WITHIN_GEOMETRY_SCOPE",
+      "observation": "All six complete connected poses passed unchanged strict source geometry and full visible-region coverage checks. This technical result does not repair the camera/support findings."
+    }
+  ],
+  "independent_review": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/e-run-followup/independent-review.json",
+    "bytes": 4522,
+    "sha256": "f103454cdcf9a08c013d923ab42dd643181c9f0686b1fa9a5f656a9cdd94db84"
+  },
+  "reasons": [
+    "Strict E profile remains insufficient: front skull-belt/chest surfaces are still visible.",
+    "The two half-cycle landing poses do not establish opposite anatomical support."
+  ],
+  "timed_playback": "NOT_RUN: this unselected quality-HOLD source was not connected to new native resources",
+  "unseen_not_reviewed": [
+    "Timed gait/transition fluidity",
+    "Moving-world physical sole-ground contact",
+    "GPU material/VFX",
+    "Default Main",
+    "Final mythic boss approval"
+  ],
+  "preserved_selected_candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/candidate-r002.json",
+    "bytes": 103853,
+    "sha256": "4dd450c6a85811119e2677f78ef749c7279f6a047ac1657c23f72cd455730a22"
+  },
+  "protected_manifest": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/file-manifest.json",
+    "bytes": 37072,
+    "sha256": "a9b8b6162c18f4d615ec1deb3577bf2aaefa6fe4903ab526ec098ec04b323a84"
+  },
+  "protected_manifest_files_verified_unchanged": 152,
+  "decision": "Preserve this actual generated PNG and exact request as a HOLD attempt; keep r002 selected. No quality retry or new direction generation."
+}

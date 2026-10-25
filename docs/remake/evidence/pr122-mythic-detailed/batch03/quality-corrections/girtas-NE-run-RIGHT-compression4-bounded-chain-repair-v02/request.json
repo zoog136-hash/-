@@ -1,0 +1,33 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "NEW_material_bounded_NEARRIGHT_loaded_chain_from_proved_contact3",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    4
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/proved-NEARRIGHT-grounded-run3-ANATOMY-primary.png",
+    "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/same-RIGHT-support-chain-new-kneeflex-load4-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/proved-NEARRIGHT-grounded-run3-ANATOMY-primary.png": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+    "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/same-RIGHT-support-chain-new-kneeflex-load4-guide.png": "07eecbbd363f3ccc4ebf1fca0f28ef38775bdbe1045a3e06b572309ba3345f73"
+  },
+  "transparent_background": true,
+  "prompt": "EDIT FIRST exact independently PROVED GIRTAS NE RUN RIGHT-LEG LANDING3 into ONE NEW RIGHT-LEG LOADED COMPRESSION4. FIRST actual anatomical nearRIGHT grounded thigh/knee/shin/boot chain is PRIMARY and MUST REMAIN the supportingchain. The farLEFT folded HIGH recoveryboot must STAY AIRBORNE. SECOND samepicture annotation GREEN shows approximate newlowerhip/bentRIGHTknee path to SAME originalRIGHTgroundboot, YELLOW marks this alreadygroundedRIGHTboot toKEEP, BLUE marks distinctfarLEFTHIGHrecovery toKEEP. No generic3D standing inversion here. Do NOT use previous failedload4 or relabelitslegs.\n\nONLY genuine requestedmotion: lower/advance pelvis modestly into sameNEARRIGHTsupport and FLEX the supportingRIGHTknee clearly, so original nearRIGHT hip→RIGHTupperthigh→BENTloadknee→RIGHTshin→SAMELOWRIGHTboot is visibly continuous andweightbearing. OriginalgroundRIGHTboot stays itsownfoot atsameforwardgroundposition, rolltoe/forefootDOWN aroundheel intoFLATloadedsole, NEVER lift itinto recoveringboot. Original FARLEFT boot behindbody remains HIGH/FOLDED/AIR; allowa smallforwardpass onlywhileclearlyaboveground. Do NOT put FARLEFT boot onground, swapwhichhipownsboots, orfoldNEARRIGHTlegintoHIGHrecovery. Exactly2connectedhips/thighs/knees/shins/boots. Show supportingnearRIGHT jointchain naturally throughrobe slit so ownership isprovable. FootscreenXmaycross but that NEVERchangeshipownership. Supportingpelvislowerswithknee, not mereloweredhead orstiffstraightleg. Annotationjointcoordsareapproximate poseinstruction, preserveactualcharacterbone/proportionlengths fromFIRST.\n\nKeep samefixedtrueNErearRIGHT3/4 camera, forwardworld+YNEUPRIGHT, largernearrightshoulder/weaponarmIMAGERIGHT, farLEFTforeshortened, originalPALElonghair/goldhorncrown/thinHARDGOLDradialspines/blackgoldheavyarmor/LONGdarkgoldtrimlayeredROBEtoankles. ClothfoldsaroundactualRIGHTloadkneeandtrailswithrun, notshortskirt/segmentedpants/barelegs. Samehead/skull/pauldron/waist/limbproportions andrichfiligree. Modestforwardrunlean, compactbentarms naturallyfollowrunningcompression, continuousoriginalRIGHTarm/hilt/grip/ONE FULLLONGSINUOUSorangegoldblade exactlyfromFIRST; EMPTYfarLEFT hand, exactly2arms. No newgear/pommel/prongs/handtransfer/broadsword/redmask/flamefeatherfan/wings/pureN/Ecamera.\n\nOutput exactlyONE NEW completeisolated transparentrequested1024squareRGBA figure, body500-600px/fullgear≤800px, ≥96pxalpha0clearance everyspine/blade/robe/boot. Entireweapon closedtip fullyinsideimage, no clippedAAedge. No floor/shadow/aura/outwardglow/particles/blur/grid/text/annotations/coloredguides/duplicates. Criticalfinalcheck SAMEprovednearRIGHThipchain nowBENTsupportingSAMEgroundboot, farLEFTHIGHrecovery maintained. This is new genuine compression4, not repeatedlanding or mislabeledoppositeleg.",
+  "corrective_reason": "Independentv04+oldv02 actualupperlegtrace found originalnew4c95nearRIGHTchainownsHIGHrecovery, farLEFTownsflatboot, soSOURCEHOLD. Preserveall0/1tiprepair/2/3/5 andfailed4. Thismaterialedit holdsproven3 actualnearRIGHTsupportboot+farLEFTHIGHrecovery, changesonlysupporthip/knee/footload, no genericguideinversion/rootdisguise.",
+  "root_authorization": "2026-10-19 root explicitlyauthorizes only4materialminimumfix fromproved3 actualnearRIGHTlandingchain; other5successfulsources notredone.",
+  "provenance_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/proved-RIGHT-chain-bounded-edit-provenance.json",
+  "provenance_sha256": "0524f8eb115270e31ee3a615c7e3d52d6a4d494ff8db57d16927d979762e6fb9",
+  "requested_at": "2026-10-19T16:58:18.160469+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_game_poses": 0,
+  "actor_approval": false,
+  "generation_budget": "ONE materiallychanged proved-chain boundedRIGHTload4, thenfreshsourceQC; no repeatedidenticalfailedgenericguide."
+}

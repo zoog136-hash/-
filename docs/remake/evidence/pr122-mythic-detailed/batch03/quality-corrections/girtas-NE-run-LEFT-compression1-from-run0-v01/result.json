@@ -1,0 +1,41 @@
+{
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "source_kind": "NEW_single_run_compression_from_correct_samehip_landing",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    1
+  ],
+  "original_generated_file": "/workspace/generated_images/exec-76dd6121-9429-4af7-84b3-5de884c6c0d0.png",
+  "raw_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/girtas-NE-run-LEFT-compression1-from-run0-v01.png",
+  "raw_png": "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/girtas-NE-run-LEFT-compression1-from-run0-v01.png",
+  "raw_sha256": "d5bb5467d4681f3145ebc0823e9d643384c3a49673fc4a9fa9aac9b12a625904",
+  "raw_bytes": 1237526,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-from-run0-v01/request.json",
+  "request_sha256": "32181ebfa6a76f5990f1b5f7d8b1b8a3d2fbb6ba680f47041b146dd00bc879af",
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+    "/workspace/scratch/girtas-NE-run-followup-constant-bone-guides-v01/NE-RUN-followup-phase1-LEFT-lead-fixedbone-guide.png": "13adb07c1b67ff8f777c960726bf8a69a1d7eb2619fa2e83e24c8f4c4c2e5a42"
+  },
+  "imagegen_completed_service_calls": 1,
+  "source_visual_status": "HOLD_PENDING_CLIPPING_AND_ACTUAL_POSE_REVIEW",
+  "actor_approval": false,
+  "status": "SOURCE_SAVED_GEOMETRY_HOLD_VISIBLE_ALPHA100_TOUCHES_BOUNDARY",
+  "geometry_status": "HOLD_CLIPPED_SOURCE_BOUNDARY",
+  "geometry_error": "A visible pose touches the image boundary",
+  "boundary_alpha100_counts": {
+    "LEFT": 0,
+    "RIGHT": 1,
+    "TOP": 0,
+    "BOTTOM": 0
+  },
+  "integration_ready": false,
+  "new_approvals": 0
+}

@@ -1,0 +1,20 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "walk",
+  "pose": 3,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-walk-author-v01/cell-0.png",
+    "/workspace/scratch/girtas-NW-walk-rightcontact-key-v04/opposite-contact-leg-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-walk-author-v01/cell-0.png": "098ab0ca25b19fc9ccc4e7b71ddc7e8f228a6e942ffc3b56700337b22a3281c1",
+    "/workspace/scratch/girtas-NW-walk-rightcontact-key-v04/opposite-contact-leg-guide.png": "9fe1c24b4881a264145614a685ea44b8c0997c5e03f17f0d0aecbed1019a1fd0"
+  },
+  "prompt": "Edit image1 into ONE NEW GIRTAS walking keyframe, opposite legs from image1. Image2 is ONLY a colored skeletal lower-leg direction guide: absolutely no guide colors, marks or writing in finished art. Keep EXACT same NORTHWEST rear-left three-quarter head/torso/pelvis camera, hair, crown, rigidgoldradialrays, longdarkgoldtrimrobe, two arms, emptynearLEFTimageLEFT hand andfarRIGHTimageRIGHT hand holding SAME lowsinuousblade. Do NOT mirror image1 or swap hands.\n\nChange ONLY articulated walking legs/robe to true FAR anatomicalRIGHT heel-contact phase. The farRIGHT hip starts on imageRIGHT behind robe; its leg now reaches diagonally FORWARD/UPPERLEFT behind the robe to a clearly visible farRIGHT boot on imageLEFT upper-left planting its HEEL. The nearLEFT hip startsimageLEFT; its leg now stretches diagonally BACK/LOWERRIGHT to a clearly visible nearLEFT boot on imageRIGHT lower-right with HEEL RAISED and TOE supporting. Therefore nearLEFT foot MUST MOVE from oldimageLEFT to newimageRIGHT lower-right, while farRIGHT foot MUST MOVE from oldimageRIGHT to newimageLEFT upper-left. Legs exchange positions beneath the same untouched torso, NOT wholeimageflip. FarRIGHTleg crosses BEHIND robe/nearleftthigh naturally, two clear distinct legs/boots. Natural ordinary WALK longsplitstride, oneheelcontact andoppositetoepush, no AIR orrunning. Longrobe panels trail and open naturally enough to reveal actual two ankle connections, no trousers replacement. Keep two legs only, no detached feet.\n\nSame exact faithful pale-silver longhair, pointed gold crown, hard thin gold rays NOT feathers, blackgold layered armor, detailed longdarkgoldtrimrobe, goldboots, ONE sinuous goldyellowblade. AnatomicalRIGHT weapon hand never swaps; nearLEFT empty. Stable skull/shoulder/hip size and lowweapon. Fullbody onefigurecentered transparent1024x1024 PNG, allcrown/rays/hair/robe/boots/blade tips visible with at least70px alpha0margin. Same fine-detail RPGcutout, opaquearmor/cloth, thinAAedges, no text/guides/floor/shadow/glow/particles. Exact NWrearleftcamera preserved; NO axialNrear orsideW. This is NEW RIGHTcontact3, opposite leftcontact0.",
+  "transparent_background": true,
+  "material_change": "First fullsixfailedalternatecontact; newexplicitjointguide requiresfarRIGHTupperleftcontact +nearLEFTlowerrighttoe, unchangedtorso/hands. One materiallychangedkeycall, not identicalretry.",
+  "requested_at": "2026-10-19T14:15:29.864778+00:00"
+}

@@ -1,0 +1,26 @@
+{
+  "actor": "monster:테베 오시리스",
+  "slug": "thebes_osiris",
+  "clip": "W-attack-v02",
+  "role": "attack",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/W-attack-v02.png",
+  "source_sha256": "0b00da3e0d007c56a6e0c8c9626d3668f9798af2aa399e8e372dfdca02a6f058",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      76344,
+      70277,
+      65264,
+      62749,
+      62175,
+      59480
+    ]
+  },
+  "status": "HOLD",
+  "cause": "phase_grid_assignment",
+  "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+}

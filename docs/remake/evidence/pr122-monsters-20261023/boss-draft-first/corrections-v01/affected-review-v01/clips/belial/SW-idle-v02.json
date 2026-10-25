@@ -1,0 +1,26 @@
+{
+  "actor": "monster:탐욕의 여왕 벨리엘",
+  "slug": "belial",
+  "clip": "SW-idle-v02",
+  "role": "idle",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/SW-idle-v02.png",
+  "source_sha256": "4c063daf6349c304f823a58cbe086158a4839b09aa7a0516e4cd1cb0e81bed56",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 5,
+    "strong_component_areas": [
+      85275,
+      73422,
+      65215,
+      58630,
+      58132,
+      54053
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

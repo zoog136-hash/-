@@ -1,0 +1,3400 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_2.png",
+    "region": [
+      0,
+      321,
+      305,
+      322
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 2,
+    "cell": 4,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+    "image_size": [
+      1222,
+      1287
+    ],
+    "region_rgba_sha256": "121e72ef60b246bd5a362ee8de1a651f9a396227fddb5fa96611fbf03d740d22"
+  },
+  "target_keys": [
+    "monster:공포의 아그니"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 2,
+      "cell": 4,
+      "body": "fire",
+      "variant": 4,
+      "width": 1.076,
+      "weapon": "staff",
+      "crest": 3,
+      "accent": "aa8aaf"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": true
+    },
+    "attack_type": "magic",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:공포의 아그니": {
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "region": [
+        0,
+        321,
+        305,
+        322
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 2,
+      "cell": 4,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "image_size": [
+        1222,
+        1287
+      ],
+      "region_rgba_sha256": "121e72ef60b246bd5a362ee8de1a651f9a396227fddb5fa96611fbf03d740d22"
+    }
+  },
+  "target_presentations": {
+    "monster:공포의 아그니": {
+      "visual": {
+        "atlas": 2,
+        "cell": 4,
+        "body": "fire",
+        "variant": 4,
+        "width": 1.076,
+        "weapon": "staff",
+        "crest": 3,
+        "accent": "aa8aaf"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": true
+      },
+      "attack_type": "magic",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "{\n  \"death-N-NE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: N, FULL BACK straight away/UP. Back head/nape, rear shoulders/spine and back flame veins. NO front eyes and NO front chest core. Head and casting palm aim straightUP, no turn RIGHT/LEFT.\\nRIGHT COLUMN: NE, BACK-RIGHT three-quarter, facing away/up-right. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-RIGHT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS only, three unmistakable collapse stages of the COMPLETE same source body: ROW1 DEATH START, shoulders/head slump and arms curl inward, waist/vortex lowers. ROW2 DEATH COLLAPSE, chest and head fold substantially lower toward the same attached base, bent arms settle against compressed vortex. ROW3 FINAL CORPSE, a COMPLETE very LOW horizontal collapsed extinguishing flame body resting on invisible ground: source head/core/two arms curled together continuously attached to flattened vortex, faint orange core/dark-red dying edges. Recognizable complete original elemental, no standing upper body, levitation, empty frame, separate ash pile or invented rocks. Same anatomical dimensions across phases; height drops by articulation, never globally shrinking a standing still. Preserve true front/back/opposite-side orientation through collapse. Never use final corpse height to normalize body scale.\\n\",\n  \"attack-N-NE-v2-exact-prompt.txt\": \"DIRECTIONAL REPAIR: Reference1 has WRONG FRONT-FACING N left column. Replace all THREE LEFT COLUMN poses by actual straight-away NORTH: nape/no eyes/no frontal pointed mask/no chest sternum V or front chest core, broad BACK shoulders and two back shoulderblades plus spine, head facing UP away. Use Reference2 (own existing N/NE idle/walk) for genuine rear anatomy, NOT frontal source orientation. N windup arms bend forward AWAY, N contact palm reaches UP/AWAY seen from behind, N recover elbows open. Keep exact fire identity and connected vortex. RIGHT COLUMN remains BACK-RIGHT NE, matching rear torso planes and aimed up-RIGHT, one coherent side eye only. Six distinct complete compact bodies 2cols×3rows, preserve identity/drawing scale, transparent no sparks/background.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: N, FULL BACK straight away/UP. Back head/nape, rear shoulders/spine and back flame veins. NO front eyes and NO front chest core. Head and casting palm aim straightUP, no turn RIGHT/LEFT.\\nRIGHT COLUMN: NE, BACK-RIGHT three-quarter, facing away/up-right. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-RIGHT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS, magic attack/cast with release at phase1: ROW1 WINDUP, elbows draw back, chest leans back slightly, head stays exact column heading. ROW2 RELEASE/CONTACT, attached casting palm extends decisively along exact heading toward the ranged target, torso leans into that aim and base stabilizes under waist. The runtime spell travels to the target; do NOT draw a projectile, beam, particle or opponent. Actual release point is the palm and faces the same direction as head/chest. E RIGHT, SE down-RIGHT, S toward viewer/DOWN, SW down-LEFT, W LEFT, NW up-LEFT, N straightUP/away, NE up-RIGHT. ROW3 RECOVER, elbow retracts and core returns upright, genuinely distinct from windup/idle. No front-face flip in rear views. One head only in every phase.\\n\",\n  \"hit-W-NW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 2 equal PHASE ROWS = 4 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: W, true LEFT PROFILE. Head and chest front edge aim LEFT; rear mass on RIGHT. No front face toward viewer. Casting palm reaches LEFT.\\nRIGHT COLUMN: NW, BACK-LEFT three-quarter, facing away/up-left. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-LEFT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTWO ROWS only: ROW1 HIT RECOIL, head and chest jerk back opposite exact travel heading, elbows fold defensively, attached waist/vortex compresses. Face/core keep the same actual directional planes; no extra old face left above the neck. ROW2 HIT RECOVER, chest begins upright, one arm releases downward and the other elbow opens, vortex uncurls. Two genuinely distinct articulated postures, uniform head/core scale, continuous body, stable hover projection. No death frame or missing row.\\n\",\n  \"hit-N-NE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 2 equal PHASE ROWS = 4 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: N, FULL BACK straight away/UP. Back head/nape, rear shoulders/spine and back flame veins. NO front eyes and NO front chest core. Head and casting palm aim straightUP, no turn RIGHT/LEFT.\\nRIGHT COLUMN: NE, BACK-RIGHT three-quarter, facing away/up-right. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-RIGHT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTWO ROWS only: ROW1 HIT RECOIL, head and chest jerk back opposite exact travel heading, elbows fold defensively, attached waist/vortex compresses. Face/core keep the same actual directional planes; no extra old face left above the neck. ROW2 HIT RECOVER, chest begins upright, one arm releases downward and the other elbow opens, vortex uncurls. Two genuinely distinct articulated postures, uniform head/core scale, continuous body, stable hover projection. No death frame or missing row.\\n\",\n  \"idle-walk-N-NE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 5 equal PHASE ROWS = 10 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 210pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: N, FULL BACK straight away/UP. Back head/nape, rear shoulders/spine and back flame veins. NO front eyes and NO front chest core. Head and casting palm aim straightUP, no turn RIGHT/LEFT.\\nRIGHT COLUMN: NE, BACK-RIGHT three-quarter, facing away/up-right. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-RIGHT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nFIVE ROWS: ROW1 IDLE0 relaxed attached upper core, arms lowered, base coiled under waist. ROW2 IDLE1 actual breathing/core flex, elbows change angle and vortex compresses; distinct real anatomy, uniform head/core size. ROW3 WALK0 hovertravel: torso leans slightly along exact heading, LEFT arm/shoulder leads forward and RIGHT arm counters back, attached lower vortex curls behind travel direction. ROW4 WALK1 passing: actual opposite shoulder and elbow bend, waist/vortex bends under core, hands move through mid-swing; distinct joints. ROW5 WALK2: RIGHT arm/shoulder now leads forward, LEFT arm back; the shoulder/elbow and attached lower-vortex curve must actually reverse from WALK0. Both arms remain connected. No invented legs and no mere whole-body translation/flame-texture changes. Stable hover root/projection level; source already floats.\\n\",\n  \"attack-N-NE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: N, FULL BACK straight away/UP. Back head/nape, rear shoulders/spine and back flame veins. NO front eyes and NO front chest core. Head and casting palm aim straightUP, no turn RIGHT/LEFT.\\nRIGHT COLUMN: NE, BACK-RIGHT three-quarter, facing away/up-right. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-RIGHT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS, magic attack/cast with release at phase1: ROW1 WINDUP, elbows draw back, chest leans back slightly, head stays exact column heading. ROW2 RELEASE/CONTACT, attached casting palm extends decisively along exact heading toward the ranged target, torso leans into that aim and base stabilizes under waist. The runtime spell travels to the target; do NOT draw a projectile, beam, particle or opponent. Actual release point is the palm and faces the same direction as head/chest. E RIGHT, SE down-RIGHT, S toward viewer/DOWN, SW down-LEFT, W LEFT, NW up-LEFT, N straightUP/away, NE up-RIGHT. ROW3 RECOVER, elbow retracts and core returns upright, genuinely distinct from windup/idle. No front-face flip in rear views. One head only in every phase.\\n\",\n  \"hit-S-SW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 2 equal PHASE ROWS = 4 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: S, FULL FRONT toward viewer/screen down. Both front eyes and front chest core visible, no right/left side turn. Casting palm projects toward viewer/DOWN.\\nRIGHT COLUMN: SW, FRONT-LEFT three-quarter, facing down-left. Front eyes and core visible; face/core project LEFT, rear mass on RIGHT. Nose/head clearly on LEFT of shoulders. Casting palm aims down-LEFT. Never face RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTWO ROWS only: ROW1 HIT RECOIL, head and chest jerk back opposite exact travel heading, elbows fold defensively, attached waist/vortex compresses. Face/core keep the same actual directional planes; no extra old face left above the neck. ROW2 HIT RECOVER, chest begins upright, one arm releases downward and the other elbow opens, vortex uncurls. Two genuinely distinct articulated postures, uniform head/core scale, continuous body, stable hover projection. No death frame or missing row.\\n\",\n  \"death-W-NW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: W, true LEFT PROFILE. Head and chest front edge aim LEFT; rear mass on RIGHT. No front face toward viewer. Casting palm reaches LEFT.\\nRIGHT COLUMN: NW, BACK-LEFT three-quarter, facing away/up-left. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-LEFT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS only, three unmistakable collapse stages of the COMPLETE same source body: ROW1 DEATH START, shoulders/head slump and arms curl inward, waist/vortex lowers. ROW2 DEATH COLLAPSE, chest and head fold substantially lower toward the same attached base, bent arms settle against compressed vortex. ROW3 FINAL CORPSE, a COMPLETE very LOW horizontal collapsed extinguishing flame body resting on invisible ground: source head/core/two arms curled together continuously attached to flattened vortex, faint orange core/dark-red dying edges. Recognizable complete original elemental, no standing upper body, levitation, empty frame, separate ash pile or invented rocks. Same anatomical dimensions across phases; height drops by articulation, never globally shrinking a standing still. Preserve true front/back/opposite-side orientation through collapse. Never use final corpse height to normalize body scale.\\n\",\n  \"idle-walk-N-NE-v2-exact-prompt.txt\": \"FOCUSED HEADING REPAIR. Reference1 is the full ten-body sheet to retain, Reference2 neutral source, Reference3 abstract direction planes. Preserve all five N back poses and first four NE back-right poses. Correct ONLY RIGHT COLUMN BOTTOM ROW: its head/torso is currently BACK-LEFT/NW, wrong. Head and side eye must stay on UPPER RIGHT of back torso, same BACK-RIGHT/NE planes as the four poses above. Broad rear shoulders/back, hidden frontal chest, coherent one tiny RIGHT side facial sliver. Keep row5 opposite arm/waist travel endpoint, no copied still and no front-facing flip. Output all10 complete transparent bodies, existing layout/camera/scale, no additional or missing pose.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 5 equal PHASE ROWS = 10 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 210pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: N, FULL BACK straight away/UP. Back head/nape, rear shoulders/spine and back flame veins. NO front eyes and NO front chest core. Head and casting palm aim straightUP, no turn RIGHT/LEFT.\\nRIGHT COLUMN: NE, BACK-RIGHT three-quarter, facing away/up-right. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-RIGHT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nFIVE ROWS: ROW1 IDLE0 relaxed attached upper core, arms lowered, base coiled under waist. ROW2 IDLE1 actual breathing/core flex, elbows change angle and vortex compresses; distinct real anatomy, uniform head/core size. ROW3 WALK0 hovertravel: torso leans slightly along exact heading, LEFT arm/shoulder leads forward and RIGHT arm counters back, attached lower vortex curls behind travel direction. ROW4 WALK1 passing: actual opposite shoulder and elbow bend, waist/vortex bends under core, hands move through mid-swing; distinct joints. ROW5 WALK2: RIGHT arm/shoulder now leads forward, LEFT arm back; the shoulder/elbow and attached lower-vortex curve must actually reverse from WALK0. Both arms remain connected. No invented legs and no mere whole-body translation/flame-texture changes. Stable hover root/projection level; source already floats.\\n\",\n  \"hit-N-NE-v2-exact-prompt.txt\": \"DIRECTIONAL REPAIR: LEFT COLUMN must be NORTH straight AWAY in BOTH recoil and recover, never frontal face/core. Show nape, rear shoulders/back shoulderblades/spine, no eyes and no front mask or chest sternum V. Use own N idle/walk rear artwork reference as directional identity. Recoil head/shoulders pull back toward camera but nape remains visible, recover upright still away. RIGHT column stays NE BACK-RIGHT, correct upper-right head edge and hidden front chest. Four genuine articulated connected complete fire bodies, same head/core size, no frontal flipping, transparent background/no particles.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 2 equal PHASE ROWS = 4 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: N, FULL BACK straight away/UP. Back head/nape, rear shoulders/spine and back flame veins. NO front eyes and NO front chest core. Head and casting palm aim straightUP, no turn RIGHT/LEFT.\\nRIGHT COLUMN: NE, BACK-RIGHT three-quarter, facing away/up-right. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-RIGHT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTWO ROWS only: ROW1 HIT RECOIL, head and chest jerk back opposite exact travel heading, elbows fold defensively, attached waist/vortex compresses. Face/core keep the same actual directional planes; no extra old face left above the neck. ROW2 HIT RECOVER, chest begins upright, one arm releases downward and the other elbow opens, vortex uncurls. Two genuinely distinct articulated postures, uniform head/core scale, continuous body, stable hover projection. No death frame or missing row.\\n\",\n  \"idle-walk-E-SE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 5 equal PHASE ROWS = 10 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 210pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: E, true RIGHT PROFILE. Head and chest front edge aim RIGHT; rear mass on LEFT. No front face toward viewer. Casting palm reaches RIGHT.\\nRIGHT COLUMN: SE, FRONT-RIGHT three-quarter, facing down-right. Front eyes and core visible; face/core project to the RIGHT, rear mass on LEFT. Casting palm aims down-RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nFIVE ROWS: ROW1 IDLE0 relaxed attached upper core, arms lowered, base coiled under waist. ROW2 IDLE1 actual breathing/core flex, elbows change angle and vortex compresses; distinct real anatomy, uniform head/core size. ROW3 WALK0 hovertravel: torso leans slightly along exact heading, LEFT arm/shoulder leads forward and RIGHT arm counters back, attached lower vortex curls behind travel direction. ROW4 WALK1 passing: actual opposite shoulder and elbow bend, waist/vortex bends under core, hands move through mid-swing; distinct joints. ROW5 WALK2: RIGHT arm/shoulder now leads forward, LEFT arm back; the shoulder/elbow and attached lower-vortex curve must actually reverse from WALK0. Both arms remain connected. No invented legs and no mere whole-body translation/flame-texture changes. Stable hover root/projection level; source already floats.\\n\",\n  \"attack-S-SW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: S, FULL FRONT toward viewer/screen down. Both front eyes and front chest core visible, no right/left side turn. Casting palm projects toward viewer/DOWN.\\nRIGHT COLUMN: SW, FRONT-LEFT three-quarter, facing down-left. Front eyes and core visible; face/core project LEFT, rear mass on RIGHT. Nose/head clearly on LEFT of shoulders. Casting palm aims down-LEFT. Never face RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS, magic attack/cast with release at phase1: ROW1 WINDUP, elbows draw back, chest leans back slightly, head stays exact column heading. ROW2 RELEASE/CONTACT, attached casting palm extends decisively along exact heading toward the ranged target, torso leans into that aim and base stabilizes under waist. The runtime spell travels to the target; do NOT draw a projectile, beam, particle or opponent. Actual release point is the palm and faces the same direction as head/chest. E RIGHT, SE down-RIGHT, S toward viewer/DOWN, SW down-LEFT, W LEFT, NW up-LEFT, N straightUP/away, NE up-RIGHT. ROW3 RECOVER, elbow retracts and core returns upright, genuinely distinct from windup/idle. No front-face flip in rear views. One head only in every phase.\\n\",\n  \"hit-W-NW-v2-exact-prompt.txt\": \"FOCUSED HEADING REPAIR: only top-right hit-recoil pose currently faces upper RIGHT but must face BACK-LEFT NW. Correct head to LEFT edge of rear shoulder mass, no right-facing eye, no front chest. Match lower-right NW recover directional planes and reference direction guide. Preserve left-column W true left profile and all real recoil/recovery articulation. Output all4 complete attached bodies with generous alpha0 margins and no additional old face remaining.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 2 equal PHASE ROWS = 4 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: W, true LEFT PROFILE. Head and chest front edge aim LEFT; rear mass on RIGHT. No front face toward viewer. Casting palm reaches LEFT.\\nRIGHT COLUMN: NW, BACK-LEFT three-quarter, facing away/up-left. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-LEFT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTWO ROWS only: ROW1 HIT RECOIL, head and chest jerk back opposite exact travel heading, elbows fold defensively, attached waist/vortex compresses. Face/core keep the same actual directional planes; no extra old face left above the neck. ROW2 HIT RECOVER, chest begins upright, one arm releases downward and the other elbow opens, vortex uncurls. Two genuinely distinct articulated postures, uniform head/core scale, continuous body, stable hover projection. No death frame or missing row.\\n\",\n  \"attack-E-SE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: E, true RIGHT PROFILE. Head and chest front edge aim RIGHT; rear mass on LEFT. No front face toward viewer. Casting palm reaches RIGHT.\\nRIGHT COLUMN: SE, FRONT-RIGHT three-quarter, facing down-right. Front eyes and core visible; face/core project to the RIGHT, rear mass on LEFT. Casting palm aims down-RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS, magic attack/cast with release at phase1: ROW1 WINDUP, elbows draw back, chest leans back slightly, head stays exact column heading. ROW2 RELEASE/CONTACT, attached casting palm extends decisively along exact heading toward the ranged target, torso leans into that aim and base stabilizes under waist. The runtime spell travels to the target; do NOT draw a projectile, beam, particle or opponent. Actual release point is the palm and faces the same direction as head/chest. E RIGHT, SE down-RIGHT, S toward viewer/DOWN, SW down-LEFT, W LEFT, NW up-LEFT, N straightUP/away, NE up-RIGHT. ROW3 RECOVER, elbow retracts and core returns upright, genuinely distinct from windup/idle. No front-face flip in rear views. One head only in every phase.\\n\",\n  \"death-S-SW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: S, FULL FRONT toward viewer/screen down. Both front eyes and front chest core visible, no right/left side turn. Casting palm projects toward viewer/DOWN.\\nRIGHT COLUMN: SW, FRONT-LEFT three-quarter, facing down-left. Front eyes and core visible; face/core project LEFT, rear mass on RIGHT. Nose/head clearly on LEFT of shoulders. Casting palm aims down-LEFT. Never face RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS only, three unmistakable collapse stages of the COMPLETE same source body: ROW1 DEATH START, shoulders/head slump and arms curl inward, waist/vortex lowers. ROW2 DEATH COLLAPSE, chest and head fold substantially lower toward the same attached base, bent arms settle against compressed vortex. ROW3 FINAL CORPSE, a COMPLETE very LOW horizontal collapsed extinguishing flame body resting on invisible ground: source head/core/two arms curled together continuously attached to flattened vortex, faint orange core/dark-red dying edges. Recognizable complete original elemental, no standing upper body, levitation, empty frame, separate ash pile or invented rocks. Same anatomical dimensions across phases; height drops by articulation, never globally shrinking a standing still. Preserve true front/back/opposite-side orientation through collapse. Never use final corpse height to normalize body scale.\\n\",\n  \"attack-hit-NE-v3-exact-prompt.txt\": \"Create exactly FIVE complete newly authored Fear Agni 2D fire elemental poses, ONE COLUMN by FIVE equal ROWS on1024x1536 transparentRGBA. Reference1 is this SAME actor own idle/walk sheet for SOURCE IDENTITY and directional back model only; use its RIGHT NORTH-EAST column. Reference2 is ONLY an abstract BACK-direction diagram, not a donor character, colors or prop.\\n\\nNORTH-EAST: ALL FIVE bodies face BACK-RIGHT/away UP-RIGHT. Back torso/shoulderblades dominate, front chest/core hidden; head on upper RIGHT edge with at most ONE coherent tiny right side eye sliver. Never frontal torso or back-LEFT. Correct design is RIGHT COLUMN of Reference1.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\n\\n\\nKEEP SMALL bodies, each max300pxwide200pxhigh with120px blank between rows, whole crown/arms/vortex insidecell, no crop/touch/stray pixels. Head/core/limb modelscale constant; common hover projection. ExactlyONEhead/TWOattachedarms/continuouswaist/ONEconnectedflamevortex, nolegs. Actual joint/elbow/shoulder/waist changes, no translatedstill/repeatedpose. No background/floor/shadow/glowcloud/particles/labels/grid.\\n\\nFIVE ROWS TOP TO BOTTOM: 1ATTACK WINDUP: viewed FROM BEHIND, both upperarms lift ahead, elbows bend and palms gather forward AWAY from camera. 2ATTACK RELEASE: viewed FROM BEHIND, one shoulder rotates and that elbow extends, palm thrusts straight UP-RIGHT/AWAY beyond the crown; other elbow draws back, torso bends forward continuously into vortex. Palms not aimed at camera, no projectile. 3ATTACK RECOVER: viewed FROM BEHIND, extending arm lowers and bends, torso comes upright, other arm opens at side; real third phase. 4HIT RECOIL: viewed FROM BEHIND, shoulders compress backward and elbows fold defensively, head tips but NAPE still faces viewer, continuous waist/vortex compresses. 5HIT RECOVER: viewed FROM BEHIND, torso begins upright, one arm opens and other drops, vortex uncurls; real second hitphase distinct from all3attack phases. Allfive hold SAME exact backheading, NEVER turn face/chest to viewer.\\n\",\n  \"attack-hit-N-v3-exact-prompt.txt\": \"Create exactly FIVE complete newly authored Fear Agni 2D fire elemental poses, ONE COLUMN by FIVE equal ROWS on1024x1536 transparentRGBA. Reference1 is this SAME actor own idle/walk sheet for SOURCE IDENTITY and directional back model only; use its LEFT NORTH column. Reference2 is ONLY an abstract BACK-direction diagram, not a donor character, colors or prop.\\n\\nNORTH: ALL FIVE bodies strictly face straight AWAY UP. Show back of flame head/nape and broad REAR shoulders/shoulderblades with a thin central spine glow. NO front eyes, NO face/mask, NO frontal chest sternum/trident/V-core. Not even tiny side eyes. The source back design is LEFT COLUMN of Reference1, maintain that back camera in every phase. Do not substitute the frontal neutral source direction. Head remains straight away even while recoiling; head crown alone does not define direction.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\n\\n\\nKEEP SMALL bodies, each max300pxwide200pxhigh with120px blank between rows, whole crown/arms/vortex insidecell, no crop/touch/stray pixels. Head/core/limb modelscale constant; common hover projection. ExactlyONEhead/TWOattachedarms/continuouswaist/ONEconnectedflamevortex, nolegs. Actual joint/elbow/shoulder/waist changes, no translatedstill/repeatedpose. No background/floor/shadow/glowcloud/particles/labels/grid.\\n\\nFIVE ROWS TOP TO BOTTOM: 1ATTACK WINDUP: viewed FROM BEHIND, both upperarms lift ahead, elbows bend and palms gather forward AWAY from camera. 2ATTACK RELEASE: viewed FROM BEHIND, one shoulder rotates and that elbow extends, palm thrusts straight UP/AWAY beyond the crown; other elbow draws back, torso bends forward continuously into vortex. Palms not aimed at camera, no projectile. 3ATTACK RECOVER: viewed FROM BEHIND, extending arm lowers and bends, torso comes upright, other arm opens at side; real third phase. 4HIT RECOIL: viewed FROM BEHIND, shoulders compress backward and elbows fold defensively, head tips but NAPE still faces viewer, continuous waist/vortex compresses. 5HIT RECOVER: viewed FROM BEHIND, torso begins upright, one arm opens and other drops, vortex uncurls; real second hitphase distinct from all3attack phases. Allfive hold SAME exact backheading, NEVER turn face/chest to viewer.\\n\",\n  \"idle-walk-S-SW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 5 equal PHASE ROWS = 10 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 210pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: S, FULL FRONT toward viewer/screen down. Both front eyes and front chest core visible, no right/left side turn. Casting palm projects toward viewer/DOWN.\\nRIGHT COLUMN: SW, FRONT-LEFT three-quarter, facing down-left. Front eyes and core visible; face/core project LEFT, rear mass on RIGHT. Nose/head clearly on LEFT of shoulders. Casting palm aims down-LEFT. Never face RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nFIVE ROWS: ROW1 IDLE0 relaxed attached upper core, arms lowered, base coiled under waist. ROW2 IDLE1 actual breathing/core flex, elbows change angle and vortex compresses; distinct real anatomy, uniform head/core size. ROW3 WALK0 hovertravel: torso leans slightly along exact heading, LEFT arm/shoulder leads forward and RIGHT arm counters back, attached lower vortex curls behind travel direction. ROW4 WALK1 passing: actual opposite shoulder and elbow bend, waist/vortex bends under core, hands move through mid-swing; distinct joints. ROW5 WALK2: RIGHT arm/shoulder now leads forward, LEFT arm back; the shoulder/elbow and attached lower-vortex curve must actually reverse from WALK0. Both arms remain connected. No invented legs and no mere whole-body translation/flame-texture changes. Stable hover root/projection level; source already floats.\\n\",\n  \"death-E-SE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: E, true RIGHT PROFILE. Head and chest front edge aim RIGHT; rear mass on LEFT. No front face toward viewer. Casting palm reaches RIGHT.\\nRIGHT COLUMN: SE, FRONT-RIGHT three-quarter, facing down-right. Front eyes and core visible; face/core project to the RIGHT, rear mass on LEFT. Casting palm aims down-RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS only, three unmistakable collapse stages of the COMPLETE same source body: ROW1 DEATH START, shoulders/head slump and arms curl inward, waist/vortex lowers. ROW2 DEATH COLLAPSE, chest and head fold substantially lower toward the same attached base, bent arms settle against compressed vortex. ROW3 FINAL CORPSE, a COMPLETE very LOW horizontal collapsed extinguishing flame body resting on invisible ground: source head/core/two arms curled together continuously attached to flattened vortex, faint orange core/dark-red dying edges. Recognizable complete original elemental, no standing upper body, levitation, empty frame, separate ash pile or invented rocks. Same anatomical dimensions across phases; height drops by articulation, never globally shrinking a standing still. Preserve true front/back/opposite-side orientation through collapse. Never use final corpse height to normalize body scale.\\n\",\n  \"hit-E-SE-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 2 equal PHASE ROWS = 4 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: E, true RIGHT PROFILE. Head and chest front edge aim RIGHT; rear mass on LEFT. No front face toward viewer. Casting palm reaches RIGHT.\\nRIGHT COLUMN: SE, FRONT-RIGHT three-quarter, facing down-right. Front eyes and core visible; face/core project to the RIGHT, rear mass on LEFT. Casting palm aims down-RIGHT.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTWO ROWS only: ROW1 HIT RECOIL, head and chest jerk back opposite exact travel heading, elbows fold defensively, attached waist/vortex compresses. Face/core keep the same actual directional planes; no extra old face left above the neck. ROW2 HIT RECOVER, chest begins upright, one arm releases downward and the other elbow opens, vortex uncurls. Two genuinely distinct articulated postures, uniform head/core scale, continuous body, stable hover projection. No death frame or missing row.\\n\",\n  \"attack-W-NW-v2-exact-prompt.txt\": \"Preserve six real W and NW attack drawings from Reference1, same headings and identity. STRICT SPACING/COVERAGE REPAIR: all six entire connected bodies must fit with at least80 transparent pixels between every visible extent and all outer edges. No detached flame islands or embers whatsoever, including tiny stray pixels around hands. Reduce drawn figure scale uniformly25 percent only if needed to provide margins; retain uniform head/core scale across6. Do not omit any pose or crop off fingers/crown/vortex. Preserve windup/contact/recover, W left, NW back-left palm up-left. Output6 fully used bodies, no leftovers.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: W, true LEFT PROFILE. Head and chest front edge aim LEFT; rear mass on RIGHT. No front face toward viewer. Casting palm reaches LEFT.\\nRIGHT COLUMN: NW, BACK-LEFT three-quarter, facing away/up-left. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-LEFT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS, magic attack/cast with release at phase1: ROW1 WINDUP, elbows draw back, chest leans back slightly, head stays exact column heading. ROW2 RELEASE/CONTACT, attached casting palm extends decisively along exact heading toward the ranged target, torso leans into that aim and base stabilizes under waist. The runtime spell travels to the target; do NOT draw a projectile, beam, particle or opponent. Actual release point is the palm and faces the same direction as head/chest. E RIGHT, SE down-RIGHT, S toward viewer/DOWN, SW down-LEFT, W LEFT, NW up-LEFT, N straightUP/away, NE up-RIGHT. ROW3 RECOVER, elbow retracts and core returns upright, genuinely distinct from windup/idle. No front-face flip in rear views. One head only in every phase.\\n\",\n  \"idle-walk-W-NW-v2-exact-prompt.txt\": \"FOCUSED HEADING REPAIR. Reference1 is the full ten-body sheet to retain, Reference2 the neutral original identity, Reference3 abstract direction planes. Preserve the correct W left column and first four NW right-column poses and their real limb/waist differences. Correct ONLY RIGHT COLUMN BOTTOM ROW: it currently shows head/shoulders toward upper RIGHT (NE). Draw it facing upper LEFT (NW), with head on left edge of back torso, broad visible REAR shoulder/back planes, no frontal chest and no right-facing eye. Keep row5 opposite arm/waist travel endpoint, do not copy another still. All five right-column poses must face the same upper LEFT, distinct from W pure LEFT profile. Output the complete10-body transparent sheet unchanged layout and scale; no extra body, no cropping or omitted pixels.\\n\\nCreate NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 5 equal PHASE ROWS = 10 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 210pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: W, true LEFT PROFILE. Head and chest front edge aim LEFT; rear mass on RIGHT. No front face toward viewer. Casting palm reaches LEFT.\\nRIGHT COLUMN: NW, BACK-LEFT three-quarter, facing away/up-left. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-LEFT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nFIVE ROWS: ROW1 IDLE0 relaxed attached upper core, arms lowered, base coiled under waist. ROW2 IDLE1 actual breathing/core flex, elbows change angle and vortex compresses; distinct real anatomy, uniform head/core size. ROW3 WALK0 hovertravel: torso leans slightly along exact heading, LEFT arm/shoulder leads forward and RIGHT arm counters back, attached lower vortex curls behind travel direction. ROW4 WALK1 passing: actual opposite shoulder and elbow bend, waist/vortex bends under core, hands move through mid-swing; distinct joints. ROW5 WALK2: RIGHT arm/shoulder now leads forward, LEFT arm back; the shoulder/elbow and attached lower-vortex curve must actually reverse from WALK0. Both arms remain connected. No invented legs and no mere whole-body translation/flame-texture changes. Stable hover root/projection level; source already floats.\\n\",\n  \"idle-walk-W-NW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 5 equal PHASE ROWS = 10 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 210pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: W, true LEFT PROFILE. Head and chest front edge aim LEFT; rear mass on RIGHT. No front face toward viewer. Casting palm reaches LEFT.\\nRIGHT COLUMN: NW, BACK-LEFT three-quarter, facing away/up-left. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-LEFT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nFIVE ROWS: ROW1 IDLE0 relaxed attached upper core, arms lowered, base coiled under waist. ROW2 IDLE1 actual breathing/core flex, elbows change angle and vortex compresses; distinct real anatomy, uniform head/core size. ROW3 WALK0 hovertravel: torso leans slightly along exact heading, LEFT arm/shoulder leads forward and RIGHT arm counters back, attached lower vortex curls behind travel direction. ROW4 WALK1 passing: actual opposite shoulder and elbow bend, waist/vortex bends under core, hands move through mid-swing; distinct joints. ROW5 WALK2: RIGHT arm/shoulder now leads forward, LEFT arm back; the shoulder/elbow and attached lower-vortex curve must actually reverse from WALK0. Both arms remain connected. No invented legs and no mere whole-body translation/flame-texture changes. Stable hover root/projection level; source already floats.\\n\",\n  \"attack-W-NW-exact-prompt.txt\": \"Create NEW transparent RGBA hand-painted 2D GAME sprites of FEAR AGNI, using only the attached exact existing-project neutral fire elemental as character identity. This is independently authored new motion for this target, NOT extracted original animation. Do not reuse or recolor another actor's animation. Preserve actual source: angular pointed flame head with glowing front eyes, broad fiery shoulders, a branching yellow-white molten chest/core, two thick attached flame arms with curled clawed hands, narrowing flame waist continuously merging into ONE curling flame-vortex base. Bright yellow-white core, orange/gold fire with red edges. A single connected fire body. NO legs, feet, stone body, armor, clothes, staff, weapon, prop, wings, new head or new appendages. Exactly one head and two arms. Ignore unrelated tiny blue/weapon fragments at the source crop edge and detached source particles. Living record is floatingTRUE/magic; travel uses real shoulder/elbow/waist/vortex articulation. Native86, broad source proportions; do not redesign into a thin ghost or a humanoid with legs. The abstract second reference is ONLY direction-plane/aim guidance, never a donor character, color scheme, label or object to include.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS × 3 equal PHASE ROWS = 6 complete bodies on a portrait1024x1536 canvas. Each full sprite including crown, hands and vortex must be SMALL and fit inside a compact200pixel WIDTH × 260pixel HEIGHT box. Centers x256 and768, evenly spaced row centers. Keep very wide transparent gutters and generous outer margins. Do not enlarge sprites to fill cells. Same head, core and limb drawing scale/camera across all poses. No clipping, touching edges, overlapping crop rectangles or detached body pieces. All empty pixels alpha0; no background/matte, floor/shadow, text, grid, labels, borders, aura, beams, projectiles or detached sparks/embers/flame islands. One connected complete sprite per cell. Real different joint/body drawings, not translated, scaled or shaded copies of a still.\\n\\nLEFT COLUMN: W, true LEFT PROFILE. Head and chest front edge aim LEFT; rear mass on RIGHT. No front face toward viewer. Casting palm reaches LEFT.\\nRIGHT COLUMN: NW, BACK-LEFT three-quarter, facing away/up-left. Broad rear torso/shoulder planes and rear head/nape. Front chest core hidden; only tiny coherent side face sliver if needed. Casting palm aims up-LEFT. No front chest/face pasted on rear body.\\nThese columns stay exactly the same through every row. Distinct front/back/side planes are mandatory, not mirror-only sprites.\\n\\nTHREE ROWS, magic attack/cast with release at phase1: ROW1 WINDUP, elbows draw back, chest leans back slightly, head stays exact column heading. ROW2 RELEASE/CONTACT, attached casting palm extends decisively along exact heading toward the ranged target, torso leans into that aim and base stabilizes under waist. The runtime spell travels to the target; do NOT draw a projectile, beam, particle or opponent. Actual release point is the palm and faces the same direction as head/chest. E RIGHT, SE down-RIGHT, S toward viewer/DOWN, SW down-LEFT, W LEFT, NW up-LEFT, N straightUP/away, NE up-RIGHT. ROW3 RECOVER, elbow retracts and core returns upright, genuinely distinct from windup/idle. No front-face flip in rear views. One head only in every phase.\\n\",\n  \"attack-hit-N-v4-exact-prompt.txt\": \"SPACING-ONLY CORRECTION to the attached SAME Fear Agni FIVE NORTH REAR poses. The true BACK/NAPE direction and five real shoulder/elbow/waist actions are now correct, but the release palm in row2 overlaps the preceding row crop. Re-render all FIVE complete bodies at exactly70percent of current drawing size, same head/core scale reduction applied UNIFORMLY to all five, preserving actual unique anatomy/direction/attached fire body. No source-art warping/copy/assembly or omitted pose.\\n\\nONE COLUMN x FIVE rows, transparent1024x1536, body centers around(512,155),(512,460),(512,768),(512,1075),(512,1380). Each WHOLE body including highest palm/crown/lowest vortex must fit max260pxWIDE x210pxHIGH, with at least90px EMPTY TRANSPARENT GAP between every pair of visible bounding rectangles and safe80pxoutertop/bottom margins. Never enlarge sprites to fill cells. No stray sparks/flame islands/halos/matte/text/grid/floor/shadow, alpha0 everywhere outside five connected bodies.\\n\\nPreserve TOP-to-BOTTOM rows exactly:1rear NORTH cast WINDUP arms bent up/away;2rear NORTH cast RELEASE one palm reaches straight UP/AWAY forward beyond crown, other elbow draws down;3rear NORTH cast RECOVER both elbows lowering;4rear NORTH hit RECOIL shoulders compress, elbows fold;5rear NORTH hit RECOVER one arm open other drops. Head NAPE/back of crown, rear shoulderblades/spine, NO eyes/face/front chest in any pose. True same NORTH straight away, never front or side. FloatingTRUE source fire elemental with one continuous flame waist and vortex, no legs; two arms and exactlyonehead. Genuine distinct articulated drawings, same modelscale and broad source identity, no repeatedstill. Keep very small fullbodies and wide gaps; preserve correct rear direction.\\n\"\n}\nNEW EXACT PROPORTIONREPAIR PROMPT:\nCreate FOUR NEW corrected2D Fear Agni HIT poses using Reference1 SAMEACTOR W/NW idle/walk for correct intrinsic head/shoulder/chest/waist dimensions. Reference2 is oldfour HIT poses ONLY for recoil/recovery gestures and compass, which currently have a TINY HEAD relative to a very elongated thin torso/vortex. Do not copy its incorrect head/core proportions. Reference3 is exact original neutral fire elemental identity, not a frontal view to paste on rear bodies. Original allimages mustremain unchanged; output anew independently authoredsheet, not originalextraction.\n\nKeep original broad muscular molten uppercore, angular pointed flamehead with darkpointedmask/glowingfront eye, two thickattachedflamearms/curledclawhands, narrowingcontinuouswaist intoONEcompactcurlingvortexbase. Relative head-face/neck/chest/shoulder proportions mustmatch ownidle reference1: large coherent pointed head, substantial broad torso and compactlowerwhorl, NOTslenderrocket withtinyskull andstretchedtail. No legs/feet/armor/weapons/newappendages. Entirebodyconnected. Skull/head base not only flamecrown shouldmatchmodel, not giant loose flameflare tofakeheadsize. Uniformhead/core MODELscale acrossall4; actualrecoil changes posture notheadsize.\n\nExactly TWO directionCOLUMNS × TWO hitphaseROWS = FOUR completebodies, portrait1024x1536transparentRGBA. Leftcolumn W trueLEFT sideprofile, pointedsnout/oneeyeonlytoLEFT, chestsideplane. Rightcolumn NW BACK-LEFT away/upLEFT, broadBACK shoulderblades/rearhead/nape, frontchest/corehidden, atmostonecoherenttinyLEFTsideeyesliver, neverfrontal/RIGHT. Keep sameheading bothrows; no secondoldface remaining.\nROW1 HIT RECOIL: head/core jerksBACK oppositeheading andshoulderscompress, bothelbowsfolddefensively, attachedwristscurl andcontinuouscompactvortexcompresses. ROW2 HIT RECOVER: torso beginsupright whileoneelbowopensforward/down andotherarmdrops; differentrealelbow/wrist/waistangles, lowerwhorluncurlswithoutelongating intoathinworm. No repeatedstills/translation/scaleonly/onlyflameshading changes.\nEach WHOLE spritemax300pxWIDE ×380pxHIGH, centersx256/768,rowcenters384/1152, huge200pxtransparentgaps, safeoutermargins. Allcrown/fingers/basefit, no clipping/touching/foreigncrop. Emptyalpha0; NO background/floor/shadow/glowcloud/text/grid/particles/detachedflameislands. FloatingTRUE/source native86 magicidentity preserved. Fourfullbodies allused, no extra/missingphase.\n",
+  "instruction_record_kind": "exact_prompt",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "cast_uses_authored_attack": true,
+    "notes": "Source atlas_2 cell4 yellow/orange/red fire elemental, pointed crown/eyes, branching hot chest, two attached claw arms and one curling vortex retained. No legs, equipment, rocks or detached embers. N rear has spine/back flame planes and no frontal eyes/core. Distinct E/W/NE/NW rear/front planes. All24 walk phases reviewed: alternating shoulder/elbow/waist/vortex deformation without invented feet; existing floating=true explains retained hover rather than a grounded-foot requirement. Attack3 windup/extension/recovery agree with compass and unchanged magic hit ratio .52. Real projectile arrives after release and can meet player after caster returns idle. Hit/death fold attached head/core/arms into one low darkening flame body, without fragmentation. Separate actual Main static/temporal/AI/lifecycle and approved-baseline visual gates PASS. Full record: res://docs/remake/evidence/pr122-remaining106/batch01/fear_agni_monster_authored_v2-independent-review.json. CI/Android not yet approved."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        174,
+        32,
+        216,
+        279
+      ],
+      "margin": [
+        195,
+        125,
+        424,
+        361
+      ],
+      "source_anchor": [
+        299,
+        307
+      ],
+      "rgba_sha256": "a343ee6077f524122675224e57a40d9eda3e05989f0ad50134308104e9807c30",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        598,
+        34,
+        262,
+        277
+      ],
+      "margin": [
+        191,
+        127,
+        378,
+        363
+      ],
+      "source_anchor": [
+        727,
+        307
+      ],
+      "rgba_sha256": "c977ebd453a49c2c5658e0016b3125820339dd7f0ab5f1955b8755b1e29f25cf",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        181,
+        320,
+        229,
+        280
+      ],
+      "margin": [
+        205,
+        124,
+        411,
+        360
+      ],
+      "source_anchor": [
+        296,
+        596
+      ],
+      "rgba_sha256": "34b25a60f7d80ab8896e23ba8bd7cba1d2d9bcff9521af06d271ff19b992cbae",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        612,
+        316,
+        256,
+        284
+      ],
+      "margin": [
+        198,
+        120,
+        384,
+        356
+      ],
+      "source_anchor": [
+        734,
+        596
+      ],
+      "rgba_sha256": "052d218da16baee481b16ef3570151d721ef1626c2058edf6543a66743e3ebba",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        140,
+        610,
+        329,
+        284
+      ],
+      "margin": [
+        210,
+        120,
+        311,
+        356
+      ],
+      "source_anchor": [
+        250,
+        890
+      ],
+      "rgba_sha256": "049b63227a91c8957e1d5996513a465b5c3fc7d47a44387ddbb965e9e2129c8a",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        602,
+        606,
+        342,
+        284
+      ],
+      "margin": [
+        172,
+        121,
+        298,
+        356
+      ],
+      "source_anchor": [
+        750,
+        885
+      ],
+      "rgba_sha256": "b071459a8da2cc69fbcf753c50f515df9101619e91f3c116455dfbc3d374a867",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        162,
+        902,
+        278,
+        284
+      ],
+      "margin": [
+        216,
+        120,
+        362,
+        356
+      ],
+      "source_anchor": [
+        266,
+        1182
+      ],
+      "rgba_sha256": "fb97f9531a89ae0620959775eda156a5e351b7df97b3a0f907a0448f786f4a20",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        616,
+        901,
+        295,
+        282
+      ],
+      "margin": [
+        194,
+        123,
+        345,
+        358
+      ],
+      "source_anchor": [
+        742,
+        1178
+      ],
+      "rgba_sha256": "d353b8954323cb9ac8d8aaf233cce789ff9d051c065ed5d2c28cc10f632e9a6d",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        141,
+        1203,
+        340,
+        266
+      ],
+      "margin": [
+        203,
+        138,
+        300,
+        374
+      ],
+      "source_anchor": [
+        258,
+        1465
+      ],
+      "rgba_sha256": "2872867a2777ade597256b33cf64979581c50c11c27c7ef100aa47725c0a7e76",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        616,
+        1202,
+        324,
+        271
+      ],
+      "margin": [
+        185,
+        134,
+        316,
+        369
+      ],
+      "source_anchor": [
+        751,
+        1468
+      ],
+      "rgba_sha256": "4720cd560c1a325983ee313bfb5a58a05e64fdc0d63cd0d73dd437516baaff8f",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        182,
+        22,
+        266,
+        276
+      ],
+      "margin": [
+        187,
+        123,
+        366,
+        356
+      ],
+      "source_anchor": [
+        311,
+        294
+      ],
+      "rgba_sha256": "7d1911a0fb92667d8b0624a176a886d7a7025fd180889813ad9091a197f74117",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        581,
+        26,
+        265,
+        272
+      ],
+      "margin": [
+        187,
+        127,
+        367,
+        360
+      ],
+      "source_anchor": [
+        710,
+        294
+      ],
+      "rgba_sha256": "4ebb845323bad613428badd147b753840cc8a033f3ae9c9e05706f347abc84ad",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        171,
+        313,
+        279,
+        281
+      ],
+      "margin": [
+        176,
+        118,
+        353,
+        351
+      ],
+      "source_anchor": [
+        311,
+        590
+      ],
+      "rgba_sha256": "6a5836cc1ccace91c0c3c1a81cfc3453f8ca2442cfe6aac6f26299deaa14a7fc",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        582,
+        315,
+        271,
+        278
+      ],
+      "margin": [
+        189,
+        122,
+        361,
+        354
+      ],
+      "source_anchor": [
+        709,
+        588
+      ],
+      "rgba_sha256": "918d8f15f3b1c2cc94cd01491441851925719d5104b29d58576ad460a99400e0",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        164,
+        609,
+        294,
+        272
+      ],
+      "margin": [
+        155,
+        127,
+        338,
+        360
+      ],
+      "source_anchor": [
+        325,
+        877
+      ],
+      "rgba_sha256": "f7bbcb87b88207ab3e572811f6b8e29cc6254aec1f25d9fe0680cca46746bed3",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        555,
+        617,
+        300,
+        263
+      ],
+      "margin": [
+        135,
+        136,
+        332,
+        369
+      ],
+      "source_anchor": [
+        736,
+        876
+      ],
+      "rgba_sha256": "5dbbe04f8dd9fcd1381a23e54b6ba2a2abbaba763f5783f4a964296e6d49a50e",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        172,
+        897,
+        294,
+        271
+      ],
+      "margin": [
+        173,
+        128,
+        338,
+        361
+      ],
+      "source_anchor": [
+        315,
+        1164
+      ],
+      "rgba_sha256": "178aa0dc98e4fb77a8660cfd221c3b1eb5a32e7cbf69463fa1b246f7891ef31f",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        562,
+        899,
+        296,
+        267
+      ],
+      "margin": [
+        155,
+        132,
+        336,
+        365
+      ],
+      "source_anchor": [
+        723,
+        1162
+      ],
+      "rgba_sha256": "aa4d041f29cde70e3dfbe2026b73815d217f23cbc649a9b9314ccdd5dd580c18",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        171,
+        1184,
+        281,
+        264
+      ],
+      "margin": [
+        164,
+        135,
+        351,
+        368
+      ],
+      "source_anchor": [
+        323,
+        1444
+      ],
+      "rgba_sha256": "fcf4e1b45abb4a82065dde4d1a2c0981d940dbd038ead9b13f48449bc1d7d211",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        574,
+        1186,
+        279,
+        262
+      ],
+      "margin": [
+        145,
+        137,
+        353,
+        370
+      ],
+      "source_anchor": [
+        745,
+        1444
+      ],
+      "rgba_sha256": "d4d267e52ed23a18d2714db432b4514bc18396618c8e599d700afbd8b0944cf8",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        172,
+        39,
+        241,
+        264
+      ],
+      "margin": [
+        181,
+        116,
+        359,
+        336
+      ],
+      "source_anchor": [
+        291,
+        298
+      ],
+      "rgba_sha256": "d9969dc87214bdd1a3d5bc1963d887ba663fd73d196c301cfec7297d58d059ff",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        619,
+        48,
+        235,
+        256
+      ],
+      "margin": [
+        173,
+        123,
+        365,
+        344
+      ],
+      "source_anchor": [
+        746,
+        300
+      ],
+      "rgba_sha256": "6ce28a97dc91c1d97c79f2b8e164a3a60779a2f8d2ea2ee32e0d278536ba0d3b",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        165,
+        324,
+        256,
+        266
+      ],
+      "margin": [
+        173,
+        113,
+        344,
+        334
+      ],
+      "source_anchor": [
+        292,
+        586
+      ],
+      "rgba_sha256": "b23547fc2a3a9a5481cfd5314c835cc94e342d3b6dc14de8d5d874f000b6c70c",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        620,
+        330,
+        257,
+        262
+      ],
+      "margin": [
+        158,
+        117,
+        343,
+        338
+      ],
+      "source_anchor": [
+        762,
+        588
+      ],
+      "rgba_sha256": "c1e8d796c23787649b0d2c819e82c2f5f33966d22a395f003e989effb873590e",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        128,
+        609,
+        311,
+        264
+      ],
+      "margin": [
+        121,
+        115,
+        289,
+        336
+      ],
+      "source_anchor": [
+        307,
+        869
+      ],
+      "rgba_sha256": "0b57a6ba71f475ae8dcee2822b34a34272b86b2894c418ec38c71de0ee3940ff",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        608,
+        611,
+        291,
+        264
+      ],
+      "margin": [
+        133,
+        115,
+        309,
+        336
+      ],
+      "source_anchor": [
+        775,
+        871
+      ],
+      "rgba_sha256": "a797f8fbb7aa1d9301ea6de128aebf5bb6a1074a28873978f468fefef78321d9",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        153,
+        896,
+        283,
+        264
+      ],
+      "margin": [
+        160,
+        117,
+        317,
+        336
+      ],
+      "source_anchor": [
+        293,
+        1154
+      ],
+      "rgba_sha256": "46121a116b8567dff37da9bec04f5039893f1b0f7448070b126e291cf2d78462",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        616,
+        900,
+        278,
+        265
+      ],
+      "margin": [
+        151,
+        114,
+        322,
+        335
+      ],
+      "source_anchor": [
+        765,
+        1161
+      ],
+      "rgba_sha256": "397164d4178b5fc2240cdb9e9817d130f1a4dfc9ecb9c619aac12daae2e2a8cd",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        141,
+        1187,
+        275,
+        262
+      ],
+      "margin": [
+        135,
+        117,
+        325,
+        338
+      ],
+      "source_anchor": [
+        306,
+        1445
+      ],
+      "rgba_sha256": "22b79fad457d4d93d856c08f09e5123aae71dff98e7bf95d3b2f203d91584807",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        608,
+        1185,
+        284,
+        261
+      ],
+      "margin": [
+        132,
+        118,
+        316,
+        339
+      ],
+      "source_anchor": [
+        776,
+        1442
+      ],
+      "rgba_sha256": "425f2c2a72c9b3c231fd57094295044a57ee53d7f25c15db5f3b9fb70fd9b52f",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        153,
+        25,
+        267,
+        290
+      ],
+      "margin": [
+        207,
+        134,
+        405,
+        382
+      ],
+      "source_anchor": [
+        282,
+        311
+      ],
+      "rgba_sha256": "cc89cdf8c7a865c744a4d9db4946fd01fe7e54b11ec2ef45060ff4f76241f81e",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        626,
+        24,
+        247,
+        293
+      ],
+      "margin": [
+        208,
+        131,
+        425,
+        379
+      ],
+      "source_anchor": [
+        754,
+        313
+      ],
+      "rgba_sha256": "ed46e714f92d837a39841876e15481da766ad0deeb7cac58a2250a0adf4d8514",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        147,
+        322,
+        280,
+        291
+      ],
+      "margin": [
+        200,
+        134,
+        392,
+        381
+      ],
+      "source_anchor": [
+        283,
+        608
+      ],
+      "rgba_sha256": "19a6041b90675cbf2370f3f15ca6766f0a0f8865b6bac76ea713a00b32b52e90",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        620,
+        317,
+        268,
+        294
+      ],
+      "margin": [
+        195,
+        131,
+        404,
+        378
+      ],
+      "source_anchor": [
+        761,
+        606
+      ],
+      "rgba_sha256": "22a9903f53cb617d3488ef09d1149137ff6360d725a8a24edcd78a9d10713111",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        137,
+        615,
+        280,
+        295
+      ],
+      "margin": [
+        201,
+        129,
+        392,
+        377
+      ],
+      "source_anchor": [
+        272,
+        906
+      ],
+      "rgba_sha256": "9bb9ed9d4b0362f9f128a69d38515d0ac5259976e8722061a1035cf4d38d19f3",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        626,
+        619,
+        280,
+        294
+      ],
+      "margin": [
+        226,
+        130,
+        392,
+        378
+      ],
+      "source_anchor": [
+        736,
+        909
+      ],
+      "rgba_sha256": "1180b180d2425ed03b4d24cebc32d09bc714972af377d60ffb0864ad8942f980",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        155,
+        909,
+        275,
+        300
+      ],
+      "margin": [
+        197,
+        124,
+        397,
+        372
+      ],
+      "source_anchor": [
+        294,
+        1205
+      ],
+      "rgba_sha256": "b2c0201967bb3e745fafa26916c2c67f2ea014f7229d6c8e2b3121489fa13137",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        636,
+        916,
+        255,
+        295
+      ],
+      "margin": [
+        236,
+        130,
+        417,
+        377
+      ],
+      "source_anchor": [
+        736,
+        1206
+      ],
+      "rgba_sha256": "a909bb2b0b5a6396f34309e5ff6dc801b9c2e61c5d1d2a9da608052492de9802",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        140,
+        1211,
+        284,
+        297
+      ],
+      "margin": [
+        179,
+        128,
+        388,
+        375
+      ],
+      "source_anchor": [
+        297,
+        1503
+      ],
+      "rgba_sha256": "74aa4880c64f85863051e532c8d38bac6f05b57479b49d554d1c6b522d02d3ea",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        617,
+        1214,
+        284,
+        298
+      ],
+      "margin": [
+        170,
+        126,
+        388,
+        374
+      ],
+      "source_anchor": [
+        783,
+        1508
+      ],
+      "rgba_sha256": "e7dea8bf0a4a1bfe994a1dc54fb938620de9b92ed968af0b4775333386df9c1b",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        75,
+        35,
+        341,
+        474
+      ],
+      "margin": [
+        294,
+        185,
+        707,
+        574
+      ],
+      "source_anchor": [
+        305,
+        505
+      ],
+      "rgba_sha256": "95be7bb4493f61d04ee82fc7b66011a94005e0f6c5f3d4989ae88d420847168e",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        567,
+        41,
+        401,
+        467
+      ],
+      "margin": [
+        334,
+        193,
+        647,
+        581
+      ],
+      "source_anchor": [
+        757,
+        503
+      ],
+      "rgba_sha256": "4a9ef10803b55f94b7fa8c7873861fbc33a7f4445160fdc2b3ebb5d72489122a",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        69,
+        553,
+        485,
+        440
+      ],
+      "margin": [
+        339,
+        220,
+        563,
+        608
+      ],
+      "source_anchor": [
+        254,
+        988
+      ],
+      "rgba_sha256": "fde8563d53dfabc2a6a419ae5bff428984ebc81249a8f1b0082bca5568475983",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        586,
+        562,
+        425,
+        428
+      ],
+      "margin": [
+        352,
+        231,
+        623,
+        620
+      ],
+      "source_anchor": [
+        758,
+        986
+      ],
+      "rgba_sha256": "a97ef564e7f16c567fefe67454a13485278d1f5f5780611b8afee2bed3fa05a8",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        92,
+        1021,
+        356,
+        455
+      ],
+      "margin": [
+        308,
+        205,
+        692,
+        593
+      ],
+      "source_anchor": [
+        308,
+        1471
+      ],
+      "rgba_sha256": "0f823ad0fc4ab32e03870905b1a264b5f78e95f26f64f4ddf676f1ecdd9cf342",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        595,
+        1022,
+        372,
+        454
+      ],
+      "margin": [
+        323,
+        205,
+        676,
+        594
+      ],
+      "source_anchor": [
+        796,
+        1472
+      ],
+      "rgba_sha256": "343861eea7bbca611156488a775a01333f82e6cf8453395385aa5659b6f251dd",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        90,
+        36,
+        379,
+        436
+      ],
+      "margin": [
+        307,
+        198,
+        629,
+        572
+      ],
+      "source_anchor": [
+        287,
+        468
+      ],
+      "rgba_sha256": "62662524482c371b89e4ef6666664b28ba06ae1fb2053bb72580b13d7df22120",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        587,
+        55,
+        387,
+        423
+      ],
+      "margin": [
+        324,
+        211,
+        621,
+        585
+      ],
+      "source_anchor": [
+        767,
+        474
+      ],
+      "rgba_sha256": "75481bcf3e486cd99ec453842ad1c6fcab34e31673d492241b97b54ae4da8e22",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        70,
+        536,
+        419,
+        436
+      ],
+      "margin": [
+        286,
+        198,
+        589,
+        572
+      ],
+      "source_anchor": [
+        288,
+        968
+      ],
+      "rgba_sha256": "b466a61ccf18907141531bbf79eeb186f5b11733fb52bffcf201b086bbc6e523",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        523,
+        561,
+        453,
+        402
+      ],
+      "margin": [
+        216,
+        232,
+        555,
+        606
+      ],
+      "source_anchor": [
+        811,
+        959
+      ],
+      "rgba_sha256": "bdbdd272798b27224647510d9535d2f98afebb8ab9c71b055d923e8ad500462f",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        80,
+        1025,
+        415,
+        439
+      ],
+      "margin": [
+        303,
+        196,
+        593,
+        569
+      ],
+      "source_anchor": [
+        281,
+        1459
+      ],
+      "rgba_sha256": "1758d97e1a7bf8b7a6cee3682d49b50dfc1eedada9c753d1eece5b969aeed6bb",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        609,
+        1036,
+        358,
+        433
+      ],
+      "margin": [
+        335,
+        201,
+        650,
+        575
+      ],
+      "source_anchor": [
+        778,
+        1465
+      ],
+      "rgba_sha256": "228e7fc318ce048838749f293cd97801690022861b3e96035ed9d7b0fe5034f0",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        140,
+        58,
+        357,
+        440
+      ],
+      "margin": [
+        290,
+        174,
+        619,
+        536
+      ],
+      "source_anchor": [
+        338,
+        494
+      ],
+      "rgba_sha256": "83c06bda9aa292ed0ce9c7a724e447e8302f6a0b32ecc08002ba4d111dd17489",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        585,
+        89,
+        350,
+        421
+      ],
+      "margin": [
+        293,
+        194,
+        626,
+        555
+      ],
+      "source_anchor": [
+        780,
+        505
+      ],
+      "rgba_sha256": "e4ea926df0bb769dc3db6293fdb39ed34b35d928db0719144012f1582f761dfc",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        45,
+        564,
+        465,
+        414
+      ],
+      "margin": [
+        167,
+        200,
+        511,
+        562
+      ],
+      "source_anchor": [
+        366,
+        974
+      ],
+      "rgba_sha256": "334a541332f6d8d9e50c4ae0b2851159425808154be973a68565358464d4b507",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        547,
+        577,
+        426,
+        406
+      ],
+      "margin": [
+        216,
+        208,
+        550,
+        570
+      ],
+      "source_anchor": [
+        819,
+        979
+      ],
+      "rgba_sha256": "9c0775696c7a96a355a527659fae2546c313e0d9680756077b48d3577b3e9ad9",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        140,
+        1025,
+        352,
+        422
+      ],
+      "margin": [
+        293,
+        193,
+        624,
+        554
+      ],
+      "source_anchor": [
+        335,
+        1442
+      ],
+      "rgba_sha256": "db7780800a823d39ac7425c982c25c1b63db82dbb36ccb8647d21b7dc6dd8d27",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        595,
+        1035,
+        334,
+        426
+      ],
+      "margin": [
+        297,
+        189,
+        642,
+        550
+      ],
+      "source_anchor": [
+        786,
+        1456
+      ],
+      "rgba_sha256": "77eda84414f9eb442a75408c095ff9854179ca7ec107b90566ff64e6b20f3ed2",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        86,
+        130,
+        393,
+        489
+      ],
+      "margin": [
+        364,
+        285,
+        839,
+        743
+      ],
+      "source_anchor": [
+        338,
+        615
+      ],
+      "rgba_sha256": "fab8ca90fa73d07c73c4749c84bff01348de54429c1e8943bcc035a77cea9df0",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        570,
+        146,
+        394,
+        492
+      ],
+      "margin": [
+        423,
+        282,
+        838,
+        740
+      ],
+      "source_anchor": [
+        763,
+        634
+      ],
+      "rgba_sha256": "bdfcb8dd82936f83dbffd2de76f4ad6399dacbc6a2f283b71c3d93e5a5a9a0cf",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        93,
+        802,
+        429,
+        545
+      ],
+      "margin": [
+        426,
+        229,
+        803,
+        687
+      ],
+      "source_anchor": [
+        283,
+        1343
+      ],
+      "rgba_sha256": "47478c38190445cd872c049793deb5ebf087a7d58dfc52b0bfd57b4b37c3e089",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        571,
+        829,
+        435,
+        522
+      ],
+      "margin": [
+        428,
+        253,
+        797,
+        710
+      ],
+      "source_anchor": [
+        759,
+        1346
+      ],
+      "rgba_sha256": "248e557a3d0bfeb7965c01cfa98e24d193fe83e09c48f375539c9d85ee18b033",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        99,
+        168,
+        388,
+        530
+      ],
+      "margin": [
+        396,
+        230,
+        820,
+        678
+      ],
+      "source_anchor": [
+        307,
+        693
+      ],
+      "rgba_sha256": "b8c8b14170eed1a54619facf863b45084ca1289642f8d5a2cfa5de7fca0e3d29",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        572,
+        166,
+        393,
+        534
+      ],
+      "margin": [
+        391,
+        226,
+        815,
+        674
+      ],
+      "source_anchor": [
+        785,
+        695
+      ],
+      "rgba_sha256": "715e6ba8c7141f28cd613df530f6d7501b23b080bd573a3d7aed2db66875bd9a",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        84,
+        827,
+        420,
+        537
+      ],
+      "margin": [
+        387,
+        223,
+        788,
+        671
+      ],
+      "source_anchor": [
+        301,
+        1359
+      ],
+      "rgba_sha256": "1da095bb157b5b5544028d2732e2e74fe5167b03e657d1190731ed4d72d009c0",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        552,
+        852,
+        423,
+        505
+      ],
+      "margin": [
+        377,
+        255,
+        785,
+        703
+      ],
+      "source_anchor": [
+        779,
+        1352
+      ],
+      "rgba_sha256": "28707f7dbece1c2054903b1d7f6440301847c3ca913c9b9c311afafa8ef58cc8",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        84,
+        110,
+        384,
+        567
+      ],
+      "margin": [
+        401,
+        195,
+        816,
+        633
+      ],
+      "source_anchor": [
+        283,
+        665
+      ],
+      "rgba_sha256": "5ce95e06902b1e685eca932c3d274de7a0c2b36382538a9d17753c8ccc70aeff",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        603,
+        142,
+        386,
+        528
+      ],
+      "margin": [
+        379,
+        227,
+        814,
+        672
+      ],
+      "source_anchor": [
+        824,
+        665
+      ],
+      "rgba_sha256": "40865a5c3cb9a4eadbd6d0c1902684b5c11eb1bf7e90b5894d0168f5c99c2b12",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        35,
+        756,
+        472,
+        615
+      ],
+      "margin": [
+        325,
+        146,
+        728,
+        585
+      ],
+      "source_anchor": [
+        310,
+        1360
+      ],
+      "rgba_sha256": "20443e9c6c0c7ebf091b56cfb00b37c37c7a1801eaf39d63a66054fccccbc779",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        544,
+        804,
+        465,
+        598
+      ],
+      "margin": [
+        309,
+        156,
+        735,
+        602
+      ],
+      "source_anchor": [
+        835,
+        1398
+      ],
+      "rgba_sha256": "0ae99f2914f9585ce28329ce7a5540b77fb30a04c626a0e19cee519cab4379c8",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        103,
+        145,
+        393,
+        442
+      ],
+      "margin": [
+        308,
+        198,
+        623,
+        574
+      ],
+      "source_anchor": [
+        303,
+        582
+      ],
+      "rgba_sha256": "c85e30347877ef214dc64f0a38979b4f909ac0d25544b64379ec5a359c1ca3ce",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        593,
+        162,
+        366,
+        437
+      ],
+      "margin": [
+        325,
+        202,
+        650,
+        579
+      ],
+      "source_anchor": [
+        776,
+        595
+      ],
+      "rgba_sha256": "94071b4957def60839d12e50d6edbef9b641dc0145b9bae5ab16debca1e02c0a",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        100,
+        733,
+        361,
+        341
+      ],
+      "margin": [
+        323,
+        298,
+        655,
+        675
+      ],
+      "source_anchor": [
+        285,
+        1070
+      ],
+      "rgba_sha256": "b91212c5d13a94b1a9450ce67c5d5e2f85e2f01dc2a8db59e8e07aa509f8228b",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        591,
+        772,
+        363,
+        303
+      ],
+      "margin": [
+        320,
+        336,
+        653,
+        713
+      ],
+      "source_anchor": [
+        779,
+        1071
+      ],
+      "rgba_sha256": "9bf21e8facec0366b94e3e983a916c8ae916acd8353662f13fd8dffec7100c26",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        86,
+        1249,
+        414,
+        191
+      ],
+      "margin": [
+        296,
+        449,
+        602,
+        825
+      ],
+      "source_anchor": [
+        298,
+        1435
+      ],
+      "rgba_sha256": "1900def9efd36db206692cd6dddc7ebc42c9407c438ee937ed79e2d74cc3b3a1",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        589,
+        1257,
+        372,
+        187
+      ],
+      "margin": [
+        321,
+        452,
+        644,
+        829
+      ],
+      "source_anchor": [
+        776,
+        1440
+      ],
+      "rgba_sha256": "2eb728404150dc7f623c8786981d76448c2e172f78359b8c45d5820ea6139552",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        83,
+        86,
+        399,
+        502
+      ],
+      "margin": [
+        349,
+        197,
+        713,
+        610
+      ],
+      "source_anchor": [
+        290,
+        584
+      ],
+      "rgba_sha256": "8ed635d330905c72d24cc384b010df4543ca1d1908a2384a3edf9c0001bc28de",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        561,
+        126,
+        380,
+        462
+      ],
+      "margin": [
+        358,
+        238,
+        732,
+        650
+      ],
+      "source_anchor": [
+        759,
+        583
+      ],
+      "rgba_sha256": "1abbb362f7482cb5b57bd0a44372c4d0e9e6266733106822e091fc4b3ee5e5aa",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        83,
+        728,
+        386,
+        345
+      ],
+      "margin": [
+        362,
+        354,
+        726,
+        767
+      ],
+      "source_anchor": [
+        277,
+        1069
+      ],
+      "rgba_sha256": "523034ff7659543ddcc9413283e6c92e29a42f850f11d5a7ade5934e6c9cec24",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        559,
+        754,
+        391,
+        319
+      ],
+      "margin": [
+        360,
+        381,
+        721,
+        793
+      ],
+      "source_anchor": [
+        755,
+        1068
+      ],
+      "rgba_sha256": "a3614011fb419808a7b9f017d6431e6b7cbeb1f558dc47a42c95045fa9501974",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        65,
+        1253,
+        408,
+        176
+      ],
+      "margin": [
+        349,
+        528,
+        704,
+        936
+      ],
+      "source_anchor": [
+        272,
+        1420
+      ],
+      "rgba_sha256": "94dc8052361000707201945c2e73b48651dc955aff77e7196a87cf051d5534ed",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        560,
+        1261,
+        414,
+        181
+      ],
+      "margin": [
+        358,
+        518,
+        698,
+        931
+      ],
+      "source_anchor": [
+        758,
+        1438
+      ],
+      "rgba_sha256": "5ab3031049f1a3bda03a24e31b048645cea49453ca3e5fc59d5e89cb2b4895f0",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        81,
+        143,
+        398,
+        448
+      ],
+      "margin": [
+        256,
+        216,
+        658,
+        608
+      ],
+      "source_anchor": [
+        353,
+        587
+      ],
+      "rgba_sha256": "40a1fa5d0127d0aedbcdf9319cb5e384a768d4b96d5243a2496c1047cc16a6d8",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        574,
+        132,
+        384,
+        464
+      ],
+      "margin": [
+        299,
+        200,
+        672,
+        592
+      ],
+      "source_anchor": [
+        803,
+        592
+      ],
+      "rgba_sha256": "0c785cb97c38b1712bbcd181e5d9e6e913358afb0ed4b941a1feecf3a1fa5cf2",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        106,
+        762,
+        407,
+        329
+      ],
+      "margin": [
+        273,
+        335,
+        649,
+        727
+      ],
+      "source_anchor": [
+        361,
+        1087
+      ],
+      "rgba_sha256": "b94252c24ba39cecf2638f2017d8d33ded1d7ecb7f88f79d2ce543e5eea24638",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        595,
+        787,
+        369,
+        319
+      ],
+      "margin": [
+        334,
+        345,
+        687,
+        737
+      ],
+      "source_anchor": [
+        789,
+        1102
+      ],
+      "rgba_sha256": "52003837c3ca63eb565d770ba8a882e4ce1b8aaea7f882d8976b1e92978560f7",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        48,
+        1255,
+        449,
+        191
+      ],
+      "margin": [
+        280,
+        477,
+        607,
+        865
+      ],
+      "source_anchor": [
+        296,
+        1438
+      ],
+      "rgba_sha256": "c785a28e34cdf34d99cc25598b3b8b00c380c1eb44be96bf00a08d17cfd0246f",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        571,
+        1254,
+        404,
+        200
+      ],
+      "margin": [
+        321,
+        469,
+        652,
+        856
+      ],
+      "source_anchor": [
+        778,
+        1445
+      ],
+      "rgba_sha256": "a59b3fcb34bc31bdc9be5e2d04bf43997ddf60621729bfe1c56563e9b760e4e2",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        90,
+        155,
+        378,
+        516
+      ],
+      "margin": [
+        377,
+        198,
+        758,
+        620
+      ],
+      "source_anchor": [
+        281,
+        667
+      ],
+      "rgba_sha256": "1e328f0695cf8beaaec6b0e1694af028c2b36bb8334209df3c6043f434fde5de",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        599,
+        202,
+        345,
+        464
+      ],
+      "margin": [
+        423,
+        251,
+        791,
+        672
+      ],
+      "source_anchor": [
+        744,
+        661
+      ],
+      "rgba_sha256": "820cacf4bbb1eab270fda67dbcf1e76daea3e3fa26426869517008ac8304a6b2",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        101,
+        820,
+        367,
+        313
+      ],
+      "margin": [
+        390,
+        401,
+        769,
+        823
+      ],
+      "source_anchor": [
+        279,
+        1129
+      ],
+      "rgba_sha256": "5efcf6b2460ec997de8f6117bd86f05fb047a4d1c5192d89ea195ac489d6a651",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        599,
+        861,
+        357,
+        272
+      ],
+      "margin": [
+        393,
+        442,
+        779,
+        864
+      ],
+      "source_anchor": [
+        774,
+        1129
+      ],
+      "rgba_sha256": "dab3d29fb6cf8266289d0dc23ef6c195d49c91bb9b261bf8558fd9a963b6adcc",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        60,
+        1232,
+        418,
+        213
+      ],
+      "margin": [
+        355,
+        501,
+        718,
+        923
+      ],
+      "source_anchor": [
+        273,
+        1441
+      ],
+      "rgba_sha256": "ea39c14cb6984e4d3b4408f3c5f545d2773b580915ec9fa42ada49d92894b95c",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        568,
+        1245,
+        409,
+        203
+      ],
+      "margin": [
+        360,
+        512,
+        727,
+        933
+      ],
+      "source_anchor": [
+        776,
+        1443
+      ],
+      "rgba_sha256": "72a609d85157420d5b54fc65bf24ddfbfa810459be082b83e2c43b2bcf5014a5",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        398,
+        86,
+        225,
+        236
+      ],
+      "margin": [
+        159,
+        108,
+        319,
+        308
+      ],
+      "source_anchor": [
+        511,
+        318
+      ],
+      "rgba_sha256": "feced22dc8741f97afd8ce642724282d054033f0744ce62d7a21da59f33f9df2",
+      "sheet": 14
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        407,
+        342,
+        201,
+        287
+      ],
+      "margin": [
+        174,
+        57,
+        343,
+        257
+      ],
+      "source_anchor": [
+        505,
+        625
+      ],
+      "rgba_sha256": "d8621743b3fcbe36e077da42d75fdfcab89c2216704ce4a1404e1cf736b55c9a",
+      "sheet": 14
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        392,
+        675,
+        246,
+        230
+      ],
+      "margin": [
+        154,
+        115,
+        298,
+        314
+      ],
+      "source_anchor": [
+        510,
+        900
+      ],
+      "rgba_sha256": "d0a40409b1ddfab9bfec2fbd01d94813f06737ad8faeb1dfe7aa8cb981d6f131",
+      "sheet": 14
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        420,
+        938,
+        191,
+        242
+      ],
+      "margin": [
+        184,
+        102,
+        353,
+        302
+      ],
+      "source_anchor": [
+        508,
+        1176
+      ],
+      "rgba_sha256": "5b6d72c002ce2614b2d2cbc2275e23f99d97a16c83e1ba665563f24c62137c14",
+      "sheet": 14
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        382,
+        1209,
+        246,
+        247
+      ],
+      "margin": [
+        136,
+        98,
+        298,
+        297
+      ],
+      "source_anchor": [
+        518,
+        1451
+      ],
+      "rgba_sha256": "6b5c41d9372d98551f88308e61886a027adc0ff86eaff7e8852c9f8e4af4b0b5",
+      "sheet": 14
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        385,
+        16,
+        264,
+        277
+      ],
+      "margin": [
+        238,
+        157,
+        424,
+        411
+      ],
+      "source_anchor": [
+        491,
+        289
+      ],
+      "rgba_sha256": "37b71962c72ea8424acd4297776cba459c7cb66d9e4d6d5103dbd6d2e420be5a",
+      "sheet": 15
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        363,
+        296,
+        348,
+        296
+      ],
+      "margin": [
+        248,
+        138,
+        340,
+        392
+      ],
+      "source_anchor": [
+        459,
+        588
+      ],
+      "rgba_sha256": "2bf26d73b7891bc111eaf9e2675bdd54af25e683a0d79246ca0f7d40be8ade45",
+      "sheet": 15
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        335,
+        599,
+        342,
+        293
+      ],
+      "margin": [
+        180,
+        141,
+        346,
+        395
+      ],
+      "source_anchor": [
+        499,
+        888
+      ],
+      "rgba_sha256": "3251a200345e65f13bb4982cc98100b56b5b4689b49a5e42b8ce70c8dcb8338e",
+      "sheet": 15
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        392,
+        905,
+        249,
+        280
+      ],
+      "margin": [
+        240,
+        154,
+        439,
+        408
+      ],
+      "source_anchor": [
+        496,
+        1181
+      ],
+      "rgba_sha256": "0797630e6c9db0c3623d410d11b917a11e5c0ca2bf858d018d64883b4bf4ed5e",
+      "sheet": 15
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        334,
+        1188,
+        338,
+        306
+      ],
+      "margin": [
+        156,
+        129,
+        350,
+        382
+      ],
+      "source_anchor": [
+        522,
+        1489
+      ],
+      "rgba_sha256": "5f55ed0217eac024b2cbce40f3a685a87d5ff41cfd09d46e66bbc51be8f64753",
+      "sheet": 15
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-0.png",
+          "sha256": "f810609233adf838f16735ba76ed28c087cbda5de486dbb985c1fe2676781db6",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-1.png",
+          "sha256": "23faf29ab7b8a778cbd19635d38362de85e5790c43900f216f32a818e5aa2e4a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            632,
+            632
+          ],
+          "foot": [
+            316,
+            395
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-2.png",
+          "sha256": "ca1617dd2b45b0aa84f16c512dfcb10942fa7b07e566f8193fa1378e5173230c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            600,
+            600
+          ],
+          "foot": [
+            300,
+            375
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-3.png",
+          "sha256": "108e5559247147ea37fdee2ed371ac517ace4bf76b0d7749e6b58df152e6a4ed",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            672,
+            672
+          ],
+          "foot": [
+            336,
+            420
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-0.png",
+          "sha256": "f810609233adf838f16735ba76ed28c087cbda5de486dbb985c1fe2676781db6",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-1.png",
+          "sha256": "23faf29ab7b8a778cbd19635d38362de85e5790c43900f216f32a818e5aa2e4a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            632,
+            632
+          ],
+          "foot": [
+            316,
+            395
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-2.png",
+          "sha256": "ca1617dd2b45b0aa84f16c512dfcb10942fa7b07e566f8193fa1378e5173230c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            600,
+            600
+          ],
+          "foot": [
+            300,
+            375
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-3.png",
+          "sha256": "108e5559247147ea37fdee2ed371ac517ace4bf76b0d7749e6b58df152e6a4ed",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            672,
+            672
+          ],
+          "foot": [
+            336,
+            420
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-4.png",
+          "sha256": "ee433a6eb47261ad192f680630206f97334264117f98e2dba38f35b9d9a9d255",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1048,
+            1048
+          ],
+          "foot": [
+            524,
+            655
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-5.png",
+          "sha256": "236284f9fc8a909527c16a232d7bc46547fee78a19973028df062edd972cd0ff",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1008,
+            1008
+          ],
+          "foot": [
+            504,
+            630
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-6.png",
+          "sha256": "839ebe7341709a73f3f753f0925c34e0a8b54e474bb9bc4402168bd396009e7e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            976,
+            976
+          ],
+          "foot": [
+            488,
+            610
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-14.png",
+          "sha256": "35454b559fe5842b9b984c990db02c4a14c7a148968e3ea1943454a69c864c6f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            544,
+            544
+          ],
+          "foot": [
+            272,
+            340
+          ],
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-15.png",
+          "sha256": "0e17fe1f46dbc035af0a3aefbc8fa69c253f41c0869ef20f0eca646a73bb9f41",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            688,
+            688
+          ],
+          "foot": [
+            344,
+            430
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-14.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-15.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-7.png",
+          "sha256": "707181590d486d62d8713b46639b20b1da8992b0494d14e3b513951ee343588e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1232,
+            1232
+          ],
+          "foot": [
+            616,
+            770
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-8.png",
+          "sha256": "2afa6665ba4a14fd8de023977186d59c59de01115cc18118247988780086f4eb",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1208,
+            1208
+          ],
+          "foot": [
+            604,
+            755
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-9.png",
+          "sha256": "be0973124e55ad0242d7f3a50059553e755d98fb67899599d1a0e0fcb9972778",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1200,
+            1200
+          ],
+          "foot": [
+            600,
+            750
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROPOSED1200 from sameheading head/core/compactvortex review ofnew4 ownsourcehitposes, not oldsilhouette1424. Perposecentralvortexroot seeds visuallyplausible butactualMain andindependentlandmark reviewpending; nofinalscaleapproval. Onecanvasall4, noPNGpixelassembly orresample.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-14.png",
+          "sha256": "35454b559fe5842b9b984c990db02c4a14c7a148968e3ea1943454a69c864c6f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            544,
+            544
+          ],
+          "foot": [
+            272,
+            340
+          ],
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-15.png",
+          "sha256": "0e17fe1f46dbc035af0a3aefbc8fa69c253f41c0869ef20f0eca646a73bb9f41",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            688,
+            688
+          ],
+          "foot": [
+            344,
+            430
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-7.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-7.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-14.png",
+          "source_rows": [
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-15.png",
+          "source_rows": [
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-10.png",
+          "sha256": "34a52813aa00cd9b9e10c0c98694412aab9208a5fceaf1e5797b606b483c5b3c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1016,
+            1016
+          ],
+          "foot": [
+            508,
+            635
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-11.png",
+          "sha256": "1d7d093b84ec2ea1b6e4cbda29bd648b145251aae566ba8be1a9e2d66a50605d",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1112,
+            1112
+          ],
+          "foot": [
+            556,
+            695
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-12.png",
+          "sha256": "69d1102d4b39e1331f87ae5150a1c9f3fe0b8b335b03c43219b058167a2eee9d",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1056,
+            1056
+          ],
+          "foot": [
+            528,
+            660
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-13.png",
+          "sha256": "cd0e6aa6800d8e1167f55ce1742f0f87bac18893e8dba692ae317a680c743edd",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1136,
+            1136
+          ],
+          "foot": [
+            568,
+            710
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Crown/flame silhouette varies with deformation; head/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible vortex/supportY are provisional metadata; source PNG pixels untouched and no final contact approval. New central-vortex anchor seeds are diagnostic only, every final contact/root must be manually approved.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-10.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-10.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-11.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-11.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 135.05882352941177
+}

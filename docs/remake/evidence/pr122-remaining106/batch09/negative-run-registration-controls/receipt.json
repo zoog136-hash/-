@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "cases": 12,
+  "controls": [
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-anchor-on-foot.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-anchor-on-foot.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-gap-over-limit.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-gap-over-limit.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-ground-margin.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-ground-margin.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/missing-run-contract.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/missing-run-contract.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/walk-speed-labelled-run.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/walk-speed-labelled-run.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/out-of-order-phase.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/out-of-order-phase.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-declared-direction.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-declared-direction.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-horizontal-axis.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-horizontal-axis.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/attempted-production-promotion.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/attempted-production-promotion.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/cropped-source-region.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/cropped-source-region.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/duplicate-body-missing-row.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/duplicate-body-missing-row.refusal.txt"
+    },
+    {
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/wrong-whole-PNG-SHA.json",
+      "returncode": 1,
+      "rejected_before_engine": true,
+      "log": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-whole-PNG-SHA.refusal.txt"
+    }
+  ],
+  "existing_source_guards_relaxed": false,
+  "ground_registration_QA_only": true
+}

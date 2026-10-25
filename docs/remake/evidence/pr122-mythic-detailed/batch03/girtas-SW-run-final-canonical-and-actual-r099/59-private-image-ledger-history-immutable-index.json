@@ -1,0 +1,61 @@
+{
+  "status": "PASS_ALL_HISTORICAL_CERTIFICATE_LEDGER_HASHES_REPRODUCED_EXACTLY",
+  "certificates_unchanged": true,
+  "reason": "The working ledger appends new view events; each earlier certificate digest resolves to this exact immutable historical snapshot.",
+  "entries": [
+    {
+      "certificate": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r097-Wwalk-SErun-actual-independent-quality.json",
+      "certificate_sha256": "601a7a4474b89c86d94131c772316c382e533fa0cbd23fa4a84784b600ec0ed0",
+      "original_mutable_ledger_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "expected_ledger_sha256": "b020468431537b0622d2786252db679ebe12c1843c717a1d0325acd0d6c3915b",
+      "immutable_snapshot_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view02.json",
+      "immutable_snapshot_sha256": "b020468431537b0622d2786252db679ebe12c1843c717a1d0325acd0d6c3915b",
+      "viewed_encoded_bytes": 197270
+    },
+    {
+      "certificate": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r098-NWrun-actual-independent-quality.json",
+      "certificate_sha256": "b08110dddffc3c20021fae825e16643840895ee80e5d70ba0e278f1fc9033abf",
+      "original_mutable_ledger_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "expected_ledger_sha256": "603023e9e2e990c9430eea14b572e462f576a17d11b7dbeb99753cc01ebfcbd8",
+      "immutable_snapshot_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view03.json",
+      "immutable_snapshot_sha256": "603023e9e2e990c9430eea14b572e462f576a17d11b7dbeb99753cc01ebfcbd8",
+      "viewed_encoded_bytes": 296140
+    },
+    {
+      "certificate": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run4-narrow-source-ownership-second-opinion-HOLD.json",
+      "certificate_sha256": "3d5605fadc635969cd85a7994a463b1efa6fe3dc11b7fc44a8d5dae4bf2dcf5e",
+      "original_mutable_ledger_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "expected_ledger_sha256": "6fbd43d71c12339beb1a9c06e39d54ded64a4a33a3efb8f4c7ece1a4a6e5bc71",
+      "immutable_snapshot_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view04.json",
+      "immutable_snapshot_sha256": "6fbd43d71c12339beb1a9c06e39d54ded64a4a33a3efb8f4c7ece1a4a6e5bc71",
+      "viewed_encoded_bytes": 359785
+    },
+    {
+      "certificate": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run4-repaired-nearRIGHT-load-source-ownership-PASS.json",
+      "certificate_sha256": "37650a221e1bf69b1d21eb5527345f8ab48c3d0937cf6db48ee32bad1dedc719",
+      "original_mutable_ledger_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "expected_ledger_sha256": "e53054f67763e82016e3605ae00f75cfadb288718b68796474e6f2cd3b91bc6e",
+      "immutable_snapshot_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view05.json",
+      "immutable_snapshot_sha256": "e53054f67763e82016e3605ae00f75cfadb288718b68796474e6f2cd3b91bc6e",
+      "viewed_encoded_bytes": 421250
+    },
+    {
+      "certificate": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r099-SWrun-actual-independent-quality.json",
+      "certificate_sha256": "2dbaaf77b6613503648ba669fd253d111aefcc58edbf7e84eedca61657d4d849",
+      "original_mutable_ledger_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "expected_ledger_sha256": "8e9e4e26e62bc0f4c8718906ace0bfa09e5f566ec85a0167c8f6470f1c09bce5",
+      "immutable_snapshot_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view06.json",
+      "immutable_snapshot_sha256": "8e9e4e26e62bc0f4c8718906ace0bfa09e5f566ec85a0167c8f6470f1c09bce5",
+      "viewed_encoded_bytes": 518497
+    },
+    {
+      "certificate": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-rigid-Cstage-independent-PASS.json",
+      "certificate_sha256": "98d5a94893dc0cc343c12a14db0f413213d5d31dc204f541fab75f0588719edc",
+      "original_mutable_ledger_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "expected_ledger_sha256": "13cb0cc9aeb2e1a3a274be4964ae479fb92b6a940290c7323296d71f348db663",
+      "immutable_snapshot_path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view07.json",
+      "immutable_snapshot_sha256": "13cb0cc9aeb2e1a3a274be4964ae479fb92b6a940290c7323296d71f348db663",
+      "viewed_encoded_bytes": 623572
+    }
+  ]
+}

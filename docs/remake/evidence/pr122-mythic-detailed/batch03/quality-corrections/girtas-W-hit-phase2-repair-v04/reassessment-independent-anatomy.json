@@ -1,0 +1,49 @@
+{
+  "status": "SOURCE_ART_HOLD_ANATOMICAL_ARM_REMNANT_INDEPENDENTLY_CONFIRMED",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "hit",
+  "source_phase": 2,
+  "version": "v04",
+  "source_visual_status": "HOLD_ANATOMY",
+  "source_proportion_status": "PASS_AT_UNIFORM_DISPLAY0_511",
+  "runtime_layout_status": "HOLD_PENDING_VALID_SOURCE_AND_MULTIRESOLUTION_PROOF",
+  "raw_png": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png",
+  "raw_sha256": "1fd52bd6e54cdceeb27e055173bcf479e3df3d12dfcd3d394d2c40c2c1640b52",
+  "raw_bytes": 698259,
+  "initial_HOLD_path": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/result.json",
+  "initial_HOLD_sha256": "e733cf7de12853198874ccfe69545dacb3537c15d06e56323e5c48349a92cafe",
+  "reassessment_path": "/workspace/scratch/girtas-W-hit-phase2-repair-v04/reassessment.json",
+  "reassessment_sha256": "80c1f9b336f5a72af3b6993a492d74e86418b877992668e252897d339a3c2733",
+  "prior_reports_immutable": true,
+  "reviewer": "/root/next_mythic_movement_prep/w_hit_arm_anatomy_review",
+  "reviewer_context": "Fresh history-free private reviewer; inspected only existing336601bytes JPEGs; no source generation or edits",
+  "confidence": "Moderately high, about85percent",
+  "private_evidence": {
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/normalization-reassessment-comparison.jpg": {
+      "bytes": 224924,
+      "sha256": "354779822bb9315cb0d3d76166aa779291a0c6e75c46fe83afecbaa8b75741a0"
+    },
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/arm-chain-reassessment-detail.jpg": {
+      "bytes": 111677,
+      "sha256": "97398b6b99c4c5dc78bee825954f915043aa7d8913add8004cf5366458fb7c8c"
+    }
+  },
+  "findings": [
+    "Independent reviewer confirms image-right shoulder descends through stacked black/gold upper-arm plates into a pointed dangling remnant beside the hair, approximately detailJPEGx345..390,y105..210 (rawx795..840,y480..585), ending without an elbow/forearm connection.",
+    "Raised empty hand has connected wrist/forearm and elbow near detailx180,y150, but its upper arm enters image-left chest silhouette. A coherent connection to the near anatomical LEFT shoulder cannot be traced. Residual downward upper-arm segment reads as incomplete arm repositioning rather than ordinary shoulder armor.",
+    "Low original weapon hand has a coherent wrist/forearm connection into far torso. There are only two hands after edit, but missing/remnant upper-arm structure still invalidates the full two-chain anatomy.",
+    "Independent reviewer agrees0.511 DISPLAY normalization matches overall body, crown, hair, long weapon and back-spike scale to neighbors1/3, and LEFT heading/camera remain consistent. Raw resolution/canvas difference is not an art-quality defect."
+  ],
+  "conclusion": "Keep source-art anatomy HOLD due concrete residual upper-arm/disconnected raised-arm route, independently of resolution. Do not assemble or approve this single pose. No further generation loop was run.",
+  "new_generation_attempts": 0,
+  "source_PNG_mutations": 0,
+  "repository_mutations": 0,
+  "newly_authored_pose_count": 1,
+  "usable_authored_pose_count": 0,
+  "reused_existing_pose_count": 5,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "reviewed_at": "2026-10-19T11:20:27.436324+00:00"
+}

@@ -1,0 +1,50 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "contact3-lowerbody-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "bounded-genuine-lowerbody-motion-edit",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    3
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a"
+  },
+  "transparent_background": true,
+  "fixed_runtime_canvas": 1776,
+  "target_uppercore_world_interval": [
+    105,
+    111
+  ],
+  "preliminary_support_shortening_native_px": [
+    80,
+    130
+  ],
+  "protected": "ALL source RGBA outside reviewed lowerbody edit mask including skull,crown,face,whitehair,spines,pauldrons,rigidcuirass,arms,hands,weapon. Other five selected source poses untouched. Current farLEFTrecovery to remain exact only if finalprojectedplaneAIRvalid.",
+  "actor_approval": false,
+  "new_approvals": 0,
+  "generation_budget": "Single real motion edit, no repeated identical failed call",
+  "notes": [
+    "Source ownership/heading/identity PASS does not imply new physical or runtime approval",
+    "No rescale/crop/mirror/pad/root compensation; contact3 must remain true nearRIGHTleading heel/forefoot landing distinct from later load4",
+    "Exact target/root and ROI pending independent reviewer and physical author"
+  ],
+  "requested_at": "2026-10-19T17:34:15.951818+00:00",
+  "target_heel_native_xy": [
+    930,
+    1018
+  ],
+  "edit_mask_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/proposed-edit-mask.png",
+  "edit_mask_sha256": "353e947dd42304bb9963e64dcc2d245e6b3de7cf35ddc65dc4f3cdbeae532d34",
+  "pre_generation_roi_review_path": "/workspace/scratch/girtas-final-actual-quality-v04/NE-run-contact3-proposed-repair-ROI-scope-PASS.json",
+  "pre_generation_roi_review_sha256": "8af094915fab7a7aac78302dd3adf6c1e1f4542196063dccafc74154bfec6d14",
+  "farLEFT_projected_clearance": "Fresh independent physical author: unchanged alpha100sole [309,885],[325,939],[327,963], Lfar[-58,-42], conservativeclearance>120canon≈26world incl4native uncertainty; nofarLEFTedit",
+  "prompt": "Precise production sprite EDIT, one single existing animation pose, transparent RGBA background. First reference is the existing full 1254 by 1254 source sprite. Second reference is a binary EDIT PERMISSION MASK, white means only the near/right lower leg region may change; black means immutable original. Return a clean single full sprite on the exact same 1254x1254 canvas and exact original placement, with no annotations, letters, grids, shadows, floor, labels, extra subjects, or resizing. Preserve the original elegant high-detail black and gold armor, coherent metallic filigree and outlines, original ivory hair, crown, pauldrons, back spines, face, cuirass, both arms/hands, sword, far/left recovering leg and flying gold-trimmed robe. Only change the near anatomical RIGHT hip-to-knee-to-shin-to-boot chain inside the WHITE mask. This is a real new physical pose edit, not moving/scaling a cut-out boot or shrinking the skeleton.\n\nThe existing pose is northeast heading in a rear three-quarter camera (+5,-7,5), +Y projects up-right. The near anatomical RIGHT leg is the leading landing leg on image right; the far anatomical LEFT leg stays high bent behind on image left. Keep a recognizable RIGHT-leading HEEL-FIRST initial landing with toe slightly raised and a still recovering LEFT leg, distinctly earlier than deep loaded midstance. The rigid torso and right upper pelvis at the top of the permission mask MUST stay in the original position. Increase the genuine bend/3D foreshortening of the near right thigh/knee and shin so the leading armored boot is about 118 native pixels HIGHER and 25 pixels RIGHT of the old heel, while retaining normal adult leg lengths and articulated joints. Native old heel is approximately (905,1136); intended new heel around (930,1018), tolerance about 18 pixels. Native knee/upper-shin may rotate/flex naturally to connect the unchanged hip to the new landing heel. A connected thigh, knee, shin, ankle and complete boot must be anatomically continuous; boots and greave maintain their original width, armor plate design, gold cuff, pointed armored toe and heel silhouette, with authentic changed lighting/folds as the leg bends. Draw the foreshortened shin and knee properly, do not compress/stretch the boot, amputate any joint, duplicate foot, or add a third leg. Remove ALL old lower-leg/boot remnants where the new bent pose vacates the old white-mask area, leaving proper transparent alpha there. Reconstruct any genuinely exposed black undercloth and gold-edged lower robe folds INSIDE the mask, keep its top connection smooth. Keep far LEFT recovering boot, cloak tails and all upper-body/weapon exact and unchanged. No new weapon pieces, no changed blade/hilt, no extra gems or spikes. Image is a crisp beautiful finished fantasy game sprite with consistent original rendering quality. Outside the white edit permission mask is immutable source; leave unchanged. Do not copy a later loaded stance; this remains a near RIGHT heel landing contact with toe-up roll. No whole-character regeneration, no shifting entire body, no canvas crop, no mirrored pose, no palette change."
+}

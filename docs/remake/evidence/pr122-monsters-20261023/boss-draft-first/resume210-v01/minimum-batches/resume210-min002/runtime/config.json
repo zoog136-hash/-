@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "key": "monster:제로스",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zeros/resume210-min002/NativeMotionProfile.tres",
+      "slug": "zeros_hit",
+      "directions": [
+        "N"
+      ],
+      "roles": [
+        "hit"
+      ],
+      "move_speed": 64.0,
+      "attack_seconds": 1.34,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:그림 리퍼",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/resume210-min002/NativeMotionProfile.tres",
+      "slug": "grim_reaper_hit",
+      "directions": [
+        "E"
+      ],
+      "roles": [
+        "hit"
+      ],
+      "move_speed": 72.0,
+      "attack_seconds": 1.41,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    }
+  ],
+  "output": "/workspace/runtime/resume210-min002",
+  "capture": true
+}

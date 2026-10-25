@@ -1,0 +1,207 @@
+{
+  "schema": "PR122-independent-final-exact-request-source-cycle-review-v1",
+  "status": "PASS_EXACT_SE_DEATH_SOURCE_REQUEST_BINDING_PENDING_MATCHING_RUNTIME_ADOPTION",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "SE",
+  "role": "death",
+  "version": "SEdeathSixActualRig01",
+  "request_sha256": "1b19b34c7570b77333647b79fac4b30b395c5e77c8b2d68eee4e09492cd05b2b",
+  "request_path": "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/request-SEdeathSixActualRig01.json",
+  "raw_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+  "raw_bytes": 6728269,
+  "raw_path": "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/thunder_female-SE-death-six-actual-poses-r001.png",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/own-SE-DEATH-six-actual-native-source-contract-v08.json",
+    "sha256": "a5ca0a93aa964ad161e1432a32a79397cdeaf00e3a59f4daf1558fdba00d62a8",
+    "bytes": 181908
+  },
+  "actual_source_cycle_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEdeath-v08-a5ca0a-independent-final-actual-source-held-cycle-PASS-v01.json",
+    "sha256": "905c497089be67b3ff8724997b63b152f52f2b53250d624f79c7cb7b3c240262",
+    "bytes": 14850
+  },
+  "exact_source_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEdeathSixActualRig01-independent-exact-source-shipping-storage-binding-v01.json",
+    "sha256": "be837825445c663aa8c4d3cf29aee93f8fa15a2007718fda0b1633dce1b22054",
+    "bytes": 13348
+  },
+  "canonical_declared_descriptor": {
+    "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+    "direction": "SE",
+    "canonical_canvas": 2048,
+    "physical_canvases": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "root_float": [
+      723.7916666666666,
+      1067.2150113422247
+    ],
+    "root_integer": [
+      724,
+      1067
+    ],
+    "tile_size": 2304,
+    "storage_translations": [
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ]
+    ],
+    "atlas_origins": [
+      [
+        0,
+        0
+      ],
+      [
+        2304,
+        0
+      ],
+      [
+        0,
+        2304
+      ],
+      [
+        2304,
+        2304
+      ],
+      [
+        0,
+        4608
+      ],
+      [
+        2304,
+        4608
+      ]
+    ],
+    "source_anchors": [
+      [
+        980,
+        1323
+      ],
+      [
+        3284,
+        1323
+      ],
+      [
+        980,
+        3627
+      ],
+      [
+        3284,
+        3627
+      ],
+      [
+        980,
+        5931
+      ],
+      [
+        3284,
+        5931
+      ]
+    ]
+  },
+  "canonical_declared_descriptor_sha256": "a057dfb91cb45c39e15f2548250be55e024649db41f62cedb3f35cb827703292",
+  "isolated_builder_provenance": {
+    "path": "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/isolated-three-copy-preload-provenance-v01.json",
+    "sha256": "e9e46eace4ea1d6b90003f668b1c4f32545330656f084174683f4918a38ad15b",
+    "bytes": 1324
+  },
+  "required_matching_module_copies": {
+    "pr122_reviewed_runtime_layout": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/pr122_reviewed_runtime_layout.py",
+      "sha256": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2"
+    },
+    "stage_pr122_native_locomotion": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/stage_pr122_native_locomotion.py",
+      "sha256": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701"
+    },
+    "advance_pr122_native_locomotion": {
+      "path": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02/advance_pr122_native_locomotion.py",
+      "sha256": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e"
+    }
+  },
+  "required_runtime_adoption": [
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval."
+  ],
+  "runtime_adoption_approved": false,
+  "runtime_tests_run": 0,
+  "proposal_pipeline_executed_by_this_audit": false,
+  "physical_canvas": 2816,
+  "common_unpadded_root": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "original_reviewed_storage": [
+    256,
+    256
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "uniform_extra_shipping_translation": [
+    0,
+    0
+  ],
+  "uniform_integer_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "loop": false,
+  "cycle_seconds": null,
+  "runtime_cycle_seconds": 0.8,
+  "resource_role_seconds": 0.65,
+  "phase_seconds": 0.13333333333333333,
+  "intended_contact_frame": null,
+  "held_dead_terminal": true,
+  "visual_findings": [
+    "The first actual own-SE six-source death reads staggered loss of balance, buckled legs, knees yielding, diagonal torso collapse, grounded impact and a held face-up supine terminal. The distinct head/torso/pelvis/arm/leg poses form an irreversible fall rather than a rotated whole still or a repeated reaction.",
+    "Original own-SE identity, hair bun and complete blue ribbons, white-gold skirt, blue-gold bodice and complete directional black-gold boots remain recognizable. Native phase0/2/5 knee and ankle material reads as continuous folded leather; both upper/cuff/forearm joins remain attached and complete.",
+    "The complete original RIGHT foregrip and both weapon ends remain one rigid properSO3 material surface through collapse and rest. Hands and costume are retained, weapon ends remain visible and unclipped, and the original cape/coattails follow a connected pelvis-rooted delayed drape into the floor pose.",
+    "The original proximal skin seam was traced to insufficient parent/child source overlap and to 8bit bicubic premultiplied-channel clamp ringing at an actual alpha0 source boundary. Finalv08 preserves six-native original skin overlap, blends the child only after that source cut, and evaluates parent edge color in float before final unpremultiplication/clamp. The final after-only phase0/5 native skin inspection shows continuous original skin with the former dark/white jagged trace removed.",
+    "The actual original thigh and pelvis donor RGBA is exact wherever painted. All six final parent edge rasters independently match the float sampler and retain their prior alpha; all102 other v07 rasters are unchanged. From v05,84 source/raster surfaces remain identical and only24 proximal/pelvis/latest original shaft-edge surfaces changed. Every final108-part depth-ordered composition reproduces the final sixPNG RGBA exactly.",
+    "The declared same-source model independently satisfies fixed318.725 limb segments, proper body/head/arm rotations, fullRIGHTforegrip-pole Gram preservation, source/raster texel-quad floor guards and a held supine terminal. Minimum guarded painted height is approximately1native. The unchanged runtime death duration is .8seconds across six equal phases; the resource role_seconds .65 remains a separate literal."
+  ],
+  "visual_limitations": [
+    "This approves this exact six-source appearance, visible death progression, native joins, complete equipment and held terminal. It does not grant full actor approval, game-test evidence or final request binding.",
+    "The model is one explicit compatible authored native capture and material/depth solution. Hidden3D anatomy and body depth are not uniquely measured; flexible transverse clothing uses the fixed minimum-norm camera-plane rule rather than a perpendicular anatomical muscle section.",
+    "At the terminal, the visible face-up front material plane is at Z60 and an explicitly declared unseen back thickness60 supplies support at Z0. This finite support assumption does not become image-measured hidden anatomy.",
+    "The first actual six-source board and one native0/2/5 joint board were viewed once. Only the final after-only phase0/5 skin crop was viewed for the repair; no repeated whole-six view or new source service was used by this review.",
+    "The source/bodyunit/root and original2304 storage remain fixed. Later transparent transport, runtime adoption and unchanged legacy/scoped game checks require their own exact request receipt and parent validation. No image rescaling, per-pose root/C fitting or quality-threshold relaxation is covered.",
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval.",
+    "Final packing uses one identical integer shipping translation for all6, exact reverseRGBA reconstruction, transparent padding only, and one common integer root quantization. Every original native world-space point is unchanged. No new source/image view or physical/body/profile fit was introduced."
+  ],
+  "images_forwarded": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

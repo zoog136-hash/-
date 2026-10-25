@@ -1,0 +1,24 @@
+{
+  "schema": "single-new-run-pose-request-v1",
+  "status": "READY_ROOT_START_SERVICE_AND_INDEPENDENT_FINITE_V02_PASS",
+  "target": "transform:413 NW run_5 phase0 LEFT contact",
+  "independent_finite_proof": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NW-run-v02-independent-finite-guide-proof.json",
+  "finite_proof_sha256": "b158f403a334e15975e64775ada1d55d8f6fc797d7420f2b83704e7d8e225f1c",
+  "prompt": "Create ONE new high-detail Mythic RPG sprite: female thunder goddess RUN phase0 LEFT heel contact, literal NW REAR THREE QUARTER, moving upper-left and AWAY from camera. This is a production single pose, not a sprite sheet. The primary guide controls the exact pose, size, rear camera and correct anatomical hand. BLUE guide arm is the anatomical RIGHT FAR arm: trace its upper-right/back shoulder to blue elbow to blue wrist gripping the staff on SCREEN RIGHT. MAGENTA arm is anatomical LEFT NEAR and FREE, on screen left. All guide colors and labels disappear in finished art.\n\nOutput a transparent1024x1024 canvas. Draw only ONE sprite at EXACTLY native512pixel density in the central512x512 region [256,256,768,768]; leave everything outside that region alpha0. The guide's central native512tile already has correct physical scale: whole alpha silhouette about458pixels high, target440–464pixels, every tip12pixels within the tile. Match that whole body/head/staff size; never fill the whole1024canvas and never shrink to232pixels. We will EXTRACT the central512tile without resampling. Preserve rich tiny native detail.\n\nUse primary reference1 for all joint geometry, run contact, correct RIGHT hand, and NW rear topology. One athletic LEFT heel contacts forward; LEFT near support knee is moderately flexed with readable thigh/shin/boot; RIGHT far leg is folded and lifted in rear recovery. Forward run lean, not upright idle or flat walking double support. Keep correct thigh/shin proportions and black pointed-heel thigh boots. The LEFT arm counter-swings behind, completely free of equipment. The RIGHT upper-right/far shoulder connects to the right elbow/wrist and the only staff. Do not swap these arms and do not move staff to screenleft. Staff remains upright at SCREEN RIGHT, its far right-side grip visible and anatomically connected. A true NW rear camera can coexist with a vertical screenright staff.\n\nReference2 contains only the same actor's newly authored REAR BUN / RIBBON / BACK BLUE-GOLD FABRIC. Its full source is HOLD and it supplies NO ARMS OR WEAPON OR WALK POSE. Preserve blond high bun, gold curls, blue ribbon, royal-blue gold-trim backbodice/scapular back, white pleated miniskirt seen from behind, long blue/gold patterned split backcoat. Show actual back surfaces and back of head; no front chest/cleavage plane, no W side/profile torso, no face turned towards viewer. Keep the same actor, adult female proportions and exact blue/gold/white palette.\n\nReference3 is a limited N identity crop for RIGHT grip/arm clothing and gold details ONLY. Reference4 supplies the exact invariant double-ended gold staff and turquoise gems ONLY. These N crops cannot override the primary NW pose or direction. Preserve one long thin gold shaft with ornate upper gold head and turquoise diamond, and lower turquoise gem plus gold point. The same right hand grips the same staff; do not invent a second weapon, left-hand staff, detached hand, bent shaft or spare ornament. Keep all staff ends fully inside native512tile, minimum12pixels from its edges. Use rich gold filigree, stable turquoise gem and original textile details rather than a generic spear.\n\nCrisp cutout sprite with fully opaque body and dark-clothing interiors, alpha0 outside exact silhouette, 1–2pixel edge antialiasing. Rich native Mythic craftsmanship: individual blonde curls, blue ribbon, engraved gold trim, repeated blue/gold coat pattern, sharply pleated skirt, black thigh boots and small gold pointed heels. NO floor, cast shadow, contact shadow, aura, haze, bloom, lightning trail, background, labels, numbers, grids, arrows, guide skeleton, palette swatches, annotations, detached particles or extra figures. Exactly ONE newly drawn NW RUN LEFT-CONTACT sprite in the native central512tile.",
+  "referenced_image_paths": [
+    "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-run-contact0-right-far-guide-padded1024-v01.png",
+    "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-rear-body-only-reference-v02.png",
+    "/workspace/scratch/mythic413-N-walk-author-20261020-r001/N-phase0-R-grip-identity-crop.png",
+    "/workspace/scratch/mythic413-N-walk-author-20261020-r001/N-phase0-R-staff-appearance-crop.png"
+  ],
+  "transparent_background": true,
+  "output_native_region": [
+    256,
+    256,
+    768,
+    768
+  ],
+  "no_resample": true,
+  "whole_source_or_motion_approval": false,
+  "service_attempts": 0
+}

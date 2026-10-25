@@ -1,0 +1,33 @@
+{
+  "key": "transform_267",
+  "name": "Girtas",
+  "direction": "E",
+  "role": "walk",
+  "version": "v08RIGHTcontact3",
+  "source_pose": 3,
+  "requested_poses": 1,
+  "expected_poses": 1,
+  "newly_authored_poses": 1,
+  "source_batch": "batch03",
+  "status": "AUTHORING_DISTINCT_MISSING_RIGHT_CONTACT_KEY_NOT_ACTOR_COMPLETION",
+  "references": [
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase3.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase3.png": "c66b708fe798e705ee14cf720fc47f289625282cd4b0849ea722dbfa76166c9e",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png": "d6650ea48f1b708be9f5fd0815fbd9907d8d31c02368bb4a48e1aed6cc2d2f13"
+  },
+  "transparent_background": true,
+  "corrective_reason": "v07 full6 proximal leg crossing hidden under robe, independent opposite support HOLD. New SINGLE nearRIGHT leading key must expose actual waist→upperthigh→knee in natural slit; not repeating full6.",
+  "preserve_hold_source": {
+    "folder": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07",
+    "raw_sha256": "21b42748c0104aaed2d020fd81a966e070e0733bcd5ce77a14f270663219487d"
+  },
+  "prompt": "Create ONE complete high-detail production animation key for Girtas the same unique boss. Transparent background. Single full character only, no labels, no guides, no scene, generous empty margins. This is an actual E-facing WALK RIGHT HEEL CONTACT key3, not a display idle.\nImage1 is the PRIMARY exact physical pose and near/far authority. Dress this solid three-dimensional mannequin in the Girtas identity from images2-4. Orange leg = ANATOMICAL RIGHT, NEAR to the viewer, currently FORWARD to imageRIGHT. Blue leg = anatomical LEFT, FAR, currently BACK to imageLEFT. Final art black/gold armor, never orange/blue. Crucial visible proof: show the right NEAR hip plate beside the weapon-side waist, continuous diagonal armored RIGHT UPPER THIGH sweeping FORWARD over/in front of the robe edge to the forward RIGHT KNEE, then shin and leading boot. This actual upper-thigh-to-knee connection must remain visible through the natural longrobe side slit: lift/separate that near robe panel naturally around the advancing thigh. Do not hide the proximal right thigh behind a closed central robe panel. FAR LEFT thigh must clearly pass BEHIND the hanging robe panels to the REAR left boot. Exactly TWO legs, no extra knee or extra sole. Right boot ahead/imageRIGHT with HEEL touching ground and toe slightly UP; left rear boot behind/imageLEFT touches TOE with heel raised. Both support contacts on one projected ground plane, NEAR right heel on LOWER foreground lane, FAR left toe on higher rear lane. No running flight. The whole pose must obey the primary leg geometry and depth, not mirror it.\nImage2 is ONLY the exact identity of the upper body, deliberately no old legs to copy: pale skin, long pale gray hair, pointed profile facing RIGHT, THIN HARD straight gold radial crown spines, black-and-gold armor and long robe. Image3 is only robe black cloth/gold trim texture: keep the same long flowing ankle-length robe and long gold-trim panels, naturally part the near side slit to show the actual advancing thigh; do not shorten the robe or replace it with trousers. Image4 is only the exact long sinuous gold-edged weapon. Keep anatomical RIGHT NEAR weapon arm continuously gripping that original long dark/gold wavy blade low/back to imageLEFT; LEFT FAR arm stays empty and naturally balances. Exactly two connected arms, two connected legs, same model and equipment. Fixed pure E side camera as mannequin, face/nose RIGHT, not SE. Preserve the recognisable original Girtas high quality. Full blade/hair/thin rays and every foot complete inside canvas. One character, one pose.",
+  "quality_gate": "All joints and actual anatomical right near forward ownership visible; merely different sole Y is insufficient. Single source cannot complete clip/actor."
+}

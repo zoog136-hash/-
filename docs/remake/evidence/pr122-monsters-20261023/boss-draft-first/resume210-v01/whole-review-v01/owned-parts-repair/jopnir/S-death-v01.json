@@ -1,0 +1,247 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/jopnir/raw/S-death-v01.png",
+  "source_sha256": "8b53e32c12a8db659120f6584a89ac23c6a1296de93ecc54c41814b71dc7007d",
+  "texture": "assets/actors/eight_direction/boss_draft_first/jopnir/owned_parts_v01/S-death-v01.png",
+  "texture_sha256": "71fb065b90523df8cbd7ccc79da4b22d4e36ca4d2544b26f7a8d519317f59f47",
+  "geometry": {
+    "image_size": [
+      1872,
+      1248
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "S",
+        "region": [
+          3,
+          3,
+          576,
+          575
+        ],
+        "margin": [
+          416,
+          339,
+          768,
+          769
+        ],
+        "source_anchor": [
+          259,
+          504
+        ],
+        "rgba_sha256": "723b9f3396c96a9ea9cd850f231701ab5ed8a54fa2a03ad55713992c4307ba85",
+        "original_source_region": [
+          0,
+          9,
+          576,
+          575
+        ],
+        "original_source_anchor": [
+          256,
+          510
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "S",
+        "region": [
+          627,
+          3,
+          612,
+          599
+        ],
+        "margin": [
+          404,
+          359,
+          732,
+          745
+        ],
+        "source_anchor": [
+          895,
+          484
+        ],
+        "rgba_sha256": "1b5aecba06af0f89e476ff15573e04309a6e20a0b1299b6255f7f05634f887a6",
+        "original_source_region": [
+          500,
+          19,
+          612,
+          599
+        ],
+        "original_source_anchor": [
+          768,
+          500
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "S",
+        "region": [
+          1251,
+          3,
+          524,
+          607
+        ],
+        "margin": [
+          401,
+          346,
+          820,
+          737
+        ],
+        "source_anchor": [
+          1522,
+          497
+        ],
+        "rgba_sha256": "7a5f7302f905358e13808a3f5c6569d988a39d4321a21383d50d095d8e04941f",
+        "original_source_region": [
+          1009,
+          23,
+          524,
+          607
+        ],
+        "original_source_anchor": [
+          1280,
+          517
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "S",
+        "region": [
+          3,
+          627,
+          574,
+          433
+        ],
+        "margin": [
+          416,
+          447,
+          770,
+          911
+        ],
+        "source_anchor": [
+          259,
+          1020
+        ],
+        "rgba_sha256": "8cf5753c6d14e0927c48b5cb68bd610df126944d2903f9828044fcc48ad0dbe5",
+        "original_source_region": [
+          0,
+          561,
+          574,
+          433
+        ],
+        "original_source_anchor": [
+          256,
+          954
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "S",
+        "region": [
+          627,
+          627,
+          527,
+          433
+        ],
+        "margin": [
+          431,
+          489,
+          817,
+          911
+        ],
+        "source_anchor": [
+          868,
+          978
+        ],
+        "rgba_sha256": "aa9685cea1bd2646ab1aeb3034fe34030b92d89634844e6bac52546b531ab158",
+        "original_source_region": [
+          527,
+          591,
+          527,
+          433
+        ],
+        "original_source_anchor": [
+          768,
+          942
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "S",
+        "region": [
+          1251,
+          627,
+          575,
+          439
+        ],
+        "margin": [
+          347,
+          438,
+          769,
+          905
+        ],
+        "source_anchor": [
+          1576,
+          1029
+        ],
+        "rgba_sha256": "e852650b32565959c5f7fa55b47f221feeb327cb1c9f8e84902519802bc228ba",
+        "original_source_region": [
+          955,
+          585,
+          575,
+          439
+        ],
+        "original_source_anchor": [
+          1280,
+          987
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 504.0,
+    "canvas_size": [
+      1344,
+      1344
+    ],
+    "foot": [
+      672,
+      840
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 706022,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "62bb27a75898843c6dba1941a2a3fc33913c61673898767a5382220463f9d97f",
+    "foreground_owner_sha256": "8e4f1da9b792208dc008f14a8f1e5ce8cc5070e7616474d40d6a2512f9995463",
+    "detached_pixels": 1,
+    "detached_fragments": [
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          816,
+          437,
+          817,
+          438
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 237.53947040439405,
+        "owner_margin_min": 234.53947040439405
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 133378,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:욥니르",
+  "slug": "jopnir",
+  "clip": "S-death-v01",
+  "role": "death",
+  "direction": "S",
+  "original_cause": "foreign_body_rectangle"
+}

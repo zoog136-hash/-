@@ -1,0 +1,292 @@
+{
+  "schema": "PR122-independent-actual-own-E-death-source-cycle-review-v1",
+  "status": "PASS_EXACT_OWN_E_DEATH_SIX_SOURCE_AND_HELD_SUPINE_TERMINAL",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "E",
+  "role": "death",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/own-E-DEATH-six-actual-native-source-contract-v04.json",
+    "sha256": "18b832df83293eb8408650181a78d4bd5f37529666156b47a8c87d8615eaff7f",
+    "bytes": 163100
+  },
+  "all_six_independent_binding": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/E-DEATH-phase0-actual-native-v04.png",
+        "sha256": "5c4fe2f9f28c41898ede768a3003783377d90660899907510c5e6a3f5c03a19f",
+        "bytes": 1032476
+      },
+      "full_RGBA_recomposition_mismatch": 0,
+      "changed_RGBA_pixels": 507,
+      "outside_existing_surface_overlap_RGBA_changes": 0,
+      "actor_alpha_changes": 0,
+      "selections": [
+        {
+          "side": "R",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase0-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "76f0876997c16f53fe4e978b8a6c1eede95d9e12ec65e1c852d6cedf347860a0",
+            "bytes": 853091
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 685,
+          "changed_pair_pixels": 639
+        },
+        {
+          "side": "L",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase0-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "7c9fc9d23fda8a77a2eaaf8cd6c2609c733dbe7db8ab0d5e4b56554ca2d603da",
+            "bytes": 736691
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 259,
+          "changed_pair_pixels": 250
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/E-DEATH-phase1-actual-native-v04.png",
+        "sha256": "b20f73a007ea5f60a528575a345c08e5599c7f4a44c0ab5403107fd2ba28e551",
+        "bytes": 1100499
+      },
+      "full_RGBA_recomposition_mismatch": 0,
+      "changed_RGBA_pixels": 3276,
+      "outside_existing_surface_overlap_RGBA_changes": 0,
+      "actor_alpha_changes": 0,
+      "selections": [
+        {
+          "side": "R",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase1-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "243bf2b4e7c3ed4ec27ac61e3b5854accc40933d50ea40ec7300c9a21cc40cb2",
+            "bytes": 546147
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 3295,
+          "changed_pair_pixels": 3238
+        },
+        {
+          "side": "L",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase1-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "337aa18e588cf3f2039be87bf1751cc0bf083994cb50549a01d41670f0ba69d7",
+            "bytes": 744967
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 956,
+          "changed_pair_pixels": 939
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/E-DEATH-phase2-actual-native-v04.png",
+        "sha256": "6a3cf1f36f7483ef1b8fe5170a5a290b815668798f8ef9d212f4864433e6da8b",
+        "bytes": 1089921
+      },
+      "full_RGBA_recomposition_mismatch": 0,
+      "changed_RGBA_pixels": 6570,
+      "outside_existing_surface_overlap_RGBA_changes": 0,
+      "actor_alpha_changes": 0,
+      "selections": [
+        {
+          "side": "R",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase2-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "975faddf7956c3938318150a9bbe0057a46f20a6ce8c1a9f094d8cb00dc92226",
+            "bytes": 116609
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 1658,
+          "changed_pair_pixels": 1645
+        },
+        {
+          "side": "L",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase2-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "435fbef8329dbd05dc13e2b510d301a9cfb2cc0a510f1823f6f95aa2b67c7ac1",
+            "bytes": 390565
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 5265,
+          "changed_pair_pixels": 5178
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/E-DEATH-phase3-actual-native-v04.png",
+        "sha256": "e1eb393a091fc128a17f46db3d80a6f1882aab0bfecbf2b12176595994c00f80",
+        "bytes": 1203119
+      },
+      "full_RGBA_recomposition_mismatch": 0,
+      "changed_RGBA_pixels": 0,
+      "outside_existing_surface_overlap_RGBA_changes": 0,
+      "actor_alpha_changes": 0,
+      "selections": [
+        {
+          "side": "R",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase3-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "e01e0dbcab63501dd216c92b1be3c0e13a729d4170f75bb10082b29846a8e674",
+            "bytes": 703434
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 0,
+          "changed_pair_pixels": 0
+        },
+        {
+          "side": "L",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase3-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "66486fcbd309e8e6d404ed78561e8567e0da14e0fb446fd708cff83c8b644924",
+            "bytes": 743441
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 0,
+          "changed_pair_pixels": 0
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/E-DEATH-phase4-actual-native-v04.png",
+        "sha256": "2ce1547cfc645952d3a9b4c61c8dedc335e3351b9ccc87313ec41b52aed25eaf",
+        "bytes": 1124994
+      },
+      "full_RGBA_recomposition_mismatch": 0,
+      "changed_RGBA_pixels": 0,
+      "outside_existing_surface_overlap_RGBA_changes": 0,
+      "actor_alpha_changes": 0,
+      "selections": [
+        {
+          "side": "R",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase4-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "f0d163a1b9703dbb2137fea7bb7625667554688b17cc7a686043a9b2c0b3b978",
+            "bytes": 894381
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 0,
+          "changed_pair_pixels": 0
+        },
+        {
+          "side": "L",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase4-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "3cf89ab8f8dfb717d6530f49748dd9a97cb8cfa06f0f0c28c446bff91a4ed50a",
+            "bytes": 616633
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 0,
+          "changed_pair_pixels": 0
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/E-DEATH-phase5-actual-native-v04.png",
+        "sha256": "1ac338715baaac01204be22f7659dfaa28a36292feb39cc93eed42246e732a93",
+        "bytes": 1145759
+      },
+      "full_RGBA_recomposition_mismatch": 0,
+      "changed_RGBA_pixels": 0,
+      "outside_existing_surface_overlap_RGBA_changes": 0,
+      "actor_alpha_changes": 0,
+      "selections": [
+        {
+          "side": "R",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase5-R-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "ecc1a03cc200c750489c9958e976441a496e52841cac60f17564e851d239455a",
+            "bytes": 968296
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 0,
+          "changed_pair_pixels": 0
+        },
+        {
+          "side": "L",
+          "selection": {
+            "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v04/phase5-L-exact-thigh-calf-camera-ray-depth-selection-v04.npz",
+            "sha256": "e93e96c791c80536ae428ad0c5de0d0ff23787bf3692672458c6cc6dcbb62ef5",
+            "bytes": 795026
+          },
+          "independent_float64_depth_to_stored_float32_mismatch": 0,
+          "actual_overlap_and_foreground_mask_mismatch": 0,
+          "nearer_thigh_pixels": 0,
+          "changed_pair_pixels": 0
+        }
+      ]
+    }
+  ],
+  "C_fixed": 2816,
+  "bodyunit_fixed": 2.75,
+  "common_rig_root": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "source_canvas": [
+    2304,
+    2304
+  ],
+  "loop": false,
+  "runtime_cycle_seconds": 0.8,
+  "resource_role_seconds": 0.65,
+  "phase_seconds": 0.13333333333333333,
+  "held_dead_terminal": true,
+  "visual_findings": [
+    "The dedicated ownE six-source sequence shows loss of balance, leg compression, knees catching the fall, torso collapse, ground settling, then a held face-up terminal. The direction, head/bun/blue ribbons, white skirt, blue/gold cloth and character body unit remain consistent.",
+    "Native actual knee/ankle0/2/5 and RIGHTelbow2/5 checks show original directional black/gold leather folds and complete curved white/gold cuff material with natural connected joints. Both complete original boots and the entire RIGHT hand/grip/double-ended staff remain complete and unclipped.",
+    "The held supine terminal visibly remains collapsed; it does not recover or loop toward the living guard. The torso/head visible-front plane settles above its declared finite back support hull; runtime death .8seconds and unchanged resource .65seconds are recorded separately.",
+    "The v03 calf lip crossing the exposed phase2 thigh was held. Finalv04 preserves all108 original source/raster materials, fixed bones and surface/floor parameters, and resolves only existing thigh/calf self-occlusion by their true declared ray depth. The corrected actual phase2 native region now has a natural uninterrupted thigh/boot rim; other changed0/1 overlaps follow the same independently checked selection.",
+    "All108 actual editable rasters and the12 recomputed overlap maps reproduce the final six PNGs exactly. Every original source and selected actual raster texel quad retains the prior finite floor bound, min guarded Z1; fixed318.725 femur/tibia lengths and wholeRIGHTforegrip/pole source Gram remain exact."
+  ],
+  "visual_limitations": [
+    "This approves the exact visible six-source fall/joints/held-terminal scope, not full actor approval, game tests or production binding.",
+    "Source3D material capture, minimum-norm camera-plane transverse vectors and the terminal60native unseen-back support thickness are explicit compatible authored choices, not uniquely recovered hidden anatomy or a perpendicular anatomical muscle section.",
+    "The actual v03 whole-six and necessary0/2/5 joints were viewed once; only the corrected phase2 overlap was viewed again. Final0/1 changes are confined to original overlapping near/far material with actor alpha, source rasters, pose and floor unchanged.",
+    "No source bitmap resizing, wholeactor mirror, root/C/alpha-height fit, threshold relaxation, new image service or material deletion was used for this correction."
+  ],
+  "exact_numeric_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Edeath-v04-independent-exact108-unchanged-floor-and-actual-ray-depth-self-occlusion-binding-v01.json",
+    "sha256": "758e7169e5d8b6d717e9b3f27ba2ab63e27e1985f08d9ab9862ea2c8b17bc85f",
+    "bytes": 11988
+  },
+  "historical_actual_HOLD": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/Edeath-v03-569442-independent-actual-RIGHT-calf-thigh-self-occlusion-HOLD-v01.json",
+    "sha256": "bd15b04aeaf35f0d8f9f464f508f5d6bc08690dd9b685371f1ce78807dda4197",
+    "bytes": 2899
+  },
+  "immutable_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-Edeath-final-occlusion-view95-frozen.json",
+    "sha256": "c77c51b774f13620b61bac4ad281d7a4118cf30c57af639727f0451dfa111e31",
+    "bytes": 47248
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

@@ -1,0 +1,172 @@
+{
+  "status": "CONFIRMED_NEW_SOURCE_CAMERA_HOLD_REOPEN_PRIOR_PASS_HISTORY_PRESERVED",
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "idle",
+  "scope": "CURRENT_SELECTED_SOURCE_PHASE0_CAMERA_CONFIRMED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+  "source_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+  "phase": 0,
+  "actual_frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r083/SpriteFrames.tres",
+  "actual_frames_sha256": "ca84f940496719b327a02232f8e50680dfd66c030febba4edd3c6d7ae6fe8d16",
+  "comparison_records": [
+    {
+      "direction": "N",
+      "role": "idle",
+      "phase": 0,
+      "animation": "idle_6",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-idle-v02.png",
+      "source_sha256": "eb46f0123a45c58e2988c572ad561cd427df8e63e0850d0fe163c6f0947203f6",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r057/N-idle.png",
+      "texture_sha256": "eb46f0123a45c58e2988c572ad561cd427df8e63e0850d0fe163c6f0947203f6",
+      "compiled_frame0": {
+        "row": 0,
+        "direction": "N",
+        "region": [
+          43,
+          10,
+          468,
+          481
+        ],
+        "margin": [
+          299,
+          163,
+          556,
+          543
+        ],
+        "source_anchor": [
+          256,
+          487
+        ],
+        "rgba_sha256": "204c0254b0018d84e1ec2fc181bde7641e7f2e5f9d4e956478461fea3b31460e"
+      }
+    },
+    {
+      "direction": "NW",
+      "role": "idle",
+      "phase": 0,
+      "animation": "idle_5",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+      "source_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r063/NW-idle.png",
+      "texture_sha256": "4a140dd2e1fe703ddb71e174db89db8fe7a1bd4288569c4fd334d07be59ed666",
+      "compiled_frame0": {
+        "row": 0,
+        "direction": "NW",
+        "region": [
+          23,
+          9,
+          495,
+          485
+        ],
+        "margin": [
+          279,
+          159,
+          529,
+          539
+        ],
+        "source_anchor": [
+          256,
+          490
+        ],
+        "rgba_sha256": "391b851a8302f40740ceeb8bbe0e4426c60b28e0a679efbc014bd9648119ad71"
+      }
+    },
+    {
+      "direction": "NW",
+      "role": "attack",
+      "phase": 0,
+      "animation": "attack_5",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+      "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r083/NW-attack.png",
+      "texture_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+      "compiled_frame0": {
+        "row": 0,
+        "direction": "NW",
+        "region": [
+          168,
+          196,
+          944,
+          887
+        ],
+        "margin": [
+          424,
+          216,
+          752,
+          809
+        ],
+        "source_anchor": [
+          592,
+          1040
+        ],
+        "rgba_sha256": "ced6870d0c27f18201bbadda41e1e37fc1677791484eef1127114d04b6b8b87b",
+        "canvas_size": [
+          1696,
+          1696
+        ],
+        "foot": [
+          848,
+          1060
+        ]
+      }
+    },
+    {
+      "direction": "W",
+      "role": "idle",
+      "phase": 0,
+      "animation": "idle_4",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png",
+      "source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r070/W-idle.png",
+      "texture_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+      "compiled_frame0": {
+        "row": 0,
+        "direction": "W",
+        "region": [
+          17,
+          12,
+          492,
+          472
+        ],
+        "margin": [
+          205,
+          172,
+          532,
+          552
+        ],
+        "source_anchor": [
+          324,
+          480
+        ],
+        "rgba_sha256": "2ab93ec9f60efba89aee09f6a1bc76e53fd5d467507749bb9f2f97c7f63e17e9"
+      }
+    }
+  ],
+  "visual_findings": [
+    "Actual compiled Nidle0 and NWidle0 both show essentially same pure axial BACK camera: centered vertical crown/back-hair/spinal line, both pauldrons near symmetric, left/right boots spreading around centered rear pelvis. NWidle0 does not show required upper-left/rear-left torso/hip/head plane. This is visibly source orientation, not a track alias or scale issue.",
+    "Actual NWattack0 and5 show faithful rear-LEFT/NW three-quarter: near/imageLEFT pauldron/arm visibly larger/lower-left, farRIGHT weapon shoulder behind hair, closed helmet left-away/back profile, diagonal hips/feet. Widle0 separately shows left side profile and confirms heading progression.",
+    "Therefore entering currentNWidle0→correctNWattack0 and recovery5→currentNWidle changes camera toward N/pureback. Earlier source/geometry/privatePASS must remain in history but current selected NWidle source needs a NEW evidence-pinned camera HOLD. This source defect cannot be fixed by canvas/anchor metadata or mirror/rotation.",
+    "NWattack all6 itself retains correct NW camera and two-arm/blade ownership, so this new HOLD concerns the current NWidle source and resulting idle-entry/return transition, not a fabricated retraction of valid NWattack art/layout."
+  ],
+  "private_evidence_files": [
+    {
+      "path": "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/actual-N-NW-W-direction-entry-comparison.jpg",
+      "sha256": "de19f49724fb66950fdaf95c9880165380d27f83ad7edda10b8541cfaa4c9be3",
+      "bytes": 110249
+    },
+    {
+      "path": "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/actual-r083-NW-idle-and-all6-attack.jpg",
+      "sha256": "84d2d4720c2e3faa735a16d58060cb7a1be291d8b8204866f9753dc54117bcb1",
+      "bytes": 144702
+    },
+    {
+      "path": "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/actual-r083-NW-head-shoulder-hip-details.jpg",
+      "sha256": "746096387aed143cbd1b9df061c8d3a530a500f83bd56bc3db4182063258fec0",
+      "bytes": 236412
+    }
+  ],
+  "no_actor_approval": true,
+  "no_prior_pass_deleted": true,
+  "created_at": "2026-10-19T13:46:27.428141+00:00"
+}

@@ -1,0 +1,4618 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_2.png",
+    "region": [
+      305,
+      965,
+      306,
+      322
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 2,
+    "cell": 13,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+    "image_size": [
+      1222,
+      1287
+    ],
+    "region_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8"
+  },
+  "target_keys": [
+    "monster:얼음 여왕"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 2,
+      "cell": 13,
+      "body": "queen",
+      "variant": 11,
+      "width": 1.05,
+      "weapon": "staff",
+      "crest": 2,
+      "accent": "849bab"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": false
+    },
+    "attack_type": "magic",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:얼음 여왕": {
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "region": [
+        305,
+        965,
+        306,
+        322
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 2,
+      "cell": 13,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "image_size": [
+        1222,
+        1287
+      ],
+      "region_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8"
+    }
+  },
+  "target_presentations": {
+    "monster:얼음 여왕": {
+      "visual": {
+        "atlas": 2,
+        "cell": 13,
+        "body": "queen",
+        "variant": 11,
+        "width": 1.05,
+        "weapon": "staff",
+        "crest": 2,
+        "accent": "849bab"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": false
+      },
+      "attack_type": "magic",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "Batch17 isolated source candidate. Exact generation requests, all rejected variants and SHA checks preserved. All source bodies accounted; no raw PNG changes, exclusions, mirrored or duplicate frames. Newly authored reference-based source, not recovered SPX. Native QA staging does NOT grant approval.",
+  "instruction_record_kind": "batch_instructions_with_exact_saved_image_generation_requests",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Provisional stage inputs: reference model, explicitly authored eight directions and all five nominal motion roles, strict full-source geometry/uniqueness/clipping pass. Actual gait exchange, contact timing and cross-role anatomy remain separate SOURCE_HOLD visual gates. Positive stage flags never substitute for completion approval.",
+    "cast_uses_authored_attack": true
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 128,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        233,
+        0,
+        689,
+        797
+      ],
+      "margin": [
+        475,
+        117,
+        767,
+        659
+      ],
+      "source_anchor": [
+        486,
+        793
+      ],
+      "rgba_sha256": "7bf3ce5c6737a75cdafb8cdbc145320f4818e77205da928c14fa165a90725f65",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        1157,
+        0,
+        728,
+        806
+      ],
+      "margin": [
+        429,
+        108,
+        728,
+        650
+      ],
+      "source_anchor": [
+        1456,
+        802
+      ],
+      "rgba_sha256": "07a145b065f704eadbf07cfd72cb7d6544d434386b88cb1e65bd56143193323d",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        53,
+        24,
+        806,
+        829
+      ],
+      "margin": [
+        341,
+        90,
+        658,
+        635
+      ],
+      "source_anchor": [
+        444,
+        849
+      ],
+      "rgba_sha256": "9e3ec2747d353537b8c5c5c99b143d4213dde3b65d5a5834eaf144f5f6c6565c",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        917,
+        54,
+        834,
+        782
+      ],
+      "margin": [
+        319,
+        137,
+        630,
+        682
+      ],
+      "source_anchor": [
+        1330,
+        832
+      ],
+      "rgba_sha256": "6bada4990a70a12711263895e01e786e2f41342cf09b0844913fee0889fe1d1d",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        140,
+        101,
+        260,
+        354
+      ],
+      "margin": [
+        200,
+        45,
+        372,
+        278
+      ],
+      "source_anchor": [
+        256,
+        451
+      ],
+      "rgba_sha256": "28401162ede209bbafb1e7e25205cd6c758e65034722685cd525152ab92587d2",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        621,
+        111,
+        258,
+        345
+      ],
+      "margin": [
+        169,
+        54,
+        374,
+        287
+      ],
+      "source_anchor": [
+        768,
+        452
+      ],
+      "rgba_sha256": "f02269898e2d89e0f433ca2d98842d946d08767b49543a47a484653a0d8ce3fd",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        129,
+        586,
+        285,
+        362
+      ],
+      "margin": [
+        189,
+        37,
+        347,
+        270
+      ],
+      "source_anchor": [
+        256,
+        944
+      ],
+      "rgba_sha256": "6bc57cae3ee94b02c8562b67bd4c890dd3a167a6b735442689070978d28d674c",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        618,
+        593,
+        270,
+        350
+      ],
+      "margin": [
+        166,
+        49,
+        362,
+        282
+      ],
+      "source_anchor": [
+        768,
+        939
+      ],
+      "rgba_sha256": "c34db0bbf8d61154f4b020b5326baa43768a641904f9336432a01812adaa83c5",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        133,
+        1069,
+        265,
+        353
+      ],
+      "margin": [
+        193,
+        46,
+        367,
+        279
+      ],
+      "source_anchor": [
+        256,
+        1418
+      ],
+      "rgba_sha256": "dbc5b556e05e40a0d98f2e3c41b90cadeb71e22109b781f4091115daba531608",
+      "sheet": 2
+    },
+    {
+      "row": 5,
+      "direction": "E",
+      "region": [
+        619,
+        1067,
+        287,
+        353
+      ],
+      "margin": [
+        167,
+        46,
+        345,
+        279
+      ],
+      "source_anchor": [
+        768,
+        1416
+      ],
+      "rgba_sha256": "3162aaa806a6a3ea9fc3896a0e3666187a50bd8221d008eb7df1df691b9634b5",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        30,
+        10,
+        590,
+        679
+      ],
+      "margin": [
+        284,
+        95,
+        642,
+        553
+      ],
+      "source_anchor": [
+        362,
+        685
+      ],
+      "rgba_sha256": "492316804efaab1784710b446ecd4c988d5aec5a11ed63096e600aea417e2fc0",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        704,
+        17,
+        846,
+        671
+      ],
+      "margin": [
+        234,
+        103,
+        386,
+        561
+      ],
+      "source_anchor": [
+        1086,
+        684
+      ],
+      "rgba_sha256": "14358c7b352e6ee5c8047e93e60eddc4fbe0a228132ec42816b64aba1172b15a",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        1579,
+        10,
+        566,
+        680
+      ],
+      "margin": [
+        385,
+        94,
+        666,
+        552
+      ],
+      "source_anchor": [
+        1810,
+        686
+      ],
+      "rgba_sha256": "1963123d3ac45dff05ebbd85b46449e396f120973874ee60271f61d60890aed6",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        87,
+        178,
+        572,
+        428
+      ],
+      "margin": [
+        209,
+        181,
+        396,
+        540
+      ],
+      "source_anchor": [
+        362,
+        602
+      ],
+      "rgba_sha256": "45b466de28d2b61affc2591e69f75821602c888acbeaa5cccbe3e326624b0d5e",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        763,
+        331,
+        649,
+        261
+      ],
+      "margin": [
+        161,
+        348,
+        319,
+        707
+      ],
+      "source_anchor": [
+        1086,
+        588
+      ],
+      "rgba_sha256": "fab9a63fe21324f69eaf6214768c65954b1a4dc66ba085c767b2793055519db8",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        1485,
+        423,
+        666,
+        184
+      ],
+      "margin": [
+        159,
+        425,
+        302,
+        784
+      ],
+      "source_anchor": [
+        1810,
+        603
+      ],
+      "rgba_sha256": "9664a3983ee2dab975a17a8fcf697157f2fb6609a51fb345d17293f32171c210",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        143,
+        0,
+        509,
+        511
+      ],
+      "margin": [
+        219,
+        68,
+        411,
+        409
+      ],
+      "source_anchor": [
+        384,
+        507
+      ],
+      "rgba_sha256": "41ff5c19cafc5b58f1e165481d33d46cb00ea9940f0887ecb6049e5346964479",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        899,
+        0,
+        550,
+        511
+      ],
+      "margin": [
+        207,
+        68,
+        370,
+        409
+      ],
+      "source_anchor": [
+        1152,
+        507
+      ],
+      "rgba_sha256": "a8b2b12df117b14471ce59f6846859d457d1a52d1f2e99a0ef011caa836ed7ba",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        133,
+        515,
+        542,
+        495
+      ],
+      "margin": [
+        209,
+        84,
+        378,
+        425
+      ],
+      "source_anchor": [
+        384,
+        1006
+      ],
+      "rgba_sha256": "3a206741bd2f29bf851132531d679434ae1e574746a182432ebd4db54e30ad62",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        907,
+        511,
+        528,
+        500
+      ],
+      "margin": [
+        215,
+        79,
+        392,
+        420
+      ],
+      "source_anchor": [
+        1152,
+        1007
+      ],
+      "rgba_sha256": "f2fcebfddbfaf078027b83a0231dfe1658c8df825bf890dc303ee7874c4ddae7",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        62,
+        0,
+        453,
+        481
+      ],
+      "margin": [
+        246,
+        73,
+        427,
+        399
+      ],
+      "source_anchor": [
+        256,
+        477
+      ],
+      "rgba_sha256": "a0cfe95e182abf2c59fab23c86eb280df75b522a7c0783061de75ff979d96c67",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        568,
+        2,
+        436,
+        480
+      ],
+      "margin": [
+        240,
+        74,
+        444,
+        400
+      ],
+      "source_anchor": [
+        768,
+        478
+      ],
+      "rgba_sha256": "e0823d9be55246d3b4610983e7c44dba96cba427ea54414a403604655b252cc7",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        55,
+        490,
+        460,
+        489
+      ],
+      "margin": [
+        239,
+        65,
+        420,
+        391
+      ],
+      "source_anchor": [
+        256,
+        975
+      ],
+      "rgba_sha256": "5b23acde443d7267c3d3f1db84ddb7e6c5a0c1d1729a258ed76f95e224448f71",
+      "sheet": 6
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        574,
+        493,
+        435,
+        490
+      ],
+      "margin": [
+        246,
+        64,
+        445,
+        390
+      ],
+      "source_anchor": [
+        768,
+        979
+      ],
+      "rgba_sha256": "17df2504fbacb65211ba194f67fc6c27dd5831ee78d033df1674e6616b8b1700",
+      "sheet": 6
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        59,
+        997,
+        452,
+        495
+      ],
+      "margin": [
+        243,
+        59,
+        428,
+        385
+      ],
+      "source_anchor": [
+        256,
+        1488
+      ],
+      "rgba_sha256": "384c0b4d9b60734926078799fe306c3f1f9c27a8b8c35c6236619b43a0a675c0",
+      "sheet": 6
+    },
+    {
+      "row": 5,
+      "direction": "SE",
+      "region": [
+        572,
+        1000,
+        432,
+        488
+      ],
+      "margin": [
+        244,
+        66,
+        448,
+        392
+      ],
+      "source_anchor": [
+        768,
+        1484
+      ],
+      "rgba_sha256": "754c3b1b73a56137e1a66f983401084a78a5ffe9eb5052fa42230992d33d49a3",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        311,
+        37,
+        397,
+        460
+      ],
+      "margin": [
+        195,
+        59,
+        427,
+        364
+      ],
+      "source_anchor": [
+        528,
+        493
+      ],
+      "rgba_sha256": "3567a589f2263e12e013910e32d0b27cd39508846e6b5ff0564c06781f656825",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        247,
+        594,
+        604,
+        401
+      ],
+      "margin": [
+        131,
+        118,
+        220,
+        423
+      ],
+      "source_anchor": [
+        528,
+        991
+      ],
+      "rgba_sha256": "5ade4c4fbedaeb2abba60718279df9a4ee438cf21119b888cec15b5fe5b836df",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        326,
+        1037,
+        405,
+        458
+      ],
+      "margin": [
+        210,
+        61,
+        419,
+        366
+      ],
+      "source_anchor": [
+        528,
+        1491
+      ],
+      "rgba_sha256": "8c3cef44cfbe31d5358570177554ea9b48fac478b19cf07ae1c962b5e3840bda",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        221,
+        105,
+        555,
+        491
+      ],
+      "margin": [
+        279,
+        208,
+        557,
+        621
+      ],
+      "source_anchor": [
+        498,
+        592
+      ],
+      "rgba_sha256": "6eb9639aea799a20de004259c317ed0b82bdca101eb95cdb174b2cebdcfff8ea",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        160,
+        670,
+        692,
+        434
+      ],
+      "margin": [
+        218,
+        265,
+        420,
+        678
+      ],
+      "source_anchor": [
+        498,
+        1100
+      ],
+      "rgba_sha256": "f9e907c72c92f9dca09b3f48f8aa20c6db98ab79282e6567fcc2da64a31d29fb",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        60,
+        1264,
+        908,
+        221
+      ],
+      "margin": [
+        118,
+        478,
+        204,
+        891
+      ],
+      "source_anchor": [
+        498,
+        1481
+      ],
+      "rgba_sha256": "b4fdc0a2a1e4dfbf8518aa685c936d75e298214a643a88abeb49494ca0c24731",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        306,
+        191,
+        416,
+        549
+      ],
+      "margin": [
+        358,
+        75,
+        576,
+        443
+      ],
+      "source_anchor": [
+        444,
+        736
+      ],
+      "rgba_sha256": "ee69a28b3aba7f1e7a24e1e8dcecb27ee6cdf77c00683365c95c0b970bf93c5c",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        1057,
+        196,
+        438,
+        544
+      ],
+      "margin": [
+        223,
+        80,
+        554,
+        448
+      ],
+      "source_anchor": [
+        1330,
+        736
+      ],
+      "rgba_sha256": "e1a2c8818dd609921b6e81e3e6cc5e23ebdd09f6e6e225a15dba7672017bc0b7",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        285,
+        188,
+        454,
+        501
+      ],
+      "margin": [
+        293,
+        68,
+        450,
+        403
+      ],
+      "source_anchor": [
+        444,
+        685
+      ],
+      "rgba_sha256": "c27875917e62389b236cd5452f4b6fc7834aa5bba47b12fe238104844d20e849",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        1087,
+        191,
+        440,
+        500
+      ],
+      "margin": [
+        209,
+        69,
+        464,
+        404
+      ],
+      "source_anchor": [
+        1330,
+        687
+      ],
+      "rgba_sha256": "363905f1b38892c2b91ece330ea0028960ba5b7776843a64fa4e4ef67a9a7574",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        62,
+        5,
+        410,
+        495
+      ],
+      "margin": [
+        254,
+        69,
+        486,
+        401
+      ],
+      "source_anchor": [
+        256,
+        496
+      ],
+      "rgba_sha256": "a1af2429d7571ffef1e698dd1101e1f04fcf5ac24e584a9a928155756f67c9eb",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        545,
+        5,
+        414,
+        495
+      ],
+      "margin": [
+        225,
+        69,
+        482,
+        401
+      ],
+      "source_anchor": [
+        768,
+        496
+      ],
+      "rgba_sha256": "5936ebbb04fd3ffa9899c31cbe237a198dc94948313cfb4b9b4320f5dbca2936",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        52,
+        509,
+        434,
+        495
+      ],
+      "margin": [
+        244,
+        69,
+        462,
+        401
+      ],
+      "source_anchor": [
+        256,
+        1000
+      ],
+      "rgba_sha256": "8505c4b2df33d6271d9da2db964de3dc2a6fab95533374b200146ef389213d5a",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        549,
+        509,
+        432,
+        496
+      ],
+      "margin": [
+        229,
+        68,
+        464,
+        400
+      ],
+      "source_anchor": [
+        768,
+        1001
+      ],
+      "rgba_sha256": "f61c8ada7babb305273524ed44ea7c5481dbe040a7210d74033ad6d1d595f3b0",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        64,
+        1023,
+        417,
+        489
+      ],
+      "margin": [
+        256,
+        75,
+        479,
+        407
+      ],
+      "source_anchor": [
+        256,
+        1508
+      ],
+      "rgba_sha256": "574e0ac61e1a429bfe4741397b59cde22a7bd1baf915310f2c009f3bd5b4c162",
+      "sheet": 11
+    },
+    {
+      "row": 5,
+      "direction": "S",
+      "region": [
+        546,
+        1010,
+        422,
+        503
+      ],
+      "margin": [
+        226,
+        61,
+        474,
+        393
+      ],
+      "source_anchor": [
+        768,
+        1509
+      ],
+      "rgba_sha256": "722cf0283632cf29dbf06bddddbc88ac89734c6fa758d398337778b4ca5447d6",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        11,
+        0,
+        625,
+        717
+      ],
+      "margin": [
+        304,
+        102,
+        679,
+        587
+      ],
+      "source_anchor": [
+        359,
+        713
+      ],
+      "rgba_sha256": "158ea52343bda145a76899786e1f3c6225cec6ac90a8f75d9d805189115bd7f1",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        742,
+        13,
+        678,
+        703
+      ],
+      "margin": [
+        316,
+        116,
+        626,
+        601
+      ],
+      "source_anchor": [
+        1078,
+        712
+      ],
+      "rgba_sha256": "06b0ca29ead819d8faebc1ef3494841b27b4b2ce0fa9d4995263984a508d3b2e",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        1525,
+        0,
+        623,
+        719
+      ],
+      "margin": [
+        380,
+        100,
+        681,
+        585
+      ],
+      "source_anchor": [
+        1797,
+        715
+      ],
+      "rgba_sha256": "161438cfcb8f9816327f173df029d5c9b4f09449e947132e7094c8e6ed787817",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        272,
+        161,
+        526,
+        456
+      ],
+      "margin": [
+        253,
+        193,
+        506,
+        576
+      ],
+      "source_anchor": [
+        535,
+        613
+      ],
+      "rgba_sha256": "82af9581933624b3f8edf92ff0c3a95628517304b828399d762bf9750274f46c",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        201,
+        731,
+        637,
+        380
+      ],
+      "margin": [
+        182,
+        269,
+        395,
+        652
+      ],
+      "source_anchor": [
+        535,
+        1107
+      ],
+      "rgba_sha256": "3b5f0eeab9efd17bbcfb420f903d6887f2677d37cf523f9b6a6748b86487ffd1",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        154,
+        1267,
+        728,
+        186
+      ],
+      "margin": [
+        135,
+        463,
+        304,
+        846
+      ],
+      "source_anchor": [
+        535,
+        1449
+      ],
+      "rgba_sha256": "cd985f742b7fcfa3717b1075143cd9e5ef40e918058bbdcb4412866cae9f4d62",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        167,
+        7,
+        495,
+        505
+      ],
+      "margin": [
+        235,
+        64,
+        409,
+        399
+      ],
+      "source_anchor": [
+        384,
+        508
+      ],
+      "rgba_sha256": "1f3ff0888ec789314a28ec41aa8a469bfade7529ece9256f9abe1ab97f6d28bb",
+      "sheet": 14
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        925,
+        10,
+        475,
+        500
+      ],
+      "margin": [
+        225,
+        69,
+        429,
+        404
+      ],
+      "source_anchor": [
+        1152,
+        506
+      ],
+      "rgba_sha256": "4ef1d0158c969b1af6799cc080fa764550d244654c87da4712c58980cecba4ed",
+      "sheet": 14
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        167,
+        525,
+        495,
+        469
+      ],
+      "margin": [
+        235,
+        100,
+        409,
+        435
+      ],
+      "source_anchor": [
+        384,
+        990
+      ],
+      "rgba_sha256": "da6992f3ea451311cbdbb77aec7f83cf9adcf50ebf59f3ef69cb50c8009fa679",
+      "sheet": 14
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        926,
+        518,
+        472,
+        483
+      ],
+      "margin": [
+        226,
+        86,
+        432,
+        421
+      ],
+      "source_anchor": [
+        1152,
+        997
+      ],
+      "rgba_sha256": "709c4419d5598dce4d80430a57ac4a1e5610d9e208ba154f50ec50286c71fdef",
+      "sheet": 14
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        28,
+        3,
+        471,
+        491
+      ],
+      "margin": [
+        216,
+        68,
+        417,
+        397
+      ],
+      "source_anchor": [
+        256,
+        490
+      ],
+      "rgba_sha256": "c9a8d016db33c36f8b020cc380629c23cb7872c1689d38d02f29e9bc3f0cf131",
+      "sheet": 15
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        549,
+        3,
+        459,
+        490
+      ],
+      "margin": [
+        225,
+        69,
+        429,
+        398
+      ],
+      "source_anchor": [
+        768,
+        489
+      ],
+      "rgba_sha256": "356ef56f77f22e130592ab648dba74cc76373026d40ae585e55cde47327815c6",
+      "sheet": 15
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        33,
+        512,
+        465,
+        492
+      ],
+      "margin": [
+        221,
+        67,
+        423,
+        396
+      ],
+      "source_anchor": [
+        256,
+        1000
+      ],
+      "rgba_sha256": "5d6413e4bd2c9badac11182f46b9dc400025519eadf7191002c2ad7e3ebffd91",
+      "sheet": 15
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        556,
+        513,
+        454,
+        493
+      ],
+      "margin": [
+        232,
+        66,
+        434,
+        395
+      ],
+      "source_anchor": [
+        768,
+        1002
+      ],
+      "rgba_sha256": "40251c1ffdb7f51d98579e6d0c84b780a317d86fe93538865319ec1f4ba4e388",
+      "sheet": 15
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        38,
+        1026,
+        458,
+        487
+      ],
+      "margin": [
+        226,
+        72,
+        430,
+        401
+      ],
+      "source_anchor": [
+        256,
+        1509
+      ],
+      "rgba_sha256": "27017bb7bcbeafb4acd576cb6799fd9c8e8469015dd3c6e73d2131aa14066a41",
+      "sheet": 15
+    },
+    {
+      "row": 5,
+      "direction": "SW",
+      "region": [
+        551,
+        1026,
+        459,
+        487
+      ],
+      "margin": [
+        227,
+        72,
+        429,
+        401
+      ],
+      "source_anchor": [
+        768,
+        1509
+      ],
+      "rgba_sha256": "c8923a28b807490546f9bfdc070ca5d437aa3e569901d646fae297011773b47c",
+      "sheet": 15
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        24,
+        4,
+        590,
+        742
+      ],
+      "margin": [
+        343,
+        87,
+        730,
+        578
+      ],
+      "source_anchor": [
+        341,
+        742
+      ],
+      "rgba_sha256": "a6d8f72e84d9b5ce7801dca7fc9970c63a929390564c224b55f6c49a2d7edb47",
+      "sheet": 16
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        669,
+        86,
+        789,
+        654
+      ],
+      "margin": [
+        305,
+        175,
+        531,
+        666
+      ],
+      "source_anchor": [
+        1024,
+        736
+      ],
+      "rgba_sha256": "35f63ef2fcee73f8b08a56665ad84115bf45f89b2c9f2fc88208c99c8ff40b82",
+      "sheet": 16
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1465,
+        25,
+        567,
+        728
+      ],
+      "margin": [
+        418,
+        101,
+        753,
+        592
+      ],
+      "source_anchor": [
+        1707,
+        749
+      ],
+      "rgba_sha256": "70dd737702706ccc9167ec2fe9bc7c287c0c1cfd811f0fbca4f573e65234eb2d",
+      "sheet": 16
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        21,
+        45,
+        653,
+        596
+      ],
+      "margin": [
+        335,
+        253,
+        699,
+        756
+      ],
+      "source_anchor": [
+        362,
+        637
+      ],
+      "rgba_sha256": "f637a42455edf591d9b8b24547ed41c7deacc6b165524779dc279de871fbbf78",
+      "sheet": 17
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        715,
+        296,
+        701,
+        351
+      ],
+      "margin": [
+        305,
+        498,
+        651,
+        1001
+      ],
+      "source_anchor": [
+        1086,
+        643
+      ],
+      "rgba_sha256": "d34a4adad918497ca28f336602675ad0bc3487d718c8469763c01b445c541928",
+      "sheet": 17
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1422,
+        382,
+        737,
+        255
+      ],
+      "margin": [
+        288,
+        594,
+        615,
+        1097
+      ],
+      "source_anchor": [
+        1810,
+        633
+      ],
+      "rgba_sha256": "a731eb94c85dae2544825cfa95b32d0b0f70f158e38d24cdcedb9e68a4556c45",
+      "sheet": 17
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        205,
+        0,
+        495,
+        506
+      ],
+      "margin": [
+        277,
+        68,
+        417,
+        406
+      ],
+      "source_anchor": [
+        384,
+        502
+      ],
+      "rgba_sha256": "9faa81815f505297da9e3ae0f97bb63231c81287a879e3298452118978a03314",
+      "sheet": 18
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        953,
+        0,
+        496,
+        506
+      ],
+      "margin": [
+        257,
+        68,
+        416,
+        406
+      ],
+      "source_anchor": [
+        1152,
+        502
+      ],
+      "rgba_sha256": "7319bdd095886d275dd4e111f9fdc577ce8914bd4e57adf05946355de312303b",
+      "sheet": 18
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        172,
+        516,
+        581,
+        481
+      ],
+      "margin": [
+        244,
+        93,
+        331,
+        431
+      ],
+      "source_anchor": [
+        384,
+        993
+      ],
+      "rgba_sha256": "3244586f9b037ec144d0a2c8409fc92d24f7e3785493fc84b9a98b57b42f5afc",
+      "sheet": 18
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        913,
+        524,
+        617,
+        478
+      ],
+      "margin": [
+        217,
+        96,
+        295,
+        434
+      ],
+      "source_anchor": [
+        1152,
+        998
+      ],
+      "rgba_sha256": "9a88c52efc8695784e254d0a84a91869be72e404913f42715efcbb85d584a5e7",
+      "sheet": 18
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        184,
+        7,
+        363,
+        409
+      ],
+      "margin": [
+        242,
+        50,
+        365,
+        319
+      ],
+      "source_anchor": [
+        306,
+        412
+      ],
+      "rgba_sha256": "33698558fbb34c1194afff4c218a89b5f05b235b97c9070635e6bb8458b7ae11",
+      "sheet": 19
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        775,
+        0,
+        391,
+        408
+      ],
+      "margin": [
+        223,
+        51,
+        337,
+        320
+      ],
+      "source_anchor": [
+        916,
+        404
+      ],
+      "rgba_sha256": "bc2c5b9e4171ab439686e9af7e97e8cc05842cf29329416a5156ca747d30263d",
+      "sheet": 19
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        152,
+        427,
+        429,
+        404
+      ],
+      "margin": [
+        210,
+        55,
+        299,
+        324
+      ],
+      "source_anchor": [
+        306,
+        827
+      ],
+      "rgba_sha256": "e5c5dbc40c198ee9ad2e14726c710d71959b4667526a8766e773ceb43d225256",
+      "sheet": 19
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        755,
+        429,
+        406,
+        401
+      ],
+      "margin": [
+        203,
+        58,
+        322,
+        327
+      ],
+      "source_anchor": [
+        916,
+        826
+      ],
+      "rgba_sha256": "d1f0c241b4208a09f7666a7db92e4597d3423698403ac24e343bd4bd4a6c9288",
+      "sheet": 19
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        191,
+        851,
+        392,
+        397
+      ],
+      "margin": [
+        249,
+        62,
+        336,
+        331
+      ],
+      "source_anchor": [
+        306,
+        1244
+      ],
+      "rgba_sha256": "ceaa9bdb3ced3df9951b6166dc4e7dca7e9d6d71c6f5c542bf3d95b4583e9003",
+      "sheet": 19
+    },
+    {
+      "row": 5,
+      "direction": "W",
+      "region": [
+        752,
+        847,
+        434,
+        398
+      ],
+      "margin": [
+        200,
+        61,
+        294,
+        330
+      ],
+      "source_anchor": [
+        916,
+        1241
+      ],
+      "rgba_sha256": "2bdcc28577ccfd3343fce67e18c43227eeadd82c327f08e4ce1af2aad0fa4949",
+      "sheet": 19
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        83,
+        0,
+        563,
+        690
+      ],
+      "margin": [
+        349,
+        99,
+        693,
+        566
+      ],
+      "source_anchor": [
+        362,
+        686
+      ],
+      "rgba_sha256": "95d1c5d6e8c00170b80cdc81e1a0e550c00a38bbdedf41fba2f009adbb4f5874",
+      "sheet": 20
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        700,
+        3,
+        827,
+        690
+      ],
+      "margin": [
+        242,
+        99,
+        429,
+        566
+      ],
+      "source_anchor": [
+        1086,
+        689
+      ],
+      "rgba_sha256": "7b5267ee612f53ead966ce1e54c48e2b697bbd2def8bbdc78cc7290e114f8fea",
+      "sheet": 20
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        1650,
+        0,
+        506,
+        689
+      ],
+      "margin": [
+        468,
+        100,
+        750,
+        567
+      ],
+      "source_anchor": [
+        1810,
+        685
+      ],
+      "rgba_sha256": "076f3718dcb6bbae5049db3900c2d9b9f3c5448a255ff53011bb4e584f0bd9bb",
+      "sheet": 20
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        288,
+        45,
+        451,
+        524
+      ],
+      "margin": [
+        366,
+        220,
+        733,
+        660
+      ],
+      "source_anchor": [
+        514,
+        565
+      ],
+      "rgba_sha256": "ee71da54fb6e2fefec9479240959b0a54186132d7737ab9fec6a0c67a73b374e",
+      "sheet": 21
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        270,
+        660,
+        515,
+        443
+      ],
+      "margin": [
+        348,
+        301,
+        669,
+        741
+      ],
+      "source_anchor": [
+        514,
+        1099
+      ],
+      "rgba_sha256": "67341423b9b484ea9b7fb623491b3ed3f7faeb5c209bb297ccf0799b195d195f",
+      "sheet": 21
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        179,
+        1248,
+        725,
+        201
+      ],
+      "margin": [
+        257,
+        543,
+        459,
+        983
+      ],
+      "source_anchor": [
+        514,
+        1445
+      ],
+      "rgba_sha256": "f74c8ed175367b69f273f0920afae72737bb12de0dbd85704a2ccf3c98c650ef",
+      "sheet": 21
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        214,
+        5,
+        510,
+        507
+      ],
+      "margin": [
+        286,
+        67,
+        402,
+        405
+      ],
+      "source_anchor": [
+        384,
+        508
+      ],
+      "rgba_sha256": "2e4c24b4130066c0b58c10f0a999abf25a50fd1a288a1eb25e485f4c56ab6047",
+      "sheet": 22
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        927,
+        3,
+        555,
+        502
+      ],
+      "margin": [
+        231,
+        72,
+        357,
+        410
+      ],
+      "source_anchor": [
+        1152,
+        501
+      ],
+      "rgba_sha256": "f9e0f8f390416859d7772c29323da9637c05c3c52bde397a1e4fe6bbb0b0b1fb",
+      "sheet": 22
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        178,
+        514,
+        603,
+        488
+      ],
+      "margin": [
+        250,
+        86,
+        309,
+        424
+      ],
+      "source_anchor": [
+        384,
+        998
+      ],
+      "rgba_sha256": "f43444140904b70a13935a469ce9bd95923b4018cd6377958b9931fb2bae5e10",
+      "sheet": 22
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        910,
+        511,
+        603,
+        495
+      ],
+      "margin": [
+        214,
+        79,
+        309,
+        417
+      ],
+      "source_anchor": [
+        1152,
+        1002
+      ],
+      "rgba_sha256": "8032d54431f111b95d89e6c80c76be27defc2e884c8b9a759d9a7e163828ad62",
+      "sheet": 22
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        59,
+        3,
+        419,
+        487
+      ],
+      "margin": [
+        239,
+        62,
+        453,
+        385
+      ],
+      "source_anchor": [
+        256,
+        486
+      ],
+      "rgba_sha256": "9c86b9682ef83ca0bd9f44d697b2b83af079a015ad7bc6a5ec2f7317fcd30e95",
+      "sheet": 23
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        560,
+        2,
+        441,
+        487
+      ],
+      "margin": [
+        228,
+        62,
+        431,
+        385
+      ],
+      "source_anchor": [
+        768,
+        485
+      ],
+      "rgba_sha256": "3a5171cb746cb8780ad22e35fc72ef39304d940c1f9348cf833e63797816049e",
+      "sheet": 23
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        57,
+        511,
+        419,
+        488
+      ],
+      "margin": [
+        237,
+        61,
+        453,
+        384
+      ],
+      "source_anchor": [
+        256,
+        995
+      ],
+      "rgba_sha256": "fe04a7602f1485b3d018703c5ec877a33a51fae82933260af4c7ed27f0a92710",
+      "sheet": 23
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        580,
+        512,
+        408,
+        480
+      ],
+      "margin": [
+        248,
+        69,
+        464,
+        392
+      ],
+      "source_anchor": [
+        768,
+        988
+      ],
+      "rgba_sha256": "3b643ba2cc20063ec52ef8324a26a3afbb10eabfa997c5e8eef391d164b6d861",
+      "sheet": 23
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        56,
+        1014,
+        426,
+        484
+      ],
+      "margin": [
+        236,
+        65,
+        446,
+        388
+      ],
+      "source_anchor": [
+        256,
+        1494
+      ],
+      "rgba_sha256": "c5cb66ce51e78a5becfc199cf075c02599a03155beeae887e80d2588d797b345",
+      "sheet": 23
+    },
+    {
+      "row": 5,
+      "direction": "NW",
+      "region": [
+        561,
+        1014,
+        440,
+        486
+      ],
+      "margin": [
+        229,
+        63,
+        432,
+        386
+      ],
+      "source_anchor": [
+        768,
+        1496
+      ],
+      "rgba_sha256": "f7233e1366b530ce7ab0ebaaa0d3ad6d0d6db7b25f5a82727cef4eeb413f43b8",
+      "sheet": 23
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        352,
+        5,
+        384,
+        475
+      ],
+      "margin": [
+        200,
+        44,
+        440,
+        349
+      ],
+      "source_anchor": [
+        564,
+        476
+      ],
+      "rgba_sha256": "36b6da0af46c61a130a37b057e8b5a78abe6f0521814aae36d708263fd9e030d",
+      "sheet": 24
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        291,
+        530,
+        504,
+        466
+      ],
+      "margin": [
+        139,
+        53,
+        320,
+        358
+      ],
+      "source_anchor": [
+        564,
+        992
+      ],
+      "rgba_sha256": "419e60012010c081468525f94f725dcaa01c649ad13cbe68a6fed1d0b18c0813",
+      "sheet": 24
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        377,
+        1049,
+        375,
+        455
+      ],
+      "margin": [
+        225,
+        64,
+        449,
+        369
+      ],
+      "source_anchor": [
+        564,
+        1500
+      ],
+      "rgba_sha256": "8de9533941af1a3eebd298b7cb3234d67b46a6bf53b709e5bc1bd5e41c113da3",
+      "sheet": 24
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        69,
+        21,
+        577,
+        656
+      ],
+      "margin": [
+        451,
+        278,
+        911,
+        832
+      ],
+      "source_anchor": [
+        362,
+        673
+      ],
+      "rgba_sha256": "a36522326cc6e2472c6019e2d4250c08822c235c4c9f96ebddbfeb556c63c6e8",
+      "sheet": 25
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        749,
+        167,
+        663,
+        476
+      ],
+      "margin": [
+        407,
+        458,
+        825,
+        1012
+      ],
+      "source_anchor": [
+        1086,
+        639
+      ],
+      "rgba_sha256": "c63a33872dfda61a23443db557607c181f05897a10b5966ca732aa7274831422",
+      "sheet": 25
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1437,
+        349,
+        711,
+        299
+      ],
+      "margin": [
+        371,
+        635,
+        777,
+        1189
+      ],
+      "source_anchor": [
+        1810,
+        644
+      ],
+      "rgba_sha256": "c61e9b92bb1b78e2f9717e500bfa00f062ec7834b9b7d6248610edecbcbc8f86",
+      "sheet": 25
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        40,
+        3,
+        528,
+        622
+      ],
+      "margin": [
+        298,
+        87,
+        600,
+        506
+      ],
+      "source_anchor": [
+        306,
+        621
+      ],
+      "rgba_sha256": "a27e6df476b51e651d336f887a90ef099e01e00bc7b17c4ae102175d46ad3b3e",
+      "sheet": 26
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        640,
+        3,
+        543,
+        622
+      ],
+      "margin": [
+        288,
+        87,
+        585,
+        506
+      ],
+      "source_anchor": [
+        916,
+        621
+      ],
+      "rgba_sha256": "33dc7e7541d9b94d3e9536c5603ebc6dd698bb2fba1fc6bad253bcc71ce01460",
+      "sheet": 26
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        11,
+        662,
+        606,
+        557
+      ],
+      "margin": [
+        269,
+        152,
+        522,
+        571
+      ],
+      "source_anchor": [
+        306,
+        1215
+      ],
+      "rgba_sha256": "e6e1314f5028e65ba77abd5d52ed8ec490f2d1c7e5fe7512815d217747ead11d",
+      "sheet": 26
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        638,
+        668,
+        575,
+        550
+      ],
+      "margin": [
+        286,
+        159,
+        553,
+        578
+      ],
+      "source_anchor": [
+        916,
+        1214
+      ],
+      "rgba_sha256": "2c0eddae3a994710d694f3ccc83fa553f97a3bb65d75f08a39438de22c312c5f",
+      "sheet": 26
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        88,
+        0,
+        416,
+        475
+      ],
+      "margin": [
+        268,
+        74,
+        456,
+        397
+      ],
+      "source_anchor": [
+        256,
+        471
+      ],
+      "rgba_sha256": "af22ab1d45d5de3bab1eb075000897a36154e1e1ade29eb2e4cec98ccb1a3c0d",
+      "sheet": 27
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        598,
+        0,
+        396,
+        475
+      ],
+      "margin": [
+        266,
+        74,
+        476,
+        397
+      ],
+      "source_anchor": [
+        768,
+        471
+      ],
+      "rgba_sha256": "94a119c1c9064282883f49200e9269f5a27c1c4ba281e7a1dd0235d8fda0baef",
+      "sheet": 27
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        107,
+        485,
+        403,
+        493
+      ],
+      "margin": [
+        287,
+        56,
+        469,
+        379
+      ],
+      "source_anchor": [
+        256,
+        974
+      ],
+      "rgba_sha256": "a73ea550db7b8a922f1f45e6e5a143e04566118fab8efd97e8bcccb0d3064230",
+      "sheet": 27
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        614,
+        493,
+        391,
+        493
+      ],
+      "margin": [
+        282,
+        56,
+        481,
+        379
+      ],
+      "source_anchor": [
+        768,
+        982
+      ],
+      "rgba_sha256": "2a2f9effae2455d846010618332a94498e79c3b5396e360d02bddb7dd65ffff6",
+      "sheet": 27
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        104,
+        1006,
+        405,
+        486
+      ],
+      "margin": [
+        284,
+        63,
+        467,
+        386
+      ],
+      "source_anchor": [
+        256,
+        1488
+      ],
+      "rgba_sha256": "4024e5b250d5eacb77cc3909f59eee368b388cc2ae34000e89a7af1b385862e7",
+      "sheet": 27
+    },
+    {
+      "row": 5,
+      "direction": "N",
+      "region": [
+        617,
+        1007,
+        382,
+        491
+      ],
+      "margin": [
+        285,
+        58,
+        490,
+        381
+      ],
+      "source_anchor": [
+        768,
+        1494
+      ],
+      "rgba_sha256": "70ab4a0cf1810f34d602c015f6bcf95e71c5f235e1f1a149701bd969bd7037a9",
+      "sheet": 27
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        79,
+        0,
+        609,
+        703
+      ],
+      "margin": [
+        357,
+        101,
+        671,
+        577
+      ],
+      "source_anchor": [
+        362,
+        699
+      ],
+      "rgba_sha256": "01c0e6ada65045e6edda916f5a34f2d1d1fa15212672ec7487e9af83db0dea14",
+      "sheet": 28
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        766,
+        10,
+        749,
+        695
+      ],
+      "margin": [
+        320,
+        109,
+        531,
+        585
+      ],
+      "source_anchor": [
+        1086,
+        701
+      ],
+      "rgba_sha256": "630f47bcd643735badc206adaaa8eebeb620dc0d8815934e30c91dc9ed41a334",
+      "sheet": 28
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1606,
+        0,
+        565,
+        703
+      ],
+      "margin": [
+        436,
+        101,
+        715,
+        577
+      ],
+      "source_anchor": [
+        1810,
+        699
+      ],
+      "rgba_sha256": "042ffaaefb4486798f8be77e19f9a197cc510a3f9d29b0c66ca8d615e15ec17b",
+      "sheet": 28
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        79,
+        105,
+        606,
+        528
+      ],
+      "margin": [
+        313,
+        221,
+        586,
+        664
+      ],
+      "source_anchor": [
+        362,
+        629
+      ],
+      "rgba_sha256": "afa468bdcedd9662567e41d879d091b89def96741eab080339cf82440f157044",
+      "sheet": 29
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        741,
+        248,
+        629,
+        371
+      ],
+      "margin": [
+        251,
+        378,
+        563,
+        821
+      ],
+      "source_anchor": [
+        1086,
+        615
+      ],
+      "rgba_sha256": "186f414328e1a2b0d756108bc6c9e39086533ff0f4a4ce3ad36fe921f9d19fba",
+      "sheet": 29
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1424,
+        392,
+        707,
+        228
+      ],
+      "margin": [
+        210,
+        521,
+        485,
+        964
+      ],
+      "source_anchor": [
+        1810,
+        616
+      ],
+      "rgba_sha256": "86408df8292575bbf213b28f8ac0499e26ab91486d021beb6be376ddfbffd16d",
+      "sheet": 29
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        286,
+        194,
+        445,
+        523
+      ],
+      "margin": [
+        314,
+        71,
+        499,
+        421
+      ],
+      "source_anchor": [
+        444,
+        713
+      ],
+      "rgba_sha256": "291ae7337e2bb93918b5da4411e6f3131df620eb22187d2e1473b106dbbbfa73",
+      "sheet": 30
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1065,
+        197,
+        428,
+        521
+      ],
+      "margin": [
+        207,
+        73,
+        516,
+        423
+      ],
+      "source_anchor": [
+        1330,
+        714
+      ],
+      "rgba_sha256": "6401f11f9cc837242297e80dbf3b2a749a38e324acec56988fd458a93cb00b50",
+      "sheet": 30
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        300,
+        182,
+        483,
+        509
+      ],
+      "margin": [
+        312,
+        65,
+        429,
+        403
+      ],
+      "source_anchor": [
+        444,
+        687
+      ],
+      "rgba_sha256": "6f3ce6cc83d5b6013b1569f656e0db96b552d9b067f3ed1946c73ba0e57de2b9",
+      "sheet": 31
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1068,
+        192,
+        458,
+        503
+      ],
+      "margin": [
+        194,
+        71,
+        454,
+        409
+      ],
+      "source_anchor": [
+        1330,
+        691
+      ],
+      "rgba_sha256": "931d9d1df1970624d9559b3e4721f818f140c3750570fcf25fb1dd72e1027b3c",
+      "sheet": 31
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        110,
+        2,
+        429,
+        410
+      ],
+      "margin": [
+        176,
+        59,
+        315,
+        334
+      ],
+      "source_anchor": [
+        306,
+        408
+      ],
+      "rgba_sha256": "5c5ad97696a9278721dae1ba58e9878776da5fd5901098bdada33e33b579a314",
+      "sheet": 32
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        668,
+        4,
+        448,
+        407
+      ],
+      "margin": [
+        124,
+        62,
+        296,
+        337
+      ],
+      "source_anchor": [
+        916,
+        407
+      ],
+      "rgba_sha256": "50b8875f09499da808d6a6ef106771f2a9b19e9e0045b1019483e56f2f1ad21e",
+      "sheet": 32
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        88,
+        423,
+        459,
+        420
+      ],
+      "margin": [
+        154,
+        49,
+        285,
+        324
+      ],
+      "source_anchor": [
+        306,
+        839
+      ],
+      "rgba_sha256": "114c24a8f2d6535c17b368f4bdb4b39e88e6435ba1f5f2fbfac60874b559bd84",
+      "sheet": 32
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        696,
+        421,
+        437,
+        417
+      ],
+      "margin": [
+        152,
+        52,
+        307,
+        327
+      ],
+      "source_anchor": [
+        916,
+        834
+      ],
+      "rgba_sha256": "fe54bec7f29903c010194b341c74947ac631ee84cf81fcb86cc5bbecca114282",
+      "sheet": 32
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        82,
+        847,
+        460,
+        407
+      ],
+      "margin": [
+        148,
+        62,
+        284,
+        337
+      ],
+      "source_anchor": [
+        306,
+        1250
+      ],
+      "rgba_sha256": "433b33da0706a29ad96a84231e33f3e65c2a9c455eb5b8cc545298b1e9e5e786",
+      "sheet": 32
+    },
+    {
+      "row": 5,
+      "direction": "NE",
+      "region": [
+        698,
+        845,
+        441,
+        414
+      ],
+      "margin": [
+        154,
+        55,
+        303,
+        330
+      ],
+      "source_anchor": [
+        916,
+        1255
+      ],
+      "rgba_sha256": "12c5d3100eb0c029cf6cd12d5b300d6a061afa2b917564c99235806be6083594",
+      "sheet": 32
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        351,
+        109,
+        310,
+        374
+      ],
+      "margin": [
+        175,
+        45,
+        354,
+        290
+      ],
+      "source_anchor": [
+        508,
+        479
+      ],
+      "rgba_sha256": "63ae175652eed50c581dccf2c92be80a1c4976bbafce0ff20b27bc5683ba8b87",
+      "sheet": 33
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        307,
+        583,
+        448,
+        407
+      ],
+      "margin": [
+        131,
+        12,
+        216,
+        257
+      ],
+      "source_anchor": [
+        508,
+        986
+      ],
+      "rgba_sha256": "d942039326f36f87ee9770dd95c2136924a9571ace7275f66042b8a835b6f913",
+      "sheet": 33
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        355,
+        1108,
+        307,
+        369
+      ],
+      "margin": [
+        179,
+        50,
+        357,
+        295
+      ],
+      "source_anchor": [
+        508,
+        1473
+      ],
+      "rgba_sha256": "adfc03ba05f9966253a1b91c1946735bf96fc6b94ea31a8e2978a69a0d63937d",
+      "sheet": 33
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        300,
+        87,
+        438,
+        443
+      ],
+      "margin": [
+        281,
+        186,
+        562,
+        557
+      ],
+      "source_anchor": [
+        519,
+        526
+      ],
+      "rgba_sha256": "82f69e7c69438cc2c378fcc7aea6237364079f9bdbb603abc72f1a56cca70ae7",
+      "sheet": 34
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        223,
+        763,
+        651,
+        312
+      ],
+      "margin": [
+        204,
+        317,
+        349,
+        688
+      ],
+      "source_anchor": [
+        519,
+        1071
+      ],
+      "rgba_sha256": "1aa3384deabbe10f7a87eab1d3a7ec5153ea2991afe1ce069de63bd1ccff5201",
+      "sheet": 34
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        224,
+        1260,
+        658,
+        190
+      ],
+      "margin": [
+        205,
+        439,
+        342,
+        810
+      ],
+      "source_anchor": [
+        519,
+        1446
+      ],
+      "rgba_sha256": "78c6bfc1fc886620fe8cf927545c377424e1c44b48273ce965d21fbc81911ee2",
+      "sheet": 34
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-0.png",
+          "sha256": "5006bacc4093f8f02fc3089f2f70ad5a475674f7c861bcc00f899dfc556489b6",
+          "size": [
+            1942,
+            809
+          ],
+          "canvas_size": [
+            1456,
+            1456
+          ],
+          "foot": [
+            728,
+            910
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-5.png",
+          "sha256": "65a8683d9608762c4fa62446a44df6e058b5bb1b8e6116c2d68835126f781bde",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-9.png",
+          "sha256": "459dba386df71c232c6c3512eb953e5f5866e1718cc3c91a678cd9347f8448a3",
+          "size": [
+            1774,
+            887
+          ],
+          "canvas_size": [
+            992,
+            992
+          ],
+          "foot": [
+            496,
+            620
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-14.png",
+          "sha256": "aae90f3e49c2c45459880e4453f4da19f7c59a2745415593117a07e38b037ea6",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            904,
+            904
+          ],
+          "foot": [
+            452,
+            565
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-18.png",
+          "sha256": "839d2e08874b131d903e4af4cf8cff91e96f68f911fcf398b86723eb338d0871",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-22.png",
+          "sha256": "1348274f849d7eb0f31ca9a468001bf91e75d591b8d212502fd9e78f4b83dbff",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-26.png",
+          "sha256": "e3f9df4d27bffb497fc45fa1e907abe271745fb993565b4bf382978cb9b832af",
+          "size": [
+            1222,
+            1287
+          ],
+          "canvas_size": [
+            1128,
+            1128
+          ],
+          "foot": [
+            564,
+            705
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-30.png",
+          "sha256": "566867cf73fce03240b24218663dd1bdae0212aad5d2c90eb598bd3986c68b7b",
+          "size": [
+            1774,
+            887
+          ],
+          "canvas_size": [
+            944,
+            944
+          ],
+          "foot": [
+            472,
+            590
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-14.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-18.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-22.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-26.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-30.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-1.png",
+          "sha256": "b9febc34331365dde4c8739a84631b2cbf3b224aef3d03e0b31b46c769d8f2a2",
+          "size": [
+            1774,
+            887
+          ],
+          "canvas_size": [
+            1464,
+            1464
+          ],
+          "foot": [
+            732,
+            915
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-5.png",
+          "sha256": "65a8683d9608762c4fa62446a44df6e058b5bb1b8e6116c2d68835126f781bde",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            920,
+            920
+          ],
+          "foot": [
+            460,
+            575
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-10.png",
+          "sha256": "cb1f245adee1fb8dd96b8ef12eda836628968bb490afd662f62879daff65eae8",
+          "size": [
+            1774,
+            887
+          ],
+          "canvas_size": [
+            904,
+            904
+          ],
+          "foot": [
+            452,
+            565
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-14.png",
+          "sha256": "aae90f3e49c2c45459880e4453f4da19f7c59a2745415593117a07e38b037ea6",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            904,
+            904
+          ],
+          "foot": [
+            452,
+            565
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-18.png",
+          "sha256": "839d2e08874b131d903e4af4cf8cff91e96f68f911fcf398b86723eb338d0871",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-22.png",
+          "sha256": "1348274f849d7eb0f31ca9a468001bf91e75d591b8d212502fd9e78f4b83dbff",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-26.png",
+          "sha256": "e3f9df4d27bffb497fc45fa1e907abe271745fb993565b4bf382978cb9b832af",
+          "size": [
+            1222,
+            1287
+          ],
+          "canvas_size": [
+            1128,
+            1128
+          ],
+          "foot": [
+            564,
+            705
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-31.png",
+          "sha256": "1ea95a1c55fa0f58bc5fc5f129057faa96fc84372dfae56978f0871fd9e11b51",
+          "size": [
+            1774,
+            887
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-5.png",
+          "source_rows": [
+            2,
+            3
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-14.png",
+          "source_rows": [
+            2,
+            3
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-18.png",
+          "source_rows": [
+            2,
+            3
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-22.png",
+          "source_rows": [
+            2,
+            3
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-26.png",
+          "source_rows": [
+            2,
+            3
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-31.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-2.png",
+          "sha256": "9138c44f248586342e0994b0b1b6ba8d199711deb3f542f6b91df3ad5f3b1620",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            632,
+            632
+          ],
+          "foot": [
+            316,
+            395
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-6.png",
+          "sha256": "e2ba501b193328bb161ad43159a2ce79988824506bd5d198f8851df156db620a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            880,
+            880
+          ],
+          "foot": [
+            440,
+            550
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-11.png",
+          "sha256": "4fa3462565c32c9371c77c88f9159a0b8657183376e146c65e4d57be86d4050a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            896,
+            896
+          ],
+          "foot": [
+            448,
+            560
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-15.png",
+          "sha256": "73c594f983b13074ea0d7b7f6e663e3846c0f1fb7fa04fc4c3d8ec4baf99e7e7",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            888,
+            888
+          ],
+          "foot": [
+            444,
+            555
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-19.png",
+          "sha256": "8d26c0bd7c8dedf1f94d31885ac4feb09743a6c2b1996a29c02c07f6c5384f1a",
+          "size": [
+            1222,
+            1287
+          ],
+          "canvas_size": [
+            728,
+            728
+          ],
+          "foot": [
+            364,
+            455
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-23.png",
+          "sha256": "5e282316d1e4612a92cef61156f6de2bb5086d8a76587de637e354d49e25b41b",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            872,
+            872
+          ],
+          "foot": [
+            436,
+            545
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-27.png",
+          "sha256": "67ae12100287d663ebd276c38f15c4e89949e329072f7ac659824b61a6497f18",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            872,
+            872
+          ],
+          "foot": [
+            436,
+            545
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-32.png",
+          "sha256": "4122e79afb8266f7c3544eabfe9903e316d37f6b232146f1e105c10f315db8e2",
+          "size": [
+            1222,
+            1287
+          ],
+          "canvas_size": [
+            744,
+            744
+          ],
+          "foot": [
+            372,
+            465
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-11.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-15.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-19.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-23.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-27.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-32.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "source_frames_per_direction": 6,
+      "unique_frames_per_direction": 6,
+      "direction_unique_frames": {
+        "E": 6,
+        "SE": 6,
+        "S": 6,
+        "SW": 6,
+        "W": 6,
+        "NW": 6,
+        "N": 6,
+        "NE": 6
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-3.png",
+          "sha256": "b4e5ca3f33ef6207bb7bca83052f058cd8b911294c64518216e59e3e42128781",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1232,
+            1232
+          ],
+          "foot": [
+            616,
+            770
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-7.png",
+          "sha256": "5ba013dcc7e53c4059fabed9aca51d8d7afb2aa55f8c029d8315d86162489678",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            824,
+            824
+          ],
+          "foot": [
+            412,
+            515
+          ],
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-12.png",
+          "sha256": "843a717201057268495303e7598a6873421adbb9c3d6b4c9011228df27679a09",
+          "size": [
+            2156,
+            729
+          ],
+          "canvas_size": [
+            1304,
+            1304
+          ],
+          "foot": [
+            652,
+            815
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-16.png",
+          "sha256": "0b73e51f5a28695521f45355a6917d0f29145646d22d28d6432142bee01ded7f",
+          "size": [
+            2048,
+            768
+          ],
+          "canvas_size": [
+            1320,
+            1320
+          ],
+          "foot": [
+            660,
+            825
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-20.png",
+          "sha256": "603df20090ac7b6056d67263adb6d396ad9351bbd0087b55165689066463318b",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1256,
+            1256
+          ],
+          "foot": [
+            628,
+            785
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-24.png",
+          "sha256": "46c300e1807dddbe15631760edf6dda079d839851a822cd454d9665864126844",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            824,
+            824
+          ],
+          "foot": [
+            412,
+            515
+          ],
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-28.png",
+          "sha256": "53e5e886909844b8fcf847306a68ef476301fd41f67cd05567711f7f01603d90",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1280,
+            1280
+          ],
+          "foot": [
+            640,
+            800
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-33.png",
+          "sha256": "5b3071c482b1d6114fc4a4fd964becf4ed4868277aa5244f7935ce0bdc5609bd",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            664,
+            664
+          ],
+          "foot": [
+            332,
+            415
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-16.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-20.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-24.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-28.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-33.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-4.png",
+          "sha256": "1df8ea38b71ecaadc279bad8bec23a62a0815c58be6bee6c2ec29c997a346e43",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            968,
+            968
+          ],
+          "foot": [
+            484,
+            605
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-8.png",
+          "sha256": "8dde2eb65a3a6c1413c98d6131a60abd64fabe1e4b1fe3f15fa2e4ff67a0ff9c",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1112,
+            1112
+          ],
+          "foot": [
+            556,
+            695
+          ],
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-13.png",
+          "sha256": "87b646c19d9320640b6c165a1541f9cd9bfe31b21d76919dbfc698e78d8ea118",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1032,
+            1032
+          ],
+          "foot": [
+            516,
+            645
+          ],
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-17.png",
+          "sha256": "0ed35319e9dd263c73ff404642261756cfeb62db56da40d4decd1170c6ffecc5",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1352,
+            1352
+          ],
+          "foot": [
+            676,
+            845
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-21.png",
+          "sha256": "67084a82c1b7d992d1b648ec1464b2c2462c90330708b7c1f42ea86ce12ac33d",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1184,
+            1184
+          ],
+          "foot": [
+            592,
+            740
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-25.png",
+          "sha256": "5cca9215b1891992f0715eca732d9120dfdd00c28389f54e624a65460f0bca16",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1488,
+            1488
+          ],
+          "foot": [
+            744,
+            930
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-29.png",
+          "sha256": "01f00a37e0d8da64b248c18222f3128dbd54e941af64886efc9bfda48e07b867",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1192,
+            1192
+          ],
+          "foot": [
+            596,
+            745
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-34.png",
+          "sha256": "5bc07989ada1e4aca33771938069ff08416be06afcbb1a3f3ee5186887df8aa5",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1000,
+            1000
+          ],
+          "foot": [
+            500,
+            625
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-8.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-17.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-21.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-25.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-29.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-34.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    },
+    "cast": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-3.png",
+          "sha256": "b4e5ca3f33ef6207bb7bca83052f058cd8b911294c64518216e59e3e42128781",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1232,
+            1232
+          ],
+          "foot": [
+            616,
+            770
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-7.png",
+          "sha256": "5ba013dcc7e53c4059fabed9aca51d8d7afb2aa55f8c029d8315d86162489678",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            824,
+            824
+          ],
+          "foot": [
+            412,
+            515
+          ],
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-12.png",
+          "sha256": "843a717201057268495303e7598a6873421adbb9c3d6b4c9011228df27679a09",
+          "size": [
+            2156,
+            729
+          ],
+          "canvas_size": [
+            1304,
+            1304
+          ],
+          "foot": [
+            652,
+            815
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-16.png",
+          "sha256": "0b73e51f5a28695521f45355a6917d0f29145646d22d28d6432142bee01ded7f",
+          "size": [
+            2048,
+            768
+          ],
+          "canvas_size": [
+            1320,
+            1320
+          ],
+          "foot": [
+            660,
+            825
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-20.png",
+          "sha256": "603df20090ac7b6056d67263adb6d396ad9351bbd0087b55165689066463318b",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1256,
+            1256
+          ],
+          "foot": [
+            628,
+            785
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-24.png",
+          "sha256": "46c300e1807dddbe15631760edf6dda079d839851a822cd454d9665864126844",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            824,
+            824
+          ],
+          "foot": [
+            412,
+            515
+          ],
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-28.png",
+          "sha256": "53e5e886909844b8fcf847306a68ef476301fd41f67cd05567711f7f01603d90",
+          "size": [
+            2172,
+            724
+          ],
+          "canvas_size": [
+            1280,
+            1280
+          ],
+          "foot": [
+            640,
+            800
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-33.png",
+          "sha256": "5b3071c482b1d6114fc4a4fd964becf4ed4868277aa5244f7935ce0bdc5609bd",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            664,
+            664
+          ],
+          "foot": [
+            332,
+            415
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "Provisional ONE whole-source canvas; no per-phase scaling or PNG edits. All gnoll views use common neutral64 before max-living display normalization, leaving room for the poleaxe. Queen neutral/recovery calibration, kneeling death source uses a whole-sheet standing equivalent. Actual Main anatomy/gait/contact review required; not production approval."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-16.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-20.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-24.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-28.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/poses-33.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once",
+      "alias_of": "attack"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 156.9156626506024,
+  "action_aliases": {
+    "cast": "attack"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/halpas-W-walk-repair-v03/halpas-W-walk-v03.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-W-walk-repair-v03/halpas-W-walk-v03.png": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Existing W run incorrectly SW/front-left. Author dedicated trueLEFT fastflight from correctWwalkv03+Widle, stronger wingstroke/lean/legtrail than walk while keeping nearLEFT free/farRIGHT weapon.",
+  "user_authorization": "Production image tools allowed. No main-chat images/binary/previewlinks. One new role sourceEDIT attempt only, no identicalretry.",
+  "prompt": "Edit the exact SAME trueLEFT Halpas boss from the two references into a DEDICATED NEW SIX-PHASE FAST WEST RUN/FLIGHT cycle. Image1 is the newly authored correct WEST slow airborne walk; image2 is matching WEST idle identity. Use only their LEFT-facing model, camera and original equipment. This is a new faster flight animation, with six newly articulated wing/body/leg/cape phases and a larger full wingstroke than slowwalk. Do NOT reuse the slowwalk frames or merely change playback speed. Never mirror or redesign the actor.\n\nHEADING/CAMERA FIXED: Every helmet/visor/nose profile points screen STRAIGHT LEFT/WEST, sternum/hip/pelvis remain true LEFT lateral elevated orthographic view. Never turn SW/front-left toward viewer, never expose broad front chest, no view rotations or spins. Same original gold-horn crown, black/gold armor plates, solid purple crystalline feather-fan wings with two gold shoulder/back roots, torn burgundy cape and compact broad purple crystal blade.\n\nANATOMY/HANDEDNESS STRICT: The NEAR anatomicalLEFT arm remains UNARMED with free LEFT fist clearly visible near-side in front of hip/torso, elbow bent naturally for faster flight. The FAR anatomicalRIGHT arm keeps the SINGLE same purple blade, with far hand/forearm/blade emerging ahead toward LEFT from far/front body silhouette as references. No blade transfer to nearLEFT fist, no mirrored arm placement. Exactly two connected arms/hands and two legs/boots, no extra hand, duplicated sword, shield, wingpair or costume. Both established crystal fan wings stay attached to same roots; far wing can naturally overlap behind nearer one as in the current WEST model, retain existing feather shapes/materials. The cape streams rearward toward RIGHT.\n\nFAST RUN/FLIGHT: both feet AIRBORNE, strong controlled torso lean toward LEFT compared with gentler upright slowwalk. Feet/knees trail back toward RIGHT, with energetic joint flexion and ankle follow-through; no grounded footstrike, skating or walkingstep. Keep normal anatomy, same head/torso/pelvis size, strong but believable aerodynamic posture. Mantle/cape extended farther backward/right than slowwalk with local wave/fold lag, never blur.\n\nSix coherent phases0→1→2→3→4→5→0, full LARGE fast wingstroke rather than wings parked above shoulder. FRAME0 full HIGH power preparation, crystalline tips high above gold roots, knees bent/tucked back, torso forward. FRAME1 powerful DOWNSTROKE across broad nearly HORIZONTAL rear/RIGHT fan span, wing roots rotating strongly and body lifting slightly. FRAME2 LOWEST stroke, wings sweep DOWN/BACK, fan tips visibly below SHOULDER toward hip/lowerRIGHT, same complete feather fans, legs tuck back in thrust. FRAME3 deepest lower-rear follow-through with partial fan closing beginning recovery, cape wave catches up and ankles briefly extend rearward. FRAME4 recovery rising through MID height with bent gold-root joints and narrower fan shape, knees flex and torso settles. FRAME5 late UPSTROKE, fans above shoulders reopening but still distinct from full-high0, cape/forearm/boot follow-through returns smoothly toward0. Genuine HIGH→horizontal→LOW→lowrear→middleup→highreturn→0. Every phase should visibly differ in actual joint angle, feather-fan opening, cape folds and leg articulation. No wholeimage transforms, body model morphing, disconnected wing, wingtip cropping or duplicated stills. Maintain original crystal fan structure through rotation, not membrane, flame, smoke or new feathers.\n\nLAYOUT: exactPNG1024x1536 transparent, TWO512px COLUMNS by THREE512px ROWS, SIX complete figures only in reading order. Full head/horns/wings/blade/cape/boots fit inside CENTRAL340x340 area of each cell, physical crown-to-boot height about270-300pixels, at least80px completely transparent margin around each full silhouette in each cell. Uniform physical scale and generous transparent gutters; extreme wing/cape/weapon boundingboxes must never overlap adjacent cells. Do not erase or shorten any equipment to fit. Crisp detailed production RPG sprite cutouts, solid opaque armor/cloth/crystal, alpha0 gaps/background, only1-2px edge antialiasing. Purple color/light only INSIDE solid crystal wings/blade; no outside glow, halo, bloom, haze, fog, trails, sparks, particles, shadow, floor, ground, motionblur, text, grids, labels or panels. Highest priorities: true horizontal LEFT lateral heading every frame, correct nearLEFT free hand/farRIGHT blade, same high-quality boss model, dedicated visibly stronger/faster complete wing/body cycle than walk, all silhouettes complete.",
+  "requested_at": "2026-10-19T11:51:30.608065+00:00",
+  "imagegen_attempt_limit": 1,
+  "private_jpeg_budget_cumulative_estimate_before_source": 2930698,
+  "private_jpeg_budget_limit": 8000000,
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-W-run-repair-v03/halpas-W-run-v03.png",
+  "output_sha256": "2888529dac7a1e6886e061f6ea60a02ae8ef46def1d7e5304f7ab377915fb1ab",
+  "output_bytes": 2358607,
+  "output_geometry": {
+    "status": "HOLD",
+    "reason": "A pose rectangle includes another body; cannot safely crop"
+  },
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v01.png",
+  "original_authoring_request_sha256": "a0dd3f4a88ffe98d830400e47ef392e421c4c3f7c19a6b4c9fd480d170509da7",
+  "preserved_source_adoption": "Existing exact raw source retained; later private source PASS and actual raw geometry HOLD recorded; no regenerated/copied raw",
+  "private_source_review": {
+    "visual_findings": [
+      "All6 visor/nose/chest/hip axes retain genuine LEFT/WEST lateral elevated-camera model, no SW/front-left turn, hand mirror or broad front-chest snap.",
+      "NearLEFT free fist remains visible with its connected near arm; farRIGHT hand carries sole compact purple crystal blade aheadLEFT. Exactly two coherent arm/hand chains and two legs/boots, with natural partial occlusion during flight. Gold horns/plates, crystalline fan feathers/roots and burgundy cape remain faithful.",
+      "New full wingbeat0HIGH→1horizontalpower→2LOWbelowshoulder/downback→3lowrearfollowthrough→4risingmiddle→5latehighreturn is visibly articulated, with changing gold-root angle and fan closure; not slowwalk replay/duplicate stills.",
+      "Stronger whole-torso forward lean, hips/knees/boots trailing rearRIGHT and cape streaming more horizontally distinguish dedicated fast run from gentle Wwalk. Feet stay airborne; no ground contacts imposed.",
+      "Complete fullsilhouettes appear uncropped; no alpha>100pixels touch outerimageedge. Raw strictimporter detects overlapping pose rectangles, so geometry remains HOLD for lossless disjointsplit rather than altered thresholds/cropped figures.",
+      "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
+    ],
+    "visual_limitations": [
+      "Sourceart PASS only; strict lossless split, runtime physicalcanvas/hiproot, SpriteFrames and Player/temporal validation remain with root.",
+      "Suggested1152 runtimecanvas is a review starting point from consistent local bodylandmarks against Widle1152, not a pinned approved layout. Actual sixpose hiproot must be measured after split, not bootlocked or globalbboxcentered."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "2888529dac7a1e6886e061f6ea60a02ae8ef46def1d7e5304f7ab377915fb1ab",
+    "raw_bytes": 2358607,
+    "request_sha256": "a0dd3f4a88ffe98d830400e47ef392e421c4c3f7c19a6b4c9fd480d170509da7",
+    "review_sha256": "657ccad253341b2ffec98899b7b5d90fb641ec168864dea9b58738795d88cf3d"
+  },
+  "original_private_review_snapshot": {
+    "status": "GENERATED_PRIVATE_SOURCE_VISUAL_PASS_GEOMETRY_RUNTIME_HOLD_NOT_APPROVED",
+    "key": "transform:393",
+    "name": "해방된 할파스",
+    "direction": "W",
+    "role": "run",
+    "version": "v03",
+    "request_path": "/workspace/scratch/halpas-W-run-repair-v03/request.json",
+    "request_sha256": "a0dd3f4a88ffe98d830400e47ef392e421c4c3f7c19a6b4c9fd480d170509da7",
+    "original_generated_file": "/workspace/generated_images/exec-8c09dc6a-bd38-4835-9686-0319c4afc622.png",
+    "raw_png": "/workspace/scratch/halpas-W-run-repair-v03/halpas-W-run-v03.png",
+    "raw_sha256": "2888529dac7a1e6886e061f6ea60a02ae8ef46def1d7e5304f7ab377915fb1ab",
+    "raw_bytes": 2358607,
+    "image_size": [
+      1024,
+      1536
+    ],
+    "private_preview": "/workspace/scratch/halpas-W-run-repair-v03/generated-private.jpg",
+    "private_preview_bytes": 124804,
+    "created_at": "2026-10-19T11:52:45.987739+00:00",
+    "repository_mutated": false,
+    "imagegen_attempts": 1,
+    "chat_image_attachments": 0,
+    "source_visual_status": "PASS",
+    "integration_ready": true,
+    "approved_actor_change": 0,
+    "detailed_completion_change": 0,
+    "reviewed_at": "2026-10-19T11:54:12.906616+00:00",
+    "identity_validation": "PASS_SAME_W_LATERAL_HALPAS_NEARLEFT_FREE_FARRIGHT_WEAPON",
+    "heading_validation": "PASS_TRUE_LEFT_ALL6",
+    "motion_validation": "PASS_DEDICATED_STRONG_FAST_AIRBORNE_WINGCYCLE",
+    "geometry_validation": "HOLD_RAW_POSE_RECTANGLE_CONTAINS_OTHER_BODY",
+    "source_canvas_validation": "PENDING_LOSSLESS_SPLIT_AND_NATIVE_SCALE_BODYROOT_REVIEW",
+    "visual_findings": [
+      "All6 visor/nose/chest/hip axes retain genuine LEFT/WEST lateral elevated-camera model, no SW/front-left turn, hand mirror or broad front-chest snap.",
+      "NearLEFT free fist remains visible with its connected near arm; farRIGHT hand carries sole compact purple crystal blade aheadLEFT. Exactly two coherent arm/hand chains and two legs/boots, with natural partial occlusion during flight. Gold horns/plates, crystalline fan feathers/roots and burgundy cape remain faithful.",
+      "New full wingbeat0HIGH→1horizontalpower→2LOWbelowshoulder/downback→3lowrearfollowthrough→4risingmiddle→5latehighreturn is visibly articulated, with changing gold-root angle and fan closure; not slowwalk replay/duplicate stills.",
+      "Stronger whole-torso forward lean, hips/knees/boots trailing rearRIGHT and cape streaming more horizontally distinguish dedicated fast run from gentle Wwalk. Feet stay airborne; no ground contacts imposed.",
+      "Complete fullsilhouettes appear uncropped; no alpha>100pixels touch outerimageedge. Raw strictimporter detects overlapping pose rectangles, so geometry remains HOLD for lossless disjointsplit rather than altered thresholds/cropped figures.",
+      "Private fixed0.70sourcepixel display of Widle/Wwalk/Wrun phase0 shows broadly coherent helmet, shoulderplate, chest/waist and pelvis physical proportions. Fullbody height changes mainly with forwardlean/kneetuck; wing/cape bbox or image dimensions were not used as an automatic body-scale decision."
+    ],
+    "visual_limitations": [
+      "Sourceart PASS only; strict lossless split, runtime physicalcanvas/hiproot, SpriteFrames and Player/temporal validation remain with root.",
+      "Suggested1152 runtimecanvas is a review starting point from consistent local bodylandmarks against Widle1152, not a pinned approved layout. Actual sixpose hiproot must be measured after split, not bootlocked or globalbboxcentered."
+    ],
+    "runtime_canvas_candidate_for_review": 1152,
+    "runtime_canvas_candidate_basis": "Same-pixel0.70 comparison of helmet/crown-neck, shoulderplate, chest-waist and pelvis against corrected Widle whose compiledcanvas1152 is the reference. Stronglean/kneetuck explains altered silhouetteheight; no image1254/1024 ratio normalization. Needs actual native size review.",
+    "runtime_bodyroot_review_suggestion": "Measure stable anatomical pelvis/hip projection in all6 splitposes, preserving natural small flight bob. Fore-aft legtrail and cape/wingbbox motion must not displace bodyroot; avoid footlocking airborne legs. No unverified numeric anchors proposed.",
+    "private_comparison": "/workspace/scratch/halpas-W-run-repair-v03/private-fixed-source-body-comparison.jpg",
+    "private_comparison_bytes": 69538,
+    "private_jpeg_budget_cumulative_estimate_bytes": 3125040,
+    "private_jpeg_budget_limit": 8000000,
+    "imagegen_attempt_limit_reached": true,
+    "further_generation_attempts": 0
+  },
+  "available_repository_reference_sources": {
+    "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png"
+  }
+}

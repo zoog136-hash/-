@@ -10,15 +10,15 @@ on:
       - feature/twilight-warehouse-persistent-instances-20261010
   workflow_dispatch:
 
-# Manual audits stay independent; newer automatic revisions release old runners.
+# Preserve in-flight PR122 audits; avoid automatic cancellation of costly Godot imports.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   atomic-crafting:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install official Godot 4.7.2

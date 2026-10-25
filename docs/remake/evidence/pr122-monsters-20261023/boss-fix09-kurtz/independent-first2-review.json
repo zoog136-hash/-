@@ -1,0 +1,70 @@
+{
+  "schema": "pr122-kurtz-independent-first-two-sheets-v1",
+  "date": "2026-10-23",
+  "method": "Actual private vision of exact project reference and both full generated sheets. Source PNG/Git not changed.",
+  "full_mythic_approvals": 0,
+  "new_approvals": 0,
+  "source_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/reference.png",
+      "sha256": "14321ddb972e5f2a8224cf8a3f8b4e1e29e76a945bbaae6aa585ccf0a03f0a23",
+      "image_size": [
+        317,
+        310
+      ],
+      "visible_boundary_pixels": 66
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-S-idle-hit4-v01.png",
+      "sha256": "18aa6362fa7704ac1aa93de4b59df086ce77b6a725510008a69a50f6e84dc3d7",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "visible_boundary_pixels": 0
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v01.png",
+      "sha256": "978d10177b5fba11d14d57333e97dabb72a5608664c79b3ef53a519c4b6c3769",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "visible_boundary_pixels": 0
+    }
+  ],
+  "S": {
+    "source": "raw/kurtz-S-idle-hit4-v01.png",
+    "source_first_static_review": "PASS_WITHIN_EXAMINED_SCOPE",
+    "examined_poses": 4,
+    "roles": [
+      "idle2",
+      "hit2"
+    ],
+    "findings": [
+      "All four poses read as SOUTH/front torso with front chest/buckle and paired shoulders, rather than a side view.",
+      "Anatomical RIGHT sword hand remains SCREEN LEFT throughout, with visible fist around hilt; anatomical LEFT SCREEN RIGHT remains empty.",
+      "Tall horned closed helm, enormous spiked dark shoulder/body armor, skull chest brooch, long ragged red cape/waist cloth and broad blade preserve the reference major identity. No wings were introduced.",
+      "Idle upright/breath poses differ from braced slump and backward hit recoil. Helmet, shoulders, elbows, wrists, knees and feet remain plausibly connected; no severe body/limb collapse or obvious crop truncation observed."
+    ]
+  },
+  "requested_E": {
+    "source": "raw/kurtz-E-idle-hit4-v01.png",
+    "as_E": "HOLD_DO_NOT_SELECT_AS_E",
+    "observed_direction": "SE",
+    "reclassification": "CONSISTENT_SE_WITHIN_STATIC_POSES",
+    "examined_poses": 4,
+    "findings": [
+      "All four poses expose a broad front chest plate/skull brooch and front belt buckle, while helmet/nose and sword point right/front: this is three-quarter front-right/SE rather than pure EAST side profile.",
+      "Head tilt changes during recoil, but the torso stays on the same front-right plane; no opposite-facing/front-back camera swap observed across the four poses.",
+      "Sword hand remains on the near right-arm side and grip stays continuous; left hand is empty. Major reference armor/cape identity remains present.",
+      "No obvious sword/helmet/foot truncation or severe anatomy collapse observed. Reclassification as SE is source-direction categorization only, not an EAST repair or completed boss approval."
+    ]
+  },
+  "unseen_not_reviewed": [
+    "Other directions and RUN/ATTACK/DEATH",
+    "Timed playback and frame ordering/cadence",
+    "Runtime sprite scale, clipping and transitions",
+    "Full mythic quality or release approval"
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "status": "PASS_ACTUAL_COMPILED_LAYOUT_SOURCE_PROOF",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r082/SpriteFrames.tres",
+  "frames_sha256": "8500c03823faa0c69f9338aee3121a5d220103220d7100a76ba2cc793c7c1a09",
+  "native_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r082/NativeMotionProfile.tres",
+  "native_profile_sha256": "4452c78c32ac2c1b9f6bc67eaeae7dd4a55aec986b0c1482e1557208fb71f361",
+  "source_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+  "reference_idle_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+  "compiled_attack_geometry_exactly_matches_reviewed_proposal": true,
+  "all_normalized_pose_render_pixels_and_positions_match_prior_private_review": true,
+  "actual_private_capture_path": "/workspace/scratch/girtas-r082-SW-attack-runtime-qc/private-actual-r082-SW-idle-versus-attack.jpg",
+  "actual_private_capture_bytes": 123266,
+  "additional_image_attachment_needed": false,
+  "private_inspection_basis": "The actual r082 normalized poses are byte-identical to the C824 candidate already privately inspected; exact crop/geometry/profile/render equality was proved for all six plus idle. Fresh actual JPEG saved without another image view to conserve private context.",
+  "entry_and_recovery_scale": "PASS: guard0/recovery5 head/shoulder/torso scale agrees with idle; no20% contraction.",
+  "root_and_trajectory": "PASS: common X+16 preserves original relative lunge; follow4 supportY1420 corrects weapon-tip-induced float, other boot anchors unchanged; real load/contact/follow crouch retained.",
+  "anatomy_and_direction": "PASS inherited from exact unchanged source: all6 SW, continuous right weapon arm, empty left, full original identity.",
+  "timing": {
+    "attack_fps": 14.285714286,
+    "durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "loop": false,
+    "contact_frame": 3,
+    "total_seconds": 0.41999999999160004
+  },
+  "root_reported_fresh_focused_resource_Player_action_tests": "PASS at d5cb9ceebb794d0312f2eef0e276d980e804dc9c; not rerun by this review",
+  "sampled": [
+    {
+      "role": "idle",
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        486,
+        499
+      ],
+      "margin": [
+        256,
+        145,
+        538,
+        525
+      ],
+      "source_anchor": [
+        256.0,
+        495.0
+      ],
+      "canvas": 1024,
+      "physical_scale": 0.281509916827,
+      "crop_RGBA_sha256": "68cb5c313ad3a00b0b963dddfd40aa178c06c2b1c26e7d6577378f3548f59bef",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "attack",
+      "phase": 0,
+      "region": [
+        55,
+        87,
+        388,
+        399
+      ],
+      "margin": [
+        195,
+        120,
+        436,
+        425
+      ],
+      "source_anchor": [
+        272.0,
+        482.0
+      ],
+      "canvas": 824,
+      "physical_scale": 0.34983756654229126,
+      "crop_RGBA_sha256": "6ca24f7966471174311413655d47100d8cc9bf1bd8d81456aa0e436ee1839ba8",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "attack",
+      "phase": 1,
+      "region": [
+        603,
+        34,
+        338,
+        452
+      ],
+      "margin": [
+        231,
+        67,
+        486,
+        372
+      ],
+      "source_anchor": [
+        784.0,
+        482.0
+      ],
+      "canvas": 824,
+      "physical_scale": 0.34983756654229126,
+      "crop_RGBA_sha256": "73a2a972f993a120e6517624eb85aff1d290a85b5fd32a162061ea2200f28401",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "idle",
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        486,
+        499
+      ],
+      "margin": [
+        256,
+        145,
+        538,
+        525
+      ],
+      "source_anchor": [
+        256.0,
+        495.0
+      ],
+      "canvas": 1024,
+      "physical_scale": 0.281509916827,
+      "crop_RGBA_sha256": "68cb5c313ad3a00b0b963dddfd40aa178c06c2b1c26e7d6577378f3548f59bef",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "attack",
+      "phase": 2,
+      "region": [
+        93,
+        562,
+        386,
+        406
+      ],
+      "margin": [
+        233,
+        113,
+        438,
+        418
+      ],
+      "source_anchor": [
+        272.0,
+        964.0
+      ],
+      "canvas": 824,
+      "physical_scale": 0.34983756654229126,
+      "crop_RGBA_sha256": "eacfddb8e6d22ab52ad59954e751136d9de0010ad8d1cd7eae368a123a3748ef",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "attack",
+      "phase": 3,
+      "region": [
+        516,
+        583,
+        465,
+        386
+      ],
+      "margin": [
+        144,
+        133,
+        359,
+        438
+      ],
+      "source_anchor": [
+        784.0,
+        965.0
+      ],
+      "canvas": 824,
+      "physical_scale": 0.34983756654229126,
+      "crop_RGBA_sha256": "308b93722f484fa07b4ff790e6dda304f6d2c3cadf7a0822345a73ff6afcec7c",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "idle",
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        486,
+        499
+      ],
+      "margin": [
+        256,
+        145,
+        538,
+        525
+      ],
+      "source_anchor": [
+        256.0,
+        495.0
+      ],
+      "canvas": 1024,
+      "physical_scale": 0.281509916827,
+      "crop_RGBA_sha256": "68cb5c313ad3a00b0b963dddfd40aa178c06c2b1c26e7d6577378f3548f59bef",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "attack",
+      "phase": 4,
+      "region": [
+        47,
+        1079,
+        480,
+        362
+      ],
+      "margin": [
+        187,
+        174,
+        344,
+        462
+      ],
+      "source_anchor": [
+        272.0,
+        1420.0
+      ],
+      "canvas": 824,
+      "physical_scale": 0.34983756654229126,
+      "crop_RGBA_sha256": "b8f780f5e3747fbf946b0edd4fff7ac37774021889ba81d8618225cc22c41490",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    },
+    {
+      "role": "attack",
+      "phase": 5,
+      "region": [
+        561,
+        1056,
+        374,
+        398
+      ],
+      "margin": [
+        189,
+        121,
+        450,
+        426
+      ],
+      "source_anchor": [
+        784.0,
+        1450.0
+      ],
+      "canvas": 824,
+      "physical_scale": 0.34983756654229126,
+      "crop_RGBA_sha256": "ad49e256e3c8874be00edc2cb3a3b0e8d2ad00283b5a565f9cd29e78e0ad2726",
+      "exact_normalized_pose_matches_privately_reviewed_proposal": true
+    }
+  ],
+  "source_pngs_modified": false,
+  "metadata_or_repo_modified": false,
+  "actor_approval": false,
+  "approved_actor_count_added": 0
+}

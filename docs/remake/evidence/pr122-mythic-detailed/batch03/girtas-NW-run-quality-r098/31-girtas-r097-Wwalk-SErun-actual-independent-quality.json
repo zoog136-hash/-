@@ -1,0 +1,145 @@
+{
+  "schema": "pr122-native-independent-quality-v1",
+  "key": "transform:267",
+  "status": "PASS_SCOPED_W_WALK_SE_RUN_12_POSES_ONLY_ACTOR_HOLD",
+  "independent": true,
+  "reviewer": "Codex independent actual compiled quality reviewer /root/girtas_final_actual_quality_v04; not source/layout author; no repository/Git/engine/CI/network changes",
+  "source_selection_sha256": "812551c0450597aa222be76df49921c681f692de249c413d8e789bcf383fb589",
+  "reviewed_staging_frames": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r097/SpriteFrames.tres",
+    "sha256": "d4cf2b608f9b21c4739c6e561994a2b54aba6100cfa35560257065465d693eb1"
+  },
+  "reviewed_staging_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r097/NativeMotionProfile.tres",
+    "sha256": "bd1e7d982d1abaaabe416c10d699cc6f46849f9a63e00fb41784846dc74301a7"
+  },
+  "effective_profile_sha256": "2184e9c5ce74555a6687440c3ff34c13cef2bc52fe39d2e18c3f90910d7be2c1",
+  "checks": {
+    "identity_equipment": "PASS_WITHIN_TWO_TRACK_SCOPE",
+    "compass8": "PASS_WITHIN_TWO_TRACK_SCOPE",
+    "anatomy_continuity": "PASS_WITHIN_TWO_TRACK_SCOPE",
+    "motion_specificity": "PASS_WITHIN_TWO_TRACK_SCOPE",
+    "loops_transitions": "PASS_WITHIN_TWO_TRACK_SCOPE",
+    "runtime_scale_footing": "PASS_WITHIN_TWO_TRACK_SCOPE",
+    "attack_contact": "NOT_APPLICABLE_TO_THESE_LOCOMOTION_TRACKS",
+    "hit_recovery": "NOT_APPLICABLE_TO_THESE_LOCOMOTION_TRACKS",
+    "death_irreversibility": "NOT_APPLICABLE_TO_THESE_LOCOMOTION_TRACKS"
+  },
+  "tracks": [
+    {
+      "direction": "W",
+      "role": "walk",
+      "animation": "walk_4",
+      "status": "PASS_SCOPED_CURRENT_ACTUAL_TRES_AND_PROFILE",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "a1a5d51f7323dddb11d65fd68ada8ebc10e8582cc1c428df2430f0b4538861d0",
+      "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-walk-v02composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Actual W profile shows stable left-facing head/neck/core and consistent black-gold armor, ray array, white hair and one RIGHT-hand sinuous blade. Both leg chains remain attached through robe occlusion; no added arm/gear or clipping defect observed.",
+        "Six distinct walk poses alternate long contact, support/transfer and recovering lead foot.0/3 broad contacts and1/2/4/5 narrower support/recovery normalize to the same rigid skull/neck/pauldron/waist scale with actual mixed C2560/1792/1792/2560/1728/1728. Head bob and bent knees remain authored movement.",
+        "Foot placement reads as perspective-grounded gait; no flat imageY or idle foot-depth invariant is imposed.5→0 and idle0→walk0 / walk5→idle0 preserve plausible body scale and root-centered stance without a camera/model pop."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "405d4694304fae7d6e414f566e3dc2e148ba22b611d95c9ee1a755eb8aaa6ce8",
+          "bytes": 98266,
+          "viewed": true
+        }
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "animation": "run_1",
+      "status": "PASS_SCOPED_CURRENT_ACTUAL_TRES_AND_PROFILE",
+      "poses": 6,
+      "applicable_checks": {
+        "identity_equipment": "PASS",
+        "compass8": "PASS",
+        "anatomy_continuity": "PASS",
+        "motion_specificity": "PASS",
+        "loops_transitions": "PASS",
+        "runtime_scale_footing": "PASS"
+      },
+      "not_applicable_checks": [
+        "attack_contact",
+        "hit_recovery",
+        "death_irreversibility"
+      ],
+      "immutable_source_geometry_pin": "85f5ad0458a09ac101333e1c1f2596e64e7bf0c795c6de4f69a47a0ca288e65e",
+      "source_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+      "selected_source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-run-v03composite01.png",
+      "source_RGBA_regions_margins_C_roots": "EXACT_ACTUAL_TO_FROZEN_REGISTER_AND_SOURCE",
+      "six_distinct_RGBA": true,
+      "loop": true,
+      "fps": 12.5,
+      "duration_seconds": 0.48,
+      "visual_notes": [
+        "Actual SE diagonal forward/right-facing head/core and permanent RIGHT blade match selected SE idle. The empty LEFT fist remains separate and no extra weapon/arm is visible. Existing hilt exposure during rotation is not treated as invented equipment.",
+        "The actual six-phase sequence retains farLEFT contact0→flexed load1→nearRIGHT leading AIR2→nearRIGHT contact3→flexed load4→farLEFT leading AIR5. Opposite limb chains, recoveryboots, torso lean and distinct load/flight are readable.",
+        "C2304/2304/2304/2168/2168/2304 yields a consistent rigid skull/neck/nearpauldron/core model against idle while authored head/body arc and lower compression4 remain. AIR2/5 show both complete boots clear the higher declared projected support plane; contacts0/1 and3/4 may use different projected depths. Root guide alone is not a literal sole plane.",
+        "5→0 progresses from flight toward opposite contact with coherent body/cloth/weapon continuation. Idle entry/exit preserves physical body scale and directional identity. No unsupported exact hidden-pelvis claim is made; the hanging front V is not a hip marker."
+      ],
+      "private_review_image_pins": [
+        {
+          "sha256": "861def01ed1cd9b06824af2f2ce5722c018bd77717491c077793f5239ef698ec",
+          "bytes": 99004,
+          "viewed": true
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "fresh_actual_reviewed_tracks": 2,
+    "fresh_actual_reviewed_poses": 12,
+    "stable43_transfer_proof": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/r096-reviewed43-to-r097-exact-transfer.json",
+      "sha256": "ca131ddd26255f3f1bba14fa8efbe143d127abc9dfbadd89151f21077342c913"
+    },
+    "aggregate_pass_tracks_with_transferred43": 45,
+    "aggregate_pass_poses_with_transferred43": 270,
+    "remaining_actual_tracks": [
+      "NW run",
+      "SW run",
+      "NE run"
+    ],
+    "full_48_288_quality_certified": false
+  },
+  "current_scoped_quality_evidence": {
+    "numeric_actual_pin": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/actual-r097-all48-numeric-pins.json",
+      "sha256": "58b9fb876b1b7331256ff162d45add8226af0c54717fa6a78a13448dfb0e5d81"
+    },
+    "private_encoded_image_ledger": {
+      "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger.json",
+      "sha256": "b020468431537b0622d2786252db679ebe12c1843c717a1d0325acd0d6c3915b",
+      "viewed_encoded_bytes": 197270
+    }
+  },
+  "quality_scope": "Strict unique-tier independent physical model/equipment/heading/anatomy/motion/loops-entry-exit/scale-footing reading of actual compiled TRES crops reconstructed by PIL at exact profile scale, not Godot screenshots. No original art changed and no body bbox fitting, flatY or hidden-joint exactpoint requirement imposed.43-track certificate transfers by exact pose/timing/profile/script equivalence only and images were not reopened. Future revisions need exact equality transfer.",
+  "actual_default_Main_status": "Separate root Godot/default Main evidence required; not certified here.",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_completed": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

@@ -1,0 +1,433 @@
+{
+  "status": "PASS_EXACT_SIX_REVIEWED_NATIVE_SOURCES_AND_UNIFORM_SHIPPING_STORAGE_WORLD_EQUIVALENCE",
+  "request": {
+    "path": "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/request-SEdeathSixActualRig01.json",
+    "sha256": "1b19b34c7570b77333647b79fac4b30b395c5e77c8b2d68eee4e09492cd05b2b",
+    "bytes": 6514
+  },
+  "raw": {
+    "path": "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/thunder_female-SE-death-six-actual-poses-r001.png",
+    "sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "bytes": 6728269
+  },
+  "packing": {
+    "path": "/workspace/scratch/mythic413-SE-death-actual-packed-r001-20261020/thunder_female-SE-death-six-actual-poses-r001.packing.json",
+    "sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+    "bytes": 5611
+  },
+  "source_review": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SEdeath-v08-a5ca0a-independent-final-actual-source-held-cycle-PASS-v01.json",
+    "sha256": "905c497089be67b3ff8724997b63b152f52f2b53250d624f79c7cb7b3c240262",
+    "bytes": 14850
+  },
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/own-SE-DEATH-six-actual-native-source-contract-v08.json",
+    "sha256": "a5ca0a93aa964ad161e1432a32a79397cdeaf00e3a59f4daf1558fdba00d62a8",
+    "bytes": 181908
+  },
+  "canonical_declared_descriptor": {
+    "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+    "source_sha256": "400c5706517b6db35ec88bf7c34162ab85be5bf41a27e0ba3427626aef044a2a",
+    "packing_proof_sha256": "0deedef8724ecd4cccea426fdf8e025882002b866cfe63eb64442bf99a7179d5",
+    "direction": "SE",
+    "canonical_canvas": 2048,
+    "physical_canvases": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "root_float": [
+      723.7916666666666,
+      1067.2150113422247
+    ],
+    "root_integer": [
+      724,
+      1067
+    ],
+    "tile_size": 2304,
+    "storage_translations": [
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ],
+      [
+        256,
+        256
+      ]
+    ],
+    "atlas_origins": [
+      [
+        0,
+        0
+      ],
+      [
+        2304,
+        0
+      ],
+      [
+        0,
+        2304
+      ],
+      [
+        2304,
+        2304
+      ],
+      [
+        0,
+        4608
+      ],
+      [
+        2304,
+        4608
+      ]
+    ],
+    "source_anchors": [
+      [
+        980,
+        1323
+      ],
+      [
+        3284,
+        1323
+      ],
+      [
+        980,
+        3627
+      ],
+      [
+        3284,
+        3627
+      ],
+      [
+        980,
+        5931
+      ],
+      [
+        3284,
+        5931
+      ]
+    ]
+  },
+  "canonical_declared_descriptor_sha256": "a057dfb91cb45c39e15f2548250be55e024649db41f62cedb3f35cb827703292",
+  "required_runtime_adoption": [
+    "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+    "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval."
+  ],
+  "runtime_adoption_approved": false,
+  "six_source_bindings": [
+    {
+      "phase": 0,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase0-actual-native-v08.png",
+        "sha256": "bc008838b0fdcdf4a184bd4c7f037649acc3da09d800a2dd5874d07c8e611a0a",
+        "bytes": 1062647
+      },
+      "original_source_RGBA_sha256": "31beedf6f79f7dde837cd65024927ac4cb6b50d5bf15b39e19008f5d55f8419b",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase0-actual-native-v08.png",
+        "sha256": "bc008838b0fdcdf4a184bd4c7f037649acc3da09d800a2dd5874d07c8e611a0a",
+        "bytes": 1062647
+      },
+      "shipping_RGBA_sha256": "31beedf6f79f7dde837cd65024927ac4cb6b50d5bf15b39e19008f5d55f8419b",
+      "original_size": [
+        2304,
+        2304
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        256,
+        256
+      ],
+      "shipping_storage": [
+        256,
+        256
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 396434,
+      "shipping_alpha_positive_count": 396434,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2816,
+      "source_anchor": [
+        980,
+        1323
+      ]
+    },
+    {
+      "phase": 1,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase1-actual-native-v08.png",
+        "sha256": "f5b8e3991787dbc934f6133b1f45dd0e8d43da4d3cfb07a1f3c7259d432f3298",
+        "bytes": 1120886
+      },
+      "original_source_RGBA_sha256": "b7241ea0385b747b7d58eba8299d461c58a0f9f41a0cbb309d80860f6b688e03",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase1-actual-native-v08.png",
+        "sha256": "f5b8e3991787dbc934f6133b1f45dd0e8d43da4d3cfb07a1f3c7259d432f3298",
+        "bytes": 1120886
+      },
+      "shipping_RGBA_sha256": "b7241ea0385b747b7d58eba8299d461c58a0f9f41a0cbb309d80860f6b688e03",
+      "original_size": [
+        2304,
+        2304
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        256,
+        256
+      ],
+      "shipping_storage": [
+        256,
+        256
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 418809,
+      "shipping_alpha_positive_count": 418809,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2816,
+      "source_anchor": [
+        3284,
+        1323
+      ]
+    },
+    {
+      "phase": 2,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase2-actual-native-v08.png",
+        "sha256": "16ae684d5e36e740ba50ed04f8105e11c0f50807919900ad7311061bcde97589",
+        "bytes": 1200546
+      },
+      "original_source_RGBA_sha256": "d7e0a4acbe7efaa61f1d85a85eadf337e2fccc08b9df2624697425ad7a43025a",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase2-actual-native-v08.png",
+        "sha256": "16ae684d5e36e740ba50ed04f8105e11c0f50807919900ad7311061bcde97589",
+        "bytes": 1200546
+      },
+      "shipping_RGBA_sha256": "d7e0a4acbe7efaa61f1d85a85eadf337e2fccc08b9df2624697425ad7a43025a",
+      "original_size": [
+        2304,
+        2304
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        256,
+        256
+      ],
+      "shipping_storage": [
+        256,
+        256
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 462513,
+      "shipping_alpha_positive_count": 462513,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2816,
+      "source_anchor": [
+        980,
+        3627
+      ]
+    },
+    {
+      "phase": 3,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase3-actual-native-v08.png",
+        "sha256": "eeadaebd37dbec5af495a96990a671f65e3125f5e6b76fcc25ea06d7a7dff918",
+        "bytes": 1153282
+      },
+      "original_source_RGBA_sha256": "ba4c86cb7cb7cee4eef021780ac5a2bfd2df6e35b2ab2346628c95ecd1e8aca2",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase3-actual-native-v08.png",
+        "sha256": "eeadaebd37dbec5af495a96990a671f65e3125f5e6b76fcc25ea06d7a7dff918",
+        "bytes": 1153282
+      },
+      "shipping_RGBA_sha256": "ba4c86cb7cb7cee4eef021780ac5a2bfd2df6e35b2ab2346628c95ecd1e8aca2",
+      "original_size": [
+        2304,
+        2304
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        256,
+        256
+      ],
+      "shipping_storage": [
+        256,
+        256
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 462147,
+      "shipping_alpha_positive_count": 462147,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2816,
+      "source_anchor": [
+        3284,
+        3627
+      ]
+    },
+    {
+      "phase": 4,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase4-actual-native-v08.png",
+        "sha256": "769899defcaa433b574b7c5d76c3af9aa1da9900b9c7007acb33441b707b44ea",
+        "bytes": 1071405
+      },
+      "original_source_RGBA_sha256": "172b62bd6f731e153f3400380ed7959c7b9c2354f984fa09a4648617f554ea74",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase4-actual-native-v08.png",
+        "sha256": "769899defcaa433b574b7c5d76c3af9aa1da9900b9c7007acb33441b707b44ea",
+        "bytes": 1071405
+      },
+      "shipping_RGBA_sha256": "172b62bd6f731e153f3400380ed7959c7b9c2354f984fa09a4648617f554ea74",
+      "original_size": [
+        2304,
+        2304
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        256,
+        256
+      ],
+      "shipping_storage": [
+        256,
+        256
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 411792,
+      "shipping_alpha_positive_count": 411792,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2816,
+      "source_anchor": [
+        980,
+        5931
+      ]
+    },
+    {
+      "phase": 5,
+      "original_reviewed_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase5-actual-native-v08.png",
+        "sha256": "985701647822ea6be4c671fc71b7a54b927d5dd0bdcd4cabd7e3a610d946b1e1",
+        "bytes": 1097260
+      },
+      "original_source_RGBA_sha256": "d6871cc2439f5093871b8aa046d1a87548a9be3934fec741aed5d1a246792b45",
+      "shipping_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v08/SE-DEATH-phase5-actual-native-v08.png",
+        "sha256": "985701647822ea6be4c671fc71b7a54b927d5dd0bdcd4cabd7e3a610d946b1e1",
+        "bytes": 1097260
+      },
+      "shipping_RGBA_sha256": "d6871cc2439f5093871b8aa046d1a87548a9be3934fec741aed5d1a246792b45",
+      "original_size": [
+        2304,
+        2304
+      ],
+      "shipping_tile": [
+        2304,
+        2304
+      ],
+      "uniform_storage_translation": [
+        0,
+        0
+      ],
+      "original_storage": [
+        256,
+        256
+      ],
+      "shipping_storage": [
+        256,
+        256
+      ],
+      "original_RGBA_reverse_reconstruction_mismatch": 0,
+      "shipping_all_RGBA_mismatch": 0,
+      "original_alpha_positive_count": 422897,
+      "shipping_alpha_positive_count": 422897,
+      "world_coordinate_equivalence": "Exact integer identity: (source+shift)-(originalStorage+shift)-root == source-originalStorage-root",
+      "physical_C": 2816,
+      "source_anchor": [
+        3284,
+        5931
+      ]
+    }
+  ],
+  "physical_C": 2816,
+  "common_unpadded_root": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "original_storage": [
+    256,
+    256
+  ],
+  "shipping_storage": [
+    256,
+    256
+  ],
+  "same_integer_translation_all6": [
+    0,
+    0
+  ],
+  "uniform_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "source_resampled": false,
+  "root_C_profile_or_motion_controls_changed": false,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

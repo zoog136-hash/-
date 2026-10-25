@@ -1,0 +1,35 @@
+{
+  "key": "transform_267",
+  "name": "Girtas",
+  "direction": "E",
+  "role": "walk",
+  "version": "v09LEFTcontact0",
+  "source_pose": 0,
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "source_batch": "batch03",
+  "status": "AUTHORING_DISTINCT_MISSING_LEFT_CONTACT_KEY_NOT_ACTOR_COMPLETION",
+  "references": [
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase0.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase0.png": "58f1f2e3ba738f9258a8e1fba83c7c4d167c4c084b4eeb379847c70af0a8ab38",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/upperbody-no-legs.png": "2bca0f2c9a51147bc21c73399fa784db1e1064c5867fe025f394973c6d1bc2ca",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/longrobe-panel-detail-no-boots.png": "a78d2038c54a75e901d9d94d42cb6c35ff372dcbc2defcef425e8d01f2429b70",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/original-sinuous-blade-detail-no-legs.png": "d6650ea48f1b708be9f5fd0815fbd9907d8d31c02368bb4a48e1aed6cc2d2f13"
+  },
+  "transparent_background": true,
+  "prompt": "Create ONE complete high-detail Girtas production WALK key, transparent background, one full character with generous margins, no labels/guides/scene. This is the OPPOSITE contact0: anatomical LEFT FAR leg leads to imageRIGHT, anatomical RIGHT NEAR leg trails to imageLEFT. It must differ physically from a right-leg-leading step.\nImage1 is the PRIMARY exact three-dimensional pose/depth authority. Dress THIS mannequin, do not redraw another stance. Orange = anatomical RIGHT NEAR leg: HIP beside the weapon-hand side, upper thigh slants BACKWARD down/imageLEFT, rear knee connects to rear shin and toe on imageLEFT. Blue = anatomical LEFT FAR leg: upper thigh behind the robe advances FORWARD down/imageRIGHT, leading knee/shin/heel on imageRIGHT. Blackgold final armor only, never orange/blue. Crucial visible anatomical proof: keep a continuous strip of the NEAR RIGHT HIP\u2192BACKWARD upperthigh\u2192REAR KNEE armor visible in FRONT of the trailing robe edge through its natural side slit, so the near right leg is unambiguously the REAR one. The leading farLEFT shin must remain BEHIND the long front robe panel/near robe edge, not pop forward as a near-right thigh. Exactly TWO legs. Leading FAR LEFT heel touching ground with toe slightly raised; trailing NEAR RIGHT toe touches ground with heel raised. NEAR trailing toe projects on lower foreground lane, FAR leading heel on upper lane. No airborne running.\nImage2 provides only Girtas identity, with all old legs deliberately removed: pale profile looking RIGHT, long pale gray hair, fine HARD straight narrow gold radial rays, black/gold armor, the same long flowing robe. Image3 supplies only longrobe cloth/gold trim: preserve ankle-length hanging panels, naturally separate the near side slit around the BACKWARD right thigh, not a short coat/pants. Image4 supplies only the original long sinuous dark/gold blade. Anatomical RIGHT NEAR arm continuously grips it low/back to imageLEFT; anatomical LEFT FAR hand empty. Exactly TWO connected arms. Same faithful face/crown/armor/weapon, pure E fixed side camera as the primary mannequin, profile and nose RIGHT, not SE. Full blade, hair, narrow rays, hands and both complete boots inside frame. One new exact opposite-contact pose, no duplicate pose sheet.",
+  "corrective_reason": "Independent v07 opposite-support HOLD; new phase0 must show nearRIGHT upperthigh slant BACK to rear knee, opposite to independently confirmed v08 nearRIGHT forward thigh. Not repeating full6 or relabeling hidden joints.",
+  "confirmed_opposite_key": {
+    "path": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+    "sha256": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+    "independent_proof_sha256": "215605660184d4b219ff2f20ade3df0e5e4b742b4810e667b08dbc5b36ebbd61",
+    "not_referenced_to_avoid_copying_wrong_stance": true
+  },
+  "quality_gate": "Visible actual nearRIGHT backward hip\u2192thigh\u2192knee; farLEFT front heel contact; no approval from guide/soleY alone."
+}

@@ -1,0 +1,49 @@
+{
+  "status": "PASS_INDEPENDENT_ONCE_BODY_REGISTRATION_ARITHMETIC",
+  "actor_id": 413,
+  "direction": "S",
+  "registration": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-native-one-time-body-density-C2560-root-registration-v01.json",
+    "sha256": "c9a5c8752e3daf303b4685c02fed424628aa621fe8ad05ff97ddbab838673480",
+    "bytes": 3681
+  },
+  "actual_source": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "dbfbca5fd54a9f5d4f704de59c7d61e586f2d9c410f48f07f233b14096a98e25",
+    "bytes": 919345
+  },
+  "canonical_N_source": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+    "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+    "bytes": 452591
+  },
+  "checks": {
+    "N_neck_waist_vector_native": [
+      4,
+      160
+    ],
+    "S_neck_waist_vector_native": [
+      1,
+      213
+    ],
+    "exact_C": 2556.0,
+    "nearest64_C": 2560,
+    "fixed_bodyunit": 2.5,
+    "vertical_span_error_fraction": -0.0015624999999999112,
+    "full2D_span_crosscheck_fraction": -0.0018633655158662998,
+    "once_hem_registered_root": [
+      655.0833333333334,
+      1017.9227375838406
+    ],
+    "root_max_error_native": 0.0,
+    "stored_root_max_error_native": 0.0,
+    "normalized_crown_height_difference_fraction": 0.005525333591849035,
+    "normalized_neck_height_difference_fraction": -0.008053939744449568
+  },
+  "limits": [
+    "Front lower-neck and garment beltline vs back-view nape/ornament are uncertain anatomical garment proxies (+/-10native), not identical visible pixels.",
+    "Arithmetic confirms one fixed authored production convention; it does not determine unique hidden anatomy or physical sole/floor. No feet, alpha-height, perpose fit or image resampling enters C/root."
+  ],
+  "new_images_for_numeric_check": 0,
+  "actor_approvals_added": 0
+}

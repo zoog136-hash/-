@@ -1,0 +1,27 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_E_RUN_RUNTIME_TRANSITION_AND_LOOP",
+  "actor_key": "transform:393",
+  "revision": "r056",
+  "checkpoint": "9dd799140883943f0781ebbe3233c0c113dc4a76",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/halpas_393/r056/SpriteFrames.tres",
+  "frames_sha256": "3fd27494cdc9e6d74880c8e7d012a138414754692650bb3bb3200a2c02aa02b2",
+  "scope": [
+    "Eidle0_and_Ewalk0_to_Erun0",
+    "Erunall6",
+    "Erun5_to0"
+  ],
+  "all_nine_actual_tres_crop_regions_margins_and_SHA_match": true,
+  "runtime_canvas": 1280,
+  "findings": [
+    "Eidle/Ewalk/Erun now share matching physical head/shoulder/torso/hip scale; previous25percent canvas enlargement is removed.",
+    "Measured physical pelvisX root removes bounding-box placement jump while retaining authentic run forward torso lean and rearward trailing legs. OriginalY anchors/bob remain unchanged.",
+    "All six trueE run phases keep same two limbs per side, right-hand purple weapon, redcape and purplegoldwing identity. Wingbeat progresses high\u2192back\u2192down\u2192down\u2192rise\u2192high and5\u21920 returns coherently.",
+    "No new canvas-driven body size, source column root or direction jump is visible at idle/walk\u2192run or5\u21920 seam. Flight feet retain motion; no new planted-foot rule is imposed."
+  ],
+  "source_RGBA_changed": false,
+  "actor_approval_granted": false,
+  "detailed_complete_added": 0,
+  "private_preview_not_for_chat": true,
+  "private_preview_bytes": 137703
+}

@@ -1,0 +1,38 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02-3D-load4blade01",
+  "raw_path": "/workspace/scratch/girtas-W-run-load4-blade-continuity-repair-v02/girtas-W-run-load4-blade-continuity-repair-v02.png",
+  "raw_png": "/workspace/scratch/girtas-W-run-load4-blade-continuity-repair-v02/girtas-W-run-load4-blade-continuity-repair-v02.png",
+  "raw_sha256": "47d751baed6fb8f6863e2ff070d80bc296b88f5e6d58bbc4235504f0f9ade820",
+  "raw_bytes": 1389825,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_sha256": "42ba07e22c04eb18ad3371fec90e029e884b3ae934c16c06deee8e2f5ef43e0f",
+  "expected_poses": 1,
+  "game_phases": [
+    4
+  ],
+  "newly_authored_poses": 0,
+  "revised_poses": 1,
+  "originating_newly_authored_poses": 1,
+  "source_visual_status": "PASS",
+  "motion_visual_status": "PASS_SCOPED_FAR_RIGHT_LOAD_NEAR_LEFT_RECOVERY",
+  "identity_visual_status": "PASS",
+  "geometry_status": "PASS_STRICT_PARTIAL1",
+  "integration_ready": false,
+  "independent_source_review_path": "/workspace/scratch/girtas-private-qc-v02-20261019/W-run-new-repaired-load4-AIR5-independent-source-QC-v01.json",
+  "independent_source_review_sha256": "7c7acb6af9967722744487f443f4f93ca7b54822167aa5b6e8e0880ba34d60ef",
+  "actor_approval": false,
+  "approved_actor_count_added": 0,
+  "visual_findings": [
+    "Independent repaired4 preserves genuine farRIGHT flexed flat load and nearLEFT separate recovered leg; original Widentity/rays/longrobe/equipment preserved.",
+    "Actual full gold/fire waveblade tip is continuous; detached273px fragment originalraw preservedHOLD; unchanged strictoneposeguard passes now.",
+    "Partialsource candidate only. BodyC/root/worldfloor/full6/actualcompiledgame and actor approval remain HOLD."
+  ]
+}

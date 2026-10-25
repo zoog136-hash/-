@@ -1,0 +1,65 @@
+{
+  "schema": "PR122-SE-cape-actual-local-retouch-generation-handoff-v1",
+  "status": "ACTUAL_NEW_HIDDEN_CAPE_FABRIC_REQUIRED_NO_SOURCE_APPROVAL",
+  "source_original_immutable": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/SE-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "a322b55c6ff5a0945cb5480512007c4efe2c335ab4a690bdd57bbca18226f076",
+    "bytes": 992950
+  },
+  "source_native_size": [
+    1254,
+    1254
+  ],
+  "crop_input": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/original-SE-cape-and-foreground-pole-native-crop-250.png",
+    "sha256": "20805489172c493bee15ee3ee80d4e79b6e5386e4b1d983b8fb13a5b969cd172",
+    "bytes": 92486
+  },
+  "crop_native_rect_xyxy": [
+    275,
+    750,
+    525,
+    1000
+  ],
+  "crop_size": [
+    250,
+    250
+  ],
+  "crop_origin_in_original_native": [
+    275,
+    750
+  ],
+  "replacement_mask_crop": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-SE-real-cape-native-mask-250.png",
+    "sha256": "33c5104adbfa41b99d2f150583f07925d1350c9a1604257aa01bbb22795dd39b",
+    "bytes": 1052
+  },
+  "replacement_mask_fullnative": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-SE-real-cape-fullnative-mask.png",
+    "sha256": "a216b5fec1b0d4bd76e9980bcf2f480c26923939b7d4bce22414eec3276812bb",
+    "bytes": 2739
+  },
+  "replacement_native_bbox": [
+    381,
+    755,
+    446,
+    965
+  ],
+  "replacement_native_pixels": 6583,
+  "protected_original_outside_mask": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/protected-original-SE-native-cape-outside-replacement-mask.png",
+    "sha256": "cc95128dd1954a6656761a838a16c0683f9faacef181ee5f4ae07b30521999fc",
+    "bytes": 75829
+  },
+  "protected_outside_required_RGBA_difference": 0,
+  "source_body_C_root_unit_resample_or_perpose_footfit": false,
+  "shared_registration": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/SE-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "7c7ab9bed7adb561762c88a39facb00815b5ab2c23cec533d0adbcf7d757f1c6",
+    "bytes": 3724
+  },
+  "paint_only_this": "This is SE-specific original dark royal-blue/gold cape. Foreground gold pole with small collars occludes real cape cloth. Paint only the newly revealed cloth behind the pole: continuous dark royal blue silk folds, same warm gold cross/star emblems and curved thick gold hem, no pole. Keep adjacent native visible cape/art placement and silhouette unchanged. Do not invent disconnected gold chunks or straight seam; follow the original visible curved hem and cross/star geometry. Body/hand/boots not present and must not be added. No whole character generation, no actor mirror or reused E painting.",
+  "service_input_context": "Use only this original native250 crop plus exact occluded-cape mask; one real local cloth retouch. Fullsource is immutable identity only. Existing raw generation and failed work must be preserved.",
+  "output_contract": "File paths/SHA/request/provenance only, no imageblocks/Base64 to root/user. Preserve raw output untouched. Author maps service crop to exact250 native and uses bounded local mask, with exact originalRGBA outside.",
+  "actor_approvals_added": 0
+}

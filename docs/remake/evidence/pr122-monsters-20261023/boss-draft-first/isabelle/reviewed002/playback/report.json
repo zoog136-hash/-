@@ -1,0 +1,808 @@
+{
+	"camera_zoom": 1.0,
+	"capture_enabled": true,
+	"cases": [
+		{
+			"actual_Monster_reference_speed": 85.0,
+			"capture_count": 50,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/SpriteFrames.tres",
+			"key": "monster:질투의 공주 이자벨",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/isabelle/isabelle-idle/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_0:0",
+						"idle_0:1",
+						"idle_0:2",
+						"idle_0:3",
+						"idle_0:4",
+						"idle_0:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.909476
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "N",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_6:0",
+						"idle_6:1",
+						"idle_6:2",
+						"idle_6:3",
+						"idle_6:4",
+						"idle_6:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.47019
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"idle_5:1",
+						"idle_5:2",
+						"idle_5:3",
+						"idle_5:4",
+						"idle_5:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.49062
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"idle_2:2",
+						"idle_2:3",
+						"idle_2:4",
+						"idle_2:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.557754
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"idle_1:1",
+						"idle_1:2",
+						"idle_1:3",
+						"idle_1:4",
+						"idle_1:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.510162
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"idle_3:1",
+						"idle_3:2",
+						"idle_3:3",
+						"idle_3:4",
+						"idle_3:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.493918
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"idle_4:1",
+						"idle_4:2",
+						"idle_4:3",
+						"idle_4:4",
+						"idle_4:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.482795
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 85.0,
+			"capture_count": 42,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/SpriteFrames.tres",
+			"key": "monster:질투의 공주 이자벨",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/isabelle/isabelle-run/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_0:0",
+						"run_0:0",
+						"run_0:1",
+						"run_0:2",
+						"run_0:3",
+						"run_0:4",
+						"run_0:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.035229
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"run_7:0",
+						"run_7:1",
+						"run_7:2",
+						"run_7:3",
+						"run_7:4",
+						"run_7:5"
+					],
+					"simulated_seconds": 0.8,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.838908
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"run_5:0",
+						"run_5:1",
+						"run_5:2",
+						"run_5:3",
+						"run_5:4",
+						"run_5:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.038073
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"run_2:0",
+						"run_2:1",
+						"run_2:2",
+						"run_2:3",
+						"run_2:4",
+						"run_2:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.068068
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"run_1:0",
+						"run_1:1",
+						"run_1:2",
+						"run_1:3",
+						"run_1:4",
+						"run_1:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.105485
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"run_3:0",
+						"run_3:1",
+						"run_3:2",
+						"run_3:3",
+						"run_3:4",
+						"run_3:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.068988
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 85.0,
+			"capture_count": 79,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/SpriteFrames.tres",
+			"key": "monster:질투의 공주 이자벨",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/isabelle/isabelle-attack/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_0:0",
+						"attack_0:0",
+						"attack_0:1",
+						"attack_0:2",
+						"attack_0:3",
+						"attack_0:4",
+						"attack_0:5",
+						"idle_0:1"
+					],
+					"simulated_seconds": 1.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 44
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.894134
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "N",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_6:0",
+						"attack_6:0",
+						"attack_6:1",
+						"attack_6:2",
+						"attack_6:3",
+						"attack_6:4",
+						"attack_6:5",
+						"idle_6:1"
+					],
+					"simulated_seconds": 1.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 44
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.850106
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"attack_7:0",
+						"attack_7:1",
+						"attack_7:2",
+						"attack_7:3",
+						"attack_7:4",
+						"attack_7:5",
+						"attack_0:0"
+					],
+					"simulated_seconds": 1.55,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 32
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.687473
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"attack_5:0",
+						"attack_5:1",
+						"attack_5:2",
+						"attack_5:3",
+						"attack_5:4",
+						"attack_5:5",
+						"idle_5:1"
+					],
+					"simulated_seconds": 1.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 44
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.886941
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"attack_2:0",
+						"attack_2:1",
+						"attack_2:2",
+						"attack_2:3",
+						"attack_2:4",
+						"attack_2:5"
+					],
+					"simulated_seconds": 1.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 44
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.836166
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"attack_1:0",
+						"attack_1:1",
+						"attack_1:2",
+						"attack_1:3",
+						"attack_1:4",
+						"attack_1:5",
+						"idle_1:1"
+					],
+					"simulated_seconds": 1.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 44
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.816631
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"attack_3:0",
+						"attack_3:1",
+						"attack_3:2",
+						"attack_3:3",
+						"attack_3:4",
+						"attack_3:5",
+						"idle_3:1"
+					],
+					"simulated_seconds": 1.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 44
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.842183
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"attack_4:0",
+						"attack_4:1",
+						"attack_4:2",
+						"attack_4:3",
+						"attack_4:4",
+						"attack_4:5",
+						"idle_4:1"
+					],
+					"simulated_seconds": 1.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.55,
+							"sequence": 1,
+							"tick": 44
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.799107
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 85.0,
+			"capture_count": 64,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/SpriteFrames.tres",
+			"key": "monster:질투의 공주 이자벨",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/isabelle/isabelle-hit/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_0:0",
+						"hit_0:1",
+						"hit_0:2",
+						"hit_0:3",
+						"hit_0:4",
+						"hit_0:5",
+						"idle_0:1",
+						"idle_0:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.90948
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "N",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_6:0",
+						"hit_6:1",
+						"hit_6:2",
+						"hit_6:3",
+						"hit_6:4",
+						"hit_6:5",
+						"idle_6:1",
+						"idle_6:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.879235
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"hit_5:1",
+						"hit_5:2",
+						"hit_5:3",
+						"hit_5:4",
+						"hit_5:5",
+						"idle_5:1",
+						"idle_5:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.93056
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"hit_2:1",
+						"hit_2:2",
+						"hit_2:3",
+						"hit_2:4",
+						"hit_2:5",
+						"idle_2:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.016798
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"hit_1:1",
+						"hit_1:2",
+						"hit_1:3",
+						"hit_1:4",
+						"hit_1:5",
+						"idle_1:1",
+						"idle_1:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.970537
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"hit_3:1",
+						"hit_3:2",
+						"hit_3:3",
+						"hit_3:4",
+						"hit_3:5",
+						"idle_3:1",
+						"idle_3:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.902334
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "hit",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"hit_4:1",
+						"hit_4:2",
+						"hit_4:3",
+						"hit_4:4",
+						"hit_4:5",
+						"idle_4:1",
+						"idle_4:2"
+					],
+					"simulated_seconds": 0.75,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.905974
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 85.0,
+			"capture_count": 8,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/SpriteFrames.tres",
+			"key": "monster:질투의 공주 이자벨",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/isabelle/isabelle-death/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 85.0,
+					"role": "death",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"death_2:0",
+						"death_2:1",
+						"death_2:2",
+						"death_2:3",
+						"death_2:4",
+						"death_2:5"
+					],
+					"simulated_seconds": 1.35,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.42197
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		}
+	],
+	"display_server": "X11",
+	"engine": "4.7.2-stable (official)",
+	"quality_approval_changes": 0,
+	"schema": "pr122-boss-fix-real-speed-qa-v1",
+	"scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval.",
+	"simulation_dt": 0.0166666666666667,
+	"speed_scale": 1.0,
+	"video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

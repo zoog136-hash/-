@@ -1,0 +1,25 @@
+{
+  "actor": "monster:테베 오시리스",
+  "slug": "thebes_osiris",
+  "clip": "S-hit-v01",
+  "role": "hit",
+  "direction": "S",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/S-hit-v01.png",
+  "source_sha256": "076481e149f385c147b635869041f6e7aaba72551fe09237d45bcb0e1181dee6",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      87387,
+      85598,
+      85203,
+      84273,
+      77581,
+      72609
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

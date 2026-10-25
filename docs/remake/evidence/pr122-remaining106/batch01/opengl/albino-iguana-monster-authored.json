@@ -1,0 +1,1920 @@
+{
+	"boss": [],
+	"checks": 1260,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792124862.67463,
+				"expires_at": 1792125462.67463,
+				"grade": "일반",
+				"hunt_batch": "677a22dc67295a20613ff818bb5bc089",
+				"id": "afb55949973a7286d0213d6d678b99b0",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					15141.7255859375,
+					6498.2744140625
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1880,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 27
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(99.16992, 0.0)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(70.11719, 70.11719)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 99.16992)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-70.11719, 70.11719)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-99.16992, 0.0)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-70.11719, -70.11719)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -99.16992)",
+			"name": "알비노 이구아나",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(70.11719, -70.11719)",
+			"name": "알비노 이구아나",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 34,
+			"facing": 0,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 1,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 2,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 3,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 4,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 5,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 6,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		},
+		{
+			"damage": 34,
+			"facing": 7,
+			"kind": "melee",
+			"name": "알비노 이구아나"
+		}
+	],
+	"physics_ticks": 1216,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				14963.708984375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "881950caf9ed1f0d08917042c2808531a27a9eef9f0bf9231d3a53a33148c947",
+			"visible_body_viewport": [
+				519.927490234375,
+				235.584060668945,
+				180.510375976562,
+				208.420211791992
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15060.8955078125,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-E-attack-0.png",
+			"physics_tick": 69,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "bdd3432c4e389b0672899ecd8535f540a5bcfc13b9c06f8444496d8eba3221f0",
+			"visible_body_viewport": [
+				545.393920898438,
+				245.041580200195,
+				154.951782226562,
+				201.139389038086
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15060.8955078125,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-E-attack-1.png",
+			"physics_tick": 87,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "804271454e92979c32cfa3f9789565306f70cfdf4aeae317cc154d7365a2a46b",
+			"visible_body_viewport": [
+				550.608642578125,
+				301.658569335938,
+				270.420715332031,
+				144.522369384766
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15060.8955078125,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-E-contact.png",
+			"physics_tick": 87,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "804271454e92979c32cfa3f9789565306f70cfdf4aeae317cc154d7365a2a46b",
+			"visible_body_viewport": [
+				550.608642578125,
+				301.658569335938,
+				270.420715332031,
+				144.522369384766
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15004.1328125,
+				6400.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SE-walk.png",
+			"physics_tick": 100,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "d660b8f2d31067201d05dbad7a17c0fe4fb3b393cad9d07648c109e394bb4f98",
+			"visible_body_viewport": [
+				469.529113769531,
+				194.420120239258,
+				226.491333007812,
+				249.58219909668
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15072.84765625,
+				6469.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SE-attack-0.png",
+			"physics_tick": 151,
+			"player_hp": 1801,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "b6f8c221d6d4c8125e62d7f69fc71f63c86b42e43376031a6487dc05e7ce4f5b",
+			"visible_body_viewport": [
+				558.79931640625,
+				256.958984375,
+				154.206848144531,
+				189.220031738281
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15072.84765625,
+				6469.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SE-attack-1.png",
+			"physics_tick": 169,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "b19648ac8316cd9eee8672ef95cd9212048845acd34c074a49c4e595c5f435a2",
+			"visible_body_viewport": [
+				557.309387207031,
+				297.931823730469,
+				230.192810058594,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15072.84765625,
+				6469.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SE-contact.png",
+			"physics_tick": 169,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "b19648ac8316cd9eee8672ef95cd9212048845acd34c074a49c4e595c5f435a2",
+			"visible_body_viewport": [
+				557.309387207031,
+				297.931823730469,
+				230.192810058594,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6360.2578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-S-walk.png",
+			"physics_tick": 182,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "fce6890bcc721044a89a027c2e6f995bb604cfcb353582602c5ce6bc8d7d88c6",
+			"visible_body_viewport": [
+				519.135131835938,
+				225.087738037109,
+				189.632751464844,
+				223.669403076172
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6457.4443359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-S-attack-0.png",
+			"physics_tick": 233,
+			"player_hp": 1770,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "7b4fccda8429179c374fd2b8bfef2bdbf026016f7457206578fc6353df4d5fc5",
+			"visible_body_viewport": [
+				558.79931640625,
+				251.000289916992,
+				148.247192382812,
+				195.92463684082
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6457.4443359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-S-attack-1.png",
+			"physics_tick": 251,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "f0a3d9d7e93b600c0a8e02d824447c6c3f1053d3f786575cbec3437130d93148",
+			"visible_body_viewport": [
+				561.779113769531,
+				293.463043212891,
+				147.502197265625,
+				168.361114501953
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6457.4443359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-S-contact.png",
+			"physics_tick": 251,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "f0a3d9d7e93b600c0a8e02d824447c6c3f1053d3f786575cbec3437130d93148",
+			"visible_body_viewport": [
+				561.779113769531,
+				293.463043212891,
+				147.502197265625,
+				168.361114501953
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15199.318359375,
+				6400.681640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SW-walk.png",
+			"physics_tick": 264,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "93867ac5c84a8312aec4e6635533f96f11aecea873cd22a570f2e2a421ad5e7b",
+			"visible_body_viewport": [
+				533.690734863281,
+				257.449981689453,
+				225.469116210938,
+				189.837982177734
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15130.603515625,
+				6469.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SW-attack-0.png",
+			"physics_tick": 315,
+			"player_hp": 1739,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "682467de08a7b32d789ccf0cd0644676532248351e1f07b06df1b7dd32865f1c",
+			"visible_body_viewport": [
+				575.933349609375,
+				252.489227294922,
+				166.126220703125,
+				193.689788818359
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15130.603515625,
+				6469.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SW-attack-1.png",
+			"physics_tick": 333,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "b9e02222e1b17771f51fc0f6d6ee94ddac6e99481b974e69adc6b51c28c5005b",
+			"visible_body_viewport": [
+				492.497802734375,
+				297.931823730469,
+				236.152526855469,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15130.603515625,
+				6469.396484375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-SW-contact.png",
+			"physics_tick": 333,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "b9e02222e1b17771f51fc0f6d6ee94ddac6e99481b974e69adc6b51c28c5005b",
+			"visible_body_viewport": [
+				492.497802734375,
+				297.931823730469,
+				236.152526855469,
+				148.247192382812
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15239.7421875,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-W-walk.png",
+			"physics_tick": 346,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "78a7ea9703d95fbb6c6239b6f97d862f38e6c423b908a220f7a1228183dec564",
+			"visible_body_viewport": [
+				571.094360351562,
+				202.363677978516,
+				222.669372558594,
+				241.723663330078
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15142.5556640625,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-W-attack-0.png",
+			"physics_tick": 397,
+			"player_hp": 1708,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "2e051c9daf7143a4b065b23784a1135fc8d29788ee285e03fd0aa1652b57b43e",
+			"visible_body_viewport": [
+				573.257629394531,
+				226.851181030273,
+				207.910766601562,
+				219.418716430664
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15142.5556640625,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-W-attack-1.png",
+			"physics_tick": 415,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "8344eeb1b09fedc0ad02bea329d3114dfd7d76b172ca46eb45e41ff15c65a439",
+			"visible_body_viewport": [
+				452.807495117188,
+				292.830261230469,
+				322.223266601562,
+				153.439666748047
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15142.5556640625,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-W-contact.png",
+			"physics_tick": 415,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "8344eeb1b09fedc0ad02bea329d3114dfd7d76b172ca46eb45e41ff15c65a439",
+			"visible_body_viewport": [
+				452.807495117188,
+				292.830261230469,
+				322.223266601562,
+				153.439666748047
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15199.318359375,
+				6595.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NW-walk.png",
+			"physics_tick": 428,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "c6cdeed3c3d4bc1714d6bd584ac35edea9cf0e97a9a2f52427152679d243aa64",
+			"visible_body_viewport": [
+				545.22705078125,
+				212.577285766602,
+				225.573425292969,
+				231.539779663086
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15130.603515625,
+				6527.15234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NW-attack-0.png",
+			"physics_tick": 479,
+			"player_hp": 1677,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "da78dd8373deb31aeabf3966daefbccebe472faed23e2239ecaa0609774fcddd",
+			"visible_body_viewport": [
+				583.227294921875,
+				229.918029785156,
+				182.593200683594,
+				219.418701171875
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15130.603515625,
+				6527.15234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NW-attack-1.png",
+			"physics_tick": 497,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "484ba038262b7d6d80b80528f635a3ec54a509dd9e53d23ad08b7d6e0663a1bb",
+			"visible_body_viewport": [
+				538.729797363281,
+				228.383636474609,
+				234.7626953125,
+				219.418731689453
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15130.603515625,
+				6527.15234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NW-contact.png",
+			"physics_tick": 497,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "484ba038262b7d6d80b80528f635a3ec54a509dd9e53d23ad08b7d6e0663a1bb",
+			"visible_body_viewport": [
+				538.729797363281,
+				228.383636474609,
+				234.7626953125,
+				219.418731689453
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6636.291015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-N-walk.png",
+			"physics_tick": 510,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "8555fe497ce2621886d2697ae34925cd6f8c559b59176117d9a349e05171d3ad",
+			"visible_body_viewport": [
+				516.634521484375,
+				255.066787719727,
+				171.169616699219,
+				191.730514526367
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6539.1044921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-N-attack-0.png",
+			"physics_tick": 561,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "d48448182fa8e3ffa83a8110aca71a37dd09cef5dad046ea786eb76130392cec",
+			"visible_body_viewport": [
+				565.581787109375,
+				232.221572875977,
+				148.836486816406,
+				220.185897827148
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6539.1044921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-N-attack-1.png",
+			"physics_tick": 579,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "f4c2df3af0afaa676c91002c9837424f040e5b5e70af15f92d0bb32a870859f3",
+			"visible_body_viewport": [
+				565.581787109375,
+				202.300842285156,
+				145.00048828125,
+				264.683410644531
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15101.7255859375,
+				6539.1044921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-N-contact.png",
+			"physics_tick": 579,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "f4c2df3af0afaa676c91002c9837424f040e5b5e70af15f92d0bb32a870859f3",
+			"visible_body_viewport": [
+				565.581787109375,
+				202.300842285156,
+				145.00048828125,
+				264.683410644531
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15004.1328125,
+				6595.8671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NE-walk.png",
+			"physics_tick": 592,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "2516df7078abb1086e95a49be2df6fae29435550852d0700046111e088fde5e5",
+			"visible_body_viewport": [
+				507.679260253906,
+				205.865173339844,
+				213.038391113281,
+				238.137145996094
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15072.84765625,
+				6527.15234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NE-attack-0.png",
+			"physics_tick": 643,
+			"player_hp": 1646,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "d70e19f43af3569229e0462032d92be80ce79642548c879e13f781fd765f9045",
+			"visible_body_viewport": [
+				500.369903564453,
+				226.849227905273,
+				194.868377685547,
+				220.185928344727
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15072.84765625,
+				6527.15234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NE-attack-1.png",
+			"physics_tick": 661,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "a046ecfaf4ba43124e1a6c538115ad3dfe3f0f55d80bd7dc6a427a79d870fa2f",
+			"visible_body_viewport": [
+				488.861938476562,
+				236.055618286133,
+				300.74169921875,
+				210.979537963867
+			]
+		},
+		{
+			"actor_hp": 1880,
+			"actor_world": [
+				15072.84765625,
+				6527.15234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/ai-NE-contact.png",
+			"physics_tick": 661,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "a046ecfaf4ba43124e1a6c538115ad3dfe3f0f55d80bd7dc6a427a79d870fa2f",
+			"visible_body_viewport": [
+				488.861938476562,
+				236.055618286133,
+				300.74169921875,
+				210.979537963867
+			]
+		},
+		{
+			"actor_hp": 1686,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/lifecycle-hit.png",
+			"physics_tick": 684,
+			"player_hp": 1615,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "0df632062f46d937590dee124826680e9298071ea3e1d21a2e463215ca6f3dbd",
+			"visible_body_viewport": [
+				533.567016601562,
+				258.152893066406,
+				197.747619628906,
+				187.467163085938
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/lifecycle-ground-drop.png",
+			"physics_tick": 1113,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "66ebd6859a894b09321b633c83f5f6b8a361ecf3438c6cdedb8a0e51e127dbfb",
+			"visible_body_viewport": [
+				551.3310546875,
+				214.4609375,
+				175.410278320312,
+				231.310302734375
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/lifecycle-death-0.png",
+			"physics_tick": 1115,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "432bd5733fce160254f971be2f31283234ae7adcd47f7b2b892fd16cc38c1dc8",
+			"visible_body_viewport": [
+				523.286560058594,
+				270.247528076172,
+				225.565368652344,
+				176.582000732422
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/lifecycle-manual-pickup.png",
+			"physics_tick": 1126,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "aaf9beff6c81d3ac1f6bbf15b5c60f912db54991fff257d68624948924d75c47",
+			"visible_body_viewport": [
+				523.286560058594,
+				270.247528076172,
+				225.565368652344,
+				176.582000732422
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/lifecycle-death-1.png",
+			"physics_tick": 1129,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "ab530752e45af9552cfda49f6a7b28cbfa749d9809c30a5734f374b60e0e8095",
+			"visible_body_viewport": [
+				529.938598632812,
+				362.771667480469,
+				263.663513183594,
+				107.642456054688
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/albino-iguana-monster-authored/lifecycle-death-2.png",
+			"physics_tick": 1143,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "3a5971e3790488f35616bca9f3657f34496e77a0a9d7f7928e46c69ee55e7348",
+			"visible_body_viewport": [
+				526.310241699219,
+				378.494720458984,
+				295.71435546875,
+				91.3146667480469
+			]
+		}
+	],
+	"scope": "original-based albino_iguana_monster_authored, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "알비노 이구아나",
+		"normal_is_existing_population_actor": false,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				15125.7255859375,
+				6498.2744140625
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_2.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					14961.7255859375,
+					6498.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15101.7255859375,
+					6638.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15002.73046875,
+					6597.26953125
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15200.720703125,
+					6597.26953125
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15101.7255859375,
+					6358.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15002.73046875,
+					6399.279296875
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15200.720703125,
+					6399.279296875
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15241.7255859375,
+					6498.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		}
+	},
+	"staff_normal": []
+}

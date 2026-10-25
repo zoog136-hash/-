@@ -1,0 +1,17 @@
+[   436.991] _XSERVTransSocketCreateListener: failed to bind listener
+[   436.991] _XSERVTransSocketUNIXCreateListener: ...SocketCreateListener() failed
+[   436.991] _XSERVTransMakeAllCOTSServerListeners: failed to create listener for local
+[   436.991] _XSERVTransmkdir: ERROR: euid != 0,directory /tmp/.X11-unix will not be created.
+[   436.991] _XSERVTransSocketCreateListener: failed to bind listener
+[   436.991] _XSERVTransSocketUNIXCreateListener: ...SocketCreateListener() failed
+[   436.991] _XSERVTransMakeAllCOTSServerListeners: failed to create listener for unix
+[   436.991] (EE) 
+Fatal server error:
+[   436.991] (EE) Cannot establish any listening sockets - Make sure an X server isn't already running(EE) 
+[   436.991] (EE) 
+Please consult the The X.Org Foundation support 
+	 at http://wiki.x.org
+ for help. 
+[   436.991] (EE) Please also check the log file at "/workspace/runtime/xorg.log" for additional information.
+[   436.991] (EE) 
+[   436.991] (EE) Server terminated with error (1). Closing log file.

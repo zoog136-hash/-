@@ -1,0 +1,38 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01-3D-RIGHT-contact301",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "newly_authored_poses": 1,
+  "game_phases": [
+    3
+  ],
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-3D-v01/3D-W-RUN-RIGHT-contact3-authority.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-3D-v01/3D-W-RUN-RIGHT-contact3-authority.png": "a06cd6a41a4356076f97c725827c68994445ca89a3f94f0aaefc06a40f7fa4f2",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/W-upperbody-equipment-identity-NO-OLD-LEGS.png": "480e064084b9245c4ecc18d30ca4dc6b35a1e7c0e2c47257f108a0cfe3e8f23f",
+    "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+  },
+  "prompt": "Create ONE brand-new finished high quality game animation source pose of GIRTAS. Transparent RGBA PNG, one complete full-body figure only, facing WEST/LEFT in the same strict side camera as the first reference. Target 1254x1254 square; center complete helmet, hard rays, both hands, all gold dark robe hems, both boots and complete sinuous blade, with at least 35 pixels transparent padding; no cut-off weapon, ray, hair or limb. No panels, writing, diagram, mannequins, ground, floor, contact line or shadows in the output.\nFIRST reference is strict PRIMARY actual 3D pose, camera, limb depth and joint ownership authority. Dress this EXACT mannequin with Girtas, do not redesign or re-pose the legs. It is RUN contact game phase 3, not a walk stance: a clear forward torso lean, bent elbows, active running momentum, one front HEEL initial contact while the opposite trailing recovery boot is fully OFF the ground. FAR anatomical RIGHT orange leg is FRONT/leftwards, farRIGHT heel touches ground with toes lightly raised; NEAR anatomical LEFT blue leg is BACK/rightwards, knee bent and whole boot lifted in running recovery AIR. Trace both hip/thigh/knee/shin/boot chains with this exact near/far occlusion. No leg swap and no second planted foot. A slight natural runner torso turn is fine, but maintain West-facing skull, hips and feet. The mannequin fixed-length leg joints are physical anatomy authority; no extra-long distorted lower leg or shrunken pelvis.\nSECOND reference is immutable ORIGINAL character appearance/weapon/equipment authority ONLY. Its old legs have been removed deliberately: NEVER infer or restore old walk leg/arm posture. Preserve pale male face, long flowing silver-white hair, original dark gold ornamental helmet/crown, original rigid thin hard golden radial rays (not soft giant feathery wings), glowing gold chest jewel, ornate hard black/gold shoulder and forearm armor. Exactly ONE skull/head, TWO arms and TWO legs. The anatomical RIGHT hand (FAR arm in this W view) owns exactly ONE long fiery GOLD/ORANGE SINUOUS blade with the ORIGINAL curved multiwave outline, kept in compact low running carry; no straight replacement sword. The anatomical LEFT hand is EMPTY and its bent running arm follows the mannequin. Preserve original dark LONG robe with gold-trim hanging panels and flowing tails. THIRD reference is exact long-robe trim/material authority; robe can open at original slit to reveal joint ownership, but must remain a long dark robe with original ornate gold hanging panels, never redesigned as short segmented armored pants or bare skin legs. The front/rear knee and boot must remain readable through plausible slit/tail draping, with no robe material seam hiding limb ownership.\nThis is an actual new RUN animation key, not a color variation or reused walk pose. Show disciplined fast running momentum and cloth/hair lag, with the blade carried safely by the correct far RIGHT hand. Retain painterly detailed game art, sharp original gold ornaments and clean transparent silhouette. Do not render blue/orange mannequin colors, floor or guide weapon proxy: only faithful finished original Girtas materials. The actual final image should contain only the one fully finished new pose.",
+  "user_authorization": "Continue PR122 actual remaining animation production; PRIVATE production image tools permitted; main chat images/binary forbidden. No actor approval from source.",
+  "requested_at": "2026-10-19T15:27:33.160068+00:00",
+  "pose_contract": {
+    "support_leg": "RIGHT",
+    "support": "FRONT_HEEL_INITIAL_CONTACT",
+    "opposite": "TRAILING_RECOVERY_BOOT_FULLY_AIR",
+    "camera": "trueW-leftside",
+    "first_ref": "3D physical pose PRIMARY",
+    "second_ref": "original model identity ONLY, old legs removed",
+    "third_ref": "original LONG robe trim"
+  },
+  "actor_approval": false
+}

@@ -1,0 +1,88 @@
+{
+  "name": "플래티넘 데스나이트",
+  "grade": "신화",
+  "reference": "res://assets/catalog/a5048f51da85bcc3416d23d2.png",
+  "key": "transform:224",
+  "role": "run",
+  "direction": "S",
+  "reference_sha256": "54595e9bf9aff8492fdbf1ff2c9f212b0b1e0a3ea51f945ec23f4fefc3120d82",
+  "additional_reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_224-S-attack-draft-v01.png": "9dbbdd2650ce46b13a564d969373c08ba231663e28f8ef9dbed5365b4e2f2749"
+  },
+  "policy": "Produce first animation drafts across remaining actors before further polish; preserve approved Unique and 413 work; new death S only; no new mythic walk; no chat image output.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new six-frame SOUTH RUN animation for transform:224, 플래티넘 데스나이트 in the first reference. The original catalog image is authoritative for exact identity, costume, face, colors, armor, ornaments, footwear and the complete original weapon. The second reference is a saved first attack draft for identity/style continuity only; do not repeat its attack poses or clipping. Produce ONE transparent PNG with THREE equal columns and TWO equal rows, exactly SIX new distinct full-body running poses in reading order. Run SOUTH toward the viewer with the same original top-down game camera. Character anatomical LEFT is on the viewer RIGHT, and anatomical RIGHT on the viewer LEFT. Frame0 LEFT leading foot planted/contact, RIGHT recovering in air; frame1 LEFT weight loading/compression and RIGHT swinging; frame2 a real flight transition with RIGHT reaching forward; frame3 RIGHT leading foot planted/contact, LEFT recovering in air; frame4 RIGHT compression and LEFT swinging; frame5 a real flight transition with LEFT reaching forward into frame0. Alternate the original legs, never land the same foot in both half-cycles. Natural articulated hips, knees, ankles, opposite arm counter-swing, controlled equipment weight and cloth motion; retain the exact original weapon carried safely only if actually present; otherwise retain the original unarmed hands and do not invent a weapon and the exact costume throughout, no attacking or spellcasting. Do not make a walking cycle, duplicate a static body, mirror entire figures or just shift/recolor a sprite. Consistent body scale, camera, original ornate details and common floor across the six cells. Keep the complete figure, weapon tips, hair, ribbons, wings only if actually present and all toes/heels wholly inside each cell with large transparent gutters, no clipping or neighboring-cell overlap. High-detail painted game sprite style faithful to the original. Seamless frame5 to frame0 running rhythm. No ground, background, labels, grid lines, logos, text, extra figures or invented equipment. This is an unapproved first animation draft for local production; output only the one six-pose image.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/a5048f51da85bcc3416d23d2.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_224-S-attack-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_224-S-run-draft-v01.png",
+  "source_sha256": "99f1a83959318fa82aac98b3f3e04f2c3851b0d64a4137c0a99452f3432b7415",
+  "source_bytes": 2321615,
+  "generated_original_path": "/workspace/generated_images/exec-44f9d164-547c-4d8f-a2e0-493e2d6c4081.png",
+  "output_spriteframes": "res://assets/actors/eight_direction/native_locomotion_staging/transform_224/draft001/S-run-SpriteFrames.tres",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "rgba_sha256": "651856a6a7d311b6138be12426e00fee82441d5507e40b57443643c21d3a8b45",
+      "visible_pixels": 66847,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "rgba_sha256": "97320982469bb3bfc7f2169419c426dd97ab4c081ad1ad3c5a4c4f6f5b60168b",
+      "visible_pixels": 72178,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "rgba_sha256": "96c0328332c50e2b6c75bc88bb54d4eb6efe6872c8479a7f63dbfb0309f54d4c",
+      "visible_pixels": 80463,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "rgba_sha256": "3f796e1a648e730fb5a3bbf2660d35e51bc904c5eb07b25ed02ad1c3f2315812",
+      "visible_pixels": 73923,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 4,
+      "rgba_sha256": "ca888801463dce9b082f2b2e4cd503e8893029e766150ca1e1ee794990ab3927",
+      "visible_pixels": 68175,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "rgba_sha256": "bb9124bb5a542712e42921fb7258b847c7643812dbf7fe411a36743741295e84",
+      "visible_pixels": 73600,
+      "border_alpha_pixels": 0
+    }
+  ],
+  "geometry_review": "NOT_RUN",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "compiler_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "generation_request_sha256": "1b25d00eb4ac50b7d10acb6190d3b41a012156c65530d84466ff0d7d7b03c9f4",
+  "generation_service": "image_gen.imagegen",
+  "Godot_resource_six_pose_playback": "PASS_LOOP"
+}

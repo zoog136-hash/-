@@ -32,7 +32,8 @@ def decode_spx(data:bytes, max_pixels_per_frame:int=3000000, max_frames:int=254)
   defs=[]
   for _ in range(nb):
    a,b,typ,idx=pull('<bbBi');defs.append((a,b,typ,idx))
-  frames.append({'index':fi,'source_rect':[x1,y1,x2,y2],'unknown':[unk1,unk2],'defs':defs,'type':defs[0][2] if defs else 0})
+  frames.append({'index':fi,'source_rect':[x1,y1,x2,y2],'unknown':[unk1,unk2],'defs':defs,'type':defs[0][2] if defs else 0,
+                 'source_types':sorted({definition[2] for definition in defs})})
  nblocks=pull('<i')
  if not 0<=nblocks<=120000:raise SPXError('bad block count')
  offsets=[pull('<i') for _ in range(nblocks+1)]
@@ -66,7 +67,7 @@ def decode_spx(data:bytes, max_pixels_per_frame:int=3000000, max_frames:int=254)
      if visible:arr[starty+line,x:x+visible]=vals[:visible]
     x+=ct
   blocks[i]=arr
- out=[]
+ out=[];total_pixels=0
  for fr in frames:
   defs=fr.pop('defs')
   if not defs:
@@ -80,6 +81,8 @@ def decode_spx(data:bytes, max_pixels_per_frame:int=3000000, max_frames:int=254)
   maxx=max(x+48 for x,y,j in placements);maxy=max(y+48 for x,y,j in placements)
   w=maxx-minx;h=maxy-miny
   if w<=0 or h<=0 or w*h>max_pixels_per_frame:raise SPXError(f'frame too large {w}x{h}')
+  total_pixels+=w*h
+  if total_pixels>100000000:raise SPXError('total decoded pixel budget exceeded')
   canvas=np.full((h,w),0x8000,dtype=np.uint16)
   for x,y,idx in placements:
    dst=canvas[y-miny:y-miny+48,x-minx:x-minx+48]

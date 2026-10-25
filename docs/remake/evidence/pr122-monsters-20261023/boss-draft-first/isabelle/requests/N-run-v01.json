@@ -1,0 +1,17 @@
+{
+  "slug": "isabelle",
+  "actor": "monster:질투의 공주 이자벨",
+  "clip": "N-run-v01",
+  "direction": "N",
+  "role": "run",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "0783c3f56c37df760f45e0a096ce42c6a538b19e54fbae92be5cb87b8fd7c905",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique pale royal female duelist princess, long raven-black braided hair, small intricate gold thorn tiara, violet eyes, ornate gold/black fitted plate with a distinct high white lace throat, asymmetrical violet silk split overskirt over black armored legs and gold boots, long violet ribbon cape. One slender gold-hilted silver SWORD in anatomical RIGHT hand, LEFT gauntlet empty. Preserve tiara, black braid, lace collar and violet ribbons; no Iris winged helmet or red hair.\nFixed camera throughout this sheet: NORTH straight BACK facing UP away from viewer. Show back of head/torso. Anatomical RIGHT weapon hand is viewerRIGHT; LEFT empty hand viewerLEFT.\nAction RUN: Six clear locomotion poses in order: phase0 RIGHT leg contact, phase1 RIGHT leg compresses/LEFT free leg swings, phase2 RIGHT toeoff/LEFT knee drives, phase3 LEFT leg contact/RIGHT leg lifts, phase4 LEFT leg compresses/RIGHT free leg swings, phase5 LEFT toeoff/RIGHT knee drives. Clearly alternate anatomical support legs between0 and3. Planted sole LOWEST, lifted sole above it. Heavy grounded advance, not six copies of one crouch. For horse use a natural four-leg canter sequence, for spider alternating supported leg groups, for floating reaper rhythmic hovering robe propulsion without fake legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  }
+}

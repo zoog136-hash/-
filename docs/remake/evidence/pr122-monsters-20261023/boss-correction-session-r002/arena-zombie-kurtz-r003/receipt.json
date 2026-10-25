@@ -1,0 +1,1366 @@
+{
+  "schema": "pr122-boss-correction-arena-receipt-v1",
+  "engine": "4.7.2-stable (official)",
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "speed_scale": 1.0,
+  "camera_zoom": 1.0,
+  "actual_Main": false,
+  "original_ActorMotion": true,
+  "cases": [
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/NativeMotionProfile.tres",
+      "requested_segments": 33,
+      "played_segments": 33,
+      "not_authored_segments": 0,
+      "tick_samples": 3264,
+      "viewport_captures": 173,
+      "actual_Monster_reference_speed": 107.0,
+      "pixel_scale": 1.333333333333,
+      "max_virtual_canvas_foot_error": 3.814697265625e-06,
+      "virtual_canvas_anchor_is_not_anatomical_contact_approval": true
+    },
+    {
+      "key": "monster:커츠",
+      "profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r003/NativeMotionProfile.tres",
+      "requested_segments": 33,
+      "played_segments": 17,
+      "not_authored_segments": 16,
+      "tick_samples": 1488,
+      "viewport_captures": 81,
+      "actual_Monster_reference_speed": 70.0,
+      "pixel_scale": 1.166666666667,
+      "max_virtual_canvas_foot_error": 3.814697265625e-06,
+      "virtual_canvas_anchor_is_not_anatomical_contact_approval": true
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/capture-manifest.json",
+      "bytes": 59736,
+      "sha256": "caba2f5e5714e46e7f87d0423f446b1d8603fd48953ab6514900c7c09e16b1c5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/command.json",
+      "bytes": 383,
+      "sha256": "84824616c95eb04ed4fc7e6448b6422b23a2ee94c7e2ebcfef3c44a219424680"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/config.json",
+      "bytes": 1269,
+      "sha256": "8ff159c4484102f4deaa69e5cedf22916cd333aa6e39a05db6c48240a800107c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/godot-run.txt",
+      "bytes": 595,
+      "sha256": "611ca0e5bf8a010451453c8dfc1317956ac6eba4356d061558386821d0244b83"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/attack-SW-action--3.png",
+      "bytes": 48443,
+      "sha256": "78be4d8c27d800027ba274f6e3565f68eaf11b097d12e3baaf70d5eec3f10ee2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/attack-SW-action-attack_3-0.png",
+      "bytes": 53160,
+      "sha256": "2c437b60b436c9e355b36da4bf10854a230041b2e07931b1045aa3faef42baa0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/attack-SW-action-attack_3-1.png",
+      "bytes": 50478,
+      "sha256": "40051c4b146caf0fd59136162818697bdadb36ae0d0a12e591f31d5d0e8f6687"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/attack-SW-action-attack_3-2-strike.png",
+      "bytes": 48725,
+      "sha256": "176e0355d5bfb4478eef7b7cf0d1d7ef368967dac6c8f91837ed7a9709829b69"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/attack-SW-action-attack_3-2.png",
+      "bytes": 48641,
+      "sha256": "df0024f2cdaa49fe9b1fc677eea6aec6442ce87a619d8f27859a7102d4498811"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/attack-SW-action-attack_3-3.png",
+      "bytes": 50246,
+      "sha256": "f81562da5df97c4f64d2917f541769ef0d365252fcaa763ecd67c063f85978f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/death-S-action-death_2-0.png",
+      "bytes": 49659,
+      "sha256": "67140b99b5b5406bfe7bf7b907b96a39a93d601b669ef95750cb73033f81ca5e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/death-S-action-death_2-1.png",
+      "bytes": 47884,
+      "sha256": "50954b89013adc1f680228edf36b4f2ae081854db968da3fc9fe817cad4c844e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/death-S-action-death_2-2.png",
+      "bytes": 47140,
+      "sha256": "c3d0b26df6065f38c298d19bd91b47e33d11872ac6ed3048d6ef3c15e27a58ad"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/death-S-action-death_2-3.png",
+      "bytes": 47430,
+      "sha256": "177671433768dc486231bbcd8de7695ba7572857b76fa50557eda71f2501ed6d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/death-S-pre-idle-idle_2-0.png",
+      "bytes": 48946,
+      "sha256": "3c8c0db7a45e5d0231f6cdb0912ed7e6cd34b53692d3c2ae03093ed3c1f32d11"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-E-action-hit_0-0.png",
+      "bytes": 43096,
+      "sha256": "6433f569a417db697c70c4f78c19c90e94fa05e922d8d81d4cf33d90659a10ba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-E-action-hit_0-1.png",
+      "bytes": 44046,
+      "sha256": "b2305e5466a27be1f9341ac76bec51bfafdcb5aeba02648e1b6c5a8aa45de482"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-E-action-idle_0-0.png",
+      "bytes": 42286,
+      "sha256": "74a1e05cf5efd9c357d93c8a0c5d46b98e37b38c3ece2a065ac1153012511da4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-E-pre-idle-idle_0-0.png",
+      "bytes": 42340,
+      "sha256": "27abdf8f20c9a260152f12647f225ae4d2dd6c524938f93bdbfa80a0727ce22b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-N-action-hit_6-0.png",
+      "bytes": 45233,
+      "sha256": "a87493702e4c4cb66c6ff75b900854a22b9bdced80232700558d2d0e47d63a45"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-N-action-hit_6-1.png",
+      "bytes": 45931,
+      "sha256": "c6b122420e0e121e705ff42b3b54401bb09f87425f29e881a234a090c05edaad"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-N-action-idle_6-0.png",
+      "bytes": 45090,
+      "sha256": "a20be9e468e0793e1fa67786fc5293a604a845c9d7bd7b771ee4a5b2e388dabd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-N-pre-idle-idle_6-0.png",
+      "bytes": 45187,
+      "sha256": "1a19a0e8380eea1b6e2efb3ef63e304c8efad4a97649374ea1c8c5a0eb25c362"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-NE-action-hit_7-0.png",
+      "bytes": 44672,
+      "sha256": "0f76484dead5e6648b771b058c25ffb700b230dedf0f789ef27f5cfe881e2bbb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-NE-action-hit_7-1.png",
+      "bytes": 44226,
+      "sha256": "65a70ba0c01cc1cff15c1d2eed901703f10b59dc366f766453c69053fe81ff61"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-NE-action-idle_7-0.png",
+      "bytes": 44157,
+      "sha256": "fb969aa918e4f09e7abe162c12bdd001251d06f325eea16ed7a9259e2193fe0b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-NE-pre-idle-idle_7-0.png",
+      "bytes": 44317,
+      "sha256": "2496f9377b916201dbb0a12f5be938737f395ee00c12aa7f01ca75d5a87a21e4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-S-action-hit_2-0.png",
+      "bytes": 48122,
+      "sha256": "6b35626a731f385df761d08e97363372dd8b0b579fb44cc92e0921136a0277e0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-S-action-hit_2-1.png",
+      "bytes": 49087,
+      "sha256": "71c9751ef4acffd3bc1f07ce09753191ac500a0f24f1cbcb6fb90405ed689766"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-S-action-idle_2-0.png",
+      "bytes": 48578,
+      "sha256": "f0a99d4192e4c9172dd0997f651d7997d22234c59b4dd421380f358a3d08e81a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-S-pre-idle-idle_2-0.png",
+      "bytes": 48491,
+      "sha256": "f284411679d04254f96984010729e0e022a455ce0617e1dd1c83ebcf98e1a152"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-SE-action-hit_1-0.png",
+      "bytes": 44077,
+      "sha256": "acb6bec934974a3ea142c8787eb7e8bb94615b35b00720c5bde58b0e95c48711"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-SE-action-hit_1-1.png",
+      "bytes": 45693,
+      "sha256": "b61f464da7cb18aa9e2f230401e43e3f0c3a9d9466addc79d9e3280c51ff2348"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-SE-action-idle_1-0.png",
+      "bytes": 44410,
+      "sha256": "68acd6c200b5cdaa0a7e6948001c2c412c53478087ae5a4f5a256a91583febc1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/hit-SE-pre-idle-idle_1-0.png",
+      "bytes": 44312,
+      "sha256": "6d0f10b460e9b629f9e7d8253d6aa9e2ebe44bbef33b750cdc4011c3551d3646"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-E-action-idle_0-0.png",
+      "bytes": 42189,
+      "sha256": "740179dbbb43f1cd060519a464e1dc4e98852984fc09cc5a916e1959457b5bf4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-E-action-idle_0-1.png",
+      "bytes": 42564,
+      "sha256": "56897431d9f8a1c1ac3113541d6ba58fce1adefdb4bce01260ed9c4d336cfa29"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-E-pre-idle-idle_0-0.png",
+      "bytes": 42489,
+      "sha256": "0d3fb2883a92b982c135e94bcad22a582430a4ead9f840138ea498a0a8503aaa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-N-action-idle_6-0.png",
+      "bytes": 45301,
+      "sha256": "0592e376f6302be6b8529ad87a0c01eb6cece04f58a50aa5cefab10ab778184b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-N-action-idle_6-1.png",
+      "bytes": 45476,
+      "sha256": "8983df5b3f453299c843181f58cbcc18652e6aa4fc4ddfa575739ac39739796c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-N-pre-idle-idle_6-0.png",
+      "bytes": 45131,
+      "sha256": "f9ec9980bfc023541e225741ef02977862b8b74c96273d7a1bc6de2cb295ea5e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-NE-action-idle_7-0.png",
+      "bytes": 44197,
+      "sha256": "b7e13949c2c4af8f7019a191aa7b61a09bb260d9c7b8c61bf2ed8b5cd154c804"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-NE-action-idle_7-1.png",
+      "bytes": 44748,
+      "sha256": "a0ab56ceb38220b519821d3f9d5b93d9ee3694be243dc0a34d4d52556b7767d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-NE-pre-idle-idle_7-0.png",
+      "bytes": 44194,
+      "sha256": "40dbc7f32541cea9e9c311e6f46c217d75d03489e32b344fd7964164a12b17b5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-S-action-idle_2-0.png",
+      "bytes": 48687,
+      "sha256": "a0c960091e4b66385d8d4207f61cca7d66222a7a85a4fdfdff03b0083ec931fe"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-S-action-idle_2-1.png",
+      "bytes": 48362,
+      "sha256": "de604673d50677b60cffddeddbf23f67d5bea6ee4ee2bcce19710720b962fe47"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 48879,
+      "sha256": "3a11ed8a15d7ef7eca5332179e4bf09594ccdaab96dbddfb9db0e73307d83a94"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-SE-action-idle_1-0.png",
+      "bytes": 44483,
+      "sha256": "2e7efc70702f5d3f341fe9082d6080fb1c9d6a60d6a5d9bcb1c6cc535e175f51"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-SE-action-idle_1-1.png",
+      "bytes": 45283,
+      "sha256": "551b81e1bf949a70719b0616cb57cbf40134b9cc0a58d3f853c8798b3bcc75f3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/idle-SE-pre-idle-idle_1-0.png",
+      "bytes": 44653,
+      "sha256": "0f7252f01fc2bbc1f7e982b692314d820fb716ddaa27156a041f69a2d6e1c4f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-E-action-run_0-0.png",
+      "bytes": 47167,
+      "sha256": "199e15a15945b05837aedad41a6cef859b30fedf9700f793be5777c470cc3441"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-E-action-run_0-1.png",
+      "bytes": 48380,
+      "sha256": "270d09df3818192ab884d216f67a44e2b5c46368e2d5536f3d4cb361c3d7cbb4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-E-action-run_0-2.png",
+      "bytes": 49643,
+      "sha256": "98a7690e9d825b15f1233b159bb8d06f99f493a2deaa981562e995ad65014e19"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-E-action-run_0-3.png",
+      "bytes": 49384,
+      "sha256": "df976c50694789af81007057ec56821fa26e3b9c114dbdf4e9d239acce9f020c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-E-action-run_0-4.png",
+      "bytes": 50219,
+      "sha256": "e1d2bd73ca740134c91f4b05d2ffc70ee41b0b0d918482dfbf083b058ca79b35"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-E-action-run_0-5.png",
+      "bytes": 49259,
+      "sha256": "46233fd1e1116f2f79b4844a1350fb28918b63fcaa91a554a6815337acb4559a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 42395,
+      "sha256": "1529cb8a80abfd1395411874e434f1aad626ff96cd3e32cc101e528e7c92e7cf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-N-action-run_6-0.png",
+      "bytes": 44537,
+      "sha256": "e7c1f626a0238fd1176644954d5531db3d4de48e4c909dc820e87ad63d12fc62"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-N-action-run_6-1.png",
+      "bytes": 44808,
+      "sha256": "64aff3866b414a998f21cb99b8b335790bf58eb750d3b268ae6d7287ec086250"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-N-action-run_6-2.png",
+      "bytes": 45016,
+      "sha256": "f6418203e1fc76902ddd0c7e59d83051ce5393be72c74d269a8380d7de3cde2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-N-action-run_6-3.png",
+      "bytes": 44636,
+      "sha256": "6b2b729d091c57e7a42a3a6025bba639eee5ab86f52516eef4d8f5b485da298a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-N-action-run_6-4.png",
+      "bytes": 44198,
+      "sha256": "127d6d4832dbb81bdc715f25688fe01260a714063fc0f3860c6b7608d8c7af49"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-N-action-run_6-5.png",
+      "bytes": 44271,
+      "sha256": "ac82b5c6123e9343ebecbfdcfb128c53c60cf443dfc5bdfe53507b1244a18bac"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-N-pre-idle-idle_6-0.png",
+      "bytes": 45266,
+      "sha256": "603fbefaeb801eae2648d78103b9505ca84a794c7cdd8b0b31c611a4e86479f1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-NE-action-run_7-0.png",
+      "bytes": 44856,
+      "sha256": "332dfd3403032355f6cd9a43dd829ea6856715ed4725e7765b31cedf4f966a6b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-NE-action-run_7-1.png",
+      "bytes": 45509,
+      "sha256": "da124d1dfcab7603810e251377bd27e1a7db168aed0f312124ce7a2fcc779420"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-NE-action-run_7-2.png",
+      "bytes": 45789,
+      "sha256": "4517396427e0e4dec83aecee6f611cf1f9ef9939859a08d29cd35242c0e66ee0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-NE-action-run_7-3.png",
+      "bytes": 45284,
+      "sha256": "a93b85260d333c0554b0834c421c0f3b7af3831fba1fe9b98f35ead6c0bdb6f9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-NE-action-run_7-4.png",
+      "bytes": 45405,
+      "sha256": "c733966c8ba0b1cdde5d98cdaeba13d18fd2284eba08a6bc476e03bdd1ffb1e8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-NE-action-run_7-5.png",
+      "bytes": 45689,
+      "sha256": "0ea17f59fa21d77c5a59411b6fd039df255dd9eba1281cb6d3aa0df1b31e6349"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-NE-pre-idle-idle_7-0.png",
+      "bytes": 44360,
+      "sha256": "589f8bd3cada03019194e185eb8f7d044141e950c9ce40a69d90a3acdf7d165c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-S-action-run_2-0.png",
+      "bytes": 45843,
+      "sha256": "cfcc6dd9121eb7fb45efc41a5538d7f017c871567344d00c7872660fe7300200"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-S-action-run_2-1.png",
+      "bytes": 45395,
+      "sha256": "e7efbe1e8a16f8c90fa6c1fb48ce756417bd1a64a8fef745f2de57d3f522a71b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-S-action-run_2-2.png",
+      "bytes": 46929,
+      "sha256": "825eec4b64002691b282bfc14820c5d61976b502b22c052450cab0bc8e73ea16"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-S-action-run_2-3.png",
+      "bytes": 46221,
+      "sha256": "774d8e69222b0cc3ad33359edff491d1026088368aa39c9167670843ba6069e2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-S-action-run_2-4.png",
+      "bytes": 46767,
+      "sha256": "f16cc9898a8ff76361494820e8058eb062066199c926f5cb2239d87a845ce444"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-S-action-run_2-5.png",
+      "bytes": 46343,
+      "sha256": "23e2c67637bd72d833829a625d543ec6d3d3386d9a4286f3d8d346718019b2cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-S-pre-idle-idle_2-0.png",
+      "bytes": 48789,
+      "sha256": "65ac76899f11d69b16b740ffa5370775a7f93954b1f7257d44dfe0a6c74ea09a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-SE-action-run_1-0.png",
+      "bytes": 48284,
+      "sha256": "dea5aa49da64a0a76bc79904fd652380d44f9ed06778524cf1c2979a9b00159e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-SE-action-run_1-1.png",
+      "bytes": 48636,
+      "sha256": "3068e9731cf1634ffb50f7fa97be86ff136b20903ba985879da16d92e440b2aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-SE-action-run_1-2.png",
+      "bytes": 50841,
+      "sha256": "48aa68367c5e04fdbec360b73fefaef2ae414ddf7560c5a15f7d36654a3bb1d1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-SE-action-run_1-3.png",
+      "bytes": 52684,
+      "sha256": "99d6150787fd5bfbcd2e0338862be362f492631b6ab6ea01de0dbacb41d20551"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-SE-action-run_1-4.png",
+      "bytes": 51086,
+      "sha256": "7213faf44918a66d721ea113321b85c383ebbcc1ff6cb03b0d881b08dc2c4fab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-SE-action-run_1-5.png",
+      "bytes": 50357,
+      "sha256": "8730ba6b0c90c2734eb351eee9b96d5d2aacd8144af8b302d509c0322f408b1a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/captures/run-SE-pre-idle-idle_1-0.png",
+      "bytes": 44626,
+      "sha256": "ef8af7812e8121502dd11e20a8022c56e49098121e741d10fd3f974b64f072b6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/kurtz/samples.json",
+      "bytes": 928062,
+      "sha256": "dc3424f8ca204d21937ebe06cf7734283bf27b00d93193f80a430ed3f7494d0f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/process.json",
+      "bytes": 246,
+      "sha256": "e79f8d20e9d72c7d24581b732535caa4d5eebddbbddbbffdebe6b3d07371c76b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/report.json",
+      "bytes": 33497,
+      "sha256": "faab0e3a08bec8bcec984ddfc8ad5b5ec9d12460c8cc61f7f67ff4e18bd0593e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/xvfb-run.txt",
+      "bytes": 64,
+      "sha256": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-E-action-attack_0-0.png",
+      "bytes": 63067,
+      "sha256": "52889d211dea24b916b8b5ccc9a90d0d8b4b6381dadc5e2d87799d3075be24f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-E-action-attack_0-1-strike.png",
+      "bytes": 60304,
+      "sha256": "8aa8ec884ee07e73f175c2edee7f5fca9ade9e646197d38de4b5f36a434e19c8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-E-action-attack_0-1.png",
+      "bytes": 60361,
+      "sha256": "c52f171de8207c19a1f8456859a7bd187efd831e8c95e4c04708ee0ea2eb2858"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-E-action-attack_0-2.png",
+      "bytes": 59847,
+      "sha256": "983a5e418face98193f1a624d1863b8b4b76c9d7ec5fd80cebae3af77b6df893"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-E-action-attack_0-3.png",
+      "bytes": 59523,
+      "sha256": "e8078c97f3e8a10254a96304e4e3e0449965928e62ed3fc57010930744fdcd1e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-E-action-idle_0-0.png",
+      "bytes": 59723,
+      "sha256": "7827ba3899b2a7214ecda3819f257d7501b58b88188481a54eb65db6ace11d5b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-E-pre-idle-idle_0-0.png",
+      "bytes": 59690,
+      "sha256": "9db616bb9a6198e8118b0c1ae94c6f5f64def4297ec489d0ce6d877ced9f2bba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-N-action-attack_6-0.png",
+      "bytes": 61939,
+      "sha256": "b22c34b168972489af61e688d80a0a811b46813afe411fd8625a8320c40d68f7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-N-action-attack_6-1-strike.png",
+      "bytes": 59185,
+      "sha256": "cd8da6b4b1cc52a9e9a48a42c211670124dd907a5ce5d281257839c19d1b2e3f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-N-action-attack_6-1.png",
+      "bytes": 59446,
+      "sha256": "a8bc8ba5bb1c9530d0b67fb0dc4f024c0c5ffa534b16e8695910e25d193173f7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-N-action-attack_6-2.png",
+      "bytes": 57978,
+      "sha256": "8a3cb9414c108a3486d75b4c5567292db7b9f6d014b1d8cd778a57397d6819e8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-N-action-attack_6-3.png",
+      "bytes": 58606,
+      "sha256": "c43a233bdc4f6c4b16939a8b00b206c139fdd15bfc946936ff96c9d83ecd59e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-N-action-idle_6-0.png",
+      "bytes": 60881,
+      "sha256": "95ee5066aee6a6d5b6934cfa21f447d034c99bf29d030991aa40e51313851de7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-N-pre-idle-idle_6-0.png",
+      "bytes": 60513,
+      "sha256": "cba6f35dd9d8c3a56f246fb4d76b6bf1aaecf81977a990bb0d976b851a97e580"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NE-action-attack_7-0.png",
+      "bytes": 62415,
+      "sha256": "46ad22dd44f910ff198f2d2560ca8fa7857ec20af93cc7e104fc109918860021"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NE-action-attack_7-1-strike.png",
+      "bytes": 60936,
+      "sha256": "e64ef8c9f5045a87752f56d64a62acc88a1dd8ccf0ef9ebbfbfedacca22aaeb7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NE-action-attack_7-1.png",
+      "bytes": 61069,
+      "sha256": "d047f62896f29a56d9de5e2549210adbff25407ca8fda3353cf7967807fac874"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NE-action-attack_7-2.png",
+      "bytes": 60179,
+      "sha256": "c651607bfff4d59de72030456b66b0006458e7f5b4e63bf081b51199fae10733"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NE-action-attack_7-3.png",
+      "bytes": 59299,
+      "sha256": "99889227cf14b6d0a809b98bf5e45f2d2d9d233d23df176245349229af285699"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NE-action-idle_7-0.png",
+      "bytes": 58784,
+      "sha256": "1bc3a77044e38baa49c447a69132e0d2f5c219e4fe98a8d611e5e009b100096e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NE-pre-idle-idle_7-0.png",
+      "bytes": 58571,
+      "sha256": "3c9c740c349c2ae71594abdcee08cec5647cf99355e9285ddc0c66dc2622b1d6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NW-action-attack_5-0.png",
+      "bytes": 64124,
+      "sha256": "f9895b3845560695971c3ef2f838429f4f52c95c8df2092f67a184cb45cd7548"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NW-action-attack_5-1-strike.png",
+      "bytes": 65157,
+      "sha256": "524a5e27fe8705d765e48ca0c92117d511b347dcf0e97dbcfe998ef8a977f87a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NW-action-attack_5-1.png",
+      "bytes": 65348,
+      "sha256": "02e99563f09c1d30d41d4057cc10592bf07bf8801e711faa0ffddba4c29263a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NW-action-attack_5-2.png",
+      "bytes": 62585,
+      "sha256": "46770c05b506d8f64a9921d83a7a72caae3927ae4e1132e2623329cecc280de2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NW-action-attack_5-3.png",
+      "bytes": 61559,
+      "sha256": "4daa6b44ccd85059dd68644c4c9497dc900ee4e9ac8603bb2c6af0a54ed3b799"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NW-action-idle_5-0.png",
+      "bytes": 58435,
+      "sha256": "13af66e9af443ec69e30dd9be2c98c89b1e066a5b7de3ae52818a1db9807a67d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-NW-pre-idle-idle_5-0.png",
+      "bytes": 58369,
+      "sha256": "5446739f60ed83b2e5d509ac98aba4d8b66a835ae2b3ec0b18a0511e1b4e4a2f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-S-action-attack_2-0.png",
+      "bytes": 66813,
+      "sha256": "719bc2db446408dc924ed0b7f4e31c53de716c9e5ebdfba7f7f614f0d12df106"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-S-action-attack_2-1-strike.png",
+      "bytes": 62488,
+      "sha256": "ab86af589c88c415b2962d5121f991bb53495623d891854248186410ab941655"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-S-action-attack_2-1.png",
+      "bytes": 62638,
+      "sha256": "a0bba3c2afe05e06e8275808763a17e334562c6762f34971de8755aa3196ae55"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-S-action-attack_2-2.png",
+      "bytes": 60667,
+      "sha256": "5a1b89b657fdd842b70ad653878fc528fbaf8e80075d4ac26608bf604961e087"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-S-action-attack_2-3.png",
+      "bytes": 64027,
+      "sha256": "fbb4a096462ab3efdbc9d31c2a83e646d7ffe4a80f7b24ab1b7f91c8e67497e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-S-action-idle_2-0.png",
+      "bytes": 65453,
+      "sha256": "0733e44c80cc275bd115aed76c0638d81b455e7ef3503913f58d141ae1d5be47"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-S-pre-idle-idle_2-0.png",
+      "bytes": 65398,
+      "sha256": "a0f325f18ce6771c8cbf8a6b441ac7a021d6de2fdc0ab4001e0277c430f8ee64"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SE-action-attack_1-0.png",
+      "bytes": 63797,
+      "sha256": "37e070711c7e2d2466f9b4594646cb0f1f9bb967de198cf88ca9c54ef760b773"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SE-action-attack_1-1-strike.png",
+      "bytes": 57922,
+      "sha256": "cdaa88b66046a68cd2ec4209cad0a5f23a84f8ab89cdd033f7bc67e199a9bbf8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SE-action-attack_1-1.png",
+      "bytes": 58063,
+      "sha256": "4f49fa848cf8d3a38dafb52eec2aa8ed478fdbf1f799b5637c9edcb0eec2c359"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SE-action-attack_1-2.png",
+      "bytes": 57281,
+      "sha256": "1cf1099e1896aa60863a1665f78911aa25a54c46a24f857249a3bf0a3a38e1ee"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SE-action-attack_1-3.png",
+      "bytes": 62074,
+      "sha256": "134824abd14e1b32a3b82142a14360e7f5040ca96bb527c49b4733cd11b830aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SE-action-idle_1-0.png",
+      "bytes": 62373,
+      "sha256": "3bd2c32dbf71fac8ea5641e38289341848328a940a75d95a27de908b8987fb1c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SE-pre-idle-idle_1-0.png",
+      "bytes": 62267,
+      "sha256": "4df317d86788d6ae8d3abd64462e103dda1ad01b8ae9a6b528365c7724af51a9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SW-action-attack_3-0.png",
+      "bytes": 63207,
+      "sha256": "51f7171fb831d43caa337d62d23fd82844303b96ef2547022346db153b0a4b3f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SW-action-attack_3-1-strike.png",
+      "bytes": 66483,
+      "sha256": "dad4cc5d582864ef863342487c1ddf9b8a381ac4206a9afbd856bd084ab95808"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SW-action-attack_3-1.png",
+      "bytes": 66618,
+      "sha256": "33c1a26457087ffea306f6b1340dee1370f3541a1a099fae10b1aff1946622e1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SW-action-attack_3-2.png",
+      "bytes": 63103,
+      "sha256": "31bd67718397fb0dd2e64dae4839a913ad7cd24532f24961fc043bac37dbbe79"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SW-action-attack_3-3.png",
+      "bytes": 61209,
+      "sha256": "569b18e279e376368711bc082da446098aef25e9603f099520a34d2e5f498d9a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SW-action-idle_3-0.png",
+      "bytes": 60849,
+      "sha256": "2344ca00c12d60e44eb91d433ed24db63d58a7c537c75ecfe44c4c8c32f4f151"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-SW-pre-idle-idle_3-0.png",
+      "bytes": 61128,
+      "sha256": "8d0f8d088e3fbeb0e763e1f7948df5499fe149ed66278817f3b8646420078289"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-W-action-attack_4-0.png",
+      "bytes": 65384,
+      "sha256": "8fa0dcd0f831d864e7dee0420a81a5ed2b8bc3d88aab2bfd31f72f381a8ab54f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-W-action-attack_4-1-strike.png",
+      "bytes": 61899,
+      "sha256": "27f6a886c058f19e13e5c014a431e73df7e9cd78b1e1b72bf82607b28fbe4fa3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-W-action-attack_4-1.png",
+      "bytes": 62055,
+      "sha256": "c84ad7100059066335edbacfd2d43801ac96a966897b06032abffb2d5dd81be8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-W-action-attack_4-2.png",
+      "bytes": 57468,
+      "sha256": "ebf38c4f026e1a9540f9579e521483387a4c22417b7b0590961ef155e627f869"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-W-action-attack_4-3.png",
+      "bytes": 59091,
+      "sha256": "4aecfdad2bdd755c65b9bc4d2eea06e49e6277863ad2e21203a3e00eba8c8886"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-W-action-idle_4-0.png",
+      "bytes": 58838,
+      "sha256": "6bfd19e80129374e0b279ad8682c04e1660637b0dc34a2c0d344df9c57a4ddc4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/attack-W-pre-idle-idle_4-0.png",
+      "bytes": 58687,
+      "sha256": "423b8c801e763fb6e7549900e80439bb4d7061359b11dcd8ab33affd35b6de8c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/death-S-action-death_2-0.png",
+      "bytes": 64111,
+      "sha256": "f5639fef8442c3c0694dd3604c975844221dd4e19e9a9ec5d913ce5d84ba6255"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/death-S-action-death_2-1.png",
+      "bytes": 61369,
+      "sha256": "f0eee7348c4f381b379739e9281d7ba710141df74076557276f1ce722289830c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/death-S-action-death_2-2.png",
+      "bytes": 67019,
+      "sha256": "41eb0e8f2e1232c8cec67f67c80650a2b5bc7ca4375f4ed46ad38214cffa043d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/death-S-action-death_2-3.png",
+      "bytes": 60558,
+      "sha256": "66836cf1fe88bbedaf9ec05e5a07c14a9975a06af14da998f6480c4b1dc35ad2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/death-S-pre-idle-idle_2-0.png",
+      "bytes": 65208,
+      "sha256": "2cb44604e94f7663ab238d853d9da05f4d4397ad9ca027c37c6610c261e5356c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-E-action-hit_0-0.png",
+      "bytes": 59516,
+      "sha256": "60b76bdbfa91fbfd958b260ee395ad4127eadfa3f5d2a61ee4be4f21b76b78fc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-E-action-hit_0-1.png",
+      "bytes": 57978,
+      "sha256": "fc7a39d70fe3a7b1862f084d6fe71a7f3936c76c3aa89048a78d4f3f3317a2f5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-E-action-idle_0-0.png",
+      "bytes": 59227,
+      "sha256": "be8e5f1b0bba55d8cc42cb1ba989febc9b49eb09515323b88f068caa7f7d066f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-E-pre-idle-idle_0-0.png",
+      "bytes": 59254,
+      "sha256": "d0debb3dc0096b0ec33306f742b8679e58fe212f34466a49c983f1390926680e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-N-action-hit_6-0.png",
+      "bytes": 62555,
+      "sha256": "eabf8bb0aafca31adeb73e5dee81748d64526344a14baec70541f0792c2f4125"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-N-action-hit_6-1.png",
+      "bytes": 55267,
+      "sha256": "e1fcd4c4b423f5a90f46f0625caaf59b576506cc48292ee9c5b7bed19efe47a1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-N-action-idle_6-0.png",
+      "bytes": 59659,
+      "sha256": "442822e023136b681a4abf41d53b2ce43be39baf46dac02c534037d1dd31c871"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-N-pre-idle-idle_6-0.png",
+      "bytes": 59957,
+      "sha256": "ee7a0e02bebf99d5e4b14a53e486ae0cb649adc0586a60e92e2113bb23f86d6a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NE-action-hit_7-0.png",
+      "bytes": 62910,
+      "sha256": "ca917ec8538c385f6a21b927018046224bbdc9b38000e357396672d7c5893a12"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NE-action-hit_7-1.png",
+      "bytes": 58871,
+      "sha256": "4ea5ad802c551bc828631710ba3265b8861a95eae1208509574774eddb7e18a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NE-action-idle_7-0.png",
+      "bytes": 58251,
+      "sha256": "d48b8a5e4a1802a86923a9fdbf8673f2dda71da29c0009a5e22a2c3565eafe2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NE-pre-idle-idle_7-0.png",
+      "bytes": 58184,
+      "sha256": "334f3f7288034a482126ce3adf721f96d037e9a59c9aec0726f6a13976523e47"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NW-action-hit_5-0.png",
+      "bytes": 58613,
+      "sha256": "6e62f9648a920e9e96e101434dfae44cbffdc1e2915c8f020f233c8c068604af"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NW-action-hit_5-1.png",
+      "bytes": 58363,
+      "sha256": "69d6e0006c2a40e4bee523a6f662366a3fb1f7e6df48c42685d9d55a5ba96052"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NW-action-idle_5-0.png",
+      "bytes": 57763,
+      "sha256": "13ab6ce230e3e85df76d8113682d334342377e0d8737b6a996e69beb33ded820"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-NW-pre-idle-idle_5-0.png",
+      "bytes": 57956,
+      "sha256": "c42d1af4b17756004f8d0ec0a90a61bc433cdcaf80d7ff0b75ecc3fd77e050d0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-S-action-hit_2-0.png",
+      "bytes": 64553,
+      "sha256": "af38fafc622a362b3f98edcc59754117d0af4ed55d53384fac92e22d05826e95"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-S-action-hit_2-1.png",
+      "bytes": 60064,
+      "sha256": "ff1402fde2a30a53df7f3855c2cb93f657450ae1ad470811fc48103c668f4487"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-S-action-idle_2-0.png",
+      "bytes": 64686,
+      "sha256": "d802666bfd45119a6c7e5d3f85706aed7f9f3cdeb35384a5bad22c68498d0ab8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-S-pre-idle-idle_2-0.png",
+      "bytes": 64634,
+      "sha256": "7eff92e878c8d51b3c68e70e5dc417954c0d0fef059be4afdb118b4ec256de48"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SE-action-hit_1-0.png",
+      "bytes": 62373,
+      "sha256": "83bb0e31f554e236c4115cc6373fcc085da12aeb0ba31bcae933b7faa9f6f823"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SE-action-hit_1-1.png",
+      "bytes": 59698,
+      "sha256": "f70c634bdc2b2ceddfd457cb6852f399b743d4861259a2dba1a8af3fe055c5bc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SE-action-idle_1-0.png",
+      "bytes": 61234,
+      "sha256": "d3bea2f1d7224c972a086b88b9504ff6bebb045e9c927cdb08fa21a1a3907b73"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SE-pre-idle-idle_1-0.png",
+      "bytes": 61397,
+      "sha256": "2fafe46d367b29a605ffccf04722e337c33d6b5e033945df5f2a9ae895b73a25"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SW-action-hit_3-0.png",
+      "bytes": 67642,
+      "sha256": "075671813d6138a895fc82c0db43d6e070b536b1b3862dc2562c570b7b3e2f52"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SW-action-hit_3-1.png",
+      "bytes": 60115,
+      "sha256": "cced26cf130b05f5d1376cbb178e2ab99a4e7a41a3a212e8aa8cd59e86c647ae"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SW-action-idle_3-0.png",
+      "bytes": 60318,
+      "sha256": "138ff105efc21accd34bb11801bbb7d87b90bc42aa52454541a721497b7112f8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-SW-pre-idle-idle_3-0.png",
+      "bytes": 60285,
+      "sha256": "9a0b1550d61b74f4a61bed24ee3c94a958d4091acfc84c2a3ef9c959d210240d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-W-action-hit_4-0.png",
+      "bytes": 59564,
+      "sha256": "f6ad9e047d97365ef9117b8b30b1646de6a37baa717ffd53102641bb43bd9294"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-W-action-hit_4-1.png",
+      "bytes": 57726,
+      "sha256": "7ba6752106227428efc215e3509fbe4e93521a5ab6225c7fdcb41559efe66e87"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-W-action-idle_4-0.png",
+      "bytes": 58248,
+      "sha256": "fba78d685aec1e174c867925a0cb47adc6aa5e2c3f1b87bc20fd893d0c8a217e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/hit-W-pre-idle-idle_4-0.png",
+      "bytes": 58380,
+      "sha256": "607089b6b9ffecd45afd9c68e62df86cd5f91035779c6151b6029befee08ce84"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-E-action-idle_0-0.png",
+      "bytes": 59153,
+      "sha256": "61528af79afccf826dbee96d0da927e8f6ab91ad29a4d0ebc6c995891dad7c99"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-E-action-idle_0-1.png",
+      "bytes": 60258,
+      "sha256": "fef91501582d8c57c63b8e607b607e32fc0753edb451ed4bc66e96ad4a00516f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-E-pre-idle-idle_0-0.png",
+      "bytes": 59393,
+      "sha256": "4f94d86b5890765c0e5c5b66b92cf2fff1c38b138074e0667d75a435b627ae22"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-N-action-idle_6-0.png",
+      "bytes": 59726,
+      "sha256": "aea9c1d8c99e06e771b166899d3d9f97df75e079e2ceaac36b8633b0dd3ec685"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-N-action-idle_6-1.png",
+      "bytes": 61627,
+      "sha256": "42d0dcd4e0e33c23fb2ce8de2422a24404baa6d2e97fb3712f39a5270ab68220"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-N-pre-idle-idle_6-0.png",
+      "bytes": 60005,
+      "sha256": "82f448c1d06ad603e5efed0453ec6ed7a8de641b7a3d8a4dc09322672e9bd1b2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-NE-action-idle_7-0.png",
+      "bytes": 58119,
+      "sha256": "905b31d3503ed8d7c65068208d92466f7a287c2c3089008316eed9380889d2cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-NE-action-idle_7-1.png",
+      "bytes": 58485,
+      "sha256": "d1b44164c48bcc7ddbc2cdd81737a8e6bf1389970070e3488d5d02a12fe67581"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-NE-pre-idle-idle_7-0.png",
+      "bytes": 58270,
+      "sha256": "cb10ef393baf46f73deaa8548e20885e71cd6905908571f21db25e4062d7fed0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-NW-action-idle_5-0.png",
+      "bytes": 57980,
+      "sha256": "dab88875d4879685e4f6e2381ac02724fea19677841089f8ce4eec15897a24e5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-NW-action-idle_5-1.png",
+      "bytes": 60120,
+      "sha256": "e010f3f7ed43667cc32f92f4693ac510a07cf79121c9b0407bf73623e7538439"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-NW-pre-idle-idle_5-0.png",
+      "bytes": 57934,
+      "sha256": "0854a891bea8cff1f6ff8b487019289910a58e30d9d0fc5b6e9c51d3eb168b7b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-S-action-idle_2-0.png",
+      "bytes": 64765,
+      "sha256": "46b6b67018fc8b8e3bc9c807405a63f1de134769d8512744687250c7af8b6076"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-S-action-idle_2-1.png",
+      "bytes": 65711,
+      "sha256": "b2bffb7a499b16ba0459b009fd599995d87a7e4bd065cb4b36390a136dd3242c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-S-pre-idle-idle_2-0.png",
+      "bytes": 64854,
+      "sha256": "efb29a04824362ed8cd62dbd83c77f0fee9b339cec62fc18a7f821a6f3501bfe"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-SE-action-idle_1-0.png",
+      "bytes": 61607,
+      "sha256": "38e78488cb2b0b63008f9425045c5fb0a2e20ec850a58eede7d8c34cba6561a9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-SE-action-idle_1-1.png",
+      "bytes": 64318,
+      "sha256": "bf9ea059653d38edd527891e8a14acd33f530af864c75a79cd3d474c13727c8e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-SE-pre-idle-idle_1-0.png",
+      "bytes": 61445,
+      "sha256": "8f690b28718d92565bc394ad791327242a4308125793f9f8b92b4e8555e83d96"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-SW-action-idle_3-0.png",
+      "bytes": 60273,
+      "sha256": "4b18f73eb15330d95e1797f3747e2f25684281809ba34efe85c1ee0e637c9f44"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-SW-action-idle_3-1.png",
+      "bytes": 62155,
+      "sha256": "9c9160aae044285b69d9ba76577e891589efdbb2f2ee3757f10bcb32f0bda04e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-SW-pre-idle-idle_3-0.png",
+      "bytes": 60546,
+      "sha256": "16727ab8459b73edce778736bf52e3c471f85b7ac522783cb71128cfbd19feef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-W-action-idle_4-0.png",
+      "bytes": 58259,
+      "sha256": "53ef905f17b0b74c10137f9fe078629374b0341de8091587aeac0e26913ab9ed"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-W-action-idle_4-1.png",
+      "bytes": 60315,
+      "sha256": "b293333f118db1d86d3bca927ff0ab95bf47024fea3fc84f261947b6e2a34078"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/idle-W-pre-idle-idle_4-0.png",
+      "bytes": 58488,
+      "sha256": "b612cfea46cf31fa70f5e8004adfd88766bac3816f1c06920d80f7bd7aaed50a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-0.png",
+      "bytes": 58969,
+      "sha256": "3d80c38a6197ca6927555c183dd347fbd42c6b47e752bfbd93ac60ec6562dedd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-1.png",
+      "bytes": 58609,
+      "sha256": "72ae25d0df9a6de37cb24ecd2917cf54697aa3685063d13c36b39b3466dff5ca"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-2.png",
+      "bytes": 57121,
+      "sha256": "d4b2dcf916c4eb9ff9017e4b5433974ce44a7ebe3cf94ae91a4084de88cca1a7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-3.png",
+      "bytes": 56543,
+      "sha256": "b877a5a2978ead3e6cc5a51b5536b9a201f05b3f17878f25c7e7c76aaec89f40"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-4.png",
+      "bytes": 56603,
+      "sha256": "2f92821704174c7ea5536db8ca66c5d148444e00ef0b5606356e65e3d9a21c4c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-action-run_0-5.png",
+      "bytes": 56051,
+      "sha256": "b13419f604af78683d4cb83c4e7a247a12f0cbdb90a8eeaee9c57fe4ee2a80e3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 59349,
+      "sha256": "0c78ece192df7f5d2760fd048a3672da9ad01b1e2523086d6d03ddd5246601f3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-N-action-run_6-0.png",
+      "bytes": 58885,
+      "sha256": "73dd6b555243a35d16c3b1b42da37c603475a7bde2748c34796942f028e22584"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-N-action-run_6-1.png",
+      "bytes": 58352,
+      "sha256": "f6126e2852402c7f2dff18a265848df2cead8aa526b5255d1d61cf0420f35be5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-N-action-run_6-2.png",
+      "bytes": 58040,
+      "sha256": "2b0b2311828c345c05eb022ca5fe287bb0a82af6f88cdac7b8a312679245dc12"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-N-action-run_6-3.png",
+      "bytes": 58242,
+      "sha256": "a1719f90adc0b1c671a6fab97b89d1bd92d2ac0c5c9e9a66f1b8b4e646307110"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-N-action-run_6-4.png",
+      "bytes": 58095,
+      "sha256": "2d82b96e7066c00cad52490b2ac00d8b4f0cee305680aa92b5791c6c260023e6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-N-action-run_6-5.png",
+      "bytes": 58485,
+      "sha256": "8de0cd6d09979d753b7c9a76283d2bd86735ece93037208fcba0df295f9c1a52"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-N-pre-idle-idle_6-0.png",
+      "bytes": 59895,
+      "sha256": "a738de3942e613f0e56e2f3de9f9501cb4927152020150b34f4bf1e8680a89b9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NE-action-run_7-0.png",
+      "bytes": 59828,
+      "sha256": "0986b042db64a84a1420ed2bfbc4a4df2887f51b0d67a789b796a291e20a91d5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NE-action-run_7-1.png",
+      "bytes": 61633,
+      "sha256": "f24e8b4d13621cb08254b607e9ff8074e85aecdf15a627aad9efb1106d6cab49"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NE-action-run_7-2.png",
+      "bytes": 61052,
+      "sha256": "9b4b30d8c96148f89cafbe865655e2eecca878f0741c7dc23c89fbbe5f3ac1cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NE-action-run_7-3.png",
+      "bytes": 62768,
+      "sha256": "af06e1222c39da84d0eaf0e629b26ba485adab7fe68a5f035971ca109952e64b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NE-action-run_7-4.png",
+      "bytes": 59349,
+      "sha256": "3038177400dfde068e7e06491ef203cc5908370c55be323c7e9bfbb481d26f2e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NE-action-run_7-5.png",
+      "bytes": 59895,
+      "sha256": "f8b164ddaf0aab0d1f23b3fbdee58fda888545d46f88085001238aa3c0f7a279"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NE-pre-idle-idle_7-0.png",
+      "bytes": 58174,
+      "sha256": "866fa50a6685faac765208b54eb6f812967f191355dd5037337aacd72f155dc1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NW-action-run_5-0.png",
+      "bytes": 67908,
+      "sha256": "085ffea566098cb42232ab1ab2a9a4bec371c4cf472222e9fdab2e115f9c43b9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NW-action-run_5-1.png",
+      "bytes": 66942,
+      "sha256": "78bda1518380139f118a42b7d334b645d29b47cefaa1a384372bd761721b358f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NW-action-run_5-2.png",
+      "bytes": 65950,
+      "sha256": "d7bf22268ab4cbcda10e9e0f301fa09f85979ac50a874a81533489ba142534aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NW-action-run_5-3.png",
+      "bytes": 67438,
+      "sha256": "be64b1c35cba09193baa0329737c6d7dcb1e5174f6794c9221e6ebbb8c7721ea"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NW-action-run_5-4.png",
+      "bytes": 65793,
+      "sha256": "afbfb099ff38425cd9555768c4c5701d03d06e358116736e98e10559d38661cf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NW-action-run_5-5.png",
+      "bytes": 63900,
+      "sha256": "8656f1b239877754bcf8b5f513ee3ffabe41a7de5307a6866ae94d0f1e94e69d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-NW-pre-idle-idle_5-0.png",
+      "bytes": 58016,
+      "sha256": "d5816e6e29f7b4d3c8fd875d5ac7fbc3e0c45d8061aaef99aa73aeb6965cf91b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-S-action-run_2-0.png",
+      "bytes": 59008,
+      "sha256": "b9527d0f41e4be3245babafc8cfcccf6295d27830e290a9dd2a0dae2dafe0924"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-S-action-run_2-1.png",
+      "bytes": 59174,
+      "sha256": "d58d295051a23b7b4ad412ab363cfbaac3fc0cd58343a528f2157b4b4c0e56ba"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-S-action-run_2-2.png",
+      "bytes": 61402,
+      "sha256": "6fbaaf5b3a4537aa47c92e23486ae9cca8cbbc2d6b7ce017bd1254bdef673c34"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-S-action-run_2-3.png",
+      "bytes": 58933,
+      "sha256": "559aeb6baf2ea03e5f39ad99a2d80244855c524a4e752a13610b832137e323da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-S-action-run_2-4.png",
+      "bytes": 59259,
+      "sha256": "c24fa527c1da15cc329ed146e34cad6ac0656f035a4d111c05d56b33cf2a15ab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-S-action-run_2-5.png",
+      "bytes": 60087,
+      "sha256": "8f2b5528f8e3b514f0a9d37008599ce079fbe91224b9516ede86630c9fe1e887"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-S-pre-idle-idle_2-0.png",
+      "bytes": 64846,
+      "sha256": "56553dfe1aff523424eb324d28677ef832c8b7059a9f7ccbf13b33161c3cb31b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SE-action-run_1-0.png",
+      "bytes": 61986,
+      "sha256": "846151c529ba83b291d164fd0582c595c8f24e34e241c09087d3e4a43af08980"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SE-action-run_1-1.png",
+      "bytes": 60123,
+      "sha256": "d8164763a1dcf462409d4fcd38586bf92b7077097e187488251cfc2eb834893e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SE-action-run_1-2.png",
+      "bytes": 61668,
+      "sha256": "83f48fb1e5133d4711c35e388b208d1c109154d4dcab1de97ee495635bf14e88"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SE-action-run_1-3.png",
+      "bytes": 63850,
+      "sha256": "c548f3cc101353e5471f21bc4813d52cce768d6fd5dc186064a96534016791a8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SE-action-run_1-4.png",
+      "bytes": 62556,
+      "sha256": "843c0b359a3cbc88b77bac0fd13c22b73da4eac17ca67504017e9d26189aa828"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SE-action-run_1-5.png",
+      "bytes": 61411,
+      "sha256": "e986f9a577039f34e761d9e7092f76563ce43e405e8470a770c73112c7607ca0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SE-pre-idle-idle_1-0.png",
+      "bytes": 61672,
+      "sha256": "a30012f4b855fcd6324481a12dbbda421722e1b2d09dcf57d0f91beb6bc1ad5e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SW-action-run_3-0.png",
+      "bytes": 59972,
+      "sha256": "3efbf29d98d6d2b09803ccba4fc4d437ca5a85b0a3413ae217b4c2661eda87b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SW-action-run_3-1.png",
+      "bytes": 59203,
+      "sha256": "7da1627469f178aa99849bb05ca1f5573ba60f9323a718be7c03a0eafa533f13"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SW-action-run_3-2.png",
+      "bytes": 58120,
+      "sha256": "863fb5e06d6bbda53db93bfd8aee92e32a3c4f1febf948f40b1440de48233e3d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SW-action-run_3-3.png",
+      "bytes": 59955,
+      "sha256": "fb6f18eddcd80bef98221ef15318af8ac424119203125b66b004754477bfa773"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SW-action-run_3-4.png",
+      "bytes": 59536,
+      "sha256": "19f1848a8b6f31c4d214e99e90fe0e6723939067cadf3617dc1247f063ee75bb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SW-action-run_3-5.png",
+      "bytes": 57575,
+      "sha256": "5371a8e55e813b0901d90b64da49bcf055441e0899734e24dee68c8ec755d3ac"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-SW-pre-idle-idle_3-0.png",
+      "bytes": 60549,
+      "sha256": "66191ad2e00e245c9cd01d5f0ae963f9cb092b823f3d62b3d359bd59bff5a86d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-W-action-run_4-0.png",
+      "bytes": 60320,
+      "sha256": "e0143512c83476247906f6e95659f39026e4579fad82acca711cd4d643359f9c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-W-action-run_4-1.png",
+      "bytes": 59129,
+      "sha256": "6d1886a439eaf4d7c9d23d13397f4c2ba3d71086f4f958ffda3edfa34f102d22"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-W-action-run_4-2.png",
+      "bytes": 61184,
+      "sha256": "1f727df418742b7f0c36afb491707f6f0d975ca0171928cb2c63b00027e6a046"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-W-action-run_4-3.png",
+      "bytes": 59718,
+      "sha256": "7110fca7f00c7ef93533c8b5d7e16d88e8c39da9518a99084dc8305b0ead5f7f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-W-action-run_4-4.png",
+      "bytes": 59661,
+      "sha256": "5af3e82d882e781ab27b2fd9453609a602e6b7d5e93577c0b5983aa6b656bbcb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-W-action-run_4-5.png",
+      "bytes": 60260,
+      "sha256": "6c9f3407d7ba4938397fe73ea09b8c712a6e9d8b66e1b5e9115a6cc0e2b3f68a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/captures/run-W-pre-idle-idle_4-0.png",
+      "bytes": 58298,
+      "sha256": "4ea2703683cf43aec17b80e4ce9ae006d7d775118072ef463402913cdff3335b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-correction-session-r002/arena-zombie-kurtz-r003/zombie_lord/samples.json",
+      "bytes": 2062146,
+      "sha256": "120f3dbf7b2418bf02bbe22069967e89631fef1466c366b1831674dfc14e61a8"
+    }
+  ],
+  "captures": 254,
+  "new_approvals": 0,
+  "process": {
+    "returncode": 0,
+    "elapsed_seconds": 92.55297483000322,
+    "render_requested": true,
+    "speed_scale": 1.0,
+    "simulation_dt": 0.016666666666666666,
+    "script_errors": false,
+    "Main_scene_validation": false,
+    "quality_approval_changes": 0
+  }
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-E-death-author-20261020-v01/prepare-own-E-DEATH-complete-native-leg-head-coat-parts-v02.py", line 6, in <module>
+    r=json.loads(REG.read_text());am=json.loads(AMP.read_text());sole=json.loads(SOLE.read_text());assert r['new_E_fixed_C']==2816 and r['new_E_fixed_bodyunit']==2.75
+                 ^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/mythic413-E-hit-author-20261020-v02/E-new-native-one-time-body-density-C2816-root-registration-v01.json'

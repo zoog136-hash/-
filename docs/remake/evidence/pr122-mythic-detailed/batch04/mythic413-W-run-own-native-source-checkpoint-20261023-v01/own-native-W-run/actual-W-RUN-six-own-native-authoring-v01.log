@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/author-W-RUN-six-own-native-v01.py", line 228, in <module>
+    far,far_error = warp_leg('R-far',bones['R-far'])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/mythic413-W-run-own-native-20261022-v01/author-W-RUN-six-own-native-v01.py", line 188, in warp_leg
+    assert inverse_error<0.0001, (name,inverse_error)
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('R-far', 13.820897590502113)

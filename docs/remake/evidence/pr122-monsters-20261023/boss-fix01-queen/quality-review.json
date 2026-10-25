@@ -1,0 +1,171 @@
+{
+  "schema": "pr122-queen-run-repair-private-visual-review-v1",
+  "reviewed_at_utc": "2026-10-23T10:10:36.239451+00:00",
+  "actor": "monster:얼음 여왕",
+  "quality_tier": "mythic_transform",
+  "status": "HOLD_FINAL_INDEPENDENT_QA",
+  "new_approvals": 0,
+  "actual_reference_examined": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/references/queen-project-canonical-crop.png",
+    "bytes": 204136,
+    "sha256": "aafad119248fd8d5e0e08877fbd874afc00ccfd20148a8129615e3555f69d5a9"
+  },
+  "actual_selected_sources_examined": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-E-run6-v01.png",
+      "bytes": 1886838,
+      "sha256": "036614afe3bb8bc9cf661900cbf9e27b22131635cfd1d99a8d47ee06899a111f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-SE-run6-v02.png",
+      "bytes": 1266582,
+      "sha256": "269c475f458548157f173b07244a9b47e4180cfa6b679e0e1bdf47ee020575cf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-S-run6-v02.png",
+      "bytes": 1877013,
+      "sha256": "4c476ec0784f241b34df6809e4596aa5a6fbf2239f400b11cfc08873fb2d23b3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-SW-run6-v03.png",
+      "bytes": 1324837,
+      "sha256": "df8204324dc4b939718ba0977867ef167033505126dc80d93ba48824a251c2dd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-W-run6-v02.png",
+      "bytes": 1371896,
+      "sha256": "f3a45d1aba264bce4bc3614c60129182e6a812770c3df104d76f9a2f2862ab4f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-NW-run6-v02.png",
+      "bytes": 1383605,
+      "sha256": "d1ab4d198641eb6761f7ab3a83d5fdfe9048a48a7dfa5af292f6a791fcd0a4f5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-NE-run6-v02.png",
+      "bytes": 1439182,
+      "sha256": "e82379c5d17b8003039fd9a14a00ca1fd9662d778176ae61075bbd1d3b75afe4"
+    }
+  ],
+  "actual_registered_preview_examined": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/private/normalized-run7-contactsheet.png",
+    "bytes": 2165045,
+    "sha256": "1ec2a06d9b30dcaba3f597fc68a004033c671e956190aa22c6fd95285523a696"
+  },
+  "actual_crown_sole_landmarks_examined": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/private/crown-sole-landmarks.png",
+    "bytes": 1401171,
+    "sha256": "fce5b716e630ad062943649fb8fe3eb6217b2a813dfb5c70397b07790dad164d"
+  },
+  "observed_improvements": [
+    {
+      "criterion": "opposite_support",
+      "result": "OBSERVED_SOURCE_IMPROVEMENT",
+      "views": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "observation": "Source slot0 and slot1 now show different forward planted legs: bare RIGHT-slit leg versus dark-covered LEFT leg. Slots2/3 also show opposite lifted knees. Playback order [0,2,4,1,3,5] keeps the two stride halves instead of repeating the same exposed leading leg."
+    },
+    {
+      "criterion": "NE_camera",
+      "result": "OBSERVED_SOURCE_IMPROVEMENT",
+      "views": [
+        "NE"
+      ],
+      "observation": "NE v02 shows back of head/crown, flowing rear hair and back armor; face and front breastplate are turned away. This corrects the previous E/SE-like frontal NE source. Exact angular separation from adjacent views is still final QA."
+    },
+    {
+      "criterion": "SW_camera",
+      "result": "OBSERVED_SOURCE_IMPROVEMENT",
+      "views": [
+        "SW"
+      ],
+      "observation": "SW v02 actually faced right and was rejected. SW v03 faces left/front with wings trailing screen right and is the selected source."
+    },
+    {
+      "criterion": "source_density",
+      "result": "REGISTRATION_TECHNICAL_PASS",
+      "views": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "NE"
+      ],
+      "observation": "Separate manual crown-apex to contact-sole measurements exclude staff orb and high wing tips. Directional logical canvases plus one 86/140 profile scale produce 85.471–86.465 px median contact-body heights without resizing or recoloring any source pixels."
+    },
+    {
+      "criterion": "gross_clipping_body_collapse",
+      "result": "NONE_OBSERVED_IN_SELECTED_42_SAMPLES",
+      "views": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "NE"
+      ],
+      "observation": "All selected regions pass unchanged component/whole-visible-pixel guards, and the registered private six-phase sheets show complete crown/staff/wing/boot silhouettes. This is a first-pass observation, not mythic approval."
+    }
+  ],
+  "held_directions": [
+    {
+      "direction": "N",
+      "reason": "three fresh attempts retained; handedness or strict region failure"
+    }
+  ],
+  "held_sources": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-NE-run6-v01.png",
+      "reason": "Strict geometry: a pose rectangle includes another body",
+      "sha256": "4448987bffa67b3beaee4a2e3a337d0e1735bbb350a774ef401c966911251f4d"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-SW-run6-v02.png",
+      "reason": "Actual view faces right/E instead of SW; v03 supersedes without deleting",
+      "sha256": "4e982daa44308a18154c220daf2a83f95ae4b78287fb3e3e4fbaeabb02cfc52a"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v02.png",
+      "reason": "Rear-view bare slit on viewer-left contradicts anatomical RIGHT",
+      "sha256": "29bc814ee18e51c6fb087fc03f8a100bd7d18155fb2e149fd4c0d737bcee6c21"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v03.png",
+      "reason": "Top row slit corrected but middle-row leg/slit handedness changes; not selected",
+      "sha256": "3ea337ca567b5cfbdd6759b33a3fb8e37ccc6ea116d9533ff220879d99b0256c"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v04.png",
+      "reason": "Targeted edit failed strict geometry: a pose rectangle includes another body",
+      "sha256": "35bea062e2bd0ecfbeb7391ab22106aafd0752f17ce1678249dc06b42ce8607a"
+    }
+  ],
+  "existing_N_reuse_probe": {
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-N-run6-v01.png",
+      "bytes": 1166126,
+      "sha256": "ce9d143a809930f76fb7e5563c2b815a920d64a96d4b4fb92ee403f7e159845f"
+    },
+    "actual_private_vision": true,
+    "selected": false,
+    "finding": "Dedicated queen rear artwork retains back hair/crown, both wing roots and viewer-left LEFT-hand staff. The exposed bare slit thigh is also viewer-left in all cells; in straight rear view this contradicts the canonical anatomical RIGHT slit. Preserve the source without forcing it into the repaired RUN profile."
+  },
+  "ground_registration_limit": "Contact source slots0/1 (playback phases0/3) use manually reviewed sole baselines. Other support baselines use the lowest visible bound estimate; flight slots register an invisible plane12 source pixels below the visible pose bound. These metadata estimates are NOT proof of anatomical sole contact on a moving-world ground plane. All source rectangles and RGBA hashes remain unchanged.",
+  "unseen_not_reviewed": [
+    "Actual default Main presentation and attack/target hitbox interaction",
+    "Independent timed moving-world support/sole slip/flight-plane QA at DB speed",
+    "Final 8-view angular separation, particularly E versus SE and W versus SW",
+    "Rear-view exact hand/slit anatomical continuity, ornament/crown palette and wing-root anatomy at mythic acceptance level",
+    "A completed new N run clip: three new N attempts and the old N reuse probe remain HOLD",
+    "N v04 actual image was not visually accepted; strict foreign-body rectangle failure already prevents selection",
+    "New IDLE/ATTACK/HIT/DEATH are produced separately; this candidate contains RUN only"
+  ],
+  "existing_approvals_and_assets_preserved": true
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "PR122-independent-readonly-explicit-storage-extension-audit-v1",
+  "status": "PASS_RO_STORAGE_ONLY_TWO_HELPER_DIFF",
+  "proposal_pin": {
+    "path": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/explicit-storage-only-proposal-pins-v01.json",
+    "sha256": "16afd32990a29983d6a1bde64d2a4b7b5c6a26b2732e23a2a89c823f801e74c5",
+    "bytes": 2485
+  },
+  "files": [
+    {
+      "source": {
+        "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/pr122-author-six-pose-atlas-v03.py",
+        "sha256": "bb54dbc139f7d48cdb629eb895f44ed5b8b3a01b063f42c569bd062492921a54",
+        "bytes": 7139
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-author-six-pose-atlas-v04.py",
+        "sha256": "297cf390779e3e60e65b242335dfab307c106dc421df3bb46250bc929ddc3938",
+        "bytes": 7139
+      },
+      "AST_parse": true,
+      "original_exact_bytes_after_restoring_only_storage_changes": true
+    },
+    {
+      "source": {
+        "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/pr122-build-authored-clip-request-v04.py",
+        "sha256": "1a3d7f96af190bd4fa6f52066830f724f44b2d90e408926b6cf77c606391e26a",
+        "bytes": 9594
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-build-authored-clip-request-v05.py",
+        "sha256": "d20c10d0c11978a16e70e5a68600b174e7cfe47c9f3b39095701647cd319b66d",
+        "bytes": 9752
+      },
+      "AST_parse": true,
+      "original_exact_bytes_after_restoring_only_storage_changes": true
+    },
+    {
+      "source": {
+        "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/integrate_new_413_clip_retaining_profile_v06.py",
+        "sha256": "b33b0d4aa24ee806c36ff9b33230e657e93642ea1198d133fdb3d696cf253e14",
+        "bytes": 42709
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/integrate_new_413_clip_retaining_profile_v06.py",
+        "sha256": "b33b0d4aa24ee806c36ff9b33230e657e93642ea1198d133fdb3d696cf253e14",
+        "bytes": 42709
+      },
+      "AST_parse": true,
+      "original_exact_bytes_after_restoring_only_storage_changes": true
+    },
+    {
+      "source": {
+        "path": "/workspace/scratch/mythic413-all-direction-missing-clip-proposal-20261020-v06/canonical-input-pins.json",
+        "sha256": "391013146f0ed6a3328bd07d3c91db04f5efe2dbdba8965db91fd38ab9912db6",
+        "bytes": 2710
+      },
+      "proposal": {
+        "path": "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/canonical-input-pins.json",
+        "sha256": "391013146f0ed6a3328bd07d3c91db04f5efe2dbdba8965db91fd38ab9912db6",
+        "bytes": 2710
+      },
+      "AST_parse": false,
+      "original_exact_bytes_after_restoring_only_storage_changes": true
+    }
+  ],
+  "findings": [],
+  "reviewed_scope": [
+    "Packer changes only its existing native storage tile upper bound2048 to2304. Requestbuilder accepts only explicit square1536 or2304 storage and uses the chosen tile in the identical2x3 atlas arithmetic.",
+    "Restoring that one bound and seven exact requestbuilder substitutions reproduces both original source bytes. Integrator and canonical-input pins are byte-identical.",
+    "Physical C, bodyunit, logical1024, nominal2048, sourceRGBA hashes, six chronological distinct poses, fixed root+storage arithmetic, all-alpha ownership, actual foreground/root containment, region derivation and existing fit validators are unchanged.",
+    "Transparent storage enlargement does not rescale pose pixels, reinterpret physical root/size, approve a clip, or bypass user WALK scope."
+  ],
+  "limits": [
+    "Static code-only read-only audit; no helper execution, generated pixels, test reruns, repository or Git writes.",
+    "A2304 pose still requires exact source review, source/request hash binding and every unchanged import/runtime validator."
+  ],
+  "images_viewed": 0,
+  "helpers_executed": 0,
+  "tests_run": 0,
+  "repo_writes": 0,
+  "actor_approvals_added": 0
+}

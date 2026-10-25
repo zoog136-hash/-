@@ -1,0 +1,460 @@
+{
+  "status": "EXACT_S_RUN6_OPPOSITE_CONTACT_CLOCK_IDENTITY_PROJECTION_FINITE_FLOOR_AND_CORRECT_LEFTCUFF_OWNER_PENDING_ACTUAL_GAIT_SOURCE_QC",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN6-own-actual-new-native-full-actor-source-contract-v01.json",
+    "bytes": 137007,
+    "sha256": "7917b07d76cf3982bea5eb7dcda9d4b1d9b17429b74303df129d3db4b5a571ac"
+  },
+  "leg_controls": {
+    "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v05/S-RUN6-new-native-leg-controls-and-exact-clock-v01.json",
+    "bytes": 41724,
+    "sha256": "2c4e4341e4ec0884f460daecfe90e9935f676987488c2fd2df0223761e1e4471"
+  },
+  "shared_boot_owner_SOURCE_PASS": {
+    "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/S-shared-pure-boot-v07-calf-AA-and-exact-cloak-owner-PASS-v01.json",
+    "sha256": "770d303e66bd65212ffcacad2183856f04ad59f4db364bce2e8598b7f515ea52"
+  },
+  "C": 2560,
+  "bodyunit": 2.5,
+  "root": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "native_to_game_scale": 0.09482758620689655,
+  "authored_seconds": 0.48,
+  "authored_fps": 12.5,
+  "reference_speed": 210,
+  "runtime_ratio": 1.25,
+  "runtime_phase_seconds": 0.064,
+  "actual_speed": 262.5,
+  "source_projection": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "one_common_source_body_U": [
+    0.9,
+    0.0,
+    0.0
+  ],
+  "one_common_source_body_V": [
+    0.0,
+    0.16,
+    -0.84
+  ],
+  "neutral_source_UV_to_native_Jacobian": [
+    [
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ]
+  ],
+  "neutral_source_projection_error": 0.0,
+  "one_common_source_body_capture_for_all_six": true,
+  "source_width_height_or_C_or_root_fitted": false,
+  "contact_parity": {
+    "phase0": "Lplant",
+    "phase3": "Rplant"
+  },
+  "support_checks": [
+    {
+      "contact_phase": 0,
+      "load_phase": 1,
+      "side": "L",
+      "native_support_heel_delta": [
+        0.0,
+        -177.16363636363639
+      ],
+      "native_player_phase_delta": [
+        0.0,
+        177.16363636363639
+      ],
+      "sum_native_residual": [
+        0.0,
+        0.0
+      ],
+      "max_native_residual": 0.0,
+      "world_phase_displacement": 16.8,
+      "sole_lift_contact": 0,
+      "sole_lift_load": 0
+    },
+    {
+      "contact_phase": 3,
+      "load_phase": 4,
+      "side": "R",
+      "native_support_heel_delta": [
+        0.0,
+        -177.16363636363639
+      ],
+      "native_player_phase_delta": [
+        0.0,
+        177.16363636363639
+      ],
+      "sum_native_residual": [
+        0.0,
+        0.0
+      ],
+      "max_native_residual": 0.0,
+      "world_phase_displacement": 16.8,
+      "sole_lift_contact": 0,
+      "sole_lift_load": 0
+    }
+  ],
+  "frames": [
+    {
+      "phase": 0,
+      "source": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase0-LEFT-CONTACT-actual-native-v01.png",
+        "bytes": 869024,
+        "sha256": "57110c162f63fbc71fd64fde4d6c3f5c3002125a46cba5933182ce2c51fe2254"
+      },
+      "physical_C": 2560.0,
+      "bodyunit": 2.5,
+      "root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "standard_lossless_RGBA_PNG": true,
+      "border_alpha_contact": false,
+      "legs": {
+        "L": {
+          "femur_error": 0.0,
+          "tibia_error": 5.684341886080802e-14,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36919,
+            "actual_source_quad_and_interior_min_Z": 2.9999999999999982,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 0.9999999999999982,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 0.8587116547611569,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "R": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36798,
+            "actual_source_quad_and_interior_min_Z": 173.0,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 171.0,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 174.87799800243843,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "minimum_other_node_guarded_source_quad_Z": 63.24965697905429,
+      "head_shortblue_HOLD_visible": false
+    },
+    {
+      "phase": 1,
+      "source": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase1-LEFT-LOAD-actual-native-v01.png",
+        "bytes": 800864,
+        "sha256": "3b2faa29868f3b0a1e9c3678177d41d44df20a756506fc3251f85d82ddafde96"
+      },
+      "physical_C": 2560.0,
+      "bodyunit": 2.5,
+      "root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "standard_lossless_RGBA_PNG": true,
+      "border_alpha_contact": false,
+      "legs": {
+        "L": {
+          "femur_error": 5.684341886080802e-14,
+          "tibia_error": 1.1368683772161603e-13,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36919,
+            "actual_source_quad_and_interior_min_Z": 2.9999999999999982,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 0.9999999999999982,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 0.5594728762156258,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "R": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36798,
+            "actual_source_quad_and_interior_min_Z": 163.0,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 161.0,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 155.61643829208523,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "minimum_other_node_guarded_source_quad_Z": 11.628388577032865,
+      "head_shortblue_HOLD_visible": false
+    },
+    {
+      "phase": 2,
+      "source": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase2-RIGHT-DRIVE-FLIGHT-actual-native-v01.png",
+        "bytes": 759617,
+        "sha256": "094554b44940d4c28ae71dd2e5fb64d41e461cf2423ff28f3918a227d4d7933e"
+      },
+      "physical_C": 2560.0,
+      "bodyunit": 2.5,
+      "root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "standard_lossless_RGBA_PNG": true,
+      "border_alpha_contact": false,
+      "legs": {
+        "L": {
+          "femur_error": 5.684341886080802e-14,
+          "tibia_error": 5.684341886080802e-14,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36919,
+            "actual_source_quad_and_interior_min_Z": 202.68259941504402,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 200.68259941504402,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 200.46406879689943,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "R": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36798,
+            "actual_source_quad_and_interior_min_Z": 163.0,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 161.0,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 160.84811791594348,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "minimum_other_node_guarded_source_quad_Z": 88.77231220195563,
+      "head_shortblue_HOLD_visible": false
+    },
+    {
+      "phase": 3,
+      "source": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase3-RIGHT-CONTACT-actual-native-v01.png",
+        "bytes": 846046,
+        "sha256": "698c25cbf77705a15ae23ba5cb7f51230031f4ff571b06b5becaed1056370fce"
+      },
+      "physical_C": 2560.0,
+      "bodyunit": 2.5,
+      "root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "standard_lossless_RGBA_PNG": true,
+      "border_alpha_contact": false,
+      "legs": {
+        "L": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36919,
+            "actual_source_quad_and_interior_min_Z": 173.0,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 171.0,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 172.39865390692674,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "R": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36798,
+            "actual_source_quad_and_interior_min_Z": 3.0,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 1.0,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 0.8481179159438432,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "minimum_other_node_guarded_source_quad_Z": 45.97390180821674,
+      "head_shortblue_HOLD_visible": false
+    },
+    {
+      "phase": 4,
+      "source": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase4-RIGHT-LOAD-actual-native-v01.png",
+        "bytes": 795305,
+        "sha256": "94a2c6288b71e57aa4cbdb6f8ff6f0f22469fd9281cf88fd3d7f60ff85e9af3d"
+      },
+      "physical_C": 2560.0,
+      "bodyunit": 2.5,
+      "root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "standard_lossless_RGBA_PNG": true,
+      "border_alpha_contact": false,
+      "legs": {
+        "L": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36919,
+            "actual_source_quad_and_interior_min_Z": 142.4300600661429,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 140.4300600661429,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 140.39173401219864,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "R": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36798,
+            "actual_source_quad_and_interior_min_Z": 3.0,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 1.0,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 0.5264423436293075,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "minimum_other_node_guarded_source_quad_Z": 7.756130333736564,
+      "head_shortblue_HOLD_visible": false
+    },
+    {
+      "phase": 5,
+      "source": {
+        "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase5-LEFT-DRIVE-FLIGHT-actual-native-v01.png",
+        "bytes": 778709,
+        "sha256": "b3ce6fa4920b8bb723d045357bb9b8b2477385c060b4bc7d714508fac73477e3"
+      },
+      "physical_C": 2560.0,
+      "bodyunit": 2.5,
+      "root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "standard_lossless_RGBA_PNG": true,
+      "border_alpha_contact": false,
+      "legs": {
+        "L": {
+          "femur_error": 5.684341886080802e-14,
+          "tibia_error": 1.1368683772161603e-13,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36919,
+            "actual_source_quad_and_interior_min_Z": 163.0,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 161.0,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 160.85871165476118,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "R": {
+          "femur_error": 0.0,
+          "tibia_error": 0.0,
+          "all_source_texel_quad_floor": {
+            "all_actual_alpha_positive_source_texel_quads_count": 36798,
+            "actual_source_quad_and_interior_min_Z": 202.65337263466387,
+            "conservative_guard_native": 2.0,
+            "guarded_min_Z": 200.65337263466387,
+            "above_floor": true,
+            "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+          },
+          "selected_raster_texel_quad_guarded_min_Z": 200.54598397187132,
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "minimum_other_node_guarded_source_quad_Z": 94.52223540467958,
+      "head_shortblue_HOLD_visible": false
+    }
+  ],
+  "independent_actual_gait_joint_loop_review": "PENDING_ROOT_QUEUE",
+  "bounded_actual_game_checks": "PENDING_ROOT_SOURCE_GATE_AND_PACK",
+  "conditional_model_limits": [
+    "A single declared finite native plane/bone/sole construction, not a unique reconstruction of unseen3D anatomy.",
+    "Original full own-side gold greaves/counters/heels/toes, native cuff/puff/grip/staff/fins and cloth retain their own source material.",
+    "Positive finite-model floor and correct contact parity do not approve painted source joints, hidden ribbon material or actual game cycle."
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0,
+  "source_owner_correction": {
+    "original_visible_piece": "native750397775435 actual LEFTupper cuff bluewall",
+    "exact_original_RGBA_transferred": 489,
+    "old_HEAD_mask_owner_corrected_to_LEFTupper": true,
+    "new_hidden_material_generated": false,
+    "source_owner_receipt": {
+      "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/S-opposite-small-blue-triangle-genuine-LEFT-uppercuff-owner-PASS-v01.json",
+      "sha256": "1e34ddd356f314b814a72941665742b6c0563d99a3f86bd5ca52621a39f85c47"
+    },
+    "actual_all6_one_alpha100_component_ge200": true,
+    "actual_joint_occlusion_SOURCE_QC": "PENDING"
+  }
+}

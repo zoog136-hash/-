@@ -1,0 +1,267 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:그림 리퍼": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "death",
+          "direction": "S",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/S-death-v01.png",
+          "source_sha256": "7e7332e0ac81ab5f8f686293581d5c2f8cfd0dd9a43bb6d1daac0a95d572d9d6",
+          "texture": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/S-death-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  44,
+                  20,
+                  447,
+                  525
+                ],
+                "margin": [
+                  396,
+                  239,
+                  769,
+                  691
+                ],
+                "source_anchor": [
+                  256,
+                  541
+                ],
+                "rgba_sha256": "16afe9ed55522aecee22033ef94b05c06774a6f6bb8113758ea66a1903a79fcf",
+                "canvas_size": [
+                  1216,
+                  1216
+                ],
+                "foot": [
+                  608,
+                  760
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  540,
+                  55,
+                  477,
+                  486
+                ],
+                "margin": [
+                  380,
+                  278,
+                  739,
+                  730
+                ],
+                "source_anchor": [
+                  768,
+                  537
+                ],
+                "rgba_sha256": "9369e4608d7277fd06b67602c3be784e9f9145d4740622b8902fed873c31125f",
+                "canvas_size": [
+                  1216,
+                  1216
+                ],
+                "foot": [
+                  608,
+                  760
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1046,
+                  122,
+                  471,
+                  425
+                ],
+                "margin": [
+                  374,
+                  339,
+                  745,
+                  791
+                ],
+                "source_anchor": [
+                  1280,
+                  543
+                ],
+                "rgba_sha256": "c0bff8bffb9d4fe6ce2695ede096d8be1afde0996a6f51ebc15e9d2c52aae366",
+                "canvas_size": [
+                  1216,
+                  1216
+                ],
+                "foot": [
+                  608,
+                  760
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  18,
+                  580,
+                  509,
+                  402
+                ],
+                "margin": [
+                  370,
+                  362,
+                  707,
+                  814
+                ],
+                "source_anchor": [
+                  256,
+                  978
+                ],
+                "rgba_sha256": "4e758f804c7c42bf7e6af75dc8b93f951c2624697cbdccfd95c5ade65f563866",
+                "canvas_size": [
+                  1216,
+                  1216
+                ],
+                "foot": [
+                  608,
+                  760
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  530,
+                  620,
+                  481,
+                  354
+                ],
+                "margin": [
+                  370,
+                  410,
+                  735,
+                  862
+                ],
+                "source_anchor": [
+                  768,
+                  970
+                ],
+                "rgba_sha256": "5758472289cba7dc9ee55f407260511b64c08fab25f746da255b3f8f528ccf20",
+                "canvas_size": [
+                  1216,
+                  1216
+                ],
+                "foot": [
+                  608,
+                  760
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1020,
+                  687,
+                  509,
+                  300
+                ],
+                "margin": [
+                  348,
+                  464,
+                  707,
+                  916
+                ],
+                "source_anchor": [
+                  1280,
+                  983
+                ],
+                "rgba_sha256": "10b80e6b8fa038cd9885f252660bde431e85354dd0e9721e52fb72c59864aefa",
+                "canvas_size": [
+                  1216,
+                  1216
+                ],
+                "foot": [
+                  608,
+                  760
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 457.5,
+            "canvas_size": [
+              1216,
+              1216
+            ],
+            "foot": [
+              608,
+              760
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/resume210-min004/SpriteFrames.tres",
+      "frames_sha256": "2df9cda8bb9ce73f2506c514b04553279fca335c6b08cac3c738510b1af11bdf",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/resume210-min004/NativeMotionProfile.tres",
+      "native_profile_sha256": "5657f309938d2f066db9006c95fc16c5c322e271a678e8d058f9bc2cc687df6e",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [
+    {
+      "clip": "NE-hit-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "source_drafts_saved": 2,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

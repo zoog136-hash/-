@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "observed_UTC": "2026-10-18T13:19:47.679314+00:00",
+  "baseline_commit": "e840f0ef7ee0b44f3d972a43745ad1fc5aefdae2",
+  "target": 498,
+  "baseline_completed_preserved": 392,
+  "new_approved": 2,
+  "completed": 394,
+  "runtime_connected": 394,
+  "remaining": 104,
+  "HOLD": 18,
+  "AUTHORING": 1,
+  "NOT_STARTED": 85,
+  "active_authoring": {
+    "monster:알비노 디어": {
+      "status": "HOLD",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 8,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 144
+      },
+      "complete_approved_source_matrix": false,
+      "currently_valid_source_parts": [
+        "idle-pilot02:16",
+        "walk-N-NE:16",
+        "walk-S-SW-v02:16",
+        "hit-v02:16",
+        "death-pilot01:24"
+      ],
+      "next": "Re-author E,SE,W,NW walk and all8 attack with complete separated source bodies. Existing strict importer rejects overlapping source bounds and attack-v03 missing3 bodies. No copied/interpolated substitute.",
+      "blocker": "Complete144 source matrix unavailable: E/SE/W/NW walk rectangles overlap neighboring bodies; attack-v03 contains21 rather than24 bodies. Gait/model/alpha/Main approval incomplete; no source omissions or threshold changes allowed."
+    },
+    "monster:알비노 몽크": {
+      "status": "HOLD",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 6,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 128
+      },
+      "complete_approved_source_matrix": false,
+      "source_reference": "res://assets/monsters/original/atlas_3.png region[0,899,328,300]",
+      "source_SHA256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+      "note": "Independent authoring while deer/sourceHOLD remain; no production install.",
+      "blocker": "Whole128 matrix unavailable: six sheets fail unchanged ownership/body-count guards. All8 standalone E originals fail strict8-neighbor alpha>100 body rule; only3 qualify for unchanged3/11-pixel microrepair. Correct opposite support and stable model/camera remain unapproved."
+    },
+    "monster:알비노 변이된 골렘": {
+      "status": "AUTHORING",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 8,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 144
+      },
+      "reference": "res://assets/monsters/original/atlas_2.png",
+      "reference_SHA256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "region": [
+        916,
+        0,
+        292,
+        321
+      ],
+      "raw_pngs_preserved": 9,
+      "strict_geometry_accepted_parts": [
+        "idle16:16",
+        "hit16:16",
+        "attack-S-SW:6",
+        "attack-E-SE-v02:6",
+        "attack-W-NW:6",
+        "attack-N-NE:6"
+      ],
+      "strict_geometry_is_not_art_approval": true,
+      "blocker": "Walk64 contains48 rather than64 separated bodies; walk-E8-v02 body rectangles overlap and opposite-foot support is not established. Idle/hit/attack56 slots have source geometry only; death24 and all64 valid walk required. Full model/gait/contact/Main not yet approved.",
+      "production_applied": false,
+      "next": "Author actual connected alternating-support walk8 in each independent view and natural death3; use allowed articulated2D skeleton helper only if complete connected anatomy/ground support is visually sound. Keep all source failures; never reduce planned144."
+    }
+  },
+  "individual_approval_registry": "docs/remake/evidence/pr122-remaining106/batch13/individual-approvals.json",
+  "final_CI": "DEFERRED_TO_FINAL_INTEGRATION; automatic checks preserved; no new full manual dispatch per intermediate commit",
+  "Android_real_device": "NOT_RUN",
+  "native21624_21653": "UNMAPPED_HOLD, outside new completion count; private evidence preserved in batch12 and delivery receipts",
+  "resume": [
+    "Read actual remote PR122 HEAD; preserve existing work and this isolated worktree. The two explicit species approvals are complete locally; do not reauthor or wait for full CI before continuing production.",
+    "Finish Golem144 full-body source matrix, native motions and actual Main batch. Correct only failed poses, preserve all raw originals.",
+    "Then resolve source-sufficient HOLD items and all85 not-started targets from the fixed498 roster. One HOLD never stops independent production.",
+    "Use light per-species checks; actual Main per10-20 newly authored species. Full regression/CI/APK at final integration. No trigger changes, force push or main merge."
+  ]
+}

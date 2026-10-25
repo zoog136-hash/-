@@ -1,0 +1,152 @@
+{
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "missing-halfcycles-v01",
+  "status": "GENERATED_PARTIAL_SOURCE_PASS_TWO_POSE_CANDIDATES_FULL_CYCLE_HOLD",
+  "request_path": "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/request.json",
+  "request_sha256": "05833b921662879eb52a5c69756f0cfa61196bed8abfca9db5ee0a36837d38d5",
+  "original_generated_file": "/workspace/generated_images/exec-884a84f5-4c8a-4808-bdd3-be0fbd723775.png",
+  "raw_png": "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/girtas-E-walk-missing-halfcycles-v01.png",
+  "raw_sha256": "df0b0ac88c2013cf9daee8b4de8ae0d36ecd9198b333a18ac93014e1a871f00e",
+  "raw_bytes": 1543067,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "imagegen_attempts": 1,
+  "expected_poses": 4,
+  "requested_game_phases": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "private_preview": "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/private-four-pose-source-preview.jpg",
+  "private_preview_bytes": 147150,
+  "geometry_status": "PASS_COMPLETE_FOUR_DISTINCT_REGIONS",
+  "geometry_error": null,
+  "source_visual_status": "PARTIAL_PASS_POSE_CANDIDATES_ONLY",
+  "integration_ready": false,
+  "repository_mutated": false,
+  "chat_image_attachments": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T11:44:24.159256+00:00",
+  "identity_validation": "PASS_MAJOR_FAITHFUL_E_MODEL_RIGHT_HAND_WEAPON_LONG_SKIRT",
+  "heading_validation": "PASS_E_RIGHT_ALL_FOUR",
+  "physical_proportions_validation": "PASS_MAJOR_HEAD_TORSO_PELVIS_BOOT_RELATIONSHIPS_AT_COMMON_SHEET_DISPLAY; numerical six-source scale registration remains HOLD",
+  "gait_validation": "HOLD_MISSING_OPPOSITE_HALF_CYCLE; all four retain the same visible foreground advancing greave/rear support configuration",
+  "newly_authored_distinct_poses": 4,
+  "usable_pose_candidates": 2,
+  "usable_source_rows": [
+    2,
+    3
+  ],
+  "hold_source_rows": [
+    0,
+    1
+  ],
+  "candidate_game_phases": [
+    4,
+    5
+  ],
+  "missing_requested_game_phases": [
+    1,
+    2
+  ],
+  "per_row_usable_map": [
+    {
+      "authored_row": 0,
+      "requested_game_phase": 1,
+      "status": "HOLD_REQUESTED_OPPOSITE_HALF_CYCLE_NOT_ESTABLISHED",
+      "usable_pose_candidate": false,
+      "suggested_game_phase_candidate": null,
+      "anatomical_ownership": "No concealed hip identity inferred. The visible foreground-vs-background shin arrangement does not exchange across these four rows.",
+      "visible_evidence": "Rear boot is flat/low and forward foreground boot is airborne, with the same large foreground greave advancing as in the other rows. This is a real passing/advance variant, but not the requested near support/far leg passing-behind exchange.",
+      "region": [
+        46,
+        14,
+        569,
+        553
+      ],
+      "rgba_sha256": "e3824371b9cad2b2e3e9a321aaec7c91785bf86b2452e3c1ad50fedb6589375e",
+      "final_compiled_use_approved": false
+    },
+    {
+      "authored_row": 1,
+      "requested_game_phase": 2,
+      "status": "HOLD_REQUESTED_OPPOSITE_HALF_CYCLE_NOT_ESTABLISHED",
+      "usable_pose_candidate": false,
+      "suggested_game_phase_candidate": null,
+      "anatomical_ownership": "No concealed hip identity inferred. The visible foreground-vs-background shin arrangement does not exchange across these four rows.",
+      "visible_evidence": "Rear heel is raised into toe support and the foreground shin/boot extends forward in air. It is another late-support advance of the same projected foreground leg, not independent evidence of the opposite support half-cycle.",
+      "region": [
+        662,
+        14,
+        581,
+        552
+      ],
+      "rgba_sha256": "00bcc859e47128b22916d88a3154eec93fb053fbee23fb116c5af5bc834ba575",
+      "final_compiled_use_approved": false
+    },
+    {
+      "authored_row": 2,
+      "requested_game_phase": 4,
+      "status": "PASS_POSE_CANDIDATE_FULL_CYCLE_HOLD",
+      "usable_pose_candidate": true,
+      "suggested_game_phase_candidate": 4,
+      "anatomical_ownership": "No concealed hip identity inferred. The visible foreground-vs-background shin arrangement does not exchange across these four rows.",
+      "visible_evidence": "Best distinct high-knee passing candidate: rear boot is flatter in support; foreground knee is more flexed/raised and its boot advances in air. It differs genuinely from the late toe-push row. Use provisionally for the foreground-leg advancing half-cycle only, subject to six-pose continuity and support-root review.",
+      "region": [
+        38,
+        621,
+        627,
+        572
+      ],
+      "rgba_sha256": "a04f3c9dc16872b856df0d506893ec8a933f4e91cec96f64b073d79a29615e3b",
+      "final_compiled_use_approved": false
+    },
+    {
+      "authored_row": 3,
+      "requested_game_phase": 5,
+      "status": "PASS_POSE_CANDIDATE_FULL_CYCLE_HOLD",
+      "usable_pose_candidate": true,
+      "suggested_game_phase_candidate": 5,
+      "anatomical_ownership": "No concealed hip identity inferred. The visible foreground-vs-background shin arrangement does not exchange across these four rows.",
+      "visible_evidence": "Best late-support candidate: rear heel lifted clearly with toe down; foreground boot reaches forward in air ready to return to contact0. This can follow the high-knee row for one half-cycle, subject to all-six seam/foot-root review.",
+      "region": [
+        666,
+        623,
+        576,
+        569
+      ],
+      "rgba_sha256": "853a50146d3e772ae2427311517b2442473dcc33504e3e1029fed7e083fc979a",
+      "final_compiled_use_approved": false
+    }
+  ],
+  "full_cycle_status": "HOLD_NOT_PROVEN; no six-pose opposite-leg cycle approved or integrated",
+  "source_geometry_status": "PASS_COMPLETE_FOUR_DISTINCT_RGBA_REGIONS; no source clipping, discarded pixels, resampling, or duplicate-frame expansion",
+  "source_geometry_path": "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/source.geometry.json",
+  "runtime_canvas_suggestion": {
+    "status": "HOLD_PENDING_RIGID_HEAD_TORSO_LANDMARK_REGISTRATION_WITH_CONTACT_KEYS",
+    "strict_source_analysis_canvas_size": 2048,
+    "runtime_reference_canvas_size": 1024,
+    "per_pose_virtual_canvas_sizes": null,
+    "note": "Keep source RGBA unmodified. Physical pixel resolution alone is not rejection. Choose lossless virtual canvases only after comparing rigid body landmarks, not full wing/weapon bbox heights. Current automatic cell-center/bbox-bottom anchors are not approved anatomical support anchors."
+  },
+  "visual_findings": [
+    "All four are genuine distinct newly authored poses, preserve the original long black/gold skirt, pale head/hair, rigid thin radial gold spines, true E camera and anatomicalRIGHT/near-hand sinuous weapon.",
+    "No visible merged legs, doubled arms, uncropped-gear loss, pants substitution or unexplained model/gear deformation was found in the bounded private source review.",
+    "The actual full-four gait request did not succeed: the foreground shin advances in all rows and the rear foot supports in all rows. Different heel height or stride extension does not alone prove the missing opposite half-cycle.",
+    "Rows2/3 are salvageable candidates for the one visible foreground-leg advancing half-cycle; rows0/1 are preserved variants, not additional opposing-cycle progress.",
+    "Both original contact-key author HOLD results and independent conditional key-pair reassessments are preserved. No hidden-thigh exposure or anatomical label was invented to pass these sources."
+  ],
+  "private_review_previews": [
+    "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/private-four-pose-source-preview.jpg",
+    "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/private-four-pose-leg-review-uniform.jpg"
+  ],
+  "private_review_preview_bytes": 264144,
+  "next_required": "Author only the missing opposite-support/passing half-cycle; preserve usable rows2/3 and both contact keys. Then inspect the actual complete six-pose chronological cycle before any runtime integration approval.",
+  "reviewed_at": "2026-10-19T11:47:17.998961+00:00"
+}

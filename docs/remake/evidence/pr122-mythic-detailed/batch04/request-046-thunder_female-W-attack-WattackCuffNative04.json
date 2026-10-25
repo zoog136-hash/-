@@ -1,0 +1,144 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "W",
+  "role": "attack",
+  "version": "WattackCuffNative04",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+    "base_geometry_sha256": "957a0c8b7abc84f8eff7d09f0effd21ecb43d7ddf07e3e8492a4c57cb078662f",
+    "direction": "W",
+    "regions": [
+      [
+        720,
+        145,
+        675,
+        1172
+      ],
+      [
+        2945,
+        128,
+        752,
+        1189
+      ],
+      [
+        535,
+        2434,
+        855,
+        1187
+      ],
+      [
+        2742,
+        2522,
+        1058,
+        1099
+      ],
+      [
+        454,
+        4829,
+        1052,
+        1096
+      ],
+      [
+        2996,
+        4743,
+        709,
+        1182
+      ]
+    ],
+    "nearest_owner_sha256": "4b76af216d90487c36aec6745d14618c166ff359ce71b60060985f6a0807b199",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 88f39b27a75e1c60f887f682bb186e3c581064107b7dcfb5dc7e69b3a5284e31"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+    "direction": "W",
+    "role": "attack",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        1030,
+        1120
+      ],
+      [
+        3334,
+        1120
+      ],
+      [
+        1030,
+        3424
+      ],
+      [
+        3334,
+        3424
+      ],
+      [
+        1030,
+        5728
+      ],
+      [
+        3334,
+        5728
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2560,
+      2560,
+      2560,
+      2560,
+      2560,
+      2560
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "88f39b27a75e1c60f887f682bb186e3c581064107b7dcfb5dc7e69b3a5284e31",
+  "authored_common_root_float": [
+    646.0833333333334,
+    991.9227375838406
+  ],
+  "common_root_integer": [
+    646,
+    992
+  ],
+  "common_root_rounding_delta": [
+    -0.08333333333337123,
+    0.07726241615944218
+  ],
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actor_approvals_added": 0,
+  "authoring_dependencies": [
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved-source-index.json",
+      "sha256": "fbbbb85ff8f066be19ba328a80930d46e237fe3b557cba90c24c96dc7c82b847"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-three-native-motion-source-checkpoint-20261022/preserved/mythic413-W-attack-author-fresh-20261020-v01/actual-W-ATTACK6-native-profile-rig-v04-distal-cuff-bind-20261022/W-ATTACK6-actual-native-profile-RIGHT-fullstaff-LEFTguard-realcloth-candidate-v04.json",
+      "sha256": "4939a867923efc11cf2145c2266cd407a9e8abd43635d53138714305cbc42779"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-shared-W-settings-incremental-20261023-v01/W-exact-native-complete-RIGHT-staff-LEFT-upper-and-true-bow-parts-v04-shared-bindings.json",
+      "sha256": "31e0b544e41ea6f161618eaea046453b09cb1dd98089ae8ba8e7547d1deb6da5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/mythic413-shared-W-settings-incremental-20261023-v01/W-shared-direction-bindings-equivalence.json",
+      "sha256": "ea1f729189a1008b6658be1c3c44d8212e6aba8d56889f41afebe39f7926ef24"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-attack-WattackCuffNative04.png",
+  "output_sha256": "f60808c017650d4d6eb09a67c910b76a8854fb25fa0680d727c21e6934ea3716",
+  "output_bytes": 3925041
+}

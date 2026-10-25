@@ -1,0 +1,32 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "SW",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_walk_phase_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 5,
+  "intended_anatomical_support": "RIGHT_TOE",
+  "references": [
+    "/workspace/scratch/girtas-SW-walk-left-contact-key-v01/girtas-SW-walk-left-contact-key-v01.png",
+    "/workspace/scratch/girtas-SW-walk-precontact-from-left-key-v01/ankle-only-precontact-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-walk-left-contact-key-v01/girtas-SW-walk-left-contact-key-v01.png": "11d8783a70e2f7180f68c98eefece53076d9b2ac0384ce47fef38456e2586bd0",
+    "/workspace/scratch/girtas-SW-walk-precontact-from-left-key-v01/ankle-only-precontact-production-guide.png": "8e9e96a621babbd64fce690689438dc2ef4ea2f90b9193929037d694c399d9bb"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Bothcontacts +1/2/4good, pair5keptwrongRIGHTforward. Newonlymissing5fromalreadycorrectLEFTforwardcontact0; onlychangeankle/support, learnedfromsuccessfulSE5primary. No redo0-4orfailedpair.",
+  "prompt": "Edit FIRST image exact correct GIRTAS SW LEFT-FORWARD CONTACT key into ONE missing WALK GAME5 PRECONTACT / RIGHT-TOEOFF pose. This is an ANKLE/SUPPORT CHANGE on an already correct LEFT-forward pose, NOT a legswap. Primarysource exactbody/camera/gear/hipchainauthority. SECONDimage masks ONLY ankles/feet to show new toe/heel targets, not finalart. Keep exactsourcelegownership: NEAR anatomicalLEFT leg is LONG FORWARD LOWER-RIGHT; FAR anatomicalRIGHT leg is SHORT TRAILING UPPER-LEFT. DoNOT mirror/crosslegs/swapweaponhand. ExactlyONEpose only.\n\nACTUAL DISTINCT NEW JOINTS:\n- NEAR anatomicalLEFT leg stays FORWARD LOWER-RIGHT as source. LEFT ankle now DORSIFLEXES: LEFT toes tip UP/LEFT and LEFT HEEL has NOT landed, visibly lifted above impendinglanding byabout20-35sourcepixels. LEFTknee softly extends slightlyfartherforward, arriving swingleg, NOT alreadyflatweightbearing. Show actual LEFTheel/sole/toe-up geometrydifferentfromsourcecontact0 flatplant, notjustglobaltranslation orcloakchange.\n- FAR anatomicalRIGHT leg stays TRAILING UPPER-LEFT as source. RIGHT HEEL lifts HIGH while RIGHT TOES point DOWN and SUPPORT recedingground at upperLEFT. RIGHTankle plantarflexes into TOE-OFF, notairbornewholefoot or flatadvancingRIGHTboot. Keep chainattachedto farRIGHT/weapon-sidehip. SourcealreadycorrectforwardLEFT/trailingRIGHT ownership mustremain.\n- Bodyweight remains on trailingRIGHTTOE until nextLEFTheelcontact. Pelvis subtlyadvances towardLEFTleg andtorso counterbalances, originalrobe/hairlag. GroundedWALK notrunjump: RIGHT toe-support exists while LEFTprecontactheelhovers. Two coherentlegs/twoboots, neverbothfeetflight orstandingduplicate.\n\nFixed original SW FRONT3/4camera: originalPALE visibleface looksDOWNLEFT, chestturnLEFT, longPALEhair, originalgoldhorncrown, narrowHARD STRAIGHT GOLD radialspines, blackgoldarmor, LONG DARK goldtrimrobe. Preserveallsilhouette/equipmentproportions androbelength, part existingcloth asneeded toreadankles, doNOTreplacewithpants. RIGHT FAR hand IMAGELEFT holdsONE SAME LONG SINUOUS orangegoldweapon; LEFT NEAR hand IMAGERIGHT EMPTY. DoNOT handtransfer/mirror/addlimbs/redVmask/flamefeatherfan/wings/newgear/shortbroadsword.\n\nOnecompletehighdetailfigure ontransparentrequested1024square, body500-600px and wholegear<=800px with>=96pxtruealpha0 outergutter, fullblade/spines/bootsinframe. Samefinegameartmaterials, hardopaqueweaponinternalshineNOoutwardglow/haze/particles/blur/trails/shadows/floor/text/diagram/coloredguide/arrows/grid/duplicates. Finalcheck: LEFTNEAR lowerRIGHTlongforwardleg retained but heelnowUP/precontact/toesUP; RIGHTFAR upperLEFTshorttrailleg heelUP/toeDOWNsupport. Changeactualankles/support only, nolegswap.",
+  "requested_at": "2026-10-19T13:45:00.738378+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_reference_only": true,
+  "generation_budget": "One distinct missingphase5 attempt only, thenHOLDifwrong noidenticalretry."
+}

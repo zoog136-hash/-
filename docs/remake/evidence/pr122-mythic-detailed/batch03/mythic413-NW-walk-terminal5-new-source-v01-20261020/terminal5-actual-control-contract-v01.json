@@ -1,0 +1,104 @@
+{
+  "status": "ACTUAL_COSTUME_TERMINAL5_CONTROL_NOT_FINAL",
+  "input_sha256": "6e1911452dac461d425bdfafbddb195065430fd657babefc0aa859a68b85fe7b",
+  "physical_canvas_fixed": 2048,
+  "rig_root": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "source_body": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-bounded-v02.png",
+  "source_body_sha256": "0874d56a0adf0d76b5e91c565ec41d601d8bbb76457c64e703a89dba54cf0645",
+  "RIGHT_leg_material": "Own actual Rload4 RIGHTthigh/shin/shoe only; removes foregroundLEFTocclusion bysemanticmatte, never swaps LEFTtoRIGHT costume",
+  "source_ownRIGHTshoe": "/workspace/scratch/mythic413-NW-walk-Rload4-author-20261020-v03/thunder_female-NW-walk-Rload4-local-joint-v01-service.png",
+  "source_ownRIGHTshoe_sha256": "23e5bc96b7c9214379ae33edae93956c7162ee4511243c2dce8352aa63c6416c",
+  "RIGHT_actual_forefoot4": [
+    665.4843188022421,
+    999.538886922018
+  ],
+  "RIGHT_target_forefoot5": [
+    776.8386376044843,
+    1099.757773844036
+  ],
+  "RIGHT_toeoff_angle_deg": 30,
+  "RIGHT_ankle5_target": [
+    768.7626597458111,
+    1018.8521519642909
+  ],
+  "RIGHT_heel5_target": [
+    811.4796537558618,
+    1093.275952491556
+  ],
+  "LEFT_heel5_target": [
+    610,
+    1010
+  ],
+  "LEFT_ankle5_target": [
+    617.0,
+    956.0
+  ],
+  "LEFT_boot_material": "Same actual anatomicalLEFT heelstrike shoe as approvedSOURCE0; shifts96/66 only, lateAIR approach, no mirror",
+  "body_bob_and_rigid_staff": [
+    0,
+    -6
+  ],
+  "LEFT_arm": "Actual approved backswing opposite nearLEFT advancingleg",
+  "limb_targets": [
+    {
+      "part": "RIGHTfar_terminal_thigh",
+      "target": [
+        [
+          670,
+          700
+        ],
+        [
+          736,
+          839
+        ]
+      ]
+    },
+    {
+      "part": "RIGHTfar_terminal_shin",
+      "target": [
+        [
+          736,
+          839
+        ],
+        [
+          768.7626597458111,
+          1018.8521519642909
+        ]
+      ]
+    },
+    {
+      "part": "LEFTnear_lateswing_thigh",
+      "target": [
+        [
+          612,
+          700
+        ],
+        [
+          578,
+          828
+        ]
+      ]
+    },
+    {
+      "part": "LEFTnear_lateswing_shin",
+      "target": [
+        [
+          578,
+          828
+        ],
+        [
+          617.0,
+          956.0
+        ]
+      ]
+    }
+  ],
+  "approval_added": 0
+}

@@ -1,0 +1,25 @@
+{
+  "actor": "monster:오만한 우그누스",
+  "slug": "ugnus",
+  "clip": "NW-attack-v01",
+  "role": "attack",
+  "direction": "NW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/NW-attack-v01.png",
+  "source_sha256": "e0756aef29a01964b7f86bb3468806362e2b490ae2b455ae4a01c69f2da406b4",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      92717,
+      90097,
+      88278,
+      81402,
+      77335,
+      67192
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

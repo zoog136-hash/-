@@ -1,0 +1,569 @@
+{
+	"camera_zoom": 1.0,
+	"capture_enabled": true,
+	"cases": [
+		{
+			"actual_Monster_reference_speed": 72.0,
+			"capture_count": 50,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/SpriteFrames.tres",
+			"key": "monster:그림 리퍼",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/grim_reaper/grim_reaper-idle/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "N",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_6:0",
+						"idle_6:1",
+						"idle_6:2",
+						"idle_6:3",
+						"idle_6:4",
+						"idle_6:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.873731
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "NE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_7:0",
+						"idle_7:1",
+						"idle_7:2",
+						"idle_7:3",
+						"idle_7:4",
+						"idle_7:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.50173
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"idle_5:1",
+						"idle_5:2",
+						"idle_5:3",
+						"idle_5:4",
+						"idle_5:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.578239
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"idle_2:2",
+						"idle_2:3",
+						"idle_2:4",
+						"idle_2:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.504636
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"idle_1:1",
+						"idle_1:2",
+						"idle_1:3",
+						"idle_1:4",
+						"idle_1:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.504304
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"idle_3:1",
+						"idle_3:2",
+						"idle_3:3",
+						"idle_3:4",
+						"idle_3:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.486813
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"idle_4:1",
+						"idle_4:2",
+						"idle_4:3",
+						"idle_4:4",
+						"idle_4:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.543513
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 72.0,
+			"capture_count": 56,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/SpriteFrames.tres",
+			"key": "monster:그림 리퍼",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/grim_reaper/grim_reaper-run/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"run_0:0",
+						"run_0:1",
+						"run_0:2",
+						"run_0:3",
+						"run_0:4",
+						"run_0:5"
+					],
+					"simulated_seconds": 0.8,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 0.834268
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "N",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_6:0",
+						"run_6:0",
+						"run_6:1",
+						"run_6:2",
+						"run_6:3",
+						"run_6:4",
+						"run_6:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.051316
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "NE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_7:0",
+						"run_7:0",
+						"run_7:1",
+						"run_7:2",
+						"run_7:3",
+						"run_7:4",
+						"run_7:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.064677
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"run_5:0",
+						"run_5:1",
+						"run_5:2",
+						"run_5:3",
+						"run_5:4",
+						"run_5:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.062025
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"run_2:0",
+						"run_2:1",
+						"run_2:2",
+						"run_2:3",
+						"run_2:4",
+						"run_2:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.091258
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"run_1:0",
+						"run_1:1",
+						"run_1:2",
+						"run_1:3",
+						"run_1:4",
+						"run_1:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.02484
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"run_3:0",
+						"run_3:1",
+						"run_3:2",
+						"run_3:3",
+						"run_3:4",
+						"run_3:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.049937
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "run",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"run_4:0",
+						"run_4:1",
+						"run_4:2",
+						"run_4:3",
+						"run_4:4",
+						"run_4:5"
+					],
+					"simulated_seconds": 1.0,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.054768
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 72.0,
+			"capture_count": 58,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/SpriteFrames.tres",
+			"key": "monster:그림 리퍼",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-42.6666679382324
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 1.333333333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed002/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-owned-parts-v01/grim_reaper/grim_reaper-attack/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"attack_0:0",
+						"attack_0:1",
+						"attack_0:2",
+						"attack_0:3",
+						"attack_0:4",
+						"attack_0:5"
+					],
+					"simulated_seconds": 1.76,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.65,
+							"sequence": 1,
+							"tick": 38
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.813921
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "NW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_5:0",
+						"attack_5:0",
+						"attack_5:1",
+						"attack_5:2",
+						"attack_5:3",
+						"attack_5:4",
+						"attack_5:5",
+						"idle_5:1"
+					],
+					"simulated_seconds": 1.96,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.65,
+							"sequence": 1,
+							"tick": 50
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 2.124856
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"attack_2:0",
+						"attack_2:1",
+						"attack_2:2",
+						"attack_2:3",
+						"attack_2:4",
+						"attack_2:5"
+					],
+					"simulated_seconds": 1.96,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.65,
+							"sequence": 1,
+							"tick": 50
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 2.115112
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "SE",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_1:0",
+						"attack_1:0",
+						"attack_1:1",
+						"attack_1:2",
+						"attack_1:3",
+						"attack_1:4",
+						"attack_1:5",
+						"idle_1:1"
+					],
+					"simulated_seconds": 1.96,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.65,
+							"sequence": 1,
+							"tick": 50
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 2.08866
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"attack_3:0",
+						"attack_3:1",
+						"attack_3:2",
+						"attack_3:3",
+						"attack_3:4",
+						"attack_3:5",
+						"idle_3:1"
+					],
+					"simulated_seconds": 1.96,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.65,
+							"sequence": 1,
+							"tick": 50
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 2.084985
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.41,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 72.0,
+					"role": "attack",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"attack_4:0",
+						"attack_4:1",
+						"attack_4:2",
+						"attack_4:3",
+						"attack_4:4",
+						"attack_4:5",
+						"idle_4:1"
+					],
+					"simulated_seconds": 1.96,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [
+						{
+							"attack_elapsed": 0.65,
+							"sequence": 1,
+							"tick": 50
+						}
+					],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 2.093463
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		}
+	],
+	"display_server": "X11",
+	"engine": "4.7.2-stable (official)",
+	"quality_approval_changes": 0,
+	"schema": "pr122-boss-fix-real-speed-qa-v1",
+	"scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval.",
+	"simulation_dt": 0.0166666666666667,
+	"speed_scale": 1.0,
+	"video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

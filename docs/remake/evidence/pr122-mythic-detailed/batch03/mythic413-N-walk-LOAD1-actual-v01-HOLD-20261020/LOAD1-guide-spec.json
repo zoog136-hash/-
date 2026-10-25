@@ -1,0 +1,142 @@
+{
+  "schema": "actual-N-LOAD1-native1254-fixedC1920-authoring-v1",
+  "status": "PREPARED_NO_SERVICE_CALLED",
+  "current_contact0_sha256": "332ef97f0a973aa5329a25f02cf0139b29c92c38e4c2aaca6424379d741466cb",
+  "fixed_C": 1920,
+  "body_unit": 1.875,
+  "native_size": [
+    1254,
+    1254
+  ],
+  "upper_reference_integer_bob_translation": [
+    -7,
+    -12
+  ],
+  "translation_scope": "motion-reference pixels only; not final art or wholebody/root gait substitute",
+  "actual_lowerbody_service_art_required": true,
+  "both_old_leg_poses_removed_from_all_wholebody_visual_refs": true,
+  "stance_model_proof_sha256": "848f8f9816cd3ee281f080a1001c11386783e574500ebf78d4b75404ca752af2",
+  "independent_stance_finite_proof_sha256": "f22d3a44ec3c2621886e8422880eadb75714e41dd2c743279366da762bd91c64",
+  "left_support_world_and_source": {
+    "phase": "load1",
+    "body_hip_height": 102.0,
+    "pelvis_x": -7.0,
+    "pitch_degrees": 0.0,
+    "fixed_bones": [
+      61.0,
+      61.0
+    ],
+    "hip_ankle_distance": 86.30170889450324,
+    "reach_margin": 35.698291105496764,
+    "knee_flexion_degrees": 89.95392194607368,
+    "world": {
+      "hip": [
+        -21.0,
+        0.0,
+        102.0
+      ],
+      "knee": [
+        -15.75374524701942,
+        28.31645764878645,
+        48.22588878194907
+      ],
+      "ankle": [
+        -13.0,
+        -25.69017240330586,
+        20.0
+      ],
+      "heel": [
+        -13.0,
+        -31.69017240330586,
+        0.0
+      ],
+      "toe": [
+        -13.0,
+        -7.6901724033058585,
+        0.0
+      ]
+    },
+    "source": {
+      "hip": [
+        588.0,
+        620.997608093268
+      ],
+      "knee": [
+        606.6897825574933,
+        719.1724968331878
+      ],
+      "ankle": [
+        616.5,
+        912.3564838778339
+      ],
+      "heel": [
+        616.5,
+        982.8727272728626
+      ],
+      "toe": [
+        616.5,
+        933.5092792571496
+      ]
+    },
+    "bone_errors": [
+      7.105427357601002e-15,
+      0.0
+    ],
+    "sole_length_error": 0.0,
+    "support_ground_z": 0.0
+  },
+  "right_pass_world_and_source": {
+    "world": {
+      "hip": [
+        7.0,
+        0.0,
+        102.0
+      ],
+      "knee": [
+        10.5,
+        55.070409477322755,
+        76.0
+      ],
+      "ankle": [
+        14.0,
+        0.0,
+        50.0
+      ],
+      "heel": [
+        14.0,
+        -5.941608412449423,
+        29.164961394239604
+      ],
+      "toe": [
+        14.0,
+        17.824825237348268,
+        32.50511581728118
+      ]
+    },
+    "source": {
+      "hip": [
+        687.75,
+        620.997608093268
+      ],
+      "knee": [
+        700.21875,
+        583.3562165917881
+      ],
+      "ankle": [
+        712.6875,
+        772.2535997101293
+      ],
+      "heel": [
+        712.6875,
+        845.0786771527862
+      ],
+      "toe": [
+        712.6875,
+        786.4798929465604
+      ]
+    }
+  },
+  "resampling": "NONE in source/reference nativepixels; JPEGpreview resized only",
+  "actual_source_approval": false,
+  "completed_added": 0
+}

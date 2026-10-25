@@ -1,0 +1,453 @@
+{
+  "schema": "independent-private-actual-NW-run-contact0-gate-v2",
+  "status": "HOLD_CONTACT0_PHASE_CORRECTION_REQUIRED_BEFORE_LOAD",
+  "scope": "Current Mythic413 corrected NW run CONTACT0 actual source only. No repo/Git/Godot/generation/source edit or count mutation. No old-ten reapproval.",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v02-forward-service.png",
+    "sha256": "d5cc5599df4a943ba28dcec2e9b8809ba0c6ff89d74b0750f6e77184b23d4752",
+    "bytes": 836415
+  },
+  "annotations": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/actual-NW-run-contact0-v02-forward-uncertain-landmarks.json",
+    "sha256": "33748b7124c68676fb6046487d3c54fa77cdba1696e43850589e25dfcb935f7e",
+    "bytes": 5339
+  },
+  "body_unit_calibration": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NW-run-915b1-body-unit-C2560-independent-calibration-v01.json",
+    "sha256": "d8e9560dd129de71b54ee7d126a75c2d620e044f1e89be317dfb296ac40808a6",
+    "bytes": 6980
+  },
+  "finite_guide": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-run-fixedbone-contract-v02.json",
+    "sha256": "106ac28cda9f50de8855e2ad3fb720b1bcf092eb20489da0b1eb918834e2dd67",
+    "bytes": 63064
+  },
+  "private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger.json",
+    "sha256": "3e9daff7a1c554699f08adbea4f68a4303467ce7a69a681132de3776baeb3ba0",
+    "bytes": 1353
+  },
+  "fixed_native_body_unit": {
+    "factor": 2.5,
+    "C": [
+      2560,
+      2560
+    ],
+    "Player_source_to_world_xy": [
+      0.08534482758612,
+      0.0948275862068
+    ],
+    "nape_to_belt_actual_raw": 215.8633827215723,
+    "nape_to_belt_previous_master_raw": 213.67732682715777,
+    "relative_projected_difference": 0.01023064040941879,
+    "normalized_actual": 86.34535308862891,
+    "decision": "Retain accepted C2560. Torso bridge differs about1%; no alpha normalization or per-pose factor fit. All source pixels were reauthored; no claim of unchanged RGBA regions."
+  },
+  "actual_landmarks": {
+    "head_skull_center": {
+      "xy": [
+        590,
+        270
+      ],
+      "uncertainty_px": [
+        14,
+        16
+      ],
+      "visibility": "under rear bun/hair"
+    },
+    "neck_nape": {
+      "xy": [
+        614,
+        339
+      ],
+      "uncertainty_px": [
+        10,
+        10
+      ],
+      "visibility": "back collar/hair"
+    },
+    "waist_belt_center": {
+      "xy": [
+        668,
+        548
+      ],
+      "uncertainty_px": [
+        10,
+        10
+      ],
+      "visibility": "belt center structuralpoint"
+    },
+    "pelvis_center": {
+      "xy": [
+        662,
+        654
+      ],
+      "uncertainty_px": [
+        23,
+        24
+      ],
+      "visibility": "occluded under pleated skirt"
+    },
+    "L_shoulder_near": {
+      "xy": [
+        551,
+        382
+      ],
+      "uncertainty_px": [
+        12,
+        12
+      ],
+      "visibility": "visible bare shoulder"
+    },
+    "L_elbow_near": {
+      "xy": [
+        483,
+        500
+      ],
+      "uncertainty_px": [
+        15,
+        18
+      ],
+      "visibility": "sleeve hinge inferred"
+    },
+    "L_wrist_free": {
+      "xy": [
+        415,
+        577
+      ],
+      "uncertainty_px": [
+        9,
+        9
+      ],
+      "visibility": "cuff to bare hand"
+    },
+    "R_shoulder_far": {
+      "xy": [
+        738,
+        403
+      ],
+      "uncertainty_px": [
+        14,
+        15
+      ],
+      "visibility": "far upperarm shoulder"
+    },
+    "R_elbow_far": {
+      "xy": [
+        815,
+        498
+      ],
+      "uncertainty_px": [
+        15,
+        16
+      ],
+      "visibility": "white sleeve bend"
+    },
+    "R_wrist_grip": {
+      "xy": [
+        894,
+        432
+      ],
+      "uncertainty_px": [
+        9,
+        10
+      ],
+      "visibility": "hand/wrist cuffstaff"
+    },
+    "L_hip_near": {
+      "xy": [
+        605,
+        695
+      ],
+      "uncertainty_px": [
+        24,
+        24
+      ],
+      "visibility": "upper near femur joint under skirt, changed from earliermaster estimate620684"
+    },
+    "L_knee_support": {
+      "xy": [
+        575,
+        866
+      ],
+      "uncertainty_px": [
+        13,
+        18
+      ],
+      "visibility": "smooth boot hinge inferred"
+    },
+    "L_ankle_support": {
+      "xy": [
+        561,
+        1064
+      ],
+      "uncertainty_px": [
+        11,
+        12
+      ],
+      "visibility": "black bootshaft to shoe bend"
+    },
+    "L_heel_tip_contact": {
+      "xy": [
+        569.5,
+        1193
+      ],
+      "uncertainty_px": [
+        2,
+        1
+      ],
+      "visibility": "EXACT alpha16 bottom row1193 xrange568..571"
+    },
+    "L_toe_tip": {
+      "xy": [
+        492,
+        1153
+      ],
+      "uncertainty_px": [
+        5,
+        5
+      ],
+      "visibility": "leftmost forefoottoe silhouette"
+    },
+    "L_forefoot_sole_low": {
+      "xy": [
+        515,
+        1170
+      ],
+      "uncertainty_px": [
+        6,
+        5
+      ],
+      "visibility": "front sole undersurface, not outertoe tip"
+    },
+    "R_hip_far": {
+      "xy": [
+        690,
+        705
+      ],
+      "uncertainty_px": [
+        28,
+        28
+      ],
+      "visibility": "inferred farhip under skirt"
+    },
+    "R_knee_recovery": {
+      "xy": [
+        635,
+        795
+      ],
+      "uncertainty_px": [
+        30,
+        30
+      ],
+      "visibility": "occluded behind near thigh; broaduncertainty"
+    },
+    "R_ankle_recovery": {
+      "xy": [
+        768,
+        858
+      ],
+      "uncertainty_px": [
+        15,
+        17
+      ],
+      "visibility": "ornate rear heel/ankle collar"
+    },
+    "R_toe_recovery": {
+      "xy": [
+        782,
+        983
+      ],
+      "uncertainty_px": [
+        7,
+        8
+      ],
+      "visibility": "visible lifted toe"
+    },
+    "R_heel_tip_recovery": {
+      "xy": [
+        800,
+        904
+      ],
+      "uncertainty_px": [
+        5,
+        5
+      ],
+      "visibility": "lifted pointedheel"
+    },
+    "staff_upper_endpoint": {
+      "xy": [
+        896,
+        14
+      ],
+      "uncertainty_px": [
+        2,
+        2
+      ],
+      "visibility": "upperend"
+    },
+    "staff_lower_endpoint": {
+      "xy": [
+        926,
+        1110
+      ],
+      "uncertainty_px": [
+        2,
+        2
+      ],
+      "visibility": "lowerend"
+    }
+  },
+  "actual_chain_read": {
+    "near_anatomical_side": "LEFT",
+    "far_anatomical_side": "RIGHT",
+    "L_heel_minus_L_hip_raw": [
+      -35.5,
+      498
+    ],
+    "L_wrist_minus_L_shoulder_raw": [
+      -136,
+      195
+    ],
+    "near_leg": "Plausible extended LEFT landing candidate; forward X sign corrected, but insufficient to establish canonical NW heelcontact. Visible near chain is nearly vertical/down from hip through knee/ankle.",
+    "far_leg": "RIGHT knee folds behind near leg; boot visibly raised. Finite actual3D clearance remains unproven until body ground and paired source registration.",
+    "free_arm": "LEFT elbow and wrist remain screenleft of near shoulder; forward/lateral read does not establish the required rear counterphase for LEFT-front contact.",
+    "source_appearance": "True rear NW back/bun/ribbon, bluegold bodice, white pleated skirt, black thighboots, LEFT free and RIGHT far staff grip remain readable; both doubleended goldturquoise staff ends visible."
+  },
+  "single_blocking_defect": {
+    "name": "CONTACT0 gait phase remains ambiguous relative to canonical forward LEFT heel landing with opposite LEFT arm backswing",
+    "components": [
+      "Actual boot pitch/yaw and body-relative leg chain do not demonstrate the canonical NW heel-ground contact.",
+      "LEFT free arm still reads forward/lateral with the forward LEFT leg; canonical backswing must be visibly established."
+    ],
+    "not_sufficient_for_pass": [
+      "heel x less than hip x",
+      "heel lowest raw Y",
+      "changing virtual root or C",
+      "narrow appearance pass"
+    ]
+  },
+  "ground_check": {
+    "fixed_NW_raw_ground_forward_slope_dy_dx": 0.9,
+    "actual_ground_root_status": "NOT_PINNED; no new virtual root is claimed.",
+    "actual_sole_under_NW_heading_assumption": [
+      {
+        "point": "L_toe_tip",
+        "heel_relative_raw": [
+          -77.5,
+          -40
+        ],
+        "signed_raw_y_below_canonical_NW_ground_through_heel": 29.75,
+        "interpretation": "positive below canonical plane only if foot yaw follows NW heading; this is a phase ambiguity, not proof of absolute 3D penetration"
+      },
+      {
+        "point": "L_forefoot_sole_low",
+        "heel_relative_raw": [
+          -54.5,
+          -23
+        ],
+        "signed_raw_y_below_canonical_NW_ground_through_heel": 26.050000000000004,
+        "interpretation": "positive below canonical plane only if foot yaw follows NW heading; this is a phase ambiguity, not proof of absolute 3D penetration"
+      }
+    ],
+    "foot_yaw_limitation": "A sufficiently outward-yawed foot can change projected ground slope. Current isolated source supplies no independent yaw/ground proof. It cannot receive physical source PASS from these pixels alone.",
+    "old_target_rejected_for_reuse": {
+      "toe_minus_heel": [
+        -62,
+        -27
+      ],
+      "signed_below_canonical_ground": 28.800000000000004,
+      "reason": "Old correction target incorrectly equated raw forefoot-higher-Y with clearance; it lies below the canonical NW ground line."
+    }
+  },
+  "one_targeted_corrective_action": {
+    "kind": "Service-authored anatomical change to near LEFT leg/boot and near LEFT free arm only; preserve all good identity/body/RIGHT far arm+grip+staff details.",
+    "body_pins": {
+      "L_hip": [
+        605,
+        695
+      ],
+      "L_shoulder": [
+        551,
+        382
+      ]
+    },
+    "fixed_guide_factor": 2.5,
+    "proposal_not_actual_source_approval": true,
+    "LEFT_leg_targets_raw": {
+      "L_knee": [
+        484.8392343774031,
+        764.3541918546708
+      ],
+      "L_ankle": [
+        505.86531822215125,
+        1035.2919791144488
+      ],
+      "L_heel": [
+        521.5790990714295,
+        1082.1399036274724
+      ],
+      "L_toe": [
+        458.7239756743165,
+        994.6873870809321
+      ]
+    },
+    "LEFT_free_arm_targets_raw": {
+      "L_elbow": [
+        650.4162840437581,
+        535.1332791338939
+      ],
+      "L_wrist": [
+        631.7492265345016,
+        687.5689923740767
+      ]
+    },
+    "source_unit_and_canvas": "1254x1254 retained source density; no resampling. Keep one C2560. No virtual-root shift may change hip-to-foot or shoulder-to-wrist relation.",
+    "minimal_union_roi_xyxy": [
+      385,
+      350,
+      690,
+      1205
+    ],
+    "mask_note": "Use limb/boot silhouette masks inside the union; do not rerender the whole union rectangle or paint across retained torso/skirt ornaments. Repair occluded old limb pixels as needed.",
+    "proposed_toe_clearance_above_canonical_heel_plane_raw": 30.882905489138615,
+    "near_hip_annotation_uncertainty_raw": [
+      24,
+      24
+    ],
+    "target_tolerance": "Heel region ~[522,1082] and near hip[605,695] are the forward contact proposal. Resolve actual morphology without C/root alteration. Toe/forefoot must clear the NW heel plane with a visible positive margin. Counterphase must visibly swing LEFT free arm rear; skeletal elbow/wrist targets guide intent but do not authorize proportion changes.",
+    "anatomical_morphology_authority": "Actual source boot/stiletto morphology has priority over generic guide shoe. Preserve gold stiletto design and height; author real ankle articulation. The actual1064 shaft/cuff point is not a confidently identified tarsal joint.",
+    "strict_coordinate_authority": "Guide-relative knee/ankle/toe coordinates are skeletal intention with annotation uncertainty, not exact shoe/bone constraints. Keep actual source body density, hip pin, proposed forward heel region and required positive canonical sole clearance. No bone or boot stretching to hit generic markers.",
+    "preserved_2D_boot_vector_example_not_authority": {
+      "source_toe_minus_heel": [
+        -77.5,
+        -40.0
+      ],
+      "rotation_screen_degrees": 27,
+      "rotated_vector": [
+        -50.89338563501664,
+        -70.82452469734959
+      ],
+      "projected_toe_at_proposed_heel": [
+        470.6857134364128,
+        1011.3153789301228
+      ],
+      "forefoot_clearance_raw": 25.02047762583461,
+      "note": "Finite silhouette-preserving example only. Service must author real anatomy and retain stiletto; no 2D transform may substitute for source-phase inspection."
+    }
+  },
+  "next_gate": "Independent finite actual corrected CONTACT0 review. Then author LOAD and FLIGHT using same C2560 and actual planted heel delta, and inspect actual source pair/cycle. This isolated gate cannot approve planting, full ground, loop or actor.",
+  "future_plant_delta_raw": [
+    139.1928985028027,
+    125.27360865252244
+  ],
+  "source_phase_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false,
+  "supersedes": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v02-independent-actual-phase-HOLD-v01.json",
+    "sha256": "ec859d96989489c7e489f53abeb0fce712dc1b2ca18b01a0ca50de5fd612065a",
+    "reason": "Clarifies generic-foot guide versus actual stiletto anatomy; does not relax contact/counterphase gate."
+  }
+}

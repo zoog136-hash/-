@@ -1,0 +1,33 @@
+{
+  "key": "transform:393",
+  "direction": "S",
+  "role": "hit",
+  "name": "해방된 할파스",
+  "version": "v01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png": "be8487121e951bff94dfc0384ed2916e306c8cb67e4acc0fecd1137ca64acc00"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG HIT animation sprites of EXACTLY 해방된 할파스. The first original portrait is identity authority. The second saved S native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for S.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces SOUTH / screen down, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: stable guard; 1: impact response; 2: maximum stagger / recoil; 3: counterbalance; 4: regaining control; 5: recovered guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nThis is a brief impact stagger followed by controlled recovery, not an attack or a death. No weapon swing toward a target. Original appendages react physically to the torso recoil.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "stable guard",
+    "impact response",
+    "maximum stagger / recoil",
+    "counterbalance",
+    "regaining control",
+    "recovered guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-hit-v01.png",
+  "output_sha256": "0d07e653197623f950c4fe1cbf8d0866841e922273c7e74b1ae325000941cb4a",
+  "output_bytes": 2528109,
+  "original_generated_file": "/workspace/generated_images/exec-4f9c42ed-74f8-47b2-8115-74f654ad332a.png"
+}

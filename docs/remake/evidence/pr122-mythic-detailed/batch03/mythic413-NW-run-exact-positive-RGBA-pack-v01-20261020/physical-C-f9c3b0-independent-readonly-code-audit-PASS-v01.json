@@ -1,0 +1,78 @@
+{
+  "schema": "PR122-independent-readonly-physical-canvas-code-audit-v1",
+  "status": "PASS_STATIC_REVIEW_EXACT_PHYSICAL_C_FIT_CHANGE",
+  "old_frozen_tool": {
+    "path": "/workspace/scratch/pr122-runtime-layout-before-actual-physical-C-28f9801.py",
+    "sha256": "ebb9a0be9caf8c44c43f48aa2abb5e208bc26450a620538fc4e638c398a3e13b",
+    "bytes": 10167
+  },
+  "current_official_tool": {
+    "path": "/workspace/twilight/tools/pr122_reviewed_runtime_layout.py",
+    "sha256": "f9c3b0dcf7021de49cde2cef90825235055c64f3a9acaf130d4af20876222d9c",
+    "bytes": 10462
+  },
+  "reviewed_exact_diff": {
+    "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/physical-canvas-proposal-exact.diff",
+    "sha256": "d5d0278c4cd0aaceeae67995bc740284ee53c96eb8943e85d4bc5f1629580b09",
+    "bytes": 5426
+  },
+  "integration_wrapper": {
+    "path": "/workspace/scratch/mythic413-new-clip-integration-proposal-20261020-v04/integrate_new_413_clip_retaining_profile_v04.py",
+    "sha256": "d2f216a5f3a760e633f60a6ed92f1d32f43086a0b73a9d77abeda007743ae0ed",
+    "bytes": 42101
+  },
+  "canonical_pins": {
+    "path": "/workspace/scratch/mythic413-new-clip-integration-proposal-20261020-v04/canonical-input-pins.json",
+    "sha256": "3474fafec690f028f46973dccf7e0fe09085a04608c23dbb49b301d5033cef05",
+    "bytes": 1755
+  },
+  "independent_findings": [
+    "Authored physical sizes retain six exact int values, range256..4096, multiple8 and nominal2048 restriction; booleans/floats are rejected.",
+    "Actual per-row physical C now governs foot/margins before completeness and playback; no pixel, region, anchor-inside or true overflow criterion is waived.",
+    "Canonical nominal reanalysis and reviewed source-region ownership are retained; final row/direction/region/RGBA identity, six distinct poses, image size and source SHA rehash remain mandatory.",
+    "The optional playback remains an exact int permutation0..5 for walk/run; physical sizes are attached to authored rows before permutation.",
+    "No-size legacy branch retains nominal fitting. Original N r011 geometry and proof compatibility are separately pinned by existing evidence.",
+    "Integrationv04 is byte-identical tov03 except the one canonical-pin digest constant; all8 live tool hashes and retained profile SHA match the pinned values."
+  ],
+  "illustrative_fit_math": {
+    "same_source_anchor_y": 1396,
+    "nominal2048_foot_y": 1280,
+    "false_intermediate_margin_y": -116,
+    "actual2560_foot_y": 1600,
+    "actual_margin_y": 204,
+    "actual_bottom_for1536tile": 1740,
+    "actual_C": 2560
+  },
+  "existing_evidence_reviewed_not_rerun": [
+    {
+      "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/FINAL-HANDOFF.json",
+      "sha256": "236d554bdfc846257c3eaa79714eb3f8b6165129b45f3e45ae6b5b1bf20365d0",
+      "bytes": 2955
+    },
+    {
+      "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/physical-canvas-fit-proposal-fixtures.json",
+      "sha256": "8d76b72bea2c04c8d170f03e93e606c4ad1a69383a4cdb890f40e108b85ce5d3",
+      "bytes": 2637
+    },
+    {
+      "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/official-physical-C-fit-boundary-proof-v01.json",
+      "sha256": "cb48eba6839f5587a24cfa611b41808b1e334658dba0b50d2de3b23e7921e004",
+      "bytes": 681
+    },
+    {
+      "path": "/workspace/scratch/mythic413-independent-code-audit-20261020-v01/N-r011-actual-source-backward-compatibility-v01.json",
+      "sha256": "8b197ddf535a3b30c69a110d262aab652c96f5c5874785630eb391754ac2b438",
+      "bytes": 506
+    }
+  ],
+  "live_pinned_tool_hashes_verified": 8,
+  "retained_profile_hash_verified": true,
+  "limitations": [
+    "This is a static code/integrity audit; existing17 numeric fixtures,9 boundary checks and oldN compatibility records were read, not rerun.",
+    "The separately proposed RUN region rectangles and the actual new source/cycle/game binding are outside this code audit and remain independently gated."
+  ],
+  "new_tests_or_Godot_or_CI_runs": 0,
+  "source_or_repo_or_Git_mutations": 0,
+  "new_image_views": 0,
+  "actor_approvals_added": 0
+}

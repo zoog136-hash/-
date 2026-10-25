@@ -1,0 +1,55 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "NE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_faithful_locomotion_contact_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 3,
+  "intended_anatomical_support": "RIGHT",
+  "references": [
+    "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png",
+    "/workspace/scratch/girtas-NE-walk-right-contact-key-v01/single-contact-joint-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e",
+    "/workspace/scratch/girtas-NE-walk-right-contact-key-v01/single-contact-joint-production-guide.png": "633777e766e909cdbfc3bac457f18ecf3811c87964cdacc04396f2375a3960fc"
+  },
+  "transparent_background": true,
+  "corrective_reason": "OriginalNEwalkwrongidentity/unapproved. SelectedNEidlenearsymmetricNcameraambiguous; useONLYactualcorrectNEattackguard0camera/modelandnewmaskedjointguide toauthoractualoppositesupportwalkkeys. NoPR100orwrongoriginalNEwalkref.",
+  "prompt": "Edit FIRST image, the CORRECT CURRENT GIRTAS NE ATTACK-GUARD0, into exactly ONE newly authored NORTHEAST WALK RIGHT-SUPPORT CONTACT key, game3. This source standingguard is the EXACT body/camera/gear authority, NOT theoldNEidle/oldNEwalk. SECONDimage masks the leg area with an explicit newjoint/supportdiagram only. MAGENTA anatomicalLEFT FAR/imageLEFT is emptyhand side; GREEN anatomicalRIGHT NEAR/imageRIGHT is originalweapon-side. Do notpaintguidemarks/colors/text in output. ExactlyONE completefigure only.\n\nABSOLUTE NE CAMERA: preserve source trueNORTHEAST rear3/4, head/bodyfaceUP-RIGHT awayfromviewer. ShowmostlyBACK and originallongsilverhair, butclearlyvisible RIGHTSIDE near shoulder/arm and nearRIGHTouterhip at IMAGERIGHT. FarLEFTshoulder foreshortened/imageLEFT, nearRIGHTshoulderlarger/imageRIGHT. Righthand continuouslyholdsoriginalLONG SINUOUSorangegoldblade at IMAGERIGHT; farLEFThandEMPTYatIMAGELEFT. KeepobliquehiplineandbothbootsorientedUPRIGHT. NO symmetricpureNback, face/frontchest SEview, pureEside orcamera turn. Sourcefaceiscamera-away, notvisiblepale frontface.\n\nGAME3 RIGHT NEAR SUPPORT: near anatomicalRIGHT thigh/knee/shin under weapon-side IMAGERIGHThip is the actualweightbearing chain. RIGHTfoot isFLAT/landingontoheel at lowerRIGHT, RIGHTknee softlyextended and pelvis shifts overRIGHTankle. FarLEFTlegunderemptyIMAGELEFT hipisTRAILING: LEFTknee bends and LEFTHEEL lifts noticeably, LEFTTOES lightly touch its recedingupperLEFTgroundprojection. Itistoe-off/unloading, NOTflatweightbearing. LEFTheelUP/RIGHTflat is the OPPOSITE supportcontact toLEFT0. Do NOT copytwoequalguardlegs orkeepLEFTlongflat. In NErear-rightprojectionnearRIGHTsupportsoleisabout21canonicalpixels LOWER thanfarLEFTtrailtoe, a realnear/fargrounddepthnotverticalAIR. Preserve2coherenthip-knee-shin-anklechains. GuideRIGHT hip[330,350]\u2192knee[340,448]\u2192flatankle[350,560]\u2192sole565; LEFT hip[275,350]\u2192bentknee[240,408]\u2192raisedheel[240,495]\u2192toe[249,535].\n\nGROUNDED WALK heelcontact/doublesupport, notRUN/highknees/jump/airborne/attack/crouch/standingstill. Actual supportknee/ankle/pelvis/counterarmmustchangefromguard: slightwaistturn and emptyLEFTarmcounterbalance, RIGHTweaponarmstabilizesnotswings. Part/fold EXISTING longdarkgoldtrimrobe enough toreadwhich knee/boot bearsweight, fullLONGskirtremaining, nosegmentedpants/shortenedhem/extraorhiddenleg. Exactly2boots, 2connectedarms, no handtransfer. Originalhair/robe naturalwalkingdelay.\n\nIDENTITY exact source: long PALE SILVER hair, samehorncrown/helmet, narrow HARD straight GOLD radialspines (not feathers/flames/wings), blackgoldarmor and LONG DARK GOLDTRIMrobe, original ONE LONG SINUOUSorangegoldweapon at anatomicalRIGHT near IMAGERIGHT. FarLEFTempty. Fullgear/spinetips/blade/hair/robe/bootsinsidecanvas, no newgear/redVmask/flamefan/broadsword/mirror/extralimbs.\n\nOutputONEcompletehighdetailfigure ontransparentrequested1024squarePNG. Body500-600px and wholegear<=800px, >=96pxtruealpha0 outergutter all4edges, nevercropblade/spinetip. Sameoriginalgameartmaterials. Hardopaqueweaponinternalshine NOoutwardglow/haze/aura/particles/shadow/floor/blur/trails/text/labels/grid/coloredguide/duplicates. Importantfinalcheck actual RIGHTsupportheel-flat plusoppositeheel-UP/toesupport, trueobliqueNErear-rightbody, notNaliasandnotRUN.",
+  "requested_at": "2026-10-19T14:29:07.791415+00:00",
+  "source_guard_exact_crop_proof": {
+    "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-attack-v02iso01.png",
+    "source_sha256": "4bd4289392f51d407f8d33acb870d1b33a13066e0fc1b8140c43d4375be1c5e9",
+    "source_pose": 0,
+    "region": [
+      209,
+      43,
+      417,
+      427
+    ],
+    "rgba_sha256": "6a30d6233690423ef6b7f37db9f23a4f7eb323e3bf84da8d40c06bdc23101130",
+    "crop_path": "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png",
+    "crop_sha256": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e",
+    "actual_source_anchor": [
+      384,
+      466
+    ],
+    "actual_canvas": [
+      1024,
+      1024
+    ]
+  },
+  "guard_measured_near_far_sole_depth_canonical": 21,
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "user_authorization": "PRIVATEproductionimagegenerationpermitted, mainchatimagesforbidden; rootonlyGit/datawrites.",
+  "pose_guide_reference_only": true
+}

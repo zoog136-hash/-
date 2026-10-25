@@ -1,0 +1,877 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:그림 리퍼": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "hit",
+          "direction": "N",
+          "animation": "hit_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/N-hit-v01.png",
+          "source_sha256": "e366aad88d4db12e9f8ae25a1294fbe44f68a78a7a815a861f5618f74a68a804",
+          "texture": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/N-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  76,
+                  10,
+                  442,
+                  504
+                ],
+                "margin": [
+                  476,
+                  320,
+                  870,
+                  808
+                ],
+                "source_anchor": [
+                  256,
+                  510
+                ],
+                "rgba_sha256": "46f97af04255e1e5f9cd595b5f63000d3ca52906b206389468e25cb94bca383b",
+                "canvas_size": [
+                  1312,
+                  1312
+                ],
+                "foot": [
+                  656,
+                  820
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  577,
+                  10,
+                  436,
+                  498
+                ],
+                "margin": [
+                  465,
+                  326,
+                  876,
+                  814
+                ],
+                "source_anchor": [
+                  768,
+                  504
+                ],
+                "rgba_sha256": "4cd0b89f0e6868515579f1ad1d5a2ae56c2c8651d9d2612f9b14b7cdbbcb75d3",
+                "canvas_size": [
+                  1312,
+                  1312
+                ],
+                "foot": [
+                  656,
+                  820
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  1037,
+                  10,
+                  474,
+                  502
+                ],
+                "margin": [
+                  413,
+                  322,
+                  838,
+                  810
+                ],
+                "source_anchor": [
+                  1280,
+                  508
+                ],
+                "rgba_sha256": "f14e62d7fbcf7017ebd806abb737cacffbb62d8da6a7c2c11166d67e50e81556",
+                "canvas_size": [
+                  1312,
+                  1312
+                ],
+                "foot": [
+                  656,
+                  820
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  68,
+                  511,
+                  451,
+                  492
+                ],
+                "margin": [
+                  468,
+                  332,
+                  861,
+                  820
+                ],
+                "source_anchor": [
+                  256,
+                  999
+                ],
+                "rgba_sha256": "eb03577a272d7a4bfa62b832a3b1ee62decf6397d231902adaac062f15efcb39",
+                "canvas_size": [
+                  1312,
+                  1312
+                ],
+                "foot": [
+                  656,
+                  820
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  595,
+                  511,
+                  408,
+                  496
+                ],
+                "margin": [
+                  483,
+                  328,
+                  904,
+                  816
+                ],
+                "source_anchor": [
+                  768,
+                  1003
+                ],
+                "rgba_sha256": "418f4b15756202465e1fb74f2aa0e572912be31e63da07c56d58ce4294bc8b76",
+                "canvas_size": [
+                  1312,
+                  1312
+                ],
+                "foot": [
+                  656,
+                  820
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  1104,
+                  511,
+                  406,
+                  499
+                ],
+                "margin": [
+                  480,
+                  325,
+                  906,
+                  813
+                ],
+                "source_anchor": [
+                  1280,
+                  1006
+                ],
+                "rgba_sha256": "4d202e4194a1badef5230e59ef2d7c2451b4cd9e5ab0c67f2b822c1332c55b42",
+                "canvas_size": [
+                  1312,
+                  1312
+                ],
+                "foot": [
+                  656,
+                  820
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 492.0,
+            "canvas_size": [
+              1312,
+              1312
+            ],
+            "foot": [
+              656,
+              820
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "NW",
+          "animation": "hit_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/NW-hit-v01.png",
+          "source_sha256": "1128b79a06641d5272a499a8d324ee4edbc178f845f909e45e359aed11356d16",
+          "texture": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/NW-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  70,
+                  30,
+                  423,
+                  477
+                ],
+                "margin": [
+                  438,
+                  307,
+                  825,
+                  771
+                ],
+                "source_anchor": [
+                  256,
+                  503
+                ],
+                "rgba_sha256": "9963ee5c6cc3b047818486b59612146d99340d548b6cf3cba302792fe4f4ce49",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  558,
+                  31,
+                  436,
+                  466
+                ],
+                "margin": [
+                  414,
+                  318,
+                  812,
+                  782
+                ],
+                "source_anchor": [
+                  768,
+                  493
+                ],
+                "rgba_sha256": "7704fa7b3e74795483e546631eff85c62006e9f85b3edc6344fde20ce97d1d81",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  1014,
+                  48,
+                  498,
+                  449
+                ],
+                "margin": [
+                  358,
+                  335,
+                  750,
+                  799
+                ],
+                "source_anchor": [
+                  1280,
+                  493
+                ],
+                "rgba_sha256": "910a78ec6c05eb426283798845fd89197e2c93212a9d26e2bd187aa1bc3e7b04",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  65,
+                  519,
+                  430,
+                  470
+                ],
+                "margin": [
+                  433,
+                  314,
+                  818,
+                  778
+                ],
+                "source_anchor": [
+                  256,
+                  985
+                ],
+                "rgba_sha256": "9e0351cd7e4bfd1cf9e94407473f304020b511614e7ed90e25bacaebd9e92514",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  565,
+                  536,
+                  429,
+                  459
+                ],
+                "margin": [
+                  421,
+                  325,
+                  819,
+                  789
+                ],
+                "source_anchor": [
+                  768,
+                  991
+                ],
+                "rgba_sha256": "89e4510016250c4dca4da7cede0d046366524161101e4f8f3b09c70fb1f4c300",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1087,
+                  524,
+                  427,
+                  472
+                ],
+                "margin": [
+                  431,
+                  312,
+                  821,
+                  776
+                ],
+                "source_anchor": [
+                  1280,
+                  992
+                ],
+                "rgba_sha256": "dc45566466e8b53560ab8119c37feacc396dc6fcfd1b6d2e5041e82783ccec7c",
+                "canvas_size": [
+                  1248,
+                  1248
+                ],
+                "foot": [
+                  624,
+                  780
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 467.5,
+            "canvas_size": [
+              1248,
+              1248
+            ],
+            "foot": [
+              624,
+              780
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "S",
+          "animation": "hit_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/S-hit-v01.png",
+          "source_sha256": "8ad6804bd50a7ee23e6ce59c5bf8012e3aafb13b09cef3f4bd31609843d2503b",
+          "texture": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/S-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  66,
+                  12,
+                  427,
+                  504
+                ],
+                "margin": [
+                  458,
+                  310,
+                  869,
+                  792
+                ],
+                "source_anchor": [
+                  256,
+                  512
+                ],
+                "rgba_sha256": "4800183e6433f2dce090bfd069addcf551555aa2f3ee4e7ba136b55fa5cee06c",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  530,
+                  17,
+                  508,
+                  500
+                ],
+                "margin": [
+                  410,
+                  314,
+                  788,
+                  796
+                ],
+                "source_anchor": [
+                  768,
+                  513
+                ],
+                "rgba_sha256": "7fb312a2a7abc615b54b89ae43649081c11bd9b7528df7c65d8f898288cb582c",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1043,
+                  20,
+                  484,
+                  497
+                ],
+                "margin": [
+                  411,
+                  317,
+                  812,
+                  799
+                ],
+                "source_anchor": [
+                  1280,
+                  513
+                ],
+                "rgba_sha256": "93a8095ee70e934e224de427a44ce57a64e12320c74efd4a2939a9d9309810c2",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  42,
+                  529,
+                  483,
+                  479
+                ],
+                "margin": [
+                  434,
+                  335,
+                  813,
+                  817
+                ],
+                "source_anchor": [
+                  256,
+                  1004
+                ],
+                "rgba_sha256": "25619d3e1e8d66e239d79b57d15c47080a0416916130b686eae07edd288b81b6",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  554,
+                  521,
+                  446,
+                  490
+                ],
+                "margin": [
+                  434,
+                  324,
+                  850,
+                  806
+                ],
+                "source_anchor": [
+                  768,
+                  1007
+                ],
+                "rgba_sha256": "a6ab851902fa81a3167a34f7af2c67907622660c1415179cd239635202c8a404",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1037,
+                  528,
+                  462,
+                  482
+                ],
+                "margin": [
+                  405,
+                  332,
+                  834,
+                  814
+                ],
+                "source_anchor": [
+                  1280,
+                  1006
+                ],
+                "rgba_sha256": "af7690ac3fcf5ef5f76dbcefdc13e3f73fadaf72dd892448f8a25cff6c1186fd",
+                "canvas_size": [
+                  1296,
+                  1296
+                ],
+                "foot": [
+                  648,
+                  810
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 485.5,
+            "canvas_size": [
+              1296,
+              1296
+            ],
+            "foot": [
+              648,
+              810
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        },
+        {
+          "role": "hit",
+          "direction": "SE",
+          "animation": "hit_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/SE-hit-v01.png",
+          "source_sha256": "3ddea7f7eaf21c6e61d9f54388acf2715f2e619b1b57d1d411cd8e1816421006",
+          "texture": "assets/actors/eight_direction/boss_draft_first/grim_reaper/sources/SE-hit-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  38,
+                  8,
+                  469,
+                  510
+                ],
+                "margin": [
+                  446,
+                  324,
+                  859,
+                  818
+                ],
+                "source_anchor": [
+                  256,
+                  514
+                ],
+                "rgba_sha256": "15d4887f8d9bbaca796375f5f61e99579da5f7f53626beba388c5c08c154db30",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  536,
+                  8,
+                  494,
+                  503
+                ],
+                "margin": [
+                  432,
+                  331,
+                  834,
+                  825
+                ],
+                "source_anchor": [
+                  768,
+                  507
+                ],
+                "rgba_sha256": "4210638d5b97eddf0335112117a7091fd907f3ff77cffe14ad533e989487a68a",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  1054,
+                  23,
+                  466,
+                  488
+                ],
+                "margin": [
+                  438,
+                  346,
+                  862,
+                  840
+                ],
+                "source_anchor": [
+                  1280,
+                  507
+                ],
+                "rgba_sha256": "3e5459d58668854123735990e70b2c2faff78950980abbca2f0103cd72db5853",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  33,
+                  518,
+                  485,
+                  496
+                ],
+                "margin": [
+                  441,
+                  338,
+                  843,
+                  832
+                ],
+                "source_anchor": [
+                  256,
+                  1010
+                ],
+                "rgba_sha256": "5f8d1d7fbcc430d7c627277643f68e943671b1df4f266b4552acde75cb02ef55",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  566,
+                  519,
+                  465,
+                  495
+                ],
+                "margin": [
+                  462,
+                  339,
+                  863,
+                  833
+                ],
+                "source_anchor": [
+                  768,
+                  1010
+                ],
+                "rgba_sha256": "2ffcd25f667a2a4d16cc50028dfe765947371189bf2ef3c682ef7d459fe8f47d",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  1078,
+                  513,
+                  436,
+                  506
+                ],
+                "margin": [
+                  462,
+                  328,
+                  892,
+                  822
+                ],
+                "source_anchor": [
+                  1280,
+                  1015
+                ],
+                "rgba_sha256": "65eb172272a98dec55e15d3af6fa4ddd6227181568ab3acae80cf924caee832b",
+                "canvas_size": [
+                  1328,
+                  1328
+                ],
+                "foot": [
+                  664,
+                  830
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 497.0,
+            "canvas_size": [
+              1328,
+              1328
+            ],
+            "foot": [
+              664,
+              830
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/resume210-min003/SpriteFrames.tres",
+      "frames_sha256": "b4ba103e8e2f71501dddee257075f6153f83d21e504875cd5456e98a2dbc6621",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/resume210-min003/NativeMotionProfile.tres",
+      "native_profile_sha256": "7445d0145e30cf6a983ea3f9cd0e5a8316a89481a4415a76bc75ae24a86a1926",
+      "native_track_count": 4,
+      "native_pose_count": 24,
+      "distinct_source_pose_count": 24,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "death_2",
+        "hit_0",
+        "hit_3",
+        "hit_4",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [
+    {
+      "clip": "SW-hit-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "W-hit-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "source_drafts_saved": 6,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

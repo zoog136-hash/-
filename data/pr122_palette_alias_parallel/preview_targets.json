@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "repository": "zoog136-hash/-",
+  "read_commit": "855047df03d61ec6ba7de2c7d89a461391b3a5c1",
+  "source_frames_sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57",
+  "source_frames_git_blob": "c813c93ffc74d6ca69420a5e670359e3d9319ec2",
+  "source_texture_git_blobs": {
+    "poses-0.png": "62a3d031f81bfaa06419a245cb19e2dccf5dd035",
+    "poses-1.png": "b6e5bc9e4bd498f5669f605e95710d0492080ab6"
+  },
+  "source_tracks": {
+    "directions": 8,
+    "idle_frames_per_direction": 2,
+    "walk_frames_per_direction": 3,
+    "attack_frames_per_direction": 3,
+    "hit_frames_per_direction": 2,
+    "death_frames_per_direction": 3,
+    "run_tracks": 0,
+    "tracks": 40,
+    "frame_references": 104
+  },
+  "new_motion_poses": 0,
+  "new_game_connections": 0,
+  "new_original_identity_approvals": 0,
+  "entries": [
+    {
+      "target": "transform:179",
+      "source": "transform:44",
+      "donor": "transform:176",
+      "name": "랜스 마스터(레드)",
+      "frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "color_tint": "ff766b",
+      "preview_scene": "res://assets/actors/eight_direction/palette_alias_pr122/lance_master_red.tscn",
+      "identity_verified": false,
+      "source_motion_reviewed": false,
+      "mask_reviewed": false,
+      "already_in_existing_54": true,
+      "production_ready": false,
+      "status": "LEGACY_TINT_PREVIEW_ONLY"
+    },
+    {
+      "target": "transform:182",
+      "source": "transform:44",
+      "donor": "transform:176",
+      "name": "랜스 마스터(블루)",
+      "frames_path": "res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres",
+      "color_tint": "75aeff",
+      "preview_scene": "res://assets/actors/eight_direction/palette_alias_pr122/lance_master_blue.tscn",
+      "identity_verified": false,
+      "source_motion_reviewed": false,
+      "mask_reviewed": false,
+      "already_in_existing_54": true,
+      "production_ready": false,
+      "status": "LEGACY_TINT_PREVIEW_ONLY"
+    }
+  ],
+  "note": "Preview replays existing whole-sprite tints only. The separate masked-palette pipeline requires reviewed semantic masks; no masks or original identity approvals were fabricated."
+}

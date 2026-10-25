@@ -1,0 +1,97 @@
+{
+  "status": "PASS_SELECTED_CLIP_ORDER_AND_CADENCE_ONLY",
+  "actor": "transform:267",
+  "direction": "S",
+  "role": "run",
+  "source_sha256": "d57271cba97110ffb6b09974a89620c0310915090351e4d54f5d137f649c571d",
+  "playback_order": [
+    0,
+    3,
+    2,
+    1,
+    4,
+    5
+  ],
+  "technical_TRES_checked": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r074/SpriteFrames.tres",
+  "actual_Player_checked": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r075/SpriteFrames.tres",
+  "actual_Player_probe": {
+    "actor": "transform:267",
+    "animation": "run_2",
+    "approval_change": 0,
+    "authored_phase_order": [
+      0.0,
+      3.0,
+      2.0,
+      1.0,
+      4.0,
+      5.0
+    ],
+    "cases": [
+      {
+        "complete_5_to_0_seams": 5,
+        "distinct_frames": 6,
+        "first_six_transition_seconds": [
+          0.0666666666666667,
+          0.133333333333333,
+          0.2,
+          0.266666666666667,
+          0.333333333333333,
+          0.4
+        ],
+        "hz": 30,
+        "transitions": 32
+      },
+      {
+        "complete_5_to_0_seams": 5,
+        "distinct_frames": 6,
+        "first_six_transition_seconds": [
+          0.0666666666666667,
+          0.133333333333333,
+          0.2,
+          0.266666666666667,
+          0.333333333333333,
+          0.4
+        ],
+        "hz": 60,
+        "transitions": 32
+      },
+      {
+        "complete_5_to_0_seams": 5,
+        "distinct_frames": 6,
+        "first_six_transition_seconds": [
+          0.0666666666666667,
+          0.133333333333333,
+          0.2,
+          0.258333333333333,
+          0.325,
+          0.391666666666667
+        ],
+        "hz": 120,
+        "transitions": 32
+      }
+    ],
+    "collision_root_position_unchanged": true,
+    "foot_root_fixed": true,
+    "frames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r075/SpriteFrames.tres",
+    "runtime_cycle_seconds": 0.384,
+    "runtime_pose_rate": 15.625,
+    "source_sha256": "d57271cba97110ffb6b09974a89620c0310915090351e4d54f5d137f649c571d",
+    "status": "PASS"
+  },
+  "source_pixel_and_crop_identity": "PASS; all six distinct original RGBA regions, exact selected margins and duration weights; PNG bytes unchanged",
+  "private_gait_review": "PASS_ONE_OPPOSING_LEG_CYCLE; RIGHT contact/compression -> LEFT forward passing/contact/drive -> RIGHT forward return. Authored2 folds the RIGHT trailing boot; authored5 raises/returns the opposite RIGHT knee. These are distinct half-cycle exchanges, not a repeated R-L-pass beat. All six sources appear once.",
+  "seam_review": "PASS_5_TO_0; the RIGHT leg returning forward in authored5 continues into the RIGHT landing in authored0; skirt/weapon positions follow the same South-facing pose. Compact passing/crouch and hem motion remain authored rather than flattened.",
+  "floor_and_packing_review": "Actual SpriteFrames margins match selected geometry. Common runtime foot-root remains fixed; passing boot can rise during the gait. No clipped gear, mirrored slot, synthesized pose, reordered strike or change to other clips.",
+  "cadence": "At reference_speed210 and velocity1.25x, motion.gait advances15.625 poses/s; six-pose cycle0.384s. Actual Player30/60/120Hz visits every frame in sequential playback order, with five correct5->0 returns in2s at each rate.",
+  "private_previews": [
+    "/workspace/scratch/girtas-S-run-runtime-qa-20261019/selected-S-run-worldroot-private.jpg",
+    "/workspace/scratch/girtas-S-run-runtime-qa-20261019/selected-S-run-leg-cycle-private.jpg"
+  ],
+  "runtime_log_errors": 0,
+  "original_result_integration_ready_unchanged": false,
+  "actor_approval": "HOLD; this independent check does not approve the whole unique actor, source proportions of other clips, production enablement, or detailed completion.",
+  "approval_change": 0,
+  "source_pixels_changed": false,
+  "repository_data_changed": false,
+  "reviewed_at": "2026-10-19T11:27:17.125207+00:00"
+}

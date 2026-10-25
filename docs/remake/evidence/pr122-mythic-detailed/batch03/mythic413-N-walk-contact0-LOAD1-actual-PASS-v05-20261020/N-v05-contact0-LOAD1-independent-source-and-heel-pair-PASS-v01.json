@@ -1,0 +1,129 @@
+{
+  "schema": "pr122-413-N-contact0-LOAD1-independent-source-and-heel-unit-pair-v1",
+  "actor": "transform:413",
+  "action": "walk",
+  "direction": "N",
+  "status": "TWO_ACTUAL_SOURCE_QUALITY_AND_HEEL_UNIT_PAIR_PASS",
+  "scope": "actual CONTACT0 and LOAD1 source quality and same-stiletto 0-to-1 timing delta only; whole6 gait/sole/air/actualbinding not yet approved",
+  "CONTACT0": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+    "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+    "bytes": 452591
+  },
+  "LOAD1": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-LOAD1-native-skin-joint-finished-v05.png",
+    "sha256": "e30aa65c1fb5f69c0ca13ac539be3702c2951fdf42d007bbaaded4fba7516d95",
+    "bytes": 443682
+  },
+  "prior_body_and_complete_heel_source": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/contact0-r002-fixedC1920/N-contact0-r002-left-forward-bounded-v02.png",
+    "sha256": "332ef97f0a973aa5329a25f02cf0139b29c92c38e4c2aaca6424379d741466cb",
+    "bytes": 452709
+  },
+  "prior_ankle_finished_rig": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-LOAD1-rig-v03/N-LOAD1-actual-native-part-rig-v03.png",
+    "sha256": "ca160cef0860777ebd229a4921560b5b7788b1d902f2a58cb905e927652610a0",
+    "bytes": 444201
+  },
+  "author_skin_finish_proof": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/native-anatomical-skin-column-finish-proof-v05.json",
+    "sha256": "05fca31a88e40da3a96fefddbe6c5060d5222d3cf1e1f152cc9a572ef000c1e2",
+    "bytes": 20934
+  },
+  "rig_motion_contract": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-LOAD1-rig-v01/actual-articulation-and-preservation-contract.json",
+    "sha256": "8c960873c481d3f485faf0f4b75bf2226494789c1b034daaaeddba9e7aa0cce3",
+    "bytes": 1337
+  },
+  "private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-N-v05-view23-frozen.json",
+    "sha256": "1691763fc4430aa80e9c8cc8f929fbe0d0d5b965bdd43725d5656451815a6a74",
+    "bytes": 11286
+  },
+  "physical_canvas_fixed": 1920,
+  "constant_body_unit": 1.875,
+  "common_rig_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "profile_and_clock": "Retain .237068965517 pixel scale, X.9, movement12.5/reference210 and actual16.8Playerworld per phase; no perposeC or alphaheight normalization.",
+  "declared_real_body_bob_LOAD1": [
+    -7,
+    -12
+  ],
+  "independent_pixel_checks": {
+    "contact0": {
+      "actual_skin_finish_changed_RGBA": 3305,
+      "all_alpha_changed": 0,
+      "finish_bbox_xyxy": [
+        579,
+        632,
+        733,
+        700
+      ],
+      "all_RGBA_y_ge730_changed": 0,
+      "actual_alpha16_bbox_xyxy": [
+        402,
+        144,
+        886,
+        1041
+      ]
+    },
+    "LOAD1": {
+      "actual_skin_finish_changed_RGBA": 3448,
+      "all_alpha_changed": 0,
+      "finish_bbox_xyxy": [
+        572,
+        620,
+        726,
+        675
+      ],
+      "all_RGBA_y_ge730_changed": 0,
+      "actual_alpha16_bbox_xyxy": [
+        395,
+        132,
+        879,
+        985
+      ]
+    },
+    "LOAD1_original_upperbody_bob_minus7_minus12_y_lt620_changed_RGBA": 0,
+    "LOAD1_RIGHTstaff_ROI_760_0_900_1040_changed_RGBA_vs_samebob": 0,
+    "same_named_LEFT_goldheel_core_RGBA_equal": true
+  },
+  "actual_quality": [
+    "Pure N rear identity, anatomical RIGHT double-ended gold/turquoise staff, bun/ribbon, gold-blue coat, pleated white/gold skirt and black/gold high boots preserved.",
+    "CONTACT0 dedicated front LEFT leg and LOAD1 actual LEFT supporting/RIGHT raised passing limbs have complete shoes and coherent human proportions at fixed body scale.",
+    "Actual source costume-part rig and localized ankle retouch now form natural silhouette rather than rejected vertical cut strip.",
+    "Actual skin cap now has continuous original skin material, no large rectangular white patches or double horizontal skin band; native costume trim remains intact."
+  ],
+  "heel_unit_pair": {
+    "CONTACT0_same_gold_stiletto_core": [
+      616.5,
+      850
+    ],
+    "LOAD1_same_gold_stiletto_core": [
+      616.5,
+      983
+    ],
+    "actual_same_material_source_delta": [
+      0,
+      133
+    ],
+    "required_source_delta": [
+      0,
+      132.8727272728626
+    ],
+    "Playerworld_residual_if_same_material_grounded": [
+      0,
+      0.016091954005865716
+    ],
+    "measurement_note": "Core has \u00b13px annotation; actual alpha fringe may extend below it. Same material pixel equality checked, decorative pointed toe is not treated as floor.",
+    "remaining_physical_scope": "Whole6 must verify actual support/flat/toe transitions, raised RIGHT sole clearance, source0-to3 switch and loop. Narrow heel-delta PASS does not establish all hidden3D bones or wholecycle."
+  },
+  "next": "Create actual terminal2 followed by opposite support3/4/5, review real all6 then bind actual staging.",
+  "whole_cycle_APPROVED": false,
+  "staging_APPROVED": false,
+  "actor_APPROVED": false,
+  "completed_added": 0,
+  "images_forwarded": 0
+}

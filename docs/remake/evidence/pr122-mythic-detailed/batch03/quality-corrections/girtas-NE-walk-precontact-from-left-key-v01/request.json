@@ -1,0 +1,32 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "NE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_walk_phase_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 5,
+  "intended_anatomical_support": "RIGHT_NEAR_TOE",
+  "references": [
+    "/workspace/scratch/girtas-NE-walk-left-contact-key-v01/girtas-NE-walk-left-contact-key-v01.png",
+    "/workspace/scratch/girtas-NE-walk-precontact-from-left-key-v01/ankle-only-precontact-production-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-walk-left-contact-key-v01/girtas-NE-walk-left-contact-key-v01.png": "b11b2ca41e3532169a1900d9deadfcd374dbebed880b91b31531958e6148dc76",
+    "/workspace/scratch/girtas-NE-walk-precontact-from-left-key-v01/ankle-only-precontact-production-guide.png": "1c5a2d56ecf673a4462e47ccabb848938e41880ec80f9e25df1792468ff2676b"
+  },
+  "transparent_background": true,
+  "corrective_reason": "ActualNEwalk0/1/2/3/4valid; pair5keptwrongLEFTtoeoff/RIGHTreach. Authoronlymissing5fromalreadycorrectLEFTcontact0bychangingankle/support, preservinglegownership. No identicalfailedpairretry, nooldwrongNEidle/Ncamera.",
+  "prompt": "Edit FIRST CORRECT GIRTAS NE LEFT-SUPPORT CONTACT0 key into exactly ONE missing WALK GAME5: RIGHT-TOEOFF SUPPORT with LEFT PRECONTACT REACH. This is an ANKLE/WEIGHT CHANGE on the already correct LEFT-forward leg ownership, NOT a request toswaplegs. FIRSTimage isONLYcorrectbody/camera/identity/legauthority. SECOND masks ONLYankles/feet toshowchangedheel/toetargets. KeepLEFTfarlegatIMAGELEFT, RIGHTnearlegatIMAGERIGHT. Not2/6sheet.\n\nACTUAL NEW JOINT/SUPPORT CHANGE:\n1. FAR anatomicalLEFT leg at IMAGELEFT keeps its existing arriving/forward role. LEFTankle now dorsiflexes so LEFT toes aim UP-RIGHT/away with toe-UP silhouette, LEFTheel has NOTlandedyet and floats about20-35sourcepixels ABOVE its nextlandingposition. Knee softlyunfolds/reaches alittlefurtherUPRIGHT from LEFT hip, noLEFTflatweightbearingascontact0. Showactualnew LEFTsole/heel/ankle geometry, notjustwholebodytranslation.\n2. NEAR anatomicalRIGHT leg at IMAGERIGHT REMAINS trailing/back fromsameRIGHT hip. RIGHT HEEL risesHIGH, RIGHT TOES pointDOWN andsupport thedeeper/nearprojectedground at lowerRIGHT. ClearRIGHTankleplantarflexion/toe-off; itisnowsoleweightbearingRIGHTtoe untilLEFTlandingin0. KeepRIGHTbootshortertrailingundernearhip, doNOTturnRIGHTintolongforwardreachingbootagain. RIGHTtoe-support retained, no two-feet-flight.\n3. Bodyweight shifts subtlyontoRIGHTtoe whileLEFTreaches, pelvisadvancesNE UP-RIGHT notsideways. GroundedWALK notRUN/highknee/jump. Exactly2completehip-knee-shin-ankle-bootchains, correctLEFTfar versusRIGHTnear, kneesnotbellyhigh. PartonlyoriginalLONGdarkgoldtrimrobe asneeded toreadankles; neverpants/shortskirt/extralimb.\n\nTrueNErear-right3/4cameraEXACTsource: mostlyBACK/silverhair, nearRIGHTshoulder/weaponarmatIMAGERIGHT, foreshortenedfarLEFTIMAGELEFT, hipsandbootsobliqueUPRIGHT. No pureNbackalias/frontface/pureEside. Originalgoldhorncrown,narrowHARDgoldradialrays,longPALE/SILVERhair,blackgoldarmor,LONGDARKGOLDTRIMrobe, ONE originalLONGSINUOUSorangegoldweapon continuouslyinRIGHTNEARhandIMAGERIGHT, farLEFThandEMPTYIMAGELEFT. Nohandtransfer,thirdarm/redVmask/flamefeatherfan/wings/broadsword/newgear. Fullhardspines/blade/robe/bootsinframe.\n\nONEhighdetailcompletefigure transparentrequested1024squarePNG, body500-600px andwholegear<=800px,>=96pxtruealpha0allouteredges,nocrop/gearshortening. Sameoriginalgameartmaterials/hardopaqueweaponinternalshine, NOoutwardglow/haze/shadow/floor/particles/blur/trails/text/grid/labels/arrows/coloredguides/duplicates. Finalcheck LEFTFAR imageLEFT precontactheelUP/toesUP, RIGHTNEAR imageRIGHT trailingHEELUP/TOEDOWNsupport, trueNEback-rightcamera. DoNOTregenerateanotherLEFTtoeoff/RIGHTforwardreach, thatwrongphasealreadyexistsandisHOLD.",
+  "requested_at": "2026-10-19T14:44:07.797213+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "pose_guide_reference_only": true,
+  "generation_budget": "One distinctmissing5single fromcorrectLEFTcontact0, thenHOLDifactualanatomywrong."
+}

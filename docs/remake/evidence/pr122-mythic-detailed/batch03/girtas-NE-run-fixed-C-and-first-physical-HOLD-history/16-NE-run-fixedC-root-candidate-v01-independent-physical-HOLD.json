@@ -1,0 +1,224 @@
+{
+  "schema": "PR122_NE_RUN_FINAL_SOURCE_PHYSICAL_CANDIDATE_INDEPENDENT_QC_V1",
+  "utc": "2026-10-19T17:32:13.819561+00:00",
+  "reviewer": "/root/girtas_final_actual_quality_v04",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "status": "HOLD_PHYSICAL_CANDIDATE_CONTACT0_3_UPPERCORE_ENTRY_POP",
+  "source_visual_status": "PASS_SELECTED_SIX_SOURCE_ART_PRESERVED",
+  "source_sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6",
+  "raw_sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6",
+  "authored_pose_canvas_sizes": [
+    1936,
+    2240,
+    1936,
+    1776,
+    2048,
+    1936
+  ],
+  "source_native_root_anchors": [
+    [
+      730,
+      1200
+    ],
+    [
+      779,
+      1215
+    ],
+    [
+      720,
+      1254
+    ],
+    [
+      717,
+      1125
+    ],
+    [
+      758,
+      1128
+    ],
+    [
+      805,
+      1259
+    ]
+  ],
+  "candidate_receipt": {
+    "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/candidate-receipt-v01.json",
+    "sha256": "156724341720f84fbb71e43f1404caeab2ab9f885e803784c9899aed736eb8b2"
+  },
+  "candidate_runtime_layout": {
+    "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_runtime_layout.candidate-v01.json",
+    "sha256": "1bcf014528371fedcc8ab1a857c274cf1a91e78c055d62313b68016bf6dc6dcb",
+    "bytes": 1308
+  },
+  "candidate_source_regions": {
+    "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_source_regions.candidate-v01.json",
+    "sha256": "f29978751108fa5976a3b89d61770bf7e92c729f4226dc126f6c4f9d84ab8fdb",
+    "bytes": 1061
+  },
+  "candidate_derived_geometry": {
+    "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/geometry-with-authored-root-candidate-v01.json",
+    "sha256": "577774c4ba3e5f903081619fb3bcc7b6d026385917e809dbc782548d899495ba",
+    "bytes": 3027
+  },
+  "candidate_authorship_proof": {
+    "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/authored-native-sole-projected-ground-root-candidate-v01.json",
+    "sha256": "9858405a405b7a25c0bbe59dcb3db33785d8ee9f3f3289139fcf00a397ae722a",
+    "bytes": 56224
+  },
+  "candidate_guards": {
+    "layout": {
+      "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_runtime_layout.candidate-v01.validation.json",
+      "sha256": "e30d157f46f8286fe19d352327cfa9ec3a65761d6050413bfdd1c19b1eeb6792",
+      "bytes": 1878
+    },
+    "regions": {
+      "path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/reviewed_source_regions.candidate-v01.validation.json",
+      "sha256": "b3ba2f22ad86ad1d6d2b9e2e71e61584a8b795f6a917bca8855710e2759c68f7",
+      "bytes": 4972
+    },
+    "status": "PASS_EXACT_METADATA_AND_SOURCE_PRESERVATION_ONLY"
+  },
+  "all_candidate_pins_and_raw6_atlas_Cstage_source6_QC_reverified": true,
+  "visual_findings": [
+    "The single actual common-world sevenfigure candidate has a visible rigid-body position discontinuity from currentNEidle to contact0: skull/neck/solid nearpauldron/core rise together by approximately26.32world at unchanged physical model scale. Contact3 is approximately32.29world above the idle registration. This is visibly larger than a modest stance/lean change in this actual idle and cannot be certified as smooth idle/run entry.",
+    "The actual core then falls27.27world from contact0 to flexedload1 and20.38world from contact3 to load4. The same source/model/C pass does not establish a pass for these ground-relative body transitions. Hairroot registration supplies a numeric datum, corroborated by the visible rigid skull/pauldron/core shift; it is not used as an exact anatomical or ornamental size authority.",
+    "Actual contact0 farLEFT and contact3 nearRIGHT boot ownership and complete sole endpoints remain correct. C-stage skull/pauldron/core scale acceptance and selectedsix source/art PASS remain preserved. This HOLD does not reset source history or assert an exact hiddenbone-length defect.",
+    "The candidate roots correctly expose painted core-to-support projected separation. Within its finite physical rootX/nearfar/foreaft assumptions, ordinary plane/sample uncertainty is only severalworld; masking the26/32world body rise by root translation would need a material new projection/stance claim or genuine bounded contact-lowerbody rearticulation. No standing footdepth, flat twofootY, clothV-as-hip or exact hiddenpelvis requirement is imposed.",
+    "Candidate recovery/AIR sampledsole intervals are positive under the declared camera; AIR5 has only about2.13world nominal minimum margin before nativepoint tolerance. This numeric fact does not repair the body-entry discontinuity. No additional AIR source change is required automatically; any proposed bounded contact repair must also retain 5to0 and flightground consistency before actual integration."
+  ],
+  "observed_contact_and_load_source_pins": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+      "source_sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+      "C": 1936,
+      "native_root": [
+        730,
+        1200
+      ],
+      "uppercore_registration_world_Y": -115.31080286840655,
+      "support_foot": "FAR_LEFT",
+      "native_support_heel_or_load_point": [
+        683,
+        1143
+      ],
+      "native_hairroot_registration_Y": 205,
+      "registration_to_support_projected_gap_world": 108.70505838247773,
+      "note": "Hairroot datum only quantifies the rigidcore translation seen directly; not an exact bone/hip or sole-plane proof."
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/girtas-NE-run-LEFT-compression1-complete-endpoint-v03.png",
+      "source_sha256": "aeee4ab97376b2520e07f6ce140434930cf9400f2fe928d1fb63afa8d58d87c6",
+      "C": 2240,
+      "native_root": [
+        779,
+        1215
+      ],
+      "uppercore_registration_world_Y": -88.04265385700539,
+      "support_foot": "FAR_LEFT",
+      "native_support_heel_or_load_point": [
+        600,
+        1223
+      ],
+      "native_hairroot_registration_Y": 336,
+      "registration_to_support_projected_gap_world": 88.84395218562433,
+      "note": "Hairroot datum only quantifies the rigidcore translation seen directly; not an exact bone/hip or sole-plane proof."
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+      "source_sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+      "C": 1776,
+      "native_root": [
+        717,
+        1125
+      ],
+      "uppercore_registration_world_Y": -121.27758487205492,
+      "support_foot": "NEAR_RIGHT",
+      "native_support_heel_or_load_point": [
+        905,
+        1136
+      ],
+      "native_hairroot_registration_Y": 165,
+      "registration_to_support_projected_gap_world": 122.66722386538055,
+      "note": "Hairroot datum only quantifies the rigidcore translation seen directly; not an exact bone/hip or sole-plane proof."
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02.png",
+      "source_sha256": "c86670e35fbfb1f2a1af607130f119878b3bf089e7be5e610f55f24f5e5b2279",
+      "C": 2048,
+      "native_root": [
+        758,
+        1128
+      ],
+      "uppercore_registration_world_Y": -100.89785790246619,
+      "support_foot": "NEAR_RIGHT",
+      "native_support_heel_or_load_point": [
+        900,
+        1185
+      ],
+      "native_hairroot_registration_Y": 207,
+      "registration_to_support_projected_gap_world": 107.14235073682077,
+      "note": "Hairroot datum only quantifies the rigidcore translation seen directly; not an exact bone/hip or sole-plane proof."
+    }
+  ],
+  "diagnosis": {
+    "decisive_defect": "Visible ground-relative rigidcore/body idle-entry and contact-to-load position pop on contact0/3 at acceptedCs.",
+    "not_claimed": "No exact hiddenhip, universal neutralwaist invariant, or proved anatomical bone-length change.",
+    "preferred_bounded_repair_path": "Preserve upperbody/model/C and correct ownership. Rearticulate only genuine lowerbody/sole projected extension in0/3, with natural robe changes, rather than rescale wholeimages or move roots solely to hide the pop. Author must test candidate projection and retainedAIR5 loop numerically; do not redo other4 automatically."
+  },
+  "bounded_review_targets_not_authored_final_roots": {
+    "basis": "Nearby actualload1/4 positions and currentidle rigidcore; QA range for a fresh bounded candidate, not a universal locomotion constant.",
+    "contact0_uppercore_height_world": [
+      92,
+      98
+    ],
+    "contact3_uppercore_height_world": [
+      105,
+      111
+    ],
+    "contact_to_own_load_height_difference_world": [
+      4,
+      10
+    ],
+    "contact0_projected_extension_reduction_world_approx": [
+      17,
+      23
+    ],
+    "contact3_projected_extension_reduction_world_approx": [
+      10,
+      16
+    ],
+    "contact0_native_projected_reduction_approx": [
+      145,
+      200
+    ],
+    "contact3_native_projected_reduction_approx": [
+      80,
+      130
+    ],
+    "AIR2_5_source_preservation": "Retain unless exact authored candidate arithmetic proves a remaining collision/clearance/loop contradiction; no broad source/C search authorized by this QC."
+  },
+  "reviewed_private_common_world_board": {
+    "sha256": "557b55dfa570954aa547a2641aaa3f34a5426c308373b4df97a1361281e7895c",
+    "encoded_bytes": 133174,
+    "own_context_only": true
+  },
+  "private_image_ledger": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view08.json",
+    "sha256": "a650325b8c6bc080728b5904d7c0ccd91b4fcf09e7e79fa7cb0cd12b6c9d2d74",
+    "viewed_encoded_bytes": 756746
+  },
+  "actual_runtime_status": "NOT_INTEGRATED_NO_NE_R100_APPROVAL",
+  "actual_Godot_render_screenshot": false,
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "counts_changed": false,
+  "repository_mutations": false,
+  "images_attached_to_main_or_parent": 0
+}

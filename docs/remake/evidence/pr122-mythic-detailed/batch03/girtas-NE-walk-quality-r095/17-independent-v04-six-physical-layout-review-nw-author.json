@@ -1,0 +1,105 @@
+{
+  "schema": "pr122-independent-runtime-layout-candidate-review-v1",
+  "status": "PASS_SCOPED_NE_WALK_SIX_PHYSICAL_LAYOUT_CANDIDATE",
+  "reviewer": "/root/girtas_nw_walk_author (independent reviewer; did not author NE walk source or layout)",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "walk",
+  "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+  "layout_candidate": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/reviewed_runtime_layout.candidate-v04.json",
+  "layout_candidate_sha256": "7fe2d8f1f970a5e4ec957fa60c40d06aaccd0d4d1b458b7427abd9e965d26bbb",
+  "Cs": [
+    1936,
+    1552,
+    1568,
+    2432,
+    1504,
+    1936
+  ],
+  "source_anchors": [
+    [
+      682,
+      1143
+    ],
+    [
+      2258,
+      1093
+    ],
+    [
+      703,
+      2662
+    ],
+    [
+      2199,
+      2863
+    ],
+    [
+      715,
+      4153
+    ],
+    [
+      2215,
+      4219
+    ]
+  ],
+  "source_native_roots": [
+    [
+      650,
+      988
+    ],
+    [
+      491,
+      765
+    ],
+    [
+      1306,
+      784
+    ],
+    [
+      522,
+      1187
+    ],
+    [
+      476,
+      752
+    ],
+    [
+      645,
+      996
+    ]
+  ],
+  "root_measurement_sha256": "35bb342a4738760d1c300c106f696e7be12c2e8b7a7432a22188c9d3af48ec67",
+  "scale_measurement_sha256": "e4f6d90f55ef0d5300008ce6268586995af8cc433cc4e8290fffba0308b084cf",
+  "source_region_review_sha256": "cd5690309c4262fa8a1bd790495fce93c40df69b4d90ccc093611f04e3dc433f",
+  "source_gait_review_sha256": "c804e84610643b9e8d3a13eed35f872bed82be25ff94c9ec123b34e74226a732",
+  "read_only_numeric_validation_sha256": "2eb9d1929dfd028e0c04f0a5ae0fc80c0309847eff26745c1e997cbce8f45925",
+  "private_previews": [
+    {
+      "path": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/private-NE-walk-seven-headregistered-C-probe-v04.jpg",
+      "bytes": 147387,
+      "sha256": "0c7981af707f14dcbbcc4a54b85a2cfac2c17d11b387b0c1aeb3598f8abe51c3"
+    },
+    {
+      "path": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/private-NE-walk-seven-pelvis-projected-ground-candidate-v04.jpg",
+      "bytes": 126207,
+      "sha256": "6c9d5806956bdd1c821d65ed56d66af85b3bb26846d671be8401db2f9933a702"
+    }
+  ],
+  "findings": [
+    "Individually measured rigid helmet/hair-root markers at the proposed per-pose C match the selected correctNEidle C832 range; actual skull/pauldron/upperwaist sizes remain coherent. Same1936 for new0/5 is supported by the same visual rigid core, not a claim of byte-identical imagegen pixels.",
+    "Visible posterior cuirass-to-upperrobe waist junction is a consistent authoring landmark. The inferred pelvis axis/ground projection is explicitly authored and uncertain by12canonical; garmentV/longrobe tips are not used as visible hip bones.",
+    "The candidate keeps actual NE projected foot depths. LEFTsupport goes forwardUPRIGHT contact0 to midstance1 to rearDOWNLEFT toeoff2, then the opposite RIGHT support cycle3/4/5. Different local soleY values are not treated as AIR or flattened to a common sourceY.",
+    "Actual projected root/body/head flow remains consistent at idle-entry,0\u21921/2\u21923/3\u21924 and5\u21920. The authored small load/toeoff pelvis arc preserves natural torso motion without the old neutral-depth-only large bob.",
+    "All source/region/RGBA pins and authored-root-to-atlas translations independently validate. Canonical layout reproduces the author candidate exactly and leaves PNG/RGBA/fringe ownership untouched."
+  ],
+  "scope_limitations": [
+    "Candidate source/layout review only; actual compiled SpriteFrames/Player, runtime gate, final ground support/entry/exit and actor approval remain pending.",
+    "This is authored2D projected pelvis/ground metadata; transparent PNGs and the generic3Dguide do not provide measured hidden bones or an exact world floor.",
+    "Preview uses canonical440/C. Historical r092 world conversion in author proof is reference-only, not a fixed global pixel_scale in this layout."
+  ],
+  "source_pixels_unchanged": true,
+  "integration_candidate_ready": true,
+  "new_actor_approvals": 0,
+  "reviewed_at": "2026-10-19T16:01:50.593105+00:00"
+}

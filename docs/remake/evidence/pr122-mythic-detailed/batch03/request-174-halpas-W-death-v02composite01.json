@@ -1,0 +1,953 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "W",
+  "role": "death",
+  "source_batch": "batch03",
+  "version": "v02composite01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "request_kind": "REVIEWED_EXACT_RGBA_POSE_ASSEMBLY",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 2,
+  "reused_poses": 4,
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+    "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png",
+    "/workspace/scratch/halpas-W-death-corpse5-key-v02/halpas-W-death-corpse5-v02.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+    "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png": "4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf",
+    "/workspace/scratch/halpas-W-death-corpse5-key-v02/halpas-W-death-corpse5-v02.png": "1f7cb3cb61b86f76dc875ab2f86599e6ea347e50b7d766e9622faea17c7a892a",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Independent final r062 W death final4/5 have TWO heads and TWO opposing swords on one body. Keep valid old0/1/2/3 exactly; create ONLY two single grounded corpse keys4/5 with ONE LEFT head, ONE connectedRIGHT sword, 2arms/2legs and continuouswest collapse. New4 uses ONLY validold3croppedreference+correctWidle; new5 uses ONLYcorrectnew4. Badold4/5 NEVER used by generation and completelyexcluded from assembledposes.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+  "prompt": "Assemble exactRGBA full six-frame death: oldPASS0, oldPASS1, oldPASS2, oldPASS3, newONEhead/ONErightbladecorpse4, newONEhead/ONErightbladefinalsettle5. Exactly2 newlyauthored and4 reused. Do not synthesize/recolor/resample/mask or repeatfull6 imagegen.",
+  "user_authorization": "Continue strictUnique/boss actualanimationproduction; privateimagegenerationallowed, no mainchatimages/binary. RootonlyGit/staging/defaultapproval.",
+  "requested_at": "2026-10-19T13:33:49.180390+00:00",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+    "canvas_size": 2048,
+    "review_basis": "ExactRGBA six-pose 4old+2new assembly with explicit1536 packing cells and unchanged32pxminimum gutters retains new corpse4 complete1233pxwidth without any resize/crop. Unchanged strict six-frame analyzer+complete guard+allalpha16 coverage PASS at allowed2048 sourcecanvas. Physical authored per-pose canvas/root proposals are separate and finalactualPlayer review pending.",
+    "assembly_proof": "/workspace/scratch/halpas-W-death-reviewed-composite-v02/halpas-W-death-reviewed-composite-v02.assembly.json",
+    "actor_approval": false
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+    "canvas_size": 2048,
+    "key": "transform:393",
+    "direction": "W",
+    "role": "death",
+    "authored_pose_canvas_sizes": [
+      1024,
+      1024,
+      1024,
+      1024,
+      2048,
+      2048
+    ],
+    "source_anchors": [
+      [
+        762,
+        989
+      ],
+      [
+        2317,
+        971
+      ],
+      [
+        757,
+        2469
+      ],
+      [
+        2309,
+        2426
+      ],
+      [
+        821,
+        4063
+      ],
+      [
+        2343,
+        4021
+      ]
+    ],
+    "review_basis": "4 unchanged approved-scoped source death0-3 poses retain original physical canvas1024 and original anchors through exactinteger packing translations. New corpse4/5 virtualcanvas2048 is a provisional rigid-helmet/plate/boot-size normalization against current W idle canvas1152, not silhouette/corpsebbox. Helmet/boots of new1254pxsources are about2x previoussource dimensions; actualreference comparisons remain needed. NewXanchors preserve prior3 nearpelvis relativeworldX using source landmarks oldpelvis[793,928] versus oldanchor[768,984], newpelvis~[729,755]/[729,803] and 2xcanvas. NewYanchors use actual emptyLEFT palm-floor strongalpha contact4[515,842],5[476,868], retaining continuousphysicalcollapse/settle rather than bbox-top/height locking. Final actualPlayer scale/root/trajectory private review pending; these are candidate metadata only, no finalapproval.",
+    "anchor_derivation": {
+      "source_anchors_old0_3": [
+        [
+          256,
+          530
+        ],
+        [
+          768,
+          530
+        ],
+        [
+          256,
+          983
+        ],
+        [
+          768,
+          984
+        ]
+      ],
+      "source_anchors_new4_5": [
+        [
+          679,
+          842
+        ],
+        [
+          679,
+          868
+        ]
+      ],
+      "new4_strong_palm_floor_point": [
+        515,
+        842
+      ],
+      "new5_strong_palm_floor_point": [
+        476,
+        868
+      ],
+      "old3_pelvis_approx": [
+        793,
+        928
+      ],
+      "new4_pelvis_approx": [
+        729,
+        755
+      ],
+      "new5_pelvis_approx": [
+        729,
+        803
+      ],
+      "native_W_idle_canvas": 1152,
+      "native_W_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+      "whole_silhouette_bbox_used_to_set_physical_canvas": false,
+      "source_pixel_resampling": false
+    },
+    "runtime_validation": "PENDING_ROOT_ACTUAL_PLAYER_AND_INDEPENDENT_QUALITY",
+    "actor_approval": false,
+    "approved_actor_change": 0,
+    "detailed_completion_change": 0
+  },
+  "source_provenance": {
+    "assembly_pose_map": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "role": "death",
+      "direction": "W",
+      "poses": [
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "region": [
+            32,
+            83,
+            460,
+            451
+          ],
+          "rgba_sha256": "35c9279fc36900927df6dc97c48934064735d89aa28dbc63698fb29d1704db04",
+          "source_pose": 0,
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely."
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "region": [
+            520,
+            119,
+            469,
+            415
+          ],
+          "rgba_sha256": "ad63b812b3de1d3ec244ed7cc72e40bfb6696978a4839e3eafe941568867ae12",
+          "source_pose": 1,
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely."
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "region": [
+            28,
+            649,
+            478,
+            338
+          ],
+          "rgba_sha256": "076de48dbe057763c6897eb882cce7b8e0945ee0a415c40e4b58ca20c6d87ed4",
+          "source_pose": 2,
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely."
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "region": [
+            516,
+            736,
+            493,
+            252
+          ],
+          "rgba_sha256": "f402c80726e76ee271bf352fe9bce69f444a232462d3b0ab65f048e7647f3def",
+          "source_pose": 3,
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely."
+        },
+        {
+          "path": "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png",
+          "source_sha256": "4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf",
+          "region": [
+            9,
+            391,
+            1233,
+            455
+          ],
+          "rgba_sha256": "4828885cc7c804696d85e6804021b97b4370c4616fb64876e1f525f268666def",
+          "source_pose": "new_single_corpse4",
+          "newly_authored": true,
+          "review_basis": "New single source pose4 privately SOURCEPASS: exactlyONE left head/neck, ONE connected body, two completearms/two legs and ONE RIGHT-hand sword. Continuous lie/settle from old3→new4→new5; faithful model/gear unchanged. Correct actualsinglecolumns strict1+complete PASS; no threshold changes."
+        },
+        {
+          "path": "/workspace/scratch/halpas-W-death-corpse5-key-v02/halpas-W-death-corpse5-v02.png",
+          "source_sha256": "1f7cb3cb61b86f76dc875ab2f86599e6ea347e50b7d766e9622faea17c7a892a",
+          "region": [
+            34,
+            497,
+            1211,
+            380
+          ],
+          "rgba_sha256": "54951274608f67353c3ad75a20adbc9a3560ce9e5681a808556fac34d19ad88c",
+          "source_pose": "new_single_corpse5",
+          "newly_authored": true,
+          "review_basis": "New single source pose5 privately SOURCEPASS: exactlyONE left head/neck, ONE connected body, two completearms/two legs and ONE RIGHT-hand sword. Continuous lie/settle from old3→new4→new5; faithful model/gear unchanged. Correct actualsinglecolumns strict1+complete PASS; no threshold changes."
+        }
+      ],
+      "newly_authored_poses": 2,
+      "reused_poses": 4,
+      "bad_old_phases_excluded": [
+        4,
+        5
+      ],
+      "basis": "Correct ONLY confirmed duplicated final corpse endpoints. ExactRGBA assembly, no reauthor valid old0-3, no resampling/recoloring/masking. Larger1536packing retains legacy32pxminimum padding for1233px-widecompletecorpse4."
+    },
+    "assembly_pose_map_sha256": "d12af59b635d7a7fbfb044b4f5592411c873894811f4cad26119a5235ca58546",
+    "assembly_proof": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "role": "death",
+      "assembler_sha256": "a9ee1e4f861a30b7c4a458722ddbb55d04948ee3702e69f2ef7e902cd938203c",
+      "direction": "W",
+      "metadata_sha256": "d12af59b635d7a7fbfb044b4f5592411c873894811f4cad26119a5235ca58546",
+      "metadata_path": "/workspace/scratch/halpas-W-death-reviewed-composite-v02/pose-map.json",
+      "metadata_hash_basis": "file_bytes",
+      "output": "/workspace/scratch/halpas-W-death-reviewed-composite-v02/halpas-W-death-reviewed-composite-v02.png",
+      "output_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+      "output_canvas": [
+        3072,
+        4608
+      ],
+      "cell_size": [
+        1536,
+        1536
+      ],
+      "virtual_canvas_size": 2048,
+      "poses": [
+        {
+          "phase": 0,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "source_pose": 0,
+          "source_region": [
+            32,
+            83,
+            460,
+            451
+          ],
+          "rgba_sha256": "35c9279fc36900927df6dc97c48934064735d89aa28dbc63698fb29d1704db04",
+          "visible_pose_sha256": "fac9b5a22b29aaf8d5597e3dd2fd7d9f968b719c5fa491ee62be95c19c7a88da",
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely.",
+          "output_region": [
+            538,
+            542,
+            460,
+            451
+          ],
+          "translation": [
+            506,
+            459
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 92460
+        },
+        {
+          "phase": 1,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "source_pose": 1,
+          "source_region": [
+            520,
+            119,
+            469,
+            415
+          ],
+          "rgba_sha256": "ad63b812b3de1d3ec244ed7cc72e40bfb6696978a4839e3eafe941568867ae12",
+          "visible_pose_sha256": "471df9adcf37aaf0bde43697af3c197b91ec9e946728b1907f60186be29ec778",
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely.",
+          "output_region": [
+            2069,
+            560,
+            469,
+            415
+          ],
+          "translation": [
+            1549,
+            441
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 88932
+        },
+        {
+          "phase": 2,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "source_pose": 2,
+          "source_region": [
+            28,
+            649,
+            478,
+            338
+          ],
+          "rgba_sha256": "076de48dbe057763c6897eb882cce7b8e0945ee0a415c40e4b58ca20c6d87ed4",
+          "visible_pose_sha256": "25822f23f841268c9ddef18a526694fc24d329f03dc596baa9f1a635eff1c7c7",
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely.",
+          "output_region": [
+            529,
+            2135,
+            478,
+            338
+          ],
+          "translation": [
+            501,
+            1486
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 83149
+        },
+        {
+          "phase": 3,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+          "source_pose": 3,
+          "source_region": [
+            516,
+            736,
+            493,
+            252
+          ],
+          "rgba_sha256": "f402c80726e76ee271bf352fe9bce69f444a232462d3b0ab65f048e7647f3def",
+          "visible_pose_sha256": "af6bbd6ae701e4a88e97f9a59a876546419cff6d1a2c08b3ec693372ec782b12",
+          "newly_authored": false,
+          "review_basis": "Independent final48 source reviewer explicitly PASSes old W death0/1/2/3; preserve exactRGBA, actual west combat yaw and continuous collapse. Old duplicated corpses4/5 excluded completely.",
+          "output_region": [
+            2057,
+            2178,
+            493,
+            252
+          ],
+          "translation": [
+            1541,
+            1442
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 69952
+        },
+        {
+          "phase": 4,
+          "source_path": "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png",
+          "source_sha256": "4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf",
+          "source_pose": "new_single_corpse4",
+          "source_region": [
+            9,
+            391,
+            1233,
+            455
+          ],
+          "rgba_sha256": "4828885cc7c804696d85e6804021b97b4370c4616fb64876e1f525f268666def",
+          "visible_pose_sha256": "a33d50cb531e4f6255e7efd8b4e5c7cc1ac5bf4c9ad7b8f29d33518e5daad376",
+          "newly_authored": true,
+          "review_basis": "New single source pose4 privately SOURCEPASS: exactlyONE left head/neck, ONE connected body, two completearms/two legs and ONE RIGHT-hand sword. Continuous lie/settle from old3→new4→new5; faithful model/gear unchanged. Correct actualsinglecolumns strict1+complete PASS; no threshold changes.",
+          "output_region": [
+            151,
+            3612,
+            1233,
+            455
+          ],
+          "translation": [
+            142,
+            3221
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 304082
+        },
+        {
+          "phase": 5,
+          "source_path": "/workspace/scratch/halpas-W-death-corpse5-key-v02/halpas-W-death-corpse5-v02.png",
+          "source_sha256": "1f7cb3cb61b86f76dc875ab2f86599e6ea347e50b7d766e9622faea17c7a892a",
+          "source_pose": "new_single_corpse5",
+          "source_region": [
+            34,
+            497,
+            1211,
+            380
+          ],
+          "rgba_sha256": "54951274608f67353c3ad75a20adbc9a3560ce9e5681a808556fac34d19ad88c",
+          "visible_pose_sha256": "ceb4df14e0070367a99458c4e08b079321f64a33a51fc7e7d37c9a38c95fd66c",
+          "newly_authored": true,
+          "review_basis": "New single source pose5 privately SOURCEPASS: exactlyONE left head/neck, ONE connected body, two completearms/two legs and ONE RIGHT-hand sword. Continuous lie/settle from old3→new4→new5; faithful model/gear unchanged. Correct actualsinglecolumns strict1+complete PASS; no threshold changes.",
+          "output_region": [
+            1698,
+            3650,
+            1211,
+            380
+          ],
+          "translation": [
+            1664,
+            3153
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 233330
+        }
+      ],
+      "newly_authored_poses": 2,
+      "reused_poses": 4,
+      "preserved_region_rgba_exact": true,
+      "preserved_pose_alpha_gt16": true,
+      "resampled": false,
+      "mirrored": false,
+      "recolored": false,
+      "cleaned_pixels": 0,
+      "strict_importer": "PASS",
+      "geometry": {
+        "image_size": [
+          3072,
+          4608
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "W",
+            "region": [
+              538,
+              542,
+              460,
+              451
+            ],
+            "margin": [
+              794,
+              833,
+              1588,
+              1597
+            ],
+            "source_anchor": [
+              768,
+              989
+            ],
+            "rgba_sha256": "35c9279fc36900927df6dc97c48934064735d89aa28dbc63698fb29d1704db04"
+          },
+          {
+            "row": 1,
+            "direction": "W",
+            "region": [
+              2069,
+              560,
+              469,
+              415
+            ],
+            "margin": [
+              789,
+              869,
+              1579,
+              1633
+            ],
+            "source_anchor": [
+              2304,
+              971
+            ],
+            "rgba_sha256": "ad63b812b3de1d3ec244ed7cc72e40bfb6696978a4839e3eafe941568867ae12"
+          },
+          {
+            "row": 2,
+            "direction": "W",
+            "region": [
+              529,
+              2135,
+              478,
+              338
+            ],
+            "margin": [
+              785,
+              946,
+              1570,
+              1710
+            ],
+            "source_anchor": [
+              768,
+              2469
+            ],
+            "rgba_sha256": "076de48dbe057763c6897eb882cce7b8e0945ee0a415c40e4b58ca20c6d87ed4"
+          },
+          {
+            "row": 3,
+            "direction": "W",
+            "region": [
+              2057,
+              2178,
+              493,
+              252
+            ],
+            "margin": [
+              777,
+              1032,
+              1555,
+              1796
+            ],
+            "source_anchor": [
+              2304,
+              2426
+            ],
+            "rgba_sha256": "f402c80726e76ee271bf352fe9bce69f444a232462d3b0ab65f048e7647f3def"
+          },
+          {
+            "row": 4,
+            "direction": "W",
+            "region": [
+              151,
+              3612,
+              1233,
+              455
+            ],
+            "margin": [
+              407,
+              829,
+              815,
+              1593
+            ],
+            "source_anchor": [
+              768,
+              4063
+            ],
+            "rgba_sha256": "4828885cc7c804696d85e6804021b97b4370c4616fb64876e1f525f268666def"
+          },
+          {
+            "row": 5,
+            "direction": "W",
+            "region": [
+              1698,
+              3650,
+              1211,
+              380
+            ],
+            "margin": [
+              418,
+              904,
+              837,
+              1668
+            ],
+            "source_anchor": [
+              2304,
+              4026
+            ],
+            "rgba_sha256": "54951274608f67353c3ad75a20adbc9a3560ce9e5681a808556fac34d19ad88c"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 345.5,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "approval": false,
+      "visual_approval": "NOT_RUN",
+      "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+      "external_physical_scale_review": null,
+      "region_height_span": [
+        252,
+        455
+      ],
+      "possible_region_height_mismatch": true,
+      "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+    },
+    "assembly_proof_sha256": "0a8d7bb57a90d3b6c3707dda87ba25993bfcfeef00f671226bbb8173cd6670c1",
+    "single_key_authoring": [
+      {
+        "game_phase": 4,
+        "request": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "W",
+          "role": "death",
+          "source_batch": "batch03",
+          "version": "v02key4",
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "game_phase": 4,
+          "references": [
+            "/workspace/scratch/halpas-W-death-corpse-repair-v02/valid-old-W-death-phase3.png",
+            "/workspace/scratch/halpas-W-death-corpse-repair-v02/faithful-current-W-idle-phase0.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-W-death-corpse-repair-v02/valid-old-W-death-phase3.png": "b93839e5ab64396efd99b75b98436a4838426a0217439bd699e53f11f1abbd29",
+            "/workspace/scratch/halpas-W-death-corpse-repair-v02/faithful-current-W-idle-phase0.png": "72faa0459a67684b352ccddf1695f92efb9db4fd3a80bbb16e49a2f57ae97af3"
+          },
+          "transparent_background": true,
+          "corrective_reason": "Independent final r062 review confirms original W death settling4 and corpse5 contain duplicated helmet/head and two opposing swords. Preserve PASS original0/1/2/3; author only new single corpse4 from valid phase3 and faithful W idle identity, excluding bad4/5 references. Exactonehead/oneRIGHTsword/twoarms/twolegs and continuous west collapse required.",
+          "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "prompt": "EDIT IMAGE1 (valid death phase3) into ONE SINGLE next settling CORPSE phase4 for this exact west-facing Halpas boss. Image1 is PRIMARY: it is the immediately preceding collapse pose, correct camera, original anatomy, handedness, proportions and gear. Image2 is same-character WEST IDLE identity support ONLY; do not stand up or recreate idle. Produce exactly ONE complete figure, no atlas, grid, inset, duplicate, overlays or extra subject.\n\nContinuous next movement: from image1's low LEFT-facing braced knee/side fall, lower the SAME single torso/hips to fully grounded lying side/prone posture. His ONE horned gold/black helmet and ONE neck remain at image LEFT, face points LEFT and slightly down; original segmented torso extends horizontally to RIGHT, ONE pelvis and TWO leg chains extend to RIGHT with natural stagger/bend and original gold boots. Same elevated orthographic sideWEST game camera. Do not flip/mirror or swap body ends. A little downward shoulder/head sag, bracing LEFT elbow relaxing and settling hips make a real new death phase after image1, not duplicate or translated copy. Still solid intact body, no gore or dissolution. Cape lies/pools behind body at RIGHT and original purple crystal featherfans fold down closer to the SAME two back shoulder roots. Both wing fans remain authentic feather/crystal structures, not membranes or new wingpair. The body/head/shoulder/hip/boot physical dimensions remain the same as in the references.\n\nEXACT ANATOMICAL ACCOUNTING: ONE HEAD ONLY, at far LEFT, one closed black facemask, two original gold helmet horns on that SAME head, one neck connecting to one torso. ImageRIGHT endpoint is legs/boots/cape ONLY, with no face, helmet, mask, crown, neck or second torso. Exactly TWO arms with natural occlusion: nearLEFT shoulder→upperarm→elbow→forearm→EMPTY left palm relaxed on floor at near-left/center as inimage1; farRIGHT shoulder→upperarm→elbow→forearm→RIGHT hand holds the ONE original purple crystal/gold sword, blade projecting LEFT close to floor by head/front as inimage1. Preserve correct arm ownership and continuous chain, no other hands emerging from floor or cape. Exactly ONE sword and one goldguard, attached to that RIGHT palm, not mirrored opposite-end blade or ornamental second sword. Exactly TWO armored legs/boots attached at single RIGHT-side pelvis. Shoulder/hip gold armor is plate geometry, no face/horn/helmet shapes on shoulder or feet. ONE body with one head, two arms, two legs, two wing roots, one sword.\n\nIdentity: original excellent Halpas black plate armor with narrow gold rims, original sharp horned helmet, compact broad purple crystal blade and ornate gold crossguard, original two violet crystalline FEATHER fans with gold roots, burgundy tattered cape. Same material shapes, armor landmark design, anatomy and detailed RPG paint as refs. No redesign, extra skull motif, new equipment, increased wing count or shortened model. Minor settling changes to joints/feather tips/cloth are real articulated motion.\n\nDeliver PNG1024x1024 transparent alpha, ONE entire horizontal corpse centered; silhouette fits in central820x640 with at least100px puretransparent margin all around (also beyond sword tip, horns, feather tips, cape and boots). Entire single body and all gear uncropped, same source detail quality. Solid opaque armor/cloth/crystal; 1–2pixel antialias at edges only, alpha0background/holes. Purple light strictly INSIDE solid blade/feathers. No external glow, bloom, aura, particles, smoke, shadow, floor, scenery, text, number, border, guide marks, multiple pose or image2 standing character. A single excellent one-headed one-sword grounded west corpse phase4 continuous from primaryimage1.",
+          "requested_at": "2026-10-19T13:23:12.617468+00:00",
+          "imagegen_attempt_limit": 1,
+          "user_authorization": "Private production imagegen permitted; no mainchat images/binary. This is one missing corpse pose only, not full6 regeneration."
+        },
+        "request_sha256": "fe9b84238b8d2f7462e56b56cf82566216cf6e77b5e4f379032d110a939f4343",
+        "generation_receipt": {
+          "original_generated_file": "/workspace/generated_images/exec-b0b2b01d-8723-4513-9f1c-521732a9b6da.png",
+          "raw_png": "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png",
+          "raw_sha256": "4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf",
+          "raw_bytes": 846521,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "tool": "image_gen.imagegen",
+          "attempts": 1,
+          "chat_image_attachments": 0,
+          "private_preview_bytes": 85699
+        },
+        "source_review": {
+          "original_generated_file": "/workspace/generated_images/exec-b0b2b01d-8723-4513-9f1c-521732a9b6da.png",
+          "raw_png": "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png",
+          "raw_sha256": "4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf",
+          "raw_bytes": 846521,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "tool": "image_gen.imagegen",
+          "attempts": 1,
+          "chat_image_attachments": 0,
+          "private_preview_bytes": 85699,
+          "key": "transform:393",
+          "direction": "W",
+          "role": "death",
+          "version": "v02key4",
+          "game_phase": 4,
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "request_path": "/workspace/scratch/halpas-W-death-corpse4-key-v02/request.json",
+          "request_sha256": "fe9b84238b8d2f7462e56b56cf82566216cf6e77b5e4f379032d110a939f4343",
+          "source_visual_status": "PASS",
+          "integration_ready": false,
+          "status": "PARTIAL_SINGLE_CORPSE4_SOURCE_AND_GEOMETRY_PASS_FULL6_ASSEMBLY_PENDING",
+          "geometry_validation": "PASS1_COMPLETE_FRAME_BASE2048",
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0,
+          "visual_findings": [
+            "Exactly one original closed black/gold helmet/head at LEFT with its two horns and one neck; right endpoint contains only the single pelvis, two armored leg/boot chains and cape. No second face, head, neck or torso.",
+            "Exactly one purple/gold sword projects LEFT close to floor and is joined continuously to the far anatomicalRIGHT hand/forearm. Near anatomicalLEFT arm ends in one EMPTY bracing/resting palm; both shoulder→elbow→wrist chains remain connected. No extra hand, duplicate blade/guard, hand swap or severed limb.",
+            "Continuous next collapse from valid phase3: torso/head/hips lower and relax onto near-side/prone ground position; left forearm lowers, legs extend with natural stagger, cape pools while same two featherfans fold closer over shoulder roots. Original black/gold armor, horned helmet, compact crystalblade, purple featherfan design and burgundy cape retained.",
+            "Single-pose unchanged strict analyzer+complete-region guard PASS at canvas2048. Raw1254² unchanged, zero alpha>100 clipping on outeredge. Complete crop1233x455 exceeds legacy assembly cell margin limit by17px; retain all pixels and use larger container rather than crop/resample."
+          ],
+          "visual_limitations": [
+            "One sourcepose only. Need new settling5 and exactRGBA 4old+2new fullclip assembly, physicalcanvas/anchors and actualPlayer finalQC. No actor approval."
+          ]
+        },
+        "strict_single_columns_geometry": {
+          "image_size": [
+            1254,
+            1254
+          ],
+          "frames": [
+            {
+              "row": 0,
+              "direction": "W",
+              "region": [
+                9,
+                391,
+                1233,
+                455
+              ],
+              "margin": [
+                407,
+                829,
+                815,
+                1593
+              ],
+              "source_anchor": [
+                626,
+                842
+              ],
+              "rgba_sha256": "4828885cc7c804696d85e6804021b97b4370c4616fb64876e1f525f268666def"
+            }
+          ],
+          "distinct_pixel_frames": 1,
+          "neutral_height": 449.0,
+          "canvas_size": [
+            2048,
+            2048
+          ],
+          "foot": [
+            1024,
+            1280
+          ]
+        }
+      },
+      {
+        "game_phase": 5,
+        "request": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "W",
+          "role": "death",
+          "source_batch": "batch03",
+          "version": "v02key5",
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "game_phase": 5,
+          "references": [
+            "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png": "4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf"
+          },
+          "transparent_background": true,
+          "corrective_reason": "Original corpse4/5 both have duplicated head and sword. New source4 is privately PASS one head/one RIGHTblade/2arms/2legs; author ONLY next single subtle settled final5 from that correct4. No bad old4/5 reference, no full6 regeneration.",
+          "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+          "prompt": "Edit this EXACT ONE-HEADED WEST-FACING CORPSE into ONE SINGLE FINAL SETTLED corpse phase5, the immediately next animation pose after this phase4. Keep its same one body, one head, one sword, original gear, camera and anatomical orientation. Do not create a new dying animation, upright stance, new character or second subject. ONE pose only on transparent alpha.\n\nModel and direction: ONE closed black/gold helmet head at farLEFT facing LEFT/down, with only its original two gold horns and one neck. Same black/gold torso extends from head to ONE pelvis at imageRIGHT; exactly TWO leg chains and TWO original gold-tipped armored boots extend right. Two violet crystalline FEATHER fans remain rooted at original two gold shoulder/back joints and overlap naturally above/behind this one body. Long burgundy tattered cape pools toward RIGHT/back. Same high orthographic WEST side game camera and correct black/gold armor landmarks. No mirrored body, no redesign, membrane wings, extra wing roots or front/back swap.\n\nFINAL SETTLING motion is small but real: lower the one helmet's cheek/front edge and nearby LEFT shoulder a little closer to floor, relax EMPTY nearLEFT palm/fingers and bend/soften its elbow a little so supporting weight comes off that arm, let two original wingroots/fan tips droop and fold lower naturally toward body, rest cape folds more flat behind, and slightly relax rightmost knee/ankle separation. The SAME ONE original sword remains held in farRIGHT hand near the LEFT head-front ground; blade settles a little flatter, no sword disappears or moves to opposite end. Preserve rigid head/torso/hip/boot physical dimensions while making these local joint, feather and cloth changes. This is a stable fully down final corpse with no raised chest or support push-up, no resurrection and no duplicate still/global translation.\n\nEXACT CONTINUOUS ANATOMY: two shoulder→upperarm→elbow→forearm→wrist→hand chains only. AnatomicalRIGHT hand retains ONE purple crystal blade with ONE ornate goldguard, sword tip extending LEFT near floor and head-front; nearLEFT hand is EMPTY and resting beside torso. No third hand or cut-off forearm, second sword at boots, second black facemask on right shoulder/hip, gold-horned equipment pretending to be another head. The only head/helmet/face/neck is LEFT; all body on RIGHT is torso/hips/legs/boots/cape. Keep head only1, torso only1, pelvis only1, arms2, legs2, blade1, wingroots2. Original correct corpse reference already has this count; preserve it exactly.\n\nCOMPOSITION: single PNG1024x1024 transparent. Place the ENTIRE corpse including sword tip, horns, full feather tips, full cape and both boots within CENTRAL760px WIDTH by560px HEIGHT (around middle of canvas). At least120px purely transparent border LEFT/RIGHT and TOP/BOTTOM. Make the subject visibly smaller within the canvas than input to create larger framing margins, while preserving same anatomical proportions; no part may touch crop boundary. One complete single cutout, no layout/atlas, no standup inset, no other image. Solid opaque black/gold armor, red cloth and violet crystal feather/blade interiors, detailed original RPG quality; alpha0 background/holes with only1–2px antialias edges. No exterior glow, aura, bloom, smoke, shadow, ground, floor, scenery, text, border, symbols or guide marks. Success: one same LEFT-headed WEST corpse, a distinct subtle settled final5, complete two arms/legs, one RIGHT-hand sword, no duplicate heads or equipment.",
+          "requested_at": "2026-10-19T13:25:48.392120+00:00",
+          "imagegen_attempt_limit": 1,
+          "user_authorization": "Private production imagegen allowed, no mainchat images/binary. One single new final corpse5 pose only."
+        },
+        "request_sha256": "958b4b41a844469c7a22dc3c435952f7ccc22a85dfaf277807573e05447b473b",
+        "generation_receipt": {
+          "original_generated_file": "/workspace/generated_images/exec-48153773-8555-42e9-8036-8b45e48fea82.png",
+          "raw_png": "/workspace/scratch/halpas-W-death-corpse5-key-v02/halpas-W-death-corpse5-v02.png",
+          "raw_sha256": "1f7cb3cb61b86f76dc875ab2f86599e6ea347e50b7d766e9622faea17c7a892a",
+          "raw_bytes": 661318,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "tool": "image_gen.imagegen",
+          "attempts": 1,
+          "chat_image_attachments": 0,
+          "private_preview_bytes": 71705
+        },
+        "source_review": {
+          "original_generated_file": "/workspace/generated_images/exec-48153773-8555-42e9-8036-8b45e48fea82.png",
+          "raw_png": "/workspace/scratch/halpas-W-death-corpse5-key-v02/halpas-W-death-corpse5-v02.png",
+          "raw_sha256": "1f7cb3cb61b86f76dc875ab2f86599e6ea347e50b7d766e9622faea17c7a892a",
+          "raw_bytes": 661318,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "tool": "image_gen.imagegen",
+          "attempts": 1,
+          "chat_image_attachments": 0,
+          "private_preview_bytes": 71705,
+          "key": "transform:393",
+          "direction": "W",
+          "role": "death",
+          "version": "v02key5",
+          "game_phase": 5,
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "request_path": "/workspace/scratch/halpas-W-death-corpse5-key-v02/request.json",
+          "request_sha256": "958b4b41a844469c7a22dc3c435952f7ccc22a85dfaf277807573e05447b473b",
+          "source_visual_status": "PASS",
+          "integration_ready": false,
+          "status": "PARTIAL_SINGLE_CORPSE5_SOURCE_AND_GEOMETRY_PASS_FULL6_ASSEMBLY_PENDING",
+          "geometry_validation": "PASS1_COMPLETE_FRAME_SINGLE_COLUMNS_BASE2048",
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0,
+          "visual_findings": [
+            "Final corpse retains exactly ONE original helmet/head/neck at LEFT, one black/gold torso and RIGHT-side pelvis, TWO original armored leg/boot chains and original burgundy cape to RIGHT/back. No additional face/helmet/horns at the right endpoint.",
+            "Exactly ONE original purple/gold blade lies to LEFT/front, continuously joined through farRIGHT hand/wrist/forearm/elbow to same shoulder. NearLEFT arm ends in one empty resting palm; natural wing/cape occlusion retained. No extra arm, detached hand, second sword or duplicated body.",
+            "Meaningful small final settling from new4: single helmet/neck and near shoulder sit lower/flatter, nearLEFT palm lies more open/flat with bent relaxed elbow, head-side wing fan tips drop and long far fan/cape lie more horizontally, boot/knee stagger relaxes. Whole body stays fully down and stable with no support push-up or turn, while preserving rigid model proportions.",
+            "Source1254² PNG preserved unchanged, zero strong outer clipping. Correct single-column one-direction unchanged analyzer and complete-region guard PASS one full1211x380 sourcepose atcanvas2048. Initial accidental phase_grid2 onepose diagnostic was wrong layout; preserved that error and switched to actual columns layout without changing pixels/thresholds."
+          ],
+          "visual_limitations": [
+            "One sourcepose only. Need exactRGBA4old+2new fullclip assembly and physicalcanvas/anchor/actualPlayer finalQC. No actor approval."
+          ]
+        },
+        "strict_single_columns_geometry": {
+          "image_size": [
+            1254,
+            1254
+          ],
+          "frames": [
+            {
+              "row": 0,
+              "direction": "W",
+              "region": [
+                34,
+                497,
+                1211,
+                380
+              ],
+              "margin": [
+                418,
+                904,
+                837,
+                1668
+              ],
+              "source_anchor": [
+                640,
+                873
+              ],
+              "rgba_sha256": "54951274608f67353c3ad75a20adbc9a3560ce9e5681a808556fac34d19ad88c"
+            }
+          ],
+          "distinct_pixel_frames": 1,
+          "neutral_height": 374.0,
+          "canvas_size": [
+            2048,
+            2048
+          ],
+          "foot": [
+            1024,
+            1280
+          ]
+        }
+      }
+    ],
+    "reference_exact_crop_proof": [
+      {
+        "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v01.png",
+        "source_sha256": "8252b004d23ca07c591170b96a567b4985a10aef89eb9d9e36c432bed7242d18",
+        "source_pose": 3,
+        "region": [
+          516,
+          736,
+          493,
+          252
+        ],
+        "rgba_sha256": "f402c80726e76ee271bf352fe9bce69f444a232462d3b0ab65f048e7647f3def",
+        "reference": "/workspace/scratch/halpas-W-death-corpse-repair-v02/valid-old-W-death-phase3.png",
+        "reference_sha256": "b93839e5ab64396efd99b75b98436a4838426a0217439bd699e53f11f1abbd29",
+        "exact_rgba_crop": true,
+        "review_basis": "Independent final48 reviewer explicitly PASSes original death phases0-3 and current corrected W idle; bad corpse4/5 excluded."
+      },
+      {
+        "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+        "source_sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651",
+        "source_pose": 0,
+        "region": [
+          61,
+          45,
+          430,
+          414
+        ],
+        "rgba_sha256": "ca145065264291b76f8cdf8b9feb71189e006936015f19ed305c0374e1f603c1",
+        "reference": "/workspace/scratch/halpas-W-death-corpse-repair-v02/faithful-current-W-idle-phase0.png",
+        "reference_sha256": "72faa0459a67684b352ccddf1695f92efb9db4fd3a80bbb16e49a2f57ae97af3",
+        "exact_rgba_crop": true,
+        "review_basis": "Independent final48 reviewer explicitly PASSes original death phases0-3 and current corrected W idle; bad corpse4/5 excluded."
+      }
+    ]
+  },
+  "approval": false,
+  "private_source_review": {
+    "visual_findings": [
+      "Original source phases0/1/2/3 are reused exactly as independently passed valid W combat-yaw collapse; no full six-frame reauthor and no pixel changes in those four poses. Old duplicated head/sword phases4/5 are entirely excluded.",
+      "New corpse4 and finalsettle5 each have exactlyONE original closed black/gold helmet/head atLEFT, ONE connectedtorso/pelvis, exactlyTWOarm chains and TWOleg/bootchains. One original crystalblade/goldguard stays continuously at anatomicalRIGHT hand nearLEFT/front; emptyLEFT palm remains separate and naturalocclusion fromcape/wings. No secondfacemask/helmet/neck atRIGHT or opposing secondblade.",
+      "New4 lowers old3 kneeling/braced sidebody to fullydown lyingpose; new5 lowers head/shoulder and relaxed emptyLEFT palm, folds fan tips/roots and cape flatter, relaxes bootstagger to finalstablecorpse. Same faithfulblack/gold armor, hornedhelmet, two rooted crystalfeatherfans and burgundyLEFTcape retained.",
+      "Generalassembler explicitly1536cell preserves allselectedRGBA and allalpha>16 pixels exactly once, maintains original32pxminimum packingmargin and all sourceownership/bridge/clippingguards. New4complete1233pxcrop is retained uncropped/unresampled. Unchangedstrictanalyzer+completecoverage PASS6 distinctposes atnominal2048.",
+      "Separate physicalcanvas/anchor proposal keeps old0-3 original1024/anchors byintegertranslations and proposes2048 fornew4/5 using rigidmodel/currentWidle1152 reference, explicit pelvis/actualemptyLEFTpalmfloor landmarks. This remains candidate metadata requiring actualPlayer/independent scale/root/fall QC; no corpse silhouettebbox normalization."
+    ],
+    "visual_limitations": [
+      "Actual Player/native staging, modelscale/head/hiporigin/groundedfall/idletransition and temporalnonloopingcorpse validation remain for root; perpose2048 fornewkeys is provisional runtimeproposal, not independentlyapproved finalscale.",
+      "No actorcompletion/defaultcatalogswitch or approvedcount increase."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+    "raw_bytes": 2781342,
+    "request_sha256": "2c069e7a6c8b13f2668de13c8d1961c346d0a15021f893969d1fff55e4328252",
+    "review_sha256": "b42bef9f9cadea2e4effa59eed63bbdeddc16d223a9115db46128e28d11cecc5"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf.png",
+      "sha256": "4421fe815bc9cfc65e5db8da0475a457789262f0be721025b140cd18a9949caf",
+      "bytes": 846521,
+      "original_reference": "/workspace/scratch/halpas-W-death-corpse4-key-v02/halpas-W-death-corpse4-v02.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-1f7cb3cb61b86f76dc875ab2f86599e6ea347e50b7d766e9622faea17c7a892a.png",
+      "sha256": "1f7cb3cb61b86f76dc875ab2f86599e6ea347e50b7d766e9622faea17c7a892a",
+      "bytes": 661318,
+      "original_reference": "/workspace/scratch/halpas-W-death-corpse5-key-v02/halpas-W-death-corpse5-v02.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png",
+  "output_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+  "output_bytes": 2781342,
+  "original_generated_file": "/workspace/scratch/halpas-W-death-reviewed-composite-v02/halpas-W-death-reviewed-composite-v02.png"
+}

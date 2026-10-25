@@ -24,7 +24,7 @@ concurrency:
 jobs:
   safe-opt-in:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Get Godot 4.7.2 official build

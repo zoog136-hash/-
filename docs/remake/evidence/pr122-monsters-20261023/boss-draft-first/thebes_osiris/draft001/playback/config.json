@@ -1,0 +1,59 @@
+{
+  "cases": [
+    {
+      "key": "monster:테베 아누비스",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/draft001/NativeMotionProfile.tres",
+      "slug": "thebes_anubis",
+      "directions": [
+        "E",
+        "S",
+        "SW",
+        "W"
+      ],
+      "roles": [
+        "idle"
+      ],
+      "move_speed": 62.0,
+      "attack_seconds": 1.27,
+      "attack_range": 58.0,
+      "run_seconds": 1.8,
+      "idle_seconds": 1.4
+    },
+    {
+      "key": "monster:테베 호루스",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/NativeMotionProfile.tres",
+      "slug": "thebes_horus",
+      "directions": [
+        "W"
+      ],
+      "roles": [
+        "idle"
+      ],
+      "move_speed": 64.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.8,
+      "idle_seconds": 1.4
+    },
+    {
+      "key": "monster:테베 오시리스",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/draft001/NativeMotionProfile.tres",
+      "slug": "thebes_osiris",
+      "directions": [
+        "E",
+        "S",
+        "W"
+      ],
+      "roles": [
+        "idle"
+      ],
+      "move_speed": 60.0,
+      "attack_seconds": 1.27,
+      "attack_range": 58.0,
+      "run_seconds": 1.8,
+      "idle_seconds": 1.4
+    }
+  ],
+  "output": "/workspace/runtime/boss-draft-first-min-batch001",
+  "capture": true
+}

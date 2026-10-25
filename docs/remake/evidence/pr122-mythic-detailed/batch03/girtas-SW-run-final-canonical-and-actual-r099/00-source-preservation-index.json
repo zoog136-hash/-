@@ -1,0 +1,446 @@
+{
+  "status": "PRESERVED_FINISHED_SW_CANONICAL_AND_R099_SCOPED_ACTUAL_PROOF_NOT_ACTOR_APPROVAL",
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "run",
+  "actor_approval_added": 0,
+  "source_pose_added": 0,
+  "allowlist_sha256": "4c36c8b7585315fe994c8fd7ef31a6fdcac430959e78cd70759702926d8949a1",
+  "allowlist_original": "/workspace/scratch/pr122-SW-run-final-canonical-and-actual-r099-explicit-preservation-allowlist.json",
+  "scope": "No approval or count change. r099 scoped review is 47/48 tracks; NE run and default-production approval remain separate. DRAFT, pending, superseded trial and withdrawn HOLD text remains historical and is not current approval or HOLD inventory.",
+  "historical_only": [
+    "source-region-review.json (invalid textualschema)",
+    "source-region-review.v02.json (insufficienttoptransparentpadding)",
+    "v01trialground/C/root",
+    "pending-physical request/result snapshots"
+  ],
+  "authoritative_SW_inputs": {
+    "authoritative_source_region_review": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/source-region-review.v03.json",
+    "authoritative_runtime_layout": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/reviewed_runtime_layout.proposal.json",
+    "authoritative_geometry": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-geometry.json",
+    "authoritative_wrapper_request": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/integration-request.json"
+  },
+  "ledger_path_resolution": "Historical certificates and frozen ledger index retain original scratch paths verbatim. Resolve them through this index files[].original -> files[].preserved mapping; never substitute the mutable working ledger.",
+  "files": [
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/assemble-source-six.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/01-assemble-source-six.py",
+      "sha256": "a18fb25b8086bca63a5fed10f5858c00199df192d9c20bc65743ecb7164775ea",
+      "bytes": 1674,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/candidate-source-pins.pending.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/02-candidate-source-pins.pending.json",
+      "sha256": "9e1c39e7564dce0c4076a266b628abed3ff71714a18acd2c0252c5120f3c5fb2",
+      "bytes": 3719,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/canonical-prepare-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/03-canonical-prepare-proof.json",
+      "sha256": "8f61503a58793359e83779c2cf5a836389d4b3fe77607515b5705bcf8f3501df",
+      "bytes": 652,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/common-groundprojection-hypothesis.v01.DRAFT.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/04-common-groundprojection-hypothesis.v01.DRAFT.json",
+      "sha256": "e8e2b0daceca4ae30ebe9b8c5f2b364481f3537fee4b1cc279c278aef118cc2e",
+      "bytes": 3010,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/common-groundprojection-hypothesis.v02.DRAFT.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/05-common-groundprojection-hypothesis.v02.DRAFT.json",
+      "sha256": "cb0abbf5b49824e025d891e823eeb3de3fd66f80d6fdeeddb314783eec67f641",
+      "bytes": 3909,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/cross288-uniqueness-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/06-cross288-uniqueness-proof.json",
+      "sha256": "aa148c5356d80048ee78f888d0004bf7a2067c241ae7c41bfdea9017c3d60883",
+      "bytes": 1232,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/derive-physical-trial-v01.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/07-derive-physical-trial-v01.py",
+      "sha256": "6018cce6ff8c88a779cba818b639a319af5bc4e216aa36d3b7cad0fd616091f4",
+      "bytes": 796,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/final-cross288-uniqueness-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/08-final-cross288-uniqueness-proof.json",
+      "sha256": "99874a1d85023be4116a37e28e5f8a2b78d14ccc8056942fbf6ad409778d0afd",
+      "bytes": 824,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/finalize-canonical-package.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/09-finalize-canonical-package.py",
+      "sha256": "4e70de73cb2786d51eb520f53ed32a1bb34c17789083d76f93ee6671087b9e42",
+      "bytes": 7044,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/finalize-correct-schema.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/10-finalize-correct-schema.py",
+      "sha256": "497f6c56fd059e10d1bc651b1c570bc8afd506aabf51bdff24387adab8126edf",
+      "bytes": 719,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/finalize-preserved-regions.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/11-finalize-preserved-regions.py",
+      "sha256": "f82d0e4201c3d6400df201ce59abc5221298ec0b7d718df0ec454795e42567e0",
+      "bytes": 1740,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/finalize-union-regions.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/12-finalize-union-regions.py",
+      "sha256": "cc79b6731048941e45825dcb2497792a2662f2f6d9459e83800e6f2593559995",
+      "bytes": 1220,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/fixed-guide-six-physical-projection-reference.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/13-fixed-guide-six-physical-projection-reference.json",
+      "sha256": "e260610f1ff08e1218a41ce998828100731861e1048b86234f7c0ec6e34b61c4",
+      "bytes": 11421,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/geometry-base2048-six.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/14-geometry-base2048-six.json",
+      "sha256": "f93ccee3f429546650f6454bc2b4e9b4823bdea99644f8dcb95f16cbe2bef5a9",
+      "bytes": 2366,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/geometry-source-reviewed-six.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/15-geometry-source-reviewed-six.json",
+      "sha256": "daa6b7ab5fd9be4667d9ecc7d50bb01e3ca0c666ac6f8264ef016939a242d99b",
+      "bytes": 2366,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/girtas-SW-run-v03six.assembly-error.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/16-girtas-SW-run-v03six.assembly-error.json",
+      "sha256": "6fbf7ec5d904aa33f9fc193168771c418654a34eb13780391c9a33c78890a7f1",
+      "bytes": 271,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/girtas-SW-run-v03six.assembly.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/17-girtas-SW-run-v03six.assembly.json",
+      "sha256": "cc05faaa821d19a3d8f2c507cea9483dd7ad8f8cae38f55b24b13e270b4389b4",
+      "bytes": 21737,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/integration-request.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/18-integration-request.json",
+      "sha256": "0fc1b67fbd05c06cb78d00517e0ef8ca98c7c46c2dd2fcad6c36fa3a7b5d47b8",
+      "bytes": 54563,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/integration-request.pending-physical.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/19-integration-request.pending-physical.json",
+      "sha256": "ec25aecbec0f58066550e27628fa3b4989cb641cb56e7af360125be01d02ea34",
+      "bytes": 52136,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/make-physical-trial-v01.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/20-make-physical-trial-v01.py",
+      "sha256": "635c7c8b113958c168af59664ef6a404cfd07e4d014d4eec8a6dddbbbe098f8c",
+      "bytes": 4427,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/make-physical-trial-v02.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/21-make-physical-trial-v02.py",
+      "sha256": "83c9c661de312b4e2b3ba33b3f5ed0cd202310aa3e3c57b3d18225414d0bbecb",
+      "bytes": 5106,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/native-boot-support-grid-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/22-native-boot-support-grid-proof.json",
+      "sha256": "0733593ee07ccb5ef436e8e9d5f8879997dadd7dec3159ac38695cce60637ba5",
+      "bytes": 3355,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/native-rigid-marker-grid-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/23-native-rigid-marker-grid-proof.json",
+      "sha256": "3ce271b4b764474db5b575693009b9fd8b90951225c43c4c88e6792e07f4702e",
+      "bytes": 3339,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/physical-C2304-initial-trial.DRAFT.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/24-physical-C2304-initial-trial.DRAFT.json",
+      "sha256": "ee5c600390c67bcf36efc0b960804a0187acb586ba86dac7aeb10f3e77012a05",
+      "bytes": 675,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/physical-boot-contact-clearance.trial-v02.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/25-physical-boot-contact-clearance.trial-v02.json",
+      "sha256": "dd4228fe379654a02a5d145b922e5202d942e3962b002b44f0d5c8be2aea94a6",
+      "bytes": 8001,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/physical-trial-v01-seven-private.proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/26-physical-trial-v01-seven-private.proof.json",
+      "sha256": "5d5928b1d9783e794d3be0f695227bf60136cf91c1add28a1e99f80c013b4e72",
+      "bytes": 3823,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/physical-trial-v02-seven-private.proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/27-physical-trial-v02-seven-private.proof.json",
+      "sha256": "e8f8ddb76e943f5698292468f00ea0e4a63749902a5610fd612c858a4e9df771",
+      "bytes": 3897,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/pose-map.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/28-pose-map.json",
+      "sha256": "0997f3c2434fef670389519a01e68057d10907abfb0ff1d983398975d9475406",
+      "bytes": 5785,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/render-native-boot-support-panel.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/29-render-native-boot-support-panel.py",
+      "sha256": "bb30407c8c8623cc0a630cf7d78be0b02b33649f31b74f64184f92f39c0a194e",
+      "bytes": 2135,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/render-native-rigid-marker-panel.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/30-render-native-rigid-marker-panel.py",
+      "sha256": "4d695048457878520d5f8207ae22197af78e1adeee079b2c265e91c2d6ab924b",
+      "bytes": 2124,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/render-physical-trial-v01.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/31-render-physical-trial-v01.py",
+      "sha256": "d1d0a8539dcf17dc2db57d31ea13cf7d9ec9eab29a947cb7589d6e16194599c2",
+      "bytes": 3136,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/render-physical-trial-v02.py",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/32-render-physical-trial-v02.py",
+      "sha256": "f7ffc16d3cd4b8f4af6ba62b34f161a9198ba6424f8efd873f2f4dceb5e65dfa",
+      "bytes": 3320,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/result.before-physical-candidate-pass.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/33-result.before-physical-candidate-pass.json",
+      "sha256": "12cacc510a1f750bcff525b94760a19a44d73b9485c1510e2c97174f5239e21b",
+      "bytes": 4023,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/result.before-source-gear-sentence-addendum.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/34-result.before-source-gear-sentence-addendum.json",
+      "sha256": "2b9cd1647532a52ce6f9893aebc1eafc55b3eeb391807c0ed2853d82b8ad6919",
+      "bytes": 3798,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/result.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/35-result.json",
+      "sha256": "c1f36610cc4cafde9dbf58525ee5f4e284d15292514db02b046aed3bb4927f15",
+      "bytes": 7477,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/reviewed_runtime_layout.proposal.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/36-reviewed_runtime_layout.proposal.json",
+      "sha256": "bc64d60d1ff582c1d77c46641a00e5875e73efeb00a4258709f90c7e0bfea4df",
+      "bytes": 1438,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/reviewed_runtime_layout.trial-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/37-reviewed_runtime_layout.trial-v01.json",
+      "sha256": "f80ac6939b157d9ec85a4ffca6830529a6ffdca46aec4883cbe2d379c2766669",
+      "bytes": 874,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/reviewed_runtime_layout.trial-v02.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/38-reviewed_runtime_layout.trial-v02.json",
+      "sha256": "9b15f80e40af73ff358852bff7a5a7f270ee226740bdb47b312ba56b9863e988",
+      "bytes": 1006,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-fixture.expected.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/39-runtime-fixture.expected.json",
+      "sha256": "4164fd8d9e1e4ef5a08636ac0169dc8b57ca551bbcc345c3e5f745862acfbcd8",
+      "bytes": 6054,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-geometry.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/40-runtime-geometry.json",
+      "sha256": "9fe47828c3f3fe2c2e93e8113b5da0b8b1f42a8a27931c3862782d8f0f46dbf5",
+      "bytes": 3048,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-geometry.trial-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/41-runtime-geometry.trial-v01.json",
+      "sha256": "832fac6f4018ce4ef281cb910cc9ce7b038722b8ab999209e9ffb6bc80f6fe76",
+      "bytes": 3048,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-geometry.trial-v02.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/42-runtime-geometry.trial-v02.json",
+      "sha256": "9fe47828c3f3fe2c2e93e8113b5da0b8b1f42a8a27931c3862782d8f0f46dbf5",
+      "bytes": 3048,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-layout-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/43-runtime-layout-proof.json",
+      "sha256": "9449e22c9417b05b047d2c2db269e2cade2d9bd584d6979eeb73a0a6ecd064fc",
+      "bytes": 2453,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-layout.trial-v01-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/44-runtime-layout.trial-v01-proof.json",
+      "sha256": "642aff29719a904e5241f464c8c6e5d1be0e0889ec1a110715d6aecd2b86f1c2",
+      "bytes": 1889,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-layout.trial-v02-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/45-runtime-layout.trial-v02-proof.json",
+      "sha256": "1a0c4476f2caffa17f4960797cc974558ed26587f791a4860e6de82f0559da2a",
+      "bytes": 2021,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/source-region-review.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/46-source-region-review.json",
+      "sha256": "044eec9e23d8ada6fde5a37657574528af96c4a04bbf9cea10b6534a074afcd5",
+      "bytes": 1137,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/source-region-review.v02.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/47-source-region-review.v02.json",
+      "sha256": "dfa314243220d9258c64368b78ef08115b32fa24bc411f58f25a4a3c6e2520e6",
+      "bytes": 1104,
+      "role": "historical_draft_or_superseded_proof_only"
+    },
+    {
+      "original": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/source-region-review.v03.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/48-source-region-review.v03.json",
+      "sha256": "87227eb8533aafa1a86ecb133b07b0e6173268ffc51f3e5e23a17a583516f655",
+      "bytes": 1302,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-native-semantic-boot-ROIs-and-surface-search-observations-v02.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/49-SW-native-semantic-boot-ROIs-and-surface-search-observations-v02.json",
+      "sha256": "4e61f1860aea77cee36c31f47c3df5f31e6a29c36889cfbda7def51e673dd75e",
+      "bytes": 8658,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-final-source-stale-gear-sentence-correction-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/50-SW-run-final-source-stale-gear-sentence-correction-v01.json",
+      "sha256": "46b38b1bf824fc3e370af942034a9a963c63f8739c0ebff1dd933a8387e405e2",
+      "bytes": 848,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-selected-six-final-independent-source-QC-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/51-SW-run-selected-six-final-independent-source-QC-v01.json",
+      "sha256": "d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4",
+      "bytes": 5407,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-v02-authored-projection-independent-numeric-proof.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/52-SW-run-v02-authored-projection-independent-numeric-proof.json",
+      "sha256": "d30a6bf6076c33cda1d8640871057686da71c0237f4ee8f5d21084ccf17f83d4",
+      "bytes": 9420,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/53-SW-run-whole6-final-source-physical-candidate-independent-QC-v01.json",
+      "sha256": "a33564495e7e16299570120510a59dfab7da96e7cb19593941b19cb6b33b16b8",
+      "bytes": 8464,
+      "role": "finished_SW_canonical_source_or_supporting_proof_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/girtas-r099-SWrun-actual-independent-quality.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/54-girtas-r099-SWrun-actual-independent-quality.json",
+      "sha256": "2dbaaf77b6613503648ba669fd253d111aefcc58edbf7e84eedca61657d4d849",
+      "bytes": 6662,
+      "role": "finished_actual_runtime_scoped_SW_run_review_not_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/r098-reviewed46-to-r099-exact-transfer.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/55-r098-reviewed46-to-r099-exact-transfer.json",
+      "sha256": "a5924e86152b5c403983db1a231858f3f85500556783126b6d6d9e46709bbfc3",
+      "bytes": 83181,
+      "role": "finished_exact_transfer_reviewed46_to_reviewed47_not_final48_or_actor_approval"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view02.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/56-private-image-ledger-through-view02.json",
+      "sha256": "b020468431537b0622d2786252db679ebe12c1843c717a1d0325acd0d6c3915b",
+      "bytes": 2197,
+      "role": "immutable_historical_view_ledger_for_finished_actual_scoped_certificate"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view03.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/57-private-image-ledger-through-view03.json",
+      "sha256": "603023e9e2e990c9430eea14b572e462f576a17d11b7dbeb99753cc01ebfcbd8",
+      "bytes": 3164,
+      "role": "immutable_historical_view_ledger_for_finished_actual_scoped_certificate"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-through-view06.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/58-private-image-ledger-through-view06.json",
+      "sha256": "8e9e4e26e62bc0f4c8718906ace0bfa09e5f566ec85a0167c8f6470f1c09bce5",
+      "bytes": 6110,
+      "role": "immutable_historical_view_ledger_for_finished_actual_scoped_certificate"
+    },
+    {
+      "original": "/workspace/scratch/girtas-final-actual-quality-v04/private-image-ledger-history-immutable-index.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/59-private-image-ledger-history-immutable-index.json",
+      "sha256": "1959c9763f8a776b4bc8fc4f90a48671f53a2a24611c8ffe1b5e6dee50ae2bc4",
+      "bytes": 4615,
+      "role": "frozen_historical_ledger_resolution_index_not_live_ledger"
+    },
+    {
+      "original": "/workspace/scratch/pr122-SWrun-v03-frozen-finished-canonical-text-proof-allowlist.json",
+      "preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-run-final-canonical-and-actual-r099/60-pr122-SWrun-v03-frozen-finished-canonical-text-proof-allowlist.json",
+      "sha256": "7d645096b55ba067dea7815899524c5f6e3b21ad7926977ecfbf89a00ab1916e",
+      "bytes": 13505,
+      "role": "original_frozen_53_file_SW_canonical_allowlist"
+    }
+  ]
+}

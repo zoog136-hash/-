@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/resume210-v01/contact_pages.py", line 70, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/resume210-v01/contact_pages.py", line 56, in main
+    native.sort(key=lambda p:int(p.stem.rsplit('-',1)[-1]))
+  File "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/resume210-v01/contact_pages.py", line 56, in <lambda>
+    native.sort(key=lambda p:int(p.stem.rsplit('-',1)[-1]))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'strike'

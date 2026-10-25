@@ -1,0 +1,129 @@
+{
+  "schema": "PR122-independent-common-recovery-surface-QC-v1",
+  "status": "HOLD_COMMON_COMPOSITOR_ERASES_OPAQUE_THIGH_AND_FADES_CALF",
+  "sources": [
+    {
+      "phase": 3,
+      "new_source": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact3-actual-rig-v04/thunder_female-NW-run-contact3-actual-rig-v04.png",
+        "sha256": "6e9f3c49d6be73be2c041498e5f41bf4bfecf79e9932e47f0fcfff4f027a6a91",
+        "bytes": 783785
+      },
+      "prior_source": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact3-actual-rig-v03/thunder_female-NW-run-contact3-actual-rig-v03.png",
+        "sha256": "94d52fba46f531b603a3ee42d3c51f0cbd41df935707107aba3f5bd23452124e"
+      },
+      "unchanged_pose_opaque_surface_loss_pixels": 775,
+      "largest_actual_alpha_loss_clusters": [
+        {
+          "pixels": 773,
+          "bbox": [
+            725,
+            853,
+            769,
+            918
+          ]
+        }
+      ],
+      "actual_material_binding": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact3-actual-rig-v04/actual-recovery-ankle-genuine-material-surface-binding.json",
+        "sha256": "0ecc5a20b2e7ae4e15804906bdd44bb52410cbb8bab5a6e1f61af2628f75a91d"
+      }
+    },
+    {
+      "phase": 4,
+      "new_source": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load4-actual-rig-v02/thunder_female-NW-run-load4-actual-rig-v02.png",
+        "sha256": "c882d6a039ce909497088fcc7da36bd1591a08eed1637d0044a3fe2f5d78086d",
+        "bytes": 805044
+      },
+      "prior_source": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load4-actual-rig-v01/thunder_female-NW-run-load4-actual-rig-v01.png",
+        "sha256": "294450a9463e5c5aba89fff9ceb0a8bc900b45c760e371579e1f4d7050f7f748"
+      },
+      "unchanged_pose_opaque_surface_loss_pixels": 3719,
+      "largest_actual_alpha_loss_clusters": [
+        {
+          "pixels": 2626,
+          "bbox": [
+            672,
+            902,
+            772,
+            986
+          ]
+        },
+        {
+          "pixels": 1065,
+          "bbox": [
+            625,
+            1008,
+            670,
+            1052
+          ]
+        }
+      ],
+      "actual_material_binding": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load4-actual-rig-v02/actual-recovery-ankle-genuine-material-surface-binding.json",
+        "sha256": "fc65beef926452006a97e2f5a5d49f56572eb9c599c23eb6c7d98fa52b736adb"
+      }
+    },
+    {
+      "phase": 5,
+      "new_source": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight5-actual-rig-v02/thunder_female-NW-run-flight5-actual-rig-v02.png",
+        "sha256": "05e50ab27c701beb39f8fb4f6e9ada218617564ac241bcef3c7ecad991f251ca",
+        "bytes": 777019
+      },
+      "prior_source": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight5-actual-rig-v01/thunder_female-NW-run-flight5-actual-rig-v01.png",
+        "sha256": "8d0350632a2f266a347541268adb94d469ef267b8f17d206ae26810bbeee0166"
+      },
+      "unchanged_pose_opaque_surface_loss_pixels": 4273,
+      "largest_actual_alpha_loss_clusters": [
+        {
+          "pixels": 2616,
+          "bbox": [
+            641,
+            797,
+            761,
+            852
+          ]
+        },
+        {
+          "pixels": 1594,
+          "bbox": [
+            578,
+            864,
+            622,
+            949
+          ]
+        },
+        {
+          "pixels": 10,
+          "bbox": [
+            626,
+            964,
+            630,
+            969
+          ]
+        }
+      ],
+      "actual_material_binding": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight5-actual-rig-v02/actual-recovery-ankle-genuine-material-surface-binding.json",
+        "sha256": "949b6797dfac7479d89e95f111aa202d5064b657137bd813660125538b4f2b27"
+      }
+    }
+  ],
+  "actual_findings": [
+    "Missing ankle gaps receive real material, but shared compositor introduces broad visible translucent cuts/fades into the unchanged original thigh and calf.",
+    "Unchanged poses and upper-thigh source were expressly preserved; opaque-to-translucent loss across broad interior patches is an actual source defect, not normal silhouette movement or singlepixel antialiasing.",
+    "Complete original folded shoe geometry and RIGHTstance controls remain protected; those passed pieces need no remake."
+  ],
+  "minimum_finite_correction": "Keep original good upperthigh, shaft silhouette and existing ornament; insert real short blackleather/tarsal joint surface into only the missing strip, with material-color/UV blending over an opaque base rather than feathering replacement alpha over cleared transparency. Remove old material only in exact unwanted silhouette, not broad branch masks.",
+  "source_static_approved": false,
+  "full_pair_physical_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approvals_added": 0,
+  "private_image_ledger_bytes": 491249,
+  "source_pixels_changed_by_reviewer": false
+}

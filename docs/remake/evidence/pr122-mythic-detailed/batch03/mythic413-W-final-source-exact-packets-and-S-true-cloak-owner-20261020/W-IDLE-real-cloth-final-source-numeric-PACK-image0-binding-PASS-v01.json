@@ -1,0 +1,229 @@
+{
+  "schema": "TWILIGHT_EXACT_SOURCE_NUMERIC_PACK_IMAGE0_BINDING_PASS_V1",
+  "reviewer": "mythic413_w_actual_quality_fresh_v01",
+  "review_utc": "2026-10-20T16:29:50.475024+00:00",
+  "actor": "Mythic413",
+  "direction": "W",
+  "action": "IDLE",
+  "binding_status": "PASS",
+  "source_visual_status": "PASS",
+  "request": {
+    "path": "/workspace/scratch/mythic413-W-idle-actual-packed-r001-20261020/request-WidleSixActualRig01.json",
+    "sha256": "a684ee8edf987670d7208659cd7e88c7478fe9555f80585738d424c7e3230faa"
+  },
+  "original_raw_PACK": {
+    "path": "/workspace/scratch/mythic413-W-idle-actual-packed-r001-20261020/thunder_female-W-idle-six-actual-poses-r001.png",
+    "sha256": "6566131bcf9775779eb85f3bb4fc371882826e5441e494f5a6cfebd66ee6a715",
+    "bytes": 3085377,
+    "dimensions": [
+      3072,
+      4608
+    ],
+    "packing_path": "/workspace/scratch/mythic413-W-idle-actual-packed-r001-20261020/thunder_female-W-idle-six-actual-poses-r001.packing.json",
+    "packing_sha256": "48cea3aa40d040aa8453da375c2dfe5ef469d3365b639a8654e2c2f20a139aa8",
+    "plan_sha256": "13654bca175d8bb8017b72a4795a6a11fc0278a57e4b2372f093a9ba6fd1130a"
+  },
+  "SOURCE_PASS": {
+    "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/W-IDLE6-HIT6-real-cloth-final-actual-native-SOURCE-PASS-v01.json",
+    "sha256": "d04097bd07b68fca23dbe433a95e710504d48e01c61b4882764400f74518e980",
+    "exact_action_contract": {
+      "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-IDLE6-native-breath-relax-real-cloth-v03/W-IDLE-six-actual-native-source-fixed-basis-and-loop-contract-v03.json",
+      "sha256": "51d0e6e982c7c6533c07d0c852b00ca981608e280abb79533a4f386641c41df1",
+      "bytes": 19290
+    }
+  },
+  "independent_numeric_rebind_PASS": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/W-final-real-cloth-v03-independent-twelve-source-floor-and-unchanged-operator-rebind-v01.json",
+    "sha256": "9b8ffe749eef954a5d9b462e097d681ee0fa8db1dc3f3f07573af25fad0b2e5f",
+    "scope": "Exact final12 including restored LEFT material support/new mesh vertices, same controls/operators/IDLE5weights+CFG, fixed soles+Rgear/lowerbody, painted floor partition. No assertion that changed material/armnode/meshcoverage SHAs are identical."
+  },
+  "authored_pose_bindings": [
+    {
+      "phase": 0,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-IDLE6-native-breath-relax-real-cloth-v03/thunder_female-W-IDLE-0-actual-native-breath-relax-v03.png",
+      "source_sha256": "24175ccce57f251366b9be5aebd50de1f744bfe071bf31433c5f340e78c3ee61",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "7df67ee90894e1f1f187ddfbb97c91897b194f16669e6c6fa5e1b89f9d3d3637",
+      "atlas_origin": [
+        0,
+        0
+      ],
+      "runtime_region": [
+        464,
+        145,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        774.0833333333334,
+        1119.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 1,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-IDLE6-native-breath-relax-real-cloth-v03/thunder_female-W-IDLE-1-actual-native-breath-relax-v03.png",
+      "source_sha256": "846d3f8ba21a3b619118d21d746c2cf171a928b0fe749cf3cce30e0c0b52ac3d",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "6ae6f06f0e3f806d8071f407e266b1ef8c0bdfb418fec52294bf71e59c1de76a",
+      "atlas_origin": [
+        1536,
+        0
+      ],
+      "runtime_region": [
+        2000,
+        145,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        2310.0833333333335,
+        1119.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 2,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-IDLE6-native-breath-relax-real-cloth-v03/thunder_female-W-IDLE-2-actual-native-breath-relax-v03.png",
+      "source_sha256": "0a5a08bc7f553ee46c01e8d2d2f7e30fdd9efc361fc945f4a913230957ac2a15",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "769facdb5672eb4923a4fc0471c5f503d0195a9c574ec2cd60403b54d5e062a4",
+      "atlas_origin": [
+        0,
+        1536
+      ],
+      "runtime_region": [
+        464,
+        1681,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        774.0833333333334,
+        2655.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 3,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-IDLE6-native-breath-relax-real-cloth-v03/thunder_female-W-IDLE-3-actual-native-breath-relax-v03.png",
+      "source_sha256": "923960a188be5b5d91fbb905434ff65b76eb423f31020cced4d6c1e5e694a3c2",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "10e6a0dc4a4813939f2b95744faf18107d7e6043ccb2d0358d5a78922a351af6",
+      "atlas_origin": [
+        1536,
+        1536
+      ],
+      "runtime_region": [
+        2000,
+        1681,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        2310.0833333333335,
+        2655.9227375838404
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 4,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-IDLE6-native-breath-relax-real-cloth-v03/thunder_female-W-IDLE-4-actual-native-breath-relax-v03.png",
+      "source_sha256": "adfec1a14972d8920b94becf313773af01791539f2ab8130a5d0d68238ad691d",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "27e9a78b2cd6e982be307744d85ad99855beb4514369fec0c01ead7443578744",
+      "atlas_origin": [
+        0,
+        3072
+      ],
+      "runtime_region": [
+        464,
+        3217,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        774.0833333333334,
+        4191.92273758384
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    },
+    {
+      "phase": 5,
+      "source": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-IDLE6-native-breath-relax-real-cloth-v03/thunder_female-W-IDLE-5-actual-native-breath-relax-v03.png",
+      "source_sha256": "618efbf6f9a74037b20086c40761f4bbeacdc4c13347c61ea8bd6ebdb7c3c2a1",
+      "source_dimensions": [
+        1536,
+        1536
+      ],
+      "source_RGBA_sha256": "9a717a77199eeb708e3c75ff5ac681bd2c20db33c961bde289e243ecdc2df3f4",
+      "atlas_origin": [
+        1536,
+        3072
+      ],
+      "runtime_region": [
+        2000,
+        3217,
+        675,
+        1172
+      ],
+      "atlas_root_anchor": [
+        2310.0833333333335,
+        4191.92273758384
+      ],
+      "inverse_atlas_RGBA_mismatch_pixels": 0
+    }
+  ],
+  "fixed_registration": {
+    "physical_C": 2560,
+    "bodyunit": 2.5,
+    "logical_canvas": 1024,
+    "common_unpadded_root_exact": [
+      646.0833333333334,
+      991.9227375838406
+    ],
+    "storage_translation": [
+      128,
+      128
+    ],
+    "common_runtime_integer_root": [
+      646,
+      992
+    ],
+    "common_rounding_delta": [
+      -0.08333333333337123,
+      0.07726241615944218
+    ],
+    "runtime_layout_canvas": 2048,
+    "per_pose_C_root_fit_or_resample": false
+  },
+  "role_cycle": "IDLE1.2s loop5\u21920 source-reviewed",
+  "conditions_and_limits": [
+    "No new image input/view/capture. Decoded atlas cells compared exact RGBA against each SOURCE-approved1536 pose, including hidden RGB/alpha.",
+    "Upstream request pending SOURCE label remains immutable; independent final SOURCEd040 resolves that gate for these exact bindings.",
+    "Inherited W once margin18px versusrequested32px stays disclosed; no source cut/storage loss. No original fullbody/source/C audit repeated.",
+    "Game playback/contact-window/role integration remains root validation. This exact PACK does not add whole-actor approval."
+  ],
+  "image_inputs_added": 0,
+  "image_ledger_cumulative_bytes": 1914513,
+  "actor_approvals_added": 0,
+  "detailed_actor_approval_count": "2/31",
+  "whole_actor_approved": false,
+  "game_OR_Godot_approved": false,
+  "sourcePNG_git_request_PACK_mutations": false
+}

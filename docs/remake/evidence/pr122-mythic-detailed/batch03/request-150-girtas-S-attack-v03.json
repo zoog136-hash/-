@@ -1,0 +1,69 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "S",
+  "role": "attack",
+  "version": "v03",
+  "source_batch": "batch03",
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "operation": "image_edit_composition_and_alpha",
+  "references": [
+    "/workspace/scratch/girtas-S-attack-repair/girtas-S-attack-v02.png",
+    "/workspace/scratch/girtas-S-attack-layout-repair-v03/reference-true-S-idle-pose0.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-S-attack-repair/girtas-S-attack-v02.png": "1c07c107c60c3d5161b345bee7bcfa720002653b47ecb3a74d39359e1a649188",
+    "/workspace/scratch/girtas-S-attack-layout-repair-v03/reference-true-S-idle-pose0.png": "8c659f629660f417a52b1bbfcc04a5b1fec61a4d4b005fe30aa439963e126287",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "intended_contact_frame": 3,
+  "phase_contract": [
+    "guard",
+    "anticipation",
+    "load",
+    "active_contact",
+    "follow_through",
+    "recovery"
+  ],
+  "corrective_reason": "Existing visually PASS S attack v02 six original-faithful poses have outside-glow/haze ownership bridges blocking unchanged strict lossless extraction. One IMAGE EDIT of the existing source to uniformly shrink/recompose whole figures and remove outside haze only; preserve frontal S actions, anatomicalRIGHT/imageLEFT long sinuous weapon and downward contact3. Old v02 unchanged; no new role design.",
+  "user_authorization": "Production image editing authorized; no images forwarded into main chat. Exactly one composition-repair edit attempt for this role.",
+  "requested_at": "2026-10-19T11:14:31.705714+00:00",
+  "prompt": "EDIT THE FIRST SUPPLIED EXISTING IMAGE: repair ONLY its composition and outside-glow alpha. Preserve its EXACT SIX already-authored SOUTH-facing attack poses, their order, equipment, anatomy, camera, weapon contours and action phases. This is not a new animation request. Reference1 is the pose/action authority. Reference2 is ONE correct FRONT/S idle cutout only to confirm identity and frontal heading, never a pose to repeat. Reference3 is the tiny original identity authority only, never the heading or pose to copy.\n\nThe source six figures are tightly packed and diffuse gold/orange glow/haze bridges between them block safe extraction. Uniformly SHRINK THE WHOLE MODEL across ALL SIX figures by ONE COMMON scale factor, preserving all body/limb/equipment proportions and physical weapon length, and recenter those same complete figures into six spacious2x3cells. Aim for head-to-boot core body about220px; the WHOLE complete silhouette including every thin radial ray and the ENTIRE long sinuous weapon is at most300-320px in width/height. Each whole figure and all gear must fit its safe area; never shorten a blade, trim rays, remove body parts, rescale a weapon independently, simplify armor or change a pose to make it fit. Do not shrink different phases by different factors. The solution is smaller WHOLE figures with all existing gear intact and generous completely transparent gaps.\n\nRetain these EXACT original SIX poses, LEFT-TO-RIGHT TOP-TO-BOTTOM:\n0 ORIGINAL frontal S guard: face/chest/pelvis toward camera/screenDOWN, anatomicalRIGHT weapon hand on IMAGELEFT lowers the full long sinuous blade, free LEFT hand on IMAGERIGHT held at front. Same original lower-body stance and skirt.\n1 ORIGINAL frontal anticipation: the same anatomicalRIGHT/IMAGELEFT arm raises the long curved weapon above its original shoulder; preserve the entire over-head thin serpentine contour and tip. Free left arm remains separate on imageRIGHT; no turned East/right model.\n2 ORIGINAL deep loaded S attack pose: raised same right weapon arm and full wavy contour, actual knee/hip/torso load and original long skirt. Keep the frontal face/chest/pelvis, not a side or rear model.\n3 ORIGINAL authoritative ACTIVE CONTACT FRAME3: the same right/imageLEFT arm extends toward the viewer/screenBOTTOM, with the full long thin sinuous blade projecting DOWN/foreground and a little DOWN-LEFT EXACTLY as in the original pose. Preserve the existing narrow repeated S-curves, taper, hand and full tip. Do NOT turn this into a horizontal E/right thrust, broad short sword, straight rod or new weapon. Preserve the original forward body/leg articulation and free left arm.\n4 ORIGINAL downward follow-through: weapon and same right arm finish DOWN-LEFT/foreground while frontal torso/knees and long skirt/hair lag. Keep that distinct pose, isolate it from neighbors by shrinking the whole figure only.\n5 ORIGINAL frontal recovery: same right/imageLEFT hand returns low with full descending sinuous weapon and same original front guard model, separate free left arm and existing gear.\n\nALL SIX retain SOUTH/front heading: exposed pale face and both eyes/front chest/front waist toward the viewer, pelvis and boots match that camera. No E/right, rear, mirrored or opposite-facing replacement. Original pale human face, long pale hair, original crown, narrow hard opaque GOLD RADIAL BACK SPIKES, long DARK gold-edged SKIRT-LIKE armor, original black/gold boots and one LONG THIN SINUOUS orange-gold weapon. Same anatomicalRIGHT hand on IMAGELEFT holds the weapon throughout, free anatomicalLEFT on IMAGERIGHT remains empty. EXACTLY TWO shoulder-upperarm-elbow-forearm-wrist-hand chains and TWO legs per pose. No extra fists, missing arms, swapped hands or extra blades. No closed redmask, broad flame/feather fan, pants replacing long skirt or shortened broad sword.\n\nTechnical edited output: transparent1024x1536PNG, EXACTLY TWO512pxcolumns and THREE512pxrows, six complete figures only. Each full figure INCLUDING full weapon/rays fits within CENTRAL300x300 (absolute max320x320) area of its cell. Aim body~220px, no filling the canvas. Safe areas column1 x106..406,column2 x618..918; row1 y106..406,row2 y618..918,row3 y1130..1430. At least96px, preferably106px, empty alpha0 gutter at every cell boundary. No foreground figure pixels or bounding rectangles cross cell borders, overlap neighboring poses or touch outer image edges. Keep ALL physical rays and blade tips, whole boots, skirt and hair.\n\nREMOVE ALL outside diffuse glow/haze/clouds/halos: every background pixel and gap is true ALPHA0, even faint orange fringe connecting figures. Only1-2px local silhouette antialiasing. Keep existing gold/orange luminosity INSIDE the solid physical sinuous blade and existing metal surfaces only, making the full long blade bright, narrow, curved and hard-edged WITHOUT any external glow bridge. Do not remove hard gold physical rays as if they were glow. Preserve crisp dark armor and fine gold trim/material shading. NO ground, castshadow, aura, bloom, halo, diffuse glow, haze, fog, particles, motiontrail, blur, text, labels, numbers, grids, panel backgrounds or colored backdrop. Final result is the SAME SIX ORIGINAL FRONT/S ATTACK POSES with same contact3 and full original right-hand serpentine weapon, uniformly smaller as whole figures, fully complete and safely separated by wide empty alpha0 gutters.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six original frontal SOUTH attack phase constructions/order are retained: guard0, same right/image-left raised anticipation1, loaded knees/arm2, foreground/downward contact3, downward follow-through4 and low recovery5. None replaced with idle or E/rear model.",
+      "Front pale face/chest/pelvis stay SOUTH throughout. Long pale hair, crown, thin rigid GOLD radial spikes, long DARK goldtrim skirt, original dark/gold boots and material identity are retained.",
+      "Exactly TWO arm/hand chains each pose. AnatomicalRIGHT/imageLEFT keeps the one long thin sinuous orange-gold weapon; contact3 still projects toward screenBOTTOM/foreground-downleft with full repeated S-curved contour and tip, not a short broad blade or horizontal E thrust. Free left arm remains distinct imageRIGHT.",
+      "Edited raw has six large complete foreground bodies at alpha16/32 and no outer-edge clipping. Diffuse source haze is reduced, but residual stronger-than-alpha16 isolated fringe remains and fails strict bounded ownership."
+    ],
+    "visual_limitations": [
+      "RAW strict extraction HOLD: pose bounding rectangle includes another body. One attempt of the UNCHANGED lossless repacker also HOLD: require six separate bodies with only bounded faint edge fringe. No derivative was generated.",
+      "Read-only diagnostic finds6 bodies>=200pixels at both seed16 and32, but detached stronger foreground is7.62px from seed16 bodies and8.06px from seed32 bodies; all alpha>16 foreground reaches8.94px from seed32 bodies. This exceeds unchanged2px/5px guards. No thresholds were relaxed, no alpha>16 deleted, no recolor/resampling or repeated image generation.",
+      "The requested wholegear<=320px safe area was not achieved by the raw edit. This source must remain geometryHOLD and cannot be selected/connected as an extracted complete resource.",
+      "Source-only visual PASS, not actor completion or runtime/contact/Main approval. Original v02 unchanged and all produced data preserved."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "3a5f2f68e33ffad19726b267305b7109c5f783c6a8a7f12201b31b303ab3e544",
+    "raw_bytes": 2437600,
+    "request_sha256": "6e97ab92fecc8ff55d5d7b175e5cae42dbec4217cc992727147e4fac9ce75bbe",
+    "review_sha256": "f34be8d3218e133fce3d6d4c7a28db21392d99e03e8ee824f0c9fe95aa27de38"
+  },
+  "available_repository_reference_sources": {
+    "1c07c107c60c3d5161b345bee7bcfa720002653b47ecb3a74d39359e1a649188": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v02.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-8c659f629660f417a52b1bbfcc04a5b1fec61a4d4b005fe30aa439963e126287.png",
+      "sha256": "8c659f629660f417a52b1bbfcc04a5b1fec61a4d4b005fe30aa439963e126287",
+      "bytes": 424717,
+      "original_reference": "/workspace/scratch/girtas-S-attack-layout-repair-v03/reference-true-S-idle-pose0.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03.png",
+  "output_sha256": "3a5f2f68e33ffad19726b267305b7109c5f783c6a8a7f12201b31b303ab3e544",
+  "output_bytes": 2437600,
+  "original_generated_file": "/workspace/scratch/girtas-S-attack-layout-repair-v03/girtas-S-attack-v03.png"
+}

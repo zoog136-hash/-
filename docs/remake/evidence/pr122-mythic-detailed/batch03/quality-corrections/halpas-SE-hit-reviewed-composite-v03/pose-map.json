@@ -1,0 +1,98 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:393",
+  "direction": "SE",
+  "role": "hit",
+  "poses": [
+    {
+      "path": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase0-lossless.png",
+      "source_sha256": "767c7244e1160e7e0b5498198b9c1b37c30a9c87599d81b8689838cb52f5d0ac",
+      "region": [
+        0,
+        0,
+        504,
+        470
+      ],
+      "rgba_sha256": "301ad842f8f9a8adc8a888ee737e405379f9c7fdac6d045847afd22f9ca1953c",
+      "source_pose": 0,
+      "newly_authored": false,
+      "review_basis": "ExactRGBA visually good SEv02 key0 from strict all-alpha16-preserving lossless isolation. Old all6 remains HOLD2/3/4; only this independently two-arm valid key reused."
+    },
+    {
+      "path": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase1-lossless.png",
+      "source_sha256": "a8d441f93fec811e249a0543fb810c16738f7cb223d751b5c0f29cbf25b6a7c1",
+      "region": [
+        0,
+        0,
+        506,
+        471
+      ],
+      "rgba_sha256": "7c803a73237ecb7cce3d5ecfc72e5f84cb7e4a4eafc858705ef546cfd3bd5a97",
+      "source_pose": 1,
+      "newly_authored": false,
+      "review_basis": "ExactRGBA visually good SEv02 key1 from strict all-alpha16-preserving lossless isolation. Old all6 remains HOLD2/3/4; only this independently two-arm valid key reused."
+    },
+    {
+      "path": "/workspace/scratch/halpas-SE-hit-peak2-key-v03/halpas-SE-hit-peak2-v03.png",
+      "source_sha256": "67a1467756ff3e8aabbde98a19a72b59baa18a95fd28bf401ea8972c986da31b",
+      "region": [
+        11,
+        56,
+        1233,
+        1106
+      ],
+      "rgba_sha256": "e28661cea9660ff1a12c30a9c6b3fa8e12d939ab1c839d44b68ad078a1ac4516",
+      "source_pose": "new_game2",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 2."
+    },
+    {
+      "path": "/workspace/scratch/halpas-SE-hit-release3-key-v03/halpas-SE-hit-release3-v03.png",
+      "source_sha256": "c5816b61765dd558997c9169b44debeb8ea768f1954ff58acaecc59c72547346",
+      "region": [
+        71,
+        119,
+        1147,
+        1026
+      ],
+      "rgba_sha256": "e3010cd23696d6717d663e518a0188a8aaaa9e70bd822c4abc083ccdfbcb8924",
+      "source_pose": "new_game3",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 3."
+    },
+    {
+      "path": "/workspace/scratch/halpas-SE-hit-lower4-key-v03/halpas-SE-hit-lower4-v03.png",
+      "source_sha256": "4dba1aae8b7635f8f946a662e7829e3aa88020ddc7f3294186692f110327915a",
+      "region": [
+        83,
+        98,
+        1135,
+        1044
+      ],
+      "rgba_sha256": "f202d06a47ab5e47a26e4c54ce8119a0e71b9341a70c447c6536ef59644acf57",
+      "source_pose": "new_game4",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 4."
+    },
+    {
+      "path": "/workspace/scratch/halpas-SE-hit-repair-v02/salvaged-phase5-lossless.png",
+      "source_sha256": "41fba4d2810fc0eb3b66bf73c95a388d8400778b0aafd3b547e5a390287ffd2f",
+      "region": [
+        0,
+        0,
+        489,
+        465
+      ],
+      "rgba_sha256": "a99aabf947d3243ab5daa63c715f7f2ea1760273eb7b3eb2b7b9d4c3cc0d84a2",
+      "source_pose": 5,
+      "newly_authored": false,
+      "review_basis": "ExactRGBA visually good SEv02 key5 from strict all-alpha16-preserving lossless isolation. Old all6 remains HOLD2/3/4; only this independently two-arm valid key reused."
+    }
+  ],
+  "physical_scale_review": {
+    "status": "PENDING_EXTERNAL_LANDMARK_PROPOSAL",
+    "basis": "Source RGBA dimensions deliberately untouched, including large single-key resolution. No silhouette bbox normalization. Body neck/pauldron/pelvis scale and runtime hip anchors reviewed separately before integration."
+  },
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

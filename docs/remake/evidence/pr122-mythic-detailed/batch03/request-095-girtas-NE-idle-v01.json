@@ -1,0 +1,33 @@
+{
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "idle",
+  "name": "지배자 기르타스",
+  "version": "v01",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NE-walk-v01.png": "b942fa80c3e8ccd613c569a4f72c41b58ab45926a82df2ed09a54b67c8b01e8b",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-idle-v01.png": "e6cbf28c76edfe1a636ea344c28c9a2da8f259071816e5a07e88c377bddb824c"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG IDLE animation sprites of EXACTLY 지배자 기르타스. The first original portrait is identity authority. The second saved NE native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for NE.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces NORTHEAST / screen up-right, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: neutral breathing; 1: inhale begins; 2: inhale peak; 3: weight / wing settling; 4: exhale; 5: return close to initial guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nThis is an idle breathing/hover loop. Keep the support/root stable, with coherent chest and wing articulation. Last phase should lead naturally back to phase0.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "neutral breathing",
+    "inhale begins",
+    "inhale peak",
+    "weight / wing settling",
+    "exhale",
+    "return close to initial guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-idle-v01.png",
+  "output_sha256": "9ee5f265ed1e3bfd38c675e6abe4f06d9e5324c1795683e85c5a0eb832665128",
+  "output_bytes": 2256046,
+  "original_generated_file": "/workspace/generated_images/exec-ad3cadfb-3ed5-49f7-b183-84ceb00e1ec9.png"
+}

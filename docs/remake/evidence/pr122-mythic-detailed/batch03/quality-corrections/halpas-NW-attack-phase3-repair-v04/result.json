@@ -1,0 +1,62 @@
+{
+  "status": "GENERATED_SINGLE_CONTACT3_PRIVATE_SOURCE_VISUAL_AND_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "attack",
+  "version": "phase3-contact-v04",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "requested_game_phase": 3,
+  "request_path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/request.json",
+  "request_sha256": "578d212b318a74e60b2ecba9233fba61a10dfb65ccad8d0f2dbdf0b5ae11c886",
+  "original_generated_file": "/workspace/generated_images/exec-d52a8081-e25a-4425-b981-d3402a84e270.png",
+  "raw_png": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/halpas-NW-attack-phase3-contact-v04.png",
+  "raw_sha256": "0a6abbdb516a9b62d4f3f115ddc8eb6b229bfa4405a3effe18c961e3e0040cec",
+  "raw_bytes": 1434972,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/generated-private.jpg",
+  "private_preview_bytes": 118716,
+  "created_at": "2026-10-19T12:39:58.903648+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "chat_image_attachments": 0,
+  "source_visual_status": "PASS",
+  "integration_ready": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "single_key_ready": true,
+  "reviewed_at": "2026-10-19T12:41:03.029972+00:00",
+  "camera_validation": "PASS_NW_REARLEFT_BODY_HEAD_BACK_AND_HIPS",
+  "handedness_validation": "PASS_EXACTLY_TWO_ARMS_NEARLEFT_EMPTY_FARRIGHT_EXTENDED_STRIKE_GRIP",
+  "contact_validation": "PASS_PHASE3_FARRIGHT_ELBOW_EXTENDS_AND_BLADE_CONTACT_POINTS_UPLEFT",
+  "identity_validation": "PASS_SAME_HALPAS_MODEL_CROWN_CRYSTAL_FANS_CAPE_COMPACT_PURPLE_BLADE",
+  "geometry_validation": "SINGLE_POSE_GEOMETRY_PASS_CANVAS2048_SOURCE_UNCHANGED",
+  "visual_findings": [
+    "Exactly TWO arms/hands: originalnearLEFT arm remains empty downlower-left; originalfarRIGHT arm is raised/extended across abovehelmet into contact and alonegrips soleblade. No extra loweredRIGHT forearm/fist remains, no new attackarm added.",
+    "Continuous original farRIGHT shoulder→upperarm→elbow→forearm→wrist→closedgrip→purpleblade is visible. Comparedwith loaded2, same rightelbow is visibly opened/extended forwardUPLEFT and wrist/bladetip reach farther in NWtargetsector.",
+    "NW rear-left head/helmet/back/spine/pelvis/camera retained; frontalface/chestskull hidden. NearLEFT empty fist and farRIGHT weaponownership unchanged, bothboots maintaincoherentNWguard/weightresponse.",
+    "Blade actualsolidtip extends strongly UPPERLEFT beyondhelmet for genuinecontact3; not an idle/windup substitution or image rotation. Subtle back/knee/cape/wingroot force response accompanies arm extension.",
+    "Samegoldhorns, black/goldplates, twoexisting purplecrystal featherfans/roots, burgundyLEFT/backcape and same compactbroad Halpaspurpleblade, no Girtassinuousweapon or added gear. Entire silhouetteuncropped and0alpha>100pixels touchingouteredge.",
+    "Strictunchangedonepose analyzer+complete-region PASS withcanvas2048. Exactallalpha>16 region[104,30,1085,1187] pinned;1228 outsidepixels alpha≤8 retainedunchanged in originalraw, no source masking/noiseremoval."
+  ],
+  "visual_limitations": [
+    "ONE missingcontact3 sourcekey only, not completed6poseattack/nativeclip oractorapproval. Root mustassemblewith actualgood0/1/2/4/5 after4PASS, losslessphysicalscale/hipsupport/layout and Player/runtimechecks separately.",
+    "Raw1254squarepixelresolution keptunchanged; no automaticimage-dimension physicalscaleclaim."
+  ],
+  "source_key_region_proof": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/source-key-region-proof.json",
+  "source_region": [
+    104,
+    30,
+    1085,
+    1187
+  ],
+  "private_jpeg_budget_cumulative_estimate_bytes": 4529450,
+  "private_jpeg_budget_limit": 8000000,
+  "imagegen_attempt_limit_reached": true,
+  "further_generation_attempts": 0
+}

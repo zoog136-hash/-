@@ -1,0 +1,1821 @@
+{
+  "status": "ACTUAL_V03_EXACT_NATIVE_RIG_SOURCE_RASTER_FLOOR_LOOP_BINDING_PENDING_INDEPENDENT_QC",
+  "contract": {
+    "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/actual-N-IDLE-six-native-v03/actual-N-IDLE-six-source-contract-v03.json",
+    "sha256": "1d2ec97c3822332fc906645c8c2afc542486c21fe3caed933f496eb40f0dc20e",
+    "bytes": 17000
+  },
+  "renderer": {
+    "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/author-N-IDLE-dedicated-native-breath-finger-cloth-six-v03.py",
+    "sha256": "7abdf8c09f5acced497fb519e589c2fdf053877a6f154e50e9120076d57cbdda",
+    "bytes": 13706
+  },
+  "fixed_C": 1920,
+  "bodyunit": 1.875,
+  "common_unpadded_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "source_scale_changes": 0,
+  "one_constructive_compatible_model": true,
+  "model_limits": [
+    "Finite source surfaces and chosen native material planes do not uniquely recover hidden anatomy.",
+    "Occluded toe is an explicit rig control; a visible projected shoe pixel is not asserted to be the toe.",
+    "Native flexible leg leather is assigned to exact187.5 bones with an orthogonal source-normal surface; rigid complete counter/stiletto remains on the single frontshoe capture plane.",
+    "All source/raster alpha>0 texel quads and the declared guard are included; no threshold is relaxed."
+  ],
+  "static_parts": [
+    {
+      "all_source_alpha_gt0": 9156,
+      "all_raster_alpha_gt0": 5774,
+      "source_texel_quad_guard_min_Z": 228.3741705921747,
+      "raster_texel_quad_guard_min_Z": 228.02621993459616,
+      "guard": 2.0,
+      "source_anchor": [
+        687,
+        631
+      ],
+      "world_anchor": [
+        619.0,
+        180.0,
+        385.0
+      ],
+      "U": [
+        -0.9732357091375575,
+        -0.01803083298403571,
+        0.2181761776885164
+      ],
+      "V": [
+        -0.1717043953403876,
+        -0.7364541540020275,
+        -0.9315635412871589
+      ],
+      "above_floor": true,
+      "side": "L",
+      "part": "native-thigh-material.png",
+      "finite_flexible_material_bone_surface": true
+    },
+    {
+      "all_source_alpha_gt0": 6369,
+      "all_raster_alpha_gt0": 9393,
+      "source_texel_quad_guard_min_Z": 93.14631598998986,
+      "raster_texel_quad_guard_min_Z": 92.12557181282617,
+      "guard": 2.0,
+      "source_anchor": [
+        679,
+        787
+      ],
+      "world_anchor": [
+        600.0,
+        65.25739863955602,
+        237.9306781376951
+      ],
+      "U": [
+        -0.80006138364707,
+        0.016320684670125943,
+        -0.004169094855124145
+      ],
+      "V": [
+        0.057406839040304906,
+        1.131672117701674,
+        -1.3151587705835952
+      ],
+      "above_floor": true,
+      "side": "L",
+      "part": "native-calf-material.png",
+      "finite_flexible_material_bone_surface": true
+    },
+    {
+      "all_source_alpha_gt0": 2006,
+      "all_raster_alpha_gt0": 2114,
+      "source_texel_quad_guard_min_Z": 219.608537578198,
+      "raster_texel_quad_guard_min_Z": 219.0522416038361,
+      "guard": 2.0,
+      "source_anchor": [
+        679,
+        787
+      ],
+      "world_anchor": [
+        600.0,
+        65.25739863955602,
+        237.9306781376951
+      ],
+      "U": [
+        -0.99936945955792,
+        0.03349747685191423,
+        -0.02043223775005035
+      ],
+      "V": [
+        0.035506102333411865,
+        0.6198567494500089,
+        -0.7204339223054151
+      ],
+      "above_floor": true,
+      "side": "L",
+      "part": "native-rounded-knee-leather-material.png",
+      "finite_flexible_material_bone_surface": true
+    },
+    {
+      "all_source_alpha_gt0": 5020,
+      "all_raster_alpha_gt0": 4800,
+      "source_texel_quad_guard_min_Z": 0.49084382461674325,
+      "raster_texel_quad_guard_min_Z": 1.3804132056760228,
+      "guard": 2.0,
+      "source_anchor": [
+        616.5,
+        850.0
+      ],
+      "world_anchor": [
+        607.0,
+        193.56666666666666,
+        6.105
+      ],
+      "U": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "V": [
+        0.0,
+        0.0702075,
+        -1.032616050109502
+      ],
+      "above_floor": true,
+      "side": "L",
+      "part": "complete-original-rounded-frontshoe",
+      "structural_heel": [
+        607.0,
+        193.56666666666666,
+        6.105
+      ],
+      "hidden_foretoe_rig_control": [
+        607.0,
+        103.77396665714473,
+        0.0
+      ],
+      "toe_is_measured_visible_bitmap_vertex": false,
+      "capture_g": 0.9661835748792271
+    },
+    {
+      "all_source_alpha_gt0": 9156,
+      "all_raster_alpha_gt0": 5925,
+      "source_texel_quad_guard_min_Z": 226.27493423560844,
+      "raster_texel_quad_guard_min_Z": 226.66685624819286,
+      "guard": 2.0,
+      "source_anchor": [
+        687,
+        631
+      ],
+      "world_anchor": [
+        687.0,
+        180.0,
+        385.0
+      ],
+      "U": [
+        0.939061534687364,
+        -0.05127048868469413,
+        0.3184101728610905
+      ],
+      "V": [
+        0.24687495049678793,
+        -0.7307908211572159,
+        -0.9190380432173637
+      ],
+      "above_floor": true,
+      "side": "R",
+      "part": "native-thigh-material.png",
+      "finite_flexible_material_bone_surface": true
+    },
+    {
+      "all_source_alpha_gt0": 6369,
+      "all_raster_alpha_gt0": 9384,
+      "source_texel_quad_guard_min_Z": 92.97095557472908,
+      "raster_texel_quad_guard_min_Z": 91.47247775396961,
+      "guard": 2.0,
+      "source_anchor": [
+        679,
+        787
+      ],
+      "world_anchor": [
+        718.0,
+        66.4067958089519,
+        239.08278387520255
+      ],
+      "U": [
+        0.7999657086521199,
+        -0.010377614304133285,
+        0.012274760725733443
+      ],
+      "V": [
+        0.007407089894927037,
+        1.120782344846395,
+        -1.3256741583792118
+      ],
+      "above_floor": true,
+      "side": "R",
+      "part": "native-calf-material.png",
+      "finite_flexible_material_bone_surface": true
+    },
+    {
+      "all_source_alpha_gt0": 2006,
+      "all_raster_alpha_gt0": 2058,
+      "source_texel_quad_guard_min_Z": 220.78374490924907,
+      "raster_texel_quad_guard_min_Z": 220.41598601795744,
+      "guard": 2.0,
+      "source_anchor": [
+        679,
+        787
+      ],
+      "world_anchor": [
+        718.0,
+        66.4067958089519,
+        239.08278387520255
+      ],
+      "U": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "V": [
+        0.0,
+        0.6124405959552083,
+        -0.7244017318201553
+      ],
+      "above_floor": true,
+      "side": "R",
+      "part": "native-rounded-knee-leather-material.png",
+      "finite_flexible_material_bone_surface": true
+    },
+    {
+      "all_source_alpha_gt0": 5020,
+      "all_raster_alpha_gt0": 4800,
+      "source_texel_quad_guard_min_Z": 0.49084382461674325,
+      "raster_texel_quad_guard_min_Z": 1.3804132056760228,
+      "guard": 2.0,
+      "source_anchor": [
+        616.5,
+        850.0
+      ],
+      "world_anchor": [
+        718.0,
+        193.56666666666666,
+        6.105
+      ],
+      "U": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "V": [
+        0.0,
+        0.0702075,
+        -1.032616050109502
+      ],
+      "above_floor": true,
+      "side": "R",
+      "part": "complete-original-rounded-frontshoe",
+      "structural_heel": [
+        718.0,
+        193.56666666666666,
+        6.105
+      ],
+      "hidden_foretoe_rig_control": [
+        718.0,
+        103.77396665714473,
+        0.0
+      ],
+      "toe_is_measured_visible_bitmap_vertex": false,
+      "capture_g": 0.9661835748792271
+    },
+    {
+      "part": "RIGHT-upperarm",
+      "all_source_alpha_gt0": 5259,
+      "all_raster_alpha_gt0": 5275,
+      "source_texel_quad_guard_min_Z": 481.5,
+      "raster_texel_quad_guard_min_Z": 481.19205318788045,
+      "guard": 2.0,
+      "source_anchor": [
+        715,
+        431
+      ],
+      "world_anchor": [
+        715.0,
+        180.0,
+        574.0
+      ],
+      "U": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "V": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "above_floor": true
+    },
+    {
+      "part": "RIGHT-full-grip-staff",
+      "all_source_alpha_gt0": 30896,
+      "all_raster_alpha_gt0": 30329,
+      "source_texel_quad_guard_min_Z": 25.5,
+      "raster_texel_quad_guard_min_Z": 26.192053187880447,
+      "guard": 8.0,
+      "source_anchor": [
+        748,
+        520
+      ],
+      "world_anchor": [
+        748.0,
+        180.0,
+        485.0
+      ],
+      "U": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "V": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "above_floor": true
+    }
+  ],
+  "phases": [
+    {
+      "phase": 0,
+      "seconds_range": [
+        0.0,
+        0.2
+      ],
+      "parts": [
+        {
+          "part": "body-native-local-breath",
+          "all_source_alpha_gt0": 36717,
+          "all_raster_alpha_gt0": 36550,
+          "source_texel_quad_guard_min_Z": 340.5,
+          "raster_texel_quad_guard_min_Z": 340.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "head",
+          "all_source_alpha_gt0": 22918,
+          "all_raster_alpha_gt0": 22450,
+          "source_texel_quad_guard_min_Z": 597.0467775467775,
+          "raster_texel_quad_guard_min_Z": 596.8425467088023,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.7484407484407484,
+            -0.6632016632016631
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "ribbon",
+          "all_source_alpha_gt0": 3454,
+          "all_raster_alpha_gt0": 3229,
+          "source_texel_quad_guard_min_Z": 549.2962577962578,
+          "raster_texel_quad_guard_min_Z": 551.0816319478874,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.7484407484407484,
+            -0.6632016632016631
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-upperarm",
+          "all_source_alpha_gt0": 4732,
+          "all_raster_alpha_gt0": 4596,
+          "source_texel_quad_guard_min_Z": 475.5,
+          "raster_texel_quad_guard_min_Z": 475.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            574,
+            433
+          ],
+          "world_anchor": [
+            574.0,
+            180.0,
+            572.0
+          ],
+          "U": [
+            1.0000000000000002,
+            -6.048129131414185e-17,
+            -2.7755575615628914e-17
+          ],
+          "V": [
+            2.7755575615628914e-17,
+            -1.2096258262828368e-17,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-real-fingers-curved-cuff-forearm",
+          "all_source_alpha_gt0": 6840,
+          "all_raster_alpha_gt0": 6661,
+          "source_texel_quad_guard_min_Z": 396.7681912681913,
+          "raster_texel_quad_guard_min_Z": 397.2271620934176,
+          "guard": 2.0,
+          "source_anchor": [
+            556,
+            523
+          ],
+          "world_anchor": [
+            556.0,
+            180.0,
+            482.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.7484407484407484,
+            -0.6632016632016631
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-coat",
+          "all_source_alpha_gt0": 21182,
+          "all_raster_alpha_gt0": 20657,
+          "source_texel_quad_guard_min_Z": 140.5,
+          "raster_texel_quad_guard_min_Z": 141.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "RIGHT-coat",
+          "all_source_alpha_gt0": 17809,
+          "all_raster_alpha_gt0": 17730,
+          "source_texel_quad_guard_min_Z": 202.5,
+          "raster_texel_quad_guard_min_Z": 202.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        }
+      ],
+      "exact_RGBA_recomposition_matches_final_source": true
+    },
+    {
+      "phase": 1,
+      "seconds_range": [
+        0.2,
+        0.4
+      ],
+      "parts": [
+        {
+          "part": "body-native-local-breath",
+          "all_source_alpha_gt0": 37254,
+          "all_raster_alpha_gt0": 36927,
+          "source_texel_quad_guard_min_Z": 340.5,
+          "raster_texel_quad_guard_min_Z": 340.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "head",
+          "all_source_alpha_gt0": 22918,
+          "all_raster_alpha_gt0": 22236,
+          "source_texel_quad_guard_min_Z": 596.517375397652,
+          "raster_texel_quad_guard_min_Z": 596.1793450456006,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999468579128084,
+            -0.0077158887304824625,
+            0.006837134736177516
+          ],
+          "V": [
+            0.010309284664894622,
+            0.748400974737237,
+            -0.6631664192810516
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "ribbon",
+          "all_source_alpha_gt0": 3581,
+          "all_raster_alpha_gt0": 3240,
+          "source_texel_quad_guard_min_Z": 547.7575329185902,
+          "raster_texel_quad_guard_min_Z": 547.7656236318792,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999468579128084,
+            -0.0077158887304824625,
+            0.006837134736177516
+          ],
+          "V": [
+            0.010309284664894622,
+            0.748400974737237,
+            -0.6631664192810516
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-upperarm",
+          "all_source_alpha_gt0": 4732,
+          "all_raster_alpha_gt0": 4643,
+          "source_texel_quad_guard_min_Z": 476.69427176309205,
+          "raster_texel_quad_guard_min_Z": 475.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            574,
+            433
+          ],
+          "world_anchor": [
+            573.0141486557882,
+            180.0,
+            572.85700856061
+          ],
+          "U": [
+            0.9998617830298777,
+            -0.0,
+            -0.01662572814387256
+          ],
+          "V": [
+            -0.01662572814387256,
+            0.0,
+            -0.9998617830298777
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-real-fingers-curved-cuff-forearm",
+          "all_source_alpha_gt0": 6821,
+          "all_raster_alpha_gt0": 6501,
+          "source_texel_quad_guard_min_Z": 396.91690187265317,
+          "raster_texel_quad_guard_min_Z": 396.95758041672474,
+          "guard": 2.0,
+          "source_anchor": [
+            556,
+            523
+          ],
+          "world_anchor": [
+            553.5203210283019,
+            180.0,
+            483.1687111945107
+          ],
+          "U": [
+            0.9997016559830607,
+            -0.018280947184421387,
+            0.016198950421751172
+          ],
+          "V": [
+            0.024425376654740795,
+            0.7482174556214175,
+            -0.6630038009534227
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-coat",
+          "all_source_alpha_gt0": 21545,
+          "all_raster_alpha_gt0": 20986,
+          "source_texel_quad_guard_min_Z": 139.5,
+          "raster_texel_quad_guard_min_Z": 140.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "RIGHT-coat",
+          "all_source_alpha_gt0": 18194,
+          "all_raster_alpha_gt0": 17994,
+          "source_texel_quad_guard_min_Z": 201.5,
+          "raster_texel_quad_guard_min_Z": 203.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        }
+      ],
+      "exact_RGBA_recomposition_matches_final_source": true
+    },
+    {
+      "phase": 2,
+      "seconds_range": [
+        0.4,
+        0.6000000000000001
+      ],
+      "parts": [
+        {
+          "part": "body-native-local-breath",
+          "all_source_alpha_gt0": 37533,
+          "all_raster_alpha_gt0": 37195,
+          "source_texel_quad_guard_min_Z": 340.5,
+          "raster_texel_quad_guard_min_Z": 340.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "head",
+          "all_source_alpha_gt0": 22918,
+          "all_raster_alpha_gt0": 22184,
+          "source_texel_quad_guard_min_Z": 596.1714912258568,
+          "raster_texel_quad_guard_min_Z": 596.1793450456006,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9998545550893849,
+            -0.01276456134135461,
+            0.011310819633033669
+          ],
+          "V": [
+            0.017054872236643242,
+            0.7483318915429907,
+            -0.6631052038950389
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "ribbon",
+          "all_source_alpha_gt0": 3618,
+          "all_raster_alpha_gt0": 3296,
+          "source_texel_quad_guard_min_Z": 546.5700976148714,
+          "raster_texel_quad_guard_min_Z": 547.7656236318792,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9998545550893849,
+            -0.01276456134135461,
+            0.011310819633033669
+          ],
+          "V": [
+            0.017054872236643242,
+            0.7483318915429907,
+            -0.6631052038950389
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-upperarm",
+          "all_source_alpha_gt0": 4732,
+          "all_raster_alpha_gt0": 4672,
+          "source_texel_quad_guard_min_Z": 478.4082888843118,
+          "raster_texel_quad_guard_min_Z": 477.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            574,
+            433
+          ],
+          "world_anchor": [
+            571.0424459673646,
+            180.0,
+            574.5710256818297
+          ],
+          "U": [
+            0.9998617830298777,
+            -0.0,
+            -0.01662572814387256
+          ],
+          "V": [
+            -0.01662572814387256,
+            0.0,
+            -0.9998617830298777
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-real-fingers-curved-cuff-forearm",
+          "all_source_alpha_gt0": 6808,
+          "all_raster_alpha_gt0": 6519,
+          "source_texel_quad_guard_min_Z": 398.15956705841376,
+          "raster_texel_quad_guard_min_Z": 398.19806019559707,
+          "guard": 2.0,
+          "source_anchor": [
+            556,
+            523
+          ],
+          "world_anchor": [
+            551.5486183398783,
+            180.0,
+            484.88272831573045
+          ],
+          "U": [
+            0.9993469352123643,
+            -0.027044542491832947,
+            0.023964469596929747
+          ],
+          "V": [
+            0.03613451371825457,
+            0.74795196814231,
+            -0.6627685495483246
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-coat",
+          "all_source_alpha_gt0": 21587,
+          "all_raster_alpha_gt0": 21027,
+          "source_texel_quad_guard_min_Z": 138.5,
+          "raster_texel_quad_guard_min_Z": 140.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "RIGHT-coat",
+          "all_source_alpha_gt0": 18212,
+          "all_raster_alpha_gt0": 18011,
+          "source_texel_quad_guard_min_Z": 201.5,
+          "raster_texel_quad_guard_min_Z": 201.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        }
+      ],
+      "exact_RGBA_recomposition_matches_final_source": true
+    },
+    {
+      "phase": 3,
+      "seconds_range": [
+        0.6000000000000001,
+        0.8
+      ],
+      "parts": [
+        {
+          "part": "body-native-local-breath",
+          "all_source_alpha_gt0": 37689,
+          "all_raster_alpha_gt0": 37368,
+          "source_texel_quad_guard_min_Z": 340.5,
+          "raster_texel_quad_guard_min_Z": 340.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "head",
+          "all_source_alpha_gt0": 22918,
+          "all_raster_alpha_gt0": 22205,
+          "source_texel_quad_guard_min_Z": 596.354126139233,
+          "raster_texel_quad_guard_min_Z": 596.1793450456006,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999089780926482,
+            -0.010098003231651966,
+            0.008947952863602712
+          ],
+          "V": [
+            0.013492054317846097,
+            0.7483726239362856,
+            -0.6631412973213197
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "ribbon",
+          "all_source_alpha_gt0": 3590,
+          "all_raster_alpha_gt0": 3239,
+          "source_texel_quad_guard_min_Z": 547.5332056030509,
+          "raster_texel_quad_guard_min_Z": 548.4288252950809,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999089780926482,
+            -0.010098003231651966,
+            0.008947952863602712
+          ],
+          "V": [
+            0.013492054317846097,
+            0.7483726239362856,
+            -0.6631412973213197
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-upperarm",
+          "all_source_alpha_gt0": 4732,
+          "all_raster_alpha_gt0": 4648,
+          "source_texel_quad_guard_min_Z": 478.9280342424396,
+          "raster_texel_quad_guard_min_Z": 478.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            574,
+            433
+          ],
+          "world_anchor": [
+            570.0565946231528,
+            180.0,
+            575.4280342424396
+          ],
+          "U": [
+            1.0000000000000002,
+            -6.048129131414185e-17,
+            -2.7755575615628914e-17
+          ],
+          "V": [
+            2.7755575615628914e-17,
+            -1.2096258262828368e-17,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-real-fingers-curved-cuff-forearm",
+          "all_source_alpha_gt0": 6801,
+          "all_raster_alpha_gt0": 6531,
+          "source_texel_quad_guard_min_Z": 399.21694289323,
+          "raster_texel_quad_guard_min_Z": 399.70812165116234,
+          "guard": 2.0,
+          "source_anchor": [
+            556,
+            523
+          ],
+          "world_anchor": [
+            552.0565946231528,
+            180.0,
+            485.4280342424396
+          ],
+          "U": [
+            0.9997255499808032,
+            -0.017533727588920904,
+            0.015536830835738242
+          ],
+          "V": [
+            0.023427008250752647,
+            0.7482353388629711,
+            -0.663019647492466
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-coat",
+          "all_source_alpha_gt0": 21478,
+          "all_raster_alpha_gt0": 20930,
+          "source_texel_quad_guard_min_Z": 140.5,
+          "raster_texel_quad_guard_min_Z": 141.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "RIGHT-coat",
+          "all_source_alpha_gt0": 18151,
+          "all_raster_alpha_gt0": 17950,
+          "source_texel_quad_guard_min_Z": 202.5,
+          "raster_texel_quad_guard_min_Z": 203.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        }
+      ],
+      "exact_RGBA_recomposition_matches_final_source": true
+    },
+    {
+      "phase": 4,
+      "seconds_range": [
+        0.8,
+        1.0
+      ],
+      "parts": [
+        {
+          "part": "body-native-local-breath",
+          "all_source_alpha_gt0": 37533,
+          "all_raster_alpha_gt0": 37195,
+          "source_texel_quad_guard_min_Z": 340.5,
+          "raster_texel_quad_guard_min_Z": 340.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "head",
+          "all_source_alpha_gt0": 22918,
+          "all_raster_alpha_gt0": 22229,
+          "source_texel_quad_guard_min_Z": 596.8832231182467,
+          "raster_texel_quad_guard_min_Z": 596.8425467088023,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999949342712277,
+            -0.00238228018711047,
+            0.0021109649435784444
+          ],
+          "V": [
+            0.0031829910277781557,
+            0.7484369570429146,
+            -0.6631983036019159
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "ribbon",
+          "all_source_alpha_gt0": 3545,
+          "all_raster_alpha_gt0": 3238,
+          "source_texel_quad_guard_min_Z": 549.031618941617,
+          "raster_texel_quad_guard_min_Z": 549.7552286214842,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999949342712277,
+            -0.00238228018711047,
+            0.0021109649435784444
+          ],
+          "V": [
+            0.0031829910277781557,
+            0.7484369570429146,
+            -0.6631983036019159
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-upperarm",
+          "all_source_alpha_gt0": 4732,
+          "all_raster_alpha_gt0": 4644,
+          "source_texel_quad_guard_min_Z": 477.7432597585569,
+          "raster_texel_quad_guard_min_Z": 476.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            574,
+            433
+          ],
+          "world_anchor": [
+            571.0424459673646,
+            180.0,
+            574.5710256818297
+          ],
+          "U": [
+            0.9998617830298776,
+            -0.0,
+            0.01662572814387253
+          ],
+          "V": [
+            0.01662572814387253,
+            0.0,
+            -0.9998617830298775
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-real-fingers-curved-cuff-forearm",
+          "all_source_alpha_gt0": 6810,
+          "all_raster_alpha_gt0": 6457,
+          "source_texel_quad_guard_min_Z": 399.0938291937338,
+          "raster_texel_quad_guard_min_Z": 399.32288088887134,
+          "guard": 2.0,
+          "source_anchor": [
+            556,
+            523
+          ],
+          "world_anchor": [
+            554.5412494057754,
+            180.0,
+            484.28420210255103
+          ],
+          "U": [
+            0.9999995013448033,
+            0.0007474334719155811,
+            -0.000662309104280751
+          ],
+          "V": [
+            -0.0009986541666427624,
+            0.7484403752268798,
+            -0.6632013324927073
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-coat",
+          "all_source_alpha_gt0": 21356,
+          "all_raster_alpha_gt0": 20811,
+          "source_texel_quad_guard_min_Z": 141.5,
+          "raster_texel_quad_guard_min_Z": 144.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "RIGHT-coat",
+          "all_source_alpha_gt0": 18101,
+          "all_raster_alpha_gt0": 17870,
+          "source_texel_quad_guard_min_Z": 202.5,
+          "raster_texel_quad_guard_min_Z": 204.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        }
+      ],
+      "exact_RGBA_recomposition_matches_final_source": true
+    },
+    {
+      "phase": 5,
+      "seconds_range": [
+        1.0,
+        1.2000000000000002
+      ],
+      "parts": [
+        {
+          "part": "body-native-local-breath",
+          "all_source_alpha_gt0": 37254,
+          "all_raster_alpha_gt0": 36927,
+          "source_texel_quad_guard_min_Z": 340.5,
+          "raster_texel_quad_guard_min_Z": 340.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "head",
+          "all_source_alpha_gt0": 22918,
+          "all_raster_alpha_gt0": 22179,
+          "source_texel_quad_guard_min_Z": 596.8258809189065,
+          "raster_texel_quad_guard_min_Z": 596.1793450456006,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999936516833071,
+            0.0026668649581602674,
+            -0.0023631386712586813
+          ],
+          "V": [
+            -0.0035632279024308015,
+            0.7484359971018515,
+            -0.6631974529874738
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "ribbon",
+          "all_source_alpha_gt0": 3515,
+          "all_raster_alpha_gt0": 3225,
+          "source_texel_quad_guard_min_Z": 550.2611154031439,
+          "raster_texel_quad_guard_min_Z": 551.0816319478874,
+          "guard": 2.0,
+          "source_anchor": [
+            642,
+            397
+          ],
+          "world_anchor": [
+            642.0,
+            180.0,
+            608.0
+          ],
+          "U": [
+            0.9999936516833071,
+            0.0026668649581602674,
+            -0.0023631386712586813
+          ],
+          "V": [
+            -0.0035632279024308015,
+            0.7484359971018515,
+            -0.6631974529874738
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-upperarm",
+          "all_source_alpha_gt0": 4732,
+          "all_raster_alpha_gt0": 4652,
+          "source_texel_quad_guard_min_Z": 476.0292426373372,
+          "raster_texel_quad_guard_min_Z": 475.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            574,
+            433
+          ],
+          "world_anchor": [
+            573.0141486557882,
+            180.0,
+            572.85700856061
+          ],
+          "U": [
+            0.9998617830298776,
+            -0.0,
+            0.01662572814387253
+          ],
+          "V": [
+            0.01662572814387253,
+            0.0,
+            -0.9998617830298775
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-real-fingers-curved-cuff-forearm",
+          "all_source_alpha_gt0": 6826,
+          "all_raster_alpha_gt0": 6503,
+          "source_texel_quad_guard_min_Z": 397.87205289711926,
+          "raster_texel_quad_guard_min_Z": 398.082401109999,
+          "guard": 2.0,
+          "source_anchor": [
+            556,
+            523
+          ],
+          "world_anchor": [
+            556.5129520941989,
+            180.0,
+            482.5701849813313
+          ],
+          "U": [
+            0.9999191879778254,
+            0.009514843187790311,
+            -0.008431208269180859
+          ],
+          "V": [
+            -0.012712887703686497,
+            0.7483802654303889,
+            -0.6631480685341502
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "LEFT-coat",
+          "all_source_alpha_gt0": 21302,
+          "all_raster_alpha_gt0": 20742,
+          "source_texel_quad_guard_min_Z": 141.5,
+          "raster_texel_quad_guard_min_Z": 142.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        },
+        {
+          "part": "RIGHT-coat",
+          "all_source_alpha_gt0": 18078,
+          "all_raster_alpha_gt0": 17873,
+          "source_texel_quad_guard_min_Z": 203.5,
+          "raster_texel_quad_guard_min_Z": 204.19205318788045,
+          "guard": 2.0,
+          "source_anchor": [
+            663,
+            620
+          ],
+          "world_anchor": [
+            663.0,
+            180.0,
+            385.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "above_floor": true
+        }
+      ],
+      "exact_RGBA_recomposition_matches_final_source": true
+    }
+  ],
+  "pinned_hip_lower_bodice_RGBA_equal_all6": true,
+  "pinned_hip_lower_bodice_RGBA_sha256": "7a99dd556a523ca22c7e83983898184bd4421559393356fac158c1b1e08b61fb",
+  "fixed_leg_RGBA_sha256": "5961df13de3132aa3aae1ff4be8dee6ead4783b60c08ae7bfae97acfcb2a84fe",
+  "fixed_RIGHT_grip_staff_RGBA_sha256": "c33cba0ccc9b40036c72bfd68894a886e74aa6282deb88cadc1ca2c6c2593db3",
+  "clock": {
+    "cycle_seconds": 1.2,
+    "phase_seconds": 0.2,
+    "resource_fps": 5,
+    "loop": true,
+    "profile_modified": false
+  },
+  "loop": {
+    "body_head_ribbon_cloth_analytic_periodic_at_phase6_equals0": true,
+    "actual_finger_keyframe_sequence_proximal": [
+      0,
+      2,
+      5,
+      7,
+      4,
+      1,
+      0
+    ],
+    "actual_finger_keyframe_sequence_distal": [
+      0,
+      3,
+      8,
+      10,
+      5,
+      1.5,
+      0
+    ],
+    "phase5_to0_is_required_actual_discrete_game_transition": true
+  },
+  "editable_actual_bound_raster_parts": [
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-L-native-thigh-material-bound-raster.png",
+      "bytes": 27682,
+      "sha256": "d14850bdb344ae251e849bc94121fb3e107718988f4a8d759fa103db0a40dcb1"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-L-native-calf-material-bound-raster.png",
+      "bytes": 28484,
+      "sha256": "400b60d2823c50ea5f44a8ad93f3a2a9640a8ffb4bc6b7cab03f29b62e75b757"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-L-native-rounded-knee-leather-material-bound-raster.png",
+      "bytes": 16280,
+      "sha256": "53d3e5cfb0c0e9d16fbbd81ea2f4db3cdf8c168cde135817084edf43a301a6a0"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-L-actual-complete-frontshoe-bound-raster.png",
+      "bytes": 22564,
+      "sha256": "e91e9c86d7308bd49a3b5c8f6cb9285283a641bb76cf1e525bb2dbeb7148a42f"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-R-native-thigh-material-bound-raster.png",
+      "bytes": 28299,
+      "sha256": "a366b5cb59af054448bde43a1ded6c5257ea6cbca3877095a66f96b3fab87332"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-R-native-calf-material-bound-raster.png",
+      "bytes": 28147,
+      "sha256": "3625b388a51c8d7e4005b153b2946567990cdc86c8336c7a4cf6d9d0a03a34e3"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-R-native-rounded-knee-leather-material-bound-raster.png",
+      "bytes": 15863,
+      "sha256": "970913206c33a9646466f6d5405c3760f12161f5ba601f4af0aaf9266dd9009b"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-R-actual-complete-frontshoe-bound-raster.png",
+      "bytes": 22659,
+      "sha256": "46cb91cc70079494c97a6dec0c4de22877f626ca57979367fc49c533c45ada49"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/fixed-entire-RIGHT-grip-restored-shaft-both-staff-ends-bound-raster.png",
+      "bytes": 100383,
+      "sha256": "a12dfbf1ab0bed981f8ea818e4b9b966813e373991e664bcacad8a54afb7652d"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase0-actual-local-breath-chest-bodice.png",
+      "bytes": 107982,
+      "sha256": "88332eb2ec3ac01a01e40714966c4fef5c605e2bb68995909966a78167a7ff09"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase0-actual-independent-head-bun.png",
+      "bytes": 77125,
+      "sha256": "822fab54393fa04dde95443e55fa1457b8ff882415a3a8c43bb771bf72f349d6"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase0-actual-free-ribbon-lag.png",
+      "bytes": 20478,
+      "sha256": "d8c4863af3ff8083f9bace1ec793ed500c125c70a282690083a7537fc55b0dda"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase0-actual-LEFT-coat-continuous-native-UV.png",
+      "bytes": 62819,
+      "sha256": "1a65216bee0e35cdcf31a1b8e4272cb8313e6cd1a105f307081d487fe5cba113"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase0-actual-RIGHT-coat-continuous-native-UV.png",
+      "bytes": 56237,
+      "sha256": "d7e0a8a860e804aa4611bf68dec81cb0a7d95316b17d24e3bdd53cbe18cbd074"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase1-actual-local-breath-chest-bodice.png",
+      "bytes": 107383,
+      "sha256": "1a4b1790fdba76d85686b2ae82348c3866ba650f28c60cd69c6d1d965b4cc63d"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase1-actual-independent-head-bun.png",
+      "bytes": 77374,
+      "sha256": "c7b03af10ea683ade6ee1aef1720618bf71c198a115c3d83f0f48dc92fdc1e12"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase1-actual-free-ribbon-lag.png",
+      "bytes": 20283,
+      "sha256": "0ef5d8b7bb33bfc037d1c75ea493076297f3f43f5510310b88135dfc74b5fff2"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase1-actual-LEFT-coat-continuous-native-UV.png",
+      "bytes": 61862,
+      "sha256": "b707baef2c0c863806bd0c3cdc8a7da6edb724f5e7ea20eda8a2573a087dfd90"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase1-actual-RIGHT-coat-continuous-native-UV.png",
+      "bytes": 56770,
+      "sha256": "0c09fa529ad28f4aec79119e4218f22d660d44c8512f0ad41922be92673975a2"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase2-actual-local-breath-chest-bodice.png",
+      "bytes": 107661,
+      "sha256": "aea7f009b7bdae0d067a1bffefc2a0f35e6c1a72df01af6408e4aecfed947dfe"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase2-actual-independent-head-bun.png",
+      "bytes": 77400,
+      "sha256": "fbfe13bd4cdb3fe7ec866c823ef1ac045d8d3c7e9e99da1852a8338466c7936b"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase2-actual-free-ribbon-lag.png",
+      "bytes": 20377,
+      "sha256": "897a1b5debb4a6b37e0e6991f87d32d209f6ea7ef67035b1ceb8da85b8aab5a8"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase2-actual-LEFT-coat-continuous-native-UV.png",
+      "bytes": 61925,
+      "sha256": "381e32aef648339473daa19171be15a6e6843ff512eb83b164504c7a304cce27"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase2-actual-RIGHT-coat-continuous-native-UV.png",
+      "bytes": 56814,
+      "sha256": "e7def59cce850d5a52507250f8f7e33ad0ca9e164cad0919cf5301d53447db71"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase3-actual-local-breath-chest-bodice.png",
+      "bytes": 107870,
+      "sha256": "98e97cad45bfe55c4d65030cf09d7a9cd2c2ac9c1bcfa7ee8e46e15f294918b4"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase3-actual-independent-head-bun.png",
+      "bytes": 77499,
+      "sha256": "91b8320ab39252c26848b7792212a80900db8a6ff1a0e937dbddcad6553ca6ad"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase3-actual-free-ribbon-lag.png",
+      "bytes": 20286,
+      "sha256": "ce06624a542546e2483f05ab7ffd344f9d10f5dae2b905c7d0f04452f9e32664"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase3-actual-LEFT-coat-continuous-native-UV.png",
+      "bytes": 61988,
+      "sha256": "054479a3e422ce85f53e368a25f0167785d01e495d13211d06de501574dd8706"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase3-actual-RIGHT-coat-continuous-native-UV.png",
+      "bytes": 56722,
+      "sha256": "7d504ee78155b2fd0beb4da3c91bc3d0ffb1791e822bc2fc9a925c628483b6c2"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase4-actual-local-breath-chest-bodice.png",
+      "bytes": 107661,
+      "sha256": "aea7f009b7bdae0d067a1bffefc2a0f35e6c1a72df01af6408e4aecfed947dfe"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase4-actual-independent-head-bun.png",
+      "bytes": 77169,
+      "sha256": "ae2bec740a81a4a0319005f7b620ef22291b1b49a05324f4ddba4acd394d53de"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase4-actual-free-ribbon-lag.png",
+      "bytes": 20248,
+      "sha256": "59d29be038f0d1c5a13bf6f2a2d734b6edb493f5a86b85abb1a3a3b2df51e88b"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase4-actual-LEFT-coat-continuous-native-UV.png",
+      "bytes": 61726,
+      "sha256": "412ac14f763e621e3f51e0b5c14c4da3285d3fc2b42a9aac8f4a38f156b4a4b1"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase4-actual-RIGHT-coat-continuous-native-UV.png",
+      "bytes": 56496,
+      "sha256": "005683f8cd172fe1620579efcb3aa029ff2f2cfaa43d6efce037b070828aefbd"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase5-actual-local-breath-chest-bodice.png",
+      "bytes": 107383,
+      "sha256": "1a4b1790fdba76d85686b2ae82348c3866ba650f28c60cd69c6d1d965b4cc63d"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase5-actual-independent-head-bun.png",
+      "bytes": 77084,
+      "sha256": "0f984c6dce2ead04322516ccd23670c3e2d75ee947624f42584793bb8e2f9956"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase5-actual-free-ribbon-lag.png",
+      "bytes": 20174,
+      "sha256": "ef3bbda95b96f3bf3f49c1ee3d4ef01cd701d36915e42ac058581c89c42b9ddc"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase5-actual-LEFT-coat-continuous-native-UV.png",
+      "bytes": 61778,
+      "sha256": "d1a42d94f88ee211376e29e2b4e320d72268c20ec7130da854c9312b4c2ecf8a"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-N-idle-author-20261020-v01/N-IDLE-v03-editable-bound-parts-and-floor-v02/phase5-actual-RIGHT-coat-continuous-native-UV.png",
+      "bytes": 56314,
+      "sha256": "3de1018667defc6e2a82c7c9e8dc90bc314321459dfb5188cd15e9e646494b7b"
+    }
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

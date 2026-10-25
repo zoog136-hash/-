@@ -1,0 +1,25 @@
+{
+  "actor": "monster:그림 리퍼",
+  "slug": "grim_reaper",
+  "clip": "SW-run-v01",
+  "role": "run",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/SW-run-v01.png",
+  "source_sha256": "a2add61b3b24d990964aaf8e87ad32976d05ec5ca15eb36fe324b96611b9eeba",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      113982,
+      110699,
+      108568,
+      107076,
+      105998,
+      103144
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

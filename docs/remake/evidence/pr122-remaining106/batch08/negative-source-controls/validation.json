@@ -1,0 +1,39 @@
+{
+  "negative_cases": [
+    {
+      "case": "duplicate-body-missing-row",
+      "refused": true,
+      "before_engine_launch": true,
+      "exit_code": 1,
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/duplicate-body-missing-row.json",
+      "fixture_SHA256": "5801c517502b768af756faa440c47d1315159dd3d8a8bf238e9447c3ba6ac5ae"
+    },
+    {
+      "case": "cropped-source-region",
+      "refused": true,
+      "before_engine_launch": true,
+      "exit_code": 1,
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/cropped-source-region.json",
+      "fixture_SHA256": "420bffdc86eb41d3d86af865407a3424fec6286867a06463d3f765587cb08dbe"
+    },
+    {
+      "case": "wrong-whole-PNG-SHA",
+      "refused": true,
+      "before_engine_launch": true,
+      "exit_code": 1,
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/wrong-whole-PNG-SHA.json",
+      "fixture_SHA256": "975453057af3ab64c6daf7ce342b52a7427f0180757e001d2d5d6212ea082387"
+    },
+    {
+      "case": "attempted-production-promotion",
+      "refused": true,
+      "before_engine_launch": true,
+      "exit_code": 1,
+      "fixture": "docs/remake/evidence/pr122-remaining106/batch08/negative-source-controls/attempted-production-promotion.json",
+      "fixture_SHA256": "0f991de1a7195a73319aee2a4d888bf05a2761471bf1487a1393517ca49f1e9f"
+    }
+  ],
+  "source_pixels_changed": false,
+  "production_writes": false,
+  "guards_weakened": false
+}

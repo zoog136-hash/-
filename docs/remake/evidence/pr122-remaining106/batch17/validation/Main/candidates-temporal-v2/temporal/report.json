@@ -1,0 +1,65 @@
+{
+	"capture_root": "/workspace/runtime/batch17/Candidates-Temporal-v02/temporal/captures",
+	"cases": [
+		{
+			"name": "얼음 여왕",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_2.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch17/Candidates-Temporal-v02/temporal/report-cases/queen-candidate-v2.json",
+			"report_sha256": "e7cd2161725b68e89081325f7e5f8c09eb6b774e0124b91759e9c42fa111562c",
+			"roles": 40,
+			"slug": "queen-candidate-v2"
+		},
+		{
+			"name": "놀",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_5.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_5.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch17/Candidates-Temporal-v02/temporal/report-cases/gnoll-candidate.json",
+			"report_sha256": "e23867f257926e93bb2349fb2f5eda5c4b3c0acc16c928765f5564b546f73b56",
+			"roles": 40,
+			"slug": "gnoll-candidate"
+		},
+		{
+			"name": "알비노 이구아나",
+			"native_phases": 112,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_2.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 112,
+			"report": "/workspace/runtime/batch17/Candidates-Temporal-v02/temporal/report-cases/preserved-iguana-baseline.json",
+			"report_sha256": "0a70fa97fe8e98473d17299a2835824c97e6c3bb9a7daa0120a8ea7ce1a99294",
+			"roles": 40,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 121966,
+	"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/runtime/batch17/Candidates-Temporal-v02/temporal/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 161020905,
+	"wall_time_performance_claim": false
+}

@@ -1,0 +1,49 @@
+{
+	"capture_root": "/workspace/runtime/batch16/Spider-Temporal-QA-v01/captures",
+	"cases": [
+		{
+			"name": "스파이더",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_1.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch16/Spider-Temporal-QA-v01/report-cases/spider-project.json",
+			"report_sha256": "95c44e44417d379414760d24641a422fb392153a6daa4b9db250a6e5520ea48f",
+			"roles": 40,
+			"slug": "spider-project"
+		},
+		{
+			"name": "알비노 이구아나",
+			"native_phases": 112,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_2.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 112,
+			"report": "/workspace/runtime/batch16/Spider-Temporal-QA-v01/report-cases/preserved-iguana-baseline.json",
+			"report_sha256": "d897a890aecdcafb7c6c5f47ca49a354b717a06444dc4b03bc1d1837e58f346e",
+			"roles": 40,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 81257,
+	"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/runtime/batch16/Spider-Temporal-QA-v01/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 149270016,
+	"wall_time_performance_claim": false
+}

@@ -1,0 +1,177 @@
+{
+  "status": "CONDITIONING_REFERENCE_ONLY",
+  "references": [
+    {
+      "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+      "sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+      "size": [
+        1254,
+        1254
+      ]
+    }
+  ],
+  "guide": {
+    "path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/left-support-two-pose-production-guide-v02.png",
+    "sha256": "ac5a046e9cc7689600973c5f112b889a15474b9c2e38e5c45d3f1f3519e087b7",
+    "size": [
+      1024,
+      512
+    ]
+  },
+  "cells": [
+    {
+      "input": {
+        "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+        "sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+        "size": [
+          1254,
+          1254
+        ]
+      },
+      "reference_factor": 0.23076923076923078,
+      "reference_resize": [
+        289,
+        289
+      ],
+      "reference_translation": [
+        119,
+        149
+      ],
+      "hip_target": [
+        256,
+        290
+      ],
+      "ground_y": 400,
+      "intended_phase": 1,
+      "target_leg_points": {
+        "phase": 1,
+        "title": "1 LEFT SUPPORT / RIGHT KNEE DRIVE",
+        "hip_y": 290,
+        "left": [
+          [
+            246,
+            290
+          ],
+          [
+            215,
+            345
+          ],
+          [
+            238,
+            393
+          ],
+          [
+            238,
+            399
+          ]
+        ],
+        "right": [
+          [
+            266,
+            290
+          ],
+          [
+            276,
+            250
+          ],
+          [
+            294,
+            289
+          ],
+          [
+            294,
+            307
+          ]
+        ],
+        "support": "LEFT",
+        "flight": false
+      },
+      "reference_only_mask_rectangle": [
+        202,
+        302,
+        309,
+        426
+      ]
+    },
+    {
+      "input": {
+        "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+        "sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+        "size": [
+          1254,
+          1254
+        ]
+      },
+      "reference_factor": 0.23076923076923078,
+      "reference_resize": [
+        289,
+        289
+      ],
+      "reference_translation": [
+        119,
+        113
+      ],
+      "hip_target": [
+        256,
+        254
+      ],
+      "ground_y": 400,
+      "intended_phase": 2,
+      "target_leg_points": {
+        "phase": 2,
+        "title": "2 BOTH AIR / RIGHT FORWARD, LEFT TRAIL",
+        "hip_y": 254,
+        "left": [
+          [
+            246,
+            254
+          ],
+          [
+            218,
+            307
+          ],
+          [
+            243,
+            329
+          ],
+          [
+            245,
+            347
+          ]
+        ],
+        "right": [
+          [
+            266,
+            254
+          ],
+          [
+            277,
+            221
+          ],
+          [
+            295,
+            259
+          ],
+          [
+            295,
+            277
+          ]
+        ],
+        "support": null,
+        "flight": true
+      },
+      "reference_only_mask_rectangle": [
+        202,
+        266,
+        309,
+        426
+      ]
+    }
+  ],
+  "source_pixels_unchanged_in_originals": true,
+  "final_game_sprite_changes": false,
+  "reference_only_leg_masking": true,
+  "material_constraints": "Support sole touches common projected plane; AIR shows both separate boot soles clearly above it. Skeleton color is anatomy metadata only and must not appear in output.",
+  "relative_scale_evidence": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/contact-key-physical-scale-reference-proposal.json",
+  "geometry_refinement": "Explicit visibly flexed support and airborne trailing knees; no near-collinear standing chains. Prior guide preserved."
+}

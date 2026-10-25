@@ -1,0 +1,46 @@
+{
+  "status": "NW_ATTACK_SCOPED_ART_PHYSICAL_LAYOUT_PASS_IDLE_ENTRY_HOLD_DUE_NWIDLE_CAMERA",
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "attack",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r083/SpriteFrames.tres",
+  "frames_sha256": "ca84f940496719b327a02232f8e50680dfd66c030febba4edd3c6d7ae6fe8d16",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+  "source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+  "scoped_attack6_visual_status": "PASS",
+  "scoped_attack6_physical_scale_status": "PASS",
+  "scoped_attack6_root_and_poseflow_status": "PASS_RETAIN_GENUINE_CROUCH_LUNGE",
+  "actual_idle_entry_and_return_status": "HOLD_CURRENT_NWIDLE_CAMERA_PURE_N_REAR",
+  "new_hold_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-idle-v02.png",
+  "new_hold_evidence": "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/confirmed-NW-idle-camera-HOLD-r083.json",
+  "metadata_correction_required_for_attack6": false,
+  "runtime_canvas_sizes": [
+    1696,
+    832,
+    832,
+    1472,
+    1472,
+    2264
+  ],
+  "actualPlayer_tests": "NOT_REPEATED_PARENT_ALREADY_PASS_FOCUSED3",
+  "visual_findings": [
+    "All six actual compiled attack_5 phases have faithful same Girtas pale long hair, narrow HARD gold radial back spines, black long robe with gold trim, same long sinuous gold blade. This is Girtas, not Halpas compactpurpleblade/wingfans or old redmask/featherfan redesign.",
+    "All six have exactly two arm/hand chains: near/imageLEFT remains EMPTY and balances; farRIGHT owns same sinuous blade continuously, with natural far-shoulder segments occluded behind hair as necessary. No leftover low armed hand plus third raised arm.",
+    "0guard→1raise→2loadedwindup→3actual extended NW contact with lowered right wrist relativeLOAD→4distinct lower followthrough→5real low-weapon guard recovery. Phase5 is not loadedoverhead pose; arms, hips/knees/robe/hair all articulate through actual6 with sourceRGBA preserved.",
+    "Cs1696/832/832/1472/1472/2264 produce near-consistent rigid helmet/pauldron/girdle scale, no wholemodel size jump. Bothfoot centroid/bodyroot track coherent; contact3/4 real NW advance/crouch and depth separation retained rather than foot-lock normalized away.",
+    "Actual current NWidle0 is independently confirmed pure axial N-rear camera. Its 0→attack0/attack5→idle transition stays HOLD until new correct NWidle art is made; attack6 scopedPASS does not mark actor complete."
+  ],
+  "visual_limitations": [
+    "NWattack6 pass is scoped source/compiled-layout visual review. New NWidle source camera correction and final fullactor/gamecatalog checks still needed. No defaultenable and no actor/detailed completion added."
+  ],
+  "proof_paths": [
+    "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/actual-layout-measurements.json",
+    "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/independent-two-sole-centroid-proof.json",
+    "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/independent-rigid-body-scale-proof.json",
+    "/workspace/scratch/girtas-r083-NW-attack-final-runtime-qc/confirmed-NW-idle-camera-HOLD-r083.json"
+  ],
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "repository_mutated": false,
+  "created_at": "2026-10-19T13:46:27.428595+00:00"
+}

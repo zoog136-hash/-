@@ -1,0 +1,35 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "PLANNED_WAITING_FARLEFT0_INDEPENDENT_SOURCE_PASS",
+  "source_kind": "NEW_single_run_flight_from_correct_samehip_landing",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phases": [
+    2
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+    "/workspace/scratch/girtas-NE-run-followup-constant-bone-guides-v01/NE-RUN-followup-phase2-RIGHT-lead-fixedbone-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+    "/workspace/scratch/girtas-NE-run-followup-constant-bone-guides-v01/NE-RUN-followup-phase2-RIGHT-lead-fixedbone-guide.png": "3d33c09cc07236a678bb4d56d67f63bccbdacb6ed1dd5744966deae7152d937f"
+  },
+  "transparent_background": true,
+  "prompt": "Author exactlyONE NEW faithfulGIRTAS trueNE RUN gamephase2 FLIGHT, anatomicalRIGHT leading/support ownership. FIRST is genuine originalmodel RUNcontact with correctRIGHThip→knee→boot chain andoriginalRIGHTweapon. Keep same anatomicalhips/camera/proportions, re-authorrealrequestedmotion. SECOND exactNEconstant-bone3D pose is newjointarticulationauthority, notmodelredesign. FARLEFT hip/imageLEFT/back ownsitsownleg, NEARRIGHT hip/imageRIGHT/near ownsitsownleg; footscreenXmaycross, neverforceLEFTbootleft. Traceeveryknee/shin/bootfromitsactualhip. Exactly2connectedlegs/boots/arms/hands. Do notcopystanding/walk or simplyrescale/translatecontact.\n\nNEW ACTUAL TWO-BOOT AIR FLIGHT, approaching RIGHT landing: preserve FIRST source RIGHT leadinghip ownership but bend/lift its actual knee/shin/boot into a reachingAIR leg, NOT a plantedstraightleg translatedup. Opposite LEFT knee/shin folds andtrails behind onitsoriginalhip, partialextensionfromhighrecovery totrailingtoe, stillAIR. BOTH completeBOOTSOLES clearly ABOVE SAME physicalground ofsourcecontact, no plantedtoe/support anywhere andnotmerelysoleupturn. Raise pelvis modestlyinto runairarc whileactualthigh/knee/ankles genuinelychange; bodyremainsforwardNElean, originalskull/pauldron/waist/limbproportionsunchanged. LeadingRIGHT shinreachesforward world+YNEUPRIGHT whiletrailingLEFT foldsbehindworld-Y, nolegswap. Contralateralbentarms: LEFT armforward, RIGHT armback, originalRIGHTweaponcontinueswithitsarm; nohandtransfer. Flight must be anatomicallydistinct fromlanding andcompression; no staticlandingcutoutfloating.\n\nFixedsameNErearRIGHT3/4 camera, world+YprojectsUPRIGHT; mostlyPALElongBACKhair/dorsalarmor withlargernearRIGHTshoulder/weaponarmvisibleIMAGERIGHT, foreshortenedfarLEFT, obliquehips, noNsymmetry/Eside/frontturn. Sameoriginalgoldhorncrown/thinHARDstraightGOLDradialspines/blackgoldheavyarmor/LONGdarkgoldtrimlayeredROBEtoankles, detailedfiligree/hairstrands. No giantlegs/tinycore, segmentedpants/shortskirt/barelegs/wings/redmask/flamefan/newgear. OnefullLONGLISH SINOUSorangegoldblade continuously in anatomicalNEARRIGHT hand, exactsourcecurve/length/grip, EMPTYfarLEFT hand; noextraarm/shortbroadsword/handtransfer.\n\nOutputONEwholeisolatedtransparentrequested1024squareRGBA, body500–600px/fullgear≤800px,≥96pxalpha0outerclearance, fullspines/robe/hair/blade/boots notclippedorshortened. No floor/shadow/aura/outwardhaze/particles/blur/labels/grid/guidecolors/duplicates. Preserve actualmodelquality andcamera whileNEWload/AIRjoints genuinelymove. No approval/count claim fromgeometryalone.",
+  "corrective_reason": "Create actualremainingrunphase fromindependentlycorrectsameleadinghip contact, primaryexactmodel/anatomy+newconstantbone3Dphase, preservealloldpartials. No repeatedcontact/walkcopy, actualload/AIRmoves andcontralateralarms.",
+  "source_contact_result_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/result.json",
+  "source_contact_result_sha256": "41c2943155e9c5ab4a28315ef1fcb257a327d509d8e297064a53f4b97df66a8f",
+  "fixedbone_3d_proof_path": "/workspace/scratch/girtas-NE-run-followup-constant-bone-guides-v01/fixedbone-NE-run-four-followup-3d-proof.json",
+  "fixedbone_3d_proof_sha256": "0f0ee44451ee13b7afaed844a75eb265caa31312a59e1abf4fb3b3ac89ba107e",
+  "user_authorization": "ContinueexistingPR122actualUniqueanimationproduction, privateimagegenallowed/mainchatimagesforbidden, preserveoldart/approvals/colorprofiles.",
+  "requested_at": "2026-10-19T16:37:33.950492+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_poses": 0,
+  "actor_approval": false
+}

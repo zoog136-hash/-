@@ -1,0 +1,25 @@
+{
+  "actor": "monster:그림 리퍼",
+  "slug": "grim_reaper",
+  "clip": "N-idle-v01",
+  "role": "idle",
+  "direction": "N",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/N-idle-v01.png",
+  "source_sha256": "1b4a4fd7158016a48060ee23cf8d3d31aa357adbbc8bf711cea0b11c6ffabd54",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      103343,
+      98561,
+      96705,
+      90812,
+      90613,
+      88473
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

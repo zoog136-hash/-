@@ -1,0 +1,7 @@
+{"phase": 0, "source": {"path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v01/phase0-actual-NE-hit-stable_guard-v01/thunder_female-NE-hit-phase0-stable_guard-actual-native-v01.png", "sha256": "589f871ad4b06d991455dee2bfb151916db4354c4d2533e5b8a2c4a0e4d9a0a0", "bytes": 762136}, "footdiff": 0, "staffdiff": 0, "strong": [273223], "inverse_residual": 1.1368683772161603e-13}
+{"phase": 1, "source": {"path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v01/phase1-actual-NE-hit-impact_response-v01/thunder_female-NE-hit-phase1-impact_response-actual-native-v01.png", "sha256": "19d8a90044230582cf7c8d7a1f08feeef00480c6bf013782fc9011f4564f83bb", "bytes": 739069}, "footdiff": 0, "staffdiff": 0, "strong": [267306], "inverse_residual": 1.1368683772161603e-13}
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/author-NE-HIT6-native-fixed-brace-spine-head-curved-guard-v01.py", line 134, in <module>
+    assert residual < .0001, residual
+           ^^^^^^^^^^^^^^^^
+AssertionError: 62.86415663281048

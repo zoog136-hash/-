@@ -1,0 +1,70 @@
+{
+  "schema": "mythic413-N-walk-author-request-v1",
+  "scope": {
+    "key": "transform:413",
+    "direction": "N",
+    "direction_index": 6,
+    "animation": "walk_6",
+    "poses": 6
+  },
+  "production_status": "REQUEST_READY_NOT_SERVICE_STARTED",
+  "canvas": {
+    "raw_atlas": [
+      1024,
+      1536
+    ],
+    "columns": 2,
+    "rows": 3,
+    "raw_cell": [
+      512,
+      512
+    ],
+    "virtual_logical_canvas": [
+      1024,
+      1024
+    ],
+    "logical_foot": [
+      512,
+      640
+    ],
+    "target_neutral_alpha16_whole_height": 464,
+    "intended_source_anchor": [
+      256,
+      480
+    ],
+    "resampling": "FORBIDDEN"
+  },
+  "identity": {
+    "weapon_hand": "anatomical RIGHT screen RIGHT",
+    "view": "pure back N, no eyes/front chest"
+  },
+  "preserve": {
+    "existing_clips": 10,
+    "existing_poses": 60,
+    "profile_pixel_scale": 0.237068965517,
+    "no_repo_mutations": true
+  },
+  "guide": "N-walk-fixedbone-guide-v05.json",
+  "approval": {
+    "author_self_approval": false,
+    "independent_review": "REQUIRED",
+    "completed_added": 0
+  },
+  "phase_contract": [
+    "Lheelcontact/Rairdeparture",
+    "Lmid/Rpass",
+    "Lterminaltoe/Rapproach",
+    "Rheelcontact/Lairdeparture",
+    "Rmid/Lpass",
+    "Rterminaltoe/Lapproach"
+  ],
+  "clock_calibration": {
+    "root_world_delta_per_phase": 16.8,
+    "required_raw_sourceY_contact_delta": 70.8654545455267,
+    "forward_contact_advance": 64.23950718488129,
+    "terminal_toe_advance": -62.914891626825536,
+    "pelvis_height": 100,
+    "thigh": 61,
+    "shin": 61
+  }
+}

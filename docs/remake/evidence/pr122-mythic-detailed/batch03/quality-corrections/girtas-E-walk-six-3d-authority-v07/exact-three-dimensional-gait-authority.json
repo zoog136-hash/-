@@ -1,0 +1,495 @@
+{
+  "status": "PRODUCTION_POSE_GUIDE_ONLY_NOT_FINAL_GAME_ART",
+  "method": "Solid limb capsules+physical boot ellipsoids, true 3D occlusion under fixed pureE camera. Final art must be imagegenerated faithful Girtas; geometricguide is not completion.",
+  "camera": [
+    7,
+    0,
+    5
+  ],
+  "forward_PLUS_Y_projects": "screenRIGHT_horizontal",
+  "near_RIGHT_PLUS_X": "foreground_lowerground",
+  "far_LEFT_MINUS_X": "background_upperground",
+  "phases": [
+    {
+      "phase": 0,
+      "name": "LEFT_HEEL_CONTACT0",
+      "camera": [
+        7,
+        0,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "anatomicalRIGHT_near_axis": [
+        1,
+        0,
+        0
+      ],
+      "hip_center": [
+        0,
+        0,
+        1.03
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            0.18,
+            -0.2208,
+            0.61
+          ],
+          "ankle": [
+            0.18,
+            -0.46,
+            0.17501062894832994
+          ],
+          "foot_center": [
+            0.18,
+            -0.38,
+            0.09501062894832994
+          ],
+          "rotationX": -0.35,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            -0.18,
+            0.2208,
+            0.61
+          ],
+          "ankle": [
+            -0.18,
+            0.46,
+            0.16395490479313263
+          ],
+          "foot_center": [
+            -0.18,
+            0.54,
+            0.08395490479313261
+          ],
+          "rotationX": 0.25,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        }
+      },
+      "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase0.png",
+      "render_sha256": "58f1f2e3ba738f9258a8e1fba83c7c4d167c4c084b4eeb379847c70af0a8ab38"
+    },
+    {
+      "phase": 1,
+      "name": "LEFT_MIDSTANCE1",
+      "camera": [
+        7,
+        0,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "anatomicalRIGHT_near_axis": [
+        1,
+        0,
+        0
+      ],
+      "hip_center": [
+        0,
+        0,
+        1.08
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.08
+          ],
+          "knee": [
+            0.18,
+            0.035,
+            0.65
+          ],
+          "ankle": [
+            0.18,
+            -0.12,
+            0.2724557213675098
+          ],
+          "foot_center": [
+            0.18,
+            -0.039999999999999994,
+            0.19245572136750977
+          ],
+          "rotationX": 0.1,
+          "ground_clearance": 0.12,
+          "is_support": false,
+          "ground_min_z": 0.12
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.08
+          ],
+          "knee": [
+            -0.18,
+            0.0,
+            0.61
+          ],
+          "ankle": [
+            -0.18,
+            0,
+            0.15000000000000002
+          ],
+          "foot_center": [
+            -0.18,
+            0.08,
+            0.07
+          ],
+          "rotationX": 0,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        }
+      },
+      "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase1.png",
+      "render_sha256": "a1b48cd9f81c2b5ddb78c5ca2a824694626962d4adcfe7f0c7399ba3e41e3490"
+    },
+    {
+      "phase": 2,
+      "name": "LEFT_TOEOFF_RIGHT_REACH2",
+      "camera": [
+        7,
+        0,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "anatomicalRIGHT_near_axis": [
+        1,
+        0,
+        0
+      ],
+      "hip_center": [
+        0,
+        0,
+        1.06
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.06
+          ],
+          "knee": [
+            0.18,
+            0.21000000000000002,
+            0.67
+          ],
+          "ankle": [
+            0.18,
+            0.28,
+            0.22762094269237038
+          ],
+          "foot_center": [
+            0.18,
+            0.36000000000000004,
+            0.14762094269237036
+          ],
+          "rotationX": 0.18,
+          "ground_clearance": 0.07,
+          "is_support": false,
+          "ground_min_z": 0.07
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.06
+          ],
+          "knee": [
+            -0.18,
+            -0.144,
+            0.61
+          ],
+          "ankle": [
+            -0.18,
+            -0.3,
+            0.17501062894832994
+          ],
+          "foot_center": [
+            -0.18,
+            -0.21999999999999997,
+            0.09501062894832994
+          ],
+          "rotationX": -0.35,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        }
+      },
+      "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase2.png",
+      "render_sha256": "ba142c0290efa19e3c61b947a999975eed7b48f29ee20f601bf269e3db4f15af"
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT_HEEL_CONTACT3",
+      "camera": [
+        7,
+        0,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "anatomicalRIGHT_near_axis": [
+        1,
+        0,
+        0
+      ],
+      "hip_center": [
+        0,
+        0,
+        1.03
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            0.18,
+            0.2208,
+            0.61
+          ],
+          "ankle": [
+            0.18,
+            0.46,
+            0.16395490479313263
+          ],
+          "foot_center": [
+            0.18,
+            0.54,
+            0.08395490479313261
+          ],
+          "rotationX": 0.25,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.03
+          ],
+          "knee": [
+            -0.18,
+            -0.2208,
+            0.61
+          ],
+          "ankle": [
+            -0.18,
+            -0.46,
+            0.17501062894832994
+          ],
+          "foot_center": [
+            -0.18,
+            -0.38,
+            0.09501062894832994
+          ],
+          "rotationX": -0.35,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        }
+      },
+      "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase3.png",
+      "render_sha256": "c66b708fe798e705ee14cf720fc47f289625282cd4b0849ea722dbfa76166c9e"
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT_MIDSTANCE4",
+      "camera": [
+        7,
+        0,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "anatomicalRIGHT_near_axis": [
+        1,
+        0,
+        0
+      ],
+      "hip_center": [
+        0,
+        0,
+        1.08
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.08
+          ],
+          "knee": [
+            0.18,
+            0.0,
+            0.61
+          ],
+          "ankle": [
+            0.18,
+            0,
+            0.15000000000000002
+          ],
+          "foot_center": [
+            0.18,
+            0.08,
+            0.07
+          ],
+          "rotationX": 0,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.08
+          ],
+          "knee": [
+            -0.18,
+            0.035,
+            0.65
+          ],
+          "ankle": [
+            -0.18,
+            -0.12,
+            0.2724557213675098
+          ],
+          "foot_center": [
+            -0.18,
+            -0.039999999999999994,
+            0.19245572136750977
+          ],
+          "rotationX": 0.1,
+          "ground_clearance": 0.12,
+          "is_support": false,
+          "ground_min_z": 0.12
+        }
+      },
+      "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase4.png",
+      "render_sha256": "6dfbaa2549b2dbf8878c4a2a5cb8085d297b4f83369607d9663e41b4cba35327"
+    },
+    {
+      "phase": 5,
+      "name": "RIGHT_TOEOFF_LEFT_REACH5",
+      "camera": [
+        7,
+        0,
+        5
+      ],
+      "forward": [
+        0,
+        1,
+        0
+      ],
+      "anatomicalRIGHT_near_axis": [
+        1,
+        0,
+        0
+      ],
+      "hip_center": [
+        0,
+        0,
+        1.06
+      ],
+      "legs": {
+        "RIGHT": {
+          "hip": [
+            0.18,
+            0,
+            1.06
+          ],
+          "knee": [
+            0.18,
+            -0.144,
+            0.61
+          ],
+          "ankle": [
+            0.18,
+            -0.3,
+            0.17501062894832994
+          ],
+          "foot_center": [
+            0.18,
+            -0.21999999999999997,
+            0.09501062894832994
+          ],
+          "rotationX": -0.35,
+          "ground_clearance": 0,
+          "is_support": true,
+          "ground_min_z": 0
+        },
+        "LEFT": {
+          "hip": [
+            -0.18,
+            0,
+            1.06
+          ],
+          "knee": [
+            -0.18,
+            0.21000000000000002,
+            0.67
+          ],
+          "ankle": [
+            -0.18,
+            0.28,
+            0.22762094269237038
+          ],
+          "foot_center": [
+            -0.18,
+            0.36000000000000004,
+            0.14762094269237036
+          ],
+          "rotationX": 0.18,
+          "ground_clearance": 0.07,
+          "is_support": false,
+          "ground_min_z": 0.07
+        }
+      },
+      "render": "/workspace/scratch/girtas-E-walk-six-3d-authority-v07/solid-E-walk-phase5.png",
+      "render_sha256": "b132b3889e8d0219cdf2fb51f53956123700436a52ef0e4f2e7a8c0a904a42f1"
+    }
+  ],
+  "no_game_asset_or_approval": true
+}

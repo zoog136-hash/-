@@ -1,0 +1,64 @@
+{
+  "schema": "independent-private-actual-NW-run-load1-v05-gate-v1",
+  "status": "HOLD_TWO_LOCAL_SEMANTIC_AND_ANKLE_SURFACE_FINISHES",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v05/thunder_female-NW-run-load1-actual-rig-v05.png",
+    "sha256": "7e8b3847cd305c54f862b1d1da99f3d13e36b024b85e4d15880eeb13387a1dce",
+    "bytes": 801834
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "raw_canvas": [
+    1536,
+    1536
+  ],
+  "closed_improvements": [
+    "Bounded UV removes long black endpoint extrusion/bar.",
+    "Clean unchanged true-shoe modules and raised RIGHT recovery read correctly.",
+    "Wholebody/costume/RIGHTstaff/native density retained."
+  ],
+  "remaining_visible_findings": [
+    {
+      "area": "LEFT ankle/leather-to-counter",
+      "ROI_xyxy": [
+        675,
+        1145,
+        765,
+        1235
+      ],
+      "finding": "Reentrant missing leather wedge between black ankle and inner gold counter; alpha0 UV area is not a finished joint surface.",
+      "minimum_fix": "Actual leather surface bridge with shaped material, anatomical shaft envelope and AA behind unchanged shoe/calf."
+    },
+    {
+      "area": "Underhem nearleg semantic edge",
+      "ROI_xyxy": [
+        615,
+        790,
+        650,
+        900
+      ],
+      "finding": "Pointed dark strip reads as disconnected material beside nearthigh.",
+      "author_isolated_cause": "Body layer is clean; broad nearleg material mask includes far/root material and drags it into the posed nearleg.",
+      "minimum_fix": "Trace true actual nearboot/thigh foreground and correct its material/cloth occlusion; do not alter good body layer."
+    }
+  ],
+  "independent_numeric_model_dependency": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/RUN-pair-b9fa-independent-constructive-numeric-v01.json",
+    "sha256": "71c935451e78178985765fb94799dadfc20128988f7d1cc70e2b0d1299bb9672",
+    "scope": "Constructive fixedbone/grounddepth/staff/clock arithmetic only; prior v04 source pins. Actual source/pairphysical/cycle not approved."
+  },
+  "method_policy": "Actual-part layer rigging/retouch is authorized; HOLD is solely final visible finishing.",
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-load1-v05-frozen.json",
+    "sha256": "be351ccf8cd8c647de656cb1bc9ed6a6246795ce871dc4125531118fc810254b",
+    "bytes": 10209
+  },
+  "actual_source_phase_approved": false,
+  "physical_planting_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

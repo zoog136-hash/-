@@ -1,0 +1,99 @@
+{
+  "phase": 4,
+  "role": "regaining_control",
+  "source": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase4-actual-W-hit-regaining_control-v01/thunder_female-W-hit-phase4-regaining_control-actual-native-v01.png",
+    "sha256": "40321742ec5907ac1cd0ee8164ccaa3f022688dc06d432b58eecbaae33af3ced",
+    "bytes": 773023
+  },
+  "native_size": [
+    1536,
+    1536
+  ],
+  "C": 2560.0,
+  "bodyunit": 2.5,
+  "common_rig_root_unpadded": [
+    646.0833333333334,
+    991.9227375838406
+  ],
+  "storage_translation": [
+    128.0,
+    128.0
+  ],
+  "stored_common_root": [
+    774.0833333333334,
+    1119.9227375838404
+  ],
+  "head_torso_velocity_parameter_native": [
+    -1.0526315789473684,
+    2.631578947368421
+  ],
+  "head_local_angular_velocity_parameter_degrees": -0.3,
+  "LEFT_actual_source_knots": [
+    [
+      699.0,
+      487.0
+    ],
+    [
+      701.0,
+      518.0
+    ],
+    [
+      735.0,
+      640.0
+    ]
+  ],
+  "LEFT_actual_guard_knots_unpadded": [
+    [
+      698.4340072274208,
+      488.4149819612503
+    ],
+    [
+      700.6005027592182,
+      518.998743057251
+    ],
+    [
+      586.9652484903281,
+      571.9877323592249
+    ]
+  ],
+  "LEFT_guard_target_angle": 155.0,
+  "LEFT_guard_projected_length": 125.3826303759815,
+  "source_complete_LEFT_native_material": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/common-own-W-native-LEFT-materials-v03/original-actual-W-LEFT-far-complete-curved-cuff-forearm-free-hand-material-v03.png",
+    "sha256": "9cd455e8ec08d23fcd974ce32c1d057fd0ab296df87124de9eb85d9f5489a033",
+    "bytes": 48670
+  },
+  "actual_LEFT_guard_forward_mesh": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase4-actual-W-hit-regaining_control-v01/LEFT-own-W-complete-curved-cuff-forearm-fingers-guard-actual-forward-mesh.json",
+    "sha256": "0bbe42d247be204d2f9504da7ff49449da34ecff13e2e54a4113351df6211e86",
+    "bytes": 154847
+  },
+  "cloth_lag_native": [
+    5.0,
+    -1.0
+  ],
+  "ribbon_lag_native": [
+    3.0,
+    -1.0
+  ],
+  "body_inverse_maximum_residual": 2.2737367544323206e-13,
+  "actual_body_forward_flow": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase4-actual-W-hit-regaining_control-v01/actual-W-native-body-causal-forward-material-flow-v03.npz",
+    "sha256": "493635a02d2b6d0cd5552d407630482943cf6958c665f9853a5bc903fc7bd81d",
+    "bytes": 2426224
+  },
+  "body_flow_definition": {
+    "scaling_squaring_steps": 8,
+    "initial_velocity_divisor": 256,
+    "minimum_dense_Jacobian_determinant": 0.9311556356214652,
+    "maximum_native_displacement": 3.248157024383545,
+    "stored_precision": "float32 exact render input"
+  },
+  "fixed_original_complete_legs_boots_native_region_RGBA_changed": 0,
+  "original_RIGHT_gear_and_conservative_fixed_native_region_RGBA_changed": 0,
+  "strong_alpha100_components_ge200": [
+    266342
+  ],
+  "actor_approvals_added": 0
+}

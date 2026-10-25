@@ -1,0 +1,56 @@
+{
+  "status": "PASS_INDEPENDENT_ONCE_BODY_REGISTRATION_ARITHMETIC",
+  "actor_id": 413,
+  "direction": "SW",
+  "registration": {
+    "path": "/workspace/scratch/mythic413-SW-hit-author-20261020-v01/SW-new-native-one-time-body-density-C2496-root-registration-v02.json",
+    "sha256": "5093a7f32fac498ee1c4effb69dc9603939cee1bb1ccc62c099a24761a1bb4a1",
+    "bytes": 4426
+  },
+  "actual_source": {
+    "path": "/workspace/scratch/mythic413-SW-hit-author-20261020-v01/SW-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "145ab2a2ee58ae4f3c2c15cdd6d37a6d55eb1716533246c7ca145d4d6e8bf4e8",
+    "bytes": 870287
+  },
+  "canonical_N_source": {
+    "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+    "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+    "bytes": 452591
+  },
+  "checks": {
+    "N_neck_waist_vector_native": [
+      4,
+      160
+    ],
+    "SW_neck_waist_vector_native": [
+      27,
+      208
+    ],
+    "exact_C": 2496.0,
+    "nearest64_C": 2496,
+    "fixed_bodyunit": 2.4375,
+    "vertical_span_error_fraction": 0.0,
+    "full2D_span_crosscheck_fraction": 0.008074849734919898,
+    "once_hem_registered_root": [
+      667.65625,
+      1003.5996691442447
+    ],
+    "root_max_error_native": 0.0,
+    "stored_root_max_error_native": 0.0,
+    "normalized_crown_height_difference_fraction": -0.008727193570715275,
+    "normalized_neck_height_difference_fraction": -0.019533537117759625,
+    "actual_marker_source_alpha": {
+      "gold_bun_crown": 167,
+      "lower_neck_center_front_left_proxy": 253,
+      "gold_waist_belt_center_front_left_proxy": 253,
+      "visible_central_hem_proxy": 253
+    }
+  },
+  "limits": [
+    "Front-left lower-neck/collar and garment beltline vs back-view nape/ornament are uncertain anatomical proxies, not identical visible pixels (+/-10native; hairstyle+/-12).",
+    "Arithmetic confirms one fixed authored production convention, not unique hidden anatomy or physical sole/floor. No feet, alpha-height, perpose fit or source resampling enters C/root.",
+    "Unused v01 proposal remains preserved; only exact v02 is bound."
+  ],
+  "new_images_for_numeric_check": 0,
+  "actor_approvals_added": 0
+}

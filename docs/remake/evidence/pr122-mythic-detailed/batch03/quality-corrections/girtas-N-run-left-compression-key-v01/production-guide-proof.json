@@ -1,0 +1,80 @@
+{
+  "status": "REFERENCE_ONLY_KINEMATIC_GUIDE",
+  "source_path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+  "source_sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+  "source_native_size": [
+    1254,
+    1254
+  ],
+  "source_support": "LEFT",
+  "source_support_sole_laststrong": [
+    526,
+    1178
+  ],
+  "source_hip_estimate": [
+    593,
+    650
+  ],
+  "reference_factor": 0.2926829268292683,
+  "reference_canvas_proposal": 2624,
+  "absolute_scale_basis": "Draft Nwalk rigid shoulder/head landmark evidence; reference only.",
+  "reference_translation": [
+    82,
+    115
+  ],
+  "reference_only_mask_rectangle": [
+    135,
+    316,
+    355,
+    490
+  ],
+  "guide_leg_chains": {
+    "LEFT_SUPPORT": [
+      [
+        246,
+        305
+      ],
+      [
+        214,
+        350
+      ],
+      [
+        249,
+        395
+      ],
+      [
+        250,
+        400
+      ]
+    ],
+    "RIGHT_DRIVE": [
+      [
+        266,
+        305
+      ],
+      [
+        277,
+        247
+      ],
+      [
+        302,
+        279
+      ],
+      [
+        300,
+        297
+      ]
+    ]
+  },
+  "target_internal_left_knee_angle_degrees": 106.70796107243437,
+  "target_left_knee_flexion_degrees": 73.29203892756563,
+  "original_landing_hip_y_at_same_reference_ground": 245,
+  "target_hip_y": 305,
+  "pelvis_lowering_guide_pixels": 60,
+  "contact_plane_y": 400,
+  "guide_path": "/workspace/scratch/girtas-N-run-left-compression-key-v01/left-compression-ground-and-knee-production-guide.png",
+  "guide_sha256": "8cfe99a5f3a01340ee9bdafde55d10c68f9f73dfada6ec9e6bddb8fe76d94361",
+  "source_PNG_mutations": false,
+  "final_sprite_resampling": false,
+  "actor_approval": false
+}

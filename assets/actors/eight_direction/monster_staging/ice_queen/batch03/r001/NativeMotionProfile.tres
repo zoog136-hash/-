@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TwilightAnimationProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/animation/animation_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+profile_id = "monster:얼음 여왕"
+frames_path = "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres"
+layout = "directional8"
+movement_fps = 12.5
+reference_speed = 210.0
+pixel_scale = 2.253890253890
+sprite_offset = Vector2(0, -72.124488124488)
+authored_motion_weight = 0.0
+hit_recoil = 0.0
+embedded_shadow = false
+metadata/twilight_production_connected = false
+metadata/twilight_detailed_completed = false

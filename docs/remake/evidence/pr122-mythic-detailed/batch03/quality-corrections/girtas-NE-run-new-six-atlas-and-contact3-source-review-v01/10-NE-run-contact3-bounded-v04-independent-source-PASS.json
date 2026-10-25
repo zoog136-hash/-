@@ -1,0 +1,81 @@
+{
+  "schema": "pr122-native-independent-source-quality-v1",
+  "utc": "2026-10-20T06:51:15.059154+00:00",
+  "reviewer": "/root/girtas_ne_final_source_and_cycle_qc_fresh",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "phase": 3,
+  "status": "PASS",
+  "source_visual_status": "PASS",
+  "scope": "NARROW_FINAL_SOURCE3_BOUNDED_LOWERBODY_ONLY; whole6 ground/loop/actualPlayer and actor approval remain pending",
+  "raw_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-v04.png",
+  "raw_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+  "source_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+  "fixed_pose_canvas_size": 1776,
+  "reference_original": {
+    "path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+    "sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a"
+  },
+  "single_generation_raw": {
+    "path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/generated-lowerbody-contact3-original-service.png",
+    "sha256": "ce8b26e7440b41b293d1f2b8e92c78c72c6233bf117c11db931f192b3237a8fc"
+  },
+  "preservation_v04": {
+    "path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/outside-semantic-ROI-exact-RGBA-proof-v04.json",
+    "sha256": "d6abe86eeb7b478b3bac0bff262ae2df3123665d63cfb4df10360d8695a32d4b"
+  },
+  "alpha16_crop_v04": {
+    "path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/source-crop-proof-v04.json",
+    "sha256": "ca5dc54edc5580cc0d0e4039f23e7748f246acf008c3264df60f794f2c9f62c7"
+  },
+  "source_geometry": {
+    "path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/geometry-base2048-v04.json",
+    "sha256": "f491e7de2697f01615d7207e81a9cf829416e45173b27ad61cdeab6e454ea0a7"
+  },
+  "producer_frozen_files": {
+    "path": "/workspace/scratch/pr122-NE-contact3-lowerbody-producer-frozen-allowlist-v01.json",
+    "sha256": "66f7f880b37a7382db7ada78e793605f13f196255f6f15ba4e9f62c5ce507e65"
+  },
+  "independent_numeric_proof": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/NE-contact3-final-v04-independent-byte-proof-final.json",
+    "sha256": "4ba6c1406bdc0503aa0dd9c1c44a2986bd700e7dc273fbb62ce61c74f920d886"
+  },
+  "private_direct_view": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/private-NE-contact3-final-v04-comparison.jpg",
+    "sha256": "883669cd60641d81bded18053cbb29414b2d2de362a48e839b26999a558c3b46"
+  },
+  "private_image_ledger": {
+    "path": "/workspace/scratch/girtas-ne-final-source-cycle-independent-fresh-20261020/private-image-ledger-through-source3-final.json",
+    "sha256": "93b91553b29e99da429421e2dcba030f0c3755fad3347fbaa7419e9b387971df",
+    "viewed_encoded_bytes": 98480
+  },
+  "checks": {
+    "identity_equipment": "PASS",
+    "NE_compass_and_anatomical_nearRIGHT": "PASS",
+    "genuine_knee_shin_heel_landing_art": "PASS",
+    "anatomy_and_cloth_join": "PASS",
+    "whole_alpha_and_complete_sole": "PASS",
+    "protected_original_uppercore_weapon_farLEFT_RGBA": "PASS",
+    "previous_hard_upperthigh_mask_cut_removed": "PASS"
+  },
+  "visual_findings": [
+    "The near anatomical RIGHT thigh and knee genuinely flex while the foot retains a complete heel-to-forefoot silhouette; this is a new local pose, not scaling, padding, mirroring, or root-only displacement.",
+    "The final lower robe rim attaches beneath the original rigid cuirass and follows the bent thigh. Direct enlarged inspection shows a continuous cloth/thigh transition and no prior polygon-cut knee or upperthigh edge.",
+    "The original gold crown, white hair, shoulder armor, arm, hand, blazing curved weapon and far anatomical LEFT recovery leg retain their model, color, silhouette and exact protected RGBA.",
+    "The final nearRIGHT boot is intact and the old extended boot has been fully vacated; source alpha is complete within the reviewed exact crop."
+  ],
+  "visual_limitations": [
+    "This cert approves the single final source3 only. It does not approve root placement, all6 timing, AIR2/AIR5 clearances, idle entry or the actual game actor.",
+    "The fixed C1776 body-scale stage is preserved through exact original uppercore pixels; final whole6 runtime footing and transitions require independent review of the newly assembled candidate."
+  ],
+  "preserved_physical_HOLD_sha256": "6af534377b3855b351bce9ae4926ea5bdeee8ac0acb82f736f947b27d366f0be",
+  "preserved_Cstage_PASS_sha256": "98d5a94893dc0cc343c12a14db0f413213d5d31dc204f541fab75f0588719edc",
+  "remaining_scope": "NEW_WHOLE6_GROUND_AND_LOOP_REVIEW_THEN_ACTUAL_GODOT_AND_DEFAULT_MAIN",
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "counts_changed": false,
+  "repository_mutations": false,
+  "images_attached_to_main_or_parent": false
+}

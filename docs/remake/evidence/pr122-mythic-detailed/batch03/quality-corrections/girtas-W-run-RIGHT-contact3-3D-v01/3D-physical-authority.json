@@ -1,0 +1,67 @@
+{
+  "key": "transform:267",
+  "direction": "W",
+  "role": "run",
+  "game_phase": 3,
+  "support_leg": "RIGHT",
+  "opposite_leg": "AIR_TRAILING",
+  "camera": [
+    -9,
+    0,
+    3.5
+  ],
+  "target": [
+    0,
+    0,
+    1
+  ],
+  "forward_world_axis": "+Y",
+  "LEFT": "near/world-Xnegative",
+  "RIGHT": "far/world-Xpositive",
+  "forward_body_lean": true,
+  "right_hand": "single_sinuous_blade_proxy",
+  "left_hand": "EMPTY",
+  "joints": {
+    "LEFT": {
+      "hip": [
+        -0.18,
+        0,
+        1.05
+      ],
+      "knee": [
+        -0.18,
+        0.0987457876948653,
+        0.4987747561907922
+      ],
+      "ankle": [
+        -0.18,
+        -0.5,
+        0.46
+      ],
+      "support": "AIR_TRAILING",
+      "upperleg_length": 0.5599999293139426,
+      "lowerleg_length": 0.5999999741829616
+    },
+    "RIGHT": {
+      "hip": [
+        0.18,
+        0,
+        1.05
+      ],
+      "knee": [
+        0.18,
+        0.4098594264751322,
+        0.668404336332977
+      ],
+      "ankle": [
+        0.18,
+        0.55,
+        0.085
+      ],
+      "support": "HEEL_CONTACT",
+      "upperleg_length": 0.5599999501023951,
+      "lowerleg_length": 0.6000000227863586
+    }
+  },
+  "purpose": "Production pose authority only; not source art/runtime approval."
+}

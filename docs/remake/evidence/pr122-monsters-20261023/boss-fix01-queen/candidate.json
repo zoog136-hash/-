@@ -1,0 +1,2260 @@
+{
+  "schema": "pr122-boss-repair-candidate-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen",
+  "actors": {
+    "monster:얼음 여왕": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/SpriteFrames.tres",
+      "frames_sha256": "01d5c21c5af8df99262fa863a135be1ea1e1e3cfa10996d735717606cb40ee00",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/NativeMotionProfile.tres",
+      "native_profile_sha256": "bc22918d1c8e8ccd38edddf0f12a6a0dbcadd74f1b19bd9989759b0ca3854103",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 7,
+      "native_pose_count": 42,
+      "missing_required_tracks": [
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_6",
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "death_2"
+      ],
+      "quality_review": "HOLD: final independent support/contact/camera/handedness/crown palette/game-speed QA; no approval or default activation",
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-E-run6-v01.png",
+          "source_sha256": "036614afe3bb8bc9cf661900cbf9e27b22131635cfd1d99a8d47ee06899a111f",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/E-run.png",
+          "geometry": {
+            "image_size": [
+              1222,
+              1287
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  59,
+                  18,
+                  458,
+                  394
+                ],
+                "margin": [
+                  105,
+                  49,
+                  246,
+                  310
+                ],
+                "source_anchor": [
+                  306,
+                  409
+                ],
+                "rgba_sha256": "b91eec3397aa0610bf220f9f0b164b58f2ff3b86476e9cd09c2d50b8cf8d4d59",
+                "source_slot": 0,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  73,
+                  436,
+                  448,
+                  402
+                ],
+                "margin": [
+                  119,
+                  42,
+                  256,
+                  302
+                ],
+                "source_anchor": [
+                  306,
+                  834
+                ],
+                "rgba_sha256": "e4be1fa7800d08bd5792ebede994c15044f81bbf4c166bae675ba454cb14c045",
+                "source_slot": 2,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  64,
+                  845,
+                  512,
+                  361
+                ],
+                "margin": [
+                  110,
+                  71,
+                  192,
+                  343
+                ],
+                "source_anchor": [
+                  306,
+                  1214
+                ],
+                "rgba_sha256": "a441f5efbace902fff69eb2247a7412b994755d388eb8811de2de974b0f49115",
+                "source_slot": 4,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  686,
+                  18,
+                  418,
+                  394
+                ],
+                "margin": [
+                  122,
+                  49,
+                  286,
+                  310
+                ],
+                "source_anchor": [
+                  916,
+                  409
+                ],
+                "rgba_sha256": "a2dcfe875e929d15f573e8eec38d4678c7652872eabf65947ea06d7d5649d913",
+                "source_slot": 1,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  678,
+                  438,
+                  452,
+                  398
+                ],
+                "margin": [
+                  114,
+                  46,
+                  252,
+                  306
+                ],
+                "source_anchor": [
+                  916,
+                  832
+                ],
+                "rgba_sha256": "41dcb941b7f539fe15dadcb953dc621e349be28c200a61fb31d58f7055395a58",
+                "source_slot": 3,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  665,
+                  850,
+                  483,
+                  367
+                ],
+                "margin": [
+                  101,
+                  65,
+                  221,
+                  337
+                ],
+                "source_anchor": [
+                  916,
+                  1225
+                ],
+                "rgba_sha256": "6bab1ba2d6942ceda0aa33a07e165d9a8591be1792a6936d2cdda8ab9f7f617c",
+                "source_slot": 5,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 388.0,
+            "canvas_size": [
+              704,
+              704
+            ],
+            "foot": [
+              352,
+              440
+            ],
+            "registration_method": "metadata_only_manual_contact0_3_sole_plus_estimated_other_support_and_flight_planes; source rectangles/RGBA unchanged",
+            "flight_plane_visual_approval": "HOLD_for_independent_moving_world_footplant_QA"
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "body_scale_measurement": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  395,
+                  24
+                ],
+                "contact_sole_xy": [
+                  469,
+                  409
+                ],
+                "crown_to_sole_height": 385
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  1004,
+                  24
+                ],
+                "contact_sole_xy": [
+                  1083,
+                  409
+                ],
+                "crown_to_sole_height": 385
+              }
+            ],
+            "median_crown_to_sole_height": 385.0,
+            "source_full_silhouette_height_for_comparison_only": 388.0,
+            "logical_canvas": [
+              704,
+              704
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.0
+          },
+          "visual_quality": "HOLD_final_mythic_QA; corrected_contact_exchange_observed",
+          "source_anchors": [
+            {
+              "source_slot": 0,
+              "ground_anchor_xy": [
+                306,
+                409
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 1,
+              "ground_anchor_xy": [
+                916,
+                409
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 2,
+              "ground_anchor_xy": [
+                306,
+                834
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 3,
+              "ground_anchor_xy": [
+                916,
+                832
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 4,
+              "ground_anchor_xy": [
+                306,
+                1214
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            },
+            {
+              "source_slot": 5,
+              "ground_anchor_xy": [
+                916,
+                1225
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            }
+          ]
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-SE-run6-v02.png",
+          "source_sha256": "269c475f458548157f173b07244a9b47e4180cfa6b679e0e1bdf47ee020575cf",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/SE-run.png",
+          "geometry": {
+            "image_size": [
+              1370,
+              1148
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  184,
+                  49,
+                  358,
+                  328
+                ],
+                "margin": [
+                  134,
+                  41,
+                  226,
+                  256
+                ],
+                "source_anchor": [
+                  342,
+                  373
+                ],
+                "rgba_sha256": "c287c275a94431bfc7f5c4c5cc36df136e921f5aa66b26168ea4a713d2b582ee",
+                "source_slot": 0,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  172,
+                  423,
+                  371,
+                  334
+                ],
+                "margin": [
+                  122,
+                  35,
+                  213,
+                  250
+                ],
+                "source_anchor": [
+                  342,
+                  753
+                ],
+                "rgba_sha256": "5fbb035be79c62845c254a3aaabc542252410cf331b2f0728f5282493f6aab3f",
+                "source_slot": 2,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  180,
+                  787,
+                  385,
+                  292
+                ],
+                "margin": [
+                  130,
+                  65,
+                  199,
+                  292
+                ],
+                "source_anchor": [
+                  342,
+                  1087
+                ],
+                "rgba_sha256": "7fee6b63230987bc6e19c686db31788cef9ef28d7b791d1b161f438fbb475cc6",
+                "source_slot": 4,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  781,
+                  62,
+                  367,
+                  321
+                ],
+                "margin": [
+                  45,
+                  48,
+                  217,
+                  263
+                ],
+                "source_anchor": [
+                  1028,
+                  379
+                ],
+                "rgba_sha256": "11be37d7dc4d8366c08ae6c29cfbfa60c23d482b839b6d6b2b34ad8ba6e58a29",
+                "source_slot": 1,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  791,
+                  424,
+                  365,
+                  337
+                ],
+                "margin": [
+                  55,
+                  32,
+                  219,
+                  247
+                ],
+                "source_anchor": [
+                  1028,
+                  757
+                ],
+                "rgba_sha256": "e008de8d3a5f249bc7f2915400593dae482874ac4159df6df69420aa3876b118",
+                "source_slot": 3,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  802,
+                  786,
+                  382,
+                  302
+                ],
+                "margin": [
+                  66,
+                  55,
+                  202,
+                  282
+                ],
+                "source_anchor": [
+                  1028,
+                  1096
+                ],
+                "rgba_sha256": "c7854277addf7c1baa834a5483dc5ac5b0cd069476fcbb97938496ea04b43dad",
+                "source_slot": 5,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 318.5,
+            "canvas_size": [
+              584,
+              584
+            ],
+            "foot": [
+              292,
+              365
+            ],
+            "registration_method": "metadata_only_manual_contact0_3_sole_plus_estimated_other_support_and_flight_planes; source rectangles/RGBA unchanged",
+            "flight_plane_visual_approval": "HOLD_for_independent_moving_world_footplant_QA"
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "body_scale_measurement": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  431,
+                  52
+                ],
+                "contact_sole_xy": [
+                  499,
+                  373
+                ],
+                "crown_to_sole_height": 321
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  1045,
+                  65
+                ],
+                "contact_sole_xy": [
+                  1105,
+                  379
+                ],
+                "crown_to_sole_height": 314
+              }
+            ],
+            "median_crown_to_sole_height": 317.5,
+            "source_full_silhouette_height_for_comparison_only": 318.5,
+            "logical_canvas": [
+              584,
+              584
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 85.49510763209393
+          },
+          "visual_quality": "HOLD_final_mythic_QA; corrected_contact_exchange_observed",
+          "source_anchors": [
+            {
+              "source_slot": 0,
+              "ground_anchor_xy": [
+                342,
+                373
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 1,
+              "ground_anchor_xy": [
+                1028,
+                379
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 2,
+              "ground_anchor_xy": [
+                342,
+                753
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 3,
+              "ground_anchor_xy": [
+                1028,
+                757
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 4,
+              "ground_anchor_xy": [
+                342,
+                1087
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            },
+            {
+              "source_slot": 5,
+              "ground_anchor_xy": [
+                1028,
+                1096
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            }
+          ]
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-S-run6-v02.png",
+          "source_sha256": "4c476ec0784f241b34df6809e4596aa5a6fbf2239f400b11cfc08873fb2d23b3",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/S-run.png",
+          "geometry": {
+            "image_size": [
+              1222,
+              1287
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  110,
+                  46,
+                  437,
+                  391
+                ],
+                "margin": [
+                  140,
+                  33,
+                  235,
+                  281
+                ],
+                "source_anchor": [
+                  306,
+                  433
+                ],
+                "rgba_sha256": "dfda53a27d09e16b0770227b73623c15baccbbf0360d78e87910670de4103dda",
+                "source_slot": 0,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  117,
+                  448,
+                  440,
+                  394
+                ],
+                "margin": [
+                  147,
+                  30,
+                  232,
+                  278
+                ],
+                "source_anchor": [
+                  306,
+                  838
+                ],
+                "rgba_sha256": "a0993755ffba6f8091e2458607290651193e4f0bb4bb26a21f3d9e8c17747694",
+                "source_slot": 2,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  73,
+                  860,
+                  515,
+                  364
+                ],
+                "margin": [
+                  103,
+                  48,
+                  157,
+                  308
+                ],
+                "source_anchor": [
+                  306,
+                  1232
+                ],
+                "rgba_sha256": "5e31bf6e2e0707d34370e77ad518af0f9948cc84f6749a21dc9c1b93b0dcb4c5",
+                "source_slot": 4,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  683,
+                  41,
+                  422,
+                  395
+                ],
+                "margin": [
+                  103,
+                  29,
+                  250,
+                  277
+                ],
+                "source_anchor": [
+                  916,
+                  432
+                ],
+                "rgba_sha256": "ac3244c0e47c0b81f03ff2fc7db6032a6b7cdb74c5ba958e113016d09b3fc3a1",
+                "source_slot": 1,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  687,
+                  450,
+                  429,
+                  390
+                ],
+                "margin": [
+                  107,
+                  34,
+                  243,
+                  282
+                ],
+                "source_anchor": [
+                  916,
+                  836
+                ],
+                "rgba_sha256": "c0fb8ff128557e3f22d10a2ce09087fb733c453e528322eab0f047a9c39c5811",
+                "source_slot": 3,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  664,
+                  860,
+                  485,
+                  369
+                ],
+                "margin": [
+                  84,
+                  43,
+                  187,
+                  303
+                ],
+                "source_anchor": [
+                  916,
+                  1237
+                ],
+                "rgba_sha256": "45533e1de6ea56a40154a91b287f32eae0a3126f9f17879713cb98a7dee689dc",
+                "source_slot": 5,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 387.0,
+            "canvas_size": [
+              672,
+              672
+            ],
+            "foot": [
+              336,
+              420
+            ],
+            "registration_method": "metadata_only_manual_contact0_3_sole_plus_estimated_other_support_and_flight_planes; source rectangles/RGBA unchanged",
+            "flight_plane_visual_approval": "HOLD_for_independent_moving_world_footplant_QA"
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "body_scale_measurement": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  343,
+                  64
+                ],
+                "contact_sole_xy": [
+                  341,
+                  433
+                ],
+                "crown_to_sole_height": 369
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  909,
+                  64
+                ],
+                "contact_sole_xy": [
+                  902,
+                  432
+                ],
+                "crown_to_sole_height": 368
+              }
+            ],
+            "median_crown_to_sole_height": 368.5,
+            "source_full_silhouette_height_for_comparison_only": 387.0,
+            "logical_canvas": [
+              672,
+              672
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.23401360544217
+          },
+          "visual_quality": "HOLD_final_mythic_QA; corrected_contact_exchange_observed",
+          "source_anchors": [
+            {
+              "source_slot": 0,
+              "ground_anchor_xy": [
+                306,
+                433
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 1,
+              "ground_anchor_xy": [
+                916,
+                432
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 2,
+              "ground_anchor_xy": [
+                306,
+                838
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 3,
+              "ground_anchor_xy": [
+                916,
+                836
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 4,
+              "ground_anchor_xy": [
+                306,
+                1232
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            },
+            {
+              "source_slot": 5,
+              "ground_anchor_xy": [
+                916,
+                1237
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            }
+          ]
+        },
+        {
+          "direction": "SW",
+          "role": "run",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-SW-run6-v03.png",
+          "source_sha256": "df8204324dc4b939718ba0977867ef167033505126dc80d93ba48824a251c2dd",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/SW-run.png",
+          "geometry": {
+            "image_size": [
+              1374,
+              1145
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  191,
+                  62,
+                  398,
+                  325
+                ],
+                "margin": [
+                  139,
+                  44,
+                  186,
+                  259
+                ],
+                "source_anchor": [
+                  344,
+                  383
+                ],
+                "rgba_sha256": "00ba1e53a0a3b0e9bb84cd24f0b4a5d38a5911bd89e45f81ed10e5504f80b825",
+                "source_slot": 0,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  195,
+                  409,
+                  412,
+                  336
+                ],
+                "margin": [
+                  143,
+                  33,
+                  172,
+                  248
+                ],
+                "source_anchor": [
+                  344,
+                  741
+                ],
+                "rgba_sha256": "18cc6fa1265986ed8c8cdec3a9d140e75b885bb2df941f5c2d55f0f479b6b95e",
+                "source_slot": 2,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  173,
+                  773,
+                  444,
+                  298
+                ],
+                "margin": [
+                  121,
+                  59,
+                  140,
+                  286
+                ],
+                "source_anchor": [
+                  344,
+                  1079
+                ],
+                "rgba_sha256": "af9ce21dd1092532bdb3c7805d1609605fac7656d1ec2c8a82cf52bb9c0f7e11",
+                "source_slot": 4,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  842,
+                  60,
+                  398,
+                  331
+                ],
+                "margin": [
+                  104,
+                  38,
+                  186,
+                  253
+                ],
+                "source_anchor": [
+                  1030,
+                  387
+                ],
+                "rgba_sha256": "6956d4b9452130981dbf9ed0387ce3ce591ec33835f4c8ca18e723219e3df767",
+                "source_slot": 1,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  854,
+                  410,
+                  408,
+                  335
+                ],
+                "margin": [
+                  116,
+                  34,
+                  176,
+                  249
+                ],
+                "source_anchor": [
+                  1030,
+                  741
+                ],
+                "rgba_sha256": "bec1076c403ad85dd069951655e4ef61451be6f6b43e46ce69d46621886f8c3d",
+                "source_slot": 3,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  837,
+                  772,
+                  428,
+                  300
+                ],
+                "margin": [
+                  99,
+                  57,
+                  156,
+                  284
+                ],
+                "source_anchor": [
+                  1030,
+                  1080
+                ],
+                "rgba_sha256": "2126beac2ff9a11ad04a6f930145979eb96ea7cadbd9033523e735cbab591e3e",
+                "source_slot": 5,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 322.0,
+            "canvas_size": [
+              584,
+              584
+            ],
+            "foot": [
+              292,
+              365
+            ],
+            "registration_method": "metadata_only_manual_contact0_3_sole_plus_estimated_other_support_and_flight_planes; source rectangles/RGBA unchanged",
+            "flight_plane_visual_approval": "HOLD_for_independent_moving_world_footplant_QA"
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "body_scale_measurement": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  321,
+                  65
+                ],
+                "contact_sole_xy": [
+                  242,
+                  383
+                ],
+                "crown_to_sole_height": 318
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  975,
+                  63
+                ],
+                "contact_sole_xy": [
+                  905,
+                  387
+                ],
+                "crown_to_sole_height": 324
+              }
+            ],
+            "median_crown_to_sole_height": 321.0,
+            "source_full_silhouette_height_for_comparison_only": 322.0,
+            "logical_canvas": [
+              584,
+              584
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.43757338551859
+          },
+          "visual_quality": "HOLD_final_mythic_QA; corrected_contact_exchange_observed",
+          "source_anchors": [
+            {
+              "source_slot": 0,
+              "ground_anchor_xy": [
+                344,
+                383
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 1,
+              "ground_anchor_xy": [
+                1030,
+                387
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 2,
+              "ground_anchor_xy": [
+                344,
+                741
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 3,
+              "ground_anchor_xy": [
+                1030,
+                741
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 4,
+              "ground_anchor_xy": [
+                344,
+                1079
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            },
+            {
+              "source_slot": 5,
+              "ground_anchor_xy": [
+                1030,
+                1080
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            }
+          ]
+        },
+        {
+          "direction": "W",
+          "role": "run",
+          "animation": "run_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-W-run6-v02.png",
+          "source_sha256": "f3a45d1aba264bce4bc3614c60129182e6a812770c3df104d76f9a2f2862ab4f",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/W-run.png",
+          "geometry": {
+            "image_size": [
+              1370,
+              1148
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  209,
+                  32,
+                  389,
+                  338
+                ],
+                "margin": [
+                  163,
+                  36,
+                  203,
+                  254
+                ],
+                "source_anchor": [
+                  342,
+                  366
+                ],
+                "rgba_sha256": "44f0ed90d1160f3a2647a0c79c6bd20ff6e4bdc10ae14f914e361e12744dfcb8",
+                "source_slot": 0,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  220,
+                  401,
+                  376,
+                  330
+                ],
+                "margin": [
+                  174,
+                  44,
+                  216,
+                  262
+                ],
+                "source_anchor": [
+                  342,
+                  727
+                ],
+                "rgba_sha256": "2bbd1872cbd18bc08e0141ca4f1d588beef7183fa8c043fd7371f070a52fa104",
+                "source_slot": 2,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  174,
+                  763,
+                  446,
+                  299
+                ],
+                "margin": [
+                  128,
+                  63,
+                  146,
+                  293
+                ],
+                "source_anchor": [
+                  342,
+                  1070
+                ],
+                "rgba_sha256": "c9a307d2603abc64f0e5d77ac7f656e331510768ab2e765eeb0a634d1777a326",
+                "source_slot": 4,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  871,
+                  41,
+                  390,
+                  327
+                ],
+                "margin": [
+                  139,
+                  47,
+                  202,
+                  265
+                ],
+                "source_anchor": [
+                  1028,
+                  364
+                ],
+                "rgba_sha256": "51787d46f1506934172a73889f6013d929e71457f8abf29658c52a0621dcbb8a",
+                "source_slot": 1,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  886,
+                  403,
+                  393,
+                  328
+                ],
+                "margin": [
+                  154,
+                  46,
+                  199,
+                  264
+                ],
+                "source_anchor": [
+                  1028,
+                  727
+                ],
+                "rgba_sha256": "da32d2772ded53e312758a0a058bc40e09093db518bb5b70953cae027b9315a6",
+                "source_slot": 3,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  863,
+                  766,
+                  403,
+                  297
+                ],
+                "margin": [
+                  131,
+                  65,
+                  189,
+                  295
+                ],
+                "source_anchor": [
+                  1028,
+                  1071
+                ],
+                "rgba_sha256": "ec376d19fec341cdf7f9177affd2d0a0a1d925c085557ee3fe01dc64ac68818e",
+                "source_slot": 5,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 326.5,
+            "canvas_size": [
+              592,
+              592
+            ],
+            "foot": [
+              296,
+              370
+            ],
+            "registration_method": "metadata_only_manual_contact0_3_sole_plus_estimated_other_support_and_flight_planes; source rectangles/RGBA unchanged",
+            "flight_plane_visual_approval": "HOLD_for_independent_moving_world_footplant_QA"
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "body_scale_measurement": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  320,
+                  35
+                ],
+                "contact_sole_xy": [
+                  255,
+                  366
+                ],
+                "crown_to_sole_height": 331
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  980,
+                  44
+                ],
+                "contact_sole_xy": [
+                  906,
+                  364
+                ],
+                "crown_to_sole_height": 320
+              }
+            ],
+            "median_crown_to_sole_height": 325.5,
+            "source_full_silhouette_height_for_comparison_only": 326.5,
+            "logical_canvas": [
+              592,
+              592
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.46486486486485
+          },
+          "visual_quality": "HOLD_final_mythic_QA; corrected_contact_exchange_observed",
+          "source_anchors": [
+            {
+              "source_slot": 0,
+              "ground_anchor_xy": [
+                342,
+                366
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 1,
+              "ground_anchor_xy": [
+                1028,
+                364
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 2,
+              "ground_anchor_xy": [
+                342,
+                727
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 3,
+              "ground_anchor_xy": [
+                1028,
+                727
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 4,
+              "ground_anchor_xy": [
+                342,
+                1070
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            },
+            {
+              "source_slot": 5,
+              "ground_anchor_xy": [
+                1028,
+                1071
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            }
+          ]
+        },
+        {
+          "direction": "NW",
+          "role": "run",
+          "animation": "run_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-NW-run6-v02.png",
+          "source_sha256": "d1ab4d198641eb6761f7ab3a83d5fdfe9048a48a7dfa5af292f6a791fcd0a4f5",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/NW-run.png",
+          "geometry": {
+            "image_size": [
+              1222,
+              1287
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  140,
+                  56,
+                  396,
+                  361
+                ],
+                "margin": [
+                  150,
+                  38,
+                  236,
+                  271
+                ],
+                "source_anchor": [
+                  306,
+                  413
+                ],
+                "rgba_sha256": "36b05a845bfe53d7dadad2810722214fda311e46c6974756106efb2f373781a1",
+                "source_slot": 0,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  153,
+                  474,
+                  391,
+                  355
+                ],
+                "margin": [
+                  163,
+                  44,
+                  241,
+                  277
+                ],
+                "source_anchor": [
+                  306,
+                  825
+                ],
+                "rgba_sha256": "ae3f82366f072a27486b965d3fd736088c66a52f53aab58f9a295bb73b1b7a24",
+                "source_slot": 2,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  150,
+                  866,
+                  431,
+                  348
+                ],
+                "margin": [
+                  160,
+                  39,
+                  201,
+                  284
+                ],
+                "source_anchor": [
+                  306,
+                  1222
+                ],
+                "rgba_sha256": "f89d6f98b9d2b7cd65d1b1cdaa5dc913f468478c521a65d5ce0a9968eec7e1f9",
+                "source_slot": 4,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  713,
+                  68,
+                  402,
+                  345
+                ],
+                "margin": [
+                  113,
+                  54,
+                  230,
+                  287
+                ],
+                "source_anchor": [
+                  916,
+                  409
+                ],
+                "rgba_sha256": "1f3c627c5f4af83f7a469191b7b6addf2a9252ed2a909212b6c0ecffe6f08c87",
+                "source_slot": 1,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  721,
+                  475,
+                  400,
+                  357
+                ],
+                "margin": [
+                  121,
+                  42,
+                  232,
+                  275
+                ],
+                "source_anchor": [
+                  916,
+                  828
+                ],
+                "rgba_sha256": "5e571784b9d0d75fbc19fd162d669e4b196b40ac4d950aed2942d877e2d36c19",
+                "source_slot": 3,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  729,
+                  879,
+                  413,
+                  339
+                ],
+                "margin": [
+                  129,
+                  48,
+                  219,
+                  293
+                ],
+                "source_anchor": [
+                  916,
+                  1226
+                ],
+                "rgba_sha256": "35f9a88bca42ca91fd6a2869e6adf99ef841c7d01a8d3cb9a309127c98b842c8",
+                "source_slot": 5,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 347.0,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ],
+            "registration_method": "metadata_only_manual_contact0_3_sole_plus_estimated_other_support_and_flight_planes; source rectangles/RGBA unchanged",
+            "flight_plane_visual_approval": "HOLD_for_independent_moving_world_footplant_QA"
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "body_scale_measurement": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  246,
+                  59
+                ],
+                "contact_sole_xy": [
+                  295,
+                  413
+                ],
+                "crown_to_sole_height": 354
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  824,
+                  70
+                ],
+                "contact_sole_xy": [
+                  811,
+                  409
+                ],
+                "crown_to_sole_height": 339
+              }
+            ],
+            "median_crown_to_sole_height": 346.5,
+            "source_full_silhouette_height_for_comparison_only": 347.0,
+            "logical_canvas": [
+              632,
+              632
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.21772151898735
+          },
+          "visual_quality": "HOLD_final_mythic_QA; corrected_contact_exchange_observed",
+          "source_anchors": [
+            {
+              "source_slot": 0,
+              "ground_anchor_xy": [
+                306,
+                413
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 1,
+              "ground_anchor_xy": [
+                916,
+                409
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 2,
+              "ground_anchor_xy": [
+                306,
+                825
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 3,
+              "ground_anchor_xy": [
+                916,
+                828
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 4,
+              "ground_anchor_xy": [
+                306,
+                1222
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            },
+            {
+              "source_slot": 5,
+              "ground_anchor_xy": [
+                916,
+                1226
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            }
+          ]
+        },
+        {
+          "direction": "NE",
+          "role": "run",
+          "animation": "run_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-NE-run6-v02.png",
+          "source_sha256": "e82379c5d17b8003039fd9a14a00ca1fd9662d778176ae61075bbd1d3b75afe4",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/r001/NE-run.png",
+          "geometry": {
+            "image_size": [
+              1222,
+              1287
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  147,
+                  36,
+                  366,
+                  380
+                ],
+                "margin": [
+                  157,
+                  19,
+                  266,
+                  252
+                ],
+                "source_anchor": [
+                  306,
+                  412
+                ],
+                "rgba_sha256": "327b83d1fe83f8896e1a562aad7c318ab99bd639ad0b78b3e23e00638d67d297",
+                "source_slot": 0,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  132,
+                  449,
+                  403,
+                  390
+                ],
+                "margin": [
+                  142,
+                  9,
+                  229,
+                  242
+                ],
+                "source_anchor": [
+                  306,
+                  835
+                ],
+                "rgba_sha256": "13d9e193e536f47816a472c81d784d28050b8eae799b64193c32e2cf730bb8b9",
+                "source_slot": 2,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  154,
+                  873,
+                  429,
+                  334
+                ],
+                "margin": [
+                  164,
+                  53,
+                  203,
+                  298
+                ],
+                "source_anchor": [
+                  306,
+                  1215
+                ],
+                "rgba_sha256": "2d537e647dd7db6fffc36b9c823d454aa82db540688e6ae3031f682096dbaec5",
+                "source_slot": 4,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  725,
+                  34,
+                  386,
+                  373
+                ],
+                "margin": [
+                  125,
+                  26,
+                  246,
+                  259
+                ],
+                "source_anchor": [
+                  916,
+                  403
+                ],
+                "rgba_sha256": "c8e75deb917bfbb4f7df466d91bb53330099ebc294fd907218f0d89ad1d02dcf",
+                "source_slot": 1,
+                "ground_registration": "manually_reviewed_contact_sole"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  738,
+                  444,
+                  384,
+                  394
+                ],
+                "margin": [
+                  138,
+                  5,
+                  248,
+                  238
+                ],
+                "source_anchor": [
+                  916,
+                  834
+                ],
+                "rgba_sha256": "4cea5e9f20309819fbe305ca486e48c5380241be2456cafbf410b69f9e1d2d33",
+                "source_slot": 3,
+                "ground_registration": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+              },
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  751,
+                  869,
+                  400,
+                  342
+                ],
+                "margin": [
+                  151,
+                  45,
+                  232,
+                  290
+                ],
+                "source_anchor": [
+                  916,
+                  1219
+                ],
+                "rgba_sha256": "09079eaae84d9f093c441c8a5a608602f74b5650e3e6a6436446db8c541cc590",
+                "source_slot": 5,
+                "ground_registration": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 370.5,
+            "canvas_size": [
+              632,
+              632
+            ],
+            "foot": [
+              316,
+              395
+            ],
+            "registration_method": "metadata_only_manual_contact0_3_sole_plus_estimated_other_support_and_flight_planes; source rectangles/RGBA unchanged",
+            "flight_plane_visual_approval": "HOLD_for_independent_moving_world_footplant_QA"
+          },
+          "source_phase_order": [
+            0,
+            2,
+            4,
+            1,
+            3,
+            5
+          ],
+          "body_scale_measurement": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  409,
+                  64
+                ],
+                "contact_sole_xy": [
+                  485,
+                  412
+                ],
+                "crown_to_sole_height": 348
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  994,
+                  64
+                ],
+                "contact_sole_xy": [
+                  1070,
+                  403
+                ],
+                "crown_to_sole_height": 339
+              }
+            ],
+            "median_crown_to_sole_height": 343.5,
+            "source_full_silhouette_height_for_comparison_only": 370.5,
+            "logical_canvas": [
+              632,
+              632
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 85.47124773960218
+          },
+          "visual_quality": "HOLD_final_mythic_QA; corrected_contact_exchange_observed",
+          "source_anchors": [
+            {
+              "source_slot": 0,
+              "ground_anchor_xy": [
+                306,
+                412
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 1,
+              "ground_anchor_xy": [
+                916,
+                403
+              ],
+              "method": "manually_reviewed_contact_sole"
+            },
+            {
+              "source_slot": 2,
+              "ground_anchor_xy": [
+                306,
+                835
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 3,
+              "ground_anchor_xy": [
+                916,
+                834
+              ],
+              "method": "support_plane_from_lowest_visible_bound_estimate_NOT_anatomical_approval"
+            },
+            {
+              "source_slot": 4,
+              "ground_anchor_xy": [
+                306,
+                1215
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            },
+            {
+              "source_slot": 5,
+              "ground_anchor_xy": [
+                916,
+                1219
+              ],
+              "method": "invisible_flight_plane_12px_below_visible_pose_bound_NOT_anatomical_sole_proof"
+            }
+          ]
+        }
+      ],
+      "held_directions": [
+        {
+          "direction": "N",
+          "reason": "three fresh attempts retained; handedness or strict region failure"
+        }
+      ],
+      "held_sources": [
+        {
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-NE-run6-v01.png",
+          "reason": "Strict geometry: a pose rectangle includes another body"
+        },
+        {
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-SW-run6-v02.png",
+          "reason": "Actual view faces right/E instead of SW; v03 supersedes without deleting"
+        },
+        {
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v02.png",
+          "reason": "Rear-view bare slit on viewer-left contradicts anatomical RIGHT"
+        },
+        {
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v03.png",
+          "reason": "Top row slit corrected but middle-row leg/slit handedness changes; not selected"
+        },
+        {
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/raw/queen-N-run6-v04.png",
+          "reason": "Targeted edit failed strict geometry: a pose rectangle includes another body"
+        }
+      ],
+      "sizing": {
+        "method": "per_direction_logical_canvas_from_manual_crown_to_contact_sole_height",
+        "reference_height": 140.0,
+        "target_display_height": 86.0,
+        "ONE_shared_pixel_scale": 0.6142857142857143,
+        "canvas256_metadata": true,
+        "no_pixel_resampling": true,
+        "measurements": {
+          "E": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  395,
+                  24
+                ],
+                "contact_sole_xy": [
+                  469,
+                  409
+                ],
+                "crown_to_sole_height": 385
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  1004,
+                  24
+                ],
+                "contact_sole_xy": [
+                  1083,
+                  409
+                ],
+                "crown_to_sole_height": 385
+              }
+            ],
+            "median_crown_to_sole_height": 385.0,
+            "source_full_silhouette_height_for_comparison_only": 388.0,
+            "logical_canvas": [
+              704,
+              704
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.0
+          },
+          "SE": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  431,
+                  52
+                ],
+                "contact_sole_xy": [
+                  499,
+                  373
+                ],
+                "crown_to_sole_height": 321
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  1045,
+                  65
+                ],
+                "contact_sole_xy": [
+                  1105,
+                  379
+                ],
+                "crown_to_sole_height": 314
+              }
+            ],
+            "median_crown_to_sole_height": 317.5,
+            "source_full_silhouette_height_for_comparison_only": 318.5,
+            "logical_canvas": [
+              584,
+              584
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 85.49510763209393
+          },
+          "S": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  343,
+                  64
+                ],
+                "contact_sole_xy": [
+                  341,
+                  433
+                ],
+                "crown_to_sole_height": 369
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  909,
+                  64
+                ],
+                "contact_sole_xy": [
+                  902,
+                  432
+                ],
+                "crown_to_sole_height": 368
+              }
+            ],
+            "median_crown_to_sole_height": 368.5,
+            "source_full_silhouette_height_for_comparison_only": 387.0,
+            "logical_canvas": [
+              672,
+              672
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.23401360544217
+          },
+          "SW": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  321,
+                  65
+                ],
+                "contact_sole_xy": [
+                  242,
+                  383
+                ],
+                "crown_to_sole_height": 318
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  975,
+                  63
+                ],
+                "contact_sole_xy": [
+                  905,
+                  387
+                ],
+                "crown_to_sole_height": 324
+              }
+            ],
+            "median_crown_to_sole_height": 321.0,
+            "source_full_silhouette_height_for_comparison_only": 322.0,
+            "logical_canvas": [
+              584,
+              584
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.43757338551859
+          },
+          "W": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  320,
+                  35
+                ],
+                "contact_sole_xy": [
+                  255,
+                  366
+                ],
+                "crown_to_sole_height": 331
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  980,
+                  44
+                ],
+                "contact_sole_xy": [
+                  906,
+                  364
+                ],
+                "crown_to_sole_height": 320
+              }
+            ],
+            "median_crown_to_sole_height": 325.5,
+            "source_full_silhouette_height_for_comparison_only": 326.5,
+            "logical_canvas": [
+              592,
+              592
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.46486486486485
+          },
+          "NW": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  246,
+                  59
+                ],
+                "contact_sole_xy": [
+                  295,
+                  413
+                ],
+                "crown_to_sole_height": 354
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  824,
+                  70
+                ],
+                "contact_sole_xy": [
+                  811,
+                  409
+                ],
+                "crown_to_sole_height": 339
+              }
+            ],
+            "median_crown_to_sole_height": 346.5,
+            "source_full_silhouette_height_for_comparison_only": 347.0,
+            "logical_canvas": [
+              632,
+              632
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 86.21772151898735
+          },
+          "NE": {
+            "method": "manual_private_visual_crown_apex_to_actual_contact_boot_sole; staff/wing tips excluded",
+            "landmark_uncertainty_source_pixels": 3,
+            "contact_source_slots": [
+              0,
+              1
+            ],
+            "contacts": [
+              {
+                "source_slot": 0,
+                "crown_apex_xy": [
+                  409,
+                  64
+                ],
+                "contact_sole_xy": [
+                  485,
+                  412
+                ],
+                "crown_to_sole_height": 348
+              },
+              {
+                "source_slot": 1,
+                "crown_apex_xy": [
+                  994,
+                  64
+                ],
+                "contact_sole_xy": [
+                  1070,
+                  403
+                ],
+                "crown_to_sole_height": 339
+              }
+            ],
+            "median_crown_to_sole_height": 343.5,
+            "source_full_silhouette_height_for_comparison_only": 370.5,
+            "logical_canvas": [
+              632,
+              632
+            ],
+            "target_reference_height": 140.0,
+            "expected_display_crown_to_sole_height": 85.47124773960218
+          }
+        }
+      }
+    }
+  },
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "existing_approved_assets_preserved": true,
+  "existing_RUN_48_poses_preserved": true,
+  "new_WALK": 0,
+  "existing_WALK_and_DEATH_preserved": true,
+  "new_raw_sources": 12,
+  "held_source_count": 5,
+  "new_selected_clips": 7,
+  "new_selected_poses": 42
+}

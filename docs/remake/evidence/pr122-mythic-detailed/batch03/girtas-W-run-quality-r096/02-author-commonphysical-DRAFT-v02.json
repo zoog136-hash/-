@@ -1,0 +1,158 @@
+{
+  "status": "AUTHOR_PHYSICAL_PROPOSAL_V02_AIR_PELVIS_CORRECTED_REQUIRES_INDEPENDENT_REVIEW",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "run",
+  "authored_pose_canvas_sizes": [
+    2560,
+    2688,
+    2688,
+    2816,
+    2688,
+    2688
+  ],
+  "source_native_anchors": [
+    [
+      650,
+      1136
+    ],
+    [
+      650,
+      1118
+    ],
+    [
+      650,
+      1228
+    ],
+    [
+      630,
+      1292
+    ],
+    [
+      650,
+      1199
+    ],
+    [
+      650,
+      1208
+    ]
+  ],
+  "baseline": {
+    "W_idle_source_sha256": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85",
+    "C": 1024,
+    "source_anchor": [
+      324,
+      480
+    ],
+    "provisional_anatomical_hip_source": [
+      324,
+      270
+    ],
+    "ground_near_source_y": 477,
+    "ground_far_source_y": 453
+  },
+  "AIR2_and5_floor_derivation": "Independent draft review corrected actual pelvis2y650/5y630 instead of lower cloth700/680. Same authored AIR hip-height relative W idle and same Cs; roots2/5 shift -50 native, no boot clamp.",
+  "current_root_reported_r094_pixel_scale": 0.224489795918,
+  "provenance": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-W-run-LEFT-contact0-3D-v01/girtas-W-run-LEFT-contact0-3D-v01.png",
+      "source_sha256": "1a310b3d233dd1a5306e055ed686f08349e3e3b7e4de4b9ebaa00b7431b5c1a4",
+      "source_region": [
+        21,
+        64,
+        1219,
+        1065
+      ],
+      "source_native_anchor": [
+        650,
+        1136
+      ],
+      "C": 2560
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-W-run-load1-3D-v01/girtas-W-run-load1-3D-v01.png",
+      "source_sha256": "99303c22adbe291f1c6a0f60fcca7c02919688095f957152f613e822a523e1f3",
+      "source_region": [
+        8,
+        13,
+        1241,
+        1098
+      ],
+      "source_native_anchor": [
+        650,
+        1118
+      ],
+      "C": 2688
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-W-run-AIR2-3D-v01/girtas-W-run-AIR2-3D-v01.png",
+      "source_sha256": "5aae1a16e9036a15e90f9a8bb40dd575cfdc3c1b5fed096ff2c8811fc2b5b284",
+      "source_region": [
+        12,
+        31,
+        1225,
+        1095
+      ],
+      "source_native_anchor": [
+        650,
+        1278
+      ],
+      "C": 2688
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/girtas-W-run-RIGHT-contact3-material-repair-v02.png",
+      "source_sha256": "dd7c6a88236bdfaef1bfad2027797aa6d2f07c8be05371e479dd894116d2d0c7",
+      "source_region": [
+        20,
+        2,
+        1229,
+        1216
+      ],
+      "source_native_anchor": [
+        630,
+        1292
+      ],
+      "C": 2816
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-W-run-load4-blade-continuity-repair-v02/girtas-W-run-load4-blade-continuity-repair-v02.png",
+      "source_sha256": "47d751baed6fb8f6863e2ff070d80bc296b88f5e6d58bbc4235504f0f9ade820",
+      "source_region": [
+        3,
+        20,
+        1244,
+        1108
+      ],
+      "source_native_anchor": [
+        650,
+        1199
+      ],
+      "C": 2688
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-W-run-AIR5-3D-v01/girtas-W-run-AIR5-3D-v01.png",
+      "source_sha256": "235382f585aaa3440b653e8bf3bd607a7c2c97ff4e4a8425fdbad614c7fdc17e",
+      "source_region": [
+        11,
+        14,
+        1234,
+        1063
+      ],
+      "source_native_anchor": [
+        650,
+        1258
+      ],
+      "C": 2688
+    }
+  ],
+  "independent_physical_quality": "PENDING",
+  "actual_game_validation": "NOT_RUN",
+  "actor_approval": false,
+  "rigid_landmark_candidates_path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/author-rigid-landmark-candidates-v02.json"
+}

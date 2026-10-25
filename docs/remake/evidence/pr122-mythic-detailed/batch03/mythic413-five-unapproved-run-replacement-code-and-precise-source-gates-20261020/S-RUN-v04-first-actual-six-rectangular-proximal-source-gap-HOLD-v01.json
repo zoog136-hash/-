@@ -1,0 +1,232 @@
+{
+  "source_visual_status": "HOLD",
+  "scope": "S_RUN_V04_FIRST_ACTUAL_SIX_SOURCE_GAIT_LOOP",
+  "contract": {
+    "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN6-own-actual-new-native-full-actor-source-contract-v01.json",
+    "sha256": "7917b07d76cf3982bea5eb7dcda9d4b1d9b17429b74303df129d3db4b5a571ac"
+  },
+  "actual_six": [
+    {
+      "phase": 0,
+      "name": "LEFT-CONTACT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase0-LEFT-CONTACT-actual-native-v01.png",
+      "sha256": "57110c162f63fbc71fd64fde4d6c3f5c3002125a46cba5933182ce2c51fe2254",
+      "bytes": 869024,
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ]
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-LOAD",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase1-LEFT-LOAD-actual-native-v01.png",
+      "sha256": "3b2faa29868f3b0a1e9c3678177d41d44df20a756506fc3251f85d82ddafde96",
+      "bytes": 800864,
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-DRIVE-FLIGHT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase2-RIGHT-DRIVE-FLIGHT-actual-native-v01.png",
+      "sha256": "094554b44940d4c28ae71dd2e5fb64d41e461cf2423ff28f3918a227d4d7933e",
+      "bytes": 759617,
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-CONTACT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase3-RIGHT-CONTACT-actual-native-v01.png",
+      "sha256": "698c25cbf77705a15ae23ba5cb7f51230031f4ff571b06b5becaed1056370fce",
+      "bytes": 846046,
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-LOAD",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase4-RIGHT-LOAD-actual-native-v01.png",
+      "sha256": "94a2c6288b71e57aa4cbdb6f8ff6f0f22469fd9281cf88fd3d7f60ff85e9af3d",
+      "bytes": 795305,
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-DRIVE-FLIGHT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase5-LEFT-DRIVE-FLIGHT-actual-native-v01.png",
+      "sha256": "b3ce6fa4920b8bb723d045357bb9b8b2477385c060b4bc7d714508fac73477e3",
+      "bytes": 778709,
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ]
+    }
+  ],
+  "visual_findings": {
+    "positive": [
+      "First actual six show distinct LEFT CONTACT0/LOAD1/AIR2 and RIGHT CONTACT3/LOAD4/AIR5; staff grips and complete staff tips remain visible.",
+      "Shared corrected LEFT blue uppercuff backing follows the actual upper cuff, separate from the long head ribbon. Native white/gold elbow cuffs and contact knees are coherent.",
+      "Complete heel/toe silhouettes, gold rails and black leather are retained on actual boots. Compiled source legs are independently RGBA-identical to the approved shared v07 pure-boot materials."
+    ],
+    "finite_HOLD": [
+      "Hard rectangular transparency strips cut across proximal inner thighs/crotch and clip outer thigh/cloth blocks in CONTACT0/3 and AIR2/5. This is visible in exact actual PNGs, not an approval-by-component-count question.",
+      "Investigate source parent/child coverage and compositor/depth clearing; the inner strip crosses cape behind the legs too. Do not fill by arbitrary color or repaint the original."
+    ]
+  },
+  "actual_PNG_gap_samples": [
+    {
+      "phase": 0,
+      "stored": [
+        900,
+        936
+      ],
+      "RGBA": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "above8_RGBA": [
+        27,
+        27,
+        46,
+        253
+      ],
+      "below8_RGBA": [
+        26,
+        26,
+        46,
+        253
+      ]
+    },
+    {
+      "phase": 3,
+      "stored": [
+        915,
+        936
+      ],
+      "RGBA": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "above8_RGBA": [
+        29,
+        27,
+        48,
+        253
+      ],
+      "below8_RGBA": [
+        29,
+        31,
+        55,
+        253
+      ]
+    },
+    {
+      "phase": 2,
+      "stored": [
+        910,
+        898
+      ],
+      "RGBA": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "above8_RGBA": [
+        29,
+        27,
+        47,
+        253
+      ],
+      "below8_RGBA": [
+        30,
+        31,
+        55,
+        253
+      ]
+    },
+    {
+      "phase": 5,
+      "stored": [
+        910,
+        898
+      ],
+      "RGBA": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "above8_RGBA": [
+        26,
+        25,
+        43,
+        253
+      ],
+      "below8_RGBA": [
+        29,
+        27,
+        48,
+        253
+      ]
+    }
+  ],
+  "required_followup": [
+    "Bind exact RAW/owner/UV/compositor diagnosis for the finite rectangular gaps.",
+    "Preserve the current candidate and submit corrected exact six plus only changed native pelvis/thigh/cape join crops; do not repeat boots/cuffs/once/original registration."
+  ],
+  "new_original_body_or_once_registration_views": 0,
+  "actor_approvals_added": 0,
+  "floor_PACK_game_status": "SEPARATE_NOT_APPROVED_HERE"
+}

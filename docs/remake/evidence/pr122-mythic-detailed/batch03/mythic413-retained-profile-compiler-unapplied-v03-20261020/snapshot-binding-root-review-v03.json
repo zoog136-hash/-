@@ -1,0 +1,45 @@
+{
+  "status": "ROOT_CODE_REVIEWED_SNAPSHOT_BINDING_FIXED_NOT_APPLIED",
+  "proposal_sha256": "e1ce79f2de74286972b0422fff3b36159067561cc20c67d811440409facbdca2",
+  "parent_proposal_sha256": "bb66cf45acb07381f1d3583d35c2f8a1b8c1973c288a59f63c53666ec1d23fd9",
+  "finding": "v02 compared review against mutable path reads; v03 binds exact snapshotted request/raw bytes before any repository write",
+  "checks": [
+    {
+      "name": "matching_snapshot",
+      "passed": true
+    },
+    {
+      "name": "stale_request_review",
+      "passed": true
+    },
+    {
+      "name": "stale_raw_review",
+      "passed": true
+    },
+    {
+      "name": "wrong_raw_size",
+      "passed": true
+    },
+    {
+      "name": "both_late_path_versions",
+      "passed": true
+    },
+    {
+      "name": "reject_{\"x\":1e999}",
+      "passed": true
+    },
+    {
+      "name": "reject_{\"x\":[-1e999]}",
+      "passed": true
+    },
+    {
+      "name": "reject_{\"x\":1,\"x\":2}",
+      "passed": true
+    }
+  ],
+  "actual_repository_writes": 0,
+  "game_tests_run": 0,
+  "clips_adopted": 0,
+  "prior49fixture_report_sha256": "44375b2bdccfecc318ed8e40121ff3c8a5a1ab1d41875ae22c5a1a08344e07ad",
+  "prior49fixtures_not_rerun": true
+}

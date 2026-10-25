@@ -1,0 +1,194 @@
+{
+  "status": "PASS_ONE_CONSTANT_NATIVE_BODY_UNIT_C2560_CALIBRATION_ONLY",
+  "scope": "Body sizing dependency for preserved-source corrective edits, not source/physical/actor approval. One targeted retainedW/E reference viewed; no old10 test/reapproval.",
+  "actual_master": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+    "sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+    "bytes": 817927
+  },
+  "actual_landmark_annotations": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/actual-NW-run-contact0-v01-uncertain-landmarks.json",
+    "sha256": "bcaedc1d24cffc0b265a9bafc18f61db6a6d45dcbd4f60e86ac4741ae72a6fc0",
+    "bytes": 7629
+  },
+  "author_proposal": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/constant-native-C2560-body-fit-proposal-v02.json",
+    "sha256": "29b56fe45f910e6463a021fcc95f580acdd3874bf04cd0b05cecf1322bd84e79",
+    "bytes": 7484
+  },
+  "retained_W_E_measurements": {
+    "path": "/workspace/scratch/mythic413-N-walk-author-20261020-r001/body-reference-measurements/existing-W-E-body-landmarks-approx-v01.json",
+    "sha256": "ac962ad6116e8222a007d170cb924c3d855d925cfe12de8877717a31fbb325f1",
+    "bytes": 6419
+  },
+  "private_ledger_immutable": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-body-reference-view07-frozen.json",
+    "sha256": "355487047d555ec4f1810c3e6515892438ace6ee0c64ded96dc4bd1fe0b1af98",
+    "bytes": 3757
+  },
+  "selected_constant_native_unit_factor": 2.5,
+  "selected_constant_virtual_canvas": [
+    2560,
+    2560
+  ],
+  "selection_basis": "Six actual projected torso/shoulder/arm/leg comparisons independently recalculated; factor2.5 is inside all explicit annotation bounds. Actual W/E torso anchors provide direct retainedbody bridge. Wholealpha height is not used to choose factor.",
+  "body_comparisons": [
+    {
+      "segment": [
+        "neck_nape",
+        "waist_belt_center"
+      ],
+      "actual_raw": 213.67732682715777,
+      "baseline_raw": 84.02380615040002,
+      "ratio": 2.5430569813117243,
+      "after_one_factor2p5": 85.4709307308631,
+      "relative_error_at_factor2p5": 0.017222792524689723,
+      "conservative_annotation_ratio_interval": [
+        1.831456691106972,
+        3.6001381297654507
+      ],
+      "factor2p5_inside_interval": true
+    },
+    {
+      "segment": [
+        "L_shoulder_near",
+        "R_shoulder_far"
+      ],
+      "actual_raw": 182.45547402037573,
+      "baseline_raw": 73.02739212103907,
+      "ratio": 2.498452549393594,
+      "after_one_factor2p5": 72.98218960815029,
+      "relative_error_at_factor2p5": -0.0006189802425623503,
+      "conservative_annotation_ratio_interval": [
+        1.6107768999128442,
+        3.92359546123727
+      ],
+      "factor2p5_inside_interval": true
+    },
+    {
+      "segment": [
+        "L_shoulder_near",
+        "L_elbow_near"
+      ],
+      "actual_raw": 137.90576492663388,
+      "baseline_raw": 50.92150822589606,
+      "ratio": 2.7082026776359718,
+      "after_one_factor2p5": 55.16230597065355,
+      "relative_error_at_factor2p5": 0.08328107105438876,
+      "conservative_annotation_ratio_interval": [
+        1.411295158787368,
+        5.387639701882362
+      ],
+      "factor2p5_inside_interval": true
+    },
+    {
+      "segment": [
+        "L_elbow_near",
+        "L_wrist_free"
+      ],
+      "actual_raw": 94.40338976964757,
+      "baseline_raw": 35.510561809129406,
+      "ratio": 2.658459482479306,
+      "after_one_factor2p5": 37.76135590785903,
+      "relative_error_at_factor2p5": 0.06338379299172248,
+      "conservative_annotation_ratio_interval": [
+        1.1710667106907764,
+        6.290552555120154
+      ],
+      "factor2p5_inside_interval": true
+    },
+    {
+      "segment": [
+        "L_hip_near",
+        "L_knee_support"
+      ],
+      "actual_raw": 190.1578291840754,
+      "baseline_raw": 83.21658488546619,
+      "ratio": 2.2850953261996523,
+      "after_one_factor2p5": 76.06313167363017,
+      "relative_error_at_factor2p5": -0.08596186952013918,
+      "conservative_annotation_ratio_interval": [
+        1.273539009180105,
+        4.1266244093341875
+      ],
+      "factor2p5_inside_interval": true
+    },
+    {
+      "segment": [
+        "L_knee_support",
+        "L_ankle_support"
+      ],
+      "actual_raw": 208.21623375712088,
+      "baseline_raw": 85.47514258543241,
+      "ratio": 2.4359858019424623,
+      "after_one_factor2p5": 83.28649350284834,
+      "relative_error_at_factor2p5": -0.025605679223015154,
+      "conservative_annotation_ratio_interval": [
+        1.6213433597586382,
+        3.7230149772360885
+      ],
+      "factor2p5_inside_interval": true
+    }
+  ],
+  "retained_W_E_torso_bridge": {
+    "W": {
+      "source": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-walk-v01.png",
+        "sha256": "42c2e494e28144342f9648ef4584debe74c50ec8d149e04fc43ce3e2dcd365f9",
+        "bytes": 2014246
+      },
+      "neck": [
+        271,
+        169
+      ],
+      "waist": [
+        272,
+        254
+      ],
+      "projected_length": 85.00588214941364,
+      "relative_new_normalized_torso_error": 0.005470781194083285
+    },
+    "E": {
+      "source": {
+        "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png",
+        "sha256": "b0a2188b66d2c59d216ec2b0ddcd2d133f26b093aaaeb1e17adfdc0d232fd7c8",
+        "bytes": 1806620
+      },
+      "neck": [
+        296,
+        171
+      ],
+      "waist": [
+        296,
+        254
+      ],
+      "projected_length": 83.0,
+      "relative_new_normalized_torso_error": 0.029770249769434987
+    }
+  },
+  "actual_normalized_torso_length": 85.4709307308631,
+  "retained_profile_unchanged": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r010/NativeMotionProfile.tres",
+    "sha256": "8b2e9d17e95b3b369840a84c053015150528ec7e4ae6c2a09e15c389da03b281",
+    "bytes": 968
+  },
+  "Player_source_to_world_factors_xy": [
+    0.08534482758612,
+    0.0948275862068
+  ],
+  "NW_required_planted_source_relative_root_delta_per_phase": [
+    139.1928985028027,
+    125.27360865252244
+  ],
+  "virtual_foot": [
+    1280,
+    1600
+  ],
+  "old_sprite_offset_foot_compensation_exact": true,
+  "future_policy": "Use this same native factor/C for every future source of this master; preserve genuine body bob/limb deformation and only inverse-compensated raw packing translations. No per-pose alpha normalization.",
+  "actual_contact_phase_status": "HOLD_TRAILING_LEFT_LEG; LEFT hip620684 to heel7701188 moves+150X behind NW. Correct actual forwardcontact lowerbody before load/flight. Root/C cannot alter hip-to-foot relation.",
+  "whole_source_approved": false,
+  "whole_cycle_status": "NOT_AVAILABLE",
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

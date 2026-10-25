@@ -1,0 +1,11 @@
+{
+  "name": "queen-E-locomotion-v02",
+  "request": {
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/runtime/references/queen-reference.png"
+    ],
+    "prompt": "Create an animation source for this EXACT fantasy queen, preserving her identity: tall pale adult queen, long silver hair, black/gold fitted royal armor and black-purple long split dress showing the RIGHT thigh and leg, exactly TWO large attached violet feather wings, ornate crown, exactly ONE long purple/gold staff held by her anatomical LEFT hand. No other weapon, staff or loose pieces. Not a white ice fairy. New source, not recovered original motion. EAST direction only: queen consistently faces screen RIGHT in a true right-facing isometric side view, looking right; same actual physical body scale and anatomy in every pose. Render exactly EIGHT separate complete connected figures in TWO COLUMNS and FOUR ROWS with enormous transparent gutters. Each figure including wings, staff, feet and long dress entirely inside the central 60% of its own cell, all eight silhouettes have disjoint bounding boxes, generous room to all sides. Temporal row-major order: row1 IDLE0, IDLE1; row2 WALK0, WALK1; row3 WALK2, WALK3; row4 WALK4, WALK5. Idle2 subtle grounded breathing and wing feather settle. WALK6 is a real alternating grounded stepping cycle: frames0/1/2 supported by right visible slit leg while other foot lifts back, passes, swings forward; frames3/4/5 supported by left leg while right leg lifts back, passes, swings forward. Distinct hip/knee/ankle articulation, arms/torso respond to weight; at least one actual foot touches ground in every frame, no gliding or pasted legs. Wings attached to back at all times. Single staff remains in LEFT hand throughout, staff grip actually touches hand and staff is connected to body, no second staff, no detached tip. Long hair, crown, feathers, train and hands must be visibly attached to the one unified solid body silhouette in every cell. True alpha0 transparent background; crisp solid clean connected edges with no floating feather flecks, dust, glow, particles, floor, shadows, text, grid or borders. No touching adjacent cells, no cropping. Painted detailed game sprite matching the supplied model."
+  },
+  "image_path": "/workspace/generated_images/exec-a884468c-eb2d-4338-a450-84b13612deb8.png"
+}

@@ -1,0 +1,188 @@
+{
+  "status": "ACTUAL_LOAD1_GENUINE_HEEL_PINNED_RIGID3D_FOOTROLL_PENDING_ART_AND_PHYSICAL_QC",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482"
+  },
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v10/thunder_female-NW-run-load1-actual-rig-v10.png",
+    "sha256": "cd86f447f8126f018c7fc7a68d6dc803d9d9e15738dfbf932248760bfc39ba5d",
+    "bytes": 785643,
+    "canvas": [
+      1536,
+      1536
+    ],
+    "alpha16_bbox": [
+      323,
+      85,
+      1039,
+      1318
+    ]
+  },
+  "rig_common_root_in_unpadded_frame": [
+    669.0,
+    1267.95
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "native_C": 2560,
+  "source_body_density_factor": 2.5,
+  "whole_source_resampled": false,
+  "actual_art_part_projection": true,
+  "body_node_bob_and_lean": [
+    4.0,
+    70.0
+  ],
+  "source_heel0_marker": [
+    583.5,
+    1191.0
+  ],
+  "target_heel1_marker": [
+    722.6928985028028,
+    1316.2736086525224
+  ],
+  "exact_plant_source_delta": [
+    139.19289850280273,
+    125.27360865252246
+  ],
+  "same_heel_marker_plant_translation": [
+    139.19289850280273,
+    125.27360865252246
+  ],
+  "footroll_contract_sha256": "dae173e85e054de9c5a508ac6549a7381585c99273b79b77d30cf3d1d0bcb07a",
+  "genuine_footroll_degrees": 17.086910688806995,
+  "genuine_new_support_knee": [
+    582.7881766604897,
+    1004.7318237199474
+  ],
+  "genuine_far_passing_knee": [
+    528.668751101061,
+    872.4968751835102
+  ],
+  "parts": [
+    {
+      "part": "Lwhole_support_thigh_shin",
+      "method": "continuous nativewidth curved actual-material skeletal skinning",
+      "source_knots": [
+        [
+          610,
+          692
+        ],
+        [
+          566,
+          900
+        ],
+        [
+          564,
+          1075
+        ]
+      ],
+      "target_knots": [
+        [
+          614.0,
+          762.0
+        ],
+        [
+          582.7881766604897,
+          1004.7318237199474
+        ],
+        [
+          672.9094395379984,
+          1202.8542974367783
+        ]
+      ]
+    },
+    {
+      "part": "Rwhole_recovery_thigh_shin",
+      "method": "forward continuous actual-material anatomical mesh, native transversewidth",
+      "source_knots": [
+        [
+          610,
+          692
+        ],
+        [
+          566,
+          900
+        ],
+        [
+          564,
+          1075
+        ]
+      ],
+      "actual_far_complete_material": "same actor unoccluded LEFT boot/thigh semantic layer articulated as RIGHT counterpart; original RIGHT actual shoe preserved, never wholeactor mirror",
+      "target_knots": [
+        [
+          709.0,
+          775.0
+        ],
+        [
+          528.668751101061,
+          872.4968751835102
+        ],
+        [
+          669.0,
+          1015.0
+        ]
+      ]
+    },
+    {
+      "part": "Lactual_heel_and_stiletto",
+      "method": "RIGID3D heel-axis pitch with unchanged true3D heel/forefoot/tarsal lengths, affine texture projection; no wholeactor scale",
+      "rigid3D_foot_contract_sha256": "dae173e85e054de9c5a508ac6549a7381585c99273b79b77d30cf3d1d0bcb07a",
+      "raw_projection_affine": [
+        [
+          0.8906058975877748,
+          0.2794538272572652,
+          -129.80515100306667
+        ],
+        [
+          -0.2911432063528994,
+          1.0266948598243588,
+          263.3620915086279
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "part": "Ractual_foot",
+      "method": "rigid native boot placement",
+      "translation": [
+        -81.0,
+        157.0
+      ]
+    },
+    {
+      "part": "Larm_true_shoulder_rotation",
+      "angle_degrees": 15,
+      "source_shoulder": [
+        559.0,
+        383.0
+      ],
+      "target_shoulder": [
+        563.0,
+        453.0
+      ]
+    }
+  ],
+  "uv_endpoint_policy": "outside first/last longitudinal domain transparent except explicit8native actualjointoverlap; no100px endpointrowextrusion",
+  "tarsal_bridge": "65native continuous inverse UV converges to exact rigid3D rolled-shoe UV; actual leather joint follows same rigid3D footplane",
+  "actual_skirt_occluder_removed_from_leg_material": true,
+  "near_shaft_semantic_matte": "true anatomical near contour excludes adjacent far thigh; broad body removal unchanged",
+  "actual_tarsal_leather_surface": "finite original own black shaft material UV surface behind complete rigid shoe, target polygon and layer retained",
+  "original_profile_preserved": true,
+  "feet_true_tarsal_annotation_uncertainty_xy": [
+    8,
+    8
+  ],
+  "foot_sampling": "BICUBIC affine sampling of one fixed3D rigid footplane pitched17.0869deg about heel; unchanged3Ddimensions, changed2Dprojection, not pure pixeltranslation",
+  "clean_shoe_material_sources": "untouchedsource0 actualRGBA+exactsemanticwholeheelcountermattes, no coatcolourfilter",
+  "source_approved": false,
+  "cycle_approved": false,
+  "actor_approvals_added": 0
+}

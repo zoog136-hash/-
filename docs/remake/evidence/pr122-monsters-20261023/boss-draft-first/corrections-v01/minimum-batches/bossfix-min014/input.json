@@ -1,0 +1,116 @@
+{
+  "jobs": [
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-run-v02",
+      "direction": "NE",
+      "role": "run",
+      "corrects": "NE-run-v01",
+      "causes": [
+        "affected_same_camera_error"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/NE-run-v02.json"
+    },
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "N-run-v02",
+      "direction": "N",
+      "role": "run",
+      "corrects": "N-run-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/N-run-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "E-attack-v02",
+      "direction": "E",
+      "role": "attack",
+      "corrects": "E-attack-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/E-attack-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "S-death-v02",
+      "direction": "S",
+      "role": "death",
+      "corrects": "S-death-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/S-death-v02.json"
+    }
+  ],
+  "source_pins": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/NE-run-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-b30462d4-9e04-44c2-873c-231683c364ba.png",
+      "sha256": "d6f78853706182aee174b20923ea19e9c47799d46d7aa20573ec539b1186b10f",
+      "bytes": 2225648,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1046693,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/N-run-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-c9fc654c-95f7-405a-b6c1-2b824303e3df.png",
+      "sha256": "b91ad232150cb2cff17881d825e51e1fe9c0fe40a93d79e799535cbd4cb735db",
+      "bytes": 2585018,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 838532,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/E-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-bb6f9c49-c46d-4779-8c40-4720bb15f138.png",
+      "sha256": "cd957b414048395c1ceb447881653e168e6654cf448391c6372453e44c421720",
+      "bytes": 2701445,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 834465,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/S-death-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-d5945a62-c8ba-499e-bca5-1ddf576d5b20.png",
+      "sha256": "5fe4a52198cb800b738d063c2199b73467e328fb3c1a364ad4c6b65756841c0d",
+      "bytes": 2501404,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 952453,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    }
+  ],
+  "normal_art_changes": 0,
+  "whole_quality_review": "TARGETED_CORRECTIONS_ONLY"
+}

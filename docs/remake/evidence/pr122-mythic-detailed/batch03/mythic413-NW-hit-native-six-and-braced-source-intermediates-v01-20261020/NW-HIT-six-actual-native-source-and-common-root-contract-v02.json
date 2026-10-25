@@ -1,0 +1,803 @@
+{
+  "status": "ACTUAL_NEW_NW_HIT6_NATIVE_PART_RECOIL_PENDING_SOURCE_AND_ONE_SHOT_QC",
+  "actor_id": 413,
+  "direction": "NW",
+  "action": "hit",
+  "loop": false,
+  "physical_canvas": 2048,
+  "body_unit": 2,
+  "logical_canvas": 1024,
+  "common_rig_root_in_unpadded_frame": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "storage_size": [
+    1536,
+    1536
+  ],
+  "fixed_stance_contract": {
+    "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-braced-stance-v03/NW-HIT-actual-braced-stance-source-and-fixed-contract-v03.json",
+    "sha256": "2e5a587e519334e8f553ef284837992f5612235d999233d4c3913fd59efb47af",
+    "bytes": 3824
+  },
+  "actual_parts_folder": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v03",
+  "input_materials_are_labeled_HOLD_until_result_QC": true,
+  "new_image_service_calls": 0,
+  "new_author_image_receipts": 0,
+  "originals_modified": false,
+  "actor_approval_added": 0,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "GUARD0",
+      "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-NW-HIT6-native-braced-recoil-v02/thunder_female-NW-HIT-0-GUARD0-actual-native-v02.png",
+      "sha256": "d720d19f18dd5ef224c865af1abe8c6681b8f2d6ed1d4362c0ca2bc4701f5eea",
+      "bytes": 498161,
+      "source_size": [
+        1536,
+        1536
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "physical_canvas": 2048,
+      "common_rig_root": [
+        641,
+        1058.3
+      ],
+      "actual_pose": {
+        "name": "GUARD0",
+        "head": [
+          0,
+          0
+        ],
+        "cloth": [
+          0,
+          0
+        ],
+        "elbow": [
+          610,
+          535
+        ],
+        "wrist": [
+          555,
+          629
+        ]
+      },
+      "LEFT_upper": {
+        "source_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            610.0,
+            535.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.7511553607080569,
+            0.6581040134998637
+          ],
+          [
+            -0.6543974311365027,
+            0.7320779791655604
+          ]
+        ],
+        "offset": [
+          -154.84214563998307,
+          508.1483724815734
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "LEFT_forearm": {
+        "source_joints": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joints": [
+          [
+            610.0,
+            535.0
+          ],
+          [
+            555.0,
+            629.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.9894298376315339,
+            0.0674962758846287
+          ],
+          [
+            -0.038050902103973626,
+            0.9749025964846131
+          ]
+        ],
+        "offset": [
+          27.004777295023928,
+          38.36887013016786
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "RIGHT_upper": {
+        "method": "Native continuous torso/rightupperarm field anchored to exact fixed RIGHTforearm/staff, no gear isolation/replacement"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 164995,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_QC"
+    },
+    {
+      "phase": 1,
+      "name": "IMPACT1",
+      "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-NW-HIT6-native-braced-recoil-v02/thunder_female-NW-HIT-1-IMPACT1-actual-native-v02.png",
+      "sha256": "ef118f69e899e84855ba233155439b2f973bfb088db7309982fec2d88ef8b975",
+      "bytes": 487002,
+      "source_size": [
+        1536,
+        1536
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "physical_canvas": 2048,
+      "common_rig_root": [
+        641,
+        1058.3
+      ],
+      "actual_pose": {
+        "name": "IMPACT1",
+        "head": [
+          8,
+          13
+        ],
+        "cloth": [
+          3,
+          3
+        ],
+        "elbow": [
+          632,
+          550
+        ],
+        "wrist": [
+          563,
+          570
+        ]
+      },
+      "LEFT_upper": {
+        "source_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joints": [
+          [
+            596.0480753043877,
+            469.45312236962997
+          ],
+          [
+            632.0,
+            550.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.6236299761711783,
+            0.8000356690106128
+          ],
+          [
+            -0.8032437246570675,
+            0.7072616923659673
+          ]
+        ],
+        "offset": [
+          -137.68631706729707,
+          618.6378210890298
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "LEFT_forearm": {
+        "source_joints": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joints": [
+          [
+            632.0,
+            550.0
+          ],
+          [
+            563.0,
+            570.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.5697791184430616,
+            -0.3582307942184062
+          ],
+          [
+            0.703979283549698,
+            0.6770927189370348
+          ]
+        ],
+        "offset": [
+          507.1326992309606,
+          -198.83677755854842
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "RIGHT_upper": {
+        "method": "Native continuous torso/rightupperarm field anchored to exact fixed RIGHTforearm/staff, no gear isolation/replacement"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 162528,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_QC"
+    },
+    {
+      "phase": 2,
+      "name": "RECOIL2",
+      "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-NW-HIT6-native-braced-recoil-v02/thunder_female-NW-HIT-2-RECOIL2-actual-native-v02.png",
+      "sha256": "5915c893c728e08efb4d1f8289248ae19b690a525718bc245760f178d17d069d",
+      "bytes": 479534,
+      "source_size": [
+        1536,
+        1536
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "physical_canvas": 2048,
+      "common_rig_root": [
+        641,
+        1058.3
+      ],
+      "actual_pose": {
+        "name": "RECOIL2",
+        "head": [
+          24,
+          30
+        ],
+        "cloth": [
+          10,
+          7
+        ],
+        "elbow": [
+          648,
+          559
+        ],
+        "wrist": [
+          567,
+          534
+        ]
+      },
+      "LEFT_upper": {
+        "source_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joints": [
+          [
+            610.144225913163,
+            484.43028239145383
+          ],
+          [
+            648.0,
+            559.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.5940147826010744,
+            0.8115110446640498
+          ],
+          [
+            -0.8111926177165889,
+            0.6214627859006708
+          ]
+        ],
+        "offset": [
+          -111.40253949500459,
+          677.5927782840174
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "LEFT_forearm": {
+        "source_joints": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joints": [
+          [
+            648.0,
+            559.0
+          ],
+          [
+            567.0,
+            534.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.149870058425253,
+            -0.7628516635918544
+          ],
+          [
+            0.9198847330996567,
+            0.3407750367253054
+          ]
+        ],
+        "offset": [
+          970.1960910581098,
+          -130.64780190524732
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "RIGHT_upper": {
+        "method": "Native continuous torso/rightupperarm field anchored to exact fixed RIGHTforearm/staff, no gear isolation/replacement"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 159470,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_QC"
+    },
+    {
+      "phase": 3,
+      "name": "COUNTER3",
+      "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-NW-HIT6-native-braced-recoil-v02/thunder_female-NW-HIT-3-COUNTER3-actual-native-v02.png",
+      "sha256": "6ceedc7410509cb463342c7b02ed1d17ac9def06f3bd1e7a21b3c18e92540a31",
+      "bytes": 484933,
+      "source_size": [
+        1536,
+        1536
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "physical_canvas": 2048,
+      "common_rig_root": [
+        641,
+        1058.3
+      ],
+      "actual_pose": {
+        "name": "COUNTER3",
+        "head": [
+          15,
+          18
+        ],
+        "cloth": [
+          12,
+          5
+        ],
+        "elbow": [
+          627,
+          549
+        ],
+        "wrist": [
+          551,
+          564
+        ]
+      },
+      "LEFT_upper": {
+        "source_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joints": [
+          [
+            602.2151411957269,
+            473.8581694348723
+          ],
+          [
+            627.0,
+            549.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.7170545710368678,
+            0.6931345665972648
+          ],
+          [
+            -0.6892548759782212,
+            0.689433630546736
+          ]
+        ],
+        "offset": [
+          -137.5856326465355,
+          564.0686885956395
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "LEFT_forearm": {
+        "source_joints": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joints": [
+          [
+            627.0,
+            549.0
+          ],
+          [
+            551.0,
+            564.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.533248397617303,
+            -0.4567936100822045
+          ],
+          [
+            0.745629946455534,
+            0.6513729434068416
+          ]
+        ],
+        "offset": [
+          574.671043071282,
+          -209.21239333894323
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "RIGHT_upper": {
+        "method": "Native continuous torso/rightupperarm field anchored to exact fixed RIGHTforearm/staff, no gear isolation/replacement"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 162042,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_QC"
+    },
+    {
+      "phase": 4,
+      "name": "RECOVER4",
+      "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-NW-HIT6-native-braced-recoil-v02/thunder_female-NW-HIT-4-RECOVER4-actual-native-v02.png",
+      "sha256": "0c7e5ba4bbcca017b6f7d053a8ee6f284c7d40cdda38f0e743fd3d50bb5242e7",
+      "bytes": 493736,
+      "source_size": [
+        1536,
+        1536
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "physical_canvas": 2048,
+      "common_rig_root": [
+        641,
+        1058.3
+      ],
+      "actual_pose": {
+        "name": "RECOVER4",
+        "head": [
+          5,
+          4
+        ],
+        "cloth": [
+          6,
+          2
+        ],
+        "elbow": [
+          613,
+          538
+        ],
+        "wrist": [
+          547,
+          613
+        ]
+      },
+      "LEFT_upper": {
+        "source_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joints": [
+          [
+            593.4050470652423,
+            461.52403765219384
+          ],
+          [
+            613.0,
+            538.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.7623271551916055,
+            0.6443661715295268
+          ],
+          [
+            -0.6381760126342654,
+            0.7328989848352412
+          ]
+        ],
+        "offset": [
+          -150.72535390313658,
+          501.7419740392357
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "LEFT_forearm": {
+        "source_joints": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joints": [
+          [
+            613.0,
+            538.0
+          ],
+          [
+            547.0,
+            613.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.9493880675551738,
+            -0.07593552991041728
+          ],
+          [
+            0.1847548748428747,
+            0.9197319387261516
+          ]
+        ],
+        "offset": [
+          128.31016502442048,
+          -52.547105251696166
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "RIGHT_upper": {
+        "method": "Native continuous torso/rightupperarm field anchored to exact fixed RIGHTforearm/staff, no gear isolation/replacement"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 165114,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_QC"
+    },
+    {
+      "phase": 5,
+      "name": "RESET5",
+      "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-NW-HIT6-native-braced-recoil-v02/thunder_female-NW-HIT-5-RESET5-actual-native-v02.png",
+      "sha256": "97067164713c044b6c7f27f5e4610828d199deee934fe003562df9dbd6a5cfa3",
+      "bytes": 497926,
+      "source_size": [
+        1536,
+        1536
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "physical_canvas": 2048,
+      "common_rig_root": [
+        641,
+        1058.3
+      ],
+      "actual_pose": {
+        "name": "RESET5",
+        "head": [
+          0,
+          0
+        ],
+        "cloth": [
+          -1,
+          0
+        ],
+        "elbow": [
+          611,
+          535
+        ],
+        "wrist": [
+          554,
+          629
+        ]
+      },
+      "LEFT_upper": {
+        "source_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joints": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            611.0,
+            535.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.742815650190485,
+            0.6676899096829789
+          ],
+          [
+            -0.6648044714829958,
+            0.7269457400905776
+          ]
+        ],
+        "offset": [
+          -154.320396597,
+          516.628684742
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "LEFT_forearm": {
+        "source_joints": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joints": [
+          [
+            611.0,
+            535.0
+          ],
+          [
+            554.0,
+            629.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.9925003945162892,
+            0.04824494106393534
+          ],
+          [
+            -0.026789058711496394,
+            0.9823306208498641
+          ]
+        ],
+        "offset": [
+          36.529218127542435,
+          28.1967897961797
+        ],
+        "outside_semantic_alpha": "TRANSPARENT; no UV endpoint clamping"
+      },
+      "RIGHT_upper": {
+        "method": "Native continuous torso/rightupperarm field anchored to exact fixed RIGHTforearm/staff, no gear isolation/replacement"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 165006,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_QC"
+    }
+  ]
+}

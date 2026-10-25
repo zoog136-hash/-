@@ -1,0 +1,1567 @@
+{
+  "schema": "new-N-walk-guide-v1",
+  "camera_elevation_degrees": 35.264389682754654,
+  "fixed_bone_scale": 0.95,
+  "heading_world": [
+    0,
+    1,
+    0
+  ],
+  "raw_cell": [
+    512,
+    512
+  ],
+  "logical_cell": [
+    512,
+    512
+  ],
+  "foot": [
+    256,
+    320
+  ],
+  "target_neutral_whole_alpha16_height": 232,
+  "poses": [
+    {
+      "phase": 0,
+      "contract": "left_support_right_forward_contact",
+      "weight_support": "L",
+      "anatomical_near": "neither: symmetric pure back",
+      "anatomical_far": "neither: symmetric pure back",
+      "points_world": {
+        "pelvis": [
+          0.0,
+          0.0,
+          108.0
+        ],
+        "chest": [
+          0.0,
+          2.0,
+          178.0
+        ],
+        "neck": [
+          0.0,
+          2.0,
+          190.0
+        ],
+        "head": [
+          0.0,
+          2.0,
+          207.0
+        ],
+        "L_hip": [
+          -14.0,
+          0.0,
+          108.0
+        ],
+        "L_knee": [
+          -14.0,
+          26.698644699554656,
+          53.15310062358181
+        ],
+        "L_ankle": [
+          -14.0,
+          -12.0,
+          6.0
+        ],
+        "L_shoulder": [
+          -23.0,
+          2.0,
+          178.0
+        ],
+        "L_elbow": [
+          -23.0,
+          -24.567099349262644,
+          148.09700295678695
+        ],
+        "L_wrist": [
+          -23.0,
+          -10.0,
+          113.0
+        ],
+        "L_heel": [
+          -14.0,
+          -18.0,
+          0.0
+        ],
+        "L_toe": [
+          -14.0,
+          6.0,
+          0.0
+        ],
+        "R_hip": [
+          14.0,
+          0.0,
+          108.0
+        ],
+        "R_knee": [
+          14.0,
+          43.94916103337475,
+          65.69785768471655
+        ],
+        "R_ankle": [
+          14.0,
+          24.0,
+          8.05212086
+        ],
+        "R_shoulder": [
+          23.0,
+          2.0,
+          178.0
+        ],
+        "R_elbow": [
+          23.0,
+          -18.477598569304256,
+          143.63915081325217
+        ],
+        "R_wrist": [
+          23.0,
+          4.0,
+          113.0
+        ],
+        "R_heel": [
+          14.0,
+          18.36184427528455,
+          4.5988102215233084e-11
+        ],
+        "R_toe": [
+          14.0,
+          40.91446717414635,
+          8.208483439862038
+        ]
+      },
+      "points_cell": {
+        "pelvis": [
+          256.0,
+          236.22745079681533
+        ],
+        "chest": [
+          256.0,
+          180.83346265366126
+        ],
+        "neck": [
+          256.0,
+          171.52540163108517
+        ],
+        "head": [
+          256.0,
+          158.3389818491024
+        ],
+        "L_hip": [
+          242.7,
+          236.22745079681533
+        ],
+        "L_knee": [
+          242.7,
+          264.1268951023094
+        ],
+        "L_ankle": [
+          242.7,
+          321.92776255747367
+        ],
+        "L_shoulder": [
+          234.15,
+          180.83346265366126
+        ],
+        "L_elbow": [
+          234.15,
+          218.59996861951294
+        ],
+        "L_wrist": [
+          234.15,
+          237.83391959471004
+        ],
+        "L_heel": [
+          242.7,
+          329.8726896031426
+        ],
+        "L_toe": [
+          242.7,
+          316.70910346561914
+        ],
+        "R_hip": [
+          269.3,
+          236.22745079681533
+        ],
+        "R_knee": [
+          269.3,
+          244.93467067923171
+        ],
+        "R_ankle": [
+          269.3,
+          300.59061116864007
+        ],
+        "R_shoulder": [
+          277.85,
+          180.83346265366126
+        ],
+        "R_elbow": [
+          277.85,
+          218.7178124325041
+        ],
+        "R_wrist": [
+          277.85,
+          230.15516101448804
+        ],
+        "R_heel": [
+          269.3,
+          309.9288450515685
+        ],
+        "R_toe": [
+          269.3,
+          291.1920315650069
+        ]
+      },
+      "segments": [
+        [
+          "pelvis",
+          "chest"
+        ],
+        [
+          "chest",
+          "neck"
+        ],
+        [
+          "L_hip",
+          "L_knee"
+        ],
+        [
+          "L_knee",
+          "L_ankle"
+        ],
+        [
+          "L_heel",
+          "L_toe"
+        ],
+        [
+          "chest",
+          "L_shoulder"
+        ],
+        [
+          "L_shoulder",
+          "L_elbow"
+        ],
+        [
+          "L_elbow",
+          "L_wrist"
+        ],
+        [
+          "R_hip",
+          "R_knee"
+        ],
+        [
+          "R_knee",
+          "R_ankle"
+        ],
+        [
+          "R_heel",
+          "R_toe"
+        ],
+        [
+          "chest",
+          "R_shoulder"
+        ],
+        [
+          "R_shoulder",
+          "R_elbow"
+        ],
+        [
+          "R_elbow",
+          "R_wrist"
+        ],
+        [
+          "L_hip",
+          "R_hip"
+        ]
+      ],
+      "weapon": "one anatomical RIGHT-hand longgold double-ended spear; screen RIGHT",
+      "timing_and_contact_continuity": "HOLD: pose intentions only",
+      "direction": "N",
+      "guide_status": "MOTION_AND_SCALE_INTENTION_ONLY_NOT_APPROVAL"
+    },
+    {
+      "phase": 1,
+      "contract": "left_support_midstance_right_passage",
+      "weight_support": "L",
+      "anatomical_near": "neither: symmetric pure back",
+      "anatomical_far": "neither: symmetric pure back",
+      "points_world": {
+        "pelvis": [
+          0.0,
+          0.0,
+          112.0
+        ],
+        "chest": [
+          0.0,
+          2.0,
+          182.0
+        ],
+        "neck": [
+          0.0,
+          2.0,
+          194.0
+        ],
+        "head": [
+          0.0,
+          2.0,
+          211.0
+        ],
+        "L_hip": [
+          -14.0,
+          0.0,
+          112.0
+        ],
+        "L_knee": [
+          -14.0,
+          23.409442190943118,
+          55.67062918593097
+        ],
+        "L_ankle": [
+          -14.0,
+          -12.0,
+          6.0
+        ],
+        "L_shoulder": [
+          -23.0,
+          2.0,
+          182.0
+        ],
+        "L_elbow": [
+          -23.0,
+          -19.547853721426637,
+          148.3
+        ],
+        "L_wrist": [
+          -23.0,
+          2.0,
+          117.0
+        ],
+        "L_heel": [
+          -14.0,
+          -18.0,
+          0.0
+        ],
+        "L_toe": [
+          -14.0,
+          6.0,
+          0.0
+        ],
+        "R_hip": [
+          14.0,
+          0.0,
+          112.0
+        ],
+        "R_knee": [
+          14.0,
+          43.75785643744447,
+          69.5
+        ],
+        "R_ankle": [
+          14.0,
+          0.0,
+          27.0
+        ],
+        "R_shoulder": [
+          23.0,
+          2.0,
+          182.0
+        ],
+        "R_elbow": [
+          23.0,
+          -18.477598569304256,
+          147.63915081325217
+        ],
+        "R_wrist": [
+          23.0,
+          4.0,
+          117.0
+        ],
+        "R_heel": [
+          14.0,
+          -5.941608412449423,
+          20.164961394239608
+        ],
+        "R_toe": [
+          14.0,
+          17.824825237348268,
+          23.50511581728118
+        ]
+      },
+      "points_cell": {
+        "pelvis": [
+          256.0,
+          233.12476378928994
+        ],
+        "chest": [
+          256.0,
+          177.7307756461359
+        ],
+        "neck": [
+          256.0,
+          168.4227146235598
+        ],
+        "head": [
+          256.0,
+          155.23629484157703
+        ],
+        "L_hip": [
+          242.7,
+          233.12476378928994
+        ],
+        "L_knee": [
+          242.7,
+          263.9781901680185
+        ],
+        "L_ankle": [
+          242.7,
+          321.92776255747367
+        ],
+        "L_shoulder": [
+          234.15,
+          177.7307756461359
+        ],
+        "L_elbow": [
+          234.15,
+          215.68953987373516
+        ],
+        "L_wrist": [
+          234.15,
+          228.14943951842298
+        ],
+        "L_heel": [
+          242.7,
+          329.8726896031426
+        ],
+        "L_toe": [
+          242.7,
+          316.70910346561914
+        ],
+        "R_hip": [
+          269.3,
+          233.12476378928994
+        ],
+        "R_knee": [
+          269.3,
+          242.0903835605933
+        ],
+        "R_ankle": [
+          269.3,
+          299.0568626992038
+        ],
+        "R_shoulder": [
+          277.85,
+          177.7307756461359
+        ],
+        "R_elbow": [
+          277.85,
+          215.61512542497871
+        ],
+        "R_wrist": [
+          277.85,
+          227.05247400696265
+        ],
+        "R_heel": [
+          269.3,
+          307.61747882424027
+        ],
+        "R_toe": [
+          269.3,
+          291.9911363692467
+        ]
+      },
+      "segments": [
+        [
+          "pelvis",
+          "chest"
+        ],
+        [
+          "chest",
+          "neck"
+        ],
+        [
+          "L_hip",
+          "L_knee"
+        ],
+        [
+          "L_knee",
+          "L_ankle"
+        ],
+        [
+          "L_heel",
+          "L_toe"
+        ],
+        [
+          "chest",
+          "L_shoulder"
+        ],
+        [
+          "L_shoulder",
+          "L_elbow"
+        ],
+        [
+          "L_elbow",
+          "L_wrist"
+        ],
+        [
+          "R_hip",
+          "R_knee"
+        ],
+        [
+          "R_knee",
+          "R_ankle"
+        ],
+        [
+          "R_heel",
+          "R_toe"
+        ],
+        [
+          "chest",
+          "R_shoulder"
+        ],
+        [
+          "R_shoulder",
+          "R_elbow"
+        ],
+        [
+          "R_elbow",
+          "R_wrist"
+        ],
+        [
+          "L_hip",
+          "R_hip"
+        ]
+      ],
+      "weapon": "one anatomical RIGHT-hand longgold double-ended spear; screen RIGHT",
+      "timing_and_contact_continuity": "HOLD: pose intentions only",
+      "direction": "N",
+      "guide_status": "MOTION_AND_SCALE_INTENTION_ONLY_NOT_APPROVAL"
+    },
+    {
+      "phase": 2,
+      "contract": "left_to_right_support_transfer",
+      "weight_support": "R",
+      "anatomical_near": "neither: symmetric pure back",
+      "anatomical_far": "neither: symmetric pure back",
+      "points_world": {
+        "pelvis": [
+          0.0,
+          0.0,
+          110.0
+        ],
+        "chest": [
+          0.0,
+          2.0,
+          180.0
+        ],
+        "neck": [
+          0.0,
+          2.0,
+          192.0
+        ],
+        "head": [
+          0.0,
+          2.0,
+          209.0
+        ],
+        "L_hip": [
+          -14.0,
+          0.0,
+          110.0
+        ],
+        "L_knee": [
+          -14.0,
+          17.703348324517947,
+          51.625421131276774
+        ],
+        "L_ankle": [
+          -14.0,
+          -30.0,
+          13.60712871
+        ],
+        "L_shoulder": [
+          -23.0,
+          2.0,
+          180.0
+        ],
+        "L_elbow": [
+          -23.0,
+          -12.13862601440341,
+          142.58209981272555
+        ],
+        "L_wrist": [
+          -23.0,
+          14.0,
+          115.0
+        ],
+        "L_heel": [
+          -14.0,
+          -35.4378467222199,
+          10.142838280444195
+        ],
+        "L_toe": [
+          -14.0,
+          -13.686459833340301,
+          -1.3325891501381193e-09
+        ],
+        "R_hip": [
+          14.0,
+          0.0,
+          110.0
+        ],
+        "R_knee": [
+          14.0,
+          40.789920989155185,
+          64.64382792057428
+        ],
+        "R_ankle": [
+          14.0,
+          24.0,
+          6.0
+        ],
+        "R_shoulder": [
+          23.0,
+          2.0,
+          180.0
+        ],
+        "R_elbow": [
+          23.0,
+          -18.477598569304256,
+          145.63915081325217
+        ],
+        "R_wrist": [
+          23.0,
+          4.0,
+          115.0
+        ],
+        "R_heel": [
+          14.0,
+          18.0,
+          0.0
+        ],
+        "R_toe": [
+          14.0,
+          42.0,
+          0.0
+        ]
+      },
+      "points_cell": {
+        "pelvis": [
+          256.0,
+          234.67610729305264
+        ],
+        "chest": [
+          256.0,
+          179.28211914989856
+        ],
+        "neck": [
+          256.0,
+          169.9740581273225
+        ],
+        "head": [
+          256.0,
+          156.7876383453397
+        ],
+        "L_hip": [
+          242.7,
+          234.67610729305264
+        ],
+        "L_knee": [
+          242.7,
+          270.2456378748084
+        ],
+        "L_ankle": [
+          242.7,
+          325.89981730734377
+        ],
+        "L_shoulder": [
+          234.15,
+          179.28211914989856
+        ],
+        "L_elbow": [
+          234.15,
+          216.06091989850074
+        ],
+        "L_wrist": [
+          234.15,
+          223.11898995342392
+        ],
+        "L_heel": [
+          242.7,
+          331.56953468930436
+        ],
+        "L_toe": [
+          242.7,
+          327.5067872066141
+        ],
+        "R_hip": [
+          269.3,
+          234.67610729305264
+        ],
+        "R_knee": [
+          269.3,
+          247.4850404783856
+        ],
+        "R_ankle": [
+          269.3,
+          302.1823833511885
+        ],
+        "R_shoulder": [
+          277.85,
+          179.28211914989856
+        ],
+        "R_elbow": [
+          277.85,
+          217.1664689287414
+        ],
+        "R_wrist": [
+          277.85,
+          228.60381751072535
+        ],
+        "R_heel": [
+          269.3,
+          310.1273103968574
+        ],
+        "R_toe": [
+          269.3,
+          296.96372425933396
+        ]
+      },
+      "segments": [
+        [
+          "pelvis",
+          "chest"
+        ],
+        [
+          "chest",
+          "neck"
+        ],
+        [
+          "L_hip",
+          "L_knee"
+        ],
+        [
+          "L_knee",
+          "L_ankle"
+        ],
+        [
+          "L_heel",
+          "L_toe"
+        ],
+        [
+          "chest",
+          "L_shoulder"
+        ],
+        [
+          "L_shoulder",
+          "L_elbow"
+        ],
+        [
+          "L_elbow",
+          "L_wrist"
+        ],
+        [
+          "R_hip",
+          "R_knee"
+        ],
+        [
+          "R_knee",
+          "R_ankle"
+        ],
+        [
+          "R_heel",
+          "R_toe"
+        ],
+        [
+          "chest",
+          "R_shoulder"
+        ],
+        [
+          "R_shoulder",
+          "R_elbow"
+        ],
+        [
+          "R_elbow",
+          "R_wrist"
+        ],
+        [
+          "L_hip",
+          "R_hip"
+        ]
+      ],
+      "weapon": "one anatomical RIGHT-hand longgold double-ended spear; screen RIGHT",
+      "timing_and_contact_continuity": "HOLD: pose intentions only",
+      "direction": "N",
+      "guide_status": "MOTION_AND_SCALE_INTENTION_ONLY_NOT_APPROVAL"
+    },
+    {
+      "phase": 3,
+      "contract": "right_support_left_forward_contact",
+      "weight_support": "R",
+      "anatomical_near": "neither: symmetric pure back",
+      "anatomical_far": "neither: symmetric pure back",
+      "points_world": {
+        "pelvis": [
+          0.0,
+          0.0,
+          108.0
+        ],
+        "chest": [
+          0.0,
+          2.0,
+          178.0
+        ],
+        "neck": [
+          0.0,
+          2.0,
+          190.0
+        ],
+        "head": [
+          0.0,
+          2.0,
+          207.0
+        ],
+        "L_hip": [
+          -14.0,
+          0.0,
+          108.0
+        ],
+        "L_knee": [
+          -14.0,
+          43.94916103337475,
+          65.69785768471655
+        ],
+        "L_ankle": [
+          -14.0,
+          24.0,
+          8.05212086
+        ],
+        "L_shoulder": [
+          -23.0,
+          2.0,
+          178.0
+        ],
+        "L_elbow": [
+          -23.0,
+          -12.13862601440341,
+          140.58209981272555
+        ],
+        "L_wrist": [
+          -23.0,
+          14.0,
+          113.0
+        ],
+        "L_heel": [
+          -14.0,
+          18.36184427528455,
+          4.5988102215233084e-11
+        ],
+        "L_toe": [
+          -14.0,
+          40.91446717414635,
+          8.208483439862038
+        ],
+        "R_hip": [
+          14.0,
+          0.0,
+          108.0
+        ],
+        "R_knee": [
+          14.0,
+          26.698644699554656,
+          53.15310062358181
+        ],
+        "R_ankle": [
+          14.0,
+          -12.0,
+          6.0
+        ],
+        "R_shoulder": [
+          23.0,
+          2.0,
+          178.0
+        ],
+        "R_elbow": [
+          23.0,
+          -18.477598569304256,
+          143.63915081325217
+        ],
+        "R_wrist": [
+          23.0,
+          4.0,
+          113.0
+        ],
+        "R_heel": [
+          14.0,
+          -18.0,
+          0.0
+        ],
+        "R_toe": [
+          14.0,
+          6.0,
+          0.0
+        ]
+      },
+      "points_cell": {
+        "pelvis": [
+          256.0,
+          236.22745079681533
+        ],
+        "chest": [
+          256.0,
+          180.83346265366126
+        ],
+        "neck": [
+          256.0,
+          171.52540163108517
+        ],
+        "head": [
+          256.0,
+          158.3389818491024
+        ],
+        "L_hip": [
+          242.7,
+          236.22745079681533
+        ],
+        "L_knee": [
+          242.7,
+          244.93467067923171
+        ],
+        "L_ankle": [
+          242.7,
+          300.59061116864007
+        ],
+        "L_shoulder": [
+          234.15,
+          180.83346265366126
+        ],
+        "L_elbow": [
+          234.15,
+          217.61226340226344
+        ],
+        "L_wrist": [
+          234.15,
+          224.6703334571866
+        ],
+        "L_heel": [
+          242.7,
+          309.9288450515685
+        ],
+        "L_toe": [
+          242.7,
+          291.1920315650069
+        ],
+        "R_hip": [
+          269.3,
+          236.22745079681533
+        ],
+        "R_knee": [
+          269.3,
+          264.1268951023094
+        ],
+        "R_ankle": [
+          269.3,
+          321.92776255747367
+        ],
+        "R_shoulder": [
+          277.85,
+          180.83346265366126
+        ],
+        "R_elbow": [
+          277.85,
+          218.7178124325041
+        ],
+        "R_wrist": [
+          277.85,
+          230.15516101448804
+        ],
+        "R_heel": [
+          269.3,
+          329.8726896031426
+        ],
+        "R_toe": [
+          269.3,
+          316.70910346561914
+        ]
+      },
+      "segments": [
+        [
+          "pelvis",
+          "chest"
+        ],
+        [
+          "chest",
+          "neck"
+        ],
+        [
+          "L_hip",
+          "L_knee"
+        ],
+        [
+          "L_knee",
+          "L_ankle"
+        ],
+        [
+          "L_heel",
+          "L_toe"
+        ],
+        [
+          "chest",
+          "L_shoulder"
+        ],
+        [
+          "L_shoulder",
+          "L_elbow"
+        ],
+        [
+          "L_elbow",
+          "L_wrist"
+        ],
+        [
+          "R_hip",
+          "R_knee"
+        ],
+        [
+          "R_knee",
+          "R_ankle"
+        ],
+        [
+          "R_heel",
+          "R_toe"
+        ],
+        [
+          "chest",
+          "R_shoulder"
+        ],
+        [
+          "R_shoulder",
+          "R_elbow"
+        ],
+        [
+          "R_elbow",
+          "R_wrist"
+        ],
+        [
+          "L_hip",
+          "R_hip"
+        ]
+      ],
+      "weapon": "one anatomical RIGHT-hand longgold double-ended spear; screen RIGHT",
+      "timing_and_contact_continuity": "HOLD: pose intentions only",
+      "direction": "N",
+      "guide_status": "MOTION_AND_SCALE_INTENTION_ONLY_NOT_APPROVAL"
+    },
+    {
+      "phase": 4,
+      "contract": "right_support_midstance_left_passage",
+      "weight_support": "R",
+      "anatomical_near": "neither: symmetric pure back",
+      "anatomical_far": "neither: symmetric pure back",
+      "points_world": {
+        "pelvis": [
+          0.0,
+          0.0,
+          112.0
+        ],
+        "chest": [
+          0.0,
+          2.0,
+          182.0
+        ],
+        "neck": [
+          0.0,
+          2.0,
+          194.0
+        ],
+        "head": [
+          0.0,
+          2.0,
+          211.0
+        ],
+        "L_hip": [
+          -14.0,
+          0.0,
+          112.0
+        ],
+        "L_knee": [
+          -14.0,
+          43.75785643744447,
+          69.5
+        ],
+        "L_ankle": [
+          -14.0,
+          0.0,
+          27.0
+        ],
+        "L_shoulder": [
+          -23.0,
+          2.0,
+          182.0
+        ],
+        "L_elbow": [
+          -23.0,
+          -19.547853721426637,
+          148.3
+        ],
+        "L_wrist": [
+          -23.0,
+          2.0,
+          117.0
+        ],
+        "L_heel": [
+          -14.0,
+          -5.941608412449423,
+          20.164961394239608
+        ],
+        "L_toe": [
+          -14.0,
+          17.824825237348268,
+          23.50511581728118
+        ],
+        "R_hip": [
+          14.0,
+          0.0,
+          112.0
+        ],
+        "R_knee": [
+          14.0,
+          23.409442190943118,
+          55.67062918593097
+        ],
+        "R_ankle": [
+          14.0,
+          -12.0,
+          6.0
+        ],
+        "R_shoulder": [
+          23.0,
+          2.0,
+          182.0
+        ],
+        "R_elbow": [
+          23.0,
+          -18.477598569304256,
+          147.63915081325217
+        ],
+        "R_wrist": [
+          23.0,
+          4.0,
+          117.0
+        ],
+        "R_heel": [
+          14.0,
+          -18.0,
+          0.0
+        ],
+        "R_toe": [
+          14.0,
+          6.0,
+          0.0
+        ]
+      },
+      "points_cell": {
+        "pelvis": [
+          256.0,
+          233.12476378928994
+        ],
+        "chest": [
+          256.0,
+          177.7307756461359
+        ],
+        "neck": [
+          256.0,
+          168.4227146235598
+        ],
+        "head": [
+          256.0,
+          155.23629484157703
+        ],
+        "L_hip": [
+          242.7,
+          233.12476378928994
+        ],
+        "L_knee": [
+          242.7,
+          242.0903835605933
+        ],
+        "L_ankle": [
+          242.7,
+          299.0568626992038
+        ],
+        "L_shoulder": [
+          234.15,
+          177.7307756461359
+        ],
+        "L_elbow": [
+          234.15,
+          215.68953987373516
+        ],
+        "L_wrist": [
+          234.15,
+          228.14943951842298
+        ],
+        "L_heel": [
+          242.7,
+          307.61747882424027
+        ],
+        "L_toe": [
+          242.7,
+          291.9911363692467
+        ],
+        "R_hip": [
+          269.3,
+          233.12476378928994
+        ],
+        "R_knee": [
+          269.3,
+          263.9781901680185
+        ],
+        "R_ankle": [
+          269.3,
+          321.92776255747367
+        ],
+        "R_shoulder": [
+          277.85,
+          177.7307756461359
+        ],
+        "R_elbow": [
+          277.85,
+          215.61512542497871
+        ],
+        "R_wrist": [
+          277.85,
+          227.05247400696265
+        ],
+        "R_heel": [
+          269.3,
+          329.8726896031426
+        ],
+        "R_toe": [
+          269.3,
+          316.70910346561914
+        ]
+      },
+      "segments": [
+        [
+          "pelvis",
+          "chest"
+        ],
+        [
+          "chest",
+          "neck"
+        ],
+        [
+          "L_hip",
+          "L_knee"
+        ],
+        [
+          "L_knee",
+          "L_ankle"
+        ],
+        [
+          "L_heel",
+          "L_toe"
+        ],
+        [
+          "chest",
+          "L_shoulder"
+        ],
+        [
+          "L_shoulder",
+          "L_elbow"
+        ],
+        [
+          "L_elbow",
+          "L_wrist"
+        ],
+        [
+          "R_hip",
+          "R_knee"
+        ],
+        [
+          "R_knee",
+          "R_ankle"
+        ],
+        [
+          "R_heel",
+          "R_toe"
+        ],
+        [
+          "chest",
+          "R_shoulder"
+        ],
+        [
+          "R_shoulder",
+          "R_elbow"
+        ],
+        [
+          "R_elbow",
+          "R_wrist"
+        ],
+        [
+          "L_hip",
+          "R_hip"
+        ]
+      ],
+      "weapon": "one anatomical RIGHT-hand longgold double-ended spear; screen RIGHT",
+      "timing_and_contact_continuity": "HOLD: pose intentions only",
+      "direction": "N",
+      "guide_status": "MOTION_AND_SCALE_INTENTION_ONLY_NOT_APPROVAL"
+    },
+    {
+      "phase": 5,
+      "contract": "right_to_left_support_transfer",
+      "weight_support": "L",
+      "anatomical_near": "neither: symmetric pure back",
+      "anatomical_far": "neither: symmetric pure back",
+      "points_world": {
+        "pelvis": [
+          0.0,
+          0.0,
+          110.0
+        ],
+        "chest": [
+          0.0,
+          2.0,
+          180.0
+        ],
+        "neck": [
+          0.0,
+          2.0,
+          192.0
+        ],
+        "head": [
+          0.0,
+          2.0,
+          209.0
+        ],
+        "L_hip": [
+          -14.0,
+          0.0,
+          110.0
+        ],
+        "L_knee": [
+          -14.0,
+          40.789920989155185,
+          64.64382792057428
+        ],
+        "L_ankle": [
+          -14.0,
+          24.0,
+          6.0
+        ],
+        "L_shoulder": [
+          -23.0,
+          2.0,
+          180.0
+        ],
+        "L_elbow": [
+          -23.0,
+          -24.567099349262644,
+          150.09700295678695
+        ],
+        "L_wrist": [
+          -23.0,
+          -10.0,
+          115.0
+        ],
+        "L_heel": [
+          -14.0,
+          18.0,
+          0.0
+        ],
+        "L_toe": [
+          -14.0,
+          42.0,
+          0.0
+        ],
+        "R_hip": [
+          14.0,
+          0.0,
+          110.0
+        ],
+        "R_knee": [
+          14.0,
+          17.703348324517947,
+          51.625421131276774
+        ],
+        "R_ankle": [
+          14.0,
+          -30.0,
+          13.60712871
+        ],
+        "R_shoulder": [
+          23.0,
+          2.0,
+          180.0
+        ],
+        "R_elbow": [
+          23.0,
+          -18.477598569304256,
+          145.63915081325217
+        ],
+        "R_wrist": [
+          23.0,
+          4.0,
+          115.0
+        ],
+        "R_heel": [
+          14.0,
+          -35.4378467222199,
+          10.142838280444195
+        ],
+        "R_toe": [
+          14.0,
+          -13.686459833340301,
+          -1.3325891501381193e-09
+        ]
+      },
+      "points_cell": {
+        "pelvis": [
+          256.0,
+          234.67610729305264
+        ],
+        "chest": [
+          256.0,
+          179.28211914989856
+        ],
+        "neck": [
+          256.0,
+          169.9740581273225
+        ],
+        "head": [
+          256.0,
+          156.7876383453397
+        ],
+        "L_hip": [
+          242.7,
+          234.67610729305264
+        ],
+        "L_knee": [
+          242.7,
+          247.4850404783856
+        ],
+        "L_ankle": [
+          242.7,
+          302.1823833511885
+        ],
+        "L_shoulder": [
+          234.15,
+          179.28211914989856
+        ],
+        "L_elbow": [
+          234.15,
+          217.04862511575027
+        ],
+        "L_wrist": [
+          234.15,
+          236.28257609094737
+        ],
+        "L_heel": [
+          242.7,
+          310.1273103968574
+        ],
+        "L_toe": [
+          242.7,
+          296.96372425933396
+        ],
+        "R_hip": [
+          269.3,
+          234.67610729305264
+        ],
+        "R_knee": [
+          269.3,
+          270.2456378748084
+        ],
+        "R_ankle": [
+          269.3,
+          325.89981730734377
+        ],
+        "R_shoulder": [
+          277.85,
+          179.28211914989856
+        ],
+        "R_elbow": [
+          277.85,
+          217.1664689287414
+        ],
+        "R_wrist": [
+          277.85,
+          228.60381751072535
+        ],
+        "R_heel": [
+          269.3,
+          331.56953468930436
+        ],
+        "R_toe": [
+          269.3,
+          327.5067872066141
+        ]
+      },
+      "segments": [
+        [
+          "pelvis",
+          "chest"
+        ],
+        [
+          "chest",
+          "neck"
+        ],
+        [
+          "L_hip",
+          "L_knee"
+        ],
+        [
+          "L_knee",
+          "L_ankle"
+        ],
+        [
+          "L_heel",
+          "L_toe"
+        ],
+        [
+          "chest",
+          "L_shoulder"
+        ],
+        [
+          "L_shoulder",
+          "L_elbow"
+        ],
+        [
+          "L_elbow",
+          "L_wrist"
+        ],
+        [
+          "R_hip",
+          "R_knee"
+        ],
+        [
+          "R_knee",
+          "R_ankle"
+        ],
+        [
+          "R_heel",
+          "R_toe"
+        ],
+        [
+          "chest",
+          "R_shoulder"
+        ],
+        [
+          "R_shoulder",
+          "R_elbow"
+        ],
+        [
+          "R_elbow",
+          "R_wrist"
+        ],
+        [
+          "L_hip",
+          "R_hip"
+        ]
+      ],
+      "weapon": "one anatomical RIGHT-hand longgold double-ended spear; screen RIGHT",
+      "timing_and_contact_continuity": "HOLD: pose intentions only",
+      "direction": "N",
+      "guide_status": "MOTION_AND_SCALE_INTENTION_ONLY_NOT_APPROVAL"
+    }
+  ]
+}

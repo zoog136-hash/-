@@ -1,0 +1,114 @@
+{
+  "key": "transform:393",
+  "direction": "E",
+  "role": "death",
+  "name": "해방된 할파스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG DEATH animation sprites of EXACTLY 해방된 할파스. The first original portrait is identity authority. The second saved E native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for E.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces EAST / screen right, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: fatal hit / unstable; 1: loss of balance; 2: body falling / knees collapsing; 3: ground impact; 4: settling; 5: fully fallen motionless corpse.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nThis is a genuine irreversible fall, not a bow or hit recoil. Phase5 must be fully fallen, resting on the ground with folded/spread original wings and recognizable anatomy; no standing final pose. Keep equipment attached, no gore.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "fatal hit / unstable",
+    "loss of balance",
+    "body falling / knees collapsing",
+    "ground impact",
+    "settling",
+    "fully fallen motionless corpse"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-025-halpas-E-death-v01.json",
+  "processing_proof": {
+    "source_sha256": "5ead88cc065e95c5d38c2ee9bb83a8c3dd7655ab06efce93e3e9d82076b3f4b2",
+    "output_sha256": "00f4159fcf8f44899bda41f149645f4519bed5162b869c5baec788936ad90141",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-death-v01.png",
+    "output": "/workspace/scratch/halpas-E-death-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 55000,
+    "maximum_removed_alpha": 15,
+    "foreground_pixels": 432156,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -30
+        ],
+        "pixels": 99469,
+        "foreground_pixels": 93138,
+        "rgba_sha256": "5788d4beaadab056a0f7ea6ee49878fde2f5ec301de5439bcbdad53fc10026f4"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -77
+        ],
+        "pixels": 86120,
+        "foreground_pixels": 81117,
+        "rgba_sha256": "d9cde364cd560508e1d7b12348d855253c10caee27e7d3a449dcc8609a33d6d6"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          -45
+        ],
+        "pixels": 85588,
+        "foreground_pixels": 80968,
+        "rgba_sha256": "516e0d2c6e5c81f68f561fb0735ea9d9fe6330837e2dafe059738252eaede15f"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          -68
+        ],
+        "pixels": 68353,
+        "foreground_pixels": 64882,
+        "rgba_sha256": "08070f897f7fba0d9ac06b9ad76953f542504609be611e71b94abc2bb646346b"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          -36
+        ],
+        "pixels": 65262,
+        "foreground_pixels": 61884,
+        "rgba_sha256": "e2b34238b80ebb9bc9ca470b77691f670584945d64806d76fb7c90c0bc537c57"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          -50
+        ],
+        "pixels": 53004,
+        "foreground_pixels": 50167,
+        "rgba_sha256": "1df672231219bf985b0c135a313a24b3d212a9f67bb488d323c61d0d3f23ecb0"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-death-v01iso01.png",
+  "output_sha256": "00f4159fcf8f44899bda41f149645f4519bed5162b869c5baec788936ad90141",
+  "output_bytes": 1319126,
+  "original_generated_file": "/workspace/scratch/halpas-E-death-v01iso01.png"
+}

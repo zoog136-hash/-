@@ -1,0 +1,50 @@
+{
+  "key": "transform_267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v08RIGHTcontact3",
+  "status": "SOURCE_PASS_SINGLE_RIGHT_CONTACT3_ONLY",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "game_pose_map": [
+    3
+  ],
+  "request_path": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/request.json",
+  "request_sha256": "c305fac2140a76f289eadc6a4901649f0dd0e93d5eb89faf0094fa094dd354a0",
+  "original_generated_file": "/workspace/generated_images/exec-9bb0c6e4-bb06-4df4-b452-398c91ea8023.png",
+  "raw_path": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+  "raw_png": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+  "raw_sha256": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+  "raw_bytes": 1592057,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/generated-private.jpg",
+  "private_preview_bytes": 140848,
+  "source_visual_status": "PASS",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T14:46:45.436723+00:00",
+  "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+  "outer_edge_alpha100_count": 0,
+  "visual_status": "PENDING_FRESH_INDEPENDENT_SOURCE_QC",
+  "visual_findings": [
+    "Independent visible joint-chain SOURCE PASS for RIGHT contact3 only.",
+    "Weapon-side nearRIGHT hip\u2192blackgold upperthigh\u2192forward knee/greave\u2192heel is continuous in front of the natural robe slit; farLEFT rear toe is distinct.",
+    "Independent E camera, longrobe, hard thin gold rays, RIGHT weapon and EMPTY LEFT remain faithful."
+  ],
+  "visual_limitations": [
+    "One contact key only; not a completed full6 clip or actor.",
+    "Prior v07 whole6 and earlier ambiguous A/B candidates retain HOLD."
+  ],
+  "independent_qc_owner": "/root/girtas_movement_source_runtime_qc",
+  "independent_source_review": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-RIGHT-visible-hip-v08-independent-source-review.json",
+    "sha256": "215605660184d4b219ff2f20ade3df0e5e4b742b4810e667b08dbc5b36ebbd61",
+    "status": "SCOPED_SINGLE_SOURCE_PASS"
+  }
+}

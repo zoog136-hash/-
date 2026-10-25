@@ -1,0 +1,71 @@
+{
+  "status": "SOURCE_DIRECTION_REPAIR_PASS_PENDING_GEOMETRY_AND_GAME",
+  "actor_approved": false,
+  "reviewed_at": "2026-10-19T10:19:31.355525+00:00",
+  "review_basis": "Private bounded previews of original portrait + selected NW walk/idle + generated sixphase atlas. No image forwarded.",
+  "source_sha256": "50fbf83f5a73b900f7f541a04eb0b588b0b150fc37c110aec04e72468d2c3b9c",
+  "findings": [
+    "All six helmets, weapon axes, and body lean remain screen-left/up-left; no phase4 rightward reversal observed.",
+    "Phase3 contact extends blade up-left; phase4 follows through on left and phase5 retracts leftward to guard.",
+    "Six distinct articulated arm/torso/knee/wing positions; same purple crystalline blade hand and established gold-black armor, burgundy cape, purple wings retained.",
+    "Source model matches selected NW references, which show a visible chest/front-left armor view. A strict geographic rear-left silhouette is not independently established by these references.",
+    "Figures exceed requested central320px width and some cell gaps are narrow; strict importer geometry/repack still required. No source geometry or runtime PASS claimed."
+  ],
+  "cell_bounds": [
+    {
+      "phase": 0,
+      "cell_bbox_alpha_gt16": [
+        32,
+        20,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 1,
+      "cell_bbox_alpha_gt16": [
+        0,
+        19,
+        486,
+        506
+      ]
+    },
+    {
+      "phase": 2,
+      "cell_bbox_alpha_gt16": [
+        22,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "phase": 3,
+      "cell_bbox_alpha_gt16": [
+        0,
+        38,
+        499,
+        512
+      ]
+    },
+    {
+      "phase": 4,
+      "cell_bbox_alpha_gt16": [
+        19,
+        0,
+        512,
+        428
+      ]
+    },
+    {
+      "phase": 5,
+      "cell_bbox_alpha_gt16": [
+        0,
+        0,
+        496,
+        437
+      ]
+    }
+  ],
+  "private_preview_bytes": 473175
+}

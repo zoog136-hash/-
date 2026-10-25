@@ -1,0 +1,373 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "SW",
+  "role": "attack",
+  "version": "SWattackSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+      "packing_proof_sha256": "7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+      "direction": "SW",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2496,
+        2496,
+        2496,
+        2496,
+        2496,
+        2496
+      ],
+      "root_float": [
+        667.65625,
+        1003.5996691442447
+      ],
+      "root_integer": [
+        668,
+        1004
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          1052,
+          1132
+        ],
+        [
+          3356,
+          1132
+        ],
+        [
+          1052,
+          3436
+        ],
+        [
+          3356,
+          3436
+        ],
+        [
+          1052,
+          5740
+        ],
+        [
+          3356,
+          5740
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "c0f3050c6b8a98ab942e286d7a2fe25bba630a0194302180688a6fbe5efa88f8",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+    "base_geometry_sha256": "9458bdf367b1fa8a262032e698b083731d3906469705501333623e2cdc4535d6",
+    "direction": "SW",
+    "regions": [
+      [
+        688,
+        164,
+        688,
+        1136
+      ],
+      [
+        2793,
+        149,
+        890,
+        1151
+      ],
+      [
+        371,
+        2501,
+        1013,
+        1103
+      ],
+      [
+        2730,
+        2552,
+        1027,
+        1052
+      ],
+      [
+        452,
+        4859,
+        1037,
+        1049
+      ],
+      [
+        2964,
+        4799,
+        712,
+        1109
+      ]
+    ],
+    "nearest_owner_sha256": "822cfb4ab3404439314c85b2a3ef4ca1f85c74a94ae3492a2fc7797376d77000",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+    "direction": "SW",
+    "role": "attack",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        1052,
+        1132
+      ],
+      [
+        3356,
+        1132
+      ],
+      [
+        1052,
+        3436
+      ],
+      [
+        3356,
+        3436
+      ],
+      [
+        1052,
+        5740
+      ],
+      [
+        3356,
+        5740
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2496,
+      2496,
+      2496,
+      2496,
+      2496,
+      2496
+    ],
+    "canonical_preflight": {
+      "status": "REVIEWED_FIXED_RIG_CANONICAL_PREFLIGHT_V1",
+      "source_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+      "packing_proof_sha256": "7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+      "direction": "SW",
+      "canonical_canvas": 2048,
+      "physical_canvases": [
+        2496,
+        2496,
+        2496,
+        2496,
+        2496,
+        2496
+      ],
+      "root_float": [
+        667.65625,
+        1003.5996691442447
+      ],
+      "root_integer": [
+        668,
+        1004
+      ],
+      "tile_size": 2304,
+      "storage_translations": [
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ],
+        [
+          384,
+          128
+        ]
+      ],
+      "atlas_origins": [
+        [
+          0,
+          0
+        ],
+        [
+          2304,
+          0
+        ],
+        [
+          0,
+          2304
+        ],
+        [
+          2304,
+          2304
+        ],
+        [
+          0,
+          4608
+        ],
+        [
+          2304,
+          4608
+        ]
+      ],
+      "source_anchors": [
+        [
+          1052,
+          1132
+        ],
+        [
+          3356,
+          1132
+        ],
+        [
+          1052,
+          3436
+        ],
+        [
+          3356,
+          3436
+        ],
+        [
+          1052,
+          5740
+        ],
+        [
+          3356,
+          5740
+        ]
+      ]
+    },
+    "canonical_preflight_sha256": "c0f3050c6b8a98ab942e286d7a2fe25bba630a0194302180688a6fbe5efa88f8",
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "7ee474a86aab7bba13752dea99bcd20acf2df338a550781e06af7398e9eda2f4",
+  "authored_common_root_float": [
+    667.65625,
+    1003.5996691442447
+  ],
+  "common_root_integer": [
+    668,
+    1004
+  ],
+  "common_root_rounding_delta": [
+    0.34375,
+    0.40033085575532823
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "First full actual-six board reads shallow-SW brace→load→windup→broad staff strike→follow→recover. Staff has both complete tips, coherent grip/rotation and distinct phase silhouettes; stationary original boot turnout/body orientation preserved.",
+      "Native0/3/4 shows complete rounded white puff and gold rim continuous with upper sleeve; gripping fingers wrap shaft and turn with forearm/staff. No old blue sleeve ghost or protruding white crescent.",
+      "Full original curved cuff/puff and free hand remain continuous in0/3/4; broad72pixel joint support removes prior fold without changing hand/knots. Final proximal bare shoulder follows BODY continuously; prior short horizontal blue/gray bite is absent.",
+      "Native head/neck/shoulder sequence remains coherent and same actual head/hair material. Genuine blue bow/tails preserved; corrected depth places ribbon behind foreground guard/puff, rather than drawing across skin/elbow.",
+      "Corrected own cloak attachment stays continuous in first six; no detached left tail. Native original/staff/cloak owner crop confirms full beveled cyan jewel/lowerblade1293pixels are staff, separate curved blue/star cloak gold hem retained. No component-based deletion."
+    ],
+    "visual_limitations": [
+      "Exact current six only; failed earlier fields/owners retained and not approved.",
+      "One first actualsix sequence plus necessary changed local views; no original fullbody/source/once audit repeated.",
+      "This approves stationary SW attack source/one-shot scope, not SW WALK/RUN facing or wholeactor.",
+      "PACK/inverse atlas, independent numeric/floor and Godot/game integration remain separate.",
+      "The actual visual/source/one-shot judgement is inherited from the exact peer SOURCE286b receipt; no images were viewed here.",
+      "The author uses eight composition groups and eleven native semantic owners per phase:48 source/raster groups, not36. Mathematical function definitions were extracted without executing any author top-level render/write code; their exact six output RGBA is independently recomposed and matched.",
+      "All original source owners are disjoint, original RGBA and reconstruct the complete source. The original stationary full boots/sole cards are bitexact at fixed common root; no alpha/footfit or perposebodyunit exists.",
+      "Projected RIGHT forearm/puff/grip/staff share one orthogonal2D rotation and fixed projected length. This is not proof of unique hidden3D anatomy, physical fixed bones or proper3D weapon rotation.",
+      "The original once-neutral sole planes and unchanged rest capture D180 are a finite stationary painted-material compatibility witness. All source texel quads and actual raster quads are guarded positive; nonlinear field source bounds use explicit conservative allquad intervals and convex-combination maxima.",
+      "Sampled positive source-grid Jacobians and actual-support inverse residuals do not assert a unique continuous physical3D recovery or global injectivity theorem. Source nodes, unit, C, root, .42s contact3 and shallow stationary SW scope remain fixed.",
+      "No source PNG, repository, helper, Git, game/runtime or actor approval changes are made.",
+      "Apply the exact matching runtime_layout, advance and stage helper copies, canonical input pins and matching builder/integrator together before any adoption.",
+      "Retain and pass the existing unchanged legacy and actual scoped source/request/runtime/game checks. The isolated builder success and this exact source binding do not grant runtime or actor approval.",
+      "Final packing uses one identical integer shipping translation for all6, exact reverseRGBA reconstruction, transparent padding only, and one common integer root quantization. Every original native world-space point is unchanged. No new source/image view or physical/body/profile fit was introduced."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+    "raw_bytes": 4274538,
+    "request_sha256": "7e0421084e5bdebe6b24f32a16e092aa9882e61b5d126e6c8b9d533b0c4a450b",
+    "review_sha256": "bb910263973708ab9ab379afea790ddde95cfc669fa5a90769bbf8b04cc297c6"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/thunder_female-SW-attack-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-68qzul9q/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/request-SWattackSixActualRig01.json": "7e0421084e5bdebe6b24f32a16e092aa9882e61b5d126e6c8b9d533b0c4a450b",
+      "/workspace/scratch/mythic413-SW-attack-actual-packed-r001-20261020/thunder_female-SW-attack-six-actual-poses-r001.png": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/SWattackSixActualRig01-independent-final-source-cycle-PASS-v01.json": "bb910263973708ab9ab379afea790ddde95cfc669fa5a90769bbf8b04cc297c6",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-attack-SWattackSixActualRig01.png",
+  "output_sha256": "0a495528692cf30f1f59e0ab9104425a2025983e83001981e2de8e9d0b246b2f",
+  "output_bytes": 4274538,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-68qzul9q/reviewed-source.png"
+}
