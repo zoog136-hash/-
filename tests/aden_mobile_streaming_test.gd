@@ -18,7 +18,7 @@ func run() -> void:
 	renderer.texture_pixel_budget=renderer.MAX_MOBILE_PIXELS
 	var initial_sync: int=renderer.synchronous_decodes
 	var entry_ms: int=Time.get_ticks_msec()-started
-	for site: Array in [["palace",11720,2934],["snow",7780,1140],["volcano",6450,2270],["forest",10290,3395],["desert",7500,5370],["ruins",8240,3130],["temple",10410,4305]]:
+	for site: Array in [["residential",11734,2551],["market",12020,2638],["palace",11720,2934],["snow",7780,1140],["volcano",6450,2270],["forest",10290,3395],["desert",7500,5370],["ruins",8240,3130],["temple",10410,4305]]:
 		var center:=Vector2(site[1],site[2])*6
 		world.player.camera.offset=center-world.player.global_position;world.player.camera.force_update_scroll();var t: int=Time.get_ticks_msec()
 		if not await renderer.settle_visible(20000):failures.append("stream timeout "+str(site[0]))
