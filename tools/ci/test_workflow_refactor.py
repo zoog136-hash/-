@@ -1,7 +1,7 @@
 """Guard against hiding changed CI coverage behind a shared setup action."""
 import copy
 import unittest
-from validate_workflow_refactor import expand
+from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup
 
 
 class RefactorContractTest(unittest.TestCase):
@@ -42,6 +42,34 @@ class RefactorContractTest(unittest.TestCase):
         self.action['runs']['steps'].append({'shell': 'bash', 'run': 'unexpected'})
         with self.assertRaises(AssertionError):
             expand(self.after, lambda _: self.action)
+
+
+class SupersededCIContractTest(unittest.TestCase):
+    def test_only_allowlisted_pr_cancel_field_can_change(self):
+        name = '.github/workflows/twilight-shop-buyback.yml'
+        before = {'concurrency': {'group': 'one-pr', 'cancel-in-progress': False},
+                  'jobs': {'check': {'steps': [{'run': 'run-tests'}]}}}
+        after = copy.deepcopy(before)
+        after['concurrency']['cancel-in-progress'] = STALE_POLICY
+        assert_preserved_workflow(name, before, after, lambda _: None)
+        for modification in ('command', 'global_cancel', 'group'):
+            changed = copy.deepcopy(after)
+            if modification == 'command':
+                changed['jobs']['check']['steps'][0]['run'] = 'true'
+            if modification == 'global_cancel':
+                changed['concurrency']['cancel-in-progress'] = True
+            if modification == 'group':
+                changed['concurrency']['group'] = 'all-prs'
+            with self.subTest(modification=modification), self.assertRaises(AssertionError):
+                assert_preserved_workflow(name, before, changed, lambda _: None)
+
+    def test_other_workflow_cannot_change_concurrency(self):
+        name = '.github/workflows/resource-integrity.yml'
+        before = {'concurrency': {'cancel-in-progress': False}, 'jobs': {}}
+        after = copy.deepcopy(before)
+        after['concurrency']['cancel-in-progress'] = STALE_POLICY
+        with self.assertRaises(AssertionError):
+            assert_preserved_workflow(name, before, after, lambda _: None)
 
 
 if __name__ == '__main__':

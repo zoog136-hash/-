@@ -13,7 +13,7 @@ permissions:
   contents: read
 concurrency:
   group: main-debug-audit-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.pull_request.number != 157 && github.event.pull_request.number != 158 }}
 jobs:
   audit:
     runs-on: ubuntu-latest

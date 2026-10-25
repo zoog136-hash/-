@@ -10,7 +10,7 @@ on:
 # Preserve in-flight PR122 audits; avoid automatic cancellation of costly Godot imports.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.pull_request.number != 157 && github.event.pull_request.number != 158 }}
 
 jobs:
   npc-transit:
