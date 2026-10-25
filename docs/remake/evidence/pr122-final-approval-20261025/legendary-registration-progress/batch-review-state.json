@@ -19,7 +19,7 @@
     "402/337 robe hem is not sufficient anatomical ground evidence.",
     "176 v01 revised S/N run swaps weapon hand between rows.",
     "176 v01 revised SW/W/NW/NE idle and several NW/NE actions retain front-facing reference guards.",
-    "192 N attack pinned source contains front-facing attack phases between back-facing N guards; impact crosses the uniform 627px cell boundary."
+    "192 N attack pinned source impact crosses the 627px uniform cell boundary; attack body/helmet reads frontward, but precise guard-direction comparison remains HOLD."
   ],
   "integration_constraint": {
     "type": "Visual transition integrity, not a code prohibition",
@@ -68,5 +68,29 @@
     },
     "production_selected": 0,
     "final_quality_approved": 0
+  },
+  "reviewed_normalized_N_attack_clips": 40,
+  "N_attack_review": {
+    "scope": "All 40 N attack sequences inspected together, not a complete all-direction quality approval.",
+    "confirmed_review_followups": [
+      "176 contact slot returns to legacy idle guard instead of attack contact.",
+      "177/226/274/331 bows and 275 gun visibly release horizontally while N is selected; require source-direction verification/correction before final compass approval.",
+      "192 source impact crosses 627px uniform cell partition; four authored attack poses present a frontward body/helmet reading. Exact guard comparison remains HOLD."
+    ],
+    "candidate_ownership_edges": [
+      113,
+      114,
+      160,
+      166,
+      192,
+      226,
+      227,
+      245,
+      275,
+      330,
+      332,
+      339
+    ],
+    "edge_policy": "A preview edge alone is not proof of damaged source. Compare the pinned full image and ownership metadata before deciding extraction repair versus re-authoring."
   }
 }
