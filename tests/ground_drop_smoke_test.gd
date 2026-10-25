@@ -58,7 +58,10 @@ func _run() -> void:
 			if path.is_empty() or path[path.size()-1].distance_to(trial)>PICKUP_RADIUS:
 				continue
 			# Both the teleported player foot and adjacent AUTO drop must fit.
-			if not bool(world.call("_has_line_of_sight_world",trial,trial+Vector2(13,0))):
+			var auto_point: Vector2 = trial + Vector2(13, 0)
+			if not bool(world.call("_is_walkable_world", auto_point)):
+				continue
+			if not bool(world.call("_has_line_of_sight_world", trial, auto_point)):
 				continue
 			far_point = trial
 			break
