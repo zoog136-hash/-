@@ -31148,10 +31148,10 @@
           "production_connected": false
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "304548254db985981722eb00c75866af745196826165a25ba54faca492a6e34c",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "2bb467cd115e10b4677da1d169418e29d5bf8844476bac661e09ec21749ea33e",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "683040ae2d725897ffa7476c790760b05267fec5fd1adc188bc150e9dbc137e6",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "cffde8cbc1b752994ad81d340061faac706aebb5cd2d3f8efd10af0f489db475",
       "native_track_count": 28,
       "native_pose_count": 168,
       "distinct_source_pose_count": 168,
@@ -31164,7 +31164,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "304548254db985981722eb00c75866af745196826165a25ba54faca492a6e34c",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "2bb467cd115e10b4677da1d169418e29d5bf8844476bac661e09ec21749ea33e"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:테베 오시리스": {
       "kind": "boss",
@@ -37591,10 +37603,10 @@
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/thebes_osiris/W-run-v01.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "a5cd7e320cf6916d2ba66230148660fb46019751b905d30bf27368a6de4c6eb6",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "feadd1e19b157d89ceef7f2971f14af18c6d29a0a1645f230680d35f8a6c65c2",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "1fb519a3e61b3e89e5fc9008eca7cd75d97fe115808c91e8fcfbff28386cb685",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "526e5069935019877f9907699885cd78cec0465ad2c7c15f5bc49417772eb342",
       "native_track_count": 31,
       "native_pose_count": 186,
       "distinct_source_pose_count": 186,
@@ -37604,7 +37616,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "a5cd7e320cf6916d2ba66230148660fb46019751b905d30bf27368a6de4c6eb6",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "feadd1e19b157d89ceef7f2971f14af18c6d29a0a1645f230680d35f8a6c65c2"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:잔혹한 아이리스": {
       "kind": "boss",
@@ -43088,10 +43112,10 @@
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/affected-review-v01/owned-parts-repair/iris/W-idle-v02.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "95a2a4acdc188bd98318f4f29987eb8000a0332499738a5bbb245e36ec7de48a",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "b21dad6938d32f53ea07a28dcb841d0d6369d6561a1fff4b164e8106f8f40a68",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/iris/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "4c807882e0851a8716f41df6ae444ef3df6aa80251e8c21b99fb139787ac9c05",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/iris/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "dd09e845593ae2943f41b0db0f49d31946bd6f4b2d6523460757770fcbceef49",
       "native_track_count": 26,
       "native_pose_count": 156,
       "distinct_source_pose_count": 156,
@@ -43106,7 +43130,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "95a2a4acdc188bd98318f4f29987eb8000a0332499738a5bbb245e36ec7de48a",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "b21dad6938d32f53ea07a28dcb841d0d6369d6561a1fff4b164e8106f8f40a68"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:질투의 공주 이자벨": {
       "kind": "boss",
@@ -49247,10 +49283,10 @@
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/resume210-v01/whole-review-v01/owned-parts-repair/isabelle/W-run-v01.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "ced0d11047b292ec6da0dc27ac0f3c6be868b6828336bbdac7ab0039d5620170",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "7410f175c0242c824e94721a6285a30256cacb8331f080361361de4675057672",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "bec94878352e08c801ddc2c01abcd1491f86eef227029bc55c48441c82573188",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "7f5bfe24174d2c042cea2a76e44b29eea79b72ee80ece6c51393fb347407dad1",
       "native_track_count": 29,
       "native_pose_count": 174,
       "distinct_source_pose_count": 174,
@@ -49262,7 +49298,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "ced0d11047b292ec6da0dc27ac0f3c6be868b6828336bbdac7ab0039d5620170",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "7410f175c0242c824e94721a6285a30256cacb8331f080361361de4675057672"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:탐욕의 여왕 벨리엘": {
       "kind": "boss",
@@ -55140,10 +55188,10 @@
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/belial/W-run-v01.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "ad11d9d5e7acfb924b588c2f35a5856a9ca8e62be60731a0317fb671efb12f39",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "cc52e2844f8487227e056a3faff938017737a8a9b0670a79662d19defa95a61a",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/belial/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "e938692b6b12bb1f10b00cb924094204e7246b46053741be002dc6896a9b7b24",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/belial/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "89def8f1e75633a4df5574a4f7b360469a183c8a96b0f1e2a546a6dc2a5fb04c",
       "native_track_count": 28,
       "native_pose_count": 168,
       "distinct_source_pose_count": 168,
@@ -55156,7 +55204,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "ad11d9d5e7acfb924b588c2f35a5856a9ca8e62be60731a0317fb671efb12f39",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "cc52e2844f8487227e056a3faff938017737a8a9b0670a79662d19defa95a61a"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:아크모": {
       "kind": "boss",
@@ -61715,10 +61775,10 @@
           "production_connected": false
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "84941166c9eefa22505d8e30c3346cbc4501b6a4b920314d3d551346f7502775",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "6c87a206868db581f8335c63740084d8431f57c4805bcc1a491cae4075ec99b2",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/arcmo/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "c4f0e4c7de6af43096ff958870bd0977d29f9e0f0e75d611e8d52bc0a8f5080e",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "0d7a0ce90a8a1716ba9f6529125a9ef64f758b80445f721239c8411743b96cc3",
       "native_track_count": 31,
       "native_pose_count": 186,
       "distinct_source_pose_count": 186,
@@ -61728,7 +61788,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "84941166c9eefa22505d8e30c3346cbc4501b6a4b920314d3d551346f7502775",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "6c87a206868db581f8335c63740084d8431f57c4805bcc1a491cae4075ec99b2"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:제로스": {
       "kind": "boss",
@@ -68538,10 +68610,10 @@
           "production_connected": false
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "23a1fcfe23a78ec96cc4e4367bd83b007a09241041d260ef1eedba8bd176e95b",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "64af92bf59bfcf33336bacee93ca67a97afa75f33a2ed2dd88235bb92e1102e6",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/zeros/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "c1bba49565a7940d6161da2738df4ecb56088d82568a4e9bd70accd9b98f7d11",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zeros/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "3164717cc4af81ce0a2e7b4391396da65b3c3cd927be67aac85832561c5f6765",
       "native_track_count": 32,
       "native_pose_count": 192,
       "distinct_source_pose_count": 192,
@@ -68550,7 +68622,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "23a1fcfe23a78ec96cc4e4367bd83b007a09241041d260ef1eedba8bd176e95b",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "64af92bf59bfcf33336bacee93ca67a97afa75f33a2ed2dd88235bb92e1102e6"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:그림 리퍼": {
       "kind": "boss",
@@ -75272,10 +75356,10 @@
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/grim_reaper/W-run-v01.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "77202e6a1215ded426b4d597eebda1fe4da66c974c4277db197a7d35db68cb86",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "38aa55a2ff8e1859945048091bdd513c982f736dfa2696c08142d8c230e37ed2",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "41208c00563790146b4291ac39dc595fcc433cd6f268b094d4d7b9e75976d136",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "e51aa70c6de86ff57431da4316304b76eacc85bd28cf50200ba01c910f994fef",
       "native_track_count": 31,
       "native_pose_count": 185,
       "distinct_source_pose_count": 185,
@@ -75285,7 +75369,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "77202e6a1215ded426b4d597eebda1fe4da66c974c4277db197a7d35db68cb86",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "38aa55a2ff8e1859945048091bdd513c982f736dfa2696c08142d8c230e37ed2"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:공포의 뱀파이어": {
       "kind": "boss",
@@ -81999,10 +82095,10 @@
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/affected-review-v01/owned-parts-repair/dread_vampire/W-run-v02.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "987267be146b62fdd2605b2473e72858359821a097b60ef27fdb18c5dc6d3637",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "ea7e96232d87744b2c3438022133d929c6378ebd9e37822215b32e993af143fa",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "7bd54323311057d83567e417908a59f08697bf992d9261fc32ac909f642877df",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "50a41486c450a67096fc62869762936d6c20aacb00d6eb050c58d9cc578fecd5",
       "native_track_count": 32,
       "native_pose_count": 192,
       "distinct_source_pose_count": 192,
@@ -82011,7 +82107,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "987267be146b62fdd2605b2473e72858359821a097b60ef27fdb18c5dc6d3637",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "ea7e96232d87744b2c3438022133d929c6378ebd9e37822215b32e993af143fa"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:알비노 유니콘": {
       "kind": "boss",
@@ -95414,10 +95522,10 @@
           "production_connected": false
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "84e6e71b983206c35bd3aeb85905a163773bf91dfdbe13c70d764af3b26f78aa",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "8e9d29953d373fdb6543487c7102ee6ec4a25f2c0d6be87315294915c4080cd5",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/jopnir/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "a3b61d19dca8fa706b32823bece28a9ba7e4833a07b5c9960f664b76d7beb967",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/jopnir/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "eb2a66eee5e32b25c76ab204907228122799b3311a72e8af2714065ca19b4ff1",
       "native_track_count": 31,
       "native_pose_count": 186,
       "distinct_source_pose_count": 186,
@@ -95427,7 +95535,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "84e6e71b983206c35bd3aeb85905a163773bf91dfdbe13c70d764af3b26f78aa",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "8e9d29953d373fdb6543487c7102ee6ec4a25f2c0d6be87315294915c4080cd5"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:교만의 왕자 데우스": {
       "kind": "boss",
@@ -102458,10 +102578,10 @@
           "production_connected": false
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "a61765dce92fca8e62ff31b31bd0b48e8b60f4ac336d92d06f5838516532fa67",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "5479f03a5e0e07d3f7e9374def3f168ee6efc6da0042cae9ddeb59324f4a0b98",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "e3f2bf7267a9e26f2c1f18baac06e2abf5c41335da6f4a71be39e3f34264bc2c",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "ce3320fb3fcad0de8afa98acb37c67f42499fc842814ac56f6c45899817e92c4",
       "native_track_count": 32,
       "native_pose_count": 190,
       "distinct_source_pose_count": 190,
@@ -102470,7 +102590,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "a61765dce92fca8e62ff31b31bd0b48e8b60f4ac336d92d06f5838516532fa67",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "5479f03a5e0e07d3f7e9374def3f168ee6efc6da0042cae9ddeb59324f4a0b98"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:오만한 우그누스": {
       "kind": "boss",
@@ -109292,10 +109424,10 @@
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/resume210-v01/whole-review-v01/owned-parts-repair/ugnus/W-run-v01.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "52862c074b762f75fe05117aff7c08676243306981c159b3b1fce651ade7d9b6",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "6750cf1ae8e877b8a371a3b8020c5edf372157b51d51d4310c4866632a392337",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "97cf777492f8687153b8095b80dde5654f103c6525ed1afc35e13484ba6a53ca",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "3ddbd1ffe01665a45676fc1c24199f09df8f39128da90ca64fce76d1231a929e",
       "native_track_count": 32,
       "native_pose_count": 192,
       "distinct_source_pose_count": 192,
@@ -109304,7 +109436,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "52862c074b762f75fe05117aff7c08676243306981c159b3b1fce651ade7d9b6",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "6750cf1ae8e877b8a371a3b8020c5edf372157b51d51d4310c4866632a392337"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     },
     "monster:왜곡의 제니스 퀸": {
       "kind": "boss",
@@ -115253,10 +115397,10 @@
           "production_connected": false
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/SpriteFrames.tres",
-      "frames_sha256": "2d11c2d9a6a836ddb39936661bd962abcfd9e3bde3707974ede5738faf0e12f4",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/NativeMotionProfile.tres",
-      "native_profile_sha256": "a9a603f135ab993c984436b8172ac59b3568b5e311f30126c26820e0493e48ba",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/pr158-native-contract-v01/SpriteFrames.tres",
+      "frames_sha256": "733c9b872962ae416a74a18bc9293ea69c6ab13e0446c02124f49c6edd0e1e07",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/pr158-native-contract-v01/NativeMotionProfile.tres",
+      "native_profile_sha256": "542fcc7c9a0037156dac6e28bc45acee27c39743f96e086052afb072298345c2",
       "native_track_count": 29,
       "native_pose_count": 174,
       "distinct_source_pose_count": 174,
@@ -115268,7 +115412,19 @@
       ],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "pr158_native_contract": {
+        "prior": {
+          "frames": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/SpriteFrames.tres",
+          "frames_sha256": "2d11c2d9a6a836ddb39936661bd962abcfd9e3bde3707974ede5738faf0e12f4",
+          "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/NativeMotionProfile.tres",
+          "native_profile_sha256": "a9a603f135ab993c984436b8172ac59b3568b5e311f30126c26820e0493e48ba"
+        },
+        "reason": "Use the existing native role/direction resolver; absent roles remain unavailable instead of falling back to an unrelated first clip. Existing monster WALK-to-RUN and S death policies remain unchanged.",
+        "source_png_changes": 0,
+        "new_quality_approvals": 0,
+        "production_catalog_replaced": false
+      }
     }
   },
   "new_approvals": 0,

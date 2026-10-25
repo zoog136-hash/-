@@ -1,0 +1,42 @@
+{
+  "mythic": {
+    "required": 528,
+    "draft_sources": 525,
+    "selected_source_clips_audited": 301,
+    "actual_Player_clips": 300,
+    "visual_source_clips_reviewed": 301,
+    "visual_FAIL": 7,
+    "visual_HOLD": 8,
+    "new_final_approvals": 0
+  },
+  "legendary": {
+    "required": 1320,
+    "selected_sources_audited": 1319,
+    "texture_paths": 1345,
+    "file_errors": 0,
+    "QA_Player_clips_with_reviewed_adapter": 33,
+    "missing_source_slots": [
+      [
+        "transform:274",
+        "NE",
+        "attack"
+      ]
+    ],
+    "other_actors_without_complete_semantic_registration": 39,
+    "new_final_approvals": 0
+  },
+  "unpublished_bosses": {
+    "actors": 13,
+    "required": 429,
+    "selected_audited_and_Main_replayed": 392,
+    "existing_phases": 2349,
+    "quality_six_pose_pass": 389,
+    "quality_six_pose_fail": 3,
+    "missing_selected_source_HOLD": 37,
+    "versioned_native_contract_fixes": 13,
+    "new_default_connections": 0,
+    "new_final_approvals": 0
+  },
+  "hero_and_normal": "Prior evidence and branch dependencies preserved; no new hero/normal approval claimed.",
+  "full_CI": "Existing 40187062534 SUCCESS at 9ac7b16b; not a final-SHA result. Final targeted guards are recorded in PR158."
+}
