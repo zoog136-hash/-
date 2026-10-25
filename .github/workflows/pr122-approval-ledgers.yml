@@ -1,0 +1,48 @@
+name: PR122 approval ledger guards
+on:
+  pull_request:
+    paths:
+      - 'data/pr122_monster_boss*'
+      - 'data/combat_animation_profiles.json'
+      - 'assets/actors/eight_direction/monster_boss_repair/**/published-*/**'
+      - 'tools/reconcile_pr122_boss_connections.py'
+      - 'tools/build_approval_plan.py'
+      - 'tools/analyze_pr122_approval_audit.py'
+      - 'tests/pr122_approval_resource_audit.gd'
+      - 'tests/test_pr122_approval_analysis.py'
+      - 'tests/test_pr122_boss_connection_reconciliation.py'
+      - '.github/workflows/pr122-approval-ledgers.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ledger-guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/reconcile_pr122_boss_connections.py
+            /tools/analyze_pr122_approval_audit.py
+            /tests/test_pr122_approval_analysis.py
+            /tests/test_pr122_boss_connection_reconciliation.py
+            /data/combat_animation_profiles.json
+            /data/pr122_monster_boss_repair_staging.json
+            /data/pr122_monster_boss_runtime_connections.json
+            /assets/actors/eight_direction/monster_boss_repair/*/published-*/*.tres
+      - name: Install pixel-fixture dependency
+        run: python3 -m pip install Pillow==12.3.0
+      - name: Reject stale bindings, changed pins and empty art without granting approvals
+        run: |
+          python3 -m unittest discover -s tests -p 'test_pr122_*reconciliation.py' -v
+          python3 -m unittest discover -s tests -p 'test_pr122_approval_analysis.py' -v
+          python3 tools/reconcile_pr122_boss_connections.py --report connection-check.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr122-connection-check-${{ github.sha }}
+          path: connection-check.json
+          if-no-files-found: warn
