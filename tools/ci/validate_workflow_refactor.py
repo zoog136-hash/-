@@ -22,10 +22,13 @@ def expand(document, action_loader):
                 assert set(step) <= {'name', 'uses'}, 'Conditional/parameterized action requires explicit validation'
                 action = action_loader(step['uses'])
                 assert action['runs']['using'] == 'composite'
-                assert len(action['runs']['steps']) == 1
-                body = copy.deepcopy(action['runs']['steps'][0])
-                assert set(body) == {'shell', 'run'} and body['shell'] == 'bash'
-                body.pop('shell')
+                if step['uses'] == './.github/actions/setup-godot-linux':
+                    body = {'run': validate_cached_setup_action(action)}
+                else:
+                    assert len(action['runs']['steps']) == 1
+                    body = copy.deepcopy(action['runs']['steps'][0])
+                    assert set(body) == {'shell', 'run'} and body['shell'] == 'bash'
+                    body.pop('shell')
                 if 'name' in step:
                     body['name'] = step['name']
                 expanded.append(body)
@@ -55,6 +58,7 @@ def assert_preserved_workflow(path, before, after, action_loader):
         expected['cancel-in-progress'] = STALE_POLICY
         assert expanded['concurrency'] == expected, path + ': unexpected change'
         expanded['concurrency'] = original
+    expanded = normalize_cached_direct(path, before, expanded)
     assert expanded == before, path + ': effective workflow contract changed'
 
 
@@ -73,6 +77,83 @@ def assert_new_cleanup(doc):
                    'run.head_sha !== oldSha', 'getWorkflowRun', 'cancelWorkflowRun',
                    'some(p => p.number === number)', 'isHead(await getPr())'):
         assert needle in script, needle
+
+
+# Cache only the version-locked Linux binary. Do not restore .godot/imported:
+# asset provenance, editor state and large map sources differ between PRs.
+ENGINE_PATH = '/tmp/Godot_v4.7.2-stable_linux.x86_64'
+ENGINE_KEY = 'twilight-godot-4.7.2-stable-linux-x86_64-engine-v1'
+ENGINE_CHECK = "test -x " + ENGINE_PATH + " && " + ENGINE_PATH + " --version | grep -q '^4\\.7\\.2\\.stable'"
+ENGINE_VALIDATE = ENGINE_PATH + " --version | grep -q '^4\\.7\\.2\\.stable'"
+ENGINE_INSTALL = "curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\nunzip -q /tmp/godot.zip -d /tmp\nchmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64\n"
+ENGINE_MAIN_INSTALL = "curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\nunzip -q /tmp/godot.zip -d /tmp\nchmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64\n"
+ENGINE_CACHE_RESTORE = {
+    'name': 'Restore pinned Godot engine cache', 'id': 'engine-cache',
+    'uses': 'actions/cache/restore@v4', 'continue-on-error': True,
+    'with': {'path': ENGINE_PATH, 'key': ENGINE_KEY},
+}
+ENGINE_CACHE_SAVE = {
+    'name': 'Save verified Godot engine cache on trusted main',
+    'if': "${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.engine-cache.outputs.cache-hit != 'true' }}",
+    'uses': 'actions/cache/save@v4', 'continue-on-error': True,
+    'with': {'path': ENGINE_PATH, 'key': ENGINE_KEY},
+}
+
+
+def cached_script(original, *, symlink=False):
+    script = ("if ! { " + ENGINE_CHECK + "; }; then\\n" +
+              "  rm -f " + ENGINE_PATH + "\\n" +
+              "\\n".join("  " + line for line in original.rstrip("\\n").split("\\n")) +
+              "\\nfi\\n" + ENGINE_VALIDATE + "\\n")
+    if symlink:
+        script += "ln -sf " + ENGINE_PATH + " Godot_v4.7.2-stable_linux.x86_64\\n"
+    return script
+
+
+def validate_cached_setup_action(action):
+    steps = action['runs']['steps']
+    assert len(steps) == 3, 'cached setup step count changed'
+    assert steps[0] == {
+        'name': 'Restore pinned Godot from default-branch cache',
+        'id': 'engine-cache', 'uses': 'actions/cache/restore@v4',
+        'continue-on-error': True, 'with': {'path': ENGINE_PATH, 'key': ENGINE_KEY}}
+    assert steps[1] == {'shell': 'bash', 'run': cached_script(ENGINE_INSTALL)}
+    assert steps[2] == {
+        'name': 'Save verified Godot on trusted main push',
+        'if': ENGINE_CACHE_SAVE['if'], 'uses': 'actions/cache/save@v4',
+        'continue-on-error': True, 'with': {'path': ENGINE_PATH, 'key': ENGINE_KEY}}
+    return ENGINE_INSTALL
+
+
+def normalize_cached_direct(path, before, expanded):
+    if path not in ('.github/workflows/godot-validate.yml',
+                    '.github/workflows/twilight-integration-validate.yml'):
+        return expanded
+    before_jobs = list(before['jobs'])
+    assert len(before_jobs) == 1
+    original_steps = before['jobs'][before_jobs[0]]['steps']
+    current_steps = expanded['jobs'][before_jobs[0]]['steps']
+    expected = copy.deepcopy(original_steps)
+    if path.endswith('godot-validate.yml'):
+        name = 'Install Godot 4.7.2'
+        old = ("curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip\\n"
+               "unzip -q godot.zip\\nchmod +x Godot_v4.7.2-stable_linux.x86_64\\n")
+        updated = cached_script(ENGINE_MAIN_INSTALL, symlink=True)
+    else:
+        name = 'Install Godot 4.7.2 and software GL'
+        old = ENGINE_MAIN_INSTALL
+        updated = cached_script(ENGINE_MAIN_INSTALL)
+    matches = [i for i, step in enumerate(expected) if step.get('name') == name]
+    assert len(matches) == 1
+    index = matches[0]
+    assert expected[index]['run'].count(old) == 1, path + ': no exact source installer'
+    expected[index]['run'] = expected[index]['run'].replace(old, updated)
+    expected[index:index] = [copy.deepcopy(ENGINE_CACHE_RESTORE)]
+    expected.insert(index + 2, copy.deepcopy(ENGINE_CACHE_SAVE))
+    assert current_steps == expected, path + ': cache may not change existing tests'
+    restored = copy.deepcopy(expanded)
+    restored['jobs'][before_jobs[0]]['steps'] = original_steps
+    return restored
 
 
 def main():
