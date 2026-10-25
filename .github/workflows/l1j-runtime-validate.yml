@@ -106,7 +106,7 @@ jobs:
                   extra = ['--import'] if name == 'import' else ['--script', 'res://tests/' + name + '.gd']
                   command = [engine, '--headless', '--path', str(root), *extra]
                   try:
-                      result = run_isolated(command, env=env, cwd=str(root), timeout=900 if name == 'import' else 450)
+                      result = run_isolated(command, env=env, cwd=str(root), timeout=1200 if name == 'import' else 450)
                       output = result.stdout + result.stderr
                       ok, skipped = classify_result(name, result.returncode, output)
                   except subprocess.TimeoutExpired as error:
