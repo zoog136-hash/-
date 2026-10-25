@@ -1,0 +1,290 @@
+{
+  "base_main": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "source_sha256": {
+    "scripts/maps/native_png_field.gd": "8522fa7e3113c1f9b9b3f6358bd14864f0a19a6788ba38fa17b817f8a8a1fd41",
+    "scripts/maps/native_png_route_graph.gd": "bedbfa5e4b651756615ba8d55398a3b402109a0216065432433a3638f34de3aa",
+    "scripts/maps/remake_renderer.gd": "f840f82ca33b4ed384dda19eb8def91329d547880d6abec118caf0198087e807",
+    "scripts/maps/native_png_registry.gd": "77361f5554420cacfc3076ad32dbc704eddf7a9725ee58e57c45900bf9915b38",
+    "data/maps/native_png_navigation_corrections.json": "f1ff0867bc4e3e3bc6bfdf6d6d919fd90399d30d3911c9071d024c554caffe50",
+    "tests/native_png_route_recovery_test.gd": "50c012aa97c5f5ddf5b54ce8eb2d3d48dd5bad466fbe12909e11709bf89b4604"
+  },
+  "source_png_changed": false,
+  "immutable_pack_plan_changed": false,
+  "physics_rules_changed": false,
+  "assertions_removed": false,
+  "route_recovery": {
+    "checks": 1554,
+    "failures": [],
+    "metrics": [
+      {
+        "cached_route_average_usec": 0,
+        "cold_route_usec": 0,
+        "destinations": 5,
+        "direct_route_average_usec": 22,
+        "graph_points": 0,
+        "map": "domination_summit",
+        "physical_grid_sha256": "2bca26422ca539a7aa65e3dbbc52b2e61c6e7c5af967c1809c51b046d6fea035"
+      },
+      {
+        "cached_route_average_usec": 1490,
+        "cold_route_usec": 313172,
+        "destinations": 27,
+        "direct_route_average_usec": 23,
+        "graph_points": 21811,
+        "map": "escaros_world",
+        "physical_grid_sha256": "1e2da21a50a687becd5eb30cda8e9aec10dd5784f9ad3fb8a9a84647bfefefe5"
+      }
+    ]
+  },
+  "measurement_context": "Single Linux headless execution; cold first repaired Escaros query, 100 repeated representative queries and 100 direct queries. Not Android FPS evidence.",
+  "final_runtime": [
+    {
+      "name": "remake_door_runtime_test",
+      "exit_code": 0,
+      "elapsed_seconds": 9.490457679999963,
+      "engine_error": false,
+      "source_unchanged": true,
+      "checks": 14
+    },
+    {
+      "name": "hunting_paths_test",
+      "exit_code": 0,
+      "elapsed_seconds": 123.90392349299964,
+      "engine_error": false,
+      "source_unchanged": true,
+      "checks": 10666,
+      "maps": 25
+    }
+  ],
+  "runtime_scope": "Existing tests unchanged: hunting_paths_test across all 25 registered maps and remake_door_runtime_test against the installed Oman floor. Final runs have no engine error and identical source hashes at start and finish.",
+  "graph_memory": {
+    "cached_routes": 24,
+    "edge_checks": 58322,
+    "graph_points": 21811,
+    "graph_released": true,
+    "static_memory_delta_bytes": 21870224,
+    "measurement_scope": "Engine static-memory increase after all 27 Escaros review destinations; not Android RSS or peak. Route cache observed 24 entries; FIFO limit 128 is code-enforced, eviction of a 129th key was not separately measured."
+  },
+  "initial_environment_attempts": "Before final asset import, direct runtime attempts reported missing/no-loader warrior.png. Those attempts are excluded from final passing results; the post-import runs above are clean.",
+  "hunting_map_metrics": [
+    {
+      "art_map_id": "aden_world",
+      "checks": 292,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "aden_world",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 408.387191295624,
+      "portal_routes": {
+        "reachable_landings": 19,
+        "validated_gates": 35
+      }
+    },
+    {
+      "checks": 124,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_01",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 805.162381649017,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 96,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_02",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 173.249918937683,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 134,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_03",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 864.815177440643,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 95,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_04",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 128.800169467926,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 128,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_05",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 864.107982158661,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 106,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_06",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 464.382111549377,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 102,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_07",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 99.0003776550293,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 102,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_08",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 302.685732841492,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 98,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_09",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 211.076500415802,
+      "physics_chunks": 9
+    },
+    {
+      "checks": 105,
+      "geometry": "A3_PC_SOURCE_EDGES",
+      "map_id": "oman_10",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 173.249918937683,
+      "physics_chunks": 9
+    },
+    {
+      "art_map_id": "domination_summit",
+      "checks": 104,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "domination_summit",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 207.125360012054,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "escaros_world",
+      "checks": 1659,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "escaros_01",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 519.410297870636,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "escaros_world",
+      "checks": 1659,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "escaros_02",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 519.410297870636,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "escaros_world",
+      "checks": 1659,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "escaros_03",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 519.410297870636,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "escaros_world",
+      "checks": 1659,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "escaros_04",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 519.410297870636,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "escaros_world",
+      "checks": 1659,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "escaros_05",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 519.410297870636,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "albino_01",
+      "checks": 186,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "albino_01",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 56.9546675682068,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "albino_02",
+      "checks": 137,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "albino_02",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 618.326891899109,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "albino_02",
+      "checks": 137,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "albino_02",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 618.326891899109,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "albino_02",
+      "checks": 137,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "albino_02",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 618.326891899109,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "faith_01",
+      "checks": 75,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "faith_01",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 463.394178390503,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "faith_02",
+      "checks": 76,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "faith_02",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 463.394178390503,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "faith_03",
+      "checks": 53,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "faith_03",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 172.286731719971,
+      "portal_routes": {}
+    },
+    {
+      "art_map_id": "faith_04",
+      "checks": 84,
+      "geometry": "MANUALLY_REVIEWED_NATIVE_PNG_FLOORS",
+      "map_id": "faith_04",
+      "original_M_coordinates_recovered": false,
+      "physical_detour_walk": 463.394178390503,
+      "portal_routes": {}
+    }
+  ]
+}
