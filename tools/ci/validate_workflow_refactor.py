@@ -127,7 +127,7 @@ def validate_cached_setup_action(action):
 
 # Import artifacts from the default-branch-only cache are revalidated by the
 # unchanged real --import and full Godot checks. No PR can seed this cache.
-IMPORT_CACHE_PATHS = ".godot/imported\\n**/*.import"
+IMPORT_CACHE_PATHS = ".godot/imported\n**/*.import\n"
 IMPORT_CACHE_KEY = "twilight-godot-import-4.7.2-linux-compat-main-v1"
 IMPORT_EXTRA_NAMES = (
     "Restore trusted Godot imported resources",
@@ -147,7 +147,7 @@ def assert_import_cache_contract(steps):
         'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY}}
     assert by_name[IMPORT_EXTRA_NAMES[1]] == {
         'name': IMPORT_EXTRA_NAMES[1], 'shell': 'bash',
-        'run': 'date +%s > "$RUNNER_TEMP/twilight-import-start"\\n'}
+        'run': 'date +%s > "$RUNNER_TEMP/twilight-import-start"'}
     report = by_name[IMPORT_EXTRA_NAMES[2]]
     assert set(report) == {'name', 'id', 'shell', 'run'}
     assert report['id'] == 'import-metrics' and report['shell'] == 'bash'
