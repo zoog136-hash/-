@@ -1,0 +1,79 @@
+{
+  "scope": "latest per-check results across targeted runs, not one full-suite pass",
+  "unique_checks": 16,
+  "latest_pass": 16,
+  "checks": {
+    "boot": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "card_draw_fusion_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "card_special_policy_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "combat_timing_test": {
+      "status": "PASS",
+      "summary": "evidence/audio-guard/summary.json"
+    },
+    "ground_drop_smoke_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "input_routing_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "minimap_geography_cache_test": {
+      "status": "PASS",
+      "summary": "evidence/recheck-final/summary.json"
+    },
+    "original_skill_audio_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "presentation_audio_main_test": {
+      "status": "PASS",
+      "summary": "evidence/audio-guard/summary.json"
+    },
+    "presentation_audio_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "presentation_ui_material_test": {
+      "status": "PASS",
+      "summary": "evidence/ui/logs/runner-count-schema/summary.json"
+    },
+    "ui_fidelity_regression_test": {
+      "status": "PASS",
+      "summary": "evidence/compact-final/summary.json"
+    },
+    "ui_renewal_integration_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "warehouse_persistence_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "auto_selection_order_test": {
+      "status": "PASS",
+      "summary": "evidence/compact-final/summary.json"
+    },
+    "presentation_catalog_compact_test": {
+      "status": "PASS",
+      "summary": "evidence/ui/logs/runner-final/summary.json"
+    }
+  },
+  "full_ci": "HELD_BY_LATEST_USER_INSTRUCTION",
+  "android": "NOT_RUN",
+  "listening": "NOT_RUN",
+  "final_import_boot": {
+    "summary": "evidence/final-boot/summary.json",
+    "passed": 2,
+    "failed": []
+  }
+}

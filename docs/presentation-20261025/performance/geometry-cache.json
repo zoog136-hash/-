@@ -1,0 +1,43 @@
+{
+  "checks": 10,
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "metrics": [
+    {
+      "after_us": 1000,
+      "before_us": 20426,
+      "clipping_calls_per_old_redraw": 8,
+      "map": "albino_01",
+      "polygons": 8,
+      "queries": 100,
+      "scope": "geometry CPU only; not frame time or Android"
+    },
+    {
+      "after_us": 915,
+      "before_us": 24417,
+      "clipping_calls_per_old_redraw": 8,
+      "map": "albino_02",
+      "polygons": 8,
+      "queries": 100,
+      "scope": "geometry CPU only; not frame time or Android"
+    },
+    {
+      "after_us": 617,
+      "before_us": 6254,
+      "clipping_calls_per_old_redraw": 5,
+      "map": "escaros_01",
+      "polygons": 5,
+      "queries": 100,
+      "scope": "geometry CPU only; not frame time or Android"
+    },
+    {
+      "after_us": 67,
+      "before_us": 72,
+      "clipping_calls_per_old_redraw": 0,
+      "map": "oman_01",
+      "polygons": 0,
+      "queries": 100,
+      "scope": "geometry CPU only; not frame time or Android"
+    }
+  ]
+}
