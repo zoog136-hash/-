@@ -30,10 +30,18 @@ def run(ref):
             for atlas,rect in re.findall(r'atlas = ExtResource\("([^"]+)"\)\nregion = Rect2\(([^)]+)\)',text):
                 tp=ext[atlas]
                 if tp not in textures:
-                    data=blob(tp)
-                    with Image.open(io.BytesIO(data)) as im:im.verify()
-                    with Image.open(io.BytesIO(data)) as im:size=im.size
-                    textures[tp]={'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),'size':size}
+                    try:
+                        data=blob(tp)
+                        with Image.open(io.BytesIO(data)) as im:im.verify()
+                        with Image.open(io.BytesIO(data)) as im:
+                            size=im.size
+                            transparent_channel='A' in im.getbands() or 'transparency' in im.info
+                        textures[tp]={'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),'size':size,'transparent_channel':transparent_channel}
+                    except (FileNotFoundError, OSError, ValueError) as exc:
+                        textures[tp]={'read_error':str(exc)}
+                if 'read_error' in textures[tp]:
+                    errors.append('PNG_READ_ERROR:'+tp);continue
+                if not textures[tp]['transparent_channel']:errors.append('NO_TRANSPARENCY_CHANNEL')
                 x,y,w,h=map(float,rect.split(','));iw,ih=textures[tp]['size']
                 if tp not in alpha_cache:
                     with Image.open(io.BytesIO(blob(tp))) as im:alpha_cache[tp]=im.convert('RGBA').getchannel('A').point(lambda v:255 if v>16 else 0)
