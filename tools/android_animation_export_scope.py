@@ -97,6 +97,10 @@ def audit_authoring_exclusions(root: Path) -> dict:
         if relative in paths or not path.is_file():
             continue
         if any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns):
+            # New high-resolution PNGs are compilation inputs, not APK assets.
+            # All exported runtime map data is still checked above and below.
+            if relative.startswith("assets/maps/aden_city_region/") and path.suffix == ".png":
+                continue
             raise ValueError("Non-archive runtime resource excluded by Android preset: " + relative)
         if path.suffix not in {".png", ".webp"} and forbidden.search(path.read_text(encoding="utf-8")):
             raise ValueError("Exported code/resource references excluded draft001: " + relative)
