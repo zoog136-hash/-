@@ -1,5 +1,7 @@
 # PR122 별도 최종 승인 검증 — HOLD 유지
 
+**최신 후속 수정:** [확정 실패 10클립 수정 및 전설 누락 초안](source-repair-batch/README.md). 신화 7/7·보스 3/3 실제 Main 재생 통과. 기본 연결·전체 품질 승인 0. PR122는 main `f24c0a8372adc33dda4dcf76735b90ec7e537aba`에 외부 병합됐고 PR158은 미병합이다. 아래 초기 조사 상태와 실패 보고서는 당시의 역사 기록이다.
+
 **추가 CI 조사:** [partial locomotion CI 실패 추적](locomotion-ci-followup/README.md).
 초기 Main 캡처는 격리 runner의 PNG 맵 번들 누락으로 기존 맵을 사용했다.
 이 누락을 수정하고 실제 번들 PNG 맵에서 보스 6종 검사를 다시 통과했다.

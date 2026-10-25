@@ -38,5 +38,35 @@
     "new_final_approvals": 0
   },
   "hero_and_normal": "Prior evidence and branch dependencies preserved; no new hero/normal approval claimed.",
-  "full_CI": "Existing 40187062534 SUCCESS at 9ac7b16b; not a final-SHA result. Final targeted guards are recorded in PR158."
+  "full_CI": "Existing 40187062534 SUCCESS at 9ac7b16b; not a final-SHA result. Final targeted guards are recorded in PR158.",
+  "latest_source_repair_followup": {
+    "confirmed_failed_clips_before": 10,
+    "specific_source_defects_fixed": 10,
+    "changed_clips_Main_verified": 10,
+    "changed_Main_poses_verified": 60,
+    "mythic": {
+      "fail_fixed": 7,
+      "remaining_prior_visual_HOLD": 8,
+      "selected_pin_audit": 301,
+      "errors": 0
+    },
+    "boss": {
+      "five_pose_failures_before": 3,
+      "five_pose_failures_after": 0,
+      "selected_pin_audit": 392,
+      "errors": 0,
+      "source_held_requests": 37
+    },
+    "legendary": {
+      "supplemental_authored_clip": 1,
+      "poses": 6,
+      "independent_render_and_playback": "PASS",
+      "Player_installation": false,
+      "source_branch_modified": false,
+      "registration_missing_complete_actors": 39
+    },
+    "new_final_approvals": 0,
+    "new_production_connections": 0,
+    "preexisting_CI": "40194582949 and 40194587681 remain queued on prior SHA; historical locomotion failure not resolved by these source fixes"
+  }
 }

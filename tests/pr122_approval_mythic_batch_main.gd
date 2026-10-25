@@ -22,6 +22,16 @@ func run() -> void:
 	report["actors"] = []
 	var completed: int = 0
 	var expected: int = 0
+	var selected_repairs: Array = []
+	var selection_path: String = OS.get_environment("PR122_APPROVAL_PLAN")
+	if not selection_path.is_empty():
+		var selection: Variant = JSON.parse_string(FileAccess.get_file_as_string(selection_path))
+		if not selection is Dictionary or not selection.get("repairs", []) is Array or selection.get("repairs", []).is_empty():
+			check(false,"Repair selection must contain explicit nonempty repairs")
+			finish(1);return
+		selected_repairs = selection.repairs
+		report["scope"] = "Explicit repaired mythic batch in actual Main/Player; original all-300 default unchanged"
+		report["repair_plan"] = selection_path
 	for key: String in register.actors:
 		var entry: Dictionary = register.actors[key]
 		if entry.get("grade", "") != "신화": continue
@@ -29,7 +39,14 @@ func run() -> void:
 			report.blocked.append({"id":key,"reason":"No authored locomotion sizing reference; no profile invented"});continue
 		var tracks: Array = []
 		for track: Dictionary in entry.tracks:
-			if track.role in ["idle","run","attack","hit"] or track.role=="death" and track.direction=="S": tracks.append(track)
+			if track.role in ["idle","run","attack","hit"] or track.role=="death" and track.direction=="S":
+				var selected: bool = selected_repairs.is_empty()
+				for repair: Dictionary in selected_repairs:
+					if repair.id==key and repair.clip==track.animation:
+						check(repair.source_sha256==track.source_sha256,"Exact repair source pin")
+						selected=true
+				if selected: tracks.append(track)
+		if tracks.is_empty(): continue
 		expected += tracks.size()
 		var sheet := Image.create(1080,maxi(1,tracks.size())*150,false,Image.FORMAT_RGBA8)
 		sheet.fill(Color(0.08,0.08,0.08,1))
@@ -99,6 +116,7 @@ func run() -> void:
 	original_player.visible=original_visible
 	check(_world_state(world)==before,"Main state preserved")
 	report["completed_clips"]=completed;report["expected_clips"]=expected
-	check(completed==expected and expected==300,"Whole current bound mythic batch denominator")
+	report["candidate_injections"]=completed
+	check(completed==expected and expected==(300 if selected_repairs.is_empty() else selected_repairs.size()),"Exact whole or repaired mythic batch denominator")
 	world.queue_free();await process_frame
 	finish(0 if report.errors.is_empty() else 1)
