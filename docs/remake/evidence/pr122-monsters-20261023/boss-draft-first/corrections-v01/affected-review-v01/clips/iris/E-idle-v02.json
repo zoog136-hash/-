@@ -1,0 +1,26 @@
+{
+  "actor": "monster:잔혹한 아이리스",
+  "slug": "iris",
+  "clip": "E-idle-v02",
+  "role": "idle",
+  "direction": "E",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/E-idle-v02.png",
+  "source_sha256": "3c7cf9191b1c8fa923cfd5e26bf30989231b532e68869c04b1a3559279c137e8",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      66017,
+      66001,
+      62148,
+      58926,
+      57134,
+      56244
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

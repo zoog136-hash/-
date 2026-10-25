@@ -1,0 +1,218 @@
+{
+  "status": "ACTUAL_SHARED_THIGH_ARM_AND_REAL_TARSAL_MATERIAL_FINISH_PENDING_SOURCE_QC",
+  "output": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-common-material-finish-v03/phase0-actual-common-finish-v03/thunder_female-NE-run-phase0-actual-common-finish-v03.png",
+    "sha256": "c6c25586d85f3abc6d352e7ef1abf9ba3505d358831d89accbd55cc8b2f0f06b",
+    "bytes": 718977
+  },
+  "baseline_source": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v02/phase0-actual/thunder_female-NE-run-phase0-actual-fixed-rig-v02.png",
+    "sha256": "008e1a7520b0b18748496b14378fab357de4d4f4c5158afb2f75022dcb5c6c7c",
+    "bytes": 718984
+  },
+  "unchanged_frozen_rig_contract": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v02/NE-run-six-actual-causal-rig-shoe-surface-and-source-contract-v02.json",
+    "sha256": "1c17170e46401d2fd7483159a77e82e5b1fd675d78ed90d13aee0b91604f21b6",
+    "bytes": 36750
+  },
+  "unchanged_exact_frame_controls": {
+    "R": {
+      "hip": [
+        -22.95,
+        278.12830094077975,
+        582.1283009407798
+      ],
+      "knee": [
+        1.3326238817931628,
+        125.53881713638582,
+        354.3208218801178
+      ],
+      "ankle": [
+        -8.589051630309683,
+        24.720684434376835,
+        98.37803846991378
+      ],
+      "heel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "front_structural_sole": [
+        48.858472656653596,
+        -22.497394816877527,
+        11.433257458509605
+      ],
+      "actual_joint_controls_unpadded": [
+        [
+          774.0,
+          724.0
+        ],
+        [
+          800.9806932019924,
+          799.2179952562681
+        ],
+        [
+          789.956609299656,
+          954.342645964463
+        ]
+      ],
+      "rotation3D": [
+        [
+          0.9819703221805693,
+          0.008301953750688809,
+          -0.18885275724889597
+        ],
+        [
+          0.008301953750688809,
+          0.9961772785532363,
+          0.0869592275620542
+        ],
+        [
+          0.18885275724889597,
+          -0.0869592275620542,
+          0.9781476007338057
+        ]
+      ],
+      "shoe_image_affine": [
+        [
+          1.0868953043158425,
+          0.26241293690447953
+        ],
+        [
+          -0.26288928898582586,
+          0.8408824668119042
+        ]
+      ],
+      "shoe_image_offset": [
+        -211.23329493832102,
+        501.75281066153036
+      ],
+      "shoe_surface_bounds": {
+        "full_nonzero_RGBA_texel_quad_count": 21448,
+        "minimum_Z": -5.129425613406566,
+        "minimum_Z_with_8native_hidden_thickness": -13.129425613406566,
+        "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+      },
+      "femur": 275.26249999999993,
+      "tibia": 275.26249999999993
+    },
+    "L": {
+      "hip": [
+        -107.55,
+        258.1283009407798,
+        582.1283009407798
+      ],
+      "knee": [
+        -157.05,
+        140.3228890938856,
+        338.3228890938856
+      ],
+      "ankle": [
+        -242.55,
+        -44.68953468658651,
+        153.3104653134135
+      ],
+      "heel": [
+        -267.4650295053193,
+        -61.55705129119944,
+        56.058983636566126
+      ],
+      "front_structural_sole": [
+        -213.85852108726922,
+        -65.98710536682447,
+        44.625726178056524
+      ],
+      "actual_joint_controls_unpadded": [
+        [
+          680.0,
+          704.0
+        ],
+        [
+          625.0,
+          830.0
+        ],
+        [
+          530.0,
+          830.0
+        ]
+      ],
+      "rotation3D": [
+        [
+          0.9199108301721485,
+          -0.33291141091092435,
+          0.20720534987612324
+        ],
+        [
+          0.3436549150113796,
+          0.9389398730627583,
+          -0.01712349734758979
+        ],
+        [
+          -0.18885275724889597,
+          0.0869592275620542,
+          0.9781476007338057
+        ]
+      ],
+      "shoe_image_affine": [
+        [
+          0.9929634333886332,
+          -0.19362245991728727
+        ],
+        [
+          0.5542013145704824,
+          1.0328247641642259
+        ]
+      ],
+      "shoe_image_offset": [
+        35.48625768373756,
+        -466.4438434876903
+      ],
+      "shoe_surface_bounds": {
+        "full_nonzero_RGBA_texel_quad_count": 21448,
+        "minimum_Z": 38.07414471959894,
+        "minimum_Z_with_8native_hidden_thickness": 30.07414471959894,
+        "method": "All native semantic source nonzero-alpha texel corners lifted by one fixed shoeplane and transformed by actual rigid3D matrix; not lowest-alphaY inference."
+      },
+      "femur": 275.26250000000016,
+      "tibia": 275.2625
+    }
+  },
+  "unchanged_body_node": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "unchanged_C": 2432,
+  "unchanged_bodyunit": 2.375,
+  "unchanged_common_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "unchanged_storage": [
+    128.0,
+    128.0
+  ],
+  "actual_material_contract": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/common-complete-NE-native-material-parts-v03/actual-complete-thigh-arm-and-short-joint-native-source-provenance-v01.json",
+    "sha256": "b1126de73a9a48e3fc2acc3b3fc9114cf4f8c07f431f71a740c9ca9a23f705f6",
+    "bytes": 4507
+  },
+  "actual_complete_shoe_projections_reused_byte_for_byte": true,
+  "protected_good_opaque_calf_and_shoe_pixels": 2305,
+  "protected_RGBA_mismatch": 0,
+  "joint_RGB_is_actual_native_blackleather_donor": true,
+  "new_skin_painted": false,
+  "native_original_visible_thigh_pixels_transferred_into_correct_moving_part": true,
+  "original_complete_cuff_and_elbow_cap_native_material": true,
+  "changed_RGBA_pixels": 9418,
+  "changed_bbox_with_storage": [
+    602,
+    637,
+    939,
+    1084
+  ],
+  "body_staff_head_cloth_native_inputs_preserved": true,
+  "whole_source_resized": false,
+  "perpose_C_or_root_fit": false,
+  "actor_approvals_added": 0
+}

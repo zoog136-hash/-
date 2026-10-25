@@ -1,0 +1,247 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/raw/SW-attack-v02.png",
+  "source_sha256": "02ae713074a940be567030f863721b3aaea4c9eb4e84933fef8dffacc46a1e1d",
+  "texture": "assets/actors/eight_direction/boss_draft_first/dread_vampire/owned_parts_v01/SW-attack-v02.png",
+  "texture_sha256": "57fb7b946fe68c64d94c4ae626c93ed54f71abe8465434601217d03ade42c636",
+  "geometry": {
+    "image_size": [
+      1664,
+      2496
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "SW",
+        "region": [
+          3,
+          3,
+          741,
+          396
+        ],
+        "margin": [
+          183,
+          278,
+          315,
+          660
+        ],
+        "source_anchor": [
+          348,
+          385
+        ],
+        "rgba_sha256": "e1e335e4ff818f588f8c13237aa5f39cc43eef7c8d303c5fa222401594a3ba84",
+        "original_source_region": [
+          39,
+          0,
+          741,
+          396
+        ],
+        "original_source_anchor": [
+          384,
+          382
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "SW",
+        "region": [
+          835,
+          3,
+          733,
+          377
+        ],
+        "margin": [
+          159,
+          307,
+          323,
+          679
+        ],
+        "source_anchor": [
+          1204,
+          356
+        ],
+        "rgba_sha256": "bf7d3b3721139dd0f8f3f240f2e3e090ca2c72219ec1a5b389d48675d4d26eef",
+        "original_source_region": [
+          783,
+          17,
+          733,
+          377
+        ],
+        "original_source_anchor": [
+          1152,
+          370
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "SW",
+        "region": [
+          3,
+          835,
+          823,
+          349
+        ],
+        "margin": [
+          169,
+          352,
+          233,
+          707
+        ],
+        "source_anchor": [
+          362,
+          1143
+        ],
+        "rgba_sha256": "02973730dbd9bd08a216a18444d18994a1eab7d26a647c0d52b4d3feb4bffdb1",
+        "original_source_region": [
+          25,
+          367,
+          823,
+          349
+        ],
+        "original_source_anchor": [
+          384,
+          675
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "SW",
+        "region": [
+          835,
+          835,
+          715,
+          394
+        ],
+        "margin": [
+          183,
+          330,
+          341,
+          662
+        ],
+        "source_anchor": [
+          1180,
+          1165
+        ],
+        "rgba_sha256": "11134b1d542fdc44b91d4b6f07cfd50435b31f1e8117a0391e63d1079bcc96d4",
+        "original_source_region": [
+          807,
+          358,
+          715,
+          394
+        ],
+        "original_source_anchor": [
+          1152,
+          688
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "SW",
+        "region": [
+          3,
+          1667,
+          735,
+          339
+        ],
+        "margin": [
+          219,
+          326,
+          321,
+          717
+        ],
+        "source_anchor": [
+          312,
+          2001
+        ],
+        "rgba_sha256": "a759dcfb6d168c07d2d99f4fd57a4d4dbbca3fc8810689f547cd6ad9d04d7a39",
+        "original_source_region": [
+          75,
+          675,
+          735,
+          339
+        ],
+        "original_source_anchor": [
+          384,
+          1009
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "SW",
+        "region": [
+          835,
+          1667,
+          653,
+          373
+        ],
+        "margin": [
+          211,
+          296,
+          403,
+          683
+        ],
+        "source_anchor": [
+          1152,
+          2031
+        ],
+        "rgba_sha256": "53ec5c8498d4d3458771475a6d44fdc5c08771bc701a45fedb96670b0577db4d",
+        "original_source_region": [
+          835,
+          651,
+          653,
+          373
+        ],
+        "original_source_anchor": [
+          1152,
+          1015
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 395.0,
+    "canvas_size": [
+      1056,
+      1056
+    ],
+    "foot": [
+      528,
+      660
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 532918,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "932f0cc9cc702d199630896170f157a32c490389ce4a33380b51dc7d954e01df",
+    "foreground_owner_sha256": "136ba1bc22f9e448ce9d554193f7395a35652f790014e16c202463fdf7470999",
+    "detached_pixels": 2,
+    "detached_fragments": [
+      {
+        "row": 4,
+        "pixels": 2,
+        "bbox": [
+          439,
+          692,
+          440,
+          694
+        ],
+        "nearest_max": 7.211102550927978,
+        "second_nearest_min": 68.6804193347711,
+        "owner_margin_min": 61.46931678384313
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 75317,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:공포의 뱀파이어",
+  "slug": "dread_vampire",
+  "clip": "SW-attack-v02",
+  "role": "attack",
+  "direction": "SW",
+  "original_cause": "foreign_body_rectangle"
+}

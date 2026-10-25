@@ -1,0 +1,624 @@
+{
+  "state": "STOPPED_BY_USER",
+  "at_UTC": "2026-10-19T00:35:46.077684+00:00",
+  "directive": "지금 하던거 그대로 저장하고 커밋해 그리고 새대화로 이어 나갈수 있도록 프롬프트 줘",
+  "branch": "feature/twilight-remaining106-20261016",
+  "start_HEAD": "baf194e17d2dc0d8c8fd38a11218060e7107e26d",
+  "last_safe_production_commit": "d069778458783e054d4755448f00f9dd18a04e86",
+  "observed_remote_HEAD": "a3eafeeb7fe81c805e15d230241016221d6d5c5f",
+  "approved_total": 405,
+  "mutually_exclusive_498": {
+    "VERIFIED_COMPLETED": 391,
+    "FRAME_INSUFFICIENT": 14,
+    "SOURCE_HOLD": 16,
+    "IN_PROGRESS": 1,
+    "NOT_AUTHORED": 76
+  },
+  "newly_completed_this_resume": 6,
+  "newly_drawn_native_poses": 296,
+  "new_palette_edits": 3,
+  "unapproved_raw_pngs": 18,
+  "raw_pngs_approved": 0,
+  "source_provenance": "Newly authored reference-based candidates, not recovered SPX original motions. Preserve all rejected sheets unchanged.",
+  "monk": {
+    "id": "monster:알비노 몽크",
+    "status": "SOURCE_HOLD",
+    "raw_PNG": 16,
+    "production_connected": false,
+    "planned_poses": 128,
+    "candidate_8_sheets": [
+      "monk-E_v02.png",
+      "monk-SE_v02.png",
+      "monk-S_v02.png",
+      "monk-SW_v02.png",
+      "monk-W.png",
+      "monk-NW.png",
+      "monk-N.png",
+      "monk-NE.png"
+    ],
+    "candidate_geometry": "128 PASS only with old SW_v02; not visual approval",
+    "failures": {
+      "monk-SW_v02.png": "idle0/idle1 face RIGHT; SW must face LEFT",
+      "monk-SW_v03.png": "Correct LEFT heading, fails unchanged foreign-body rectangle guard",
+      "monk-SW_v04.png": "2-column reframe still fails foreign-body rectangle guard",
+      "monk-SW-idle-0-v01.png": "Strict alpha>100 8-neighbor connected body count 4; patch rejected",
+      "monk-SW-idle-1-v01.png": "Strict alpha>100 8-neighbor connected body count 25; patch rejected"
+    },
+    "other_gates_pending": [
+      "Actual alternating hind support and whole-body gait review",
+      "Main playback, transitions, real contacts, lifecycle",
+      "All eight directional visual approval"
+    ],
+    "stage_monk_driver": "Failed during SW_v03 preflight before import; its positive review fields are proposed input, never approval evidence"
+  },
+  "queen": {
+    "id": "monster:얼음 여왕",
+    "status": "IN_PROGRESS_SOURCE_HOLD",
+    "raw_PNG": 2,
+    "production_connected": false,
+    "appearance": "Original black/gold/violet winged queen; left-hand staff, right slit leg, silver hair. Not white ice fairy.",
+    "failures": {
+      "queen-E-v01.png": "Foreign-body rectangle guard FAIL",
+      "queen-S-v01.png": "12 separated bodies rather than required16; adjacent figures merge. Visual death0 also has extra second staff."
+    },
+    "directions_NOT_STARTED": [
+      "SE",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "planned_roles": {
+      "idle": 2,
+      "walk": 6,
+      "attack": 3,
+      "hit": 2,
+      "death": 3
+    },
+    "cast": "Future explicit cast=attack alias only; not extra unique poses"
+  },
+  "pipeline": {
+    "phase_grid2": "Implemented; 6 phase-grid tests PASS. All three new 2-column source candidates fail unchanged source guards.",
+    "strict_complete_pose_patch": "Supports 104/112/128/144 existing complete contracts; 9 pose-patch tests PASS. No threshold relaxation.",
+    "next": "Redraw failed source with spacious per-role/direction sheets; keep ownership/body-count/uniqueness/clipping checks. Do not rerun completed actors.",
+    "possible_future_risk": "2-column raw centroids can differ from fixed cell centers. Use reviewed explicit source anchors if needed; no per-frame scaling or raw pixel cleanup."
+  },
+  "validation": {
+    "resource_integrity": "PASS 723 atlases / 41442 frames at save before merge",
+    "full_integrated_CI": "NOT_RUN_FOR_NEW_HEAD",
+    "Android_real_device": "NOT_RUN",
+    "new_Monk_Queen_Main": "NOT_RUN",
+    "prior_baf_CI": "Historical only; cannot validate subsequent game changes"
+  },
+  "private_data": {
+    "SPX_raw_public_delivery": "FORBIDDEN_UNCONFIRMED_REDISTRIBUTION_RIGHTS",
+    "private_backup": "NOT_DELIVERED; prior automatic approval review rejected upload. Do not retry without new authorization; user Drive source ZIPs remain available.",
+    "local_backup_SHA256": "965f51e3f8ff7e61b3e769b35e4788bec2d8c6672ef8a363df39c4b6fdd6ddde",
+    "unrecovered": "Previous 2 uncommitted Reaper PNGs and QA draft remain UNRECOVERED"
+  },
+  "files": [
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/check_monk_sources.py",
+      "original_workspace_path": "/workspace/runtime/batch16/check_monk_sources.py",
+      "bytes": 991,
+      "sha256": "f25042dc49e62f37d0a10f8e070e2707cd6d9e6e7a115eb76c00d4192e68176b",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/check_spider_sources.py",
+      "original_workspace_path": "/workspace/runtime/batch16/check_spider_sources.py",
+      "bytes": 1025,
+      "sha256": "d9e2cb3315a3d60fb029d7811d38e1a8e3ab64a48f38f13423daba20ef7db819",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-E-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-E-request.json",
+      "bytes": 4357,
+      "sha256": "f63ba098e6b839c42b8c4fcdcf19e4f8bbb56c584ae01ca258c5d80efa7c7997",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-E.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-E.png",
+      "bytes": 2407732,
+      "sha256": "cfcde27284a124a2ee124ddc2650f915b9a5a465a9834a445725280eada628fa",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-E_v02-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-E_v02-request.json",
+      "bytes": 3764,
+      "sha256": "8d392a538e36258a383318ab74aac664e8234886eaeaf8f76bd8daa765876bc2",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-E_v02.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-E_v02.png",
+      "bytes": 1803609,
+      "sha256": "dceebe3c90b9de75eebe1d032168a69a9ba28e5b583d8ffe58cfbc7ac810566d",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-N-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-N-request.json",
+      "bytes": 5264,
+      "sha256": "cd262c81e9688202c7d3bb10b0c321072be5aa6a93423a545fdc1e3e61391384",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-N.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-N.png",
+      "bytes": 2048115,
+      "sha256": "fe88b5ad7242265765d63bcd0b43bdd2a22286b37d9bc889bb8c02e0b9beaeaf",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-NE-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-NE-request.json",
+      "bytes": 5142,
+      "sha256": "ec94844b8d36f2910c5f30b29545b1bbd9e451c293ba1fda1a048054b05932aa",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-NE.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-NE.png",
+      "bytes": 2004677,
+      "sha256": "f143cd7775592437c2f4c0c16e95d414b184775818e095ab28a45084642a67b4",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-NW-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-NW-request.json",
+      "bytes": 5222,
+      "sha256": "5e4786dc3d0b50538f8b02c4e6800b121b0bf137f20fe2642608473ba860cd45",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-NW.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-NW.png",
+      "bytes": 1925182,
+      "sha256": "5d58d7a7b1dc316129a52e03c7057ac8a56b35a17c88b183fe57dd21940f5b1c",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-S-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-S-request.json",
+      "bytes": 4329,
+      "sha256": "7292d51933cd1c292590c5930e019956f536908317905529dfa904cfac4ba782",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-S.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-S.png",
+      "bytes": 2264686,
+      "sha256": "a9a94c788ad34dfc92b06c2a7a9ed7ef69ba206bd03ef6e2fca0c0a3cec2864f",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-SE-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SE-request.json",
+      "bytes": 4275,
+      "sha256": "cd39929d418e0acbdd2fd65907a97d2e363ee20a10e3c263ab243e7642455004",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SE.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SE.png",
+      "bytes": 2544035,
+      "sha256": "a86c54d91957d9c5a772cc8c4417704df7acf628f2a5eafb8687b9b383b8bf95",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-SE_v02-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SE_v02-request.json",
+      "bytes": 3742,
+      "sha256": "e675d1005a5a96371ad349cc7d00f65a29ab3befb4c6db04634701e319e30e70",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SE_v02.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SE_v02.png",
+      "bytes": 1673414,
+      "sha256": "b43f1f74605bd9acaf917e9c09753a5ab7e8cd0737b94b162dc51cef38adee2a",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SW-idle-0-v01.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW-idle-0-v01.png",
+      "bytes": 1993385,
+      "sha256": "d36554ecc18f97a15c7268f0f3b1dd15a0b16ba617cb269d0c0713a003a8411b",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SW-idle-1-v01.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW-idle-1-v01.png",
+      "bytes": 1933963,
+      "sha256": "95080f8bb675fbbc5e478ec342f58e093d80f82bb49a63732a8dcc82639589e4",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-SW-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW-request.json",
+      "bytes": 4324,
+      "sha256": "51b44e82f76b14f30c8eea8e7f0ee6064b7753a368857ebd436f0da8342e528c",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SW.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW.png",
+      "bytes": 2376288,
+      "sha256": "06598573c2b8419d557600c017611a13f693ea228a97a9e1c20c59430ecede2e",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-SW_v02-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW_v02-request.json",
+      "bytes": 3907,
+      "sha256": "55a3106d1c9f26e3094df38e15e59ce95ed4e5318ee1280ab1540b066964ceda",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SW_v02.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW_v02.png",
+      "bytes": 1662315,
+      "sha256": "65c0f800b9ea0ab99bb624ade17e93cc00d0f66af19152b8c3daafc00cf32a45",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-SW_v03-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW_v03-request.json",
+      "bytes": 2778,
+      "sha256": "329819c950e61048de6992a081c687a90c81d90c0d582317883498ed27cec640",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SW_v03.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW_v03.png",
+      "bytes": 2110262,
+      "sha256": "0245b1749e15dcb470c0e49f3205803695ab4a1c536fe811dc86bf7dd35b6abd",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-SW_v04.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-SW_v04.png",
+      "bytes": 2286841,
+      "sha256": "e8ab3a043f84aa9d98fe5cb055cd6562dae10816767f1f03b4ba551f770956aa",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-S_v02-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-S_v02-request.json",
+      "bytes": 3755,
+      "sha256": "551524d5413406f65f5c8015ee9c782a2e8fb8c5717d32878a6bbf37ffae5da9",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-S_v02.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-S_v02.png",
+      "bytes": 1683096,
+      "sha256": "c900d22b6369e0e2e923828886525a7365ce0f46b981ea91e20f95c3823b3040",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-W-request.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-W-request.json",
+      "bytes": 4967,
+      "sha256": "b662623373e0161dbf36bd7161c4f79108c8ea284024d8f77d4c0187cafae25c",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/monk/monk-W.png",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-W.png",
+      "bytes": 1953403,
+      "sha256": "f61b5a4df9ac95c136b28a230b5c778472c094a05e772e0a2a0cf19412d97647",
+      "kind": "monk",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-current-source-index.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-current-source-index.json",
+      "bytes": 35950,
+      "sha256": "d54c86a779feda4d1a20ba4f67a97fd06390eff44d071342c237d0ec2f3aa196",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-final-SW-index.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-final-SW-index.json",
+      "bytes": 2806,
+      "sha256": "8c1006ea3070d9a3fb62da0df9526822cd293ce49b1aa9173640fec0ae1e1d44",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-front-source-index.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-front-source-index.json",
+      "bytes": 17380,
+      "sha256": "a6c7a5cec8ceb08bb25d58120be5282fc2f25419e68a226f68fd4d0dce60c04e",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/monk-idle-patch-index.json",
+      "original_workspace_path": "/workspace/runtime/batch16/monk-idle-patch-index.json",
+      "bytes": 3757,
+      "sha256": "f3e2b2de3ace2c40f4f95327183c326aa2f26891a791ac0cfee0eeb08118b1e6",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/requests/phase2-source-index.json",
+      "original_workspace_path": "/workspace/runtime/batch16/phase2-source-index.json",
+      "bytes": 11199,
+      "sha256": "88c0698a01e9e1ab16238b950cd818544fba97487ec1424c8005a2fe574895af",
+      "kind": "requests",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/preserve_deer.py",
+      "original_workspace_path": "/workspace/runtime/batch16/preserve_deer.py",
+      "bytes": 1967,
+      "sha256": "be494ab9a57019f606bc731f5c1c4b82b0d772e427c9ce44d412d80d514f5aed",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/preserve_spider.py",
+      "original_workspace_path": "/workspace/runtime/batch16/preserve_spider.py",
+      "bytes": 1854,
+      "sha256": "360ee050f5d7b6adf3f1b5c81473345ff30f6b77ddbe04ab1bb0e2e808c21593",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/preserve_spider_adapters.py",
+      "original_workspace_path": "/workspace/runtime/batch16/preserve_spider_adapters.py",
+      "bytes": 2881,
+      "sha256": "e9ba5db2198d452e441d988ac4ab447b48b5760950d71b5e24a0cca6389ac87e",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/preserve_spider_front.py",
+      "original_workspace_path": "/workspace/runtime/batch16/preserve_spider_front.py",
+      "bytes": 5145,
+      "sha256": "7eb6764cb6a27d39f3607ea4e4e7458773de04b02776d7ad07f4967ae5b10c87",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/preserve_tomb.py",
+      "original_workspace_path": "/workspace/runtime/batch16/preserve_tomb.py",
+      "bytes": 1593,
+      "sha256": "cb421b9f8332f6dbaba88daf1fee2715567fe51d37e900875a22d030c313f733",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/promote_deer.py",
+      "original_workspace_path": "/workspace/runtime/batch16/promote_deer.py",
+      "bytes": 6533,
+      "sha256": "fc8345fc861ec18166ca50957adbf43d8aedcac0e00ea1ba33eb6a013f8dc4c8",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/promote_golem.py",
+      "original_workspace_path": "/workspace/runtime/batch16/promote_golem.py",
+      "bytes": 5898,
+      "sha256": "2c68ec077c5824791e41764193c5887d21a3f4a117ea4c9fd232fadefaade242",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/promote_native.py",
+      "original_workspace_path": "/workspace/runtime/batch16/promote_native.py",
+      "bytes": 6614,
+      "sha256": "f8a6243e4f640f50bbdd2db1333f5857ae66fd50cb0c87a31667cc4c743c359e",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/promote_tomb.py",
+      "original_workspace_path": "/workspace/runtime/batch16/promote_tomb.py",
+      "bytes": 7177,
+      "sha256": "46ac222dfad0cfc3476a12adecad69caa211540f5c81222141ec61495bb4715b",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/queen/queen-E-v01.png",
+      "original_workspace_path": "/workspace/runtime/batch16/queen-E-v01.png",
+      "bytes": 2226026,
+      "sha256": "424c46f5738ea467fe5b7dee1b0485a24a5dd9da98d4ce1ff2926ff612665ab3",
+      "kind": "queen",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/queen/queen-S-v01.png",
+      "original_workspace_path": "/workspace/runtime/batch16/queen-S-v01.png",
+      "bytes": 2273428,
+      "sha256": "b4d486e41b399bdcb8fa38f0f4c79867ba1efe9794225c7857001f9e20cd60ba",
+      "kind": "queen",
+      "approved": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/record_new_source.py",
+      "original_workspace_path": "/workspace/runtime/batch16/record_new_source.py",
+      "bytes": 2017,
+      "sha256": "f938013890b95a4f434ceb2fcfa820b159aad69df83d8710cde38856f20c198e",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_main_checks.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_main_checks.py",
+      "bytes": 1781,
+      "sha256": "95c7c69aa589d2fc7cecebf3458a7e19f297376c4e412e1554715c77d46f8768",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_main_checks_v02.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_main_checks_v02.py",
+      "bytes": 1764,
+      "sha256": "49f9ee5d1546683904011038680e409d0161d6de95e964d9dda836694706d67b",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_main_deer.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_main_deer.py",
+      "bytes": 1792,
+      "sha256": "e2e52675e8994631cc2e671031dfcfddfb9f76ba2e94562b8c1cbec934b256a6",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_main_spider.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_main_spider.py",
+      "bytes": 1796,
+      "sha256": "b8245b49c954cfff00acb0f3655d8385b588432acfee4f17ee378d9eb8ffbd10",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_main_spider_family.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_main_spider_family.py",
+      "bytes": 1810,
+      "sha256": "d38e3b13a29d69019f6a2c65dcbe8654134fef4777ab734f7e97811c62d8e129",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_main_tomb.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_main_tomb.py",
+      "bytes": 1041,
+      "sha256": "66fa4700190d10d8162424a6ce7c349f1f9dad1ca7cf6826f5a10f705f1eaba6",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_temporal_deer.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_temporal_deer.py",
+      "bytes": 1438,
+      "sha256": "4f833670d4a2198fe38251f276b2f7d5687d7bda6dc8cbefe9a0d8f30983b3d6",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_temporal_golem.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_temporal_golem.py",
+      "bytes": 1428,
+      "sha256": "c58fca18e45edc7810903bb8bbc3c1929061974abe42c42fab286dca1a40b95e",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_temporal_spider.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_temporal_spider.py",
+      "bytes": 1442,
+      "sha256": "f1ea01c9199b6cdab7182bb98c376a8d2ab5bb2ecf915388e13c7947d19ac8eb",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/run_temporal_spider_family.py",
+      "original_workspace_path": "/workspace/runtime/batch16/run_temporal_spider_family.py",
+      "bytes": 1456,
+      "sha256": "9724ffa0500685bfce0ee36e5d852067792cc7e26053f8f10e0072a2c7458a68",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/save_tomb_palette.py",
+      "original_workspace_path": "/workspace/runtime/batch16/save_tomb_palette.py",
+      "bytes": 9558,
+      "sha256": "6046a9ec118507d8b99a8e4fdcf388b85172cb415da4ea72c9db9b22e09b23cd",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/stage_deer.py",
+      "original_workspace_path": "/workspace/runtime/batch16/stage_deer.py",
+      "bytes": 3681,
+      "sha256": "d7f38dc646bc1db78f67ad64d9734708421a7b1b0a93c7f0a48f3546132dbf91",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/stage_golem.py",
+      "original_workspace_path": "/workspace/runtime/batch16/stage_golem.py",
+      "bytes": 4257,
+      "sha256": "d7ce0878280f929face81c7d7c35d30d2588cee5ccbcf4243b4193cecef4f7e9",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/stage_monk.py",
+      "original_workspace_path": "/workspace/runtime/batch16/stage_monk.py",
+      "bytes": 3104,
+      "sha256": "9b326d9137ad85c64fa5cb297b8340a5d45a8e729e426c8ce2afd51f38568dc5",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/stage_spider.py",
+      "original_workspace_path": "/workspace/runtime/batch16/stage_spider.py",
+      "bytes": 3594,
+      "sha256": "94b03c301b514b5e562eea243fb530fb71bcfb76dde96175e323ccfb83017ec5",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/stage_spider_adapters.py",
+      "original_workspace_path": "/workspace/runtime/batch16/stage_spider_adapters.py",
+      "bytes": 2461,
+      "sha256": "0f6de85a1357eb0aeb3bc43b530242ea296c024216a568590f7b76f92272b3f8",
+      "kind": "workflow-drivers",
+      "approved": null
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/authoring-stop-20261019/workflow-drivers/stage_tomb_repaired.py",
+      "original_workspace_path": "/workspace/runtime/batch16/stage_tomb_repaired.py",
+      "bytes": 3010,
+      "sha256": "f1a9dc6eb02168f28756ff12b73406df430a5625b970d666d228a2c4dcdc5e29",
+      "kind": "workflow-drivers",
+      "approved": null
+    }
+  ],
+  "runtime_preservation": "All /workspace/runtime/batch16 and /workspace/generated_images originals retained in place, no deletion. Large Main captures/caches remain workspace-only, not durable public delivery.",
+  "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_PR122_RESUME_20261019.md"
+}

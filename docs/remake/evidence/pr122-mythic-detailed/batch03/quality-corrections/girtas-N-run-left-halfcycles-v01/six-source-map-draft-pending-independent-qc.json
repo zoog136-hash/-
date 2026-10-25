@@ -1,0 +1,186 @@
+{
+  "key": "267",
+  "direction": "N",
+  "role": "run",
+  "status": "DRAFT_NOT_ASSEMBLY_AUTHORIZATION",
+  "poses": [
+    {
+      "game_phase": 0,
+      "path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+      "source_sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+      "newly_authored": false,
+      "review_status": "PASS_SINGLE_LANDING_KEY_ONLY",
+      "draft_virtual_canvas": 2624,
+      "source_review": "/workspace/scratch/girtas-N-run-left-landing-key-v01/result.json"
+    },
+    {
+      "game_phase": 1,
+      "path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/source-row0-lossless.png",
+      "source_sha256": "b34bb2fc149e8f9ffd35847f335e758c11f4815a0c078567dd7bbc732101be6d",
+      "newly_authored": true,
+      "review_status": "PENDING_INDEPENDENT_COMPRESSION_QC",
+      "draft_virtual_canvas": 1840,
+      "original_source_provenance": {
+        "source_path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/girtas-N-run-left-halfcycles-v01.png",
+        "source_sha256": "ecb2a4b33d4ecad0c3bec0f1284ad17e2f75c269fd05376563c7ba27ec35301c",
+        "source_pose": 0,
+        "intended_game_phase": 1,
+        "region": [
+          127,
+          82,
+          748,
+          748
+        ],
+        "crop_path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/source-row0-lossless.png",
+        "crop_sha256": "b34bb2fc149e8f9ffd35847f335e758c11f4815a0c078567dd7bbc732101be6d",
+        "rgba_sha256": "dd442306285a9aced62c711317e388198cff8b0b4532cb85e8e8a530ce6fd1dc",
+        "crop_size": [
+          748,
+          748
+        ],
+        "resampling": false,
+        "mirrored": false,
+        "masked": false,
+        "source_visual_status": "PENDING_PER_POSE_QC",
+        "actor_approval": false
+      }
+    },
+    {
+      "game_phase": 2,
+      "path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/source-row1-lossless.png",
+      "source_sha256": "d1707604c9739686c04dcea79d502b264b179f90ec60ab0e9e966bcdba983a7a",
+      "newly_authored": true,
+      "review_status": "PENDING_INDEPENDENT_FLIGHT_QC",
+      "draft_virtual_canvas": 1856,
+      "original_source_provenance": {
+        "source_path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/girtas-N-run-left-halfcycles-v01.png",
+        "source_sha256": "ecb2a4b33d4ecad0c3bec0f1284ad17e2f75c269fd05376563c7ba27ec35301c",
+        "source_pose": 1,
+        "intended_game_phase": 2,
+        "region": [
+          1004,
+          58,
+          726,
+          723
+        ],
+        "crop_path": "/workspace/scratch/girtas-N-run-left-halfcycles-v01/source-row1-lossless.png",
+        "crop_sha256": "d1707604c9739686c04dcea79d502b264b179f90ec60ab0e9e966bcdba983a7a",
+        "rgba_sha256": "f6a352d884559598906c413a4ed7c0e196895b384988e46e3592a37911c857f8",
+        "crop_size": [
+          726,
+          723
+        ],
+        "resampling": false,
+        "mirrored": false,
+        "masked": false,
+        "source_visual_status": "PENDING_PER_POSE_QC",
+        "actor_approval": false
+      }
+    },
+    {
+      "game_phase": 3,
+      "path": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+      "source_sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+      "newly_authored": false,
+      "review_status": "PASS_SINGLE_RIGHT_LANDING_KEY_ONLY",
+      "draft_virtual_canvas": 816,
+      "original_source_provenance": {
+        "source": "/workspace/scratch/girtas-N-run-repair-v03/girtas-N-run-v03.png",
+        "source_sha256": "38847df29be88702f4c3ecd8f8d34386f8e0a86a043e2cd7b2727c99c9a6b6f0",
+        "source_pose": 0,
+        "source_region": [
+          122,
+          41,
+          339,
+          392
+        ],
+        "source_region_rgba_sha256": "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e",
+        "key": "/workspace/scratch/girtas-N-run-right-landing-key-reused-v01/girtas-N-run-right-landing-row0-lossless.png",
+        "key_sha256": "c583ac1538e84d2bfa80e3eeaacce32333801cb9aef5fd53732e03721ab85e5a",
+        "key_rgba_sha256": "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e",
+        "crop_size": [
+          339,
+          392
+        ],
+        "intended_game_phase": 3,
+        "source_role_status": "RIGHT_LANDING_KEY_SOURCE_PASS",
+        "whole_source_status": "HOLD_NONALTERNATING_RUN_UNCHANGED",
+        "newly_authored_poses": 0,
+        "reused_pose_count": 1,
+        "imagegen_attempts": 0,
+        "resampled": false,
+        "mirrored": false,
+        "actor_approval": false
+      }
+    },
+    {
+      "game_phase": 4,
+      "path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/source-row0-lossless.png",
+      "source_sha256": "6a54b11587e11093eed3bd39eb9a11e851e2946c7b3e5da674db7f77215d62e5",
+      "newly_authored": true,
+      "review_status": "PENDING_INDEPENDENT_COMPRESSION_QC",
+      "draft_virtual_canvas": 1600,
+      "original_source_provenance": {
+        "source_path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/girtas-N-run-right-halfcycles-v01.png",
+        "source_sha256": "2b5c7222bad326c8d95fe2f5eb7b79f37d150077449885e9eb109a9ae0e92ba5",
+        "source_pose": 0,
+        "intended_game_phase": 4,
+        "region": [
+          199,
+          126,
+          679,
+          693
+        ],
+        "crop_path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/source-row0-lossless.png",
+        "crop_sha256": "6a54b11587e11093eed3bd39eb9a11e851e2946c7b3e5da674db7f77215d62e5",
+        "rgba_sha256": "0a3d7bdc9fdb1ab78ba5bf11d789f4ab30511ac610d5a5c050e59d1dfea33ef5",
+        "crop_size": [
+          679,
+          693
+        ],
+        "resampling": false,
+        "mirrored": false,
+        "masked": false,
+        "source_visual_status": "PENDING_PER_POSE_QC",
+        "actor_approval": false
+      }
+    },
+    {
+      "game_phase": 5,
+      "path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/source-row1-lossless.png",
+      "source_sha256": "71208ae72f8ac8613b1440bb47d6a8a983e489f249db64054e762d4cd7ec73b5",
+      "newly_authored": true,
+      "review_status": "PENDING_INDEPENDENT_FLIGHT_QC",
+      "draft_virtual_canvas": 1536,
+      "original_source_provenance": {
+        "source_path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/girtas-N-run-right-halfcycles-v01.png",
+        "source_sha256": "2b5c7222bad326c8d95fe2f5eb7b79f37d150077449885e9eb109a9ae0e92ba5",
+        "source_pose": 1,
+        "intended_game_phase": 5,
+        "region": [
+          1025,
+          95,
+          667,
+          672
+        ],
+        "crop_path": "/workspace/scratch/girtas-N-run-right-halfcycles-v01/source-row1-lossless.png",
+        "crop_sha256": "71208ae72f8ac8613b1440bb47d6a8a983e489f249db64054e762d4cd7ec73b5",
+        "rgba_sha256": "590b0bd7409abdec9e91d07d102833256de51003ea4a90f01bfd665b46914dd3",
+        "crop_size": [
+          667,
+          672
+        ],
+        "resampling": false,
+        "mirrored": false,
+        "masked": false,
+        "source_visual_status": "PENDING_PER_POSE_QC",
+        "actor_approval": false
+      }
+    }
+  ],
+  "exact_source_pixels": true,
+  "newly_authored_poses": 4,
+  "reused_landing_keys": 2,
+  "runtime_final_status": "HOLD",
+  "actor_approval": false
+}

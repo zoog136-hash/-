@@ -1,0 +1,64 @@
+{
+  "schema": "pr122-queen-N-isolated-edit-review-v1",
+  "actor": "monster:얼음 여왕",
+  "method": "Private actual vision of preserved old six isolated crops, two exact edit canvases, all three new single-pose results composited with real alpha, and final normalized six-pose strip.",
+  "status": "TECHNICALLY_STAGED_FINAL_QUALITY_HOLD",
+  "new_approvals": 0,
+  "selected_clip": "run_6",
+  "selected_poses": 6,
+  "newly_generated_selected_poses": 3,
+  "reused_selected_poses": 3,
+  "actual_examined_final_preview": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/private/normalized-N-six-exact-alpha.png",
+    "bytes": 290476,
+    "sha256": "e2b1e0bfd6e0fad6f4a8b6a0897b2eedca9835cdd58a915c84b2bce62bb21940"
+  },
+  "observed_corrections": [
+    {
+      "criterion": "RIGHT_bare_LEFT_covered_continuity",
+      "result": "OBSERVED_FIXED_IN_SELECTED_SIX",
+      "observation": "All selected rear poses keep exposed bare RIGHT upper thigh on viewer-right and covered LEFT thigh/leg on viewer-left. Wrong old middle source slots2/3 are not selected."
+    },
+    {
+      "criterion": "LEFT_staff",
+      "result": "OBSERVED_PRESERVED_IN_SELECTED_SIX",
+      "observation": "LEFT hand holds the staff on viewer-left in every back-view pose; hair/crown and both purple wing silhouettes remain connected. Face/front breastplate stay turned away."
+    },
+    {
+      "criterion": "opposite_support_and_flight",
+      "result": "OBSERVED_STATIC_IMPROVEMENT_NOT_FULL_GAIT_APPROVAL",
+      "observation": "Phase0 bare RIGHT support differs from phase3 covered LEFT support. New phases1/4 preserve opposite raised-knee/grounded-leg ownership. Phase2 old LEFT-forward flight and new phase5 RIGHT-forward flight have different extended/folded legs, replacing the old repeated LEFT-forward ending."
+    },
+    {
+      "criterion": "source_pixel_density",
+      "result": "TECHNICAL_NORMALIZATION_ONLY",
+      "observation": "Each frame retains exact source PNG/RGBA/region, with per-frame virtual canvases616/696/616/616/728/776 and one86/140 profile scale. No source pixel resampling or color edits."
+    }
+  ],
+  "reused_old_source_whole_sheet_preserved": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/references/queen-N-v03-preserved-source.png",
+    "bytes": 1394240,
+    "sha256": "3ea337ca567b5cfbdd6759b33a3fb8e37ccc6ea116d9533ff220879d99b0256c"
+  },
+  "selected_old_source_slots": [
+    0,
+    4,
+    1
+  ],
+  "excluded_old_source_slots": {
+    "2": "wrong rear bare-thigh side",
+    "3": "wrong rear bare-thigh side",
+    "5": "repeated LEFT-forward instead of opposite RIGHT-forward flight"
+  },
+  "confirmed_source_defects_in_selected_six": [],
+  "unseen_not_reviewed": [
+    "Complete timed gait and moving-world foot slip/physical contact",
+    "Cross-role transitions in default Main",
+    "Final independent mythic anatomy/cloth/wing detail and rear-view exact camera acceptance",
+    "Flight ground-plane source anchors are metadata estimates, not anatomical contact approval"
+  ],
+  "PNG_sources": 4,
+  "actual_imagegen_calls": 3,
+  "additional_whole_sheet_generation": 0,
+  "existing_frozen_queen_sources_and_approvals_preserved": true
+}

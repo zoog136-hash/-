@@ -1,0 +1,30 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02-3D-load4blade01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "newly_authored_poses": 0,
+  "revised_poses": 1,
+  "game_phases": [
+    4
+  ],
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-W-run-load4-3D-v01/girtas-W-run-load4-3D-v01.png",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-run-load4-3D-v01/girtas-W-run-load4-3D-v01.png": "be23a011532111c6a3025c887465e28030b929dfa209433ef3530ef197584d4f",
+    "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png": "a18e7741173cd3d8705d6c2329534a5681089ad7d9809659a148880ed7e57035"
+  },
+  "prompt": "Edit the FIRST reference into ONE corrected finished GIRTAS W/LEFT-facing RUN load4 source. Transparent RGBA PNG1254x1254, one complete fullbody pose, preserve all original face/body/robe/hair/armor/hardgoldrays, pose, TWOarms/TWOlegs, camera, entire weapon and all silhouette extent. DO NOT re-pose, mirror, redesign, recolor, crop or change character size. Target only an actual source-art defect in the ORIGINAL ONE SINUOUS RIGHT-HAND BLADE: a tiny detached strong gold/fire fragment near the extreme left blade tip at source pixel bbox x25..52,y742..759 in this1254square image.\nMaterially repair the blade's original gold metallic core and fireedge so that this tip/lobe belongs visibly and physically to the SAME continuous blade from right-hand hilt all the way through every sinuous gold wave to its extreme tip. Integrate the detached small fragment smoothly into the original waveblade form with a real continuous originalgold core, not a faint transparent glow or an artificial hairline bridge. Do NOT delete a real tip or shorten the blade. No detached flame chunks, floating sparks or extra object. The SECOND reference is the complete original canonical RIGHT-hand sinuous gold/orange blade material/outline authority; preserve its elegant original multibend wave identity, not a straight sword.\nKeep the FIRST pose exactly: FAR anatomical RIGHT leg is flexed FLAT support under body, NEAR anatomical LEFT leg is lifted bent passing/recovery in foreground, genuine opposite running load after RIGHT heelcontact. Keep the forward-running torso lean and nearLEFT EMPTY arm counter-swing; exactly one farRIGHThand grips exactly one blade. Original longdark robe and ornate gold trim tails, pale male face, longsilverwhitehair and thin HARD gold radial rays must remain faithful. No soft featherwings, pants redesign or barelegs.\nFinish this one scoped physical blade continuity correction as high quality original game art. Preserve full equipment and boots with transparent padding; never clip a weapon/ray/cloth tip. No text, guide, extra panel, floor or shadow. Render only the one faithfully preserved corrected fullbody source. This is a revision of the same new load4 key, not another action or palette variant.",
+  "material_change": "Repair exact strong blade-tip disconnected273px lobe into original physicallycontinuous gold-core/firewave, preserve entirebody/gait/identity; no threshold relaxation/alpha cleanup.",
+  "replaces_candidate_raw_sha256": "be23a011532111c6a3025c887465e28030b929dfa209433ef3530ef197584d4f",
+  "user_authorization": "Continue PR122 actual animation production, private production tool allowed, no mainchat images/binary. Preserve all oldraws/requests, actor+0.",
+  "requested_at": "2026-10-19T15:54:13.623891+00:00",
+  "actor_approval": false
+}

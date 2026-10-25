@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-NE-idle-author-20261020-v01/author-NE-IDLE-dedicated-native-breath-finger-ribbon-coat-six-v01.py", line 50, in <module>
+    a=np.array(pose);fixedmask=protected.copy();fixedmask[np.array(fmask)>0]=False;assert np.array_equal(a[fixedmask],sa[fixedmask]);fixedrows.append(hashlib.sha256(a[fixedmask].tobytes()).hexdigest())
+                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

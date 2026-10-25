@@ -1,0 +1,98 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "walk",
+  "poses": [
+    {
+      "path": "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/girtas-W-walk-LEFT-contact0-3D-v02.png",
+      "source_sha256": "9a9d484f3afd5e7eb659c7d65eb609de68622cd449caba7a0c37ab91c6d4e70b",
+      "region": [
+        16,
+        8,
+        1220,
+        1176
+      ],
+      "rgba_sha256": "aa08ad964cad086741ab3804a6096701c3dcdf9968c3204fd9661a5ffdc156a4",
+      "source_pose": 0,
+      "newly_authored": true,
+      "review_basis": "Gamephase0: IndependentnearLEFTfrontcontact hip/thigh/knee/heel proven332755c6; farRIGHTreartoe, longrobe/identityPASS."
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+      "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+      "region": [
+        5,
+        63,
+        759,
+        843
+      ],
+      "rgba_sha256": "ffd33fb262b6c7f8501e49f088aa04688aab530a41669947cfedca1da4ac97c2",
+      "source_pose": 0,
+      "newly_authored": true,
+      "review_basis": "Gamephase1: IndependentnearLEFTflat support/farRIGHTliftedpassing626b817e; modelandownershipPASS."
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-walk-3D-LEFT-halfcycles-v02/girtas-W-walk-3D-LEFT-halfcycles-v02.png",
+      "source_sha256": "ea33ad342d3854c2c9e6fdabbe5e0ec030db01516d009652d558a71feb2ee28e",
+      "region": [
+        763,
+        62,
+        759,
+        844
+      ],
+      "rgba_sha256": "213e44f00bb0ecdafa9df1fa6991d81772b7d878a843636b8a84af38833bfcb4",
+      "source_pose": 1,
+      "newly_authored": true,
+      "review_basis": "Gamephase2: IndependentnearLEFTtrailingtoe/farRIGHTreachheelhover626b817e; notwholebodyAIR."
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-walk-RIGHT-contact3-3D-v01/girtas-W-walk-RIGHT-contact3-3D-v01.png",
+      "source_sha256": "93a18232d135651fbbef18d425c268d1b1df30771386c73209f21dcb49916d7b",
+      "region": [
+        22,
+        19,
+        1197,
+        1116
+      ],
+      "rgba_sha256": "64946bb35b4ef5031231ce821293573836764d5ad35933668a99f0ffbc6efcd3",
+      "source_pose": 0,
+      "newly_authored": true,
+      "review_basis": "Gamephase3: IndependentfarRIGHTfrontcontact hip/thigh/frontheel vsnearLEFTrear337? exactreview897ec1e2010eb0ea; oppositeLEFT0 proven."
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+      "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+      "region": [
+        23,
+        126,
+        681,
+        780
+      ],
+      "rgba_sha256": "d5960ec3ac59c042881f343168e7dc9049a96a8c92925464bf8555de1154065c",
+      "source_pose": 0,
+      "newly_authored": true,
+      "review_basis": "Gamephase4: OriginalRIGHT4 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTflat+LEFTforegroundpassing, strict2geometryPASS; final layout/full6 independent review pending."
+    },
+    {
+      "path": "/workspace/scratch/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03/girtas-W-walk-3D-RIGHT-halfcycles-layout-v03.png",
+      "source_sha256": "b170dc2c8dded7fc25badd85ff0db4573b1fb3cf15652d910931272746cb0ca0",
+      "region": [
+        792,
+        129,
+        688,
+        768
+      ],
+      "rgba_sha256": "6af3212ab99294fe4193dc76dc67bc391bd72f9e3ddae6820a4d9f5ecaf25c06",
+      "source_pose": 1,
+      "newly_authored": true,
+      "review_basis": "Gamephase5: OriginalRIGHT5 motion/identity independentPASSeb3973de; layout-onlyrevision retainedRIGHTreartoe+LEFTforeheelhover, strict2geometryPASS; final layout/full6 independent review pending."
+    }
+  ],
+  "new_dedicated_gamepose_count": 6,
+  "old_shared_or_legacy_pose_reuse_count": 0,
+  "RIGHT45_original_newly_authored": 2,
+  "RIGHT45_layout_newly_authored": 0,
+  "source_canvas_status": "NOMINAL2048 strictcoverage only; actual perposeC/root proposal pending",
+  "actor_approval": false
+}

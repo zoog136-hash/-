@@ -1,0 +1,25 @@
+{
+  "actor": "monster:알비노 유니콘",
+  "slug": "albino_unicorn",
+  "clip": "NW-run-v01",
+  "role": "run",
+  "direction": "NW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/albino_unicorn/raw/NW-run-v01.png",
+  "source_sha256": "01287c0383fb2af96b83bd651cf953a78bc352ba0732a9b91cf6ddd5c3e73df8",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      93777,
+      91508,
+      91366,
+      88784,
+      87613,
+      84358
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

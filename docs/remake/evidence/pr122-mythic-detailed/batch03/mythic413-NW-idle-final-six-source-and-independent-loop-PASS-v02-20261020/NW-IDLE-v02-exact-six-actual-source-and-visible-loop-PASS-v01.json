@@ -1,0 +1,111 @@
+{
+  "status": "INDEPENDENT_EXACT_SIX_ACTUAL_SOURCE_AND_VISIBLE_IDLE_LOOP_PASS",
+  "actor_id": 413,
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "idle",
+  "source_visual_status": "PASS",
+  "source_contract": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/NW-IDLE-six-actual-native-source-common-root-and-loop-contract-v02.json",
+  "source_contract_sha256": "4d08f9c6353405137dfc17755a36c7121bc3a65a436c46ad652242d1ae2c4bf8",
+  "frames": [
+    {
+      "phase": 0,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-0-native-breath-relax-v02.png",
+      "sha256": "da557d3ba1653dcd02b56ba0372205c6d09469e931c117ddf85132fa589c0c09",
+      "bytes": 509904
+    },
+    {
+      "phase": 1,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-1-native-breath-relax-v02.png",
+      "sha256": "2582b831ec10aca8c92717c12fec98626ef8826d437934cfaa0b8bd51e41c3e9",
+      "bytes": 510360
+    },
+    {
+      "phase": 2,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-2-native-breath-relax-v02.png",
+      "sha256": "9b394e26aafda8e709295205aa838f83458c7e87860f6729653231572028314a",
+      "bytes": 507912
+    },
+    {
+      "phase": 3,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-3-native-breath-relax-v02.png",
+      "sha256": "8e7408b8df41b003091192b683f9a223fcc40049ddfda9870983c95b681f480f",
+      "bytes": 508237
+    },
+    {
+      "phase": 4,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-4-native-breath-relax-v02.png",
+      "sha256": "b534c4e465fe931da1c2861b0a0a1d6afc784a71198d07d6badf3614d776a90e",
+      "bytes": 510507
+    },
+    {
+      "phase": 5,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-5-native-breath-relax-v02.png",
+      "sha256": "65c183bcb97c56687277714618260a3c31e8932219f18b461b2db28a59f7e806",
+      "bytes": 509215
+    }
+  ],
+  "basis": {
+    "C": 2048,
+    "body_unit": 2,
+    "root": [
+      641,
+      1058.3
+    ],
+    "storage": [
+      0,
+      0
+    ],
+    "loop_seconds": 1.2,
+    "required_equal_weight_resource_fps": 5.0
+  },
+  "actual_review_scope": [
+    "New dedicated idle source0 full figure and complete RIGHTstaff, identity, costume, relaxed LEFTarm",
+    "All six fixed-root upperbody views, ordered5-0-1 and2-3-4; observed full6 breathing and visible5-to-0 wrap",
+    "Existing approved stationary leg material was preserved; no redo of locomotion QC"
+  ],
+  "visual_findings": [
+    "Complete right-hand double-ended staff, grip, costume, face, bun, hair and ribbon retained.",
+    "Relaxed LEFT upperarm, cuff, wrist and fingers form connected anatomical contours without observed duplicated cuff remnants or detached material.",
+    "Actual corset/rib surface expands by3.8149681174490695 native units; gentle neck, hair and farcoat lag accompany breathing without whole-actor bob or root motion.",
+    "Six source poses and5-to-0 wrap show a smooth restrained idle rhythm; no blocking source defect observed.",
+    "Exact fixed semantic leg32843pixels and complete-staff23241pixels RGBA changes0 across all6; actual arm joint affine residual1.1368683772161603e-13."
+  ],
+  "blocking_source_HOLD_count": 0,
+  "visual_limitations": [
+    "Private reduced previews plus exact source/material checks establish the scoped source conclusion. This is not a claim of uniquely reconstructed hidden3D anatomy.",
+    "Game SpriteFrames binding and actual1.2second idle runtime are separate pending parent integration gates.",
+    "No actor detailed-completion count is increased by this source/loop review."
+  ],
+  "independent_numeric_proof": {
+    "path": "/workspace/scratch/mythic413-NW-idle-independent-qc-20261020-v01/NW-IDLE-v02-independent-exact-material-nodes-and-loop-numeric-PASS-v01.json",
+    "sha256": "75a787472a5d2d6daaacdd505174266ce22aadfdcba413a5ae1d0c85638e854e"
+  },
+  "private_preview_records": [
+    {
+      "name": "NW-idle-v02-private-first-actual-static-upperbody-and-identity.jpg",
+      "bytes": 68110,
+      "sha256": "cd0435683e7a3f1dd6b1c3d1f12ff20e55499cbedf3bddd7e178669bc96077ed"
+    },
+    {
+      "name": "NW-idle-v02-private-upperbody-loop5-0-1.jpg",
+      "bytes": 133533,
+      "sha256": "61f20cd3097048fb1caae14338d451a5d66821df72213623a534092a6e9edb81"
+    },
+    {
+      "name": "NW-idle-v02-private-upperbody-breath2-3-4.jpg",
+      "bytes": 132672,
+      "sha256": "415e9f117138b0a37f1ad981b99b51fec18c3259a41a98d26f85e3d15a4f46b2"
+    }
+  ],
+  "frozen_private_ledger": {
+    "path": "/workspace/scratch/mythic413-NW-idle-independent-qc-20261020-v01/private-image-ledger-through-NW-IDLE-source-cycle-frozen-v01.json",
+    "sha256": "2c4aed7f3b6679a224d8dbd8b6a7e4e3369dd118eb4a2aaa040edf0f7e65cb5f",
+    "cumulative_returned_image_bytes": 2707351
+  },
+  "no_images_to_root_or_user": true,
+  "new_image_views_for_numeric_or_formal_closure": 0,
+  "repository_changes": 0,
+  "game_validation": false,
+  "actor_approval_added": 0
+}

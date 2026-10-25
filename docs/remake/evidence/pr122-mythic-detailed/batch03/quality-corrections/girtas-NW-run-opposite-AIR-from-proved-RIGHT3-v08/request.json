@@ -1,0 +1,30 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "pose": 2,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/proved-farRIGHT-leading-leg-ankle-flex-guide-only.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-from-proved-RIGHT3-v08/proved-farRIGHT-leading-leg-ankle-flex-guide-only.png": "fe2eafb49b09f231fd181a9aadd2f90e536a67a266c980205282746cce27a7bc"
+  },
+  "prompt": "Edit FIRST exact GIRTAS transparent PNG from its independently accepted true NORTHWEST FAR-RIGHT-FORWARD LANDING phase3 into exactly ONE NEW OPPOSITE AIR phase2. The FIRST source is absolute authority for the already PROVEN hip/leg anatomical ownership; preserve both actual hip/thigh chains, same camera, allbody proportions, exact head/armor/rays/silverhair/longrobe, same EMPTY nearLEFT hand and faithful SMALL simple collar/hilt holding continuous sinuous blade in FAR RIGHT hand. Do NOT reconstruct newlegs from scratch or swap ownership. SECOND is the SAME character with mint circle/arrow on the FAR RIGHT leading shin/boot ONLY, showing the small localized pose edit. No mint marks in final.\n\nMake an actual AIR frame: FAR anatomicalRIGHT front leg is the existing UPPER-LEFT leading leg/boot inside mintcircle, its thigh already crosses from farRIGHThip behind robe toward the UPPERLEFT front boot. Retain that actual farRIGHThip->thigh->knee chain. Gently FLEX this same RIGHT leading knee/shin and raise the actual front RIGHT ankle/heel/toe upward by about40-65 sourcepixels so its sole is clearly AIR, softly dorsiflexed/reaching for nextlanding. The marked leading RIGHT boot must NOT touch ground. Keep its foreleg UPLEFT extent (do not retract it beneathbody or replace by nearLEFT leg).\n\nThe OTHER leg is anatomical NEAR LEFT: existing lowerRIGHT foreground leg has knee trailing behindhip and shin foldedBACK with raisedboot/heel near hip, sole visible. Keep that complete actual trailingLEFT hip/thigh/knee/shin/raisedboot geometry and foreground occlusion. Do NOT move nearLEFT knee UPLEFT into a newleading pose. Both feet airborne, no supporting toe/heel. Add only small natural airborne robe/hair followthrough while retaining original LONG dark GOLDTRIMrobe panels; do not shortenrobe or exposebarethigh.\n\nThis is one opposite RUNNING flight key, not walk/toeoff, not contact, not a newcharacter. Preserve faithful NWrearLEFT3/4heading, twoarms/twolegs, hardthin goldrays (notfeathers), longsilverhair, no extraweapon/flowercrossguard/limbs/head. Generous transparent alpha allaround everyraytip/bladelongtip/boot/robe. Exactly ONE full foreground pose without diagram/grid/labels/text/shadow/ground.",
+  "transparent_background": true,
+  "material_change": "localized correctfarRIGHTleading contact3 -> AIR byactualfrontRIGHTknee/shin/ankle flex, preserve independently proved oppositehipownership; excludes allfailedsameleadAIR references",
+  "proved_source3_independent_review": "/workspace/scratch/girtas-private-qc-v02-20261019/NW-run-phase3-small-hilt-independent-source-QC-v01.json",
+  "proved_source3_independent_review_sha256": "2482f21b253e02f0d82d85bba47996e9b9b80ea6adbb829cd39cfd0005f13443",
+  "guide_native_roi_xyxy": [
+    300,
+    815,
+    480,
+    995
+  ],
+  "requested_at": "2026-10-19T15:53:28.358557+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0
+}

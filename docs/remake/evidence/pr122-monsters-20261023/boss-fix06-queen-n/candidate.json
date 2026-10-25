@@ -1,0 +1,440 @@
+{
+  "schema": "pr122-queen-N-targeted-repair-candidate-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n",
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "new_raw_sources": 3,
+  "new_selected_poses": 3,
+  "reused_selected_poses": 3,
+  "existing_frozen_inputs_preserved": true,
+  "actors": {
+    "monster:얼음 여왕": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "frames": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/SpriteFrames.tres",
+      "frames_sha256": "7cf7429c0ad680e1d16ace106aa577519fd04e1e2d65fa7758ac853a21c507ad",
+      "native_profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/NativeMotionProfile.tres",
+      "native_profile_sha256": "a4ff8765e5fce0ca957a3dc07ceabc11089de977b3ef7d5ca56767b0d4ea276f",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "new_source_pose_count": 3,
+      "reused_source_pose_count": 3,
+      "missing_required_tracks": [
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_7",
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "death_2"
+      ],
+      "quality_review": "HOLD: selected anatomical outfit continuity observed fixed; full gait, moving-world physical contact, final mythic approval remain unapproved",
+      "tracks": [
+        {
+          "direction": "N",
+          "role": "run",
+          "animation": "run_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/references/queen-N-v03-preserved-source.png",
+          "source_sha256": "3ea337ca567b5cfbdd6759b33a3fb8e37ccc6ea116d9533ff220879d99b0256c",
+          "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/N-preserved-source.png",
+          "geometry": {
+            "image_size": [
+              1373,
+              1146
+            ],
+            "canvas_size": [
+              616,
+              616
+            ],
+            "frame_canvas_sizes": [
+              [
+                616,
+                616
+              ],
+              [
+                696,
+                696
+              ],
+              [
+                616,
+                616
+              ],
+              [
+                616,
+                616
+              ],
+              [
+                728,
+                728
+              ],
+              [
+                776,
+                776
+              ]
+            ],
+            "per_frame_texture_source_and_canvas_override": true,
+            "reference_canvas": [
+              256,
+              256
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  246,
+                  37,
+                  360,
+                  368
+                ],
+                "margin": [
+                  144,
+                  21,
+                  256,
+                  248
+                ],
+                "source_anchor": [
+                  410,
+                  401
+                ],
+                "rgba_sha256": "af9c3e599b15d9903e455a85f1a036d7e12b56e571e8cf8fb8e814c1f68e17fa",
+                "source_slot": 0,
+                "pose_label": "RIGHT_contact",
+                "canvas_size": [
+                  616,
+                  616
+                ],
+                "foot": [
+                  308,
+                  385
+                ],
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/references/queen-N-v03-preserved-source.png",
+                "source_sha256": "3ea337ca567b5cfbdd6759b33a3fb8e37ccc6ea116d9533ff220879d99b0256c",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/N-preserved-source.png",
+                "image_size": [
+                  1373,
+                  1146
+                ],
+                "newly_generated": false,
+                "body_scale_measurement": {
+                  "crown_apex_xy": [
+                    411,
+                    65
+                  ],
+                  "sole_y": 401,
+                  "body_reference_height": 336
+                },
+                "ground_registration": "visible_boot_sole_line_technical_registration_NOT_moving_world_approval"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  584,
+                  300,
+                  397,
+                  418
+                ],
+                "margin": [
+                  168,
+                  21,
+                  299,
+                  278
+                ],
+                "source_anchor": [
+                  764,
+                  714
+                ],
+                "rgba_sha256": "49d13689913376701628c92205de0173f5c5965e2e856d7ae84bb3994f7dd726",
+                "source_slot": 0,
+                "pose_label": "RIGHT_midstance",
+                "canvas_size": [
+                  696,
+                  696
+                ],
+                "foot": [
+                  348,
+                  435
+                ],
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/raw/phase1-RIGHT-midstance-v01.png",
+                "source_sha256": "07014a7483f20822018f12c0cf4a40891903fd4732b4095c0a5a6503f84f1843",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase1-RIGHT-midstance-v01.png",
+                "image_size": [
+                  1536,
+                  1024
+                ],
+                "newly_generated": true,
+                "body_scale_measurement": {
+                  "method": "private_visual_head_ROI_crown_apex_to_planted_or_extended_boot_sole",
+                  "crown_apex_xy": [
+                    769,
+                    333
+                  ],
+                  "sole_y": 714,
+                  "body_reference_height": 381,
+                  "logical_canvas": [
+                    696,
+                    696
+                  ],
+                  "reference_height": 140,
+                  "uncertainty_source_pixels": 3,
+                  "flight_contact_claim": false
+                },
+                "ground_registration": "visible_boot_sole_line_technical_registration_NOT_moving_world_approval"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  239,
+                  759,
+                  373,
+                  341
+                ],
+                "margin": [
+                  135,
+                  36,
+                  243,
+                  275
+                ],
+                "source_anchor": [
+                  412,
+                  1108
+                ],
+                "rgba_sha256": "fde941e53a59d62a7f2bfcf7b0afce57c2b847a6c4dea548b15efd865c0612fc",
+                "source_slot": 4,
+                "pose_label": "LEFT_forward_flight",
+                "canvas_size": [
+                  616,
+                  616
+                ],
+                "foot": [
+                  308,
+                  385
+                ],
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/references/queen-N-v03-preserved-source.png",
+                "source_sha256": "3ea337ca567b5cfbdd6759b33a3fb8e37ccc6ea116d9533ff220879d99b0256c",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/N-preserved-source.png",
+                "image_size": [
+                  1373,
+                  1146
+                ],
+                "newly_generated": false,
+                "body_scale_measurement": {
+                  "same_source_density_as_old_contacts": true,
+                  "flight_contact_claim": false
+                },
+                "ground_registration": "flight_plane_12px_below_visible_pose_bound_NOT_physical_contact_approval"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  834,
+                  38,
+                  352,
+                  366
+                ],
+                "margin": [
+                  156,
+                  23,
+                  264,
+                  250
+                ],
+                "source_anchor": [
+                  986,
+                  400
+                ],
+                "rgba_sha256": "2bdcb12d2b9ece11d500c140358f6b86c750f536b0da282b392741ddb92e288c",
+                "source_slot": 1,
+                "pose_label": "LEFT_contact",
+                "canvas_size": [
+                  616,
+                  616
+                ],
+                "foot": [
+                  308,
+                  385
+                ],
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/references/queen-N-v03-preserved-source.png",
+                "source_sha256": "3ea337ca567b5cfbdd6759b33a3fb8e37ccc6ea116d9533ff220879d99b0256c",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/N-preserved-source.png",
+                "image_size": [
+                  1373,
+                  1146
+                ],
+                "newly_generated": false,
+                "body_scale_measurement": {
+                  "crown_apex_xy": [
+                    997,
+                    66
+                  ],
+                  "sole_y": 400,
+                  "body_reference_height": 334
+                },
+                "ground_registration": "visible_boot_sole_line_technical_registration_NOT_moving_world_approval"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  571,
+                  292,
+                  418,
+                  438
+                ],
+                "margin": [
+                  186,
+                  21,
+                  310,
+                  290
+                ],
+                "source_anchor": [
+                  749,
+                  726
+                ],
+                "rgba_sha256": "fcacb51763c62c141c0f98615a879ecedace03bb3a2278ede24b807dbd6b9967",
+                "source_slot": 0,
+                "pose_label": "LEFT_midstance",
+                "canvas_size": [
+                  728,
+                  728
+                ],
+                "foot": [
+                  364,
+                  455
+                ],
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/raw/phase4-LEFT-midstance-v01.png",
+                "source_sha256": "5807a1b205cfce3803964cdd42221333995c854bd78db59eb1b60c83f4642f25",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase4-LEFT-midstance-v01.png",
+                "image_size": [
+                  1536,
+                  1024
+                ],
+                "newly_generated": true,
+                "body_scale_measurement": {
+                  "method": "private_visual_head_ROI_crown_apex_to_planted_or_extended_boot_sole",
+                  "crown_apex_xy": [
+                    771,
+                    327
+                  ],
+                  "sole_y": 726,
+                  "body_reference_height": 399,
+                  "logical_canvas": [
+                    728,
+                    728
+                  ],
+                  "reference_height": 140,
+                  "uncertainty_source_pixels": 3,
+                  "flight_contact_claim": false
+                },
+                "ground_registration": "visible_boot_sole_line_technical_registration_NOT_moving_world_approval"
+              },
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  547,
+                  283,
+                  442,
+                  461
+                ],
+                "margin": [
+                  167,
+                  16,
+                  334,
+                  315
+                ],
+                "source_anchor": [
+                  768,
+                  752
+                ],
+                "rgba_sha256": "09771285f795cd9bd23d295f2b77bdb6051948591480c5bda77a4e608981913f",
+                "source_slot": 0,
+                "pose_label": "RIGHT_forward_flight",
+                "canvas_size": [
+                  776,
+                  776
+                ],
+                "foot": [
+                  388,
+                  485
+                ],
+                "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix06-queen-n/raw/phase5-RIGHT-forward-flight-v01.png",
+                "source_sha256": "f118bf32b453cd691dbc1f1e32b6a05c41b0c94b9fa5f9cdfefef47e720859c0",
+                "texture": "assets/actors/eight_direction/monster_boss_repair/ice_queen/n-r001/phase5-RIGHT-forward-flight-v01.png",
+                "image_size": [
+                  1536,
+                  1024
+                ],
+                "newly_generated": true,
+                "body_scale_measurement": {
+                  "method": "private_visual_head_ROI_crown_apex_to_planted_or_extended_boot_sole",
+                  "crown_apex_xy": [
+                    761,
+                    315
+                  ],
+                  "sole_y": 740,
+                  "body_reference_height": 425,
+                  "logical_canvas": [
+                    776,
+                    776
+                  ],
+                  "reference_height": 140,
+                  "uncertainty_source_pixels": 3,
+                  "flight_contact_claim": false
+                },
+                "ground_registration": "flight_plane_12px_below_visible_pose_bound_NOT_physical_contact_approval"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "foot": [
+              308,
+              385
+            ]
+          },
+          "new_source_pose_count": 3,
+          "reused_source_pose_count": 3,
+          "source_policy": "per-frame source/texture/source_sha256/canvas_size overrides are authoritative; track defaults describe preserved old sheet only",
+          "quality_review": "HOLD final gait/contact/timing; actual selected6 preserve RIGHT bare thigh on viewer-right and LEFT cloth/staff on viewer-left"
+        }
+      ],
+      "sizing": {
+        "ONE_profile_scale": 0.6142857142857143,
+        "reference_canvas": [
+          256,
+          256
+        ],
+        "per_frame_density_canvas": true,
+        "source_pixels_resampled": false
+      }
+    }
+  }
+}

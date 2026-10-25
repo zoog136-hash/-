@@ -1,0 +1,22 @@
+{
+  "arguments": {
+    "prompt": "Create ONE newly authored 2D game-sprite correction for the SOUTH attack IMPACT pose of this exact Death Servant. The first reference is the defective existing single impact frame; the second is this actor's existing original portrait. Preserve identity: the same small human skull deep inside its pale gray hood, long continuous ragged bluish-gray robe, exactly TWO thin skeletal arms with articulated clawed hands, no legs, no feet, no extra bones, no weapon. Keep the same fine painted 2D TWILIGHT style and original cool gray palette. No 3D model or 3D animation.\n\nCorrect ONLY the failed South attack impact gesture. The actual actor attacks a player BELOW it on the isometric screen. In the old pose the claw stops high above the player's helmet. Draw an anatomical forward/down-screen LUNGE: pitch the hooded upper torso toward the bottom of the image, bend one shoulder and elbow naturally forward, and extend the near skeletal hand DOWN toward the foreground/bottom so its fingertips reach the opponent's head plane, well below its own skull. The other connected arm stays bent out to the side for balance. The upper body leans forward/down while the long connected trailing robe flows backward/up the screen. This must be real new arm/shoulder/torso articulation, not translation, rotation, scaling or mirroring of the old still. No detached hand or separated cloth pieces. Face remains SOUTH/front; no rear camera or side view. Keep both arms attached under the same hood/robe, never add a third limb.\n\n1536x1024 transparent canvas, one complete body comfortably inside all edges. Approximate framing: figure centered near x768, visible trailing robe reaches upward behind the pitched torso, overall visible body height about 760px, skull about 90px high (preserve small skull/body proportions), forward claw fingertips near y880-920. The hooded skull should lean toward foreground, around y480-570, with shoulder below it and a believable upper arm/forearm/hand chain reaching downward. The robe remains one continuous body and still trails behind the lunge. Do not stretch the arm into a tentacle. No ground shadow, no background, no colored glow, no impact effect, no text, no grid. Real transparent alpha; only one connected visible body including cloth and both hands. This is a single unapproved impact-pose repair; do not regenerate any other motion frame.",
+    "referenced_image_paths": [
+      "/workspace/scratch/pr100-review-20261016/servant-local-impact-repair01/S-impact-original-QA.png",
+      "/workspace/scratch/pr100-review-20261016/servant-local-impact-repair01/own-original-reference-QA.png"
+    ],
+    "transparent_background": true
+  },
+  "references": [
+    {
+      "path": "/workspace/scratch/pr100-review-20261016/servant-local-impact-repair01/S-impact-original-QA.png",
+      "sha256": "0255f0928dac8988673b1d23589cc4464e9fa00cbe7d24c60e432d83d94cd9de"
+    },
+    {
+      "path": "/workspace/scratch/pr100-review-20261016/servant-local-impact-repair01/own-original-reference-QA.png",
+      "sha256": "6230bbbe9f0a2f6155be32282fe91d68301870a07e5e31bd4d1b2d6d2f1f2c06"
+    }
+  ],
+  "status": "PREPARED_SINGLE_BAD_FRAME_ONLY",
+  "completed_added": 0
+}

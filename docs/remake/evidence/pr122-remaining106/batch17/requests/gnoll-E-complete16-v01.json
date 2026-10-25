@@ -1,0 +1,11 @@
+{
+  "name": "gnoll-E-complete16-v01",
+  "request": {
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/runtime/references/gnoll-reference.png"
+    ],
+    "prompt": "Create an animation source of the EXACT spotted hyena GNOLL in the reference. Ignore the tiny unrelated cut-off fragment above its head in reference. One lean hunched hyena beast with tan dark-spotted fur, dark muzzle, snarling teeth, large ears, brown leather ragged harness/skirt, long tail. Exactly ONE long wood-handled iron POLEAXE in anatomical RIGHT hand and exactly ONE round red-white weathered shield strapped to LEFT forearm; poleaxe is NOT a sword. Keep all equipment physically connected to hands/forearm, tail attached to hips. EAST direction only: true right-facing isometric side view, muzzle and toes point screen RIGHT, consistent handedness not mirrored. Exactly SIXTEEN distinct whole bodies, FOUR columns FOUR rows. Central HALF of each cell used, huge transparent empty gutters, every complete weapon/shield/tail/body within own cell, no overlapping bounding boxes. Same real character scale throughout. Temporal row-major slots: row1 IDLE0 IDLE1 WALK0 WALK1; row2 WALK2 WALK3 WALK4 WALK5; row3 ATTACK0 ATTACK1 ATTACK2 HIT0; row4 HIT1 DEATH0 DEATH1 DEATH2. Idle2 distinct grounded breathing. Walk6 clear alternating RIGHT and LEFT hind-foot support: 0/1/2 right supporting while left foot lifts/passes/swings;3/4/5 left supporting while right lifts/passes/swings. Real hip/knee/ankle, torso and shoulder articulation; at least one paw planted each frame, shield and poleaxe travel with arms not pasted to static body. Attack3 poleaxe wind-up, connected forward/down contact, recovery with grounded feet; no extra weapon trails or motion clones. Hit2 grounded braced recoils. Death3 buckle, side collapse, inert horizontal corpse, all limbs/head/tail/equipment stay visibly joined, poleaxe still in hand and shield still strapped. True alpha0 transparent background, solid connected clean silhouettes without detached specks, aura, shadows, floor, debris, text, grid or borders. Newly authored project-reference motion, not recovered original."
+  },
+  "image_path": "/workspace/generated_images/exec-1544b7ae-73e3-4e41-9e30-fa93eac20206.png"
+}

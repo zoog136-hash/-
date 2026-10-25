@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v04",
+  "source_batch": "batch03",
+  "status": "GENERATED_SOURCE_QC_HOLD_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png",
+    "/workspace/scratch/girtas-E-walk-guide-v04/girtas-E-walk-six-phase-support-guide-v04.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802",
+    "/workspace/scratch/girtas-E-walk-guide-v04/girtas-E-walk-six-phase-support-guide-v04.png": "1852f96b2e2a05ec1d08202d50b7a2df9a7e64e1ef74822e88eebb16449ee3f2"
+  },
+  "prompt": "Make an actual six-phase WALK animation sprite sheet for Girtas, preserving this exact original character. Output transparent1024x1536, TWO COLUMNS x THREE ROWS, row-major phases0..5, exactly one complete full-body figure per512x512 cell. All6 face EAST/screenRIGHT in the same side-on elevated game camera.\n\nREFERENCE ROLES: image1 is the exact original character and absolute identity authority; image2 is its enlarged identity/material draft; image3 is an explicit six-phase NEAR/FAR LEG POSE GUIDE and has absolute authority over leg positions and which anatomical leg is ahead/behind. The guide is conditioning only: do NOT render guide colors, text, stick limbs, baseline or gray background in final art. Render the character's own detailed black/gold armored legs/boots in those six guide poses. Do not copy the canonical draft's unchanged staggered standing legs six times.\n\nCRITICAL SUPPORT EXCHANGE: anatomicalRIGHT leg is NEAR/camera-side (BLUE in guide), anatomicalLEFT leg is FAR (MAGENTA in guide). Frame0 has NEAR right boot AHEAD/screenRIGHT at heel contact, FAR left boot BEHIND/screenLEFT at toe-off. Frame1 has NEAR right boot planted beneath hip, FAR left knee flexed passing forward, its foot lifted. Frame2 has NEAR right boot BEHIND/screenLEFT on toe, FAR left leg reaching AHEAD/screenRIGHT. Frame3 has FAR left boot AHEAD/screenRIGHT at heel contact, NEAR right boot BEHIND/screenLEFT at toe-off: this MUST be the opposite leading leg from frame0. Frame4 has FAR left boot planted beneath hip, NEAR right knee flexed passing forward with lifted foot: opposite supporting leg from frame1. Frame5 has FAR left boot BEHIND/screenLEFT, NEAR right leg reaching AHEAD/screenRIGHT. Near limb stays drawn in front of far limb where they overlap, so anatomical limb identity is readable. Genuine alternating contact/support/advance; no airborne run and no six copies of the same front leg. Follow each corresponding diagram hip-knee-ankle chain explicitly, even when the long skirt drapes over upper thigh. Preserve dark long skirt panels, but let hem move naturally and part/overlap enough to show both boots and the support exchange without shortening the garment or inventing new armor.\n\nCHARACTER IDENTITY: visible pale face and long pale/silver hair; original high gold/black head ornaments, thin LONG GOLD RADIAL SPINES physically connected behind shoulder/back, long DARK skirt/coat lower armor with GOLD EDGE TRIM, dark boots, same original long THIN SINUOUS orange/gold glowing weapon held low in anatomicalRIGHT/near-camera hand. Keep this weapon's entire curve/tip visible and same hand across6. No redV mask, no broad orange flame-feather wings, no muscular demon redesign, no short broad sword. Keep original body proportions/camera/materials/equipment and coherent head/torso size across phases; conservative hidden-side detail only. Body/gear can articulate, not mirror.\n\nFrame inside each512cell with all physical silhouette/spikes/hair/weapon/boots within local x48..464,y45..462, boots near y440 and transparent gutters around every pose. All6 bodies same scale; don't solve leg poses by changing character or torso size. Fine armor opaque; alpha0 outside silhouette and between long connected gold spines. No floating rays, sparks, large bloom, backdrop, floor, shadow, fog, checkerboard, grid, labels or extra characters. Output game-ready high-detail native poses, not a poster. The actual visual result must show both near-leg-forward and FAR-leg-forward contacts and both opposite passing poses exactly as the provided motion guide.",
+  "transparent_background": true,
+  "expected_poses": 6,
+  "phase_contract": [
+    "near_right_forward_far_left_back",
+    "near_right_support_far_left_passing",
+    "near_right_back_far_left_forward",
+    "far_left_forward_near_right_back",
+    "far_left_support_near_right_passing",
+    "far_left_back_near_right_forward"
+  ],
+  "method_change": "New explicit6-phase colored near/far skeletal poseguide conditioned as third reference; previous v03 text-only gait instructions failed actual support exchange. No v03 image reused.",
+  "prior_hold_source": "/workspace/scratch/girtas-E-walk-repair/girtas-E-walk-v03.png",
+  "user_authorization": "Production image tools allowed; one materially changed attempt, no main chat images, no repo edits, no new approval.",
+  "repo_mutations": false,
+  "generated_original_path": "/workspace/generated_images/exec-d2e61d28-cc92-4870-bf96-49c017021f93.png",
+  "preserved_raw_path": "/workspace/scratch/girtas-E-walk-guide-v04/girtas-E-walk-v04.png",
+  "generated_sha256": "b55b61971b66f904e1cb8992293fb8082ffbf52cabd1851888f8e2f93e4f6635",
+  "generated_bytes": 2534600,
+  "generated_dimensions": [
+    1024,
+    1536
+  ],
+  "source_qc_status": "HOLD_NEAR_FAR_SUPPORT_EXCHANGE_UNPROVEN",
+  "source_qc_path": "/workspace/scratch/girtas-E-walk-guide-v04/private-source-qc-girtas-E-walk-v04.json",
+  "animation_approved": false
+}

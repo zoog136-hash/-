@@ -1,0 +1,158 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "hit",
+  "version": "NWhitSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+    "base_geometry_sha256": "24ea383ac409ffd91b5c468a91db98153cfd83489df35b4565ea11fcb1ee07bc",
+    "direction": "NW",
+    "regions": [
+      [
+        460,
+        15,
+        610,
+        1105
+      ],
+      [
+        1996,
+        15,
+        610,
+        1105
+      ],
+      [
+        460,
+        1551,
+        610,
+        1105
+      ],
+      [
+        1996,
+        1551,
+        611,
+        1105
+      ],
+      [
+        460,
+        3087,
+        610,
+        1105
+      ],
+      [
+        1996,
+        3087,
+        610,
+        1105
+      ]
+    ],
+    "nearest_owner_sha256": "00a910530a4d3dbdbd0402d0bf7814d0f4a8a214dacbf30c9a6b04a5ddd831e6",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 2d8747f73668c57dcde03064931d78514ac308baf8986ccac1acc908806db10c"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+    "direction": "NW",
+    "role": "hit",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        641,
+        1058
+      ],
+      [
+        2177,
+        1058
+      ],
+      [
+        641,
+        2594
+      ],
+      [
+        2177,
+        2594
+      ],
+      [
+        641,
+        4130
+      ],
+      [
+        2177,
+        4130
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "2d8747f73668c57dcde03064931d78514ac308baf8986ccac1acc908806db10c",
+  "authored_common_root_float": [
+    641,
+    1058.3
+  ],
+  "common_root_integer": [
+    641,
+    1058
+  ],
+  "common_root_rounding_delta": [
+    0,
+    -0.2999999999999545
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Six dedicated hit phases articulate head/spine recoil, a complete LEFT guard arm and coat lag into impact, counterbalance and recovery.",
+      "Native LEFT shoulder/cuff/white sleeve/bracer/complete hand remain visibly connected through guard, recoil and counterbalance; original garment and rear-NW identity are retained.",
+      "Both complete actual flat shoes and the true calf-to-shoe surfaces are continuous after removing the earlier misplaced airborne toe fragment. The observed fixed stance remains unchanged through all six reactions.",
+      "The complete anatomical RIGHT-held double-ended staff and its original grip/arm stay coherent; actual leg material32843px and complete staff material23241px are independently unchanged across all six source frames.",
+      "All six actual poses have one strong alpha100/4connected body and are individually distinct; the source sequence is dedicated to hit reaction rather than an old locomotion/attack clip."
+    ],
+    "visual_limitations": [
+      "Final atlas/request preserves all six reviewed actual source RGBA pixels. Uniform root rounding adds no relative fixed-stance drift.",
+      "This is an actual source/visible six-phase hit gate. Exact final atlas/request binding and scoped Godot/Player/action checks remain pending.",
+      "Fixed heel/leg material verifies visible stationary support. Foot yaw is retained from the actual flat shoe material; hidden joint/depth anatomy is not uniquely recovered.",
+      "Two constant very weak staff-edge AA clusters total7px at alpha18..22 remain; their RGB and source semantic provenance match the original staff edge. They are not detached hands, armor or additional strong bodies. No threshold was changed to hide them.",
+      "Detailed actor approvals remain unchanged; only this new NW HIT source cycle is approved here."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+    "raw_bytes": 2178382,
+    "request_sha256": "5bd4d6c631a11d04a5a8818b09d3c12b909a8dadfcb5f0d5d1c6e57b75b127e5",
+    "review_sha256": "a113176c7ff4250c9a0d08ef2dfaf9d221aebafaf6c103e99557bdbb21932202"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-NW-hit-actual-packed-r001-20261020/thunder_female-NW-hit-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-5qmlagnq/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-NW-hit-actual-packed-r001-20261020/request-NWhitSixActualRig01.json": "5bd4d6c631a11d04a5a8818b09d3c12b909a8dadfcb5f0d5d1c6e57b75b127e5",
+      "/workspace/scratch/mythic413-NW-hit-actual-packed-r001-20261020/thunder_female-NW-hit-six-actual-poses-r001.png": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NWhitSixActualRig01-5bd4d6-independent-final-source-cycle-PASS-v01.json": "a113176c7ff4250c9a0d08ef2dfaf9d221aebafaf6c103e99557bdbb21932202",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-hit-NWhitSixActualRig01.png",
+  "output_sha256": "833a96b43d083a3d3234eb0254869f835886980d5e9c62cfb68dff50725e5aa4",
+  "output_bytes": 2178382,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-5qmlagnq/reviewed-source.png"
+}

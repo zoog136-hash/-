@@ -1,0 +1,262 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:왜곡의 제니스 퀸": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "death",
+          "direction": "S",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/S-death-v01.png",
+          "source_sha256": "45e744dccb92f96ec653eb768d33f672e53b6c08a1862aff696a2b99ee247e0d",
+          "texture": "assets/actors/eight_direction/boss_draft_first/zenith_queen/sources/S-death-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  31,
+                  17,
+                  484,
+                  503
+                ],
+                "margin": [
+                  335,
+                  201,
+                  636,
+                  617
+                ],
+                "source_anchor": [
+                  256,
+                  516
+                ],
+                "rgba_sha256": "a40a2b4a8c32d269e0e2ad55c0df9ff2600aab001a02a5cbe09e05697200dc73",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  546,
+                  67,
+                  463,
+                  454
+                ],
+                "margin": [
+                  338,
+                  250,
+                  657,
+                  666
+                ],
+                "source_anchor": [
+                  768,
+                  517
+                ],
+                "rgba_sha256": "79827f20104fc22198d8dce9b9bae6dd9db65f1fd0c1471894b4783fb6680019",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  1046,
+                  128,
+                  462,
+                  393
+                ],
+                "margin": [
+                  326,
+                  311,
+                  658,
+                  727
+                ],
+                "source_anchor": [
+                  1280,
+                  517
+                ],
+                "rgba_sha256": "2ced8871d6612b74e1640cc26278e6c56f800b6f6f3b18385d7ba1da54e1ad34",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  27,
+                  624,
+                  486,
+                  346
+                ],
+                "margin": [
+                  331,
+                  358,
+                  634,
+                  774
+                ],
+                "source_anchor": [
+                  256,
+                  966
+                ],
+                "rgba_sha256": "8d1cfd613a3d80d64c85b32143316c9fedf9310478f080d6eddd51cb140bc62e",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  522,
+                  633,
+                  494,
+                  334
+                ],
+                "margin": [
+                  314,
+                  370,
+                  626,
+                  786
+                ],
+                "source_anchor": [
+                  768,
+                  963
+                ],
+                "rgba_sha256": "2a7bf902318da85e6bab525a76bdb08bd6af1d699d6b90c7e3edc30a27d953d1",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  1023,
+                  652,
+                  505,
+                  297
+                ],
+                "margin": [
+                  303,
+                  407,
+                  615,
+                  823
+                ],
+                "source_anchor": [
+                  1280,
+                  945
+                ],
+                "rgba_sha256": "aa4ccd036986f50e08646d3cf74732f7e582a26dc169be9b065c99d8edecc9f8",
+                "canvas_size": [
+                  1120,
+                  1120
+                ],
+                "foot": [
+                  560,
+                  700
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 418.5,
+            "canvas_size": [
+              1120,
+              1120
+            ],
+            "foot": [
+              560,
+              700
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/resume210-min032/SpriteFrames.tres",
+      "frames_sha256": "dfd753b74e7882f2084a6570d45a888236f692994530634f02477ae22d02f98f",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/resume210-min032/NativeMotionProfile.tres",
+      "native_profile_sha256": "edc7a40394b00c7401143fa6cdae0b413a49b3b791eb647dfc54e841b335fb01",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [],
+  "source_drafts_saved": 1,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

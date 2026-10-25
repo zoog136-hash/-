@@ -1,0 +1,1275 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "SE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v03composite01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "request_kind": "LOSSLESS_REVIEWED_POSE_MAP_ASSEMBLY",
+  "references": [
+    "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png",
+    "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/girtas-SE-walk-right-halfcycles-v01.png",
+    "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/girtas-SE-walk-left-contact-key-v01.png",
+    "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png",
+    "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/girtas-SE-walk-precontact-from-right-key-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png": "1a08a21b414edcf7aa5ac2e1661dde21749c5d94daafd2d467d45625b3d0181c",
+    "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/girtas-SE-walk-right-halfcycles-v01.png": "5e81f3513f9e818ac92e6d8f5c2465afb28391778134e451aa933635f28d539c",
+    "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/girtas-SE-walk-left-contact-key-v01.png": "dc084eda0d10449e87db6c92ca12b8145de67f1b0db46a8c22c75027dc3e66e8",
+    "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png": "5b7921d64d52fa1c9b71e5edad98e1304fd1736c30418071862da7e842ed6d40",
+    "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/girtas-SE-walk-precontact-from-right-key-v02.png": "d6f694992d64ac6260dc601809eb09145c127fb2b5420b78c130a80193c3c49f"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Replace originalSEwalkwrongredmask/flamefan/segmentedpants sourcewith6newactualfaithfuloriginalcamera/gaitkeys. Samepalehair/hardgoldspines/longdarkrobe/rightoriginalsinuousweapon, oppositefootcontacts/passing/toeoff/reach. Preservealloriginalrawrequests/partialHOLDs; noactorapprovalfromgeometry/sourcealone.",
+  "prompt": "No newimagegeneration inthisintegrationrequest. ExactRGBA6reviewedindividualsourceposemap assembly, noresize/mirror/recolor/cleanup. Completegear+alpha16coverageandoutwardtransparentprojectedrootpadding verified byunchangedguards; independentfull6source/gait/rootcandidatePASS. ActualcompiledSpriteFramesPlayerandfinalactorapprovalstillrequired.",
+  "user_authorization": "ResumeexistingPR122actualanimationproduction, preserveexistingassets/approvals/colorprofiles, privateproductionimagesallowed/mainchatimagesforbidden.",
+  "requested_at": "2026-10-19T14:12:59.373905+00:00",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+    "canvas_size": 2048,
+    "review_basis": "ExactRGBA6faithfulSEwalksourcekeyswithstrict6geometry/completegear; independentfull6gait/model/projectedrootcandidatePASS. Allowedvirtual2048, explicitoutwardtransparentrootpaddingunderunchangedowner/alpha/clipguards. FinalactualPlayer/actorapprovalstillHOLD.",
+    "assembly_proof": "/workspace/scratch/girtas-SE-walk-reviewed-composite-v01/girtas-SE-walk-reviewed-composite-v01.assembly.json",
+    "assembly_proof_sha256": "c9c3a115594bef8c8868e844ff4f696959508c2c232465ab557af5adf219d701",
+    "source_art_review": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/independent-source-and-projected-root-review.json",
+    "source_art_review_sha256": "e9a8609a75a4fa16d9c89b3577e94e8182c05e2e3cd198e24ea63d31922eed7a",
+    "actor_approval": false
+  },
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+    "base_geometry_sha256": "556bab018e1a64ddd8baa499c5bcf9c7899150f9ebb6028d312582580e7a0160",
+    "direction": "SE",
+    "review_basis": "Outward-only transparent projectedground-root padding under unchanged owner/RGBA/disjointness checks. FarLEFT support-origin26canonicaldepth from exact selectedidle. Independentcandidate review pending. Independentfull6source/rootcandidatePASS; thisregionoperationonlyprovesoutwardpadding/ownership/RGBA, notactorapproval.",
+    "regions": [
+      [
+        99,
+        43,
+        1082,
+        1194
+      ],
+      [
+        1515,
+        223,
+        810,
+        834
+      ],
+      [
+        242,
+        1511,
+        796,
+        818
+      ],
+      [
+        1355,
+        1325,
+        1129,
+        1248
+      ],
+      [
+        245,
+        2781,
+        790,
+        876
+      ],
+      [
+        1376,
+        2618,
+        1087,
+        1219
+      ]
+    ],
+    "nearest_owner_sha256": "f5894da37fa2b6c8ec8ce1239332941c8f3b314bf24573337ab8c71584593d12"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+    "canvas_size": 2048,
+    "authored_pose_canvas_sizes": [
+      2208,
+      1536,
+      1536,
+      2352,
+      1632,
+      2240
+    ],
+    "source_anchors": [
+      [
+        648,
+        1233
+      ],
+      [
+        1945,
+        1053
+      ],
+      [
+        680,
+        2325
+      ],
+      [
+        1931,
+        2571
+      ],
+      [
+        649,
+        3655
+      ],
+      [
+        1930,
+        3835
+      ]
+    ],
+    "review_basis": "NEW SE projected-ground/root authoring from exact selectedidle nearRIGHT/farLEFT sole separation26canonicalpx. FarLEFT-support half3/4/5 retains projected side depth and actual fore/aft stride. Support toes/raised soles are not flattened to same horizontalY. Original PNG/rigidCs unchanged. Candidate body/stride/transition review pending. Independent6sourceandprojectedrootcandidatePASS nowpinned /workspace/scratch/girtas-SE-walk-independent-N-author-qc/independent-source-and-projected-root-review.json SHA256 e9a8609a75a4fa16d9c89b3577e94e8182c05e2e3cd198e24ea63d31922eed7a. ActualcompiledPlayer/idletransition/5to0 andactorapprovalstillHOLD.",
+    "actor_approval": false,
+    "key": "transform:267",
+    "direction": "SE",
+    "role": "walk",
+    "runtime_validation": "SOURCE_AND_AUTHORED_ROOT_INDEPENDENT_PASS_ACTUAL_PLAYER_HOLD",
+    "independent_source_review": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/independent-source-and-projected-root-review.json",
+    "independent_source_review_sha256": "e9a8609a75a4fa16d9c89b3577e94e8182c05e2e3cd198e24ea63d31922eed7a"
+  },
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "layout_revised_poses": 0,
+  "approval": "SOURCE_CANDIDATE_PASS_RUNTIME_AND_ACTOR_HOLD",
+  "source_provenance": {
+    "assembly_spec": "/workspace/scratch/girtas-SE-walk-reviewed-composite-v01/spec.json",
+    "assembly_spec_sha256": "59214ab091686a43a0d9bdc0462531c32253041ae9ffc3c8266d66d65cf1303a",
+    "assembly_spec_inline": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:267",
+      "role": "walk",
+      "direction": "SE",
+      "poses": [
+        {
+          "path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png",
+          "source_sha256": "1a08a21b414edcf7aa5ac2e1661dde21749c5d94daafd2d467d45625b3d0181c",
+          "region": [
+            71,
+            30,
+            1082,
+            1194
+          ],
+          "rgba_sha256": "c881fc8a43a159f792d8e4c566dc1c32b02e9693a4c20b1b17526412cf27df61",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "RIGHT near lowerLEFT forward heel contact; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "intended_game_phase": 0,
+          "source_request_path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/request.json",
+          "source_request_sha256": "07bf8fef23fbcef9b04a89a546dee0a0b2154656d38e895335dee06e28baa925",
+          "source_author_review_path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/result.json",
+          "source_author_review_sha256": "13de0f0b62fab0d300348314e3ca1ec324ecd0877d58eefd386f525a58d8a1cf"
+        },
+        {
+          "path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/girtas-SE-walk-right-halfcycles-v01.png",
+          "source_sha256": "5e81f3513f9e818ac92e6d8f5c2465afb28391778134e451aa933635f28d539c",
+          "region": [
+            30,
+            18,
+            810,
+            834
+          ],
+          "rgba_sha256": "07847b361251f5e66eff9a96c6eae6b430b6ba86896fb4b922f94b72054403da",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "RIGHT near planted midstance, LEFT far bentpassing; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "intended_game_phase": 1,
+          "source_request_path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/request.json",
+          "source_request_sha256": "3ee4dee6a270cc564e2c17311ed9f126e7fa24b6ffbc93686416cbaba0afd962",
+          "source_author_review_path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/result.json",
+          "source_author_review_sha256": "99a69ad1d0848fd7feee87c654f3c892ff4919932955d2a54bf06f0aa3f938d3"
+        },
+        {
+          "path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/girtas-SE-walk-right-halfcycles-v01.png",
+          "source_sha256": "5e81f3513f9e818ac92e6d8f5c2465afb28391778134e451aa933635f28d539c",
+          "region": [
+            874,
+            18,
+            796,
+            818
+          ],
+          "rgba_sha256": "2a45435ecb6edc1307ae9f45182bc710e41dfdc6b14745bce0bb82a0c626683d",
+          "source_pose": 1,
+          "newly_authored": true,
+          "review_basis": "RIGHT near trailingtoeoff, LEFT far forwardreach; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "intended_game_phase": 2,
+          "source_request_path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/request.json",
+          "source_request_sha256": "3ee4dee6a270cc564e2c17311ed9f126e7fa24b6ffbc93686416cbaba0afd962",
+          "source_author_review_path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/result.json",
+          "source_author_review_sha256": "99a69ad1d0848fd7feee87c654f3c892ff4919932955d2a54bf06f0aa3f938d3"
+        },
+        {
+          "path": "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/girtas-SE-walk-left-contact-key-v01.png",
+          "source_sha256": "dc084eda0d10449e87db6c92ca12b8145de67f1b0db46a8c22c75027dc3e66e8",
+          "region": [
+            38,
+            22,
+            1129,
+            1190
+          ],
+          "rgba_sha256": "5536af2b9b103035980fd5a967ece458f665d86d760840b4ac5976beabbf56bc",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "LEFT far lowerRIGHT forwardheelcontact; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "intended_game_phase": 3,
+          "source_request_path": "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/request.json",
+          "source_request_sha256": "f2e1fb6626580ef3588d5757fdeff0a20f86462f1586a850caf9d6c897d14ce1",
+          "source_author_review_path": "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/result.json",
+          "source_author_review_sha256": "86f21ce5e4c62d252a916b77574cf4b2ba7430c145abd11c9a51d29a1cb59a96"
+        },
+        {
+          "path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png",
+          "source_sha256": "5b7921d64d52fa1c9b71e5edad98e1304fd1736c30418071862da7e842ed6d40",
+          "region": [
+            62,
+            15,
+            790,
+            837
+          ],
+          "rgba_sha256": "8e80df139ca18da01c03ce4184044f1f172030080d9a6c35683d03635542a62c",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "LEFT far planted midstance, RIGHT near bentpassing; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "intended_game_phase": 4,
+          "source_request_path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/request.json",
+          "source_request_sha256": "488caf4061b35f528a4f5bccbcbefab6521581ee31ca74175d5ae47b12c1a0c0",
+          "source_author_review_path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/result.json",
+          "source_author_review_sha256": "da0f9e0e91d46136217124692283efdcecbd650e0a1cd11c23d8073ff09befdb"
+        },
+        {
+          "path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/girtas-SE-walk-precontact-from-right-key-v02.png",
+          "source_sha256": "d6f694992d64ac6260dc601809eb09145c127fb2b5420b78c130a80193c3c49f",
+          "region": [
+            70,
+            31,
+            1087,
+            1164
+          ],
+          "rgba_sha256": "5f6dc20fe5e1bff045cfe8659a0e888ee247cb6881c43a643413d3b58e72f640",
+          "source_pose": 0,
+          "newly_authored": true,
+          "review_basis": "LEFT far trailingtoeoff, RIGHT near lowerLEFT heelprecontact; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "intended_game_phase": 5,
+          "source_request_path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/request.json",
+          "source_request_sha256": "dac72f59afd6f959efb070995afb8eadfa33c88609e37e8f775cff29ccc95855",
+          "source_author_review_path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/result.json",
+          "source_author_review_sha256": "89f20a6cf416fd50044a4db93d26b9e0b730b91331ecc7374b53b6fe4889583d"
+        }
+      ],
+      "newly_authored_poses": 6,
+      "reused_game_animation_poses": 0,
+      "source_visual_scope": "Individual6keys correctfaithfulSEcamera+poseownership; fullcycleabsolutephysicalscale andindependentQCpending",
+      "actor_approval": false
+    },
+    "assembly_proof": "/workspace/scratch/girtas-SE-walk-reviewed-composite-v01/girtas-SE-walk-reviewed-composite-v01.assembly.json",
+    "assembly_proof_sha256": "c9c3a115594bef8c8868e844ff4f696959508c2c232465ab557af5adf219d701",
+    "assembly_proof_inline": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:267",
+      "role": "walk",
+      "assembler_sha256": "a9ee1e4f861a30b7c4a458722ddbb55d04948ee3702e69f2ef7e902cd938203c",
+      "direction": "SE",
+      "metadata_sha256": "59214ab091686a43a0d9bdc0462531c32253041ae9ffc3c8266d66d65cf1303a",
+      "metadata_path": "/workspace/scratch/girtas-SE-walk-reviewed-composite-v01/spec.json",
+      "metadata_hash_basis": "file_bytes",
+      "output": "/workspace/scratch/girtas-SE-walk-reviewed-composite-v01/girtas-SE-walk-reviewed-composite-v01.png",
+      "output_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "output_canvas": [
+        2560,
+        3840
+      ],
+      "cell_size": [
+        1280,
+        1280
+      ],
+      "virtual_canvas_size": 2048,
+      "poses": [
+        {
+          "phase": 0,
+          "source_path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png",
+          "source_sha256": "1a08a21b414edcf7aa5ac2e1661dde21749c5d94daafd2d467d45625b3d0181c",
+          "source_pose": 0,
+          "source_region": [
+            71,
+            30,
+            1082,
+            1194
+          ],
+          "rgba_sha256": "c881fc8a43a159f792d8e4c566dc1c32b02e9693a4c20b1b17526412cf27df61",
+          "visible_pose_sha256": "b634a0b2026b59637cc112c5dfae2075189fdba7a76b72077956f42642bfff62",
+          "newly_authored": true,
+          "review_basis": "RIGHT near lowerLEFT forward heel contact; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "output_region": [
+            99,
+            43,
+            1082,
+            1194
+          ],
+          "translation": [
+            28,
+            13
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 469948
+        },
+        {
+          "phase": 1,
+          "source_path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/girtas-SE-walk-right-halfcycles-v01.png",
+          "source_sha256": "5e81f3513f9e818ac92e6d8f5c2465afb28391778134e451aa933635f28d539c",
+          "source_pose": 0,
+          "source_region": [
+            30,
+            18,
+            810,
+            834
+          ],
+          "rgba_sha256": "07847b361251f5e66eff9a96c6eae6b430b6ba86896fb4b922f94b72054403da",
+          "visible_pose_sha256": "34bdfdec388011fbe5d734c6577f0526c636c6ab36a746fc767593490b15e87d",
+          "newly_authored": true,
+          "review_basis": "RIGHT near planted midstance, LEFT far bentpassing; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "output_region": [
+            1515,
+            223,
+            810,
+            834
+          ],
+          "translation": [
+            1485,
+            205
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 254483
+        },
+        {
+          "phase": 2,
+          "source_path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/girtas-SE-walk-right-halfcycles-v01.png",
+          "source_sha256": "5e81f3513f9e818ac92e6d8f5c2465afb28391778134e451aa933635f28d539c",
+          "source_pose": 1,
+          "source_region": [
+            874,
+            18,
+            796,
+            818
+          ],
+          "rgba_sha256": "2a45435ecb6edc1307ae9f45182bc710e41dfdc6b14745bce0bb82a0c626683d",
+          "visible_pose_sha256": "fe038cd59a9c60a5f4ebb077221634cc409e75ff2387bc3baf0043c144f969fb",
+          "newly_authored": true,
+          "review_basis": "RIGHT near trailingtoeoff, LEFT far forwardreach; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "output_region": [
+            242,
+            1511,
+            796,
+            818
+          ],
+          "translation": [
+            -632,
+            1493
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 251244
+        },
+        {
+          "phase": 3,
+          "source_path": "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/girtas-SE-walk-left-contact-key-v01.png",
+          "source_sha256": "dc084eda0d10449e87db6c92ca12b8145de67f1b0db46a8c22c75027dc3e66e8",
+          "source_pose": 0,
+          "source_region": [
+            38,
+            22,
+            1129,
+            1190
+          ],
+          "rgba_sha256": "5536af2b9b103035980fd5a967ece458f665d86d760840b4ac5976beabbf56bc",
+          "visible_pose_sha256": "7fb41740bb24e8f3039b2165f918fa556ad84ad50f89eb2f01fdf3576ccaf321",
+          "newly_authored": true,
+          "review_basis": "LEFT far lowerRIGHT forwardheelcontact; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "output_region": [
+            1355,
+            1325,
+            1129,
+            1190
+          ],
+          "translation": [
+            1317,
+            1303
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 496790
+        },
+        {
+          "phase": 4,
+          "source_path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png",
+          "source_sha256": "5b7921d64d52fa1c9b71e5edad98e1304fd1736c30418071862da7e842ed6d40",
+          "source_pose": 0,
+          "source_region": [
+            62,
+            15,
+            790,
+            837
+          ],
+          "rgba_sha256": "8e80df139ca18da01c03ce4184044f1f172030080d9a6c35683d03635542a62c",
+          "visible_pose_sha256": "6a6b3673fe75ada7aba84db9cd744a585aabd103c5f71579f1f1824e359b9efb",
+          "newly_authored": true,
+          "review_basis": "LEFT far planted midstance, RIGHT near bentpassing; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "output_region": [
+            245,
+            2781,
+            790,
+            837
+          ],
+          "translation": [
+            183,
+            2766
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 238191
+        },
+        {
+          "phase": 5,
+          "source_path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/girtas-SE-walk-precontact-from-right-key-v02.png",
+          "source_sha256": "d6f694992d64ac6260dc601809eb09145c127fb2b5420b78c130a80193c3c49f",
+          "source_pose": 0,
+          "source_region": [
+            70,
+            31,
+            1087,
+            1164
+          ],
+          "rgba_sha256": "5f6dc20fe5e1bff045cfe8659a0e888ee247cb6881c43a643413d3b58e72f640",
+          "visible_pose_sha256": "a346c2bcdb7802e43f8603d60536098e744f368b1011db46b8881a35231e9955",
+          "newly_authored": true,
+          "review_basis": "LEFT far trailingtoeoff, RIGHT near lowerLEFT heelprecontact; originalfaithfulSEmodel. Fullcyclephysicalscale andruntimechecks pending.",
+          "output_region": [
+            1376,
+            2618,
+            1087,
+            1164
+          ],
+          "translation": [
+            1306,
+            2587
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 481170
+        }
+      ],
+      "newly_authored_poses": 6,
+      "reused_poses": 0,
+      "preserved_region_rgba_exact": true,
+      "preserved_pose_alpha_gt16": true,
+      "resampled": false,
+      "mirrored": false,
+      "recolored": false,
+      "cleaned_pixels": 0,
+      "strict_importer": "PASS",
+      "geometry": {
+        "image_size": [
+          2560,
+          3840
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SE",
+            "region": [
+              99,
+              43,
+              1082,
+              1194
+            ],
+            "margin": [
+              483,
+              90,
+              966,
+              854
+            ],
+            "source_anchor": [
+              640,
+              1233
+            ],
+            "rgba_sha256": "c881fc8a43a159f792d8e4c566dc1c32b02e9693a4c20b1b17526412cf27df61"
+          },
+          {
+            "row": 1,
+            "direction": "SE",
+            "region": [
+              1515,
+              223,
+              810,
+              834
+            ],
+            "margin": [
+              619,
+              450,
+              1238,
+              1214
+            ],
+            "source_anchor": [
+              1920,
+              1053
+            ],
+            "rgba_sha256": "07847b361251f5e66eff9a96c6eae6b430b6ba86896fb4b922f94b72054403da"
+          },
+          {
+            "row": 2,
+            "direction": "SE",
+            "region": [
+              242,
+              1511,
+              796,
+              818
+            ],
+            "margin": [
+              626,
+              466,
+              1252,
+              1230
+            ],
+            "source_anchor": [
+              640,
+              2325
+            ],
+            "rgba_sha256": "2a45435ecb6edc1307ae9f45182bc710e41dfdc6b14745bce0bb82a0c626683d"
+          },
+          {
+            "row": 3,
+            "direction": "SE",
+            "region": [
+              1355,
+              1325,
+              1129,
+              1190
+            ],
+            "margin": [
+              459,
+              94,
+              919,
+              858
+            ],
+            "source_anchor": [
+              1920,
+              2511
+            ],
+            "rgba_sha256": "5536af2b9b103035980fd5a967ece458f665d86d760840b4ac5976beabbf56bc"
+          },
+          {
+            "row": 4,
+            "direction": "SE",
+            "region": [
+              245,
+              2781,
+              790,
+              837
+            ],
+            "margin": [
+              629,
+              447,
+              1258,
+              1211
+            ],
+            "source_anchor": [
+              640,
+              3614
+            ],
+            "rgba_sha256": "8e80df139ca18da01c03ce4184044f1f172030080d9a6c35683d03635542a62c"
+          },
+          {
+            "row": 5,
+            "direction": "SE",
+            "region": [
+              1376,
+              2618,
+              1087,
+              1164
+            ],
+            "margin": [
+              480,
+              120,
+              961,
+              884
+            ],
+            "source_anchor": [
+              1920,
+              3778
+            ],
+            "rgba_sha256": "5f6dc20fe5e1bff045cfe8659a0e888ee247cb6881c43a643413d3b58e72f640"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 1186.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "approval": false,
+      "visual_approval": "NOT_RUN",
+      "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+      "external_physical_scale_review": null,
+      "region_height_span": [
+        818,
+        1194
+      ],
+      "possible_region_height_mismatch": true,
+      "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+    },
+    "independent_source_review": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/independent-source-and-projected-root-review.json",
+    "independent_source_review_sha256": "e9a8609a75a4fa16d9c89b3577e94e8182c05e2e3cd198e24ea63d31922eed7a",
+    "independent_source_review_inline": {
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "walk",
+      "source_visual_status": "PASS",
+      "status": "SOURCE_GAIT_AND_PROJECTED_ROOT_CANDIDATE_PASS_ACTUAL_RUNTIME_HOLD",
+      "raw_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "source_author_independent": true,
+      "reviewer": "Nrun author /root/halpas_nw_attack_repair",
+      "projected_root_author": "same reviewer, separate source-author crosscheck pending",
+      "runtime_layout_path": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/reviewed_runtime_layout.projected-ground.proposal.json",
+      "runtime_layout_sha256": "a8cd754241a38c6a510bfc1d80642229734cf90f8dc1061f2e74d0b9a4517b0c",
+      "source_region_review_path": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/reviewed_source_regions.projected-ground.proposal.json",
+      "source_region_review_sha256": "e4811044a2aa03bb0a29aa9b29a0410ec18ef5951122213f36761d0a5f090dd8",
+      "root_authorship_proof_path": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/projected-ground-root-authorship-proof.json",
+      "root_authorship_proof_sha256": "556a9ad6cc5375ebdcf1fd3a8f699ab7724c52e0c613e46c4d21f4ec455693e9",
+      "visual_findings": [
+        "All six figures preserve true SE front-right camera/visible pale face and pale hair, thin rigid gold dorsal spines, long dark gold-trim robe and the original anatomical RIGHT long sinuous weapon; no model/weapon-side swap.",
+        "Actual nearRIGHT/farLEFT support ownership exchanges: right contact/passing, farLEFT advance/contact/passing, then distinct RIGHT precontact dorsiflexed boot with farLEFT trailing toe support; knees/ankles/boots move through the original robe.",
+        "CurrentSEidle explicitly has nearRIGHT sole507/farLEFTsole481, proving26canonical projected side depth. New root origins retain that directional projection rather than flattening all soles to one screenY.",
+        "New root3/4/5 offsets60/41/57native make per-pose eye/body arc coherent under unchanged rigidCs; source5near-raisedheel and far-trailtoe retain actual fore/aft projected depth. This is newly authored root animation, not an embeddedPNGfloor assertion.",
+        "5→0 switches genuine nearRIGHT precontact-to-flatplant; full-six source pose continuity/identity and revised common-physical-root candidate pass private static-sequence review.",
+        "Existing source-owner/completealpha/RGBA/outward-only transparent padding and layout validation all passed, no sourcepixel/resample/threshold changes."
+      ],
+      "visual_limitations": [
+        "New projected roots authored in this review require source-author crosscheck; source-author already received pinned104KBcandidate and exactnumericproof.",
+        "More upright walkingstraightsupport posture is higher than relaxed selectedidle; actualPlayer idle→walk, cadence, step-contact projection and action transitions need private runtime review.",
+        "Hidden exact pelvis bone centers are not measured beyond visible waist/leg continuity; manual rigidcoordinates carry uncertainty.",
+        "Original olddraft/failed source review history remains unchanged. No actualgame/actor/global approval."
+      ],
+      "actor_approval": false,
+      "new_actor_approvals": 0,
+      "runtime_status": "HOLD_PENDING_ACTUAL_PLAYER_AND_FRESH_PRIVATE_RUNTIME_QC",
+      "repository_mutations": false,
+      "chat_image_attachments": false,
+      "reviewed_at": "2026-10-19T14:05:18.169910+00:00"
+    },
+    "source_author_crossreview": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/source-author-crossreview-projected-ground-root.json",
+    "source_author_crossreview_sha256": "2e5e82ecfb69cd2e476c86998a99020b0bd3c520651f2ddbfda1741fc9d19a3c",
+    "source_author_crossreview_inline": {
+      "schema": "pr122-source-author-crossreview-new-projected-root-v1",
+      "key": "transform:267",
+      "direction": "SE",
+      "role": "walk",
+      "reviewer": "girtas_se_walk_author",
+      "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "source_visual_status": "PASS",
+      "new_authored_projected_root_candidate_status": "PASS_FOR_NATIVE_STAGING",
+      "runtime_status": "HOLD_ACTUAL_PLAYER_IDLE_TRANSITION_AND_SEAM_REQUIRED",
+      "actor_approval": false,
+      "checks": {
+        "original_SEcamera_pale_face_hair_hardgoldspines_longrobe": true,
+        "RIGHTnear_sinuousweapon_EMPTYLEFTfar": true,
+        "twoarms_twolegchains_6actualjointchanges": true,
+        "nearRIGHTsupport0_1_farLEFTsupport3_4_with2_5toeoffreach": true,
+        "idle_actual_near_far_footdepth26_accounted": true,
+        "phase5_rightprecontact_lefttrailtoeownership": true,
+        "5_to_0_approachingRIGHTleg_toRIGHTlanding": true
+      },
+      "evidence": [
+        "Crosschecked NEW103756Bsharedroot7panel versusold draft. FarLEFTsupporthalf3/4/5nowretainsitsrear-depthgroundprojectioninstead ofbeingflattenedtosameYasnearRIGHT. Absolutehead/carryjumpbetweenfirstandsecondhalfvisuallyremoved.",
+        "Source5farLEFTtoelastY1095 andnearRIGHTheellastY1191 remainunchanged; newrootaccountsforcamera+fore/aftfootdepth. Thisisnewauthoredgroundrootmetadata, notembeddedPNGfloor orclaimsaboutverticalflightheight.",
+        "0→1→2 realRIGHTsupport/pass/toeoffwithLEFTreach,3→4→5oppositeLEFTsupport/pass/toeoffwithRIGHTreach; realknee/ankle/robe/armchangesanddistinctfinalheelprecontact.",
+        "CurrentSEidleisrelaxedstance; newwalkbody/headheightislarger/higherinstride. Sourcecandidateacceptedforisolatednativeintegration, mandatoryactualcompiledidle→walk0/bodyrigidscale/5→0reviewmustdecidefinalvisualcontinuity."
+      ],
+      "root_proof_sha256": "556a9ad6cc5375ebdcf1fd3a8f699ab7724c52e0c613e46c4d21f4ec455693e9",
+      "layout_sha256": "a8cd754241a38c6a510bfc1d80642229734cf90f8dc1061f2e74d0b9a4517b0c",
+      "source_region_sha256": "e4811044a2aa03bb0a29aa9b29a0410ec18ef5951122213f36761d0a5f090dd8",
+      "preview_bytes": 103756,
+      "reviewed_at": "2026-10-19T14:05:30.813836+00:00"
+    },
+    "physical_projected_root_evidence": "/workspace/scratch/girtas-SE-walk-independent-N-author-qc/projected-ground-root-authorship-proof.json",
+    "physical_projected_root_evidence_sha256": "556a9ad6cc5375ebdcf1fd3a8f699ab7724c52e0c613e46c4d21f4ec455693e9",
+    "physical_projected_root_evidence_inline": {
+      "status": "AUTHORED_PROJECTED_ROOT_NOT_EMBEDDED_PNG_FLOOR",
+      "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "selected_idle": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+      "selected_idle_sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+      "idle_foot_ROIs": {
+        "nearRIGHT": {
+          "ROI": [
+            130,
+            380,
+            245,
+            511
+          ],
+          "last_strong_y": 507,
+          "lastrow_xrange": [
+            212,
+            214
+          ],
+          "median_x": 213.0
+        },
+        "farLEFT": {
+          "ROI": [
+            245,
+            380,
+            460,
+            511
+          ],
+          "last_strong_y": 481,
+          "lastrow_xrange": [
+            348,
+            373
+          ],
+          "median_x": 360.5
+        }
+      },
+      "actual_near_far_depth_canonical": 26,
+      "source_Cs_unchanged": [
+        2208,
+        1536,
+        1536,
+        2352,
+        1632,
+        2240
+      ],
+      "root_dy_native": [
+        0,
+        0,
+        0,
+        60,
+        41,
+        57
+      ],
+      "atlas_anchors": [
+        [
+          648,
+          1233
+        ],
+        [
+          1945,
+          1053
+        ],
+        [
+          680,
+          2325
+        ],
+        [
+          1931,
+          2571
+        ],
+        [
+          649,
+          3655
+        ],
+        [
+          1930,
+          3835
+        ]
+      ],
+      "estimated_old_eye_values": [
+        -457,
+        -469,
+        -458,
+        -426,
+        -441,
+        -438
+      ],
+      "estimated_new_eye_values": [
+        -457.0,
+        -469.0,
+        -458.0,
+        -452.1224489795918,
+        -466.72549019607845,
+        -464.0571428571429
+      ],
+      "source5_actual_foot_evidence": {
+        "source_path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/girtas-SE-walk-precontact-from-right-key-v02.png",
+        "source_sha256": "d6f694992d64ac6260dc601809eb09145c127fb2b5420b78c130a80193c3c49f",
+        "status": "ACTUAL_BOOT_ROI_MEASUREMENT_ONLY_NOT_PLANE_APPROVAL",
+        "boots": [
+          {
+            "label": "farLEFT_trailing_toe_support",
+            "ROI_xyxy": [
+              850,
+              1015,
+              950,
+              1110
+            ],
+            "last_strong_y": 1095,
+            "last_strong_x_median": 925.0,
+            "last_strong_x_range": [
+              920,
+              930
+            ],
+            "threshold_alpha_gt": 100
+          },
+          {
+            "label": "nearRIGHT_arriving_heel",
+            "ROI_xyxy": [
+              425,
+              1100,
+              610,
+              1220
+            ],
+            "last_strong_y": 1191,
+            "last_strong_x_median": 532.0,
+            "last_strong_x_range": [
+              523,
+              541
+            ],
+            "threshold_alpha_gt": 100
+          }
+        ],
+        "support_foot": "farLEFT_trailing_toe",
+        "nearRIGHT_heel": "precontactsourcepose, actualsharedplane/foreaftdepthnotyetproven",
+        "preview_path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/private-phase5-foot-native-grid.jpg",
+        "preview_bytes": 52433,
+        "note": "farLEFTtoeROIisolatesvisiblebootfromrobe/hair/weapon, nearRIGHTheelROIactualheelnottoes. OriginalRGBAunchanged. DoesnotclaimsameYworldfloor forboth near/far footpoints."
+      },
+      "source5_interpretation": "FarLEFT trailtoe supports while nearRIGHT boot dorsiflexes/precontacts. New root origin accounts for side depth and fore/aft stride. ScreenY projected sole depth is not a measured verticalAIRheight.",
+      "limitations": [
+        "Body/face posture is higher than relaxedidle and needs actualPlayer idle-to-walk transition review.",
+        "Actualtoe contactprojection/cadence remains actualruntimeHOLD.",
+        "No sameY groundplane assertion, no opaquefloor pixels, no sourcepixels changed.",
+        "All original draft/HOLD metadata stays immutable; this new candidate needs independentreview."
+      ],
+      "new_artwork": 0,
+      "actor_approval": false
+    },
+    "rigid_scale_evidence": "/workspace/scratch/girtas-SE-walk-reviewed-composite-v01/physical-anchor-numeric-evidence.DRAFT.json",
+    "rigid_scale_evidence_sha256": "35fdfeab6140a431926dee717c4f900b1eb6333a997096780fbb93988d544948",
+    "source_region_validation_inline": {
+      "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "source_RGBA_sha256": "e8400a86f599f3d4fb51be84b69dd33f62a7b1f589c0599405a119a072920d2d",
+      "base_geometry_sha256": "556bab018e1a64ddd8baa499c5bcf9c7899150f9ebb6028d312582580e7a0160",
+      "derived_geometry_sha256": "91966dd31f37e78d8eb2dcefbea9d859fbea7724fe06c0f8b1a55ecc0a784a66",
+      "review_sha256": "764338f974af7e2b51783c3e9747b0795fb6e28f45833ad1c87f189e9619dd1a",
+      "review_basis": "Outward-only transparent projectedground-root padding under unchanged owner/RGBA/disjointness checks. FarLEFT support-origin26canonicaldepth from exact selectedidle. Independentcandidate review pending. Independentfull6source/rootcandidatePASS; thisregionoperationonlyprovesoutwardpadding/ownership/RGBA, notactorapproval.",
+      "source_unchanged": true,
+      "canonical_canvas_foot_anchors_unchanged": true,
+      "all_alpha_gt16_covered_exactly_once": true,
+      "foreign_foreground_pixels": 0,
+      "alpha_gt16_pixels": 2191826,
+      "added_alpha_gt16_pixels": 0,
+      "all_alpha_positive_covered": true,
+      "expanded_regions": [
+        [
+          99,
+          43,
+          1082,
+          1194
+        ],
+        [
+          1515,
+          223,
+          810,
+          834
+        ],
+        [
+          242,
+          1511,
+          796,
+          818
+        ],
+        [
+          1355,
+          1325,
+          1129,
+          1248
+        ],
+        [
+          245,
+          2781,
+          790,
+          876
+        ],
+        [
+          1376,
+          2618,
+          1087,
+          1219
+        ]
+      ],
+      "default_importer_repacker_unchanged": true,
+      "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+      "nearest_owner_sha256": "f5894da37fa2b6c8ec8ce1239332941c8f3b314bf24573337ab8c71584593d12",
+      "foreground_owner_sha256": "086d14a421bdea2a0a100574d63ba336ba1ea23c5ae5f0fd9bd608960df9104f",
+      "detached_pixels": 17,
+      "detached_fragments": [
+        {
+          "row": 0,
+          "pixels": 1,
+          "bbox": [
+            492,
+            257,
+            493,
+            258
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 1214.7695254656333,
+          "owner_margin_min": 1212.5334574881335
+        },
+        {
+          "row": 1,
+          "pixels": 1,
+          "bbox": [
+            2034,
+            301,
+            2035,
+            302
+          ],
+          "nearest_max": 2.0,
+          "second_nearest_min": 881.3001758765284,
+          "owner_margin_min": 879.3001758765284
+        },
+        {
+          "row": 1,
+          "pixels": 2,
+          "bbox": [
+            2036,
+            309,
+            2037,
+            311
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 883.5440000362178,
+          "owner_margin_min": 881.343583214174
+        },
+        {
+          "row": 1,
+          "pixels": 1,
+          "bbox": [
+            1934,
+            632,
+            1935,
+            633
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 708.5936776460823,
+          "owner_margin_min": 705.765250521336
+        },
+        {
+          "row": 0,
+          "pixels": 1,
+          "bbox": [
+            890,
+            641,
+            891,
+            642
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 711.7647083130773,
+          "owner_margin_min": 708.9362811883311
+        },
+        {
+          "row": 0,
+          "pixels": 1,
+          "bbox": [
+            148,
+            1149,
+            149,
+            1150
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 549.6553465581864,
+          "owner_margin_min": 546.8269194334401
+        },
+        {
+          "row": 2,
+          "pixels": 1,
+          "bbox": [
+            510,
+            2000,
+            511,
+            2001
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 767.0234676983489,
+          "owner_margin_min": 764.7873997208491
+        },
+        {
+          "row": 3,
+          "pixels": 1,
+          "bbox": [
+            1748,
+            2060,
+            1749,
+            2061
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 623.0072230720925,
+          "owner_margin_min": 620.7711550945927
+        },
+        {
+          "row": 4,
+          "pixels": 1,
+          "bbox": [
+            557,
+            3154,
+            558,
+            3155
+          ],
+          "nearest_max": 2.0,
+          "second_nearest_min": 845.0005917157691,
+          "owner_margin_min": 843.0005917157691
+        },
+        {
+          "row": 5,
+          "pixels": 3,
+          "bbox": [
+            2195,
+            3179,
+            2196,
+            3182
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 668.1264850310905,
+          "owner_margin_min": 665.8904170535907
+        },
+        {
+          "row": 5,
+          "pixels": 1,
+          "bbox": [
+            2185,
+            3189,
+            2186,
+            3190
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 678.3900058226094,
+          "owner_margin_min": 675.5615786978632
+        },
+        {
+          "row": 5,
+          "pixels": 1,
+          "bbox": [
+            2192,
+            3189,
+            2193,
+            3190
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 678.1887642832193,
+          "owner_margin_min": 675.9526963057194
+        },
+        {
+          "row": 4,
+          "pixels": 1,
+          "bbox": [
+            624,
+            3193,
+            625,
+            3194
+          ],
+          "nearest_max": 2.23606797749979,
+          "second_nearest_min": 875.8430224646423,
+          "owner_margin_min": 873.6069544871425
+        },
+        {
+          "row": 5,
+          "pixels": 1,
+          "bbox": [
+            1718,
+            3581,
+            1719,
+            3582
+          ],
+          "nearest_max": 2.0,
+          "second_nearest_min": 761.2128480260958,
+          "owner_margin_min": 759.2128480260958
+        }
+      ],
+      "minimum_required_owner_margin": 32.0
+    },
+    "runtime_layout_validation_inline": {
+      "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+      "source_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "base_geometry_sha256": "91966dd31f37e78d8eb2dcefbea9d859fbea7724fe06c0f8b1a55ecc0a784a66",
+      "derived_geometry_sha256": "551ab72e546e29799aeb4133614c9797debaa27f006909e766a2099c757cdda1",
+      "review_sha256": "252fe17619b623f28f5c427ed969955527354f799d4e7785af8244456bcd248c",
+      "review_basis": "NEW SE projected-ground/root authoring from exact selectedidle nearRIGHT/farLEFT sole separation26canonicalpx. FarLEFT-support half3/4/5 retains projected side depth and actual fore/aft stride. Support toes/raised soles are not flattened to same horizontalY. Original PNG/rigidCs unchanged. Candidate body/stride/transition review pending. Independent6sourceandprojectedrootcandidatePASS nowpinned /workspace/scratch/girtas-SE-walk-independent-N-author-qc/independent-source-and-projected-root-review.json SHA256 e9a8609a75a4fa16d9c89b3577e94e8182c05e2e3cd198e24ea63d31922eed7a. ActualcompiledPlayer/idletransition/5to0 andactorapprovalstillHOLD.",
+      "direction": "SE",
+      "pose_count": 6,
+      "canvas_size": [
+        2048,
+        2048
+      ],
+      "foot": [
+        1024,
+        1280
+      ],
+      "source_anchors": [
+        [
+          648,
+          1233
+        ],
+        [
+          1945,
+          1053
+        ],
+        [
+          680,
+          2325
+        ],
+        [
+          1931,
+          2571
+        ],
+        [
+          649,
+          3655
+        ],
+        [
+          1930,
+          3835
+        ]
+      ],
+      "runtime_pixel_scale_ratio": [
+        1024,
+        2048
+      ],
+      "source_pixels_unchanged": true,
+      "resampled": false,
+      "approval_granted": false,
+      "source_region_review_sha256": "764338f974af7e2b51783c3e9747b0795fb6e28f45833ad1c87f189e9619dd1a",
+      "pose_canvas_sizes": [
+        2208,
+        1536,
+        1536,
+        2352,
+        1632,
+        2240
+      ],
+      "runtime_reference_canvas_size": 1024,
+      "per_pose_runtime_pixel_scale_ratios": [
+        [
+          1024,
+          2208
+        ],
+        [
+          1024,
+          1536
+        ],
+        [
+          1024,
+          1536
+        ],
+        [
+          1024,
+          2352
+        ],
+        [
+          1024,
+          1632
+        ],
+        [
+          1024,
+          2240
+        ]
+      ],
+      "pose_canvas_size_allowed_range": [
+        256,
+        4096
+      ],
+      "newly_authored_poses": 0
+    },
+    "all_original_generation_requests": [
+      {
+        "path": "/workspace/scratch/girtas-SE-walk-right-contact-key-v02/request.json",
+        "sha256": "07bf8fef23fbcef9b04a89a546dee0a0b2154656d38e895335dee06e28baa925"
+      },
+      {
+        "path": "/workspace/scratch/girtas-SE-walk-right-halfcycles-v01/request.json",
+        "sha256": "3ee4dee6a270cc564e2c17311ed9f126e7fa24b6ffbc93686416cbaba0afd962"
+      },
+      {
+        "path": "/workspace/scratch/girtas-SE-walk-left-contact-key-v01/request.json",
+        "sha256": "f2e1fb6626580ef3588d5757fdeff0a20f86462f1586a850caf9d6c897d14ce1"
+      },
+      {
+        "path": "/workspace/scratch/girtas-SE-walk-left-halfcycles-v01/request.json",
+        "sha256": "488caf4061b35f528a4f5bccbcbefab6521581ee31ca74175d5ae47b12c1a0c0"
+      },
+      {
+        "path": "/workspace/scratch/girtas-SE-walk-precontact-from-right-key-v02/request.json",
+        "sha256": "dac72f59afd6f959efb070995afb8eadfa33c88609e37e8f775cff29ccc95855"
+      }
+    ]
+  },
+  "actor_approval": false,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-walk-v02.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six figures preserve true SE front-right camera/visible pale face and pale hair, thin rigid gold dorsal spines, long dark gold-trim robe and the original anatomical RIGHT long sinuous weapon; no model/weapon-side swap.",
+      "Actual nearRIGHT/farLEFT support ownership exchanges: right contact/passing, farLEFT advance/contact/passing, then distinct RIGHT precontact dorsiflexed boot with farLEFT trailing toe support; knees/ankles/boots move through the original robe.",
+      "CurrentSEidle explicitly has nearRIGHT sole507/farLEFTsole481, proving26canonical projected side depth. New root origins retain that directional projection rather than flattening all soles to one screenY.",
+      "New root3/4/5 offsets60/41/57native make per-pose eye/body arc coherent under unchanged rigidCs; source5near-raisedheel and far-trailtoe retain actual fore/aft projected depth. This is newly authored root animation, not an embeddedPNGfloor assertion.",
+      "5→0 switches genuine nearRIGHT precontact-to-flatplant; full-six source pose continuity/identity and revised common-physical-root candidate pass private static-sequence review.",
+      "Existing source-owner/completealpha/RGBA/outward-only transparent padding and layout validation all passed, no sourcepixel/resample/threshold changes."
+    ],
+    "visual_limitations": [
+      "ActualcompiledPlayer/idletransition/5to0/source48actorreview pending.",
+      "No actorapproval orcountincreasefromsourcealone; defaults/canonicalcatalogunchanged."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+    "raw_bytes": 6230485,
+    "request_sha256": "36366c8220508720d48385bf88713e5a3c572bb75e6b6d308c78a71d3bfb61f7",
+    "review_sha256": "4e9e346431de991da9bf919a1f40a54ad531bf5756b487fc26964553966fceea"
+  },
+  "available_repository_reference_sources": {
+    "1a08a21b414edcf7aa5ac2e1661dde21749c5d94daafd2d467d45625b3d0181c": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-SE-walk-right-contact-key-v02/girtas-SE-walk-right-contact-key-v02.png",
+    "5e81f3513f9e818ac92e6d8f5c2465afb28391778134e451aa933635f28d539c": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-SE-walk-right-halfcycles-v01/girtas-SE-walk-right-halfcycles-v01.png",
+    "dc084eda0d10449e87db6c92ca12b8145de67f1b0db46a8c22c75027dc3e66e8": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-SE-walk-left-contact-key-v01/girtas-SE-walk-left-contact-key-v01.png",
+    "5b7921d64d52fa1c9b71e5edad98e1304fd1736c30418071862da7e842ed6d40": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-SE-walk-left-halfcycles-v01/girtas-SE-walk-left-halfcycles-v01.png",
+    "d6f694992d64ac6260dc601809eb09145c127fb2b5420b78c130a80193c3c49f": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/girtas-SE-walk-precontact-from-right-key-v02/girtas-SE-walk-precontact-from-right-key-v02.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SE-walk-v03composite01.png",
+  "output_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+  "output_bytes": 6230485,
+  "original_generated_file": "/workspace/scratch/girtas-SE-walk-reviewed-composite-v01/girtas-SE-walk-reviewed-composite-v01.png"
+}

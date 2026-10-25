@@ -1,0 +1,19 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+BOSS_FIX_QA_CASE_DONE key=monster:오만한 우그누스 segments=1 captures=6
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/actors/eight_direction/boss_draft_first/ugnus/sources/S-death-v01.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2780)
+     GDScript backtrace (most recent call first):
+         [0] _cache (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix-runtime/arena.gd:75)
+         [1] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix-runtime/arena.gd:206)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/actors/eight_direction/boss_draft_first/ugnus/sources/SW-hit-v01.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2780)
+     GDScript backtrace (most recent call first):
+         [0] _cache (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix-runtime/arena.gd:75)
+         [1] _run (res://docs/remake/evidence/pr122-monsters-20261023/boss-fix-runtime/arena.gd:206)
+BOSS_FIX_QA_CASE_DONE key=monster:오만한 우그누스 segments=1 captures=6
+BOSS_FIX_QA_CASE_DONE key=monster:왜곡의 제니스 퀸 segments=2 captures=14
+BOSS_FIX_QA_DONE real_scale=true speed_scale=1 capture=true approval_changes=0

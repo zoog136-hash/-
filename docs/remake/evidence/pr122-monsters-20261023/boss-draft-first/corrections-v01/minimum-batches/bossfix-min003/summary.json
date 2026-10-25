@@ -1,0 +1,72 @@
+{
+  "label": "bossfix-min003",
+  "checked_new_sheets": 6,
+  "safe_played_clips": 1,
+  "held": [
+    {
+      "slug": "dread_vampire",
+      "clip": "SE-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "SW-idle-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "W-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "E-idle-v02",
+      "reason": "A visible pose touches the image boundary"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [
+    "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/dread_vampire/bossfix-min003/candidate.json"
+  ],
+  "runtime": "/workspace/runtime/bossfix-min003",
+  "source_pins": [
+    {
+      "slug": "dread_vampire",
+      "clip": "SE-attack-v02",
+      "sha256": "a14cacc0af860d8186417d8d17365f48657c8cf6a0851ae12892a544bec6b6d5"
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "SW-attack-v02",
+      "sha256": "02ae713074a940be567030f863721b3aaea4c9eb4e84933fef8dffacc46a1e1d"
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "SW-idle-v02",
+      "sha256": "698be13996330b5e2faddc033959836249d2e044660c0dfa1895d9f16b6ec704"
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "W-attack-v02",
+      "sha256": "089cb6724ad745acbd239266974c57a5947c5ca032b5ff615da03777cd9b864c"
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "W-run-v02",
+      "sha256": "ad0e537443188ad05f57d832160eaf62c468c340ded112b5370208150c3a19e6"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "E-idle-v02",
+      "sha256": "d1b82483bdeaa8b02fa91bcf911a423861a30378537e500ecfdb5933555a6e6c"
+    }
+  ]
+}

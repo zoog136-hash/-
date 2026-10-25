@@ -1,0 +1,50 @@
+{
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "walk",
+  "source_kind": "two_same_support_walk_halfcycle_poses",
+  "expected_poses": 2,
+  "intended_game_phases": [
+    1,
+    2
+  ],
+  "original_generated_file": "/workspace/generated_images/exec-0b3049c1-6536-4707-baa0-f089e5d69613.png",
+  "raw_path": "/workspace/scratch/girtas-SW-walk-left-halfcycles-v01/girtas-SW-walk-left-halfcycles-v01.png",
+  "raw_png": "/workspace/scratch/girtas-SW-walk-left-halfcycles-v01/girtas-SW-walk-left-halfcycles-v01.png",
+  "raw_sha256": "d85d39eb8e3a378c410aee44d60e30838f613a3835b921ff748f0154aa7bfe51",
+  "raw_bytes": 1439448,
+  "image_size": [
+    1774,
+    887
+  ],
+  "request_path": "/workspace/scratch/girtas-SW-walk-left-halfcycles-v01/request.json",
+  "request_sha256": "edcc137a53e9b351843dffc3e569731ae018371ab9113a93bc528d15d27818f5",
+  "imagegen_attempts": 1,
+  "source_visual_status": "PASS",
+  "complete_clip": false,
+  "actor_approval": false,
+  "geometry_status": "HOLD",
+  "geometry_error": "A pose rectangle includes another body; cannot safely crop",
+  "status": "PARTIAL_SOURCE_HALF_CYCLE_ONLY",
+  "per_pose_review": [
+    {
+      "source_pose": 0,
+      "intended_game_phase": 1,
+      "source_visual_status": "PASS",
+      "finding": "NearLEFT long lowerRIGHT flat support; farRIGHT knee bends toimageLEFT and boot folds behind/upRIGHT in coherent passing chain, genuine distinctmidstance."
+    },
+    {
+      "source_pose": 1,
+      "intended_game_phase": 2,
+      "source_visual_status": "PASS",
+      "finding": "NearLEFT trailsupperRIGHT heelraised/toeoff, farRIGHT long reachesDOWNLEFT with newknee/ankle extension; actual oppositecontactapproach."
+    }
+  ],
+  "usable_game_phases": [
+    1,
+    2
+  ],
+  "integration_ready": false,
+  "new_approvals": 0,
+  "identity_camera_review": "FaithfulcurrentSW originalpale face/hair/hardgoldspines/longdarkrobe/RIGHTfarimageLEFTsinuousweapon/emptyLEFTnearimageRIGHT, noextralimbs."
+}

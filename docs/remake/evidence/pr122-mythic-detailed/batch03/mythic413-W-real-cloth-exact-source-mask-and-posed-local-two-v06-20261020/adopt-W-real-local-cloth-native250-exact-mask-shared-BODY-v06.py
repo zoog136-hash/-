@@ -1,0 +1,17 @@
+from pathlib import Path
+from PIL import Image
+import numpy as np,json,hashlib,sys
+D=Path(__file__).parent
+assert len(sys.argv)==3,'Pass native250 actual service fragment PNG and immutable service provenance/handoff JSON'
+FRAG=Path(sys.argv[1]);SERVICE=Path(sys.argv[2]);O=D/'common-own-W-native-LEFT-and-real-hidden-cloth-v06';O.mkdir(exist_ok=False)
+INPUT=D/'W-hidden-coat-real-local-service-input-native250-r001/W-native250-real-hidden-coat-single-service-exact-mask-handoff-v01.json';inp=json.loads(INPUT.read_text());old=json.loads(Path(inp['original_shared_handoff']['path']).read_text());newfinger=json.loads((D/'common-own-W-native-LEFT-materials-v05/W-own-native-complete-LEFT-and-repaired-hidden-coat-BODY-readonly-handoff-v05.json').read_text())
+def rec(p):
+ p=Path(p);b=p.read_bytes();return dict(path=str(p),sha256=hashlib.sha256(b).hexdigest(),bytes=len(b))
+assert rec(INPUT)['sha256']=='c987b5b44db85ce6160a8a3c4272554b9bfc780cff1d31fdc25fc9535a5a3304'
+base=np.array(Image.open(inp['original_BODY']['path']).convert('RGBA'));z=np.array(Image.open(FRAG).convert('RGBA'));assert z.shape==(250,250,4),z.shape;m=np.asarray(Image.open(inp['binary_editable_mask_native250']['path']))>0;x0,y0,x1,y1=inp['raw_native_crop_rect'];a=base.copy();crop=a[y0:y1,x0:x1];crop[m]=z[m];a[y0:y1,x0:x1]=crop
+full=np.asarray(Image.open(inp['full_native_replacement_support']['path']))>0;assert np.count_nonzero(np.any(a[~full]!=base[~full],axis=1))==0
+b=O/'actual-W-LEFT-erased-BODY-real-service-hidden-coat-native-v06.png';Image.fromarray(a).save(b)
+proof=dict(status='ACTUAL_REAL_HIDDEN_CLOTH_EXACT_MASK_COMPOSITE_PENDING_INDEPENDENT_SOURCE_QC',original_BODY=inp['original_BODY'],new_BODY=rec(b),actual_native250_service_fragment=rec(FRAG),service_provenance=rec(SERVICE),original_native250_input_and_mask=rec(INPUT),full_native_editable_support=inp['full_native_replacement_support'],outside_exact_editable_RGBA_changed=int(np.any(a[~full]!=base[~full],axis=1).sum()),inside_editable_actual_service_RGBA_mismatch=int(np.any(a[full]!=z[m],axis=1).sum()),actual_service_pixel_count=int(full.sum()),source_raw_or_C_root_changed=False,old_failed_donor_pixels_used=False,actor_approvals_added=0)
+pp=O/'W-real-native250-service-hidden-cloth-exact-mask-composition-proof-v06.json';pp.write_text(json.dumps(proof,indent=2)+'\n')
+h=old.copy();h.update(schema='MYTHIC413_W_COMPLETE_LEFT_AND_REAL_SERVICE_HIDDEN_CLOTH_READONLY_HANDOFF_V06',status='ACTUAL_NEW_NATIVE_HIDDEN_CLOTH_PENDING_INDEPENDENT_QC',parts=newfinger['parts'],semantic_mattes=newfinger['semantic_mattes'],body_inputs={'LEFT-forearm-only-old-erased-BODY-with-original-RIGHT-staff-arms-and-boots':dict(body=rec(b),old_forearm_erasure_support=newfinger['semantic_mattes']['LEFT-far-complete-curved-cuff-forearm-free-hand'])},real_hidden_cloth_service_exact_composition=rec(pp),moving_original_pinky_ownership_only_source_reference=inp['moving_complete_LEFT_with_native_pinky_ownership'],previous_shared_original_handoff_preserved=inp['original_shared_handoff'],all_failed_uniform_donor_BODY_inputs_excluded=True,source_ownership_recipe=dict(original_source=inp['original_source'],left_pixel_RGBA_from_original_source=True,hidden_BODY_pixels=proof,original_good_visible_BODY_outside_editable_preserved=True))
+p=O/'W-own-native-complete-LEFT-and-real-service-hidden-coat-BODY-readonly-handoff-v06.json';p.write_text(json.dumps(h,indent=2)+'\n');print(json.dumps(dict(handoff=rec(p),proof=rec(pp),BODY=rec(b))))

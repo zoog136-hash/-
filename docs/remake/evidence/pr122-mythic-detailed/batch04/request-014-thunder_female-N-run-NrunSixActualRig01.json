@@ -1,0 +1,162 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "run",
+  "version": "NrunSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "2da820467fd4e2e5fe930fe8ca0d6c3c9781e732b0e16fa00c4cbf74c8637198",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "2da820467fd4e2e5fe930fe8ca0d6c3c9781e732b0e16fa00c4cbf74c8637198",
+    "base_geometry_sha256": "14212e0f63c42e72bdf5c332c50ddd551dc75c1849992891f9c0753404a69442",
+    "direction": "N",
+    "regions": [
+      [
+        169,
+        154,
+        1113,
+        1138
+      ],
+      [
+        1715,
+        206,
+        1108,
+        1063
+      ],
+      [
+        162,
+        1646,
+        1213,
+        1126
+      ],
+      [
+        1696,
+        1679,
+        1143,
+        1142
+      ],
+      [
+        179,
+        3265,
+        1113,
+        1066
+      ],
+      [
+        1700,
+        3174,
+        1115,
+        1135
+      ]
+    ],
+    "nearest_owner_sha256": "ac932c82e0aec3b849ca94dd7d9f88cf65aa7f9c88154accd3caa5badad871c1",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof b8e2937c23bf5d1eee0a2c3a0eca468d76e219c2d28360834507f0f0e91c377a"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "2da820467fd4e2e5fe930fe8ca0d6c3c9781e732b0e16fa00c4cbf74c8637198",
+    "direction": "N",
+    "role": "run",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        791,
+        1046
+      ],
+      [
+        2327,
+        1046
+      ],
+      [
+        791,
+        2582
+      ],
+      [
+        2327,
+        2582
+      ],
+      [
+        791,
+        4118
+      ],
+      [
+        2327,
+        4118
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      1920,
+      1920,
+      1920,
+      1920,
+      1920,
+      1920
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "b8e2937c23bf5d1eee0a2c3a0eca468d76e219c2d28360834507f0f0e91c377a",
+  "authored_common_root_float": [
+    662.8125,
+    917.6920531878804
+  ],
+  "common_root_integer": [
+    663,
+    918
+  ],
+  "common_root_rounding_delta": [
+    0.1875,
+    0.3079468121195532
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "Actual dedicated opposite LEFT/RIGHT CONTACT, LOAD and AIR gestures are visible; no shared profile or faster WALK relabel.",
+      "One common unpadded crop and preview scale show constant body unit/root, readable body compression/rise, torso lean and complete freeLEFTarm cuff/bracer/hand swing.",
+      "Full RIGHTstaff both gold endpoints, grip, identity, blue/gold coat tails, original complete gold shoe counter/stiletto and actual knee/calf/tarsal materials are preserved.",
+      "Actual lower-limb close ROIs show coherent material closure rather than disconnected shoes; no additional blocking joint defect was observed.",
+      "The actual 5->0 seam and opposite-side transitions have coherent recovery-to-contact motion at fixed framing; final v08 changes are restricted to complete LEFTcuff semantic registration.",
+      "Previously detached stationary old LEFTcuff fragments are gone in final six changed ROIs. Original contiguous gold/white cuff contour moves with whole forearm; genuine blue/gold coat stays intact.",
+      "Exact final atlas has zero full-RGBA differences from all six independently viewed frozen source poses; every alpha-positive pixel and source region is preserved.",
+      "Fixed C1920/unit1.875/root and source pixel scale are unchanged. Storage-only128padding and one common rounding delta[0.1875,0.3079468121195532] are explicit; no pose-specific root/foot fit.",
+      "Exact native132.8727272728626 heelclock matches16.8world phase step at262.5/.064;187.5bone controls and the declared rigid3.998902deg heel/counter roll are numerically consistent.",
+      "Independent actual shoe source/raster texel-quad AIR bounds plus8native hidden-thickness guard are positive in both flight phases. Fullstaff sourceenvelope expanded3px plus8nativeguard is positive, and actual opaque end-region RGBA changed0 in allsix."
+    ],
+    "visual_limitations": [
+      "This source/visible-cycle receipt and explicit constructive model audit permit the exact frozen packet to proceed to separate game integration. They do not add an actor approval or game clip by themselves.",
+      "Chosen depth/hip/knee/heel/toe/sourceplanes are one compatible fixed authored2.5D construction, not unique hidden anatomical or volumetric boot recovery.",
+      "Observed heel/roll, actual painted surface AIR and declared guard pass; uniquely measured hidden full-sole floor shape or continuous subframe collision physics is not claimed.",
+      "Actual Godot SpriteFrames/Player/Sprite2D fit, speed and resource ownership/geometry validation remain parent integration gates."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "2da820467fd4e2e5fe930fe8ca0d6c3c9781e732b0e16fa00c4cbf74c8637198",
+    "raw_bytes": 2551159,
+    "request_sha256": "429686ba1a003bcb45efd46a51a553dc552370f26272a9a18d24cdf37ba4c07b",
+    "review_sha256": "4b621afa961357d0ebdbc6ddb233d373adaa5da036b22da17a8dc1e296c5f576"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-N-run-actual-packed-r001-20261020/thunder_female-N-run-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-p0npbzma/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-N-run-actual-packed-r001-20261020/request-NrunSixActualRig01.json": "429686ba1a003bcb45efd46a51a553dc552370f26272a9a18d24cdf37ba4c07b",
+      "/workspace/scratch/mythic413-N-run-actual-packed-r001-20261020/thunder_female-N-run-six-actual-poses-r001.png": "2da820467fd4e2e5fe930fe8ca0d6c3c9781e732b0e16fa00c4cbf74c8637198",
+      "/workspace/scratch/mythic413-N-run-independent-qc-20261020-v01/NrunSixActualRig01-exact-request-source-cycle-PASS-v01.json": "4b621afa961357d0ebdbc6ddb233d373adaa5da036b22da17a8dc1e296c5f576",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-run-NrunSixActualRig01.png",
+  "output_sha256": "2da820467fd4e2e5fe930fe8ca0d6c3c9781e732b0e16fa00c4cbf74c8637198",
+  "output_bytes": 2551159,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-p0npbzma/reviewed-source.png"
+}

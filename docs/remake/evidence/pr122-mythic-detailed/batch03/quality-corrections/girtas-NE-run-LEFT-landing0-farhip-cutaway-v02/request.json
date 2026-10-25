@@ -1,0 +1,47 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "NEW_material_farLEFT_run_landing_exposed_hip_constant_bone_3D_primary",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phases": [
+    0
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-farhip-cutaway-v02/NE-RUN-LEFT-landing0-fixedbone-CUTAWAY-primary.png",
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-farhip-cutaway-v02/NE-RUN-LEFT-landing0-fixedbone-3d-guide.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-head-hair-spines-central-cuirass-NO-POSED-ARMS-NO-LEGS.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-near-pauldron-material-only.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-long-robe-gold-trim-material-only.png",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-RIGHT-sinuous-weapon-material-only.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-farhip-cutaway-v02/NE-RUN-LEFT-landing0-fixedbone-CUTAWAY-primary.png": "a5d1286da2d40adfaab6553183cda223d6f5031b2a5d58f56a720f90cf5fb579",
+    "/workspace/scratch/girtas-NE-run-LEFT-landing0-farhip-cutaway-v02/NE-RUN-LEFT-landing0-fixedbone-3d-guide.png": "008bc9c39ad058cb5b9074456b14ecc8aa7f522d7f3fcf3a250764de3dbbe663",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-head-hair-spines-central-cuirass-NO-POSED-ARMS-NO-LEGS.png": "18b6be587faa98d3b1564284ad5a7bf537e1595237464ae18e23a6ca2fd790a1",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-near-pauldron-material-only.png": "a0fe40c6fbfb15d7c97f8a0c3c3fa21fe18d80245f03dcfc3bcad24b37da33fa",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-long-robe-gold-trim-material-only.png": "3634131b43459fec746ca6b72ebe4dd447108e88831fb185cff6c230a253059f",
+    "/workspace/scratch/girtas-NE-run-production-v01/NE-original-RIGHT-sinuous-weapon-material-only.png": "fba50d589080cfec6e5e794a09dced995487373eacd83e7fa1aa1ac6c3a613a0"
+  },
+  "transparent_background": true,
+  "prompt": "Author ONE NEW detailed GIRTAS NE RUN FAR-LEFT-LEG LANDING0 with NEAR-RIGHT HIGH-FOLDED RECOVERY. Previous art copied the nearRIGHT lead; do not repeat that default. FIRST is NEW constant-bone 3D CUTAWAY, the ONLY joint/pose authority: exposed FARLEFT MAGENTA hip and thigh→knee→groundheel are visible through wiretorso, while NEARRIGHT GREEN hip→knee→foldedshin→HIGHrecoveryboot is a separate chain. SECOND is EXACT SAME new3D pose with natural overlap. THIRD is original head/hair/hardrays/centralcuirass with ALL oldposed arms/legs REMOVED; FOURTH nearpauldron material, FIFTH longrobe fabric, SIXTH longRIGHTsinuousblade only. Dress these actual 3D joints in ORIGINAL Girtas proportions/equipment, not a generic mannequin redesign. Do not include wirebody/colors/guidefloor in final.\n\nCRITICAL ACTUAL ANATOMY: anatomical FAR LEFT hip is at IMAGELEFT/back side and owns the FORWARD GROUND SUPPORT. Its thigh emerges BEHIND the NEAR RIGHT hip/upperthigh, goes forward world+Y towardNEUPRIGHT, through its own farLEFT knee/shin to the forward planted LEFT boot. Near RIGHT hip at IMAGERIGHT must own the BENT-HIGH RECOVERY KNEE and folded-back shin; its boot is HIGH AIRBORNE behind the body, not the planted forward shin. Keep the connected right hip→recoveryknee→foldedbackshin visible where the robe parts, so this cannot be misread as another nearRIGHT landing. The right recoveryknee advances forward while the heel folds BACK and UP under it. FARLEFT boot screenX may cross nearRIGHT boot: NEVER forceLEFTbootimageLEFT. Preserve actual 3D hip ownership/near-over-far occlusion, not mere labels or arm-swing inference. Exactly TWO hip/knee/shin/boot chains, no limb attached to wronghip/thirdleg.\n\nOnly farLEFT heel/sole lands acceptingweight with modestsoftknee; nearRIGHT recoverysole HIGH above the same ground, not toe support, not walk-doublecontact or mere soleangle. Actual RUN forwardNE torsolean10-15degrees, compact bentelbows: originalRIGHT weaponarm FORWARD and EMPTYfarLEFT arm BACK, contralateral tosupportLEFT. Natural longrobe parts around actual knee/highheel while remaining LONGdarklayeredgoldtrim robe toankles, with trailinglonghem, never shorts/segmentedpants/barelegs. Hardpauldron/skull/waist proportions remain original; generic3D .57 bones are pose construction, not certified originalbone measurements. Preserve detailed original filigree and heavyarmor.\n\nFixed trueNE REAR-RIGHT threequarter camera, mostlysilverBACKhair/dorsalarmor, larger visible NEARRIGHT shoulder/weaponarm IMAGERIGHT and foreshortened farLEFT. Original longPALEhair/goldhorncrown/narrowHARDstraightGOLDradialspines/blackgoldheavyarmor/LONGdarkgoldtrimROBE. Exactly2arms/hands, fullcontinuous anatomicalRIGHT arm carries originalONE LONGSINUOUSorangegoldblade with samecontinuouscurves/length, LEFT handEMPTY. No bladehandtransfer, extra arms/gear, broadshortsword, redmask, flamefeatherfan/wings, pureNsymmetry/pureEside/frontface. Preserve allspine/hair/robe/weaponextents and faithful handpainted game quality.\n\nOUTPUT ONE complete isolated transparent requested1024squareRGBA, body500-600px/fullgear≤800px, ≥96px alpha0 outerclearance. No clipping/gearshortening/floor/shadow/aura/outwardglow/particles/blur/text/labels/grid/guidecolors/duplicatefigure. Final check anatomical FARLEFT really plantsforward, NEARRIGHT really foldsHIGHbehind onitsOWNnearhip chain; if both are nearRIGHT leads it is failed even with opposite arms.",
+  "corrective_reason": "Fresh independent initialpair actualhip/slit review found both first0/3 read nearRIGHTleading. Preserve first0HOLD and actualsuccessfulnearRIGHT3. MaterialNEW0 shifts farLEFTheelforward.60, nearRIGHTrecoveryankleHIGH.72, exposesbothcoloredhips/chains through wiretorso and restoresnaturalocclusionsecondguide; originalposedarms/legsremainremoved. No identicalcompletedfailure retry or pair/full6regeneration.",
+  "fixedbone_3d_proof_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-farhip-cutaway-v02/fixedbone-NE-run-opposite-landing-3d-proof.json",
+  "fixedbone_3d_proof_sha256": "c75f755dd1cb9636e3315e23da43c7f3466aa359c6a36a9cead2d966bb08d637",
+  "identity_crop_proofs_path": "/workspace/scratch/girtas-NE-run-production-v01/identity-reference-arm-leg-removal-proofs.json",
+  "identity_crop_proofs_sha256": "8388a931cd8dcb200c27ad7be2276eec0c590d9c8ae4c65c3ac47fc98297688a",
+  "user_authorization": "Continue PR122 actual animation production. Private production generation authorized, no images/mainchat, preserve allpriorart/approval/colorprofiles.",
+  "requested_at": "2026-10-19T16:16:41.854750+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_poses": 0,
+  "actor_approval": false,
+  "generation_budget": "ONE materially changed farLEFT0 attempt after exactsame-legSOURCEHOLD, then fresh sourceQC; no blind repeating failedleg.",
+  "previous_HOLD_source_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-key-v01/girtas-NE-run-LEFT-landing0-key-v01.png",
+  "previous_HOLD_source_sha256": "d07effebddfaad6df85dffc7c60389e8ef7a7ce548cd410c2b3e085abb774a73",
+  "root_authorization": "2026-10-19 root explicitly: continue material farLEFT0 repair; preserve actualnearRIGHT3, do not regenerate it."
+}

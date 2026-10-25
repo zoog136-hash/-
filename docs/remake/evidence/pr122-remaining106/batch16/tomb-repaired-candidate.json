@@ -1,0 +1,1310 @@
+{
+  "input_mode": "mixed_sources_v1",
+  "texture_binding": "unchanged_png_metadata",
+  "key": "transform:269",
+  "prompt": "Batch16: restored immutable51-source/112-pose Tomb269 draft; preserve corrected E weapon proportion, NE rear heels, six neutral-palette replacements,32 prior source-foot observations and12 reviewed hit/collapse foot roots. Three NE walk palette v02 edits were newly authored with exact saved prompts. Whole source bytes unchanged; reference-based drawings, not recovered SPX. No production approval from geometry.",
+  "phase_counts": {
+    "idle": 2,
+    "walk": 4,
+    "attack": 3,
+    "hit": 2,
+    "death": 3
+  },
+  "expected_distinct_poses": 112,
+  "display_height_basis": "median_idle",
+  "sheets": [
+    {
+      "id": "idle-E-W-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-017-whole-sheet.png",
+      "source_sha256": "597e857721c03b8bf6dabb3e33d33428fc1bab03d37a840504d075802ddefe32",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 2,
+      "directions": [
+        "E",
+        "W"
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "directions_axis": "rows",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          353,
+          572
+        ],
+        [
+          323,
+          1189
+        ],
+        [
+          915,
+          578
+        ],
+        [
+          884,
+          1198
+        ]
+      ]
+    },
+    {
+      "id": "idle-S-N-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-018-whole-sheet.png",
+      "source_sha256": "957a2881e4cabfb3a5f6f8396d1659015f5fc99c29132357913ba60a5fd7cdd8",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 2,
+      "directions": [
+        "S",
+        "N"
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "directions_axis": "rows",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          359,
+          581
+        ],
+        [
+          346,
+          1177
+        ],
+        [
+          938,
+          586
+        ],
+        [
+          928,
+          1174
+        ]
+      ]
+    },
+    {
+      "id": "idle-SE-SW-correction1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-019-whole-sheet.png",
+      "source_sha256": "f0273738b7b004db5a2400946e9cf60a268fc255ea13018d313dd300ab509259",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 2,
+      "directions": [
+        "SE",
+        "SW"
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "directions_axis": "rows",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          371,
+          606
+        ],
+        [
+          347,
+          1199
+        ],
+        [
+          944,
+          609
+        ],
+        [
+          923,
+          1209
+        ]
+      ]
+    },
+    {
+      "id": "NW-idle2-rear-armor-consistency-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-000-whole-sheet.png",
+      "source_sha256": "b18c73488027f3fada5ab6f1bceb23860e54dc57737f83ae7d4650f347fcd261",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 2,
+      "directions": [
+        "NW"
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ]
+      },
+      "directions_axis": "rows",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          450,
+          950
+        ],
+        [
+          1200,
+          950
+        ]
+      ]
+    },
+    {
+      "id": "attack-E3-single-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-001-whole-sheet.png",
+      "source_sha256": "ba91b9b539d23cf245dc0acc2152fe9e7479aa1ff078e4f2b09a25a22cda2afe",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "E"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          510,
+          537
+        ],
+        [
+          410,
+          950
+        ],
+        [
+          500,
+          1500
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-E5-staggered-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-009-whole-sheet.png",
+      "source_sha256": "fc22b7ee8a443ed3507795005a8203033e71c5f31ddf531c0703b10791f14ea0",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "E"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          260,
+          497
+        ],
+        [
+          723,
+          666
+        ],
+        [
+          250,
+          1018
+        ],
+        [
+          723,
+          1217
+        ],
+        [
+          426,
+          1497
+        ]
+      ]
+    },
+    {
+      "id": "attack-SE3-staggered-reflow",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-006-whole-sheet.png",
+      "source_sha256": "ff2f57b93b6409a95f7981fefb1b0c092706e004b3ca51256d461376ede3d595",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "SE"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          262,
+          691
+        ],
+        [
+          748,
+          1050
+        ],
+        [
+          284,
+          1498
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-SE5-clearance1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-014-whole-sheet.png",
+      "source_sha256": "93e78188da7ac3c6c7404fab215e3ba4af36568776bec3e619d8ead809e82b59",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "SE"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          270,
+          510
+        ],
+        [
+          745,
+          721
+        ],
+        [
+          213,
+          1010
+        ],
+        [
+          733,
+          1172
+        ],
+        [
+          461,
+          1498
+        ]
+      ]
+    },
+    {
+      "id": "attack-S3-staggered-reflow",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-005-whole-sheet.png",
+      "source_sha256": "345ecf08398a244def5b8c8e19047004711ea372d8e0fe86a63640084eb5ee90",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "S"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          314,
+          585
+        ],
+        [
+          722,
+          1052
+        ],
+        [
+          323,
+          1520
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-S5-staggered-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-013-whole-sheet.png",
+      "source_sha256": "b3df5e6c9948af753a828ef940baab7f682924511340055d8760156bc6490b56",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "S"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          309,
+          530
+        ],
+        [
+          725,
+          695
+        ],
+        [
+          299,
+          1064
+        ],
+        [
+          759,
+          1253
+        ],
+        [
+          348,
+          1502
+        ]
+      ]
+    },
+    {
+      "id": "attack-SW3-staggered-reflow",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-007-whole-sheet.png",
+      "source_sha256": "3e7b401587758057ddd5893b8bd1edebc3c4cbc11715337c86e91510beecb38d",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "SW"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          245,
+          593
+        ],
+        [
+          704,
+          980
+        ],
+        [
+          282,
+          1493
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-SW5-staggered-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-015-whole-sheet.png",
+      "source_sha256": "8f778a880c9def402d0e4c60c236118199eb0d7e187a9ab9e7f3cf9677c8422e",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "SW"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          285,
+          505
+        ],
+        [
+          780,
+          722
+        ],
+        [
+          288,
+          1077
+        ],
+        [
+          757,
+          1224
+        ],
+        [
+          354,
+          1517
+        ]
+      ]
+    },
+    {
+      "id": "attack-W3-staggered-reflow",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-008-whole-sheet.png",
+      "source_sha256": "2368335146a7fc5ffd9eb1fcfbc8aef7787c7ea57f913459387332fcbb68b8bb",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "W"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          312,
+          513
+        ],
+        [
+          630,
+          943
+        ],
+        [
+          346,
+          1446
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-W5-clearance1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-016-whole-sheet.png",
+      "source_sha256": "ec26011ede277eefa95782cee4753e6dc1a21cea1b31b16dba17f71f3a9a6372",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "W"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          284,
+          517
+        ],
+        [
+          767,
+          706
+        ],
+        [
+          250,
+          1058
+        ],
+        [
+          736,
+          1285
+        ],
+        [
+          415,
+          1492
+        ]
+      ]
+    },
+    {
+      "id": "attack-NW3-staggered-reflow",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-004-whole-sheet.png",
+      "source_sha256": "69f10a0ce7c928aec744f67529585e8e8d144a393d5c801c2c7b03c341303f90",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "NW"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          250,
+          606
+        ],
+        [
+          732,
+          1046
+        ],
+        [
+          273,
+          1487
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-NW5-staggered-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-012-whole-sheet.png",
+      "source_sha256": "4a255de868e5aa236643ed8514adf6a52828c9352dad161c26ae161b5e33dcdc",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "NW"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          286,
+          500
+        ],
+        [
+          782,
+          674
+        ],
+        [
+          292,
+          1015
+        ],
+        [
+          782,
+          1238
+        ],
+        [
+          349,
+          1497
+        ]
+      ]
+    },
+    {
+      "id": "attack-N3-staggered-reflow",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-002-whole-sheet.png",
+      "source_sha256": "b573a9ec4ae0b1fb22630dc372e5743b1393049a9493a0e870e6206bff645fa9",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "N"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          319,
+          533
+        ],
+        [
+          735,
+          1052
+        ],
+        [
+          301,
+          1495
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-N5-staggered-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-010-whole-sheet.png",
+      "source_sha256": "9cbafc13244d3cf54ef48e3da6abfadeadb087c6d35d75350e5f8b4e843281f2",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "N"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          292,
+          536
+        ],
+        [
+          775,
+          701
+        ],
+        [
+          300,
+          1080
+        ],
+        [
+          757,
+          1188
+        ],
+        [
+          352,
+          1483
+        ]
+      ]
+    },
+    {
+      "id": "attack-NE3-staggered-reflow",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-003-whole-sheet.png",
+      "source_sha256": "f5906f11fee4108aa20d568da06c47c88734ff6cccf212627cc6da37c5d526cf",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 3,
+      "directions": [
+        "NE"
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          246,
+          636
+        ],
+        [
+          730,
+          1089
+        ],
+        [
+          245,
+          1507
+        ]
+      ]
+    },
+    {
+      "id": "hit-death-NE5-staggered-attempt1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-011-whole-sheet.png",
+      "source_sha256": "757ddc8f55fc3cbafcb9396aef8acfddb2702ca34b923afb16320c1214f74315",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 5,
+      "directions": [
+        "NE"
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          275,
+          462
+        ],
+        [
+          728,
+          714
+        ],
+        [
+          299,
+          1052
+        ],
+        [
+          730,
+          1242
+        ],
+        [
+          351,
+          1503
+        ]
+      ]
+    },
+    {
+      "id": "walk-S4-filled-guide",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-020-whole-sheet.png",
+      "source_sha256": "f10b03eefdebfca12d8f6819cccdce1667c3234340c6fc06b199cd1801f9e4ef",
+      "canvas_size": 1000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "rows": 4,
+      "directions": [
+        "S"
+      ],
+      "roles": {
+        "walk": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "directions_axis": "columns",
+      "reference_rows": [
+        0
+      ],
+      "source_anchors": [
+        [
+          280,
+          597
+        ],
+        [
+          750,
+          888
+        ],
+        [
+          280,
+          1321
+        ],
+        [
+          760,
+          1520
+        ]
+      ]
+    }
+  ],
+  "pose_files": [
+    {
+      "id": "walk-E-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-023-pose-file.png",
+      "source_sha256": "58b777607fa8c06977f0a4dc40f301106d4a37005129387370f333f11db50600",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "E",
+      "phase": 0,
+      "source_anchor": [
+        750,
+        938
+      ]
+    },
+    {
+      "id": "walk-E-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-024-pose-file.png",
+      "source_sha256": "7703678d0c98465c03900114c4c4f5bc4b622b7a36ba97cff55a0df7a19d2ac3",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "E",
+      "phase": 1,
+      "source_anchor": [
+        750,
+        913
+      ]
+    },
+    {
+      "id": "walk-E-2",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-025-pose-file.png",
+      "source_sha256": "31c8954c3db2bc209b88f5aad6a039d33c9977cf1acc005186520983078ca6e9",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "E",
+      "phase": 2,
+      "source_anchor": [
+        760,
+        956
+      ]
+    },
+    {
+      "id": "walk-E-3",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-026-pose-file.png",
+      "source_sha256": "e5881f300fb36ddd3137e10042c979927260ce99541c835252b3dd0ebb8cc68f",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "E",
+      "phase": 3,
+      "source_anchor": [
+        750,
+        928
+      ]
+    },
+    {
+      "id": "walk-SE-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-039-pose-file.png",
+      "source_sha256": "d208ddc5e530f34a80216d61e443cc93fcc46e1c35ecb0979b99f47ec202f6a7",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SE",
+      "phase": 0,
+      "source_anchor": [
+        760,
+        960
+      ]
+    },
+    {
+      "id": "walk-SE-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-040-pose-file.png",
+      "source_sha256": "153ba222a4bfcbe762ba8ff7ed35f9fdc774c40e92a8192a8d845ebc256ce290",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SE",
+      "phase": 1,
+      "source_anchor": [
+        750,
+        1005
+      ]
+    },
+    {
+      "id": "walk-SE-2",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-041-pose-file.png",
+      "source_sha256": "8038addf9f242b10a08b01c08cddc3831d22f15fc24250b82f9d986b780c7b55",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SE",
+      "phase": 2,
+      "source_anchor": [
+        760,
+        960
+      ]
+    },
+    {
+      "id": "walk-SE-3",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-042-pose-file.png",
+      "source_sha256": "a130ff07667d801f3bd90d14c3766d7df6243292759ed54d1aa50632136df89f",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SE",
+      "phase": 3,
+      "source_anchor": [
+        750,
+        952
+      ]
+    },
+    {
+      "id": "walk-SW-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-043-pose-file.png",
+      "source_sha256": "80327005c370cdfc35eb0825938bb7f3d58728267d3613fc97cfe739ede7a1d7",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SW",
+      "phase": 0,
+      "source_anchor": [
+        780,
+        960
+      ]
+    },
+    {
+      "id": "walk-SW-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-044-pose-file.png",
+      "source_sha256": "dc139b020aec71113a12960f198756873d26ca975549f2df3142712dac8025e7",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SW",
+      "phase": 1,
+      "source_anchor": [
+        775,
+        970
+      ]
+    },
+    {
+      "id": "walk-SW-2",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-045-pose-file.png",
+      "source_sha256": "a989e42fc865412dfc8b00fe6b08ca923ceb30909d2ecaad2aaf7241e0975c21",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SW",
+      "phase": 2,
+      "source_anchor": [
+        760,
+        960
+      ]
+    },
+    {
+      "id": "walk-SW-3",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-046-pose-file.png",
+      "source_sha256": "0935bdf728a4a9da262e01f2b0bff8614042ea2835d852fe78f86c1ffc348d09",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "SW",
+      "phase": 3,
+      "source_anchor": [
+        780,
+        950
+      ]
+    },
+    {
+      "id": "walk-W-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-047-pose-file.png",
+      "source_sha256": "4993190418d39142a001c2aeda12c6ca88dec1271f13dfd25b326a28c15dfdbc",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "W",
+      "phase": 0,
+      "source_anchor": [
+        785,
+        945
+      ]
+    },
+    {
+      "id": "walk-W-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-048-pose-file.png",
+      "source_sha256": "fc3658a0cf60539a0b2f246609fda7ec34c0a9103fe62b22dd6db9a628b24b9f",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "W",
+      "phase": 1,
+      "source_anchor": [
+        830,
+        945
+      ]
+    },
+    {
+      "id": "walk-W-2",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-049-pose-file.png",
+      "source_sha256": "7b970c692fa74e89eca12f5c3d687c3d2b378f63786f63063e97a255d7fd1fe0",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "W",
+      "phase": 2,
+      "source_anchor": [
+        760,
+        970
+      ]
+    },
+    {
+      "id": "walk-W-3",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-050-pose-file.png",
+      "source_sha256": "402e77845429efb379e8b103e4812406dc0ebe418090dee6f320fbc79f2afcd7",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "W",
+      "phase": 3,
+      "source_anchor": [
+        785,
+        945
+      ]
+    },
+    {
+      "id": "walk-NW-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-035-pose-file.png",
+      "source_sha256": "7ba02f91515568bcaf67d0670ef9aa57edcd6c52364078d83ee4cf36b25ebca8",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NW",
+      "phase": 0,
+      "source_anchor": [
+        800,
+        940
+      ]
+    },
+    {
+      "id": "walk-NW-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-036-pose-file.png",
+      "source_sha256": "f7b75313c07db87b4a9858f36367b2703777c79fce8e86e9e37be8941deb3892",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NW",
+      "phase": 1,
+      "source_anchor": [
+        800,
+        990
+      ]
+    },
+    {
+      "id": "walk-NW-2",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-037-pose-file.png",
+      "source_sha256": "23e75dac3d0e96961501f51fd90a11ce8eac92c0844b479e0ef003e9daaae281",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NW",
+      "phase": 2,
+      "source_anchor": [
+        800,
+        970
+      ]
+    },
+    {
+      "id": "walk-NW-3",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-038-pose-file.png",
+      "source_sha256": "28dbb714ec49d3c7b0710ff62a1a0d124ea47e1004a81e9fc4c0de15e47ef716",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NW",
+      "phase": 3,
+      "source_anchor": [
+        800,
+        960
+      ]
+    },
+    {
+      "id": "walk-N-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-027-pose-file.png",
+      "source_sha256": "f8b33bf24cd42decde53ecc141cb67ef55c5df626ce32202012c5627c450960e",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "N",
+      "phase": 0,
+      "source_anchor": [
+        790,
+        950
+      ]
+    },
+    {
+      "id": "walk-N-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-028-pose-file.png",
+      "source_sha256": "25f96ac708a705e6e203f096c846cf4a3e0278d5aa2723af9a19c68c84a8ce2d",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "N",
+      "phase": 1,
+      "source_anchor": [
+        800,
+        970
+      ]
+    },
+    {
+      "id": "walk-N-2",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-029-pose-file.png",
+      "source_sha256": "64c09dd3da295b8ad69fb3146411a4b54dd273f6bb645bb5fe79111492586360",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "N",
+      "phase": 2,
+      "source_anchor": [
+        790,
+        970
+      ]
+    },
+    {
+      "id": "walk-N-3",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-030-pose-file.png",
+      "source_sha256": "702c7bf31a804b3180d7a8f68e76b404260869071b7d9991b18b79e72bc35736",
+      "canvas_size": 1800,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "N",
+      "phase": 3,
+      "source_anchor": [
+        800,
+        967
+      ]
+    },
+    {
+      "id": "walk-NE-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-031-pose-file.png",
+      "source_sha256": "ead76018e90235ca4be8eb39f4eccb0ce9d50059f94b832c6cbe31834c4589f1",
+      "canvas_size": 2000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NE",
+      "phase": 0,
+      "source_anchor": [
+        800,
+        950
+      ]
+    },
+    {
+      "id": "walk-NE-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-032-pose-file.png",
+      "source_sha256": "bdb042df659b8269378793fee35e5d4ff4640baea9d20db4e96a78ef43df797c",
+      "canvas_size": 2000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NE",
+      "phase": 1,
+      "source_anchor": [
+        825,
+        998
+      ]
+    },
+    {
+      "id": "walk-NE-2",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-033-pose-file.png",
+      "source_sha256": "8e91b2c917bc744a8ef02add776099c894627ed08fb86f32589f736734db7312",
+      "canvas_size": 2000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NE",
+      "phase": 2,
+      "source_anchor": [
+        760,
+        970
+      ]
+    },
+    {
+      "id": "walk-NE-3",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-034-pose-file.png",
+      "source_sha256": "013bcc2b19ddd74f966e97f33665cb9bbfc66fe9b0ce340b0b88d688387ae30f",
+      "canvas_size": 2000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "walk",
+      "direction": "NE",
+      "phase": 3,
+      "source_anchor": [
+        790,
+        968
+      ]
+    },
+    {
+      "id": "idle-NE-0",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-021-pose-file.png",
+      "source_sha256": "4f4663e24b473e11eac56b7c3974573b85a2c6530584155089f31b713e2ab7d2",
+      "canvas_size": 2000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "idle",
+      "direction": "NE",
+      "phase": 0,
+      "source_anchor": [
+        800,
+        995
+      ]
+    },
+    {
+      "id": "idle-NE-1",
+      "output_path": "res://assets/actors/eight_direction/original_based/tomb_guardian269_batch16_repaired/source-022-pose-file.png",
+      "source_sha256": "45a5e43cb643d620292b5a899270a139e2d0b41b74e1e38fd4cf9e8df5dd8fd8",
+      "canvas_size": 2000,
+      "scale_review_note": "Preserved whole-source canvas and manually observed semantic foot anchors; actual Main final helmet/core/ground review pending. No raster resizing or pose-specific scaling.",
+      "role": "idle",
+      "direction": "NE",
+      "phase": 1,
+      "source_anchor": [
+        710,
+        1000
+      ]
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Complete source model/facing/connected-body and retained landmark review, with E weapon/NE color/heel corrections. Final actual Main scale/contact/transition review still pending; isolated QA only."
+  }
+}

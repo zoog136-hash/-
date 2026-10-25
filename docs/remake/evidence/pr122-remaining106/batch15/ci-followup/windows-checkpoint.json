@@ -1,0 +1,62 @@
+{
+  "branch": "feature/twilight-remaining106-20261016",
+  "focused_local_godot_4_7_2": {
+    "checks": 336,
+    "failures": [],
+    "real_git_core_autocrlf_true_checkout": "PASS: exact original pinned SHA preserved"
+  },
+  "last_safe_game_commit": "755360cea8428dd71140da80590ca209767e1a7c",
+  "parent_safe_ci_commit": "bfdbeda4a98d10529e57a46b42d28d9f25af334d",
+  "first_run": 39142865334,
+  "windows_job": 117720685320,
+  "first_failures": [
+    "original_based_transform_temporal_main_test: nine original male reaper provenance/minimum assertions",
+    "qa_original_source_frame_test: original male reaper pinned provenance assertion"
+  ],
+  "root_cause": "Windows core.autocrlf rewrites the SHA-authenticated original provenance JSON. Preserve the original blob bytes via a path-specific -text attribute. Do not relax SHA, source identity or pose checks.",
+  "reproduction": {
+    "pinned_sha256": "6402666115e8f7b45ea3a7a333e8755c2c28545f575bec442026bd295db38406",
+    "actual_git_checkout_core_autocrlf_true": [
+      {
+        "checkout": "old",
+        "sha256": "b350a690906f7c950b46447761e93861c173a7c5592123976f9765c27a6bb098",
+        "bytes": 48097,
+        "crlf": 2406,
+        "matches_pinned_source": false
+      },
+      {
+        "checkout": "fixed",
+        "sha256": "6402666115e8f7b45ea3a7a333e8755c2c28545f575bec442026bd295db38406",
+        "bytes": 45691,
+        "crlf": 0,
+        "matches_pinned_source": true
+      }
+    ]
+  },
+  "job_failure_annotation": "The job has exceeded the maximum execution time of 1h30m0s",
+  "windows_job_minutes_before": 90,
+  "windows_job_minutes_after": 120,
+  "all_steps_and_individual_test_deadlines_preserved": true,
+  "linux_job_minutes_unchanged": 75,
+  "full_original_windows_log_utf8_bytes": 1526739,
+  "full_original_windows_log_utf8_sha256": "c6e9c62767cb56e0bb757a5bb0a4dc065bf969d2ddc6cdca1fcc33d374607720",
+  "compressed_log": "windows-first.txt.gz",
+  "game_assets_tests_tools_unchanged": true,
+  "unchanged_tree_entries": 15088,
+  "unchanged_tree_sha256": "51ff54ea52a4b709e3c9ffd3ba654abe6c52f701a6b189b96eb85e2fa00a9609",
+  "excluded_from_tree_identity": [
+    ".gitattributes",
+    ".github/workflows/combat-animation-validate.yml",
+    ".github/workflows/l1j-runtime-validate.yml",
+    "docs/remake/evidence/pr122-remaining106/batch15/ci-followup/"
+  ],
+  "counts_unchanged": {
+    "approved": 399,
+    "normal_status": 385,
+    "frame_insufficient": 14,
+    "hold": 19,
+    "in_progress": 1,
+    "not_authored": 79
+  },
+  "next_action": "Verify pinned-source QA locally, commit/push attributes and Windows budget plus evidence; manually dispatch only L1J Runtime and Recovery Validation. Existing Combat retry continues on identical game code."
+}

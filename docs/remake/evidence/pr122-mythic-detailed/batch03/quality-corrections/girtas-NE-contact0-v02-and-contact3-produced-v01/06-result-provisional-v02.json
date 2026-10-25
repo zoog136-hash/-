@@ -1,0 +1,51 @@
+{
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02",
+  "expected_poses": 1,
+  "intended_game_phases": [
+    0
+  ],
+  "source_kind": "NEW_bounded_farLEFT_support_knee_foreshortening_from_owned_contact0",
+  "raw_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+  "raw_png": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+  "raw_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+  "raw_bytes": 1147908,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/request.json",
+  "request_sha256": "52bc84db9bdcb375b25234611b6d83312d451a177ff8619c5695d09eacc80028",
+  "original_generated_file": "/workspace/generated_images/exec-9fc12ba1-a969-496b-90a6-3271ee11b47c.png",
+  "imagegen_completed_service_calls": 1,
+  "source_visual_status": "HOLD_PENDING_INDEPENDENT_V02_SOURCE_REVIEW",
+  "status": "PROVISIONAL_STRICT_OPPOSITE_RECOVERY_PRESERVATION_CANDIDATE_NOT_ADOPTED",
+  "actor_approval": false,
+  "new_approvals": 0,
+  "integration_ready": false,
+  "newly_authored_poses": 1,
+  "reused_poses": 0,
+  "completion_count_delta": 0,
+  "fixed_runtime_canvas": 1936,
+  "visual_findings": [
+    "Single actual production image edit changed supporting farLEFT leg/attached inner robe inside agreed semantic mask.",
+    "Exact original RGBA outside mask preserved; opposite nearRIGHT folded recovery, upper rigid body and entire weapon unchanged.",
+    "Direct native observation: new support boot ROI [610,900,780,1025], approximate back heel [635,1007], middlebottomsole [670,1009], leadingtoe [739,992]."
+  ],
+  "visual_limitations": [
+    "Source anatomy/knee flexion versus projected limb shortening requires independent v04 verdict.",
+    "Actual new heel differs from nominal green target683967; physical author must derive ground/root from actual new sole, not targets.",
+    "No six-pose physical, actual Godot, game connection, or actor approval is claimed."
+  ],
+  "source_crop_alpha16_proof_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/source-crop-alpha16-proof-v02.json",
+  "source_crop_alpha16_proof_sha256": "036090d41d711805d7cad71411563146514fb473392e57aafb017848c034aa8d",
+  "exact_preservation_proof_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/exact-bounded-preservation-proof-v02.json",
+  "exact_preservation_proof_sha256": "fa11bc6577c96c01d2d501b82161814866d9fc9bd348c1ab07887ee3d5c99e8e",
+  "prior_candidate_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v01.png",
+  "prior_candidate_sha256": "99eacae26b148d58339441ed91ba0985d0eb7b54dbebb766dc8191e353bfc90e",
+  "refinement": "Only63RGBApixels atoriginalmasktip restored to source; wholeprotectedoppositeRIGHTROI0changes and entirefarLEFTboot0changes vs priorcandidate. No new generation.",
+  "actual_heel_note": "Physicalauthor actualalpha100heelcentroid[636.9355,1019.1935],rootY1048.529/core97.7568world; unchangedfarLEFTboot proves old actualedgeaudit transferable, not independently approvedsource."
+}

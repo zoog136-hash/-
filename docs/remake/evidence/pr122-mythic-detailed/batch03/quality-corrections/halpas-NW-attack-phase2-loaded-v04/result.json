@@ -1,0 +1,72 @@
+{
+  "status": "GENERATED_PRIVATE_SINGLE_KEY_PASS_NOT_APPROVED",
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "v04",
+  "target_phase": 2,
+  "phase_name": "loaded_anticipation",
+  "expected_poses": 1,
+  "newly_authored_poses": 1,
+  "request_path": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/request-halpas-NW-attack-phase2-v04.json",
+  "request_sha256": "75ca9238823559c5dde80a2b45b213db2891f2eb794213b489add31693a77cab",
+  "original_generated_file": "/workspace/generated_images/exec-09602dcb-08fa-498e-81fa-708e1e19b126.png",
+  "raw_png": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+  "raw_sha256": "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956",
+  "raw_bytes": 1425534,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "source_visual_status": "PASS",
+  "source_art_status": "PASS_SINGLE_KEY_ONLY",
+  "source_region": [
+    184,
+    104,
+    988,
+    1060
+  ],
+  "source_rgba_sha256": "0fcd67b7b7fcbb4597dea86aee1d8c670872a70b25c130392498629bc2af40dc",
+  "source_geometry_proof": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/source-region-proof.json",
+  "source_geometry_proof_sha256": "9dae5c2d89a5dfe51bdaa3003b22795108476d78a196645aac623f9eaace9273",
+  "alpha_positive_bounds": [
+    0,
+    9,
+    1240,
+    1245
+  ],
+  "outside_region_alpha_positive_pixels": 1761,
+  "outside_region_max_alpha": 11,
+  "all_alpha_gt16_inside_reviewed_region": true,
+  "strong_outer_edge_pixels": 0,
+  "references": [
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-phase1-raise-lossless.png": "5f05cd3d83c07457a4c328ab41c4e5bd53ba088b59c5b3b86ed8e8b46c1553b5"
+  },
+  "source_good_key_proof": "/workspace/scratch/halpas-NW-attack-repair-v03/salvaged-good-keys-proof.json",
+  "source_good_key_proof_sha256": "8e9d5c8d2a064c3ffd6e2ccfdc7619c47f8335d51c211f3da795abb54c90bf73",
+  "production_receipt": "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/production-receipt.json",
+  "production_receipt_sha256": "a407e29a806a9403b78f56239d34ab042bfaaf3befbba28dff8480a3a9e7a7b1",
+  "visual_findings": [
+    "Exactly TWO connected arms: original nearLEFT shoulder→upperarm→elbow→forearm→empty fist hangs downLEFT; original farRIGHT shoulder→one raised upperarm→one high bent elbow→folded forearm→one gripping hand→one compact purple blade is visibly continuous. No lower-right hanging arm/fist or spare hand remains.",
+    "True NW rear-left view remains: left-away helmet profile, segmented black/gold back and spine, rear-left pelvis and NW boots. Front skull breastplate/face and NE/right torso turn are absent.",
+    "Loaded phase2 gathers the existing raised weapon arm farther high/back with a tighter bent forearm, deeper shoulder/torso loading and flexed knees; both wing fans/cape respond. It is a new anticipation key before the upper-left strike and retains exact original equipment/materials.",
+    "Complete two fan tips, full blade, both arms, entire cape and boots are inside the canvas. No strong alpha touches outer edges. One complete key is retained unmodified; original source1/canonical/full HOLD sources are not overwritten."
+  ],
+  "visual_limitations": [
+    "This is a single authored phase2 only. Phases3/4 must be separately authored and physically reviewed, then combined with original valid0/1/5; no six-pose attack/game selection or actor approval is implied.",
+    "The tool produced1254square and approximately1060px alpha>16 silhouette height despite the requested smaller native layout. Pixel resolution/layout alone is not an art defect; runtime virtualcanvas/anchors must later be physically compared to retained phases without resampling source pixels.",
+    "Low-opacity alpha1–16 pixels exist outside the reviewed alpha>16 physical region and are separately counted; all original PNG bytes are retained without masking or cleanup. No alpha>16 material lies outside the proposed source region.",
+    "Ornate armor/wing roots partially overlap shoulder joints; visible continuous arm chains are reviewed, not a uniquely proven hidden skeleton."
+  ],
+  "imagegen_attempts": 1,
+  "repository_mutated": false,
+  "chat_image_attachments": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T12:38:04.111681+00:00"
+}

@@ -1,0 +1,75 @@
+{
+  "label": "bossfix-min004",
+  "checked_new_sheets": 6,
+  "safe_played_clips": 0,
+  "held": [
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-hit-v02",
+      "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-idle-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-run-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "iris",
+      "clip": "S-run-v02",
+      "reason": "A visible pose touches the image boundary"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-attack-v02",
+      "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [],
+  "runtime": null,
+  "source_pins": [
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-attack-v02",
+      "sha256": "adbb2d247035bba95f67a8088f00d25472d6f8954ac91058f12c308f2ac76376"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-hit-v02",
+      "sha256": "3486dfde44634f1d24c64691fe41cc2f2e0a861c2bb349658a19437c661fb1f3"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-idle-v02",
+      "sha256": "d3520869753b2537ebd225ba6ed0a2f951f992a302260cd1e72930190494254f"
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "SW-run-v02",
+      "sha256": "3a434dcd351aafefb59e289495e6ea74d04076ee6edf3f59bdc20d60613bd7ae"
+    },
+    {
+      "slug": "iris",
+      "clip": "S-run-v02",
+      "sha256": "66b6f9142a8b8c54abc548593f7a04c6efed46c8861d9c4e641aeafff84e0a54"
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-attack-v02",
+      "sha256": "fd83e9227456983b37552aa17558b112b5d01ae0264c48a6d317698c87a5b09f"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "species_gates": {
+    "source_review": "PASS",
+    "static_image_gate": "PASS",
+    "temporal_gate": "PASS",
+    "game_function_gate": "PASS",
+    "actual_Main_visual_gate": "PASS",
+    "baseline_comparison": "PASS"
+  },
+  "independent_visual_review": "Resuming agent reviewed complete raw8-view sources plus actual Main E idle/gait/AI strike, N idle/gait, S strike/collapse and NW gait. No independent human or wall-time performance claim.",
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "motion_contract": {
+    "idle": 2,
+    "walk": 6,
+    "attack": 3,
+    "hit": 2,
+    "death": 3,
+    "unique_poses": 128,
+    "run": "No separate verified source run; none invented"
+  },
+  "newly_drawn_poses": 128,
+  "preserved_prior_poses": 0,
+  "new_raw_PNG": 8,
+  "total_pack_PNG": 8,
+  "visual_notes": "Connected8-leg roots and original hairy purple-brown abdomen/eye/fang model retained. Rear views hide frontal eyes. One768 canvas retains consistent body pixel size across8 views. Seven N foot anchors use actual outer leg contacts because the projected abdomen lies below those feet; actual Main feet/ground reviewed. Full body/legs remain uncropped through gait, strike and curled terminal death. Original attack/poison/AI/stats/collision/save logic unchanged. Rejected E_v02 source with17 components remains preserved and unused.",
+  "id": "monster:스파이더",
+  "name": "스파이더",
+  "status": "APPROVED",
+  "decided_UTC": "2026-10-18T23:55:35.867409+00:00",
+  "scope": "Local reference-based native completion, final integrated CI/device acceptance separate; no independent human claim",
+  "runtime_connected": true,
+  "actual_Main_checks": 1723,
+  "with_baseline_gameplay_checks": 3208,
+  "continuous_with_baseline_checks": 81257,
+  "source_reference_SHA256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+  "final_CI": "PENDING_BATCH",
+  "Android_device": "NOT_RUN",
+  "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch16/spider-source-preservation.json",
+  "reviewed_profile_sha256": "b1b13dd71b01b6b13368faf080adb3d02843bdd25f382f2a3d095aafd64abe99",
+  "evidence_pins": [
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-source-preservation.json",
+      "sha256": "d84d73fae23849ab31e2cbb88704bbbb58f0e0e8cd1714129261244fbe5c9c6a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-candidate.json",
+      "sha256": "dac0ef160b9936bed85bb64b35c7b343af2ef7d691a2be0d61633c1f338a26a7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-Main-reports/gameplay.json",
+      "sha256": "dfe9461db5836e67a28cf48a938aac19822a6f42bc4f6a28debf32abe8f266f6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-Main-reports/gameplay-cases/spider-project.json",
+      "sha256": "e5fa41b481f2f202f711a2fdadd23f6a61bfd0d506c6310a048e721a07ae4c70"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-Temporal-reports/report.json",
+      "sha256": "9c6a8613731f6de4b4d7b2c531049efda6acfeaad76df330079935907dc950f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch16/spider-Temporal-reports/report-cases/spider-project.json",
+      "sha256": "95c44e44417d379414760d24641a422fb392153a6daa4b9db250a6e5520ea48f"
+    }
+  ]
+}

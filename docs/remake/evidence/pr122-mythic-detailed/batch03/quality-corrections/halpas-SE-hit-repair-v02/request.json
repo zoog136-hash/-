@@ -1,0 +1,44 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "SE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-SE-current-idle-phase0-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-SE-current-idle-phase0-lossless.png": "f382e7d214731188003b7f672f512eb5539804acc8b3dad15d1c9035de71ac3a"
+  },
+  "reference_provenance": {
+    "direction": "SE",
+    "selected_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01iso01.png",
+    "source_sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3",
+    "region": [
+      145,
+      43,
+      506,
+      428
+    ],
+    "reference": "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-SE-current-idle-phase0-lossless.png",
+    "reference_sha256": "f382e7d214731188003b7f672f512eb5539804acc8b3dad15d1c9035de71ac3a",
+    "operation": "exact_RGBA_crop_no_resize_no_recolor",
+    "role": "idle",
+    "stage_revision": "r062",
+    "raw_rgba_sha256": "e6f45f2edbfb4c4dc91f0b1bafe4d2946e9147a9c7fdc373a0535fa1f2b91180"
+  },
+  "transparent_background": true,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v01.png",
+  "corrective_reason": "Confirmed current hit peak phase2 duplicated empty RIGHT fist plus existing low RIGHT blade/grip, creating three arms. New six-pose source uses ONLY correct current directional idle. Continuous LOW right blade arm through all six; only EMPTY LEFT arm flinches. Fix rear/front plane where required without losing hit jerk.",
+  "user_authorization": "Private production image generation and bounded private JPEG inspection allowed; no mainchat images/binary. Root handles Git/native integration.",
+  "prompt": "CAMERA SE / SOUTHEAST: exact FRONT-RIGHT three-quarter DOWN-RIGHT plane as reference, same visible front pink chest jewel, horn/helmet profile and shoulder planes. Do not rotate to side E or rear NE. Maintain existing same RIGHT weapon arm continuous low grip and EMPTY LEFT flinch only; no extra right empty fist beside the chest.\n\nEdit the SAME Halpas winged armored boss in the ONLY reference into SIX different directional HIT-REACTION poses. Preserve exact closed gold-horn black helmet, black/gold segmented armor, purple-pink crystal feather fan wings with warm veins rooted at the two upper-back shoulder sockets, torn burgundy LEFT/back cape and ONE short broad purple crystal blade. Same model, equipment, proportions, perspective and directional body plane in all six. Existing flying/hovering stance is deliberate: keep believable complete two-leg chains, do not invent a floor.\n\nCRITICAL TWO-ARM ANATOMY: only TWO arms total. Anatomical RIGHT arm CONTINUOUSLY grips the existing blade LOW beside its same hip in ALL SIX. Keep the right shoulder, upper arm, elbow, forearm, wrist, hand and blade connected as ONE unbroken natural low chain, moving only a small amount with torso recoil. NEVER lift an empty RIGHT fist while leaving the original low blade arm behind. NEVER add a third arm or another hand near the chest/helmet. The OTHER anatomical LEFT arm is always EMPTY and is the ONLY arm that flinches upward, with one visibly connected left shoulder/elbow/wrist chain. No duplicated forearms/fists, no floating sword, no hand swap. Wings are BACK appendages, never spare arms.\n\nReading order 0 guard with blade low and empty left hand relaxed; 1 immediate impact jerk, head/upper torso recoil, empty LEFT elbow begins to bend; 2 clear peak recoil: upper torso/head lean back slightly and EMPTY LEFT forearm alone braces toward upper chest while RIGHT hand still holds blade LOW at hip; 3 release, left forearm starts to drop, knees and wing roots absorb recoil; 4 recovery half-way toward guard with cape/wings lagging; 5 settle near guard, left hand low again. Six genuinely distinct head/torso/left-arm/wing-root/cloth poses with a visible brief hit jerk at 1-2, no attack swing, no extra striking arm, no shared static translation, no camera rotation or body spin. Allow natural partial far-arm occlusion, never fill that gap with an extra fist.\n\nTransparent PNG, exact 1024x1536, two columns by three rows, six complete figures. Keep every full silhouette including wing tips, cape, blade, horns and toes inside its own 512px cell with at least 42px transparent gutter around all sides; target overall figure width 390px and same head-to-hip pixel scale all six. Preserve full feather fans and blade rather than clipping or shrinking individual gear. Clean detailed RPG sprite cutouts, opaque materials, alpha0 background and interior gaps, thin 1px edge antialias. No outer glow, mist, shadow, floor, particles, sparks, trails, labels, numbers, grids, extra objects or afterimages.",
+  "requested_at": "2026-10-19T13:02:44.543532+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

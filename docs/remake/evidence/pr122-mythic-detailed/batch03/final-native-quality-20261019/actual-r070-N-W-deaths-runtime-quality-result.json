@@ -1,0 +1,368 @@
+{
+  "schema": "pr122-independent-changed-native-quality-review-v1",
+  "actor": "transform:393",
+  "revision": "r070",
+  "status": "PASS_SCOPED_N_AND_W_CORRECTED_DEATHS_12_POSES",
+  "scope": "Only Ndeath+Wdeath; NWfinalreview in separate r073PASSresult. No old47whole re-review.",
+  "selected_frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/SpriteFrames.tres",
+  "selected_frames_sha256": "6e497557701026263e10ed2e9d81e6177afaa335ee2d6fe2b0b74f6ebe96441c",
+  "native_profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/NativeMotionProfile.tres",
+  "native_profile_sha256": "2fcfffdd5be04caf8de18f6956b3fa1098c2cca17c77c269adcfc77b045e8de4",
+  "tracks": [
+    {
+      "direction": "N",
+      "role": "death",
+      "source_visual_status": "PASS_SCOPED_SIX",
+      "actual_selected_status": "PASS_SCOPED_SIX",
+      "runtime_layout_change_required": false,
+      "finding": "Same rigid black/gold paired-horn rear helmet and shoulder plate scale as selected Nidle; source-only wing/body bounding box expansion belongs to real leg/spine extension and fatal-flinch, not a justified rescale. All6 retain N dorsal identity without the former 180-degree front flip. One RIGHT blade and EMPTY LEFT, two anatomically coherent arms/legs, single head, single pair of feather wings/cape; brace->buckle->side collapse->corpse continuous, no reversal to alive pose. Preserve C1024 and all anchors."
+    },
+    {
+      "direction": "W",
+      "role": "death",
+      "source_visual_status": "PASS_SCOPED_SIX",
+      "actual_selected_status": "PASS_SCOPED_SIX",
+      "runtime_layout_change_required": false,
+      "finding": "Existing correct0-3 and new one-head/one-blade corpse4/5 have continuous rigid helmet/boot/plate scale at perposeCs[1024,1024,1024,1024,2048,2048]. Broad helmet in0-3 is physical 45-degree combat/death yaw, not a second head or a bbox rescale trigger. New4/5 retains one RIGHT-hand blade, EMPTY LEFT grounded palm, two bent legs and same wing/cape model. Clear loss of support, side fall, grounded settle and terminal corpse; sourceY/palm-floor anchors preserved."
+    }
+  ],
+  "actual_AtlasTexture_animationmap_sourceSHA_cropRGBA_proof": {
+    "revision": "r070",
+    "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/SpriteFrames.tres",
+    "frames_sha256": "6e497557701026263e10ed2e9d81e6177afaa335ee2d6fe2b0b74f6ebe96441c",
+    "profile": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/NativeMotionProfile.tres",
+    "profile_sha256": "2fcfffdd5be04caf8de18f6956b3fa1098c2cca17c77c269adcfc77b045e8de4",
+    "basis": "Exact actual selected AtlasTexture regions/margins; equal physical canvas via per-pose C. No bbox fit. Native global1024/foot512,640.",
+    "tracks": [
+      {
+        "direction": "N",
+        "role": "death",
+        "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v02iso01.png",
+        "source_sha256": "ad7429692e4a252d1dd1ea5bf507eacab7baef201a2c078c13375c409d21dd62",
+        "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r068/N-death.png",
+        "texture_sha256": "ad7429692e4a252d1dd1ea5bf507eacab7baef201a2c078c13375c409d21dd62",
+        "poses": [
+          {
+            "phase": "idle0",
+            "C": 1024,
+            "rect": [
+              49,
+              97,
+              451,
+              372
+            ],
+            "margin": [
+              305,
+              272,
+              573,
+              652
+            ],
+            "source_anchor": [
+              256,
+              465
+            ],
+            "rgba_sha256": "92165cfc800a53f769e88c8e64b8620004a7c470c270dfdbbeaaead0dd0629af"
+          },
+          {
+            "phase": 0,
+            "C": 1024,
+            "rect": [
+              161,
+              17,
+              479,
+              481
+            ],
+            "margin": [
+              289,
+              163,
+              545,
+              543
+            ],
+            "source_anchor": [
+              384,
+              494
+            ],
+            "rgba_sha256": "6ab158b7dae02d8e29393853015d2eedcdcda738d5b7505290f77b394502eb8a"
+          },
+          {
+            "phase": 1,
+            "C": 1024,
+            "rect": [
+              910,
+              61,
+              470,
+              391
+            ],
+            "margin": [
+              270,
+              253,
+              554,
+              633
+            ],
+            "source_anchor": [
+              1152,
+              448
+            ],
+            "rgba_sha256": "f78df7e206b083aef416a00a24c350da130cf76f92f120873fb8bd4510882800"
+          },
+          {
+            "phase": 2,
+            "C": 1024,
+            "rect": [
+              140,
+              625,
+              501,
+              288
+            ],
+            "margin": [
+              268,
+              356,
+              523,
+              736
+            ],
+            "source_anchor": [
+              384,
+              909
+            ],
+            "rgba_sha256": "a53633cbc6da4f6e1d88e09a0177e731a7718b05d1d0a5fd2708671482afa538"
+          },
+          {
+            "phase": 3,
+            "C": 1024,
+            "rect": [
+              904,
+              626,
+              498,
+              285
+            ],
+            "margin": [
+              264,
+              359,
+              526,
+              739
+            ],
+            "source_anchor": [
+              1152,
+              907
+            ],
+            "rgba_sha256": "64c0b6a79a8bf3302be357a1fa9e25766c614c283f5d22bafabf1910a437426b"
+          },
+          {
+            "phase": 4,
+            "C": 1024,
+            "rect": [
+              139,
+              1153,
+              519,
+              255
+            ],
+            "margin": [
+              267,
+              389,
+              505,
+              769
+            ],
+            "source_anchor": [
+              384,
+              1404
+            ],
+            "rgba_sha256": "badaf717bca5f4a66f70064a3f5a3f67236e3b97e7c799a9582b3a377e8dd7fb"
+          },
+          {
+            "phase": 5,
+            "C": 1024,
+            "rect": [
+              910,
+              1183,
+              492,
+              195
+            ],
+            "margin": [
+              270,
+              449,
+              532,
+              829
+            ],
+            "source_anchor": [
+              1152,
+              1374
+            ],
+            "rgba_sha256": "063ba3e8cd6260d13ec713460bdb2f495523706038e8e1b4b4cdac8bfef04aa9"
+          }
+        ],
+        "private_panel": "/workspace/scratch/halpas-final-changed-clips-qc-20261019/r070-N-death-actual-normalized.jpg",
+        "private_panel_bytes": 99410
+      },
+      {
+        "direction": "W",
+        "role": "death",
+        "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png",
+        "source_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+        "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/W-death.png",
+        "texture_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+        "poses": [
+          {
+            "phase": "idle0",
+            "C": 1152,
+            "rect": [
+              61,
+              45,
+              430,
+              414
+            ],
+            "margin": [
+              383,
+              310,
+              722,
+              738
+            ],
+            "source_anchor": [
+              254,
+              455
+            ],
+            "rgba_sha256": "ca145065264291b76f8cdf8b9feb71189e006936015f19ed305c0374e1f603c1"
+          },
+          {
+            "phase": 0,
+            "C": 1024,
+            "rect": [
+              538,
+              542,
+              460,
+              451
+            ],
+            "margin": [
+              288,
+              193,
+              564,
+              573
+            ],
+            "source_anchor": [
+              762,
+              989
+            ],
+            "rgba_sha256": "35c9279fc36900927df6dc97c48934064735d89aa28dbc63698fb29d1704db04"
+          },
+          {
+            "phase": 1,
+            "C": 1024,
+            "rect": [
+              2069,
+              560,
+              469,
+              415
+            ],
+            "margin": [
+              264,
+              229,
+              555,
+              609
+            ],
+            "source_anchor": [
+              2317,
+              971
+            ],
+            "rgba_sha256": "ad63b812b3de1d3ec244ed7cc72e40bfb6696978a4839e3eafe941568867ae12"
+          },
+          {
+            "phase": 2,
+            "C": 1024,
+            "rect": [
+              529,
+              2135,
+              478,
+              338
+            ],
+            "margin": [
+              284,
+              306,
+              546,
+              686
+            ],
+            "source_anchor": [
+              757,
+              2469
+            ],
+            "rgba_sha256": "076de48dbe057763c6897eb882cce7b8e0945ee0a415c40e4b58ca20c6d87ed4"
+          },
+          {
+            "phase": 3,
+            "C": 1024,
+            "rect": [
+              2057,
+              2178,
+              493,
+              252
+            ],
+            "margin": [
+              260,
+              392,
+              531,
+              772
+            ],
+            "source_anchor": [
+              2309,
+              2426
+            ],
+            "rgba_sha256": "f402c80726e76ee271bf352fe9bce69f444a232462d3b0ab65f048e7647f3def"
+          },
+          {
+            "phase": 4,
+            "C": 2048,
+            "rect": [
+              151,
+              3612,
+              1233,
+              455
+            ],
+            "margin": [
+              354,
+              829,
+              815,
+              1593
+            ],
+            "source_anchor": [
+              821,
+              4063
+            ],
+            "rgba_sha256": "4828885cc7c804696d85e6804021b97b4370c4616fb64876e1f525f268666def"
+          },
+          {
+            "phase": 5,
+            "C": 2048,
+            "rect": [
+              1698,
+              3650,
+              1211,
+              380
+            ],
+            "margin": [
+              379,
+              909,
+              837,
+              1668
+            ],
+            "source_anchor": [
+              2343,
+              4021
+            ],
+            "rgba_sha256": "54951274608f67353c3ad75a20adbc9a3560ce9e5681a808556fac34d19ad88c"
+          }
+        ],
+        "private_panel": "/workspace/scratch/halpas-final-changed-clips-qc-20261019/r070-W-death-actual-normalized.jpg",
+        "private_panel_bytes": 92478
+      }
+    ]
+  },
+  "later_selected_geometry_reuse_proof": {
+    "path": "/workspace/scratch/halpas-final-changed-clips-qc-20261019/r073-baseline38-and-recent-review-reuse-proof.json",
+    "sha256": "54c5405c7032c7144ea4888aa6997f4dab70b8ed20d8a4387de2c265865c472d"
+  },
+  "runtime_validation": "Existing focused r067/r068/r070 root resource/Player/action allPASS; no repeats.",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_completed": false,
+  "default_enable_authorized": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

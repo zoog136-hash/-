@@ -1,0 +1,114 @@
+{
+	"actor": "transform:413",
+	"actor_approvals_added": 0,
+	"cycle_wraps": 3,
+	"direction": "W",
+	"failures": 0,
+	"fixture_override": true,
+	"gameplay_and_save_unchanged": true,
+	"poses_reached": 6,
+	"production_connected": false,
+	"resource_fps": 12.5,
+	"returned_to_preserved_W_idle": true,
+	"role": "run",
+	"runtime_status": "PASS",
+	"source_texture_sha256": "5079804ef7eaa35060e1798ba1813eaea66d1a2cac6768dbcf586ae14415f7df",
+	"source_visual_status": "HOLD_NOT_REVIEWED",
+	"used_actual_new_candidate_atlas": true,
+	"world_foot_contact": "NOT_RUN_HOLD",
+	"world_foot_contact_probe": {
+		"collision_physics_tested": false,
+		"contact_pairs": [
+			{
+				"elapsed": 0.08,
+				"phases": [
+					0.0,
+					1.0
+				],
+				"side": "L-near",
+				"world_dx": -10.33984375,
+				"world_dy": 0.00390625
+			},
+			{
+				"elapsed": 0.08,
+				"phases": [
+					3.0,
+					4.0
+				],
+				"side": "R-far",
+				"world_dx": -9.908203125,
+				"world_dy": 0.01953125
+			}
+		],
+		"frame_rendering_performed": false,
+		"samples": {
+			"0": {
+				"native_original_texel": [
+					600.0,
+					1183.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.0,
+				"world": [
+					22166.09765625,
+					31350.265625
+				]
+			},
+			"1": {
+				"native_original_texel": [
+					600.0,
+					1183.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.08,
+				"world": [
+					22155.7578125,
+					31350.26953125
+				]
+			},
+			"3": {
+				"native_original_texel": [
+					512.0,
+					1151.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.2408,
+				"world": [
+					22108.109375,
+					31347.16015625
+				]
+			},
+			"4": {
+				"native_original_texel": [
+					512.0,
+					1151.0
+				],
+				"rotation": 0.0,
+				"sprite_scale": [
+					0.0853448286652565,
+					0.0948275849223137
+				],
+				"time": 0.3208,
+				"world": [
+					22098.201171875,
+					31347.1796875
+				]
+			}
+		},
+		"scope": "ACTUAL_MAIN_PLAYER_SPRITE_TRANSFORM_WITH_PRESCRIBED_WORLD_TRANSLATION_NO_COLLISION_PHYSICS",
+		"status": "MEASURED_ONLY_NOT_VISUAL_APPROVAL",
+		"world_translation_speed": 210.0
+	}
+}

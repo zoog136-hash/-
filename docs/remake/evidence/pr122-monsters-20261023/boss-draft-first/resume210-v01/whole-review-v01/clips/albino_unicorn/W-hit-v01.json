@@ -1,0 +1,25 @@
+{
+  "actor": "monster:알비노 유니콘",
+  "slug": "albino_unicorn",
+  "clip": "W-hit-v01",
+  "role": "hit",
+  "direction": "W",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/albino_unicorn/raw/W-hit-v01.png",
+  "source_sha256": "3797bc512555be6c7af58488c09d1fdc5d928ecfd0dc790751365d71d9e44eb2",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      98720,
+      91356,
+      90514,
+      90062,
+      89916,
+      88574
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

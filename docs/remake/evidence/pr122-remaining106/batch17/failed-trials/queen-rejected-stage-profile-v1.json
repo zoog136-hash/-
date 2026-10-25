@@ -1,0 +1,50 @@
+{
+  "review": "REJECTED isolated cast-alias trial:344 normal-attack route assertions, eight directions. No production approval. Preserve v1 PNG/TRES/provenance and profile.",
+  "failures": [
+    "existing skeleton attack E",
+    "existing skeleton attack SE",
+    "existing skeleton attack S",
+    "existing skeleton attack SW",
+    "existing skeleton attack W",
+    "existing skeleton attack NW",
+    "existing skeleton attack N",
+    "existing skeleton attack NE"
+  ],
+  "rejected_profile": {
+    "name": "얼음 여왕",
+    "layout": "directional8",
+    "motion_style": "slash",
+    "floating": false,
+    "prior_visual_profile": {
+      "name": "얼음 여왕",
+      "layout": "still",
+      "motion_style": "slash",
+      "floating": false
+    },
+    "frames_path": "res://assets/actors/eight_direction/original_based/ice_queen_batch17_candidate/SpriteFrames.tres",
+    "pixel_scale": 0.548065,
+    "color_tint": "ffffff",
+    "sprite_offset": [
+      0,
+      -17.53808
+    ],
+    "embedded_shadow": false,
+    "authored_motion_weight": 0,
+    "hit_recoil": 0,
+    "action_hit_frames": {
+      "attack": 1,
+      "cast": 1
+    },
+    "attack_hit_frame": 1,
+    "death_duration": 0.65,
+    "movement_fps": 12.5,
+    "authoring_reference": "res://assets/monsters/original/atlas_2.png"
+  },
+  "restore_scope": "Only the rejected isolated staging profile; repository production profile is unchanged.",
+  "production_baseline": {
+    "name": "얼음 여왕",
+    "layout": "still",
+    "motion_style": "slash",
+    "floating": false
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "zombie-lord-E-far-left-plant-single-v01",
+  "direction": "E",
+  "role": "run",
+  "intended_phase": 3,
+  "intended_support": "anatomical_LEFT_far",
+  "intended_swing": "anatomical_RIGHT_near_trailing_raised",
+  "rows": 1,
+  "directions_axis": "columns",
+  "reference_rows": [
+    0
+  ],
+  "request": {
+    "prompt": "TARGETED LEG-POSE EDIT of the ONE supplied Zombie Lord sprite. Produce exactly ONE complete full-body sprite, facing RIGHT at the EXACT same side camera as reference. Preserve the same massive distended belly, torso, head, sparse dark hair, shoulder/back nails, chain hardware, empty fists, muted gray skin, ragged skirt and gold belt plate. Preserve the body colors/shape/scale and painted detail; do not slim or redesign this boss. Do not mirror the whole character.\n\nChange ONLY the articulated leg/hip stance and small weighted arm/chain counterbalance. The source has the NEAR/RIGHT leg planted ahead. Correct it to the OPPOSITE SUPPORT phase: the FAR/anatomical LEFT leg carries the entire body with a complete LEFT bare foot flat on ground FORWARD under the belly, toes pointing screenRIGHT. The NEAR/anatomical RIGHT leg is now AIRBORNE: its big foreground thigh bends BACK, the foreground RIGHT knee is strongly bent, calf/heel curl high BACK toward screenLEFT behind the hip. The ENTIRE near RIGHT foot must be clearly elevated at mid-shin height, far above the flat planted LEFT foot, with obvious empty air beneath its sole. The foot that is nearest camera must NOT touch ground anywhere. Make the two leg ownerships visually unambiguous: far LEFT sole is the only grounded sole; near RIGHT knee/foot is raised BEHIND. Belly weight sits over the far LEFT support knee. Both complete feet visible. Heavy grounded boss stride, no jumping, no detached limbs.\n\nOne full connected character only. True clean alpha0 transparent background; generous empty margins on all four sides. Remove the reference's low-opacity background halo/shadow. No ground plane, no cast shadow, no extra character, no grid, text, symbols, labels, specks, isolated pixels or loose chain rings. Smooth clean continuous alpha silhouette. Never clip head, fingers, chains, foot or skirt.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/reference-E-phase0.png"
+    ]
+  }
+}

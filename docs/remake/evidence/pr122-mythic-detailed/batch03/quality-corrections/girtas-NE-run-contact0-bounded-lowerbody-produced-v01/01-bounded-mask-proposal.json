@@ -1,0 +1,87 @@
+{
+  "schema": "pr122-bounded-edit-mask-proposal-v1",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "phase": 0,
+  "source_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+  "source_sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+  "source_canvas": [
+    1254,
+    1254
+  ],
+  "fixed_runtime_canvas": 1936,
+  "edit_mask_polygon_native": [
+    [
+      500,
+      680
+    ],
+    [
+      650,
+      680
+    ],
+    [
+      670,
+      740
+    ],
+    [
+      692,
+      790
+    ],
+    [
+      687,
+      850
+    ],
+    [
+      690,
+      900
+    ],
+    [
+      760,
+      950
+    ],
+    [
+      790,
+      990
+    ],
+    [
+      790,
+      1170
+    ],
+    [
+      500,
+      1170
+    ]
+  ],
+  "strict_unchanged_outside_mask": true,
+  "target_heel_nominal_native": [
+    683,
+    967
+  ],
+  "target_heel_x_interval_native": [
+    665,
+    705
+  ],
+  "target_heel_y_interval_at_x683": [
+    942,
+    994
+  ],
+  "band_slope_dy_dx": -0.5903,
+  "desired_core_height_world": [
+    92,
+    98
+  ],
+  "load1_core_height_world": 88.04,
+  "existing_nearRIGHT_recovery_immutable": true,
+  "status": "PENDING_INDEPENDENT_MASK_REVIEW_NO_GENERATION",
+  "exact-lowerbody-edit-mask.png": {
+    "path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/exact-lowerbody-edit-mask.png",
+    "sha256": "1a765a485253c99169b9632ef1dc910c6cb1cda8e3f6e5f75873483cb59d8e62",
+    "bytes": 3028
+  },
+  "same-owned-farLEFT-support-bend-target-guide.png": {
+    "path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/same-owned-farLEFT-support-bend-target-guide.png",
+    "sha256": "ec7fab0ddba71d063c8155a8289ae5e6adcadee9bf9fbdf187411b62d7664d9e",
+    "bytes": 1110526
+  }
+}

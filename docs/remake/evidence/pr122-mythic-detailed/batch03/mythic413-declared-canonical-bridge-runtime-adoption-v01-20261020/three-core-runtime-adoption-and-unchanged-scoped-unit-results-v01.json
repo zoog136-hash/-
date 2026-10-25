@@ -1,0 +1,66 @@
+{
+  "status": "REVIEWED_OPTIONAL_DECLARED_CANONICAL_ROOT_THREE_CORE_ADOPTED_SCOPED_UNITS_PASS",
+  "head_before": "63633f3030a54dda23c016578cc1bb8c654c7518",
+  "matching_proposal": "/workspace/scratch/mythic413-declared-physical-root-canonical-bridge-proposal-20261020-v09r02",
+  "proposal_pins_sha256": "b80d47c7d34e43df2718e2709d05e7dd6c5e5669b4dd6e5244f1aebe3ec78d08",
+  "independent_code_audit_sha256": "8bd4f1d3d741e8668c0b5589585874ed552a57eafdcd6c5785668a75b4bf584c",
+  "changed_core": [
+    {
+      "path": "tools/pr122_reviewed_runtime_layout.py",
+      "before_sha256": "f9c3b0dcf7021de49cde2cef90825235055c64f3a9acaf130d4af20876222d9c",
+      "after_sha256": "55b30a6da6644ce0840a3f822e7579f524c9453cf3508f43a739ec58ca643ef2"
+    },
+    {
+      "path": "tools/advance_pr122_native_locomotion.py",
+      "before_sha256": "972f2492a653ea948d7d15cee0c0a5888f7e64bcdc646f89dbebd12a9db274eb",
+      "after_sha256": "c61891f034d332887aea2c8f589f5024a56c71a79a7b8eb031a39dfde2a6046e"
+    },
+    {
+      "path": "tools/stage_pr122_native_locomotion.py",
+      "before_sha256": "6cc5c9933015c9a5bf8c17d5daac04bb3ebb585cb5609420bf3f6b90d0623b7b",
+      "after_sha256": "4b4279ae9c8e302585a18ed12eb864178f9b8b7fb9843d3ac6c57770fdae1701"
+    }
+  ],
+  "unchanged_dependencies": {
+    "bind_pr122_native_locomotion_profiles.py": "ddc4643a78d01d5cbc0529ee31262e73095ff1e989ce71c6d70264c5eb448a62",
+    "checkpoint_pr122_native_clip.py": "23f0f7b75b90b7af4368214e11feea43fa8c5899a08cb1a2797fd2dc489559ca",
+    "integrate_pr122_corrective_clip.py": "5271739c9e02d0a743856d4a6338b67dbb1b1fb3630f747fde5dd8690723d9cd",
+    "pr122_native_production_approvals.py": "e10c66e9241969c11678f24f056350ed5f1daab2ce1e6136dd117d5b8f6e4234",
+    "pr122_reviewed_source_regions.py": "8d2745e5cae9412438c282811323dc4d0e80496fe73c4cc69dfed38078db8857",
+    "pr122_transform_motion_scope.py": "06001b834a7ee0b10c95124a6a9ae6c263bb905026e0f14c497d989b0d58bb42"
+  },
+  "unchanged_tests": [
+    {
+      "test": "test_finalize_pr122_reviewed_pose_atlas.py",
+      "exit_code": 0,
+      "log": "/workspace/scratch/three-core-before-reviewed-declared-canonical-adoption-20261020-v01/test_finalize_pr122_reviewed_pose_atlas.py.unittest.log",
+      "sha256": "15c9fd492fa727468cf7eb2c52507b59a417bd6b7c83626e8ffd79d507cd366f",
+      "bytes": 102,
+      "last_lines": [
+        "Ran 3 tests in 17.449s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "test": "test_pr122_native_runtime_profile_sizing.py",
+      "exit_code": 0,
+      "log": "/workspace/scratch/three-core-before-reviewed-declared-canonical-adoption-20261020-v01/test_pr122_native_runtime_profile_sizing.py.unittest.log",
+      "sha256": "38bf320bde0206302c1e57a1b42621b895232f0c74ebfec8c7b81ec6681fa5a0",
+      "bytes": 103,
+      "last_lines": [
+        "Ran 5 tests in 0.013s",
+        "",
+        "OK"
+      ]
+    }
+  ],
+  "legacy_absent_descriptor_returns_empty_kwargs": true,
+  "canonical_default_2048_retained": true,
+  "required_guard_thresholds_unchanged": true,
+  "geometry_or_importer_test_waivers": false,
+  "source_pixels_or_controller_profiles_changed": false,
+  "actor_approvals_added": 0,
+  "game_animation_approval": false,
+  "full_or_manual_ci_run": false
+}

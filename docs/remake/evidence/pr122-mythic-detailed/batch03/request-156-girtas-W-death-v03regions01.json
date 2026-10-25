@@ -1,0 +1,383 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "W",
+  "role": "death",
+  "version": "v03regions01",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/scratch/girtas-W-death-repair-v03/girtas-W-death-v03.png",
+    "/workspace/scratch/girtas-W-idle-repair/girtas-W-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-death-repair-v03/girtas-W-death-v03.png": "e6c4c065157e732c2ed17206b5b49329376fa577f4d15d859375db4d1322869e",
+    "/workspace/scratch/girtas-W-idle-repair/girtas-W-idle-v02.png": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85"
+  },
+  "transparent_background": true,
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+    "base_geometry_sha256": "c29faa68a9d6b0566218fe3d403eebfeb3a26db37244aaa3afcf805bbe7424a9",
+    "direction": "W",
+    "review_basis": "Original faithful W death art PASS plus independent six-core/whole-foreground exact RGBA translation proof. Expand only crop metadata to include all existing ray/antialias fragments; no PNG changes, default guards unchanged.",
+    "regions": [
+      [
+        179,
+        28,
+        433,
+        459
+      ],
+      [
+        904,
+        58,
+        455,
+        397
+      ],
+      [
+        145,
+        596,
+        475,
+        347
+      ],
+      [
+        871,
+        649,
+        528,
+        240
+      ],
+      [
+        138,
+        1181,
+        509,
+        200
+      ],
+      [
+        890,
+        1191,
+        504,
+        179
+      ]
+    ],
+    "nearest_owner_sha256": "ced2680d2a79e51f3a2bd28af1700e1c2f1affa3f9160bddf76edef9810ad4c3",
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1"
+  },
+  "source_conservation": {
+    "method": "independent-six-physical-core-shape-and-every-alphaGT16-RGBA-translation",
+    "original_raw_sha256": "e6c4c065157e732c2ed17206b5b49329376fa577f4d15d859375db4d1322869e",
+    "existing_derivative_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+    "export_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+    "source_foreground_owner_sha256": "1a08bcb1ff43df498e42b6db8115146e73c9c38c23c006d3c85260aa2a6e1cf5",
+    "foreground_pixels": 300796,
+    "foreground_all_preserved_exactly_once": true,
+    "all_relative_body_pixels_unchanged": true,
+    "source_RGBA_sha256": "21b6bbe860f57e6757ee7fde2c73ed0e6d9411cbffbccf8d3e4f744149e3410a",
+    "target_RGBA_sha256": "4b045a084e6a6998ea4e4adae63f1d61d5e9c033ee7fd16045ca09afd35d7761",
+    "same_1024_virtual_coordinates": true,
+    "phases": [
+      {
+        "phase": 0,
+        "source_core_bbox": [
+          56,
+          66,
+          477,
+          515
+        ],
+        "target_core_bbox": [
+          184,
+          35,
+          605,
+          484
+        ],
+        "translation": [
+          128,
+          -31
+        ],
+        "foreground_pixels": 63678,
+        "source_foreground_RGBA_sha256": "a376be250f72d6db87317b3c66772a5a409ffcbd01663ed2c24ff5695d66eb90",
+        "target_foreground_RGBA_sha256": "a376be250f72d6db87317b3c66772a5a409ffcbd01663ed2c24ff5695d66eb90",
+        "original_source_anchor": [
+          256,
+          514
+        ],
+        "target_source_anchor": [
+          384,
+          483
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 1,
+        "source_core_bbox": [
+          525,
+          121,
+          972,
+          509
+        ],
+        "target_core_bbox": [
+          909,
+          64,
+          1356,
+          452
+        ],
+        "translation": [
+          384,
+          -57
+        ],
+        "foreground_pixels": 59105,
+        "source_foreground_RGBA_sha256": "11cc1edf4b69188890fe32901c895293b014651e4ec6485843bd9e3b1d1fefdb",
+        "target_foreground_RGBA_sha256": "11cc1edf4b69188890fe32901c895293b014651e4ec6485843bd9e3b1d1fefdb",
+        "original_source_anchor": [
+          768,
+          508
+        ],
+        "target_source_anchor": [
+          1152,
+          451
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 2,
+        "source_core_bbox": [
+          21,
+          640,
+          489,
+          977
+        ],
+        "target_core_bbox": [
+          149,
+          603,
+          617,
+          940
+        ],
+        "translation": [
+          128,
+          -37
+        ],
+        "foreground_pixels": 56796,
+        "source_foreground_RGBA_sha256": "5a84fd360aadec6721b17ff222280265d046a0c45966313548f12d34fa4ed43f",
+        "target_foreground_RGBA_sha256": "5a84fd360aadec6721b17ff222280265d046a0c45966313548f12d34fa4ed43f",
+        "original_source_anchor": [
+          256,
+          976
+        ],
+        "target_source_anchor": [
+          384,
+          939
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 3,
+        "source_core_bbox": [
+          491,
+          740,
+          1012,
+          972
+        ],
+        "target_core_bbox": [
+          875,
+          654,
+          1396,
+          886
+        ],
+        "translation": [
+          384,
+          -86
+        ],
+        "foreground_pixels": 47079,
+        "source_foreground_RGBA_sha256": "0d982d680f0c4cbfc1df2cc034bca56d9c67a07ae457eda64f082d309eb02bf2",
+        "target_foreground_RGBA_sha256": "0d982d680f0c4cbfc1df2cc034bca56d9c67a07ae457eda64f082d309eb02bf2",
+        "original_source_anchor": [
+          768,
+          971
+        ],
+        "target_source_anchor": [
+          1152,
+          885
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 4,
+        "source_core_bbox": [
+          14,
+          1189,
+          516,
+          1380
+        ],
+        "target_core_bbox": [
+          142,
+          1187,
+          644,
+          1378
+        ],
+        "translation": [
+          128,
+          -2
+        ],
+        "foreground_pixels": 38390,
+        "source_foreground_RGBA_sha256": "1e7ef430fddead1aad44588d0f08dcfba1b1bc69fb305b2c886db54cdd2e8ced",
+        "target_foreground_RGBA_sha256": "1e7ef430fddead1aad44588d0f08dcfba1b1bc69fb305b2c886db54cdd2e8ced",
+        "original_source_anchor": [
+          256,
+          1379
+        ],
+        "target_source_anchor": [
+          384,
+          1377
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      },
+      {
+        "phase": 5,
+        "source_core_bbox": [
+          511,
+          1206,
+          1007,
+          1372
+        ],
+        "target_core_bbox": [
+          895,
+          1200,
+          1391,
+          1366
+        ],
+        "translation": [
+          384,
+          -6
+        ],
+        "foreground_pixels": 35748,
+        "source_foreground_RGBA_sha256": "9ab2fcd3e81c5a5af19ed90df72b639877942b3c0f3db6455ca995730e709aff",
+        "target_foreground_RGBA_sha256": "9ab2fcd3e81c5a5af19ed90df72b639877942b3c0f3db6455ca995730e709aff",
+        "original_source_anchor": [
+          768,
+          1371
+        ],
+        "target_source_anchor": [
+          1152,
+          1365
+        ],
+        "constant_relative_body_translation": true,
+        "same_1024_virtual_coordinates": true
+      }
+    ],
+    "source_ownership": {
+      "detached_pixels": 4,
+      "fragments": [
+        {
+          "phase": 0,
+          "pixels": 1,
+          "bbox": [
+            374,
+            457,
+            375,
+            458
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 154.5639026422405,
+          "margin_min": 151.7354755174943
+        },
+        {
+          "phase": 3,
+          "pixels": 1,
+          "bbox": [
+            837,
+            864,
+            838,
+            865
+          ],
+          "nearest_max": 3.0,
+          "second_nearest_min": 353.89970330589426,
+          "margin_min": 350.89970330589426
+        },
+        {
+          "phase": 4,
+          "pixels": 1,
+          "bbox": [
+            119,
+            1277,
+            120,
+            1278
+          ],
+          "nearest_max": 3.0,
+          "second_nearest_min": 326.0751447136074,
+          "margin_min": 323.0751447136074
+        },
+        {
+          "phase": 4,
+          "pixels": 1,
+          "bbox": [
+            107,
+            1293,
+            108,
+            1294
+          ],
+          "nearest_max": 4.123105625617661,
+          "second_nearest_min": 341.7864830563081,
+          "margin_min": 337.66337743069045
+        }
+      ]
+    },
+    "existing_repacker_not_rerun": true,
+    "resampled": false,
+    "recolored": false,
+    "removed_alpha_gt16_pixels": 0,
+    "image_service_calls": 0,
+    "export_code_sha256": "c2170131f56cb983d8a7d7c70b8a0130945dfb06015cb2f34fd6e0d90be4ade1"
+  },
+  "original_art_review": {
+    "path": "/workspace/scratch/girtas-W-death-repair-v03/result.json",
+    "sha256": "41f19caf9ab37859b5dcffa8b8ff9ece91478559f74696c10d2ea67d6320a03a",
+    "source_sha256": "e6c4c065157e732c2ed17206b5b49329376fa577f4d15d859375db4d1322869e",
+    "source_visual_status": "PASS",
+    "visual_findings": [
+      "All six are true LEFT/W lateral with the same pale left-profile face, left-directed chest/pelvis and consistent W idle-master camera. Exactly TWO original arm chains in every pose: near anatomicalLEFT is empty and later braces; far anatomicalRIGHT holds the single sinuous weapon, retaining far-side layering throughout. No extra raised fist or third hanging arm. Actual forward/LEFT buckle, horizontal fall and complete lying corpse have head LEFT and feet RIGHT; original pale hair, long skirt and thin rigid gold array remain attached through impact/settling.",
+      "Original-faithful long pale hair, narrow hard GOLD radial back spines, long DARK gold-trim skirt and long thin sinuous single weapon persist through all six poses. No prior red-mask/flame-feather/broad-blade redesign. Same anatomical right weapon hand.",
+      "Actual distinct upright fatal recoil, failing knees, deep buckle, almost-horizontal fall, ground impact and settled complete lying corpse are visible; spine array follows the fallen torso rather than remaining a standing ghost.",
+      "Every body, hair tip, boot, original skirt panel, physical gold back spike and complete sinuous weapon is visible; no source outer-edge clipping."
+    ],
+    "visual_limitations": [
+      "Original portrait is108x132, limiting exact tiny face/insignia confirmation; unseen-back surfaces are conservatively inferred from the faithful canonical structure.",
+      "Generated raw cell gutters were not respected; some complete bodies cross nominal cell borders. Raw geometry is not approved. Lossless separation/repacking plus unchanged strict geometry/import validation required before selection.",
+      "Source-only private visual review. No game integration, timing verification or final actor approval claimed."
+    ]
+  },
+  "authoring_operation": "independent-six-physical-core-shape-and-every-alphaGT16-RGBA-translation",
+  "image_service_calls": 0,
+  "corrective_reason": "Preserve original faithful W death RGBA in the existing derivative; sourceSHA-pinned outward crop metadata restores omitted ray/fringe coverage without modifying PNG.",
+  "requested_at": "2026-10-19T11:50:49.269675+00:00",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Original source artwork was privately reviewed PASS; its exact review/source digests are pinned in the immutable request.",
+      "Independent pixel proof preserves all original alpha>16 RGBA exactlyonce, each phase through one unchanged rigid pixel translation, with no resampling/recolor/alpha deletion or anatomical/weapon changes.",
+      "Original phase order, body-relative pixels and1024foot-anchored virtual placement are exact. Original correct direction/two-arm construction, unique identity and authored motion therefore remain unchanged.",
+      "Reviewed source-region adapter passes six original physical bodies, distinct phases, detached-fragment ownership, exact foreground coverage/no foreign body, unchanged1024canvas/foot/anchors and unchanged PNG bytes.",
+      "Existing W derivative PNG is copied byte-identically; only reviewed atlas region metadata expands to include all current nonzero ray/AA pixels."
+    ],
+    "visual_limitations": [
+      "Geometry/source-only authoring PASS, not actual Player/Main playback/scale/clock approval or actor completion. Root must compile and perform the required fresh runtime QA.",
+      "No new image generation or new visual inspection was necessary for an exact existing-art derivative; source quality relies on the pinned original visual review and independently verified pixel conservation."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+    "raw_bytes": 962694,
+    "request_sha256": "2130f55ba650bca78facb554d2c2b5e89f128519fb2fb87840a81989316d7653",
+    "review_sha256": "341fdbad846d223f0186284a70951fa83f3421c6d31c960fc69f887cada66d0d"
+  },
+  "available_repository_reference_sources": {
+    "e6c4c065157e732c2ed17206b5b49329376fa577f4d15d859375db4d1322869e": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03.png",
+    "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-death-v03regions01.png",
+  "output_sha256": "ebf1ddcf52d79abe6b1a5ebbe8a83d1b8321760fdd162981f39de870b4fe9132",
+  "output_bytes": 962694,
+  "original_generated_file": "/workspace/scratch/girtas-W-death-reviewed-regions-v01/girtas-W-death-v03regions01.png"
+}

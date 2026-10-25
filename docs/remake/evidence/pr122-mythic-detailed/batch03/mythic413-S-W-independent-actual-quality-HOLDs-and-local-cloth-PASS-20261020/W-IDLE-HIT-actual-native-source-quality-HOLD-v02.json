@@ -1,0 +1,377 @@
+{
+  "schema": "TWILIGHT_INDEPENDENT_ACTUAL_CLIP_SOURCE_VISUAL_REVIEW_V1",
+  "reviewer": "mythic413_w_actual_quality_fresh_v01",
+  "review_utc": "2026-10-20T15:47:30.475979+00:00",
+  "actor": "Mythic413",
+  "direction": "W",
+  "source_visual_status": "HOLD",
+  "reason": "Shared v03 LEFT-old-erased body underlay exposes angular transparent cut in the side/coat silhouette and detached pale shard. HIT raises the free arm and exposes the notch fully; IDLE covers most but leaves lower cut/shard visible behind/below hanging hand. Author confirmed shared defective underlay and is repairing it.",
+  "defect_probe": {
+    "native_storage_crop": [
+      790,
+      610,
+      965,
+      980
+    ],
+    "unpadded_crop": [
+      662,
+      482,
+      837,
+      852
+    ],
+    "most_visible_HIT_phases": [
+      1,
+      2,
+      3
+    ],
+    "IDLE_lossless_probe_phase": 2,
+    "lossless_confirmed": true,
+    "JPEG_artifact": false
+  },
+  "observed_motion": {
+    "IDLE": "Six phase full-source board and native 0/2/5 head/neck/free-arm/contact plus all-six cuff/hand/coat contacts show a gentle breath/relax sequence, attached cuff and hand, stable neck/head relationship and coherent ribbon. Boundary 5\u21920 has no visible large pose jump in inspected contacts; material HOLD prevents clip source approval. Loop timing 1.2s is read from author contract, not a Godot playback claim.",
+    "HIT": "Six full-source phases and all-six native neck/guard/cuff/coat crops show legible short recoil, free hand advancing toward shoulder then lowering to settle. Cuff remains joined, finger orientation remains readable, and fixed staff stays visible. 0.22s comes from author contract; no Godot reaction playback approval."
+  },
+  "base_registration_not_repeated": {
+    "receipt_path": "/workspace/scratch/mythic413-W-base-independent-qc-20261020-v01/W-new-native-stationary-source-and-once-C2560-body-root-registration-PASS-v02.json",
+    "sha256": "8e92968e66492293d697a218f5b487e2a662f0d22bac1e2a45fc6c039fdd7e9b",
+    "note": "Prior independent original body/source/C registration is inherited, not re-viewed. Numeric flow/floor is a separate reviewer gate."
+  },
+  "clips": [
+    {
+      "action": "idle",
+      "contract_path": "/workspace/scratch/mythic413-W-idle-author-20261020-v01/actual-W-IDLE6-native-breath-relax-v02/W-IDLE-six-actual-native-source-fixed-basis-and-loop-contract-v02.json",
+      "contract_sha256": "3866da94585c291eb3b9e9f2af3739dc2ac04fe300be28e275dd20acbbced10e",
+      "source_visual_status": "HOLD",
+      "frames": [
+        {
+          "phase": 0,
+          "path": "/workspace/scratch/mythic413-W-idle-author-20261020-v01/actual-W-IDLE6-native-breath-relax-v02/thunder_female-W-IDLE-0-actual-native-breath-relax-v02.png",
+          "sha256": "954691ed6ae0e89073eefa548fcd1cfa20db50bd095326c4b1f55b446df3555c",
+          "bytes": 793323,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 1,
+          "path": "/workspace/scratch/mythic413-W-idle-author-20261020-v01/actual-W-IDLE6-native-breath-relax-v02/thunder_female-W-IDLE-1-actual-native-breath-relax-v02.png",
+          "sha256": "ca1de5500b6f7f2c0584b96e841b7dc09a2c36aee42f76caef8416ed1a55c7cd",
+          "bytes": 794244,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 2,
+          "path": "/workspace/scratch/mythic413-W-idle-author-20261020-v01/actual-W-IDLE6-native-breath-relax-v02/thunder_female-W-IDLE-2-actual-native-breath-relax-v02.png",
+          "sha256": "c3c2b1b61b2323a888b1c969a0001104c37e6e634f9dd302e9ed77c5e9588ff0",
+          "bytes": 790131,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 3,
+          "path": "/workspace/scratch/mythic413-W-idle-author-20261020-v01/actual-W-IDLE6-native-breath-relax-v02/thunder_female-W-IDLE-3-actual-native-breath-relax-v02.png",
+          "sha256": "ceabba7c8855a241539ed408118f31223a51abc34a356d3ed61558c7a33be763",
+          "bytes": 791173,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 4,
+          "path": "/workspace/scratch/mythic413-W-idle-author-20261020-v01/actual-W-IDLE6-native-breath-relax-v02/thunder_female-W-IDLE-4-actual-native-breath-relax-v02.png",
+          "sha256": "eae322dbabba6c0b35d70c5bd6def3d6be79d728fe2b5e461ea8c2f130ab7007",
+          "bytes": 795299,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 5,
+          "path": "/workspace/scratch/mythic413-W-idle-author-20261020-v01/actual-W-IDLE6-native-breath-relax-v02/thunder_female-W-IDLE-5-actual-native-breath-relax-v02.png",
+          "sha256": "d14a2f33512baf702c7ff8c6a666ab204fa56e6a46bdc2620e288bd661032e56",
+          "bytes": 792298,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        }
+      ]
+    },
+    {
+      "action": "hit",
+      "contract_path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/W-HIT6-actual-own-native-body-head-LEFTguard-source-contract-v01.json",
+      "contract_sha256": "f89948a96c2a137959c5bff4008d7c3d69ac75ad4363bf340ffcadeb029676ad",
+      "source_visual_status": "HOLD",
+      "frames": [
+        {
+          "phase": 0,
+          "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase0-actual-W-hit-stable_guard-v01/thunder_female-W-hit-phase0-stable_guard-actual-native-v01.png",
+          "sha256": "afe0cf8a5538c7cbb21968b25b14a5d3a9c73063b7776c0cf207d590768ccca0",
+          "bytes": 780918,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 1,
+          "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase1-actual-W-hit-impact_response-v01/thunder_female-W-hit-phase1-impact_response-actual-native-v01.png",
+          "sha256": "5b7d85ff614cb246b5749654852be49232155b82eb1e62efffa6081374c6aa27",
+          "bytes": 768878,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 2,
+          "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase2-actual-W-hit-maximum_recoil-v01/thunder_female-W-hit-phase2-maximum_recoil-actual-native-v01.png",
+          "sha256": "329e43ec943b506b9b883b942eec73c42f3b838ebb7366d29d31747a97fc2c97",
+          "bytes": 764341,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 3,
+          "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase3-actual-W-hit-counterbalance-v01/thunder_female-W-hit-phase3-counterbalance-actual-native-v01.png",
+          "sha256": "afa1a5bd024c312a3e9e42cda7381f2f486bc7459aced669e803dab8763184c5",
+          "bytes": 763799,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 4,
+          "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase4-actual-W-hit-regaining_control-v01/thunder_female-W-hit-phase4-regaining_control-actual-native-v01.png",
+          "sha256": "40321742ec5907ac1cd0ee8164ccaa3f022688dc06d432b58eecbaae33af3ced",
+          "bytes": 773023,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        },
+        {
+          "phase": 5,
+          "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-HIT6-own-native-articulated-v02/phase5-actual-W-hit-regained_guard_settled-v01/thunder_female-W-hit-phase5-regained_guard_settled-actual-native-v01.png",
+          "sha256": "92bd0ed7d4ce23078cf6b68b5cdf3aca9db26816aa8814954f1deb20772960d0",
+          "bytes": 775926,
+          "dimensions": [
+            1536,
+            1536
+          ],
+          "mode": "RGBA",
+          "C": 2560.0,
+          "body_unit": 2.5,
+          "common_root_unpadded": [
+            646.0833333333334,
+            991.9227375838406
+          ],
+          "storage_translation": [
+            128,
+            128
+          ],
+          "stored_root": [
+            774.0833333333334,
+            1119.9227375838404
+          ]
+        }
+      ]
+    }
+  ],
+  "image_ledger": {
+    "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/image-input-ledger-immutable.jsonl",
+    "cumulative_bytes": 692598,
+    "preview_count": 7,
+    "max_single_bytes": 149339,
+    "soft_cap": 6000000,
+    "hard_cap": 7000000
+  },
+  "scope": {
+    "repo_or_git_changes": false,
+    "source_PNG_mutation": false,
+    "new_author_images": 0,
+    "actor_approvals_added": 0,
+    "detailed_actor_approval_count": "2/31",
+    "game_or_PACK_binding_approval": false,
+    "numeric_flow_floor_approval": false,
+    "next_gate": "Rebind rerendered exact six and narrowly re-inspect corrected seam/contact for both IDLE/HIT before SOURCE PASS."
+  },
+  "metadata_revision": "v02 computes stored root by exact Python addition of recorded unpadded root and storage; visual findings unchanged; v01 retained."
+}

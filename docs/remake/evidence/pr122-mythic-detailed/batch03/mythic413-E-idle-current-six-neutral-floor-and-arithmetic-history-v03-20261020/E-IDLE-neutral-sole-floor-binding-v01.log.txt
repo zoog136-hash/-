@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-E-idle-author-20261020-v01/bind-E-IDLE6-original-once-sole-and-current-material-floor-v01.py", line 16, in <module>
+    y,x=np.where(raw);sa=np.array(m['observed_painted_heel_native']);wa=np.array(m['source_plane_anchor_world']);u=np.array(m['source_U']);v=np.array(m['source_V']);world=wa+(x-sa[0])[:,None]*u+(y-sa[1])[:,None]*v;projected=world@projection.T+origin;error=float(np.max(np.abs(projected-np.column_stack([x,y]))));minimum=float(world[:,2].min()-2.5*(abs(u[2])+abs(v[2])));assert minimum>=-1e-8;assert error<1e-8
+                                                                                                                                                                                                                                                                                                                                                                                         ^^^^^^^^^^^^^^
+AssertionError

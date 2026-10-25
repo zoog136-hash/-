@@ -1,0 +1,134 @@
+{
+  "schema": "PR122_SE_RUN_EXACT_HILT_GEAR_ONLY_HOLD_ADDENDUM_V1",
+  "utc": "2026-10-19T16:28:42.501792+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "SOURCE_GEAR_HOLD_POINTED_ORNATE_CROSSGUARDS",
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "actor_approval_increment": 0,
+  "affected_phase_sources": [
+    {
+      "phase": 0,
+      "raw_path": "/workspace/scratch/girtas-SE-run-left-landing-key-v01/girtas-SE-run-left-landing-key-v01.png",
+      "raw_sha256": "553356b11936a9dc23449c888c54abd874948576b54d7bb2dd97350b576e817c",
+      "repair_ROI_XYWH": [
+        370,
+        455,
+        240,
+        275
+      ]
+    },
+    {
+      "phase": 1,
+      "raw_path": "/workspace/scratch/girtas-SE-run-left-compression-key-v01/girtas-SE-run-left-compression-key-v01.png",
+      "raw_sha256": "b2e11d492a404a52654ddee9881b9c4e475258e4ab79cc0ccd0f9ce53de80bb5",
+      "repair_ROI_XYWH": [
+        430,
+        400,
+        270,
+        320
+      ]
+    },
+    {
+      "phase": 2,
+      "raw_path": "/workspace/scratch/girtas-SE-run-right-leading-flight-key-v01/girtas-SE-run-right-leading-flight-key-v01.png",
+      "raw_sha256": "6cac533eae8c9a7d456ecd621132804013b8d6a2a5a4fe3257e5bd1354773299",
+      "repair_ROI_XYWH": [
+        350,
+        470,
+        220,
+        300
+      ]
+    },
+    {
+      "phase": 3,
+      "raw_path": "/workspace/scratch/girtas-SE-run-right-landing-key-v01/girtas-SE-run-right-landing-key-v01.png",
+      "raw_sha256": "97dab96143e8f4a5ea56f4bc654035908f1e2cd7cad8ee24333b6dc2ad6a7393",
+      "repair_ROI_XYWH": [
+        360,
+        500,
+        300,
+        300
+      ]
+    },
+    {
+      "phase": 4,
+      "raw_path": "/workspace/scratch/girtas-SE-run-right-compression-key-v01/girtas-SE-run-right-compression-key-v01.png",
+      "raw_sha256": "39264eda3975de9a760c8c0b8a87d9aeaa38f80628dfa99c030b2a14a7293dfa",
+      "repair_ROI_XYWH": [
+        445,
+        515,
+        260,
+        300
+      ]
+    },
+    {
+      "phase": 5,
+      "raw_path": "/workspace/scratch/girtas-SE-run-left-leading-flight-key-v01/girtas-SE-run-left-leading-flight-key-v01.png",
+      "raw_sha256": "ba0c87e37c3c689705ee578e444305eb9040bcf5d59f5605fd3a7372ab59f5e2",
+      "repair_ROI_XYWH": [
+        400,
+        380,
+        260,
+        230
+      ]
+    }
+  ],
+  "confirmed_primary_phases": [
+    0,
+    3
+  ],
+  "additional_phases_privately_observed": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "parallel_additional_phase_confirmation_owner": "/root/girtas_nw_walk_author",
+  "selected_reference": {
+    "path": "/workspace/scratch/girtas-SE-walk-production-v01/SEidle0-lossless.png",
+    "sha256": "c89f4d16b9c776dc98be87f021df83738ba9cef8c68709fde919b0faf116da91",
+    "exact_native_ROI_XYWH": [
+      115,
+      230,
+      90,
+      105
+    ],
+    "selected_crop_path": "/workspace/scratch/girtas-SE-run-hilt-only-repair-production-v01/selected-SEidle-original-small-collar-hand-hilt-exactRGBA.png",
+    "selected_crop_sha256": "d5d4eebcf3f83166e208f62a09bc92c7bfa6cfbe6dadf43255d8f799097a633a"
+  },
+  "material_finding": "SelectedSEidle has a smallplaincollar/continuoussinuousblade junction. Newsource0/3 and privatelychecked1/2/4/5 add clearly separate pointedornatecrossguard/hookedprongs outside thefist. This is actualaddedvisiblegeometry, not handrotation/projectedsize or unknowablehiddenbackside.",
+  "correction": "InitialfullbodySOURCEPASS missed thehilt addition. This laterexactcrop evidence supersedes ONLY gear scope; actualbody/limb/gait sourcefindings remain valid. EarlierPASSrecords retained ashistory.",
+  "single_minimal_fix": "Onlyreplace wrongguard/grip-to-blade junction with faithfulsmallplaincollar using exactselectedhand/hilt reference. Preservefist/wristpose, longbladecurve/endpoints, allarmor/robe/body/legs. Outside boundedROI mustremainexactoriginalRGBA. WithinROI, preserveallnondefectpixels; SE2nearbyfarrecoveryboot is protected and mustnotchange. No sixpose/bodyregeneration, relabeling or countincrement.",
+  "additional_protected_source_regions": [
+    {
+      "phase": 2,
+      "ROI_XYWH": [
+        540,
+        530,
+        160,
+        190
+      ],
+      "reason": "NearbyfarLEFTrecoveryboot mustremainoriginalexactRGBA; ROIoverlap is not permission to alter it."
+    }
+  ],
+  "body_candidate_proof": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-fixed-mixedC-body-root-independent-final-candidate-QC-v01.json",
+    "sha256": "b8ef5b5ddb1e11af5a02c9c02457132bcdb2051fc02b3ef77bdbbfd1e400e537"
+  },
+  "private_evidence": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-SE-selected-vs-contact-hilt-evidence-v01.jpg",
+      "sha256": "0d07107ce82c7a36a9214e1a5b3fef757ce51525c91e0932b6e399c331536987"
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-SE-new1-2-4-5-hilt-reference-check-v01.jpg",
+      "sha256": "d795fd1c3be05008e8fb7633b4eaedc825da0309486f367655d0ff44c2845be9"
+    }
+  ],
+  "source_visual_status": "HOLD_HILT_ONLY",
+  "actual_runtime_status": "HOLD",
+  "actor_approval": false,
+  "repository_mutations": false
+}

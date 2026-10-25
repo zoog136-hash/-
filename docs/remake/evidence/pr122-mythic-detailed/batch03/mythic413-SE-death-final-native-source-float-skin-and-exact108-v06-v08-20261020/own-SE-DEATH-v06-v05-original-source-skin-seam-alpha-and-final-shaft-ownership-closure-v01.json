@@ -1,0 +1,2562 @@
+{
+  "status": "ACTUAL_SOURCE_UV_AND_ORIGINAL_RGBA_CAUSAL_CLOSURE_PENDING_INDEPENDENT_SOURCE_QC",
+  "new_contract": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/own-SE-DEATH-six-actual-native-source-contract-v06.json",
+    "sha256": "80c99d1e312f7b38f9de0b3902ab3be87d0d37b7d5947b54e82f2c616d1bcec6",
+    "bytes": 180703
+  },
+  "original_contract": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/own-SE-DEATH-six-actual-native-source-contract-v05.json",
+    "sha256": "70c9c539fb01d1b1d847e92c12224a7b28a01022cf26a755bfdd5fee37b3832e",
+    "bytes": 178216
+  },
+  "defining_proximal_UV_code": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/render-own-SE-DEATH-proximal-source-premultiplied-alpha-exact-UV-v03.py",
+    "sha256": "045e054c357a4b53663f89c8ff2be7440c3f61168ab72f2db2830a3792802327",
+    "bytes": 6172
+  },
+  "all_bones_body_head_arms_SO3_clock_and_fixed_C_root_unchanged": true,
+  "source_colors_recolored_or_blurred_or_deleted": false,
+  "new_actor_approvals": 0,
+  "frames": [
+    {
+      "phase": 0,
+      "changed_RGBA_pixels": 1335,
+      "changed_alpha_pixels": 8,
+      "changed_RGBA_bbox": [
+        639,
+        664,
+        1116,
+        1184
+      ],
+      "source_geometry_bones_clock_unchanged": true
+    },
+    {
+      "phase": 1,
+      "changed_RGBA_pixels": 1481,
+      "changed_alpha_pixels": 8,
+      "changed_RGBA_bbox": [
+        709,
+        645,
+        1170,
+        1340
+      ],
+      "source_geometry_bones_clock_unchanged": true
+    },
+    {
+      "phase": 2,
+      "changed_RGBA_pixels": 1305,
+      "changed_alpha_pixels": 6,
+      "changed_RGBA_bbox": [
+        887,
+        761,
+        1117,
+        1696
+      ],
+      "source_geometry_bones_clock_unchanged": true
+    },
+    {
+      "phase": 3,
+      "changed_RGBA_pixels": 1390,
+      "changed_alpha_pixels": 8,
+      "changed_RGBA_bbox": [
+        955,
+        994,
+        1332,
+        1811
+      ],
+      "source_geometry_bones_clock_unchanged": true
+    },
+    {
+      "phase": 4,
+      "changed_RGBA_pixels": 1421,
+      "changed_alpha_pixels": 8,
+      "changed_RGBA_bbox": [
+        749,
+        1239,
+        1219,
+        1659
+      ],
+      "source_geometry_bones_clock_unchanged": true
+    },
+    {
+      "phase": 5,
+      "changed_RGBA_pixels": 1501,
+      "changed_alpha_pixels": 6,
+      "changed_RGBA_bbox": [
+        756,
+        1265,
+        1225,
+        1676
+      ],
+      "source_geometry_bones_clock_unchanged": true
+    }
+  ],
+  "traces": [
+    {
+      "phase": 0,
+      "side": "R",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase0-R-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "6b2a85dcd28ae3456e47332a62c443bf30359778936abb2328ee3df44cdfadae",
+        "bytes": 480146
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 882,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 867,
+      "samples": [
+        {
+          "stored": [
+            955,
+            916
+          ],
+          "sourceUV": [
+            687.8245052762854,
+            676.2231348315247
+          ],
+          "oldRGBA": [
+            37,
+            25,
+            21,
+            47
+          ],
+          "newRGBA": [
+            203,
+            137,
+            113,
+            47
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.1839758459151796
+        },
+        {
+          "stored": [
+            933,
+            928
+          ],
+          "sourceUV": [
+            662.420921145027,
+            689.2406978546696
+          ],
+          "oldRGBA": [
+            60,
+            52,
+            46,
+            61
+          ],
+          "newRGBA": [
+            249,
+            214,
+            191,
+            61
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.24069785466963367
+        },
+        {
+          "stored": [
+            862,
+            941
+          ],
+          "sourceUV": [
+            584.1241108222421,
+            690.7026661887016
+          ],
+          "oldRGBA": [
+            5,
+            1,
+            1,
+            31
+          ],
+          "newRGBA": [
+            38,
+            12,
+            12,
+            31
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.12411082224207348
+        },
+        {
+          "stored": [
+            1030,
+            975
+          ],
+          "sourceUV": [
+            668.4573895078134,
+            754.3232070967474
+          ],
+          "oldRGBA": [
+            7,
+            3,
+            4,
+            93
+          ],
+          "newRGBA": [
+            18,
+            7,
+            10,
+            93
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.3672349303422549
+        },
+        {
+          "stored": [
+            940,
+            1015
+          ],
+          "sourceUV": [
+            585.3772616256553,
+            727.2881290383449
+          ],
+          "oldRGBA": [
+            68,
+            47,
+            49,
+            95
+          ],
+          "newRGBA": [
+            179,
+            124,
+            131,
+            95
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.377261625655251
+        },
+        {
+          "stored": [
+            978,
+            1045
+          ],
+          "sourceUV": [
+            582.5886033063081,
+            746.4612151105376
+          ],
+          "oldRGBA": [
+            9,
+            3,
+            4,
+            149
+          ],
+          "newRGBA": [
+            15,
+            4,
+            6,
+            149
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.5886033063080731
+        },
+        {
+          "stored": [
+            1020,
+            1080
+          ],
+          "sourceUV": [
+            582.1742582540369,
+            783.3999233774506
+          ],
+          "oldRGBA": [
+            1,
+            0,
+            0,
+            44
+          ],
+          "newRGBA": [
+            5,
+            1,
+            2,
+            44
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.17425825403688577
+        },
+        {
+          "stored": [
+            1100,
+            1116
+          ],
+          "sourceUV": [
+            604.7676486186069,
+            843.5353215779603
+          ],
+          "oldRGBA": [
+            116,
+            109,
+            46,
+            118
+          ],
+          "newRGBA": [
+            249,
+            234,
+            98,
+            118
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.46467842203969667
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 0,
+      "side": "L",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase0-L-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "3ce389d47da243c9e852d18be41358dbdcb22359b9fd58a9ed267ee7a8f0749e",
+        "bytes": 566546
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 985,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 960,
+      "samples": [
+        {
+          "stored": [
+            1074,
+            908
+          ],
+          "sourceUV": [
+            806.7638888888889,
+            667.7849886577753
+          ],
+          "oldRGBA": [
+            123,
+            84,
+            71,
+            152
+          ],
+          "newRGBA": [
+            205,
+            140,
+            118,
+            152
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.5996441135783965
+        },
+        {
+          "stored": [
+            1076,
+            925
+          ],
+          "sourceUV": [
+            811.8010165184725,
+            681.5785403123956
+          ],
+          "oldRGBA": [
+            24,
+            16,
+            14,
+            29
+          ],
+          "newRGBA": [
+            207,
+            142,
+            120,
+            29
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.11511996556450446
+        },
+        {
+          "stored": [
+            1057,
+            960
+          ],
+          "sourceUV": [
+            815.1123821500057,
+            700.1595030558823
+          ],
+          "oldRGBA": [
+            72,
+            52,
+            54,
+            229
+          ],
+          "newRGBA": [
+            80,
+            58,
+            60,
+            229
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9055431463468179
+        },
+        {
+          "stored": [
+            1027,
+            998
+          ],
+          "sourceUV": [
+            821.8995863523617,
+            715.7086437815502
+          ],
+          "oldRGBA": [
+            20,
+            23,
+            38,
+            187
+          ],
+          "newRGBA": [
+            27,
+            31,
+            52,
+            187
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.7378999222068756
+        },
+        {
+          "stored": [
+            877,
+            1034
+          ],
+          "sourceUV": [
+            754.4596386455138,
+            782.926894140125
+          ],
+          "oldRGBA": [
+            4,
+            3,
+            5,
+            116
+          ],
+          "newRGBA": [
+            9,
+            6,
+            11,
+            116
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.45963864551379174
+        },
+        {
+          "stored": [
+            949,
+            1070
+          ],
+          "sourceUV": [
+            828.2351705880416,
+            754.314803201155
+          ],
+          "oldRGBA": [
+            27,
+            31,
+            52,
+            194
+          ],
+          "newRGBA": [
+            36,
+            40,
+            68,
+            194
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.7648294119584307
+        },
+        {
+          "stored": [
+            907,
+            1109
+          ],
+          "sourceUV": [
+            828.7533752906071,
+            788.5064748986933
+          ],
+          "oldRGBA": [
+            6,
+            5,
+            9,
+            62
+          ],
+          "newRGBA": [
+            26,
+            21,
+            35,
+            62
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.24662470939290415
+        },
+        {
+          "stored": [
+            874,
+            1148
+          ],
+          "sourceUV": [
+            835.2269766108102,
+            817.8090388301249
+          ],
+          "oldRGBA": [
+            37,
+            35,
+            56,
+            195
+          ],
+          "newRGBA": [
+            48,
+            46,
+            72,
+            195
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.7730233891898024
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 1,
+      "side": "R",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase1-R-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "ff53ce8d7328653500d3fb53666ba0eb4fecc79b40df635cec72a194232361a4",
+        "bytes": 511870
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 956,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 925,
+      "samples": [
+        {
+          "stored": [
+            862,
+            1027
+          ],
+          "sourceUV": [
+            584.8663194058574,
+            677.136643620793
+          ],
+          "oldRGBA": [
+            22,
+            13,
+            11,
+            30
+          ],
+          "newRGBA": [
+            182,
+            107,
+            89,
+            30
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.11837702037964595
+        },
+        {
+          "stored": [
+            907,
+            1044
+          ],
+          "sourceUV": [
+            625.8921555668554,
+            687.4398830230307
+          ],
+          "oldRGBA": [
+            111,
+            96,
+            86,
+            111
+          ],
+          "newRGBA": [
+            252,
+            218,
+            195,
+            111
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.4398830230306885
+        },
+        {
+          "stored": [
+            1027,
+            1055
+          ],
+          "sourceUV": [
+            677.4376449871818,
+            734.3049206092884
+          ],
+          "oldRGBA": [
+            22,
+            25,
+            42,
+            219
+          ],
+          "newRGBA": [
+            25,
+            29,
+            49,
+            219
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8665530238565218
+        },
+        {
+          "stored": [
+            1071,
+            1090
+          ],
+          "sourceUV": [
+            663.5865597879102,
+            764.9681291173869
+          ],
+          "oldRGBA": [
+            1,
+            1,
+            0,
+            3
+          ],
+          "newRGBA": [
+            50,
+            40,
+            35,
+            3
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.013176704467062289
+        },
+        {
+          "stored": [
+            965,
+            1124
+          ],
+          "sourceUV": [
+            585.5408012794488,
+            725.4306698822127
+          ],
+          "oldRGBA": [
+            99,
+            70,
+            73,
+            137
+          ],
+          "newRGBA": [
+            183,
+            129,
+            134,
+            137
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.5408012794488286
+        },
+        {
+          "stored": [
+            1018,
+            1153
+          ],
+          "sourceUV": [
+            583.7540521236069,
+            745.3397421530442
+          ],
+          "oldRGBA": [
+            34,
+            17,
+            23,
+            212
+          ],
+          "newRGBA": [
+            41,
+            20,
+            28,
+            212
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.837610984669357
+        },
+        {
+          "stored": [
+            1169,
+            1183
+          ],
+          "sourceUV": [
+            633.4908948390439,
+            843.4985743571472
+          ],
+          "oldRGBA": [
+            8,
+            6,
+            7,
+            65
+          ],
+          "newRGBA": [
+            31,
+            25,
+            28,
+            65
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.25527838261210767
+        },
+        {
+          "stored": [
+            1158,
+            1216
+          ],
+          "sourceUV": [
+            599.997484912263,
+            843.3726031454461
+          ],
+          "oldRGBA": [
+            152,
+            111,
+            22,
+            159
+          ],
+          "newRGBA": [
+            242,
+            177,
+            35,
+            159
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.6273968545539219
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 1,
+      "side": "L",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase1-L-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "d46033deafd0b8437f702f41991b9768230f36248c828d7085c8a60fd31c2ac8",
+        "bytes": 626511
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1093,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1072,
+      "samples": [
+        {
+          "stored": [
+            992,
+            1039
+          ],
+          "sourceUV": [
+            715.615461030056,
+            677.2535744462889
+          ],
+          "oldRGBA": [
+            29,
+            18,
+            15,
+            39
+          ],
+          "newRGBA": [
+            188,
+            118,
+            96,
+            39
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.15606518990885626
+        },
+        {
+          "stored": [
+            1085,
+            1049
+          ],
+          "sourceUV": [
+            809.0214257096477,
+            675.7391546678883
+          ],
+          "oldRGBA": [
+            201,
+            138,
+            114,
+            248
+          ],
+          "newRGBA": [
+            205,
+            141,
+            117,
+            248
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9785742903522987
+        },
+        {
+          "stored": [
+            1071,
+            1087
+          ],
+          "sourceUV": [
+            815.9109584608411,
+            696.710928256382
+          ],
+          "oldRGBA": [
+            4,
+            3,
+            4,
+            16
+          ],
+          "newRGBA": [
+            67,
+            49,
+            63,
+            16
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.06330214617978315
+        },
+        {
+          "stored": [
+            907,
+            1128
+          ],
+          "sourceUV": [
+            737.8041106691851,
+            755.4709939022066
+          ],
+          "oldRGBA": [
+            12,
+            12,
+            23,
+            108
+          ],
+          "newRGBA": [
+            29,
+            29,
+            53,
+            108
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.4253794472996447
+        },
+        {
+          "stored": [
+            1002,
+            1167
+          ],
+          "sourceUV": [
+            826.6753494699506,
+            728.2745239310614
+          ],
+          "oldRGBA": [
+            9,
+            11,
+            19,
+            82
+          ],
+          "newRGBA": [
+            29,
+            34,
+            58,
+            82
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.3246505300494391
+        },
+        {
+          "stored": [
+            861,
+            1210
+          ],
+          "sourceUV": [
+            763.352593074535,
+            800.5197171833217
+          ],
+          "oldRGBA": [
+            2,
+            1,
+            2,
+            89
+          ],
+          "newRGBA": [
+            7,
+            4,
+            4,
+            89
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.3525930745349797
+        },
+        {
+          "stored": [
+            833,
+            1254
+          ],
+          "sourceUV": [
+            774.7766547840799,
+            826.3634706932836
+          ],
+          "oldRGBA": [
+            14,
+            12,
+            14,
+            125
+          ],
+          "newRGBA": [
+            28,
+            24,
+            29,
+            125
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.49436353126837607
+        },
+        {
+          "stored": [
+            876,
+            1299
+          ],
+          "sourceUV": [
+            835.8052107217627,
+            816.7014528268455
+          ],
+          "oldRGBA": [
+            7,
+            7,
+            11,
+            34
+          ],
+          "newRGBA": [
+            50,
+            49,
+            78,
+            34
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.13663548985874985
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 2,
+      "side": "R",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase2-R-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "51cc2545b4c9727024dd3c3e17178517c005563edbc63baefe100fc210653c44",
+        "bytes": 693931
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1320,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1284,
+      "samples": [
+        {
+          "stored": [
+            888,
+            1218
+          ],
+          "sourceUV": [
+            584.5225883318406,
+            677.3297701957106
+          ],
+          "oldRGBA": [
+            31,
+            18,
+            15,
+            44
+          ],
+          "newRGBA": [
+            182,
+            107,
+            89,
+            44
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.17233405646712446
+        },
+        {
+          "stored": [
+            986,
+            1257
+          ],
+          "sourceUV": [
+            687.1608146288731,
+            677.3483878131294
+          ],
+          "oldRGBA": [
+            92,
+            63,
+            51,
+            115
+          ],
+          "newRGBA": [
+            204,
+            138,
+            114,
+            115
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.4531765851302282
+        },
+        {
+          "stored": [
+            897,
+            1297
+          ],
+          "sourceUV": [
+            584.7089485132503,
+            705.7719333379761
+          ],
+          "oldRGBA": [
+            29,
+            17,
+            19,
+            179
+          ],
+          "newRGBA": [
+            42,
+            24,
+            26,
+            179
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.7089485132503341
+        },
+        {
+          "stored": [
+            919,
+            1362
+          ],
+          "sourceUV": [
+            585.1800163262845,
+            722.388855256941
+          ],
+          "oldRGBA": [
+            33,
+            23,
+            24,
+            46
+          ],
+          "newRGBA": [
+            184,
+            129,
+            136,
+            46
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.18001632628454445
+        },
+        {
+          "stored": [
+            942,
+            1424
+          ],
+          "sourceUV": [
+            583.6147938459577,
+            739.1793021655144
+          ],
+          "oldRGBA": [
+            42,
+            22,
+            25,
+            156
+          ],
+          "newRGBA": [
+            68,
+            36,
+            40,
+            156
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.6147938459577063
+        },
+        {
+          "stored": [
+            963,
+            1492
+          ],
+          "sourceUV": [
+            582.8674480095884,
+            770.0007891992984
+          ],
+          "oldRGBA": [
+            13,
+            11,
+            14,
+            219
+          ],
+          "newRGBA": [
+            15,
+            13,
+            16,
+            219
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8674480095884292
+        },
+        {
+          "stored": [
+            981,
+            1559
+          ],
+          "sourceUV": [
+            580.7510715286121,
+            801.9311661650225
+          ],
+          "oldRGBA": [
+            8,
+            8,
+            15,
+            177
+          ],
+          "newRGBA": [
+            11,
+            11,
+            21,
+            177
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.6993723949553518
+        },
+        {
+          "stored": [
+            1040,
+            1619
+          ],
+          "sourceUV": [
+            619.0745463331513,
+            843.5613968016396
+          ],
+          "oldRGBA": [
+            87,
+            55,
+            10,
+            111
+          ],
+          "newRGBA": [
+            198,
+            126,
+            23,
+            111
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.4386031983603971
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 2,
+      "side": "L",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase2-L-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "bf4587b732c6302aede2100a990fa0b9ceae9fb20fdb9c82f68945bee439ca23",
+        "bytes": 671874
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1293,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1268,
+      "samples": [
+        {
+          "stored": [
+            1013,
+            1269
+          ],
+          "sourceUV": [
+            715.4806750702396,
+            677.243604398451
+          ],
+          "oldRGBA": [
+            22,
+            14,
+            11,
+            30
+          ],
+          "newRGBA": [
+            188,
+            118,
+            96,
+            30
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.11709456133611208
+        },
+        {
+          "stored": [
+            1102,
+            1295
+          ],
+          "sourceUV": [
+            804.8266656424853,
+            668.9355482527321
+          ],
+          "oldRGBA": [
+            204,
+            146,
+            126,
+            237
+          ],
+          "newRGBA": [
+            218,
+            156,
+            135,
+            237
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9355482527321328
+        },
+        {
+          "stored": [
+            1009,
+            1350
+          ],
+          "sourceUV": [
+            719.3887911160491,
+            717.1365552325265
+          ],
+          "oldRGBA": [
+            24,
+            25,
+            43,
+            232
+          ],
+          "newRGBA": [
+            26,
+            27,
+            47,
+            232
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9165362287298465
+        },
+        {
+          "stored": [
+            1019,
+            1409
+          ],
+          "sourceUV": [
+            728.4513014116898,
+            736.5918445569292
+          ],
+          "oldRGBA": [
+            15,
+            16,
+            27,
+            114
+          ],
+          "newRGBA": [
+            33,
+            35,
+            60,
+            114
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.45130141168976934
+        },
+        {
+          "stored": [
+            1029,
+            1472
+          ],
+          "sourceUV": [
+            741.1905056985917,
+            761.908765007081
+          ],
+          "oldRGBA": [
+            1,
+            1,
+            1,
+            4
+          ],
+          "newRGBA": [
+            34,
+            39,
+            63,
+            4
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.01738078606203939
+        },
+        {
+          "stored": [
+            1042,
+            1536
+          ],
+          "sourceUV": [
+            757.939792681979,
+            788.2037745862835
+          ],
+          "oldRGBA": [
+            12,
+            10,
+            13,
+            238
+          ],
+          "newRGBA": [
+            13,
+            10,
+            13,
+            238
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9397926819790428
+        },
+        {
+          "stored": [
+            1050,
+            1604
+          ],
+          "sourceUV": [
+            770.06032517387,
+            817.3759309904725
+          ],
+          "oldRGBA": [
+            0,
+            0,
+            1,
+            10
+          ],
+          "newRGBA": [
+            6,
+            7,
+            14,
+            10
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.037647071506596665
+        },
+        {
+          "stored": [
+            1117,
+            1666
+          ],
+          "sourceUV": [
+            839.4108924206134,
+            831.3014425285803
+          ],
+          "oldRGBA": [
+            7,
+            8,
+            11,
+            45
+          ],
+          "newRGBA": [
+            40,
+            43,
+            64,
+            45
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.1775820783361115
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 3,
+      "side": "R",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase3-R-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "44d177c3af6e401278f94a57ebd645265fa0e536959347099a23b48aaaab15eb",
+        "bytes": 675059
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1296,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1262,
+      "samples": [
+        {
+          "stored": [
+            965,
+            1349
+          ],
+          "sourceUV": [
+            584.4822361372671,
+            677.1185382363872
+          ],
+          "oldRGBA": [
+            10,
+            6,
+            5,
+            14
+          ],
+          "newRGBA": [
+            182,
+            107,
+            89,
+            14
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.05716342123380604
+        },
+        {
+          "stored": [
+            997,
+            1403
+          ],
+          "sourceUV": [
+            635.5775802387989,
+            688.7248462444065
+          ],
+          "oldRGBA": [
+            183,
+            162,
+            147,
+            183
+          ],
+          "newRGBA": [
+            252,
+            224,
+            203,
+            183
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.7248462444065353
+        },
+        {
+          "stored": [
+            1044,
+            1458
+          ],
+          "sourceUV": [
+            686.1911032063879,
+            709.2682233458006
+          ],
+          "oldRGBA": [
+            34,
+            13,
+            17,
+            205
+          ],
+          "newRGBA": [
+            42,
+            15,
+            21,
+            205
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8088967936121207
+        },
+        {
+          "stored": [
+            1069,
+            1525
+          ],
+          "sourceUV": [
+            676.3827298211006,
+            737.096847411224
+          ],
+          "oldRGBA": [
+            14,
+            14,
+            23,
+            156
+          ],
+          "newRGBA": [
+            23,
+            22,
+            37,
+            156
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.6172701788993891
+        },
+        {
+          "stored": [
+            1070,
+            1588
+          ],
+          "sourceUV": [
+            664.136685229711,
+            762.5820897538592
+          ],
+          "oldRGBA": [
+            22,
+            14,
+            12,
+            91
+          ],
+          "newRGBA": [
+            61,
+            40,
+            32,
+            91
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.3607880881484246
+        },
+        {
+          "stored": [
+            996,
+            1654
+          ],
+          "sourceUV": [
+            582.5085521621888,
+            773.1427433822043
+          ],
+          "oldRGBA": [
+            8,
+            7,
+            12,
+            129
+          ],
+          "newRGBA": [
+            16,
+            15,
+            23,
+            129
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.5085521621888347
+        },
+        {
+          "stored": [
+            1004,
+            1721
+          ],
+          "sourceUV": [
+            580.1199795580126,
+            804.3416818852807
+          ],
+          "oldRGBA": [
+            1,
+            1,
+            2,
+            30
+          ],
+          "newRGBA": [
+            10,
+            7,
+            13,
+            30
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.11997955801257376
+        },
+        {
+          "stored": [
+            1060,
+            1780
+          ],
+          "sourceUV": [
+            625.4141108242547,
+            843.8762969619903
+          ],
+          "oldRGBA": [
+            13,
+            8,
+            4,
+            31
+          ],
+          "newRGBA": [
+            105,
+            69,
+            32,
+            31
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.12370303800969396
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 3,
+      "side": "L",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase3-L-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "94f90c75029a1e52a4d89c730fbbd82e80a3a469df491b977542a70cb9c978f1",
+        "bytes": 580058
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1121,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1098,
+      "samples": [
+        {
+          "stored": [
+            1064,
+            1448
+          ],
+          "sourceUV": [
+            715.6106211428611,
+            677.5178335749725
+          ],
+          "oldRGBA": [
+            59,
+            37,
+            30,
+            80
+          ],
+          "newRGBA": [
+            188,
+            118,
+            96,
+            80
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.31620012936157116
+        },
+        {
+          "stored": [
+            1112,
+            1495
+          ],
+          "sourceUV": [
+            778.7902616033491,
+            678.1160030154422
+          ],
+          "oldRGBA": [
+            29,
+            26,
+            24,
+            29
+          ],
+          "newRGBA": [
+            252,
+            223,
+            203,
+            29
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.11600301544217473
+        },
+        {
+          "stored": [
+            1156,
+            1547
+          ],
+          "sourceUV": [
+            817.9111933857126,
+            705.6667457703803
+          ],
+          "oldRGBA": [
+            7,
+            4,
+            3,
+            22
+          ],
+          "newRGBA": [
+            78,
+            46,
+            39,
+            22
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.08880661428736403
+        },
+        {
+          "stored": [
+            1128,
+            1607
+          ],
+          "sourceUV": [
+            729.053855794835,
+            738.4196613307438
+          ],
+          "oldRGBA": [
+            2,
+            2,
+            3,
+            14
+          ],
+          "newRGBA": [
+            32,
+            35,
+            61,
+            14
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.053855794835044435
+        },
+        {
+          "stored": [
+            1258,
+            1655
+          ],
+          "sourceUV": [
+            828.6505849606809,
+            763.777539947014
+          ],
+          "oldRGBA": [
+            15,
+            17,
+            27,
+            88
+          ],
+          "newRGBA": [
+            42,
+            48,
+            78,
+            88
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.34941503931906936
+        },
+        {
+          "stored": [
+            1201,
+            1707
+          ],
+          "sourceUV": [
+            758.1246022006977,
+            790.1117568600391
+          ],
+          "oldRGBA": [
+            2,
+            2,
+            2,
+            32
+          ],
+          "newRGBA": [
+            14,
+            12,
+            13,
+            32
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.12460220069772276
+        },
+        {
+          "stored": [
+            1303,
+            1753
+          ],
+          "sourceUV": [
+            834.7137764982793,
+            815.5420316034496
+          ],
+          "oldRGBA": [
+            13,
+            12,
+            19,
+            72
+          ],
+          "newRGBA": [
+            46,
+            44,
+            68,
+            72
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.2862235017206558
+        },
+        {
+          "stored": [
+            1328,
+            1803
+          ],
+          "sourceUV": [
+            839.6680335551846,
+            841.9810673076636
+          ],
+          "oldRGBA": [
+            15,
+            11,
+            9,
+            84
+          ],
+          "newRGBA": [
+            44,
+            33,
+            28,
+            84
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.33196644481540716
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 4,
+      "side": "R",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase4-R-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "50b95d06c854d72f3a66570b75355c59f1e7b48d724ab96034b5660a92b38664",
+        "bytes": 515539
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1043,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1021,
+      "samples": [
+        {
+          "stored": [
+            748,
+            1452
+          ],
+          "sourceUV": [
+            565.1797421932936,
+            843.5033483750616
+          ],
+          "oldRGBA": [
+            0,
+            0,
+            0,
+            23
+          ],
+          "newRGBA": [
+            2,
+            2,
+            5,
+            23
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.08926925236924886
+        },
+        {
+          "stored": [
+            893,
+            1457
+          ],
+          "sourceUV": [
+            582.1884105154697,
+            763.8539099568098
+          ],
+          "oldRGBA": [
+            4,
+            3,
+            4,
+            48
+          ],
+          "newRGBA": [
+            20,
+            16,
+            22,
+            48
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.18841051546974086
+        },
+        {
+          "stored": [
+            871,
+            1459
+          ],
+          "sourceUV": [
+            582.3085634914343,
+            776.4917715773978
+          ],
+          "oldRGBA": [
+            5,
+            3,
+            6,
+            78
+          ],
+          "newRGBA": [
+            15,
+            11,
+            20,
+            78
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.3085634914342563
+        },
+        {
+          "stored": [
+            755,
+            1473
+          ],
+          "sourceUV": [
+            586.3242086408154,
+            843.8204253522667
+          ],
+          "oldRGBA": [
+            17,
+            13,
+            13,
+            45
+          ],
+          "newRGBA": [
+            95,
+            74,
+            72,
+            45
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.17957464773326137
+        },
+        {
+          "stored": [
+            1056,
+            1509
+          ],
+          "sourceUV": [
+            642.7893523692517,
+            690.1719818639338
+          ],
+          "oldRGBA": [
+            87,
+            79,
+            71,
+            88
+          ],
+          "newRGBA": [
+            252,
+            227,
+            206,
+            88
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.34640192251275226
+        },
+        {
+          "stored": [
+            839,
+            1524
+          ],
+          "sourceUV": [
+            643.2723314982136,
+            807.3236984624083
+          ],
+          "oldRGBA": [
+            69,
+            51,
+            22,
+            185
+          ],
+          "newRGBA": [
+            94,
+            70,
+            31,
+            185
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.7276685017864111
+        },
+        {
+          "stored": [
+            913,
+            1536
+          ],
+          "sourceUV": [
+            661.2027838127332,
+            768.5694529421228
+          ],
+          "oldRGBA": [
+            12,
+            11,
+            11,
+            87
+          ],
+          "newRGBA": [
+            36,
+            31,
+            31,
+            87
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.34323908391982716
+        },
+        {
+          "stored": [
+            1092,
+            1547
+          ],
+          "sourceUV": [
+            688.3726602677494,
+            679.0305171690894
+          ],
+          "oldRGBA": [
+            127,
+            87,
+            71,
+            159
+          ],
+          "newRGBA": [
+            202,
+            138,
+            113,
+            159
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.6273397322505616
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 4,
+      "side": "L",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase4-L-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "1868f1e1a8aec639f4f81a0f8d8cb890fadb887f6fb7bfda2e16bece1929f0c5",
+        "bytes": 572528
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1031,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 997,
+      "samples": [
+        {
+          "stored": [
+            1009,
+            1550
+          ],
+          "sourceUV": [
+            734.0087709832235,
+            750.6409384618997
+          ],
+          "oldRGBA": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "newRGBA": [
+            34,
+            36,
+            63,
+            1
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.0031493227268761382
+        },
+        {
+          "stored": [
+            966,
+            1556
+          ],
+          "sourceUV": [
+            748.7978474592372,
+            771.9499454659849
+          ],
+          "oldRGBA": [
+            6,
+            7,
+            14,
+            204
+          ],
+          "newRGBA": [
+            7,
+            9,
+            18,
+            204
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8079661104650789
+        },
+        {
+          "stored": [
+            1068,
+            1559
+          ],
+          "sourceUV": [
+            719.8750974899676,
+            718.7199778091156
+          ],
+          "oldRGBA": [
+            6,
+            7,
+            12,
+            62
+          ],
+          "newRGBA": [
+            26,
+            27,
+            48,
+            62
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.2450467163782079
+        },
+        {
+          "stored": [
+            1106,
+            1570
+          ],
+          "sourceUV": [
+            715.087184825862,
+            679.6839973150934
+          ],
+          "oldRGBA": [
+            16,
+            10,
+            9,
+            22
+          ],
+          "newRGBA": [
+            188,
+            119,
+            98,
+            22
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.08718482586198206
+        },
+        {
+          "stored": [
+            1122,
+            1608
+          ],
+          "sourceUV": [
+            757.9298436478566,
+            681.9275612101587
+          ],
+          "oldRGBA": [
+            232,
+            192,
+            172,
+            235
+          ],
+          "newRGBA": [
+            250,
+            207,
+            185,
+            235
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9275612101587285
+        },
+        {
+          "stored": [
+            864,
+            1621
+          ],
+          "sourceUV": [
+            832.5617262650036,
+            808.4962274831714
+          ],
+          "oldRGBA": [
+            6,
+            5,
+            10,
+            55
+          ],
+          "newRGBA": [
+            29,
+            25,
+            45,
+            55
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.21748347245741043
+        },
+        {
+          "stored": [
+            1149,
+            1638
+          ],
+          "sourceUV": [
+            793.6493093920008,
+            673.2498823362988
+          ],
+          "oldRGBA": [
+            181,
+            152,
+            134,
+            186
+          ],
+          "newRGBA": [
+            245,
+            206,
+            182,
+            186
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.73694078044566
+        },
+        {
+          "stored": [
+            1042,
+            1654
+          ],
+          "sourceUV": [
+            824.4199678376879,
+            720.2817846780895
+          ],
+          "oldRGBA": [
+            16,
+            18,
+            31,
+            147
+          ],
+          "newRGBA": [
+            28,
+            32,
+            53,
+            147
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.5800321623121363
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 5,
+      "side": "R",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-R-thigh-actual-native-v01.png",
+        "sha256": "41ff936f39fa4c533572750ac659a5953cc3cb28d254c3482d7452144aab62d3",
+        "bytes": 40389
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase5-R-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "212de60b3a857e9e44c1edd4921fff74ca34344234c5d1973b036ea343e14708",
+        "bytes": 508014
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1027,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1012,
+      "samples": [
+        {
+          "stored": [
+            756,
+            1456
+          ],
+          "sourceUV": [
+            565.4273925318661,
+            843.4860987809495
+          ],
+          "oldRGBA": [
+            0,
+            0,
+            1,
+            56
+          ],
+          "newRGBA": [
+            2,
+            2,
+            5,
+            56
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.21963754313904205
+        },
+        {
+          "stored": [
+            932,
+            1467
+          ],
+          "sourceUV": [
+            582.8453710706985,
+            746.5952054643403
+          ],
+          "oldRGBA": [
+            13,
+            4,
+            6,
+            214
+          ],
+          "newRGBA": [
+            15,
+            5,
+            7,
+            214
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8453710706985476
+        },
+        {
+          "stored": [
+            960,
+            1469
+          ],
+          "sourceUV": [
+            584.2837319814547,
+            732.7910802950701
+          ],
+          "oldRGBA": [
+            51,
+            37,
+            40,
+            72
+          ],
+          "newRGBA": [
+            179,
+            131,
+            140,
+            72
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.28373198145470724
+        },
+        {
+          "stored": [
+            765,
+            1484
+          ],
+          "sourceUV": [
+            593.2555012571472,
+            843.332903481331
+          ],
+          "oldRGBA": [
+            37,
+            27,
+            20,
+            169
+          ],
+          "newRGBA": [
+            55,
+            41,
+            30,
+            169
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.667096518669041
+        },
+        {
+          "stored": [
+            1061,
+            1521
+          ],
+          "sourceUV": [
+            636.2657143464302,
+            689.5903050865577
+          ],
+          "oldRGBA": [
+            225,
+            200,
+            180,
+            225
+          ],
+          "newRGBA": [
+            252,
+            225,
+            203,
+            225
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8911381838389109
+        },
+        {
+          "stored": [
+            852,
+            1534
+          ],
+          "sourceUV": [
+            645.6167704942586,
+            803.2351457209086
+          ],
+          "oldRGBA": [
+            10,
+            8,
+            9,
+            74
+          ],
+          "newRGBA": [
+            34,
+            27,
+            30,
+            74
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.29311472734038807
+        },
+        {
+          "stored": [
+            1075,
+            1548
+          ],
+          "sourceUV": [
+            666.5051252171252,
+            688.9609481155873
+          ],
+          "oldRGBA": [
+            238,
+            200,
+            178,
+            243
+          ],
+          "newRGBA": [
+            247,
+            208,
+            185,
+            243
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9609481155872572
+        },
+        {
+          "stored": [
+            1094,
+            1563
+          ],
+          "sourceUV": [
+            684.9589744509855,
+            680.9168354261424
+          ],
+          "oldRGBA": [
+            204,
+            141,
+            118,
+            252
+          ],
+          "newRGBA": [
+            205,
+            142,
+            118,
+            252
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.9965881276989309
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    },
+    {
+      "phase": 5,
+      "side": "L",
+      "original_source": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v05/original-L-thigh-actual-native-v01.png",
+        "sha256": "d3bd9407d16659b2c70cc3bc0d7fa3c678cd9e9e007ac93e66447ab226d7c7bd",
+        "bytes": 41457
+      },
+      "actual_UV_map": {
+        "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/actual-own-SE-DEATH-six-native-v06/phase5-L-exact-native-proximal-UV-depth-v06.npz",
+        "sha256": "c07f073fd96d93f0dfe67dc1bec503f0509c7688f8aa8be2bc3e8dc2a1f929b5",
+        "bytes": 571764
+      },
+      "all_alpha_bitexact": true,
+      "changed_RGB_pixels": 1042,
+      "changed_pixels_with_original_alpha0_neighbor_contributor": 1008,
+      "samples": [
+        {
+          "stored": [
+            1010,
+            1565
+          ],
+          "sourceUV": [
+            735.3019903531289,
+            752.7239197812119
+          ],
+          "oldRGBA": [
+            3,
+            3,
+            5,
+            21
+          ],
+          "newRGBA": [
+            32,
+            32,
+            57,
+            21
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.08337356276372605
+        },
+        {
+          "stored": [
+            852,
+            1569
+          ],
+          "sourceUV": [
+            777.4464609320969,
+            833.692813186462
+          ],
+          "oldRGBA": [
+            16,
+            13,
+            16,
+            156
+          ],
+          "newRGBA": [
+            26,
+            22,
+            26,
+            156
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.6165008345348517
+        },
+        {
+          "stored": [
+            956,
+            1570
+          ],
+          "sourceUV": [
+            753.1610187101192,
+            779.3292362278714
+          ],
+          "oldRGBA": [
+            6,
+            5,
+            7,
+            183
+          ],
+          "newRGBA": [
+            9,
+            7,
+            9,
+            183
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.7237769648649196
+        },
+        {
+          "stored": [
+            822,
+            1585
+          ],
+          "sourceUV": [
+            799.9436530753883,
+            844.5879562390886
+          ],
+          "oldRGBA": [
+            21,
+            16,
+            17,
+            104
+          ],
+          "newRGBA": [
+            52,
+            40,
+            42,
+            104
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.41204376091138784
+        },
+        {
+          "stored": [
+            802,
+            1621
+          ],
+          "sourceUV": [
+            839.0360350934793,
+            844.4067283533495
+          ],
+          "oldRGBA": [
+            13,
+            9,
+            7,
+            150
+          ],
+          "newRGBA": [
+            22,
+            16,
+            13,
+            150
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.5932716466504644
+        },
+        {
+          "stored": [
+            894,
+            1633
+          ],
+          "sourceUV": [
+            828.1244789937049,
+            793.0494157091337
+          ],
+          "oldRGBA": [
+            35,
+            32,
+            47,
+            222
+          ],
+          "newRGBA": [
+            40,
+            36,
+            54,
+            222
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8755210062951164
+        },
+        {
+          "stored": [
+            979,
+            1654
+          ],
+          "sourceUV": [
+            827.4006500436424,
+            743.0242771826156
+          ],
+          "oldRGBA": [
+            21,
+            24,
+            41,
+            154
+          ],
+          "newRGBA": [
+            34,
+            40,
+            67,
+            154
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.6090766106320842
+        },
+        {
+          "stored": [
+            1060,
+            1670
+          ],
+          "sourceUV": [
+            821.2797867598672,
+            715.520419766638
+          ],
+          "oldRGBA": [
+            23,
+            22,
+            35,
+            219
+          ],
+          "newRGBA": [
+            26,
+            26,
+            40,
+            219
+          ],
+          "source_nonzero_alpha_interpolation_coverage": 0.8658198004113057
+        }
+      ],
+      "source_RGBA_original_unchanged": true,
+      "geometry_and_actual_selected_depth_unchanged": true
+    }
+  ],
+  "actual_108_parts_floor": {
+    "path": "/workspace/scratch/mythic413-SE-death-author-20261020-v01/own-SE-DEATH-v06-whole-original108-source-raster-floor-and-exact-premultiplied-alpha-binding-v01.json",
+    "sha256": "37f897bb9101f53576cbad3d4cd08c55ee9c58fa83b3a2201fb3c9395374a6e4",
+    "bytes": 285971
+  }
+}

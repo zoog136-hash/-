@@ -1,0 +1,45 @@
+{
+  "status": "REVIEWED_LAYOUT_PROPOSAL",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "walk",
+  "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+  "canvas_size": 2048,
+  "authored_pose_canvas_sizes": [
+    2560,
+    1792,
+    1792,
+    2560,
+    1728,
+    1728
+  ],
+  "source_anchors": [
+    [
+      777,
+      1328
+    ],
+    [
+      2339,
+      1179
+    ],
+    [
+      797,
+      2709
+    ],
+    [
+      2407,
+      2892
+    ],
+    [
+      802,
+      4223
+    ],
+    [
+      2328,
+      4224
+    ]
+  ],
+  "review_basis": "AUTHOR physical layout proposal only: normalize genuine rigid skull/neck/pauldron/belt to selected W idle, preserve authored alternating gait/longrobe/equipment. Contacts0/3 require different native-pixel Cs than smaller support/reach sources. Proposed hip-X/projected near/far support roots need fresh independent full6 confirmation before actual game integration. No bbox fitting, no lower-body affine changes, no source-pixel resampling. Geometry-only validation does NOT grant physical approval.",
+  "runtime_validation": "AUTHOR_PROPOSAL_INDEPENDENT_PHYSICAL_AND_ACTUAL_PLAYER_HOLD",
+  "actor_approval": false
+}

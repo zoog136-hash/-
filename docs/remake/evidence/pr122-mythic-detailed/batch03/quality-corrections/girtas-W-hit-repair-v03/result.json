@@ -1,0 +1,86 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_NOT_APPROVED",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "hit",
+  "version": "v03",
+  "source_batch": "batch03",
+  "request_path": "/workspace/scratch/girtas-W-hit-repair-v03/request.json",
+  "request_sha256": "9e9ce6ea9c76365c64a7fdb6bd7b5857b531584b047cf94d7ff21102a24f2ba6",
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png": "81a80c77b05148b2fa5e6b173135b8253fe5e0e3a232a3a1d559ab08ee58c10b",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-S-hit-repair/girtas-S-hit-v02.png": "6bfdeece93c9951d5d235562657321acc30e7aa34bc930d41eb672e7f95e0c1d"
+  },
+  "original_generated_file": "/workspace/generated_images/exec-65223257-96b5-43d8-a153-5a407a3040af.png",
+  "raw_png": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+  "raw_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+  "raw_bytes": 2213274,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "detected_large_alpha_components": 6,
+  "component_phase_slots": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "private_preview": "/workspace/scratch/girtas-W-hit-repair-v03/private-preview.jpg",
+  "private_preview_bytes": 245633,
+  "private_queue_total_bytes": 2991493,
+  "created_at": "2026-10-19T11:02:57.232468+00:00",
+  "reviewed_at": "2026-10-19T11:04:28.305967+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "strict_geometry_status": "GEOMETRY_PASS",
+  "strict_geometry_details": {
+    "status": "GEOMETRY_PASS",
+    "frames": 6,
+    "distinct": 6
+  },
+  "visual_findings": [
+    "Changed conditioning used one exact lossless W idle phase0 crop, original portrait and faithful S reaction only. Exact source SHA, region, cropped PNG SHA and RGBA identity proof are embedded in the immutable request; no six-figure W layout or rejected old W hit image was used.",
+    "Absolute WEST compass remains horizontal LEFT in all six, with pale face/hair, long dark gold-trimmed skirt, narrow gold radial spines and original sinuous weapon recognizable. Genuine neck/torso backward pitch and bent-knee recovery are present.",
+    "CRITICAL ANATOMY FAILURE in phase2: there are THREE distinct hand/forearm endpoints: the original weapon grip low/image-left, a raised empty hand upper-left, and an additional lowered empty fist on image-right. This is an extra arm/hand, not a valid two-arm humanoid hit pose.",
+    "A native source-pixel private phase2 crop confirms the extra hand/forearm. Whole sheet must remain visual HOLD and must not replace selected W hit merely because the direct geometry now passes.",
+    "Unchanged strict source analyze and complete-region gate pass six complete distinct rectangles. This improves the v02 separation failure but cannot validate anatomy. No source patch, mirroring, frame splicing, alpha masking or regeneration was attempted; original v02 HOLD checksums remain unchanged."
+  ],
+  "visual_limitations": [
+    "Do not integrate or approve this W v03 sheet. Its concrete extra-anatomy defect requires genuinely new valid authored art; there is no further generation loop in this task.",
+    "Phase2 private native-pixel anatomy check is /workspace/scratch/girtas-W-hit-repair-v03/phase2-anatomy-review.jpg (52459bytes), shown only inside this worker context.",
+    "The hard miniature320px silhouette cap was again not fully obeyed, and weapon-edge light still needs material review. Geometry PASS does not certify exact sparse dimensions or the no-halo alpha contract.",
+    "Private source review only; actual game/Player integration, runtime hit timing, cross-role source body calibration and final actor approval remain for integration. No approval or detailed completion added.",
+    "The generator again enlarged full figures beyond requested sparse330px silhouette. No bbox normalization, cropping, mirroring, pose splicing, alpha masking or validator relaxation was performed.",
+    "The tiny original limits small facial/hidden-landmark precision; the new correct compass master supplies meaningful new evidence instead of reusing the rejected direction."
+  ],
+  "new_conditioning_evidence": [
+    "ONE_pose_lossless_Widle0_crop_with_source_region_RGBA_proof",
+    "single_model_instead_of_six_figure_W_layout",
+    "new_sparser220_240_body_and_hard_opaque_weapon_alpha_contract"
+  ],
+  "prior_hold_protection": {
+    "/workspace/scratch/girtas-W-hit-repair/request.json": "a248eb8fd639f0fc76887e216114bd61cebfd3abcd30498f754b10d2ae04ac95",
+    "/workspace/scratch/girtas-W-hit-repair/result.json": "19cef271c92d9f289640a2812fa2b04957221b2c80f6205ff984f32f99e3adf5",
+    "/workspace/scratch/girtas-W-hit-repair/girtas-W-hit-v02.png": "3a34d02f13d0f0001d1641af3fb3ddf689aebbad176b22b9aa048b3fe4c92ff6"
+  },
+  "prior_hold_files_unchanged": true,
+  "phase_contract": [
+    "west_brace",
+    "impact",
+    "maximum_LEFT_head_torso_recoil",
+    "coherent_W_leg_stagger",
+    "recover",
+    "west_guard"
+  ],
+  "all_actor_approvals": "HOLD_UNTIL_INTEGRATION_AND_FINAL_QUALITY",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "production_receipt": "/workspace/scratch/girtas-W-hit-repair-v03/receipt.json",
+  "production_receipt_sha256": "b2b385f9ceafa48f304fd6cf8c04623bc3f2aa30d4fc5f0c1f2886e782f0b645"
+}

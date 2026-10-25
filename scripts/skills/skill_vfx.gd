@@ -187,6 +187,10 @@ func _clip_duration(frames: SpriteFrames, phase: String) -> float:
 	return seconds
 
 func emit_skill(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF, context: Dictionary = {}) -> void:
+	# Preserve PR122's source event routing while retaining authored VFX layers.
+	var world := get_parent()
+	if world != null and world.get("combat_vfx") != null:
+		if world.combat_vfx.source_skill_event(id, phase, point): return
 	_emit(id, phase, point, end, context)
 
 func _emit(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF, context: Dictionary = {}) -> Dictionary:

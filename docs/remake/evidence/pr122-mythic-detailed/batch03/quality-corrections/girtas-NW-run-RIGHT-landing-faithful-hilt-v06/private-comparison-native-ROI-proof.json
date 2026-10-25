@@ -1,0 +1,48 @@
+{
+  "status": "SOURCE_REPAIR_CANDIDATE_PENDING_INDEPENDENT",
+  "source_sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+  "request_sha256": "3b531e8ad924678ad703e7fe29fad22822ae7e2b5013b576b3a24fdf994779ad",
+  "geometry_sha256": "de2f286d991112d4455dea45cd797863ae6e31d0d1689b300b6db83fcec85e9f",
+  "private_preview": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/private-new3-full-and-faithful-smallhilt-comparison.jpg",
+  "preview_sha256": "8a65063ed26693fc252296b68c6113119f55d831a22a1bd747b281155bdd9b65",
+  "preview_bytes": 74090,
+  "panels": [
+    {
+      "name": "NEW3 full RIGHTlanding",
+      "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+      "sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+      "native_ROI_xyxy": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    },
+    {
+      "name": "NEW3 small collar/hilt",
+      "source_path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+      "sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+      "native_ROI_xyxy": [
+        650,
+        535,
+        850,
+        765
+      ]
+    },
+    {
+      "name": "CURRENT NWidle faithful hilt",
+      "source_path": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+      "sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+      "native_ROI_xyxy": [
+        235,
+        210,
+        380,
+        385
+      ]
+    }
+  ],
+  "prior_independent_HOLD": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/NW-run-six-v02-independent-source-HOLD-with-detail.json",
+  "prior_independent_HOLD_sha256": "9246493e9d73298a39ef18c455d949ea5c95f5355a1d6d919ba27b53f0ab9d52",
+  "actual_scope": "New3 source model/hilt and retention of actualfarRIGHTlanding; not whole6/physical/actorapproval",
+  "no_source_pixel_patching": true
+}

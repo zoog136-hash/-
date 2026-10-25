@@ -1,0 +1,26 @@
+{
+  "actor": "monster:테베 아누비스",
+  "slug": "thebes_anubis",
+  "clip": "SW-idle-v02",
+  "role": "idle",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_anubis/raw/SW-idle-v02.png",
+  "source_sha256": "dfff79295c548da5a2ec71a4f5cd409a5e6d5db2d2f7bd5a7522f33b7ea09763",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      70520,
+      69700,
+      69483,
+      68109,
+      67843,
+      67279
+    ]
+  },
+  "status": "HOLD",
+  "cause": "phase_grid_assignment",
+  "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+}

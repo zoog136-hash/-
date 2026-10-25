@@ -1,0 +1,61 @@
+{
+  "status": "FIXED_OWN_S_RUN6_CONTROLLER_NUMERIC_CLOCK_AND_OPPOSITE_CONTACT_PARITY_PASS_SOURCE_MATERIAL_HOLD",
+  "leg_controls": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v03/S-RUN6-new-native-leg-controls-and-exact-clock-v01.json",
+  "authored_cycle_seconds": 0.48,
+  "authored_fps": 12.5,
+  "reference_speed": 210,
+  "runtime_ratio": 1.25,
+  "runtime_phase_seconds": 0.064,
+  "actual_speed": 262.5,
+  "game_phase_displacement": 16.8,
+  "native_to_game_scale": 0.09482758620689655,
+  "contact_support_checks": [
+    {
+      "side": "L",
+      "phase_pair": [
+        0,
+        1
+      ],
+      "native_heel_delta": [
+        0.0,
+        -177.16363636363639,
+        0.0
+      ],
+      "player_native_delta": [
+        0,
+        177.16363636363639,
+        0
+      ],
+      "support_world_motion_residual_native": 0.0,
+      "sole_lift_pair": [
+        0,
+        0
+      ]
+    },
+    {
+      "side": "R",
+      "phase_pair": [
+        3,
+        4
+      ],
+      "native_heel_delta": [
+        0.0,
+        -177.16363636363639,
+        0.0
+      ],
+      "player_native_delta": [
+        0,
+        177.16363636363639,
+        0
+      ],
+      "support_world_motion_residual_native": 0.0,
+      "sole_lift_pair": [
+        0,
+        0
+      ]
+    }
+  ],
+  "max_bone_length_error": 1.1368683772161603e-13,
+  "source_material_hold": "Corrected pure skin/boot ownership pending original S creator; no SOURCE acceptance",
+  "actor_approvals_added": 0
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "NE_RUN_BOUNDED_NEW0_3_SOURCE_EDGE_AUDIT_AND_NUMERIC_CORRECTION_V1",
+  "status": "READ_ONLY_ACTUAL_SOURCE_EDGE_AUDIT_PENDING_INDEPENDENT_SOURCE_AND_PHYSICAL_QC",
+  "old_constraint_path": "/workspace/scratch/girtas-NE-run-fresh-physical-author-v01/bounded-contact0-contact3-lowerbody-repair-author-constraints-v01.json",
+  "old_constraint_sha256": "ef529dae9b0910f5c5ac68de79be59b426d5dd1b2f7cdc01fb5128dd48d36a18",
+  "old_constraint_unchanged": true,
+  "old_clearance_claim_correction": {
+    "old_text": "opposite boots >120canonical (~26world)",
+    "correct_nominal_repair_heel_minima_canonical": [
+      111.502492,
+      114.811648
+    ],
+    "after_4native_XY_error_canonical": [
+      108.137907,
+      111.143948
+    ],
+    "after_error_world": [
+      23.6936,
+      24.3522
+    ],
+    "across_full_v04_contact_height_ranges_worst_canonical": [
+      95.087875,
+      96.477604
+    ],
+    "independent_numeric_auditor": "/root/girtas_ne_run_physical_author_fresh/numeric_plane_audit",
+    "interpretation": "The old lower-bound wording was overstated. Both actual recovery boots remain clearly airborne; no source/mask changes follow from this correction."
+  },
+  "camera": [
+    5,
+    -7,
+    5
+  ],
+  "target": [
+    0,
+    0,
+    1
+  ],
+  "m": -0.5902918298980975,
+  "K": 0.8914611308665146,
+  "new_source_observations": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v01.png",
+      "source_sha256": "99eacae26b148d58339441ed91ba0985d0eb7b54dbebb766dc8191e353bfc90e",
+      "source_scope_status": "PENDING_INDEPENDENT_NARROW_SOURCE_ANATOMY_AND_PHYSICAL_QC",
+      "source_actual_size": [
+        1254,
+        1254
+      ],
+      "C_fixed": 1936,
+      "source_core_registrationY_unchanged": 205,
+      "heel_ROI_xyxy": [
+        620,
+        990,
+        650,
+        1025
+      ],
+      "alpha_threshold_gt": 100,
+      "heel_last_strong_Y": 1021,
+      "heel_bottom4row_centroid_native": [
+        636.9354838709677,
+        1019.1935483870968
+      ],
+      "heel_bottom4row_pixels": 93,
+      "authored_groundX": 730,
+      "lateral_screenX_canonical_nominal": -50,
+      "candidate_rootY_from_actual_centroid": 1048.5292598899346,
+      "candidate_core_height_world": 97.75682030241319,
+      "note": "Sole centroid is observed edge evidence, not automatically a wholefoot-floor plane or source approval. Finalintegerroot to be authored after independent actualheel/contactshape verdict."
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-candidate-v03.png",
+      "source_sha256": "9dd5fbbb708e490dd12ccca63f9428102939442a70f63f00405739389b8b51a4",
+      "source_scope_status": "PENDING_INDEPENDENT_NARROW_SOURCE_ANATOMY_AND_PHYSICAL_QC",
+      "source_actual_size": [
+        1254,
+        1254
+      ],
+      "C_fixed": 1776,
+      "source_core_registrationY_unchanged": 165,
+      "heel_ROI_xyxy": [
+        928,
+        1000,
+        944,
+        1025
+      ],
+      "alpha_threshold_gt": 100,
+      "heel_last_strong_Y": 1018,
+      "heel_bottom4row_centroid_native": [
+        935.6065573770492,
+        1016.4262295081967
+      ],
+      "heel_bottom4row_pixels": 61,
+      "authored_groundX": 717,
+      "lateral_screenX_canonical_nominal": 79,
+      "candidate_rootY_from_actual_centroid": 1023.3237902811362,
+      "candidate_core_height_world": 108.43274617033788,
+      "note": "Sole centroid is observed edge evidence, not automatically a wholefoot-floor plane or source approval. Finalintegerroot to be authored after independent actualheel/contactshape verdict."
+    }
+  ],
+  "no_PNG_edits": true,
+  "no_Git_or_repository_mutations": true,
+  "actor_approval": false
+}

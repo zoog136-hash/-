@@ -1,0 +1,52 @@
+{
+  "key": "transform:267",
+  "direction": "N",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "source_kind": "single_missing_run_keypose",
+  "expected_poses": 1,
+  "intended_game_phase": 0,
+  "original_generated_file": "/workspace/generated_images/exec-2c301f5e-ab34-4dae-bead-2626b4b645d1.png",
+  "raw_png": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+  "raw_path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/girtas-N-run-left-landing-key-v01.png",
+  "raw_sha256": "3415fd66e1c08f831da57a1ef9423d7119a7b74e60136ecd846fcaecffa52626",
+  "raw_bytes": 1161082,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/request-girtas-N-run-left-landing-key-v01.json",
+  "request_sha256": "2ba12e4c0c47ab85cc679a177d0b65f12d4b954ce0e0dc0e358bf1cf4c4c3db7",
+  "imagegen_attempts": 1,
+  "source_visual_status": "PASS",
+  "created_at": "2026-10-19T12:14:51.655435+00:00",
+  "complete_clip": false,
+  "source_PNG_mutations": false,
+  "actor_approval": false,
+  "status": "SINGLE_LEFT_RUN_LANDING_KEY_SOURCE_PASS_RUNTIME_HOLD",
+  "source_role_status": "LEFT_LANDING_GAME0_SOURCE_PASS",
+  "reviewed_at": "2026-10-19T12:15:44.506239+00:00",
+  "geometry_status": "PASS",
+  "geometry_path": "/workspace/scratch/girtas-N-run-left-landing-key-v01/geometry-base2048.json",
+  "geometry_error": null,
+  "visual_findings": [
+    "Correct anatomicalLEFT/imageLEFT leg is visibly long down and load-bearing below pelvis; LEFT boot is the lower planted landing foot. AnatomicalRIGHT/imageRIGHT knee and boot are distinctly raised high/forward, clearly above LEFT sole. No swapped support side.",
+    "Compared with source walk contact0, RIGHT knee/boot has a much higher and more flexed drive, existing right robe panels part to reveal that joint/boot; genuine newly articulated faster landing key rather than relabeled slow-walk pixels.",
+    "Pure NORTH rear model maintained: back helmet/pale hair/backarmor, thin hard gold radialspines, long dark goldtrim robe, same one long sinuous weapon in RIGHT/imageRIGHT hand, emptyLEFT hand, exactly two coherent arms/legs.",
+    "Allgear/entireblade/radialtips/boots visible with transparent background; no guide marks/colors/text copied. Source PNG unchanged, no post-generation resize/mirror/cleanup."
+  ],
+  "visual_limitations": [
+    "ONE source-art LEFT-landing key only; not complete6run, not runtime/game/actor approval. Other missing opposite-half compression/flight sources still require their own evidence.",
+    "Forward torso lean is restrained under rear orthographic camera; the clear change is RIGHT hip/knee drive over LEFT landing support. Actual run progression/footlock/physical scale must be reviewed in assembled playback.",
+    "Generated key has larger native physical resolution than oldcontact0. Any runtime virtualcanvas/support/pelvis proposal must use actual landmarks, not bbox normalization; final PNG stays untouched."
+  ],
+  "newly_authored_pose_count": 1,
+  "reused_existing_game_poses": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "new_approvals": 0,
+  "runtime_layout_status": "HOLD_UNTIL_ASSEMBLY_AND_PHYSICAL_RUNTIME_REVIEW",
+  "repo_mutations": false,
+  "chat_image_attachments": 0
+}

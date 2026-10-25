@@ -1,0 +1,48 @@
+{
+  "status": "INDEPENDENT_APPROXIMATE_ACTUAL_COMPILED_RIGID_BODY_SCALE_PASS",
+  "actual_frames_sha256": "ca84f940496719b327a02232f8e50680dfd66c030febba4edd3c6d7ae6fe8d16",
+  "detail_zoom": 4,
+  "units": "pixels in same actual compiled body-detail image; divide by4 for runtime units",
+  "manual_observation_precision_pixels": 4,
+  "helmet_crown_to_nape_lengths": [
+    106,
+    107,
+    102,
+    102,
+    108,
+    107,
+    103
+  ],
+  "near_pauldron_shell_widths": [
+    60,
+    56,
+    54,
+    63,
+    65,
+    64,
+    62
+  ],
+  "nape_to_girdle_projected_lengths": [
+    162,
+    165,
+    172,
+    163,
+    163,
+    150,
+    162
+  ],
+  "order": [
+    "NWidle0",
+    "NWattack0",
+    "NWattack1",
+    "NWattack2",
+    "NWattack3",
+    "NWattack4",
+    "NWattack5"
+  ],
+  "basis": "Same actual TRES AtlasTexture canvas ratio/nativepixel_scale in all seven, not rawcrop bbox. Crown-to-nape and projected rigid pauldron/girdle dimensions remain near same physical scale, with expected perspective/crouch/twist variations; no uniform model size jump across six attackframes. Both soles average measures supplement origin continuity without clamping each foot.",
+  "limitations": [
+    "Approximate manual projected rigid landmarks support visual conclusion, not automated actor approval. NWidle has separate camera HOLD, so direct shoulder width differs in perspective and cannot be forced equal.",
+    "Attack3/4 two-foot centroid moves about6-7runtimepixels towardNW relative to idle, coherent with genuine crouch/advance and whole leg/hip/robe articulation, not per-phase packing origin/size jump. Retain authored lunge rather than force both soles to idle coordinates."
+  ]
+}

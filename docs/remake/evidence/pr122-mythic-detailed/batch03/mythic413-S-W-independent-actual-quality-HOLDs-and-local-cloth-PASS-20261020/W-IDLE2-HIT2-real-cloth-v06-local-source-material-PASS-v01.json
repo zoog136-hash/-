@@ -1,0 +1,93 @@
+{
+  "schema": "TWILIGHT_EXACT_LOCAL_SOURCE_MATERIAL_VISUAL_GATE_V1",
+  "reviewer": "mythic413_w_actual_quality_fresh_v01",
+  "review_utc": "2026-10-20T16:11:27.600260+00:00",
+  "actor": "Mythic413",
+  "direction": "W",
+  "local_material_source_visual_status": "PASS",
+  "full_exact_six_source_visual_status": "PENDING_BOTH_RERENDERS_AND_BINDINGS",
+  "scope": "Actual v06 IDLE2 and HIT2 local cloth seam candidates only. Existing original fullbody/source/once C registration inherited, not re-viewed.",
+  "candidate_contract": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v06/W-IDLE2-HIT2-local-cloth-source-quality-candidates-v06.json",
+    "sha256": "87a40d37a66c8adac22c832a27c4b2f4035e792cdc5c34560bbc609cecd27e3a"
+  },
+  "shared_material": {
+    "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/common-own-W-native-LEFT-and-real-hidden-cloth-v06/W-own-native-complete-LEFT-and-real-service-hidden-coat-BODY-readonly-handoff-v06.json",
+    "sha256": "ebb1e43a6d9f95b92d7e64cd634d80caa7d93b5199ca662b0065fb2ad8d1ef04",
+    "bytes": 7617
+  },
+  "candidate_pose_bindings": [
+    {
+      "role": "IDLE2",
+      "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v06/W-IDLE2-own-cloth-v06-local-quality-only.png",
+      "sha256": "0a5a08bc7f553ee46c01e8d2d2f7e30fdd9efc361fc945f4a913230957ac2a15",
+      "bytes": 793514,
+      "dimensions": [
+        1536,
+        1536
+      ],
+      "mode": "RGBA",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        128,
+        128
+      ]
+    },
+    {
+      "role": "HIT2",
+      "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v06/W-HIT2-own-cloth-v06-local-quality-only.png",
+      "sha256": "cb39ee937da92f3885f7ab4d25235a51e816896656882f125fa0d6eea57f0ecb",
+      "bytes": 776000,
+      "dimensions": [
+        1536,
+        1536
+      ],
+      "mode": "RGBA",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_root_unpadded": [
+        646.0833333333334,
+        991.9227375838406
+      ],
+      "storage_translation": [
+        128,
+        128
+      ]
+    }
+  ],
+  "observed_findings": [
+    "Navy cloth shows shaded continuous fold/pleat into original cape rather than flat extra flap.",
+    "New gold border reads as coherent garment trim and joins original cape boundary.",
+    "Original angular cut, pale detached shard, donor-gold smear and rounded hanging tongue are absent in inspected native local composites.",
+    "Upper negative gap and outer cape edge read as deliberate cloth contour; cuff/hand and raised-guard material remain intact."
+  ],
+  "private_views": [
+    {
+      "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v06/private-W-IDLE2-HIT2-own-navy-cloth-seam-candidates-v06.jpg",
+      "bytes": 33313,
+      "sha256": "4887c2180cea63e0f8d29110c95aeb495e4c9e79708d72df7d2f51e348477917"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-W-hit-author-20261020-v01/actual-W-local-IDLE2-HIT2-underarm-quality-candidates-v06/W-HIT2-own-cloth-v06-local-quality-only-native-seam-crop.png",
+      "bytes": 96198,
+      "sha256": "359e220bb3b6636564ffe413eb4ed1a4a37c8ce27dcf1d96d4050ac757e73dcf"
+    }
+  ],
+  "preservation_provenance": "Author v06 exact11042 mask composition/outside BODYv03 RGBA0; visual gate does not replace numeric preservation proof. Raw1254 is logical250 fragment, not fullactor. Exactly one separately authorized service; no retry requested.",
+  "next_gate": "Rerender both actual IDLE6/HIT6 unchanged field/C/root/storage against v06; verify new exact-six hashes/dimensions and changed seam contacts before full SOURCE PASS, then root PACK binding separately.",
+  "actor_approvals_added": 0,
+  "detailed_actor_approval_count": "2/31",
+  "game_OR_PACK_binding_approval": false,
+  "numeric_flow_OR_floor_approval": false,
+  "image_ledger": {
+    "path": "/workspace/scratch/mythic413-W-actual-quality-independent-20261020-v01/image-input-ledger-immutable.jsonl",
+    "cumulative_bytes": 1568743,
+    "soft_cap": 6000000,
+    "hard_cap": 7000000
+  }
+}

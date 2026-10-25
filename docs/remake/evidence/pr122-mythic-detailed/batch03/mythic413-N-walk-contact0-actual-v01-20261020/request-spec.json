@@ -1,0 +1,40 @@
+{
+  "schema": "targeted-N-contact0-bounded-lowerbody-edit-v1",
+  "status": "REQUEST_READY_NOT_SERVICE_STARTED",
+  "source_fullsheet_sha256": "cfd051b8b3589dddca9e74af68162fc2f9fe1f5dbcaf5de5cdf3086f3772e1f8",
+  "base_source_phase": 0,
+  "service_canvas": [
+    1024,
+    1024
+  ],
+  "native_region": [
+    256,
+    256,
+    512,
+    512
+  ],
+  "resample": "NONE",
+  "virtual_canvas": [
+    1024,
+    1024
+  ],
+  "logical_foot": [
+    512,
+    640
+  ],
+  "source_root_cell": [
+    256,
+    480
+  ],
+  "pixel_scale_unchanged": 0.237068965517,
+  "intended_edit_region_cell": [
+    204,
+    271,
+    104,
+    228
+  ],
+  "preserve": "all upperbody/gear outside exact lowerbody mask; separate immutable mask proof required",
+  "finite_guide": "../N-walk-fixedbone-guide-v05.json",
+  "approval": "independent actual contact0 source review required; author cannot self-approve",
+  "completed_added": 0
+}

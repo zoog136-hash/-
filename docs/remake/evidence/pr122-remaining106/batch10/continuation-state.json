@@ -1,0 +1,85 @@
+{
+  "starting_PR_HEAD": "846b71d14f847a302692064e6a8e9e34b37e3261",
+  "previous_checkpoint": "c7d9c2b",
+  "target": 498,
+  "historical_completed_preserved": 392,
+  "reported398_difference_unsubstantiated": 6,
+  "runtime_connected": 394,
+  "CI_pending": 2,
+  "existing_HOLD": 16,
+  "legacy_not_authored_or_connected": 88,
+  "actual_legacy_remaining": 106,
+  "new_approved": 0,
+  "raw_PNGs_this_batch": 23,
+  "strict_source_geometry_pass_files": 10,
+  "unapproved_production_applied": false,
+  "actual_Main_new_candidate_checks": 8786,
+  "actual_Main_new_candidate_failures": 0,
+  "actual_Main_PNG_bodies_in_Git_ZIP": 70,
+  "art_quality": "HOLD; technical PASS does not approve tail pop, model size, full gait or source packing defects",
+  "Android_real_device": "NOT_RUN",
+  "active_authoring": {
+    "monster:알비노 디어": {
+      "status": "AUTHORING",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 8,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 144
+      },
+      "complete_approved_source_matrix": false,
+      "currently_valid_source_parts": [
+        "idle-pilot02:16",
+        "walk-N-NE:16",
+        "walk-S-SW-v02:16",
+        "hit-v02:16",
+        "death-pilot01:24"
+      ],
+      "next": "Re-author E,SE,W,NW walk and all8 attack with complete separated source bodies. Existing strict importer rejects overlapping source bounds and attack-v03 missing3 bodies. No copied/interpolated substitute."
+    },
+    "monster:알비노 몽크": {
+      "status": "AUTHORING",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 6,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 128
+      },
+      "complete_approved_source_matrix": false,
+      "source_reference": "res://assets/monsters/original/atlas_3.png region[0,899,328,300]",
+      "source_SHA256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+      "note": "Independent authoring while deer/sourceHOLD remain; no production install."
+    }
+  },
+  "quality14": {
+    "status": "WIP_HOLD",
+    "counted_as_new_species": false,
+    "transform2_outside498_but_still_required": true
+  },
+  "priority_HOLD_preserved": [
+    "death_servant:cloth/light/contact/source",
+    "tomb269:model/ground/contact",
+    "unicorn:alpha+two missing originals",
+    "wolf+wilddog:limb alternation and head/core"
+  ],
+  "resume": [
+    "Read this checkpoint and actual remote PR122 HEAD; isolated worktree, no reset/force push/main merge.",
+    "Keep known-rejected Doguri N and deer source candidates out of production.",
+    "Resolve Doguri candidate canvas registration and tail continuity without changing source pixels/gameplay.",
+    "Continue independent source-backed HOLD targets while deer source matrix remains incomplete.",
+    "Use only exact-SHA CI; starting846 L1J cancelled jobs were explicitly re-requested, not counted PASS."
+  ],
+  "doguri_registered_height": {
+    "original": 105.988006591797,
+    "candidate": 105.9921875,
+    "source_RGBA_regions_anchors_unchanged": true,
+    "final_gait": "HOLD"
+  },
+  "servant_S05": "Strict standalone source geometry PASS; cloth fan/near-hand model HOLD. Actual Main for this source NOT_RUN; no production change."
+}

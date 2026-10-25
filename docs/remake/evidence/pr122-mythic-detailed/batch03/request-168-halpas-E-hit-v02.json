@@ -1,0 +1,72 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "E",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-E-current-idle-phase0-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-E-current-idle-phase0-lossless.png": "49577cbc77aa43aa0050ad997c0f901190ba9cfec3970e2e23498868d1d6bde4"
+  },
+  "reference_provenance": {
+    "direction": "E",
+    "selected_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+    "source_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+    "region": [
+      53,
+      29,
+      451,
+      451
+    ],
+    "reference": "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-E-current-idle-phase0-lossless.png",
+    "reference_sha256": "49577cbc77aa43aa0050ad997c0f901190ba9cfec3970e2e23498868d1d6bde4",
+    "operation": "exact_RGBA_crop_no_resize_no_recolor",
+    "role": "idle",
+    "stage_revision": "r062",
+    "raw_rgba_sha256": "66591853ac00ea478a0e9eaad02b7b25772f9e874723fd80d773e509fea650c2"
+  },
+  "transparent_background": true,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v01.png",
+  "corrective_reason": "Confirmed current hit peak phase2 duplicated empty RIGHT fist plus existing low RIGHT blade/grip, creating three arms. New six-pose source uses ONLY correct current directional idle. Continuous LOW right blade arm through all six; only EMPTY LEFT arm flinches. Fix rear/front plane where required without losing hit jerk.",
+  "user_authorization": "Private production image generation and bounded private JPEG inspection allowed; no mainchat images/binary. Root handles Git/native integration.",
+  "prompt": "CAMERA E / DUE EAST: pure SIDE PROFILE pointing RIGHT as reference, helmet snout points directly right, narrow side plane, not front-right/SE or rear-right/NE. Maintain exact same pure-right helmet/shoulder/pelvis/hip plane in all six. Preserve correct continuous low RIGHT weapon arm; EMPTY LEFT flinch may be naturally partly occluded on the far side, do not add an extra visible near fist.\n\nEdit the SAME Halpas winged armored boss in the ONLY reference into SIX different directional HIT-REACTION poses. Preserve exact closed gold-horn black helmet, black/gold segmented armor, purple-pink crystal feather fan wings with warm veins rooted at the two upper-back shoulder sockets, torn burgundy LEFT/back cape and ONE short broad purple crystal blade. Same model, equipment, proportions, perspective and directional body plane in all six. Existing flying/hovering stance is deliberate: keep believable complete two-leg chains, do not invent a floor.\n\nCRITICAL TWO-ARM ANATOMY: only TWO arms total. Anatomical RIGHT arm CONTINUOUSLY grips the existing blade LOW beside its same hip in ALL SIX. Keep the right shoulder, upper arm, elbow, forearm, wrist, hand and blade connected as ONE unbroken natural low chain, moving only a small amount with torso recoil. NEVER lift an empty RIGHT fist while leaving the original low blade arm behind. NEVER add a third arm or another hand near the chest/helmet. The OTHER anatomical LEFT arm is always EMPTY and is the ONLY arm that flinches upward, with one visibly connected left shoulder/elbow/wrist chain. No duplicated forearms/fists, no floating sword, no hand swap. Wings are BACK appendages, never spare arms.\n\nReading order 0 guard with blade low and empty left hand relaxed; 1 immediate impact jerk, head/upper torso recoil, empty LEFT elbow begins to bend; 2 clear peak recoil: upper torso/head lean back slightly and EMPTY LEFT forearm alone braces toward upper chest while RIGHT hand still holds blade LOW at hip; 3 release, left forearm starts to drop, knees and wing roots absorb recoil; 4 recovery half-way toward guard with cape/wings lagging; 5 settle near guard, left hand low again. Six genuinely distinct head/torso/left-arm/wing-root/cloth poses with a visible brief hit jerk at 1-2, no attack swing, no extra striking arm, no shared static translation, no camera rotation or body spin. Allow natural partial far-arm occlusion, never fill that gap with an extra fist.\n\nTransparent PNG, exact 1024x1536, two columns by three rows, six complete figures. Keep every full silhouette including wing tips, cape, blade, horns and toes inside its own 512px cell with at least 42px transparent gutter around all sides; target overall figure width 390px and same head-to-hip pixel scale all six. Preserve full feather fans and blade rather than clipping or shrinking individual gear. Clean detailed RPG sprite cutouts, opaque materials, alpha0 background and interior gaps, thin 1px edge antialias. No outer glow, mist, shadow, floor, particles, sparks, trails, labels, numbers, grids, extra objects or afterimages.",
+  "requested_at": "2026-10-19T13:02:44.542205+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "All six preserve due EAST pure side profile: helmet snout points right and narrow side armor/hip plane stays E through head recoil. No rear/front three-quarter camera swap.",
+      "Exactly two arm chains: near anatomical RIGHT shoulder-elbow-low forearm-hand continuously grips original blade low at hip all six. Far EMPTY LEFT forearm emerges in front of upper torso at1, bends near helmet peak2, releases3, lowers4 and returns5. No third arm, extra right empty fist, disconnected weapon or grip swap.",
+      "Clear six-phase hit response: guard0; left arm lift/head recoil1; peak2 torso/head rear lean and bent empty LEFT hand; release3; lower-hand/wing-cape recovery4; settle5. Blade stays low rather than becoming an attack swing.",
+      "Exact same gold-horn helmet, black/gold plate segmentation, original purple fan wings, crystal blade and left-back burgundy cape. Existing hovering two-leg chains match idle reference. All silhouettes fully present, zero alpha>100 outer-edge pixels. Unchanged strict six-frame geometry and complete-pose checks PASS."
+    ],
+    "visual_limitations": [
+      "Source-level animation and geometry only. Root must integrate native SpriteFrames and actual Player, measure physical body scale/root against selected idle, and review hit timing before any actor approval/default enable."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1",
+    "raw_bytes": 2586344,
+    "request_sha256": "a9c5eeaccd945bfe1703806849ae08a4cc5b70c7787c663232c1c9523da8ad36",
+    "review_sha256": "964e8076a9a6b06d8c0e1695616884867cb5f844fd5a33a7698bb63418fd6652"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-49577cbc77aa43aa0050ad997c0f901190ba9cfec3970e2e23498868d1d6bde4.png",
+      "sha256": "49577cbc77aa43aa0050ad997c0f901190ba9cfec3970e2e23498868d1d6bde4",
+      "bytes": 358394,
+      "original_reference": "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-E-current-idle-phase0-lossless.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
+  "output_sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1",
+  "output_bytes": 2586344,
+  "original_generated_file": "/workspace/scratch/halpas-E-hit-repair-v02/halpas-E-hit-v02.png"
+}

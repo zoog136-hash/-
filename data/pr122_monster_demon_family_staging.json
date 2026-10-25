@@ -1,0 +1,3036 @@
+{
+  "schema": "pr122-monster-demon-family-staging-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family",
+  "shared_unique_clips": 33,
+  "shared_unique_poses": 91,
+  "candidate_species": 4,
+  "actors": {
+    "monster:오만의 탑 공포의 악마": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/demon_family/r001/SpriteFrames.tres",
+      "frames_sha256": "f0260ce238a3cc0b1d37eea5ac2276dfbc4b27cb1ca4fe971cecc11111a96532",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/demon_family/r001/fear_demon-NativeMotionProfile.tres",
+      "native_profile_sha256": "0a3432498ecfa79c4dc39a205ee89de419edd957a7913db797376914681cd1a2",
+      "production_connected": false,
+      "detailed_completed": false,
+      "native_track_count": 33,
+      "native_pose_count": 91,
+      "missing_required_tracks": [],
+      "sharing_basis": "Same existing atlas bytes/region/body/melee/slash/height; newly authored shared normal-family source, not a palette-only proxy",
+      "quality_review": "HOLD: exact reference identity, hand ownership, direction, support/contact and default Main review pending",
+      "original_presentation": {
+        "visual": {
+          "atlas": 1,
+          "cell": 10,
+          "body": "demon",
+          "variant": 10,
+          "width": 0.998,
+          "weapon": "sword",
+          "crest": 2,
+          "accent": "849bab"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "tracks": [
+        {
+          "direction": "E",
+          "role": "run",
+          "animation": "run_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-front4-v01.png",
+          "source_sha256": "2a4138606dcf85d0dbfa994009aa8fa8464c991ac1a106daa8d7bc7365e68021",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-front4-v01.png",
+          "geometry": {
+            "image_size": [
+              1448,
+              1086
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  84,
+                  9,
+                  202,
+                  231
+                ],
+                "margin": [
+                  391,
+                  383,
+                  774,
+                  745
+                ],
+                "source_anchor": [
+                  181,
+                  236
+                ],
+                "rgba_sha256": "5dda67c5170cf5636547ad33480e65175ca65dd16c9eb44d3390a22949e4910f"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  442,
+                  8,
+                  195,
+                  232
+                ],
+                "margin": [
+                  387,
+                  382,
+                  781,
+                  744
+                ],
+                "source_anchor": [
+                  543,
+                  236
+                ],
+                "rgba_sha256": "1aaa38200d84409dbaa63abbd681635427a520d95799712bb3257dcda21653d0"
+              },
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  793,
+                  13,
+                  219,
+                  228
+                ],
+                "margin": [
+                  376,
+                  386,
+                  757,
+                  748
+                ],
+                "source_anchor": [
+                  905,
+                  237
+                ],
+                "rgba_sha256": "87d5fa8e8fbacdf69dc4720cb7141dfe1086751bf9da2a2f2ac4cf89b870e43b"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  1165,
+                  10,
+                  209,
+                  233
+                ],
+                "margin": [
+                  386,
+                  381,
+                  767,
+                  743
+                ],
+                "source_anchor": [
+                  1267,
+                  239
+                ],
+                "rgba_sha256": "3c23b07fed8cd9225ace550b0b282d803cefc15b6c764a6ebb9221b1439f633d"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 243.5,
+            "canvas_size": [
+              976,
+              976
+            ],
+            "foot": [
+              488,
+              610
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "run",
+          "animation": "run_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-front4-v01.png",
+          "source_sha256": "2a4138606dcf85d0dbfa994009aa8fa8464c991ac1a106daa8d7bc7365e68021",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-front4-v01.png",
+          "geometry": {
+            "image_size": [
+              1448,
+              1086
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  97,
+                  270,
+                  191,
+                  256
+                ],
+                "margin": [
+                  404,
+                  358,
+                  785,
+                  720
+                ],
+                "source_anchor": [
+                  181,
+                  522
+                ],
+                "rgba_sha256": "51a4ab1957ef32b030e23dc89a8491d43b134188c1c856b4608e31337358abda"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  452,
+                  270,
+                  190,
+                  222
+                ],
+                "margin": [
+                  397,
+                  392,
+                  786,
+                  754
+                ],
+                "source_anchor": [
+                  543,
+                  488
+                ],
+                "rgba_sha256": "049fa99020937b55a40b9fab6dc6e53a58f7a7a3aad2ba7598fecaf98a16c2b3"
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  812,
+                  270,
+                  195,
+                  259
+                ],
+                "margin": [
+                  395,
+                  355,
+                  781,
+                  717
+                ],
+                "source_anchor": [
+                  905,
+                  525
+                ],
+                "rgba_sha256": "41d33b317d78bd63000b503524ce8280fd670c4db082f414687218e4fb500cd1"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  1178,
+                  270,
+                  193,
+                  233
+                ],
+                "margin": [
+                  399,
+                  381,
+                  783,
+                  743
+                ],
+                "source_anchor": [
+                  1267,
+                  499
+                ],
+                "rgba_sha256": "f8cbacaec93a8796b97a4d6beb327bd9e7eed9041d0cac3f4bb7b51ee285b8b1"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 243.5,
+            "canvas_size": [
+              976,
+              976
+            ],
+            "foot": [
+              488,
+              610
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "run",
+          "animation": "run_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-front4-v01.png",
+          "source_sha256": "2a4138606dcf85d0dbfa994009aa8fa8464c991ac1a106daa8d7bc7365e68021",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-front4-v01.png",
+          "geometry": {
+            "image_size": [
+              1448,
+              1086
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  97,
+                  547,
+                  185,
+                  250
+                ],
+                "margin": [
+                  404,
+                  364,
+                  791,
+                  726
+                ],
+                "source_anchor": [
+                  181,
+                  793
+                ],
+                "rgba_sha256": "dfa2e29c9523e90329bf37ce71c18285a00eac20fb27cf20106dfa0db39377f2"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  454,
+                  549,
+                  173,
+                  244
+                ],
+                "margin": [
+                  399,
+                  370,
+                  803,
+                  732
+                ],
+                "source_anchor": [
+                  543,
+                  789
+                ],
+                "rgba_sha256": "a46a6001b1466180d9f2f6a1695f36a4155a94a796620857553a957193e3ca66"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  817,
+                  547,
+                  179,
+                  251
+                ],
+                "margin": [
+                  400,
+                  363,
+                  797,
+                  725
+                ],
+                "source_anchor": [
+                  905,
+                  794
+                ],
+                "rgba_sha256": "86f822c4ee5c8cbe8fc0412024e3ad2a002d65735798d6faec3833600e22ea24"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  1176,
+                  547,
+                  176,
+                  224
+                ],
+                "margin": [
+                  397,
+                  390,
+                  800,
+                  752
+                ],
+                "source_anchor": [
+                  1267,
+                  767
+                ],
+                "rgba_sha256": "284e98d3ef07e1a8518124a1cd6e6a18e942793cc0866b243d14b3ce5a526efe"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 243.5,
+            "canvas_size": [
+              976,
+              976
+            ],
+            "foot": [
+              488,
+              610
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "run",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-front4-v01.png",
+          "source_sha256": "2a4138606dcf85d0dbfa994009aa8fa8464c991ac1a106daa8d7bc7365e68021",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-front4-v01.png",
+          "geometry": {
+            "image_size": [
+              1448,
+              1086
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  85,
+                  819,
+                  197,
+                  249
+                ],
+                "margin": [
+                  392,
+                  365,
+                  779,
+                  727
+                ],
+                "source_anchor": [
+                  181,
+                  1064
+                ],
+                "rgba_sha256": "f5eadf5b004d2afa975bd71567026a6b66352514b47e71a76f16bd74867932d3"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  443,
+                  818,
+                  204,
+                  228
+                ],
+                "margin": [
+                  388,
+                  386,
+                  772,
+                  748
+                ],
+                "source_anchor": [
+                  543,
+                  1042
+                ],
+                "rgba_sha256": "17e8e79d3bfecf9b7374fcdfe1947f7b2be04225bf8b162f8b244e52fb064c3f"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  801,
+                  821,
+                  201,
+                  244
+                ],
+                "margin": [
+                  384,
+                  370,
+                  775,
+                  732
+                ],
+                "source_anchor": [
+                  905,
+                  1061
+                ],
+                "rgba_sha256": "083a661390032c4422aa1cdbf9d6373ea8ac7cf34ac500cb294afd8566d794e9"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  1160,
+                  820,
+                  205,
+                  227
+                ],
+                "margin": [
+                  381,
+                  387,
+                  771,
+                  749
+                ],
+                "source_anchor": [
+                  1267,
+                  1043
+                ],
+                "rgba_sha256": "20d7114a75dde32f38080a9c2b597ca89dba6f7c3935e710ca492930e06d702a"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 243.5,
+            "canvas_size": [
+              976,
+              976
+            ],
+            "foot": [
+              488,
+              610
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "run",
+          "animation": "run_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-back4-v01.png",
+          "source_sha256": "78aff74dc35fd1ec4ff3ac4fca9e494708e4c9d357c9c21a55c58456bfdeb57b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-back4-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  112,
+                  18,
+                  215,
+                  199
+                ],
+                "margin": [
+                  332,
+                  320,
+                  609,
+                  625
+                ],
+                "source_anchor": [
+                  192,
+                  213
+                ],
+                "rgba_sha256": "1b87337654c6892ff8195aebcf95318d2b1e783ed07f2e006daf8b6a66326e51"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  485,
+                  18,
+                  219,
+                  204
+                ],
+                "margin": [
+                  321,
+                  315,
+                  605,
+                  620
+                ],
+                "source_anchor": [
+                  576,
+                  218
+                ],
+                "rgba_sha256": "a41cde72880a31589933c78d558cab6f8607fb6be4162a344e559131c601e738"
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  833,
+                  19,
+                  224,
+                  202
+                ],
+                "margin": [
+                  285,
+                  317,
+                  600,
+                  622
+                ],
+                "source_anchor": [
+                  960,
+                  217
+                ],
+                "rgba_sha256": "8ad73434e42ef5ef07a02748bc3f8aa969ceca0c3a535562c1d78fc67cf48250"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  1204,
+                  19,
+                  211,
+                  201
+                ],
+                "margin": [
+                  272,
+                  318,
+                  613,
+                  623
+                ],
+                "source_anchor": [
+                  1344,
+                  216
+                ],
+                "rgba_sha256": "71eb548e484aa331af67e0004ff3bc3fe801519c2507ffa92ed1f06f3212aaf2"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 206.0,
+            "canvas_size": [
+              824,
+              824
+            ],
+            "foot": [
+              412,
+              515
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "run",
+          "animation": "run_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-back4-v01.png",
+          "source_sha256": "78aff74dc35fd1ec4ff3ac4fca9e494708e4c9d357c9c21a55c58456bfdeb57b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-back4-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  126,
+                  266,
+                  197,
+                  212
+                ],
+                "margin": [
+                  346,
+                  307,
+                  627,
+                  612
+                ],
+                "source_anchor": [
+                  192,
+                  474
+                ],
+                "rgba_sha256": "441919442eae176b1124584f974973cebbbf087aa3e3cf65613f55a4e90210a2"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  499,
+                  266,
+                  207,
+                  212
+                ],
+                "margin": [
+                  335,
+                  307,
+                  617,
+                  612
+                ],
+                "source_anchor": [
+                  576,
+                  474
+                ],
+                "rgba_sha256": "e50342e87e07a458b665168cfb0e0e478082d05fa1f87538f95eb5a633847356"
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  858,
+                  268,
+                  202,
+                  212
+                ],
+                "margin": [
+                  310,
+                  307,
+                  622,
+                  612
+                ],
+                "source_anchor": [
+                  960,
+                  476
+                ],
+                "rgba_sha256": "0309604a37784b4632ea8ca880b474e4d84db770b90639758ed752fe422b2e95"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  1226,
+                  267,
+                  210,
+                  212
+                ],
+                "margin": [
+                  294,
+                  307,
+                  614,
+                  612
+                ],
+                "source_anchor": [
+                  1344,
+                  475
+                ],
+                "rgba_sha256": "3de3c6b103747ebadf73630173a7bda125ab461090ef376b91ea875b6a94b843"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 206.0,
+            "canvas_size": [
+              824,
+              824
+            ],
+            "foot": [
+              412,
+              515
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "run",
+          "animation": "run_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-back4-v01.png",
+          "source_sha256": "78aff74dc35fd1ec4ff3ac4fca9e494708e4c9d357c9c21a55c58456bfdeb57b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-back4-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  150,
+                  513,
+                  170,
+                  220
+                ],
+                "margin": [
+                  370,
+                  299,
+                  654,
+                  604
+                ],
+                "source_anchor": [
+                  192,
+                  729
+                ],
+                "rgba_sha256": "1732afaf7ec8da4e18c5fb6b738c1550dfae828ac51969b224dfa9b4e7381fc7"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  514,
+                  511,
+                  160,
+                  221
+                ],
+                "margin": [
+                  350,
+                  298,
+                  664,
+                  603
+                ],
+                "source_anchor": [
+                  576,
+                  728
+                ],
+                "rgba_sha256": "d31f4cf377fe8e9c9ba41f279614bcff1581d21963e6eb378788fd7621205a79"
+              },
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  878,
+                  513,
+                  179,
+                  220
+                ],
+                "margin": [
+                  330,
+                  299,
+                  645,
+                  604
+                ],
+                "source_anchor": [
+                  960,
+                  729
+                ],
+                "rgba_sha256": "6424f73653e87b97eb3c67b4bdb0d18b1111ee64e293046d434f30482c42c0b9"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  1248,
+                  511,
+                  165,
+                  219
+                ],
+                "margin": [
+                  316,
+                  300,
+                  659,
+                  605
+                ],
+                "source_anchor": [
+                  1344,
+                  726
+                ],
+                "rgba_sha256": "d442b5628b7080cb638453891da9b8fd1ea4c5de7c20f9a567c736a1b4a0b2bf"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 206.0,
+            "canvas_size": [
+              824,
+              824
+            ],
+            "foot": [
+              412,
+              515
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "run",
+          "animation": "run_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-back4-v01.png",
+          "source_sha256": "78aff74dc35fd1ec4ff3ac4fca9e494708e4c9d357c9c21a55c58456bfdeb57b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon-run-back4-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  116,
+                  762,
+                  208,
+                  211
+                ],
+                "margin": [
+                  336,
+                  308,
+                  616,
+                  613
+                ],
+                "source_anchor": [
+                  192,
+                  969
+                ],
+                "rgba_sha256": "c68fd6ae07cd2f6f4803e4b14c40b1258c20c2d4b804133af1fbea08643ceea6"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  494,
+                  763,
+                  203,
+                  212
+                ],
+                "margin": [
+                  330,
+                  307,
+                  621,
+                  612
+                ],
+                "source_anchor": [
+                  576,
+                  971
+                ],
+                "rgba_sha256": "1b90f32e2d138c544f263887208275af6ab2769761b0e192ec94455c6c91c706"
+              },
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  871,
+                  761,
+                  204,
+                  212
+                ],
+                "margin": [
+                  323,
+                  307,
+                  620,
+                  612
+                ],
+                "source_anchor": [
+                  960,
+                  969
+                ],
+                "rgba_sha256": "40b04fa033182ccddf4ab05f100c5f5e703d3205c74b2b5344d3014d4db4e01c"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  1240,
+                  761,
+                  198,
+                  208
+                ],
+                "margin": [
+                  308,
+                  311,
+                  626,
+                  616
+                ],
+                "source_anchor": [
+                  1344,
+                  965
+                ],
+                "rgba_sha256": "ffa748d3e0e26ace7c42d8eef86bfa56084198623fa557687f07c24cb7538c80"
+              }
+            ],
+            "distinct_pixel_frames": 4,
+            "neutral_height": 206.0,
+            "canvas_size": [
+              824,
+              824
+            ],
+            "foot": [
+              412,
+              515
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "idle",
+          "animation": "idle_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_S_SW.png",
+          "source_sha256": "1f1e8c8c3c46b4a864a6522775dd05a0c7abdc32666b63c9855a1e90fc761973",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_S_SW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  183,
+                  7,
+                  185,
+                  197
+                ],
+                "margin": [
+                  292,
+                  287,
+                  583,
+                  571
+                ],
+                "source_anchor": [
+                  275,
+                  200
+                ],
+                "rgba_sha256": "31a4e436817433b286383946a21f32b56ac35807eb61ae80e812e6ea2f30adad"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  181,
+                  222,
+                  186,
+                  195
+                ],
+                "margin": [
+                  290,
+                  289,
+                  582,
+                  573
+                ],
+                "source_anchor": [
+                  275,
+                  413
+                ],
+                "rgba_sha256": "ed47f39f28dc7261db2d844ca127af2a375ee1c09dd984a4558841485c88853e"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "idle",
+          "animation": "idle_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_S_SW.png",
+          "source_sha256": "1f1e8c8c3c46b4a864a6522775dd05a0c7abdc32666b63c9855a1e90fc761973",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_S_SW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  637,
+                  7,
+                  198,
+                  201
+                ],
+                "margin": [
+                  284,
+                  283,
+                  570,
+                  567
+                ],
+                "source_anchor": [
+                  737,
+                  204
+                ],
+                "rgba_sha256": "4467f5e842ea9f2e79d18694b89e2ee27ea2b829c35efad360c41794cefb6794"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  638,
+                  222,
+                  199,
+                  205
+                ],
+                "margin": [
+                  285,
+                  279,
+                  569,
+                  563
+                ],
+                "source_anchor": [
+                  737,
+                  423
+                ],
+                "rgba_sha256": "3f802da8e2c4e003723dac84739099788e0866fb8b888849095468a7aedb1aea"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "attack",
+          "animation": "attack_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_S_SW.png",
+          "source_sha256": "1f1e8c8c3c46b4a864a6522775dd05a0c7abdc32666b63c9855a1e90fc761973",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_S_SW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  192,
+                  434,
+                  192,
+                  214
+                ],
+                "margin": [
+                  301,
+                  270,
+                  576,
+                  554
+                ],
+                "source_anchor": [
+                  275,
+                  644
+                ],
+                "rgba_sha256": "6fc99a967bb11dbaa41c68ea925c82ce8c21bf394bac1620f57d439753c671ed"
+              },
+              {
+                "row": 3,
+                "direction": "S",
+                "region": [
+                  150,
+                  658,
+                  263,
+                  206
+                ],
+                "margin": [
+                  259,
+                  278,
+                  505,
+                  562
+                ],
+                "source_anchor": [
+                  275,
+                  860
+                ],
+                "rgba_sha256": "c5a779cd17d3bae6e652eae5adfb81136ad4eb01f13942016a0ac73efabae6a3"
+              },
+              {
+                "row": 4,
+                "direction": "S",
+                "region": [
+                  145,
+                  877,
+                  237,
+                  203
+                ],
+                "margin": [
+                  254,
+                  281,
+                  531,
+                  565
+                ],
+                "source_anchor": [
+                  275,
+                  1076
+                ],
+                "rgba_sha256": "5347a450a5dc63036371dc57d1167e1482d36379389d1c0cebb536020c318155"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "attack",
+          "animation": "attack_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_S_SW.png",
+          "source_sha256": "1f1e8c8c3c46b4a864a6522775dd05a0c7abdc32666b63c9855a1e90fc761973",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_S_SW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  666,
+                  433,
+                  195,
+                  224
+                ],
+                "margin": [
+                  313,
+                  260,
+                  573,
+                  544
+                ],
+                "source_anchor": [
+                  737,
+                  653
+                ],
+                "rgba_sha256": "9675daf2a85a8c86a09f224b881499579da589fd96cc4ea514b28a1a905320a2"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  579,
+                  660,
+                  292,
+                  214
+                ],
+                "margin": [
+                  226,
+                  270,
+                  476,
+                  554
+                ],
+                "source_anchor": [
+                  737,
+                  870
+                ],
+                "rgba_sha256": "76d2fc4ea54be3b900939856c2d7df7bec1c82f176760133588ce922eb36e211"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  621,
+                  876,
+                  242,
+                  207
+                ],
+                "margin": [
+                  268,
+                  277,
+                  526,
+                  561
+                ],
+                "source_anchor": [
+                  737,
+                  1079
+                ],
+                "rgba_sha256": "ffa64f99bd1a0313b2f68413a1f0a4a183347784eece34780ad6e56ef32fc043"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "hit",
+          "animation": "hit_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_S_SW.png",
+          "source_sha256": "1f1e8c8c3c46b4a864a6522775dd05a0c7abdc32666b63c9855a1e90fc761973",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_S_SW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "S",
+                "region": [
+                  166,
+                  1099,
+                  222,
+                  196
+                ],
+                "margin": [
+                  275,
+                  288,
+                  546,
+                  572
+                ],
+                "source_anchor": [
+                  275,
+                  1291
+                ],
+                "rgba_sha256": "eb73fff6603d77b6fc29f00c6f7c98ea28094706676d16bcd9f84a624211cca6"
+              },
+              {
+                "row": 6,
+                "direction": "S",
+                "region": [
+                  173,
+                  1327,
+                  200,
+                  182
+                ],
+                "margin": [
+                  282,
+                  302,
+                  568,
+                  586
+                ],
+                "source_anchor": [
+                  275,
+                  1505
+                ],
+                "rgba_sha256": "bddc6b62c9088b8a17054e8b0529aa8b51a0a64318e68cc8e3938a8395fb1f3d"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "SW",
+          "role": "hit",
+          "animation": "hit_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_S_SW.png",
+          "source_sha256": "1f1e8c8c3c46b4a864a6522775dd05a0c7abdc32666b63c9855a1e90fc761973",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_S_SW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  634,
+                  1098,
+                  227,
+                  211
+                ],
+                "margin": [
+                  281,
+                  273,
+                  541,
+                  557
+                ],
+                "source_anchor": [
+                  737,
+                  1305
+                ],
+                "rgba_sha256": "4f0022f4047b4ab67208bc4d9046bbed5c8db6da8d2e521b7746e5aa67688fd4"
+              },
+              {
+                "row": 6,
+                "direction": "SW",
+                "region": [
+                  639,
+                  1317,
+                  219,
+                  199
+                ],
+                "margin": [
+                  286,
+                  285,
+                  549,
+                  569
+                ],
+                "source_anchor": [
+                  737,
+                  1512
+                ],
+                "rgba_sha256": "0663cb709e457c372635d270ec936f0e0853eba4cec6fb74a25779fb8c3109bd"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "idle",
+          "animation": "idle_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_W_NW.png",
+          "source_sha256": "1b02910eb0a694f0b9185be30ab90e35f9498020595c3168d5b2182387b8192b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_W_NW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  204,
+                  4,
+                  170,
+                  199
+                ],
+                "margin": [
+                  300,
+                  285,
+                  598,
+                  569
+                ],
+                "source_anchor": [
+                  288,
+                  199
+                ],
+                "rgba_sha256": "ebc00163eb5034163ca085fbfae557f082bf8fa32cee424b22675cc92e3e1e3e"
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  196,
+                  225,
+                  181,
+                  199
+                ],
+                "margin": [
+                  292,
+                  285,
+                  587,
+                  569
+                ],
+                "source_anchor": [
+                  288,
+                  420
+                ],
+                "rgba_sha256": "d168b7b319a8801504dc54d2f7284f64746b95f1d1aecea5296524f7df9a4074"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "idle",
+          "animation": "idle_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_W_NW.png",
+          "source_sha256": "1b02910eb0a694f0b9185be30ab90e35f9498020595c3168d5b2182387b8192b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_W_NW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  649,
+                  5,
+                  163,
+                  196
+                ],
+                "margin": [
+                  301,
+                  288,
+                  605,
+                  572
+                ],
+                "source_anchor": [
+                  732,
+                  197
+                ],
+                "rgba_sha256": "06cfb718b3767aa176651a76244f2c2ddbe6f6a6741f344d18bbcdc3366004c6"
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  650,
+                  228,
+                  166,
+                  194
+                ],
+                "margin": [
+                  302,
+                  290,
+                  602,
+                  574
+                ],
+                "source_anchor": [
+                  732,
+                  418
+                ],
+                "rgba_sha256": "2e9c3e6cf7d32f1aab2666e7b0e78d2dd179fc1cbd106e04b239dfa279f41b80"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "attack",
+          "animation": "attack_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_W_NW.png",
+          "source_sha256": "1b02910eb0a694f0b9185be30ab90e35f9498020595c3168d5b2182387b8192b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_W_NW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  207,
+                  434,
+                  191,
+                  209
+                ],
+                "margin": [
+                  303,
+                  275,
+                  577,
+                  559
+                ],
+                "source_anchor": [
+                  288,
+                  639
+                ],
+                "rgba_sha256": "f3873693a7318f19ee487f95e847cfdae7bb69f3a80fad4bd620c0157aa3c47a"
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  148,
+                  661,
+                  314,
+                  183
+                ],
+                "margin": [
+                  244,
+                  301,
+                  454,
+                  585
+                ],
+                "source_anchor": [
+                  288,
+                  840
+                ],
+                "rgba_sha256": "cf3fe0618c7450405bad70a6cce89df3c8438734db6415b8f01b370d646c42a3"
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  173,
+                  858,
+                  225,
+                  183
+                ],
+                "margin": [
+                  269,
+                  301,
+                  543,
+                  585
+                ],
+                "source_anchor": [
+                  288,
+                  1037
+                ],
+                "rgba_sha256": "52a35638660c937ed48a0d6a1d41cd9de75440f308dc1504b99088cad912a1fd"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "attack",
+          "animation": "attack_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_W_NW.png",
+          "source_sha256": "1b02910eb0a694f0b9185be30ab90e35f9498020595c3168d5b2182387b8192b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_W_NW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  636,
+                  436,
+                  206,
+                  204
+                ],
+                "margin": [
+                  288,
+                  280,
+                  562,
+                  564
+                ],
+                "source_anchor": [
+                  732,
+                  636
+                ],
+                "rgba_sha256": "4515cb040a93fc83d4e4c14db27b8fa2e7fe72242b21e90b4051378963138742"
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  561,
+                  666,
+                  303,
+                  176
+                ],
+                "margin": [
+                  213,
+                  308,
+                  465,
+                  592
+                ],
+                "source_anchor": [
+                  732,
+                  838
+                ],
+                "rgba_sha256": "9b3659251a4ff459ed0515d4307b8f0b3625b98bd8620949ebf3fa9b5c98d9db"
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  624,
+                  861,
+                  213,
+                  182
+                ],
+                "margin": [
+                  276,
+                  302,
+                  555,
+                  586
+                ],
+                "source_anchor": [
+                  732,
+                  1039
+                ],
+                "rgba_sha256": "49916f962b79dbc4da1497c0ff156afe74fd96390e598207e1a174398bd2d4ca"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "W",
+          "role": "hit",
+          "animation": "hit_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_W_NW.png",
+          "source_sha256": "1b02910eb0a694f0b9185be30ab90e35f9498020595c3168d5b2182387b8192b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_W_NW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  210,
+                  1063,
+                  192,
+                  198
+                ],
+                "margin": [
+                  306,
+                  286,
+                  576,
+                  570
+                ],
+                "source_anchor": [
+                  288,
+                  1257
+                ],
+                "rgba_sha256": "e61ddb058be2105b87388b3e7891460571c4eb25078d4e20e785b6f3b8b723cc"
+              },
+              {
+                "row": 6,
+                "direction": "W",
+                "region": [
+                  215,
+                  1304,
+                  177,
+                  187
+                ],
+                "margin": [
+                  311,
+                  297,
+                  591,
+                  581
+                ],
+                "source_anchor": [
+                  288,
+                  1487
+                ],
+                "rgba_sha256": "e0a3e914996866a46cb162da5f28bddd212ebdb4b34dd3682a91ab446f759753"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "NW",
+          "role": "hit",
+          "animation": "hit_5",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_W_NW.png",
+          "source_sha256": "1b02910eb0a694f0b9185be30ab90e35f9498020595c3168d5b2182387b8192b",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_W_NW.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  664,
+                  1067,
+                  175,
+                  184
+                ],
+                "margin": [
+                  316,
+                  300,
+                  593,
+                  584
+                ],
+                "source_anchor": [
+                  732,
+                  1247
+                ],
+                "rgba_sha256": "2ae59f1bd12f089dd2dbfe1e587691a01851bfa49796cd157cc5cdfc54588b46"
+              },
+              {
+                "row": 6,
+                "direction": "NW",
+                "region": [
+                  638,
+                  1304,
+                  182,
+                  176
+                ],
+                "margin": [
+                  290,
+                  308,
+                  586,
+                  592
+                ],
+                "source_anchor": [
+                  732,
+                  1476
+                ],
+                "rgba_sha256": "7f98b44992dd996a0294e5c2c27eab53be07823a263f98ea5aefabcf8bfda8ab"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 191.5,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "idle",
+          "animation": "idle_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_N_NE.png",
+          "source_sha256": "4200396d933c988b71f5cb580af371064241586f247bdf567cbaae91e7511912",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_N_NE.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "N",
+                "region": [
+                  255,
+                  6,
+                  159,
+                  197
+                ],
+                "margin": [
+                  305,
+                  287,
+                  609,
+                  571
+                ],
+                "source_anchor": [
+                  334,
+                  199
+                ],
+                "rgba_sha256": "01e38de467a17f0fd5197569d21bb5da9069a9b1f173b59ba3a1dfa3f7b2fb01"
+              },
+              {
+                "row": 1,
+                "direction": "N",
+                "region": [
+                  250,
+                  218,
+                  166,
+                  201
+                ],
+                "margin": [
+                  300,
+                  283,
+                  602,
+                  567
+                ],
+                "source_anchor": [
+                  334,
+                  415
+                ],
+                "rgba_sha256": "6474ebddef8cea6906270c770f1a9f4fa4c5cb79edb38cf16820a3a4b7998fd8"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "idle",
+          "animation": "idle_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_N_NE.png",
+          "source_sha256": "4200396d933c988b71f5cb580af371064241586f247bdf567cbaae91e7511912",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_N_NE.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NE",
+                "region": [
+                  648,
+                  8,
+                  185,
+                  203
+                ],
+                "margin": [
+                  294,
+                  281,
+                  583,
+                  565
+                ],
+                "source_anchor": [
+                  738,
+                  207
+                ],
+                "rgba_sha256": "2ff9a78eda22f5c1f08fc71086d2ff5a377ae8643c4c6769fcc2abd953fc4dc3"
+              },
+              {
+                "row": 1,
+                "direction": "NE",
+                "region": [
+                  642,
+                  226,
+                  188,
+                  197
+                ],
+                "margin": [
+                  288,
+                  287,
+                  580,
+                  571
+                ],
+                "source_anchor": [
+                  738,
+                  419
+                ],
+                "rgba_sha256": "dd68b62ccb959314e61db1e21bd66c696f0287a4c4f4fd763eb5c372f9fec9b0"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "attack",
+          "animation": "attack_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_N_NE.png",
+          "source_sha256": "4200396d933c988b71f5cb580af371064241586f247bdf567cbaae91e7511912",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_N_NE.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "N",
+                "region": [
+                  226,
+                  437,
+                  187,
+                  208
+                ],
+                "margin": [
+                  276,
+                  276,
+                  581,
+                  560
+                ],
+                "source_anchor": [
+                  334,
+                  641
+                ],
+                "rgba_sha256": "d4b60da015eb2afbe009b7fa07836cafef920dd537d7e00cdfe7efd61affa663"
+              },
+              {
+                "row": 3,
+                "direction": "N",
+                "region": [
+                  230,
+                  650,
+                  259,
+                  206
+                ],
+                "margin": [
+                  280,
+                  278,
+                  509,
+                  562
+                ],
+                "source_anchor": [
+                  334,
+                  852
+                ],
+                "rgba_sha256": "f944a273b13a9e64e37bdbd833ada0f1e6121fcffa949b03bf678a1ac7cc603b"
+              },
+              {
+                "row": 4,
+                "direction": "N",
+                "region": [
+                  244,
+                  870,
+                  198,
+                  194
+                ],
+                "margin": [
+                  294,
+                  290,
+                  570,
+                  574
+                ],
+                "source_anchor": [
+                  334,
+                  1060
+                ],
+                "rgba_sha256": "e81771157f820b2fbff73ef0b1eb8400af2faed2979a11be938f567a58264df5"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "attack",
+          "animation": "attack_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_N_NE.png",
+          "source_sha256": "4200396d933c988b71f5cb580af371064241586f247bdf567cbaae91e7511912",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_N_NE.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "NE",
+                "region": [
+                  631,
+                  443,
+                  216,
+                  201
+                ],
+                "margin": [
+                  277,
+                  283,
+                  552,
+                  567
+                ],
+                "source_anchor": [
+                  738,
+                  640
+                ],
+                "rgba_sha256": "7b704bd85f9ae6e7cb0d00f250c2eaba31700458b88a44a68d4426e63ba4df97"
+              },
+              {
+                "row": 3,
+                "direction": "NE",
+                "region": [
+                  626,
+                  654,
+                  280,
+                  199
+                ],
+                "margin": [
+                  272,
+                  285,
+                  488,
+                  569
+                ],
+                "source_anchor": [
+                  738,
+                  849
+                ],
+                "rgba_sha256": "c28041e2d0e64225efd0787615b96056c5ca7ecc1f88a19c3da7737d52d0c2c9"
+              },
+              {
+                "row": 4,
+                "direction": "NE",
+                "region": [
+                  649,
+                  871,
+                  208,
+                  198
+                ],
+                "margin": [
+                  295,
+                  286,
+                  560,
+                  570
+                ],
+                "source_anchor": [
+                  738,
+                  1065
+                ],
+                "rgba_sha256": "97baa1790cdd3108dab4159be3c8fb13d6b0bdc8ebf09803d3910e4ecb442cf4"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "N",
+          "role": "hit",
+          "animation": "hit_6",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_N_NE.png",
+          "source_sha256": "4200396d933c988b71f5cb580af371064241586f247bdf567cbaae91e7511912",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_N_NE.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "N",
+                "region": [
+                  229,
+                  1097,
+                  207,
+                  195
+                ],
+                "margin": [
+                  279,
+                  289,
+                  561,
+                  573
+                ],
+                "source_anchor": [
+                  334,
+                  1288
+                ],
+                "rgba_sha256": "4b6e9ac3574f7f01174091b304692771f65c203a8b066608d22890673771553d"
+              },
+              {
+                "row": 6,
+                "direction": "N",
+                "region": [
+                  240,
+                  1314,
+                  186,
+                  182
+                ],
+                "margin": [
+                  290,
+                  302,
+                  582,
+                  586
+                ],
+                "source_anchor": [
+                  334,
+                  1492
+                ],
+                "rgba_sha256": "ef4c95d29b5a1c14c58c8cf787521ef4cb66bf6579d5107f024e42338adbdb6c"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "NE",
+          "role": "hit",
+          "animation": "hit_7",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_N_NE.png",
+          "source_sha256": "4200396d933c988b71f5cb580af371064241586f247bdf567cbaae91e7511912",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_N_NE.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "NE",
+                "region": [
+                  655,
+                  1101,
+                  196,
+                  186
+                ],
+                "margin": [
+                  301,
+                  298,
+                  572,
+                  582
+                ],
+                "source_anchor": [
+                  738,
+                  1283
+                ],
+                "rgba_sha256": "c44d5e5e4f0187767df4af89131996b0d32c98fda1c856bac5cbf9d572eafb77"
+              },
+              {
+                "row": 6,
+                "direction": "NE",
+                "region": [
+                  655,
+                  1310,
+                  197,
+                  188
+                ],
+                "margin": [
+                  301,
+                  296,
+                  571,
+                  580
+                ],
+                "source_anchor": [
+                  738,
+                  1494
+                ],
+                "rgba_sha256": "380e94903473da1ca59c1802235a01f2ca078c63c7c7681d551bdc6739d13f88"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 193.0,
+            "canvas_size": [
+              768,
+              768
+            ],
+            "foot": [
+              384,
+              480
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "idle",
+          "animation": "idle_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_E_v2.png",
+          "source_sha256": "db7c8cd3f70fbbde6d436cb5386940b76e8a9205e9201540a3af078bbb9fa88f",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_E_v2.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "E",
+                "region": [
+                  438,
+                  4,
+                  135,
+                  220
+                ],
+                "margin": [
+                  355,
+                  314,
+                  713,
+                  628
+                ],
+                "source_anchor": [
+                  507,
+                  220
+                ],
+                "rgba_sha256": "4cddd9e04bd1177b9b72f0cd192e404a171db7b202a741fc5f001b5d8b9adc45"
+              },
+              {
+                "row": 1,
+                "direction": "E",
+                "region": [
+                  435,
+                  234,
+                  147,
+                  216
+                ],
+                "margin": [
+                  352,
+                  318,
+                  701,
+                  632
+                ],
+                "source_anchor": [
+                  507,
+                  446
+                ],
+                "rgba_sha256": "ec502a1f9faf816ba13a69e32a422ff5a816ea6a51ca253c8325b10359a7c87d"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 212.0,
+            "canvas_size": [
+              848,
+              848
+            ],
+            "foot": [
+              424,
+              530
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "attack",
+          "animation": "attack_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_E_v2.png",
+          "source_sha256": "db7c8cd3f70fbbde6d436cb5386940b76e8a9205e9201540a3af078bbb9fa88f",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_E_v2.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "E",
+                "region": [
+                  414,
+                  468,
+                  194,
+                  202
+                ],
+                "margin": [
+                  331,
+                  332,
+                  654,
+                  646
+                ],
+                "source_anchor": [
+                  507,
+                  666
+                ],
+                "rgba_sha256": "b1fff680df5541f27469bc3cceb58425b9e407123dbdbdb8a504250b9072180d"
+              },
+              {
+                "row": 3,
+                "direction": "E",
+                "region": [
+                  408,
+                  674,
+                  367,
+                  198
+                ],
+                "margin": [
+                  325,
+                  336,
+                  481,
+                  650
+                ],
+                "source_anchor": [
+                  507,
+                  868
+                ],
+                "rgba_sha256": "56690ac4525e1d533276bfd69258aeaf68185a56658a48782d613e1689e13dd5"
+              },
+              {
+                "row": 4,
+                "direction": "E",
+                "region": [
+                  412,
+                  873,
+                  204,
+                  222
+                ],
+                "margin": [
+                  329,
+                  312,
+                  644,
+                  626
+                ],
+                "source_anchor": [
+                  507,
+                  1091
+                ],
+                "rgba_sha256": "9172a37ce86daf43fa0a2e2d733f52c724d9fc214823101091c5960d815a7075"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 212.0,
+            "canvas_size": [
+              848,
+              848
+            ],
+            "foot": [
+              424,
+              530
+            ]
+          }
+        },
+        {
+          "direction": "E",
+          "role": "hit",
+          "animation": "hit_0",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_E_v2.png",
+          "source_sha256": "db7c8cd3f70fbbde6d436cb5386940b76e8a9205e9201540a3af078bbb9fa88f",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_E_v2.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "E",
+                "region": [
+                  416,
+                  1106,
+                  196,
+                  196
+                ],
+                "margin": [
+                  333,
+                  338,
+                  652,
+                  652
+                ],
+                "source_anchor": [
+                  507,
+                  1298
+                ],
+                "rgba_sha256": "b47b9900a02c8fac932382a0285fd5c03c417010d699465aa51c31f48d94cdc7"
+              },
+              {
+                "row": 6,
+                "direction": "E",
+                "region": [
+                  417,
+                  1317,
+                  192,
+                  203
+                ],
+                "margin": [
+                  334,
+                  331,
+                  656,
+                  645
+                ],
+                "source_anchor": [
+                  507,
+                  1516
+                ],
+                "rgba_sha256": "8af783ab04bc702ce5d8087c7432258a7ac9dc9c90382a560374f1421bb8004a"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 212.0,
+            "canvas_size": [
+              848,
+              848
+            ],
+            "foot": [
+              424,
+              530
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "idle",
+          "animation": "idle_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_SE_v2.png",
+          "source_sha256": "47e7502a785dbdb5e1a09a3e0f5be2bd37d6930f5cb8f38e96f5833bdba03d7d",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_SE_v2.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  430,
+                  7,
+                  148,
+                  208
+                ],
+                "margin": [
+                  333,
+                  306,
+                  668,
+                  608
+                ],
+                "source_anchor": [
+                  505,
+                  211
+                ],
+                "rgba_sha256": "27fde10b02061fb68ef0752bdc36e3f178f229aa7a11be262cfe357bb49096a8"
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  433,
+                  227,
+                  146,
+                  211
+                ],
+                "margin": [
+                  336,
+                  303,
+                  670,
+                  605
+                ],
+                "source_anchor": [
+                  505,
+                  434
+                ],
+                "rgba_sha256": "4beb5654e295ac1839159f50c4f0652b794600c6b136bb9b2aa7e878e9609d00"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 203.5,
+            "canvas_size": [
+              816,
+              816
+            ],
+            "foot": [
+              408,
+              510
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "attack",
+          "animation": "attack_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_SE_v2.png",
+          "source_sha256": "47e7502a785dbdb5e1a09a3e0f5be2bd37d6930f5cb8f38e96f5833bdba03d7d",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_SE_v2.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  406,
+                  446,
+                  184,
+                  217
+                ],
+                "margin": [
+                  309,
+                  297,
+                  632,
+                  599
+                ],
+                "source_anchor": [
+                  505,
+                  659
+                ],
+                "rgba_sha256": "eec6e7b07668d9fd64a57847572d6fd05eec591d50959bfdddab5cbc469aa86f"
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  408,
+                  673,
+                  319,
+                  196
+                ],
+                "margin": [
+                  311,
+                  318,
+                  497,
+                  620
+                ],
+                "source_anchor": [
+                  505,
+                  865
+                ],
+                "rgba_sha256": "ca3b5f22d1826c2bf6baf1fa567dccdee3a809e403988aa7d4290d2309eb9e2c"
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  416,
+                  882,
+                  200,
+                  212
+                ],
+                "margin": [
+                  319,
+                  302,
+                  616,
+                  604
+                ],
+                "source_anchor": [
+                  505,
+                  1090
+                ],
+                "rgba_sha256": "ac791c7206077adc3430c208631683849fb5bee749bb29759dec9fabb6139cec"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 203.5,
+            "canvas_size": [
+              816,
+              816
+            ],
+            "foot": [
+              408,
+              510
+            ]
+          }
+        },
+        {
+          "direction": "SE",
+          "role": "hit",
+          "animation": "hit_1",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_SE_v2.png",
+          "source_sha256": "47e7502a785dbdb5e1a09a3e0f5be2bd37d6930f5cb8f38e96f5833bdba03d7d",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_combat_SE_v2.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  408,
+                  1104,
+                  203,
+                  196
+                ],
+                "margin": [
+                  311,
+                  318,
+                  613,
+                  620
+                ],
+                "source_anchor": [
+                  505,
+                  1296
+                ],
+                "rgba_sha256": "67d6a2ec1ac60e1266cde784c1a6a82c38c7b64ae60db255eea869f9b64a9ee2"
+              },
+              {
+                "row": 6,
+                "direction": "SE",
+                "region": [
+                  410,
+                  1315,
+                  195,
+                  187
+                ],
+                "margin": [
+                  313,
+                  327,
+                  621,
+                  629
+                ],
+                "source_anchor": [
+                  505,
+                  1498
+                ],
+                "rgba_sha256": "e9016ccd5cb261c10ada3eb4727f2d8337403500ed41d79eb52e04a386c89b8b"
+              }
+            ],
+            "distinct_pixel_frames": 2,
+            "neutral_height": 203.5,
+            "canvas_size": [
+              816,
+              816
+            ],
+            "foot": [
+              408,
+              510
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "role": "death",
+          "animation": "death_2",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_death_S3.png",
+          "source_sha256": "676bd5ebef0f114118d742837cdc818c7dddd6ba60d3dc67e5b4d9077e0fe37d",
+          "texture": "assets/actors/eight_direction/monster_staging/demon_family/r001/demon_death_S3.png",
+          "geometry": {
+            "image_size": [
+              1024,
+              1536
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "S",
+                "region": [
+                  244,
+                  80,
+                  454,
+                  468
+                ],
+                "margin": [
+                  697,
+                  691,
+                  1394,
+                  1380
+                ],
+                "source_anchor": [
+                  471,
+                  544
+                ],
+                "rgba_sha256": "c41b6724844fe0bf57efc99c65333ca3f6b7a484282269770a0324a71e623aef"
+              },
+              {
+                "row": 1,
+                "direction": "S",
+                "region": [
+                  184,
+                  691,
+                  654,
+                  333
+                ],
+                "margin": [
+                  637,
+                  826,
+                  1194,
+                  1515
+                ],
+                "source_anchor": [
+                  471,
+                  1020
+                ],
+                "rgba_sha256": "bed4b743d89b805d223b46e9fc50993bfb872f938b3972f95f6b5f8940561e08"
+              },
+              {
+                "row": 2,
+                "direction": "S",
+                "region": [
+                  110,
+                  1189,
+                  803,
+                  226
+                ],
+                "margin": [
+                  563,
+                  933,
+                  1045,
+                  1622
+                ],
+                "source_anchor": [
+                  471,
+                  1411
+                ],
+                "rgba_sha256": "0ac5aa340d67f6f5bf739832c4a17cc0852e2d4bb0cffed83a30e976829ecd7b"
+              }
+            ],
+            "distinct_pixel_frames": 3,
+            "neutral_height": 462.0,
+            "canvas_size": [
+              1848,
+              1848
+            ],
+            "foot": [
+              924,
+              1155
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "family_adapters": {
+    "monster:마계 악마전사": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/demon_family/r001/demon_warrior-NativeMotionProfile.tres",
+      "native_profile_sha256": "7da2770cca661f47fd159640a5aa18be3bd636e88dd9f69591bc60efdef1edb7",
+      "production_connected": false,
+      "detailed_completed": false,
+      "sharing_basis": "Same existing atlas bytes/region/body/melee/slash/height; newly authored shared normal-family source, not a palette-only proxy",
+      "quality_review": "HOLD: exact reference identity, hand ownership, direction, support/contact and default Main review pending",
+      "original_presentation": {
+        "visual": {
+          "atlas": 1,
+          "cell": 10,
+          "body": "demon",
+          "variant": 12,
+          "width": 0.972,
+          "weapon": "sword",
+          "crest": 1,
+          "accent": "b76d5a"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "source_actor": "monster:오만의 탑 공포의 악마",
+      "new_source_poses": 0,
+      "per_species_Main_visual_review": "HOLD",
+      "newly_approved": false
+    },
+    "monster:교만의 제노사이더": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/demon_family/r001/genocider-NativeMotionProfile.tres",
+      "native_profile_sha256": "af82b8b79fbbab317a7dea9a927aa33859a84223da61efadd70091eb87858bac",
+      "production_connected": false,
+      "detailed_completed": false,
+      "sharing_basis": "Same existing atlas bytes/region/body/melee/slash/height; newly authored shared normal-family source, not a palette-only proxy",
+      "quality_review": "HOLD: exact reference identity, hand ownership, direction, support/contact and default Main review pending",
+      "original_presentation": {
+        "visual": {
+          "atlas": 1,
+          "cell": 10,
+          "body": "demon",
+          "variant": 11,
+          "width": 0.92,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "source_actor": "monster:오만의 탑 공포의 악마",
+      "new_source_poses": 0,
+      "per_species_Main_visual_review": "HOLD",
+      "newly_approved": false
+    },
+    "monster:탐욕의 코아쿡": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/demon_family/r001/koakuk-NativeMotionProfile.tres",
+      "native_profile_sha256": "6a4e5222267a16cb41b15555f8065fc2b2b0d8f768b69faa2c168f115374283b",
+      "production_connected": false,
+      "detailed_completed": false,
+      "sharing_basis": "Same existing atlas bytes/region/body/melee/slash/height; newly authored shared normal-family source, not a palette-only proxy",
+      "quality_review": "HOLD: exact reference identity, hand ownership, direction, support/contact and default Main review pending",
+      "original_presentation": {
+        "visual": {
+          "atlas": 1,
+          "cell": 10,
+          "body": "demon",
+          "variant": 11,
+          "width": 0.946,
+          "weapon": "sword",
+          "crest": 3,
+          "accent": "aa8aaf"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "source_actor": "monster:오만의 탑 공포의 악마",
+      "new_source_poses": 0,
+      "per_species_Main_visual_review": "HOLD",
+      "newly_approved": false
+    }
+  },
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_1.png",
+    "region": [
+      631,
+      623,
+      316,
+      311
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 1,
+    "cell": 10,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "image_size": [
+      1263,
+      1246
+    ],
+    "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+  },
+  "selected_sources": [
+    {
+      "name": "demon-run-front4-v01",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-front4-v01.png",
+      "sha256": "2a4138606dcf85d0dbfa994009aa8fa8464c991ac1a106daa8d7bc7365e68021",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "rows": 4,
+      "canvas_size": 976,
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "name": "demon-run-back4-v01",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/run-production/raw/demon-run-back4-v01.png",
+      "sha256": "78aff74dc35fd1ec4ff3ac4fca9e494708e4c9d357c9c21a55c58456bfdeb57b",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "rows": 4,
+      "canvas_size": 824,
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "name": "demon_combat_S_SW",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_S_SW.png",
+      "sha256": "1f1e8c8c3c46b4a864a6522775dd05a0c7abdc32666b63c9855a1e90fc761973",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "rows": 7,
+      "canvas_size": 768,
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "name": "demon_combat_W_NW",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_W_NW.png",
+      "sha256": "1b02910eb0a694f0b9185be30ab90e35f9498020595c3168d5b2182387b8192b",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "rows": 7,
+      "canvas_size": 768,
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "name": "demon_combat_N_NE",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_N_NE.png",
+      "sha256": "4200396d933c988b71f5cb580af371064241586f247bdf567cbaae91e7511912",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "rows": 7,
+      "canvas_size": 768,
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "name": "demon_combat_E_v2",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_E_v2.png",
+      "sha256": "db7c8cd3f70fbbde6d436cb5386940b76e8a9205e9201540a3af078bbb9fa88f",
+      "directions": [
+        "E"
+      ],
+      "rows": 7,
+      "canvas_size": 848,
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "name": "demon_combat_SE_v2",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_combat_SE_v2.png",
+      "sha256": "47e7502a785dbdb5e1a09a3e0f5be2bd37d6930f5cb8f38e96f5833bdba03d7d",
+      "directions": [
+        "SE"
+      ],
+      "rows": 7,
+      "canvas_size": 816,
+      "status": "GEOMETRY_PASS_ONLY"
+    },
+    {
+      "name": "demon_death_S3",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch05-demon-family/raw/demon_death_S3.png",
+      "sha256": "676bd5ebef0f114118d742837cdc818c7dddd6ba60d3dc67e5b4d9077e0fe37d",
+      "directions": [
+        "S"
+      ],
+      "rows": 3,
+      "canvas_size": 1848,
+      "status": "GEOMETRY_PASS_ONLY"
+    }
+  ],
+  "newly_approved": 0,
+  "default_catalog_switches": 0,
+  "source_approval": "HOLD; geometry and playback never grant identity/contact/Main approval"
+}

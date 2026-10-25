@@ -1,0 +1,102 @@
+{
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "missing-phases12-v01",
+  "status": "GENERATED_TWO_POSES_HOLD_PROJECTED_SUPPORT_SWAP_FAILED_STOP_E_CHAIN",
+  "request_path": "/workspace/scratch/girtas-E-walk-missing-phases12-v01/request.json",
+  "request_sha256": "f23992b3c6cc2432eaf497464901a7681a221d143acbc158443ee27a13d742ae",
+  "original_generated_file": "/workspace/generated_images/exec-9902d251-9840-4833-bf4a-327479af9709.png",
+  "raw_png": "/workspace/scratch/girtas-E-walk-missing-phases12-v01/girtas-E-walk-missing-phases12-v01.png",
+  "raw_sha256": "a73f3c4284798c8c396a83e4e430603ab7aa709956c6bb4983af059b63c9798f",
+  "raw_bytes": 1326841,
+  "image_size": [
+    2007,
+    783
+  ],
+  "imagegen_attempts": 1,
+  "expected_poses": 2,
+  "requested_game_phases": [
+    1,
+    2
+  ],
+  "private_preview": "/workspace/scratch/girtas-E-walk-missing-phases12-v01/private-two-pose-source-preview.jpg",
+  "private_preview_bytes": 57807,
+  "geometry_status": "PASS_COMPLETE_TWO_DISTINCT_REGIONS",
+  "geometry_error": null,
+  "source_visual_status": "HOLD_MISSING_SUPPORT_EXCHANGE",
+  "integration_ready": false,
+  "repository_mutated": false,
+  "chat_image_attachments": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T11:51:10.010421+00:00",
+  "newly_authored_distinct_poses": 2,
+  "usable_missing_phase_count": 0,
+  "missing_requested_game_phases": [
+    1,
+    2
+  ],
+  "per_row_usable_map": [
+    {
+      "authored_row": 0,
+      "requested_game_phase": 1,
+      "status": "HOLD_PROJECTED_SUPPORT_POSITION_FAILED",
+      "usable_for_requested_missing_phase": false,
+      "region": [
+        63,
+        0,
+        911,
+        752
+      ],
+      "rgba_sha256": "801513e084c83726a1fb0b8bb70550ace85865b634aaddb75239291024f1cc72",
+      "visible_evidence": "Rear/screen-left boot is flat in support; the large foreground greave still extends ahead toward screenRIGHT and its boot is airborne. The requested foreground support boot is not vertical under the hip.",
+      "failure_independent_of_hidden_thigh_identity": true
+    },
+    {
+      "authored_row": 1,
+      "requested_game_phase": 2,
+      "status": "HOLD_PROJECTED_SUPPORT_POSITION_FAILED",
+      "usable_for_requested_missing_phase": false,
+      "region": [
+        1061,
+        4,
+        899,
+        738
+      ],
+      "rgba_sha256": "76c415480d320d0048ea8a359d18665201bfa939583902eee3247113bda3e23f",
+      "visible_evidence": "Rear/screen-left heel rises to toe support while the large foreground greave/boot again extends ahead toward screenRIGHT in air. The requested large foreground boot has not moved behind the hip.",
+      "failure_independent_of_hidden_thigh_identity": true
+    }
+  ],
+  "identity_validation": "PASS_MAJOR_FAITHFUL_E_MODEL_LONG_SKIRT_RIGHT_SINUOUS_WEAPON",
+  "heading_validation": "PASS_E_RIGHT_BOTH",
+  "physical_proportions_validation": "No concrete model-ratio defect found; higher native pixel resolution is not the reason for HOLD.",
+  "gait_validation": "HOLD_CONCRETE_PIXEL_POSITION_FAILURE; large foreground boot advances in both figures rather than supporting under/behind hip",
+  "full_six_cycle_status": "HOLD_NOT_AUTHORED_OR_APPROVED",
+  "source_geometry_status": "PASS_COMPLETE_TWO_DISTINCT_REGIONS_ONLY; this is not a fictional six-pose geometry proof",
+  "source_geometry_path": "/workspace/scratch/girtas-E-walk-missing-phases12-v01/source.geometry.json",
+  "source_nominal_analysis_canvas_size": 2048,
+  "runtime_virtual_canvas_sizes": null,
+  "chain_status": "STOP_E_CHAIN_AFTER_ONE_GUIDED_TWO_POSE_ATTEMPT",
+  "additional_generation_attempted": false,
+  "additional_generation_authorized_for_this_task": false,
+  "prior_four_pose_source_preserved": "/workspace/scratch/girtas-E-walk-missing-halfcycles-v01/girtas-E-walk-missing-halfcycles-v01.png",
+  "prior_four_pose_usable_rows_preserved": [
+    2,
+    3
+  ],
+  "contact_key_sources_preserved": true,
+  "private_review_previews": [
+    "/workspace/scratch/girtas-E-walk-missing-phases12-v01/private-two-pose-source-preview.jpg"
+  ],
+  "private_review_preview_bytes": 57807,
+  "visual_findings": [
+    "Exactly one genuine two-pose edit was made from three SHA-pinned references including the explicit projected-footpath guide. No source or guide pixels were pasted into final game art by code.",
+    "The output keeps the pale face/hair, gold crown and thin rigid rays, long dark gold-trimmed skirt, E camera and nearRIGHT sinuous weapon; no guide colors/lines/text appear.",
+    "Both pictures still repeat the previously obtained foreground-leg-advance/rear-leg-support family. Different rear heel height produces two pose variants, but does not create the requested opposite support half-cycle.",
+    "This HOLD is based on visible boot position relative to hip and ground/support, not a demand to expose hidden thighs or a rejection of higher source resolution.",
+    "No whole-six motion, actor approval, production connection or completion increment is claimed. Existing contact keys and four-pose salvage remain intact."
+  ],
+  "reviewed_at": "2026-10-19T11:52:07.144420+00:00"
+}

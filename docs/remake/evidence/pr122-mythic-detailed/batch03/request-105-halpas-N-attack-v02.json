@@ -1,0 +1,53 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "N",
+  "role": "attack",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488"
+  },
+  "transparent_background": true,
+  "intended_contact_frame": 3,
+  "phase_contract": [
+    "guard",
+    "anticipation",
+    "load",
+    "active_contact",
+    "follow_through",
+    "recovery"
+  ],
+  "corrective_reason": "N attack v01 phases1-4 turn front/right; replace with back-facing north strike and unchanged weapon hand",
+  "user_authorization": "Production image tools authorized; no image attachments or image links in main chat; one private correction attempt.",
+  "requested_at": "2026-10-19T10:15:15.738397+00:00",
+  "prompt": "Create ONE production game attack-animation sprite sheet for the EXACT same unique armored boss 해방된 할파스 / Halpas shown in the references. First reference: original identity portrait. Second and third references: the CORRECT NORTH-facing rear model, equipment, camera and wing/cape construction. Use ONLY these supplied correct references; newly draw the attack action. Preserve exact same helmet/horns, black-and-gold armor, burgundy cape, crystalline purple wings, two existing arms, two existing legs, established single purple blade and anatomical weapon hand.\n\nABSOLUTE DIRECTION CONTRACT: ALL SIX complete figures face NORTH, screen STRAIGHT UP, directly AWAY from the viewer. The camera always sees the BACK of the helmet/head, BACK armor and BACK cape. NEVER show the face, eyes, front chest/gem, front waist or a front/side-facing character. Helmet, shoulders, pelvis, feet and weapon perspective all remain the same NORTH heading. The head may nod and torso may lean but MUST NOT turn sideways or towards the viewer. No spin, side view, reversal, mirrored handedness or rotation to a front/right sprite. The weapon stays in the same anatomical hand as the correct rear N references, on that same side of the body. The north attack target is ABOVE THE FIGURE on screen, never screen-left or screen-right.\n\nDraw a coherent SIX-PHASE NORTH-directed overhead cut/thrust action, in temporal order LEFT-TO-RIGHT, TOP-TO-BOTTOM. All phases remain fully rear-facing:\n0 GUARD: rear-facing airborne guard, wing/cape resting, same model as correct N idle.\n1 ANTICIPATION: rear-facing shoulder/hip coil and weapon arm drawn upward beside and behind that SAME shoulder; face stays hidden away from camera.\n2 LOAD: rear-view deep body lean/load with blade above the helmet, existing elbow visibly bent, wings brace, no body-heading change.\n3 ACTIVE CONTACT: strongest north-directed extension/cut towards SCREEN TOP; same rear head and back surfaces remain visible. Weapon and weapon arm reach toward the top of the screen, foreshortened away from camera. The blade tip/strike axis clearly points NORTH/UP, not horizontally right or left. This is the game's authoritative attack hit frame.\n4 FOLLOW-THROUGH: continue the same north-directed blade arc and rear-facing body release, cape and wings lag naturally; no sideways/front flip.\n5 RECOVERY: return towards the same rear-facing north guard, weapon returns to its original hand/side, no extra weapon or limbs.\n\nEach phase must be clearly distinct articulated anatomy with convincing anticipation, impact and recovery, not shifted copies or a rigidly rotated old sprite. Same original body proportions, camera elevation, material style and scale in every pose. The existing wing attachments, armor pieces, weapon hand, boot shapes and cape must persist through all phases.\n\nTechnical output is a sparse transparent1024x1536 PNG with EXACTLY TWO COLUMNS and THREE ROWS, six figures only, one per512x512 cell. Every complete silhouette, including both full wing tips, horns, boots, cape and the entire raised weapon, must fit within the CENTRAL320x320 area of its own cell. Leave at least96px of empty transparent gutter on EVERY cell edge; keep the whole figure small enough to fit without clipping. Do not fill the page or overlap any neighboring figure's bounding rectangle. Do not crop weapon, wing or feet to make it fit.\n\nDetailed crisp isometric RPG game-sprite cutouts, opaque black armor with internal material shading and sharp gold trim. Background and all gaps are transparent alpha0; only1-2px silhouette edge anti-aliasing. Purple energy remains INSIDE the existing solid crystalline wing/blade shapes. NO floor, shadow, bloom, halo, surrounding aura, diffuse glow, haze, fog, smoke, motion trails, blur, text, labels, numbers, grids or background panels. The central priority is SIX CONSISTENT NORTH/REAR figures, with an unmistakably NORTH/UP-directed contact at phase3.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v01.png",
+  "private_source_review": {
+    "raw_sha256": "a9c2c57d303eaeaf64ddc5d15a6a5bc847018267d4ccca61e10965b6e95c1f84",
+    "raw_bytes": 2370626,
+    "source_visual_status": "PASS",
+    "visual_findings": [
+      "All six poses retain the back of helmet and back armor, north-facing shoulders/hips/feet and the same cape side; no front/right body reversal.",
+      "Anticipation phase1 lifts the established weapon; phase2 clearly bends both arms into a rear-view load; phase3 extends the same weapon straight screen-UP/NORTH above the helmet with readable elbow/arm extension.",
+      "Phase4 completes the attack arc while remaining rear-facing, phase5 returns to the same rear guard and same anatomical weapon hand.",
+      "Six complete figures, distinct guard/anticipation/load/contact/follow-through/recovery, same established gold-black armor, burgundy cape, crystalline wing structure and equipment at game-view scale."
+    ],
+    "visual_limitations": [
+      "Private source review only. Original portrait108x132 limits exact tiny landmarks.",
+      "Strict geometry, lossless import, SpriteFrames, attack marker and actual game integration remain for root."
+    ]
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
+  "output_sha256": "a9c2c57d303eaeaf64ddc5d15a6a5bc847018267d4ccca61e10965b6e95c1f84",
+  "output_bytes": 2370626,
+  "original_generated_file": "/workspace/scratch/halpas-N-attack-repair/halpas-N-attack-v02.png"
+}

@@ -1,0 +1,93 @@
+{
+  "status": "NATIVE_SW_SOURCE_PRODUCED_ONCE_FROZEN_NOT_REGISTERED",
+  "source": {
+    "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/service-SW-fullbody-base-native-r001.png",
+    "sha256": "1e5de9a93d8755783a2405733eddb21f7f59b3141acb9f5204332228a7a263ee",
+    "bytes": 950319,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "native_untouched": true
+  },
+  "actual_service_calls": 1,
+  "requested_square_size": 1024,
+  "actual_native_size": [
+    1254,
+    1254
+  ],
+  "mask_used": false,
+  "source_pixels_modified": false,
+  "source_pixels_resampled": false,
+  "C_or_unit_or_root_registered": false,
+  "actor_approvals_added": 0,
+  "source_QA_gate": "Independent source-owner direction/body/hand/weapon acceptance remains required before once registration and motion manufacture.",
+  "direction_visual_observation": "Face and upper-body front-left three-quarter, anatomical RIGHT staff at observer left, anatomical LEFT free near arm at observer right. New original rendered view; no mirroring/whole-PNG rotation.",
+  "visual_retained": [
+    "blonde high bun and blue bow/ribbons",
+    "navy/gold ornate corset and white pleated miniskirt",
+    "split navy/gold coat tails",
+    "complete black/gold high boots with visible toes/counters and both gold stiletto heels",
+    "whole straight double-ended gold staff with turquoise finials and visible shaft",
+    "no FX, shadow, floor, text or duplicate person"
+  ],
+  "source_alpha_stats": {
+    "1": {
+      "bbox": [
+        17,
+        9,
+        1240,
+        1254
+      ],
+      "foreground_pixels": 356608,
+      "border_pixels": 6,
+      "component_count": 2027,
+      "components_at_least_100px": 2,
+      "largest_component_pixels": 351401
+    },
+    "8": {
+      "bbox": [
+        306,
+        38,
+        990,
+        1170
+      ],
+      "foreground_pixels": 315159,
+      "border_pixels": 0,
+      "component_count": 252,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 314840
+    },
+    "100": {
+      "bbox": [
+        307,
+        39,
+        988,
+        1167
+      ],
+      "foreground_pixels": 306249,
+      "border_pixels": 0,
+      "component_count": 18,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 306225
+    }
+  },
+  "explicit_limitations": [
+    "Exact SW direction gate remains independent: torso is a shallow front-left three-quarter; near/image-right boot toe projects rightward relative to desired shared lower-left facing. Do not count direction/motion complete from this raw alone.",
+    "At alpha100 staff top is y39/1254 with bottom87px margin, meeting minimum32px meaningful-silhouette target; requested48px safety margin was not fully achieved at top.",
+    "At alpha100 one306225px main component plus17 tiny components remain; lower-alpha residuals are recorded separately. Original pixels kept intact, no blanket clean-alpha claim.",
+    "Independent hand/clothing/weapon quality and once body C/root registration are not asserted by this generation task."
+  ],
+  "diagnostic_preview": {
+    "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/private-produced-SW-base-quality-v01.jpg",
+    "sha256": "0b825b210b162371976d3e24788702f7a6b0ddaf09f613da312959073a78f5d0",
+    "bytes": 67479,
+    "size": [
+      760,
+      760
+    ]
+  },
+  "private_cumulative_image_bytes": 4777090,
+  "root_and_source_owner_receive_metadata_only": true
+}

@@ -1,0 +1,26 @@
+{
+  "actor": "monster:질투의 공주 이자벨",
+  "slug": "isabelle",
+  "clip": "SW-idle-v02",
+  "role": "idle",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/isabelle/raw/SW-idle-v02.png",
+  "source_sha256": "16ee7bc0885b269d45a2931a9f7e1227146da6d82c26b1fb60d319c1092f808b",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      100490,
+      98197,
+      91876,
+      87908,
+      86959,
+      85414
+    ]
+  },
+  "status": "HOLD",
+  "cause": "phase_grid_assignment",
+  "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+}

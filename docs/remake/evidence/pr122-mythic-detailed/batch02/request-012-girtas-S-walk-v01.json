@@ -1,0 +1,25 @@
+{
+  "key": "transform:267",
+  "name": "지배자 기르타스",
+  "direction": "S",
+  "role": "walk",
+  "version": "v01",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-walk-v02.png"
+  ],
+  "prompt": "Draw six detailed isometric RPG game sprites of EXACTLY 지배자 기르타스 from the attached original character portrait. Preserve the specific reference body, face, helmet/horns, armor, wings, cloak, colors and actual weapon design. Do not invent new anatomy or add a long energy trail.\n\nThis is a deliberately SPARSE technical atlas, not a full-page illustration. EXACTLY TWO COLUMNS and THREE ROWS,1024x1536 pixels. Six cells of512x512 each. Each complete character silhouette must be AT MOST320x320 pixels, including every wing/horn/weapon/flame tip. This size cap is mandatory. Position each figure inside the central320x320 portion of its cell. Leave at least96pixels of completely empty transparent space on every cell edge. More than70percent of the whole image should remain empty transparent background. Do NOT enlarge characters to fill the empty canvas. The empty gutters are essential. No pair of character bounding rectangles may overlap.\n\nALL6 full figures face screenDOWN/SOUTH, directly FRONT-facing with full chest/front helmet visible, same camera, same body proportions and uniform scale. Temporal order left-to-right then down. Animate six ground WALK phases: near-foot contact, near-leg compression, far-knee passing, FAR-foot contact, far-leg compression, near-knee passing. The support leg visibly alternates. Keep the original weapon in its original anatomical hand and wings attached. Hips/shoulders counter-rotate. One coherent character per cell; no detached ornaments, spare weapons, copies or extra figures. Entire anatomy and equipment visible, no cropping. Crisp, hard-edged game sprite cutouts with detailed material shading INSIDE each body. All black armor/skin materials fully opaque. Colored energy must remain contained in the original wing/blade shapes. NO bloom, diffuse aura, surrounding halo, glow circles, colored fog, environmental light gradient, floor, shadow, background panels, text, numbers or grid lines. Outside the exact character silhouette: alpha0, completely transparent. Edge antialiasing only one or two pixels. Use local shading for detailed armor rather than surrounding glow. Keep strong separated poses and the reference identity.\nThe second reference is an accepted SPARSE6-pose east WALK layout and identity source. Keep its exact model and scale, but draw the requested NEW role/direction above. Never copy the entire reference sheet or its existing poses. Every figure must match the requested facing, including head, chest, toes, wings and weapon perspective. Keep weapon handedness anatomically consistent. Strict6-figure2-column3-row sparse layout with320px maximum complete bounding box and96px empty gutters remains mandatory.\nTHIS IS THE NEW S VIEW. Rotate the ENTIRE actual character coherently into this requested direction. All six phases must keep this same facing. Match the precise original anatomical weapon hand and wing attachment; render new surfaces and occlusion correctly. Do not mirror an east sprite or reuse its old facing. Keep the same elevated orthographic isometric camera and local lighting. For any rear view, show the back of the head and back surfaces consistently; no front face turned toward the camera. Preserve exact design and320px complete silhouette cap in every512cell.\nThe second and third references establish this exact character in EAST and SOUTHEAST walking. Turn the same equipment and proportions to SOUTH/front throughout. Show genuine alternating left/right planted foot support and distinct heel-strike, passing, push-off and recovery phases; rigid weapon stays in the same anatomical hand. Do not slide, repeat one support leg, add wings or replace the weapon.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png": "84e17c6b4bbe6ee9f4268167529d7888959e6ce8af7465243466afb047345492",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SE-walk-v02.png": "2a723c3f0ec63db71e4c0fb7bf8af15408963594c852e53c45f5400788ffcfe6"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-S-walk-v01.png",
+  "output_sha256": "f5b8b1db3f54b948f44bbd61c35774ff4da3f6d646b571dd8e15801750eb1879",
+  "output_bytes": 2200446,
+  "original_generated_file": "/workspace/generated_images/exec-5c2eba58-3993-4a82-9874-312d26c23980.png"
+}

@@ -1,0 +1,152 @@
+{
+  "status": "ACTUAL_PART_LAYER_JOINT_RETOUCH_PENDING_INDEPENDENT_QC",
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v07-actual-layer-join.png",
+    "sha256": "abbe4157bec3b886e5678ca69f283cb9f8a359206f7e801360d841c17980a18e",
+    "bytes": 760626,
+    "canvas": [
+      1254,
+      1254
+    ]
+  },
+  "base": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v06-original-hem-restored.png",
+    "sha256": "8ee2ca11c418ca717abf45a219bb1d06c18e8f014d3af19f17ee6e67c3ef4160"
+  },
+  "source_actual_upperhip": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+    "sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+    "projection": "xnative unchanged; ysource=y to721, then721+.1*(y-721) in tinyunderhemjoint"
+  },
+  "source_actual_farboot": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v04-localized-composite.png",
+    "sha256": "e37a2866b069ece600288777962d44a535ce17a88bd8f4f4b30dd6f56219228a",
+    "projection": "xsource=630+.35*(x-606); ysource=775+.3*(y-733) nativeblackbootmaterial"
+  },
+  "ROI": [
+    590,
+    700,
+    746,
+    775
+  ],
+  "changed_pixels": 6046,
+  "outside_semantic_ROI_changed": 0,
+  "whole_source_resampled": false,
+  "local_actual_part_projection": true,
+  "native_C": 2560,
+  "arm_nearboot_foreground_preserved": true,
+  "head_body_garment_staff_goodregions_unchanged": true,
+  "lowerbody_y775_down_exact": true,
+  "skin_curve": [
+    [
+      596,
+      704
+    ],
+    [
+      715.0611267089844,
+      713.1951599121094
+    ],
+    [
+      708.3221130371094,
+      721.2979431152344
+    ],
+    [
+      696.3682556152344,
+      728.4046325683594
+    ],
+    [
+      680.6058044433594,
+      733.6714782714844
+    ],
+    [
+      666.4090309143066,
+      736.628173828125
+    ],
+    [
+      652.9658546447754,
+      739.229736328125
+    ],
+    [
+      639.6691627502441,
+      741.456298828125
+    ],
+    [
+      626.6127052307129,
+      743.307861328125
+    ],
+    [
+      616.357421875,
+      743.810546875
+    ],
+    [
+      608.431640625,
+      742.259765625
+    ],
+    [
+      602.240234375,
+      739.068359375
+    ],
+    [
+      597.689453125,
+      734.142578125
+    ]
+  ],
+  "boot_curve": [
+    [
+      606.0,
+      744.0
+    ],
+    [
+      611.140625,
+      739.890625
+    ],
+    [
+      618.625,
+      736.625
+    ],
+    [
+      627.796875,
+      734.296875
+    ],
+    [
+      638.0,
+      733.0
+    ],
+    [
+      645.7783203125,
+      733.3989410400391
+    ],
+    [
+      652.6220703125,
+      736.0193023681641
+    ],
+    [
+      657.9658203125,
+      740.5381011962891
+    ],
+    [
+      661.8095703125,
+      746.5803375244141
+    ],
+    [
+      664.1227722167969,
+      752.3621520996094
+    ],
+    [
+      666.9809265136719,
+      758.6001892089844
+    ],
+    [
+      670.3898620605469,
+      764.6858825683594
+    ],
+    [
+      674.4433288574219,
+      770.3379821777344
+    ]
+  ],
+  "service_rejection": "previousfiniteactualretouch rejected at outputmoderation; noimage/no retry; this is authorized actualpartlayer retouch, not a service return",
+  "source_approved": false,
+  "cycle_approved": false,
+  "actor_approvals_added": 0
+}

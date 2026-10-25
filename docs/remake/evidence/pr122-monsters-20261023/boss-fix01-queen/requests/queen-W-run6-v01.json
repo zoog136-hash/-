@@ -1,0 +1,38 @@
+{
+  "schema": "pr122-queen-run-correction-request-v1",
+  "actor": "monster:얼음 여왕",
+  "direction": "W",
+  "role": "run",
+  "revision": "r001",
+  "pose_count": 6,
+  "source_grid": [
+    2,
+    3
+  ],
+  "playback_source_slots": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "neutral_contact_source_slots": [
+    0,
+    1
+  ],
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/references/queen-project-canonical-crop.png"
+  ],
+  "reference_sha256": "aafad119248fd8d5e0e08877fbd874afc00ccfd20148a8129615e3555f69d5a9",
+  "request": {
+    "prompt": "Use the supplied local character artwork as the identity reference, and newly draw a SIX-POSE RUN animation contact sheet of this SAME adult ICE QUEEN boss. Preserve her pale adult face, long SILVER HAIR and ornate SILVER CROWN, fitted BLACK-and-GOLD breastplate/armor, long VIOLET-BLACK flowing dress, exactly TWO large violet feather wings attached solidly to the back, and exactly ONE purple-and-gold staff firmly gripped in her anatomical LEFT hand. The dress slit exposes ONLY her anatomical RIGHT upper thigh. Both legs must be clearly traceable from each hip to its own knee, ankle and boot: the LEFT thigh has dark fabric/stocking, the RIGHT thigh has pale skin at the slit. No limb switches or missing hidden support leg. Same ornamentation, body proportions and feather-wing anatomy throughout; fine painted dark-fantasy game sprite rendering with mature realistic anatomy and mythic-tier boss detail. Full staff, crown, both wings, hem and BOTH boots always inside the frame.\n\nThis correction is about GENUINELY OPPOSITE ANATOMICAL SUPPORT, not six versions of the same leading bare thigh. The layout is TWO COLUMNS by THREE ROWS, with matching opposite contacts SIDE BY SIDE to make the difference unambiguous. The six squares are independent fresh skeletal poses, not copies, mirror flips or whole-body shifts. LEFT COLUMN is first half of stride: TOP-LEFT: anatomical RIGHT boot contacts flat on the invisible ground ahead of pelvis, RIGHT knee extended, LEFT boot is flexed behind and clearly OFF the ground; MIDDLE-LEFT: RIGHT boot supports under pelvis with compressed knee, LEFT covered knee and LEFT boot swing visibly FORWARD and UP with clear air below; BOTTOM-LEFT: short FLIGHT, LEFT covered leg extended forward/down while RIGHT exposed slit leg extends back/up, both boots above the invisible ground. RIGHT COLUMN is second half of stride: TOP-RIGHT: anatomical LEFT covered leg extends FORWARD and LEFT boot contacts flat ahead of pelvis, RIGHT exposed slit knee bends BACK and RIGHT boot is visibly OFF ground; MIDDLE-RIGHT: LEFT boot supports under pelvis, RIGHT pale thigh/knee and RIGHT boot swing visibly FORWARD and UP with air below; BOTTOM-RIGHT: short FLIGHT, RIGHT bare-thigh leg extended forward/down, LEFT covered leg extends back/up, both boots above the invisible ground. Do not draw the bare RIGHT thigh as the planted leading leg in both top cells. Show an obvious DIFFERENT support foot in top-left vs top-right. These column halves will be played left-column top-to-bottom, then right-column top-to-bottom. Keep staff with LEFT hand through all phases, subtle shoulder counterrotation, recognizable weight over planted boot, bent toe-off and ankle articulation. Skirt panels separate enough to reveal both lower legs during stride while remaining a long ornate gown. Hair, feathers and cloth trail behind and follow through differently in each pose. Wings stay attached and do not replace legs or hide the support exchange. The character RUNS on feet, not levitates or hovers.\n\nSingle fixed orthographic/isometric camera per sheet, identical camera and facing in every cell. Small whole figures with VERY LARGE empty transparent gutters: all visible pixels fit within the central 50 percent width and central 65 percent height of each of the six equal cells. Align each cell's invisible ground baseline at about 84 percent of its height; planted soles sit there and flight soles are a little above it. One connected full character silhouette per cell. No overlap of full bounding boxes. TRUE RGBA transparency, alpha0 background. No visible floor, no ground plane, no cast shadow, no text/numbers/grid, no effects/glow/particles/haze, no floating loose feathers, no tiny detached specks. Save the generated PNG locally. Never add walking/attack/death cells. \n\nEvery cell is exact WEST side view: face/chest/toes point screen LEFT. TOP-RIGHT clearly plants the dark-covered anatomical LEFT boot toward screen LEFT while the bare RIGHT thigh bends BACK toward screen RIGHT. Never mirror EAST: staff remains anatomical LEFT.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix01-queen/references/queen-project-canonical-crop.png"
+    ],
+    "transparent_background": true
+  },
+  "preserve_all_results": true,
+  "production_connected": false,
+  "new_approvals": 0
+}

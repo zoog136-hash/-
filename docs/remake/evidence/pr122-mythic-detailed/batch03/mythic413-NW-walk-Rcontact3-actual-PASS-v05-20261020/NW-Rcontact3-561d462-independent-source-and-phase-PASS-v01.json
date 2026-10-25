@@ -1,0 +1,102 @@
+{
+  "schema": "pr122-413-NW-Rcontact3-independent-actual-source-phase-quality-v1",
+  "actor": "transform:413",
+  "direction": "NW",
+  "action": "walk",
+  "status": "ACTUAL_SOURCE_AND_SINGLE_CONTACT_PHASE_PASS",
+  "scope": "Opposite farRIGHT contact3 single actual source quality/sole placement only; all6 timing/loop/body-ground/actualbinding pending",
+  "source3": {
+    "path": "/workspace/scratch/mythic413-NW-walk-Rcontact3-author-20261020-v01/thunder_female-NW-walk-Rcontact3-finished-hip-join-v05.png",
+    "sha256": "561d462462f6f02e1bb45ac0dc554b8dbd54f45073a584e915471b38bb618957",
+    "bytes": 546701
+  },
+  "source_body_forward_LEFT_arm": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/thunder_female-NW-walk-contact0-v01-service.png",
+    "sha256": "dc5da66b30171bdff9ab4c25cf5a22327debe8c8b41088693824433cb4e684db",
+    "bytes": 587417
+  },
+  "new_actual_leg_art": {
+    "path": "/workspace/scratch/mythic413-NW-walk-Rcontact3-author-20261020-v01/thunder_female-NW-walk-Rcontact3-local-hip-v01-service.png",
+    "sha256": "ecc4ac034b8259930a1cf9babfd7bc31b53c5907b69013ac00db571a6c66de4f",
+    "bytes": 589518
+  },
+  "author_finish_proof": {
+    "path": "/workspace/scratch/mythic413-NW-walk-Rcontact3-author-20261020-v01/Rcontact3-finished-hip-join-proof-v05.json",
+    "sha256": "b35ba1c8400f607a10eab0a0624bbbe33d2344d3ea75f567d0719b382fbb82a0",
+    "bytes": 2141
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NW-Rcontactv05-view26-frozen.json",
+    "sha256": "450da6b3c80788b19dbe5d2bcdd7afcf0782ee5d5331b4e63fdd77a44199e0f3",
+    "bytes": 12658
+  },
+  "fixed_C": 2048,
+  "constant_body_unit": 2,
+  "same_source_coordinate_origin": [
+    641,
+    1058.3
+  ],
+  "origin_caveat": "Frozen common author rig origin, not independently inferred absolute 3D pelvis-ground proof in this single-source certificate. No perpose root fit.",
+  "independent_pixel_check": {
+    "upperbody_y_lt714_vs_sourcebody_changed_RGBA": 0
+  },
+  "actual_quality": [
+    "True rear NW orientation and original anatomical RIGHT staff grip with complete weapon ends retained.",
+    "Natural LEFT free-arm forward balances farRIGHT lead leg and nearLEFT trailing departure.",
+    "New two-thigh/hip anatomy and complete black-gold shoes are joined; retained original dark/gold coat lining is continuous rather than a missing hip gap.",
+    "Front farRIGHT heel-strike and rear nearLEFT released foot are visibly distinct; no missing footwear or wire guides."
+  ],
+  "actual_farRIGHT_contact": {
+    "frozen_target_heel": [
+      594.13,
+      914.32
+    ],
+    "actual_alpha16_stiletto_lastrow_y": 915,
+    "actual_alpha16_stiletto_lastrow_xrange": [
+      593,
+      596
+    ],
+    "actual_forefoot_underside_alpha100_samples": [
+      [
+        560,
+        876
+      ],
+      [
+        565,
+        879
+      ],
+      [
+        570,
+        877
+      ]
+    ],
+    "forefoot_vs_same_NW_heel_groundline": "Visible forefoot underside is about8-10nativepx above frozen heel line, consistent heel-strike; pointed gold ornament excluded.",
+    "frozen_RIGHT_lane_y_minus_0p9x": 379.60300000000007,
+    "lane_definition": "Opposite lateral placement selected from prior constant guide once; retain for3-to4-to5, not retune perpose."
+  },
+  "actual_nearLEFT_departure": {
+    "ROI": [
+      735,
+      1080,
+      860,
+      1170
+    ],
+    "LEFT_lane_from_source0": [
+      514,
+      944
+    ],
+    "all_alpha100_min_same_lane_ground_gap_native": 19.09999999999991,
+    "min_gap_Player_world": 2.2640086206873393,
+    "min_pixel": [
+      753,
+      1140
+    ],
+    "caveat": "Explicit same-lane finite-foot 2D ground model only; full6 actual-body projection/footwidth/loop remain review scope."
+  },
+  "next": "Dedicated actual RIGHT load4 and terminal5 at fixed lane/clock then independent complete six-phase physical/loop review.",
+  "whole_cycle_APPROVED": false,
+  "actual_staging_APPROVED": false,
+  "actor_APPROVED": false,
+  "completed_added": 0,
+  "images_forwarded": 0
+}

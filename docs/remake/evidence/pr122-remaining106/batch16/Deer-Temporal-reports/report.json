@@ -1,0 +1,49 @@
+{
+	"capture_root": "/workspace/runtime/batch16/Deer-Temporal-QA-v01/captures",
+	"cases": [
+		{
+			"name": "알비노 디어",
+			"native_phases": 144,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_4.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_4.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 144,
+			"report": "/workspace/runtime/batch16/Deer-Temporal-QA-v01/report-cases/albino-deer.json",
+			"report_sha256": "4ab4256a7ff7a65694049bb38fe739bde9e9a1f3dbcd15d423f9f2d65dba524a",
+			"roles": 40,
+			"slug": "albino-deer"
+		},
+		{
+			"name": "알비노 이구아나",
+			"native_phases": 112,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_2.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 112,
+			"report": "/workspace/runtime/batch16/Deer-Temporal-QA-v01/report-cases/preserved-iguana-baseline.json",
+			"report_sha256": "43ba616868d127e62ce5660c29ece08fed89cba3dc3f5815a84da436c38a37d1",
+			"roles": 40,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 81417,
+	"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/runtime/batch16/Deer-Temporal-QA-v01/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 159118438,
+	"wall_time_performance_claim": false
+}

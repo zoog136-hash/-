@@ -1,0 +1,19 @@
+{
+  "status": "PASS_STRICT_ACTUAL_CANVAS_FIT",
+  "tool_sha256": "f9c3b0dcf7021de49cde2cef90825235055c64f3a9acaf130d4af20876222d9c",
+  "checks": [
+    "actual_C2560_padded_RUN_root_fits",
+    "same_root_still_rejects_real_C1920_overflow",
+    "same_root_without_authored_size_retains_nominal_rejection",
+    "anchor_outside_exact_region_rejected",
+    "bool",
+    "unaligned",
+    "over4096",
+    "wrong_count",
+    "old_N_C1920_fixed_root_fit_unchanged"
+  ],
+  "case_count": 9,
+  "source_or_actor_approval_added": 0,
+  "whole_CI_or_Godot_rerun": false,
+  "actual_N_RGBA_geometry_and_proof_compatibility_sha256": "8b197ddf535a3b30c69a110d262aab652c96f5c5874785630eb391754ac2b438"
+}

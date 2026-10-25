@@ -1,0 +1,139 @@
+{
+  "status": "ACTUAL_OPPOSITE_RIGHT_CONTACT3_PENDING_INDEPENDENT_ART_AND_PHYSICAL_QC",
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact3-actual-rig-v04/thunder_female-NW-run-contact3-actual-rig-v04.png",
+    "sha256": "6e9f3c49d6be73be2c041498e5f41bf4bfecf79e9932e47f0fcfff4f027a6a91",
+    "bytes": 783785,
+    "canvas": [
+      1536,
+      1536
+    ],
+    "alpha16_bbox": [
+      447,
+      143,
+      1163,
+      1340
+    ]
+  },
+  "source_body_sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+  "original915_complete_leg_source_contract_sha256": "177829492917fbe56696ae18a986c4c310c5e98b89de0caebbe3e3a24b1f5ceb",
+  "fixed_250bone_R_joint_controls_causally_driven_from_contract_sha256": "ea696929dd6b18fc9609b98318f44b38504919234cb818a11747e9b49a7b62a6",
+  "native_C": 2560,
+  "density_factor": 2.5,
+  "rig_common_root_in_unpadded_frame": [
+    669.0,
+    1267.95
+  ],
+  "storage_translation": [
+    128.0,
+    128.0
+  ],
+  "body_node_bob_and_lean": [
+    0.0,
+    0.0
+  ],
+  "actual_whole_actor_mirrored": false,
+  "actual_complete_own_boot_material_counterpart_rig": true,
+  "source_material_leg_bind": [
+    [
+      631,
+      690
+    ],
+    [
+      653,
+      865
+    ],
+    [
+      749,
+      1068
+    ]
+  ],
+  "Lhip": [
+    610.0,
+    692.0
+  ],
+  "Lknee": [
+    547.0,
+    772.0
+  ],
+  "Lankle": [
+    655.0,
+    845.0
+  ],
+  "Rhip": [
+    705.0,
+    705.0
+  ],
+  "Rknee": [
+    666.8799208266498,
+    908.6694118359951
+  ],
+  "Rankle": [
+    659.0,
+    1088.0
+  ],
+  "Rsupport_shoe": {
+    "source": "actual same actor original915 complete support shoe with its exact original shaft, articulated as symmetric RIGHT counterpart",
+    "source_sha256": "65ff1207aaaee3c32b1ebce27c4ab5ecbc445322b509a95c6ec19601826ac577",
+    "source_tarsal": [
+      749,
+      1068
+    ],
+    "target_tarsal": [
+      659.0,
+      1088.0
+    ],
+    "source_structural_heel": [
+      771,
+      1186
+    ],
+    "target_structural_heel": [
+      681,
+      1206
+    ],
+    "source_structural_fore_model_within_visual_uncertainty": [
+      720.6732365245826,
+      1167.228399508298
+    ],
+    "target_structural_fore_model": [
+      630.6732365245826,
+      1187.228399508298
+    ],
+    "translation": [
+      -90,
+      20
+    ],
+    "geometric_scale": 1,
+    "rotation_degrees": 0
+  },
+  "Lrecovery_shoe": {
+    "source": "actual same actor RIGHT folded recovery shoe as symmetric LEFT counterpart",
+    "source_sha256": "4b501909b263f1a0e32f47284c393ff04a4b64941f3419be17e062b4e48a9090",
+    "source_tarsal": [
+      750,
+      858
+    ],
+    "target_tarsal": [
+      655.0,
+      845.0
+    ],
+    "translation": [
+      -95,
+      -13
+    ],
+    "geometric_scale": 1,
+    "rotation_degrees": 0,
+    "structural_heel_proposal": [
+      696,
+      893
+    ]
+  },
+  "left_arm_rotation_degrees": 30,
+  "foot_sampling": "BICUBIC affine identity+translation; no geometric resize, not bit-copy after any fractional placement",
+  "old_near_leg_body_edge_remnant_removed": true,
+  "matched_actual_recovery_ankle_surface_completed": true,
+  "source_approved": false,
+  "physical_phase_approved": false,
+  "cycle_approved": false,
+  "actor_approvals_added": 0
+}

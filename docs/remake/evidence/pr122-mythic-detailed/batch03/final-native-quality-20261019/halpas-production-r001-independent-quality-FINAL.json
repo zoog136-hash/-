@@ -1,0 +1,1392 @@
+{
+  "schema": "pr122-native-independent-quality-v1",
+  "key": "transform:393",
+  "status": "PASS",
+  "independent": true,
+  "reviewer": "Codex independent reviewer /root/halpas_final_changed_clips_qc, incorporating preserved independent /root/halpas_final_native_quality reviews with exact source/geometry/profile equivalence",
+  "source_selection_sha256": "c2205bc707775d422df803a2b4f1b76f56a3bbf849869557bb7c6e3bcb596f20",
+  "production_frames": {
+    "path": "res://assets/actors/eight_direction/native_production/halpas_393/r001/SpriteFrames.tres",
+    "sha256": "d54cca2c6ccebb4e1dd7133e8091377e298da7fbe8e038852ceac3e02de93260"
+  },
+  "production_profile": {
+    "path": "res://assets/actors/eight_direction/native_production/halpas_393/r001/NativeMotionProfile.tres",
+    "sha256": "337e4179cefa41348727dc73650a63985b3a9d09cf3f958fc7657a5056b43cf2"
+  },
+  "effective_profile_sha256": "77922dee1d956e734bac84099c9241967c0d25e20a321caf3625cdc81a8927a1",
+  "checks": {
+    "identity_equipment": "PASS",
+    "compass8": "PASS",
+    "anatomy_continuity": "PASS",
+    "motion_specificity": "PASS",
+    "loops_transitions": "PASS",
+    "attack_contact": "PASS",
+    "hit_recovery": "PASS",
+    "death_irreversibility": "PASS",
+    "runtime_scale_footing": "PASS"
+  },
+  "tracks": [
+    {
+      "direction": "E",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-attack-v01iso01.png",
+      "source_sha256": "ee982e57247119a40a7cc67e0bac9da4cd2b0267274a8d76de29dcac85d6e040",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r013/E-attack.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "7f87deff0c665ca5b731f1c45c31846a1a7bb5f077b2937f46588e2617496775",
+      "frame_rgba_sha256": [
+        "55397c5316b61004e64d5b1e32c939862438a4a0a253d23115352c3d287b1b38",
+        "57db99c029e1bf90261b92f2a56ba957c211337527254014c57caf8821953d74",
+        "54183fc46feca603125f77d2c6b83669b97090b47a4e6251aa1ee7c88c2ec9ff",
+        "03bd7c4923c607952f21990fc2345ed76347043b0a908506ad3b537c19379ed8",
+        "b4d92390eaa8f29dac0695002a3debe15abeb6681d3e38e61fed4c50cec94789",
+        "32ad5e2d8127a90893f5cd81b1a9c5ceb820e0b0ebff3040d40f2cb24fe34d4a"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected poses form guard/raise/load/contact3/follow/recovery with correct directional blade contact3, continuous right-weapon ownership and at most two arm endpoints. E/W guard/recovery quarter body-yaw is a plausible fighting stance, with head and actual contact orienting E/W; a flat idle torso axis is not required throughout attack. No extra source defect established.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-death-v01iso01.png",
+      "source_sha256": "00f4159fcf8f44899bda41f149645f4519bed5162b869c5baec788936ad90141",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r029/E-death.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "ec578a521755df6bcd850a4e979fb606afa46c845f1f21924b1a7df468d38e7a",
+      "frame_rgba_sha256": [
+        "3f0ab7a50a1019cbf3d0fa288fdc1391b371e9b96535cce82a7117cf701ea0bf",
+        "9b86e08f86c8ac00b58cd65a1093eea47b4c3b62551f2826111c1375e7a8958d",
+        "0dd26669eb00885726d348e5e6216fdbda889957bb27799683e7203c315afc30",
+        "111c8a404c14db7d0b93869b552ca6e1386d64045bb655800ad7bb4bf7ce6103",
+        "09372f17dbf96d967c8f3cb2ad28dea945c9138f40c3a77784237c1007bbf925",
+        "cc35769f1e8cc7680d9b8ed7f7a5d45891d090e59f847cd14f9f215eb63c2534"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected collapse/settle poses retain one head and one blade, body/wing/cape identity and final settled corpse5. E death starts from an open 3/4 battle/impact torso and head/blade remain rightward; permitted physical body-yaw/collapse is distinguished from N 180deg front/back source replacement. NE/S/SW/SE can roll during collapse rather than hold a frozen torso axis.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-hit-v02.png",
+      "source_sha256": "f5470a3cb8e1df4e2752b5cfb708b36174dc97d8e1a9e5e9875ec8647e6e9df1",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r064/E-hit.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "ab7e16bf94ce2ebceb1f617d8f4319cbaa6b826441088c202f5a6d3434e6eaf6",
+      "frame_rgba_sha256": [
+        "fa5142ac68636480abf926232f80c2e5e22341a43b18f2573ac7ec3b145bdbe4",
+        "ccb436d707a3823a2f6a660493813236e77d1f3b413f2d946e76d0d323df9751",
+        "1b0afa5d051da6744773d65478b515ecbada6bafef332d677f3fecab478d0a29",
+        "e44cca53e798825fc31c751d1d2acb4ff314950169d09ac725bf916984b170c3",
+        "5d898bfa16a10b3acaa83c85d8136aa1cac004a0e82341789af40763bda37c9e",
+        "0204f5b67c0ac4b8fa1877c6fd51711451ee103abeebc35bee1ac7cd374c9444"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Actual perpose C1280 frames match faithful N/E/NW idles in helmet/neck/shoulder/pelvis model scale, with wing/cape area excluded from sizing. N head/hip neutral0 and5 match existing rear reference without prior 25percent size jump; E side body and hip pivot are aligned after perpose X origin correction; NW rear body retains the same physical model as idle while its recoil lean remains visible.",
+        "Actual idle0->hit0 and corrected sixpose recovery5->idle0 have no material body-size or pivot pop. Perpose hip-root X normalization removes source packing movement while all original Y/bob, torso/head recoil and wing/cloth articulation remain. NW deliberate forward torso bend and lifted trailing feet are physical recoil rather than heading error.",
+        "All18 corrected poses retain N/E/NW body/head/hip view, exactly two coherent arms with persistent RIGHT blade and empty LEFT; no old frontal backplate morph, extra empty-fist weapon branch, detached weapon or swapped hand."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-new3hit-runtime-quality-result.json",
+        "sha256": "7fd0f2053bb6bf2b9ff35d1f5f245f36004a50d461c67a267dd9a729cc49817c"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "E",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+      "source_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r048/E-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "b96fd2d1b54cc044913bbdae17a63f4b17ae2bf2f590821b0cfd266158c783ea",
+      "frame_rgba_sha256": [
+        "66591853ac00ea478a0e9eaad02b7b25772f9e874723fd80d773e509fea650c2",
+        "7c984ba0f7ba922f5f60d44491585177c85bc6407f03be6b0885c9392a895c25",
+        "d259ea14c74b7509d904da809e7df39110a57afcfed87f49e466f35b719381d6",
+        "05b85ef28ffdd6eed93f28dc961cd25d53828813ccf91fb157c3175997ce5e2a",
+        "dd64aec7b1ef8985a81f4042efe577f75dd4579607bfc4654b33ac606b01cea7",
+        "83d340ec639f15f67696395078ac1a7aa1202f7b6f0804dfcbac26f025197619"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-run-v03iso01.png",
+      "source_sha256": "7cdf37a20cd14c2f53adb7fed226c879b4a4f0162ab8ddde5ce9e2a42ef5b874",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r054/E-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "21ee378dca31076302680849447c0a472b44bb842a079992cce2f96d5af7e11a",
+      "frame_rgba_sha256": [
+        "3e81252b019bccd5fc024cef219a380344986958f015989ea76daf334a2efd9f",
+        "b00b4612315bcecd739693ae8b19f9cfba5460fcf4100336c8166ba735a8affb",
+        "b2e8db1443ca922fb240aa1302c233e40483120fabfdd544ecbc9b73da6fb4d0",
+        "e709614a4ffe6e26eddeeb45053e97375732c37c4e1ca0079c19a404e47926dd",
+        "3485c3cf6896e98187f389c1fce2e6c3e3b52a91443da5876b4b7e75823dc058",
+        "0e395a367574ce6e30278af0f1d98bdb39b50f1313653c55ecd5ca3d1ad3aac9"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "E",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03iso01.png",
+      "source_sha256": "0676e2d482daaef489610cb96f524810d7952f83ddf3706bd82a0b4ec154c292",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r051/E-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "8516fb8b3927a0d9166d7c727e291e41ca29ec474ba6e834788303c0e84fec93",
+      "frame_rgba_sha256": [
+        "5cbe9bcbb5d7b8963fb0e3121ad86666fe3f43c7345aa2e2b022071525b2916e",
+        "b0e06183ead3e296d53ad7a4e2d075772ab99814148f3a1f0fda7c1db26fbbb4",
+        "e841920a6fb2d6b6e46cb2e19d8a729fd448c72085a7fc5aac7a4280f5cb27c2",
+        "6f878bed728e047d38af4386fcdf70369e37999547606e283a9b4ebe4b9106a4",
+        "85e55a9d9942e245c9b4350d7c5c001f08172a523876bf08ac4ffbe4870c32ec",
+        "f270f4e6724f816bc5bd4a3fe0b1d08cc89eb82632f64261bbd0e8d8b140c979"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-attack-v02.png",
+      "source_sha256": "a9c2c57d303eaeaf64ddc5d15a6a5bc847018267d4ccca61e10965b6e95c1f84",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r046/N-attack.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "6308e5504949695195ed6c6d62510fb6bcc0599185784069836232b45c4a8741",
+      "frame_rgba_sha256": [
+        "a4ddc6f7f8e6dde97728418fc18dc3f5a00cd4c772cb3bc86473b0d14577a5e1",
+        "e6ea1a5f036499557b7466d6eb9930499a4d5ff89df811f5b8bb473d063d3deb",
+        "730bca5edaac25a6cc75e87f61324df7d03b92f35b07677da079e70cbe3f37e3",
+        "203a6cf9eb9ba8361bd3f8a43446a2f513e57bf4865c8af692e72d33dc0f3b5d",
+        "7597d7d401765ff87fa520e88f75445b552f6109d68d25526ad8853265a96423",
+        "196adffb4de82d89ac1d0fb02aeb538becce9848785bceda9c7575b2294eed73"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected poses form guard/raise/load/contact3/follow/recovery with correct directional blade contact3, continuous right-weapon ownership and at most two arm endpoints. E/W guard/recovery quarter body-yaw is a plausible fighting stance, with head and actual contact orienting E/W; a flat idle torso axis is not required throughout attack. No extra source defect established.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-death-v02iso01.png",
+      "source_sha256": "ad7429692e4a252d1dd1ea5bf507eacab7baef201a2c078c13375c409d21dd62",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r068/N-death.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "b83b037298c90d63f1752efe640b4daf3cc303abbde3854c7f2ce54224699662",
+      "frame_rgba_sha256": [
+        "6ab158b7dae02d8e29393853015d2eedcdcda738d5b7505290f77b394502eb8a",
+        "f78df7e206b083aef416a00a24c350da130cf76f92f120873fb8bd4510882800",
+        "a53633cbc6da4f6e1d88e09a0177e731a7718b05d1d0a5fd2708671482afa538",
+        "64c0b6a79a8bf3302be357a1fa9e25766c614c283f5d22bafabf1910a437426b",
+        "badaf717bca5f4a66f70064a3f5a3f67236e3b97e7c799a9582b3a377e8dd7fb",
+        "063ba3e8cd6260d13ec713460bdb2f495523706038e8e1b4b4cdac8bfef04aa9"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Same rigid black/gold paired-horn rear helmet and shoulder plate scale as selected Nidle; source-only wing/body bounding box expansion belongs to real leg/spine extension and fatal-flinch, not a justified rescale. All6 retain N dorsal identity without the former 180-degree front flip. One RIGHT blade and EMPTY LEFT, two anatomically coherent arms/legs, single head, single pair of feather wings/cape; brace->buckle->side collapse->corpse continuous, no reversal to alive pose. Preserve C1024 and all anchors."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-N-W-deaths-runtime-quality-result.json",
+        "sha256": "db9c5c4ad7862ba73c70b087c8ea621cdf795b14c2a25aa3e4d21c3fdbde0b95"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "N",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v02iso01.png",
+      "source_sha256": "c07306fb8348b7b60379d47a50b4ec4e97f08b20548c649e408bfe6fae4012e3",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r063/N-hit.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "3e73796d0f00e257de43e6ec5107f4ddd6becf19fdc4762f0331351479b0d346",
+      "frame_rgba_sha256": [
+        "5842599cece34572b872cae2d73c20c6d8b177bb06e2730d27519a962246bab7",
+        "d1aeffa6a97beeaa64c1589f1c49674695cf9f44467bec9d02af09c568c5a104",
+        "61d44d8cc141b7e03356527ae444060048b79f390fc42ced20202ada0714ec9a",
+        "797f5b80e2b6f9837a5a60825524cbe47bbea9136854a64ab07d1820a6fb34d1",
+        "546bd48c6dc5b339617af7101676d1f7f4ca144f2749d5c047388d8aa731d67b",
+        "215cbb7f5953bf49e40e6d308ff03cffe24a664d041e29b9b58595ead220d1b2"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Actual perpose C1280 frames match faithful N/E/NW idles in helmet/neck/shoulder/pelvis model scale, with wing/cape area excluded from sizing. N head/hip neutral0 and5 match existing rear reference without prior 25percent size jump; E side body and hip pivot are aligned after perpose X origin correction; NW rear body retains the same physical model as idle while its recoil lean remains visible.",
+        "Actual idle0->hit0 and corrected sixpose recovery5->idle0 have no material body-size or pivot pop. Perpose hip-root X normalization removes source packing movement while all original Y/bob, torso/head recoil and wing/cloth articulation remain. NW deliberate forward torso bend and lifted trailing feet are physical recoil rather than heading error.",
+        "All18 corrected poses retain N/E/NW body/head/hip view, exactly two coherent arms with persistent RIGHT blade and empty LEFT; no old frontal backplate morph, extra empty-fist weapon branch, detached weapon or swapped hand."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-new3hit-runtime-quality-result.json",
+        "sha256": "7fd0f2053bb6bf2b9ff35d1f5f245f36004a50d461c67a267dd9a729cc49817c"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "N",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
+      "source_sha256": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r043/N-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "51f8797fcb7b5c9c5e65c802a343121088fa465ac652fa01b40bc6b5dd88e127",
+      "frame_rgba_sha256": [
+        "92165cfc800a53f769e88c8e64b8620004a7c470c270dfdbbeaaead0dd0629af",
+        "0d24e680a61ae610b18ac2e8f9f33ece2010a758d0ea7ad3f1abd5ae663efb5c",
+        "12528f75fa73c3ea8f02448eb0402cbbab08e1a19012c5e0a524ef0fadfd5276",
+        "afb47b2b921ef9804eedbb0d54ea39bf04d179d60aee442115c5c404141e4434",
+        "3ee51104491346dcf1536a42be3c8c5b1652b1e8bb66cc60c9a31c8c29259587",
+        "208e1c69d3d4ccc87aeb0aa9e5427703d60576a62a112d954e3959bd4758b8f6"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-run-v01.png",
+      "source_sha256": "6a590f4d8e5df5cde61cf8e99c4e92ded2a5302106a50e0b75fd92639ccaebdb",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r010/N-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "ee85eb4ed4fc852990c391c41dfc6ddc5d6cd1a98d519dc963201d36cd173e03",
+      "frame_rgba_sha256": [
+        "fe65a9d14aa79afb16b69bee634d89de4e2da283c8f98ea62102c142b7611569",
+        "9793e6bd120ac65257d33e8d883a4fec07a9b8cf04f1a4563dd89e3508d46e8a",
+        "698e807490a3f78e176fe520a084efa64323ca40eb350510d688211dd3df8e5f",
+        "688583cdacedf51c18933bb856c1abeea7c493b7cca8e68b595bd114a9f2b42d",
+        "f2d729ca0828a768c28e228283e60c832a49d05cba3b811cbccf81aed5bdb4c4",
+        "74750cf1be99a85dd1c06e1bd260b11099ef19a1c9ff423638efd85a216c1c1d"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "N",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
+      "source_sha256": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r009/N-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "fc4914173851d483749cbd2a51053b659bd4f4e3c832d0bd772a926d4f3195e3",
+      "frame_rgba_sha256": [
+        "4e4340b5ed5ed49ff9f046705839e5499397b5dc70791bacb2db2391671864d6",
+        "826ff9e9e2f176f1105df8963c3b53ffa8f09ee4d212836d3e619bd14dc30f25",
+        "7dceacdb87250ca7e2bece81d0e60cfe3816256193f827b75eaec2fcacc182d2",
+        "c2c92c8cfda89e8e934d4995c2b3e6b515b62141e4e2799063aaf9cc16065ca4",
+        "87f3f5d7e6b74f157a4955bfd65417f4c49a3678b6bd75ceba9f611fd0d67c97",
+        "7611b32263384e3bbe9d1a69eff147e215f03b4e435cb6576c371c9bf9ef56a4"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-attack-v02.png",
+      "source_sha256": "020fd6c34f3b9f52d804ad1b7eda2149ec91da97f031388f71bcca0c93681013",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r047/NE-attack.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "cb16e0ef7e394c84ecdec91c55d5f7b2513fe8aab4044fca227793043e37edf2",
+      "frame_rgba_sha256": [
+        "ca0f5ff527cf94cdb4ec733e7059ce5efb40e21398e34ab83cbc878a5e038be0",
+        "231f663269c3d118c56091cee6eaba81d243bdfda1df8fa79dac65f908890195",
+        "999c90f6ec14dc457e1b8c635e6c074e2bdfc271cdb7df6fe6b353c2c56a65a6",
+        "78c0dd92677449cbc564d64588712d56d3ddaf4624df657708e18c052c1c806b",
+        "166e384656b6af211427495e1a2e891ffeda924b879b50907dce3b037ef34bbd",
+        "7a769fabdf9be07c4c459e830f087555d28be6207a9339b0ab0d387d2cd53082"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected poses form guard/raise/load/contact3/follow/recovery with correct directional blade contact3, continuous right-weapon ownership and at most two arm endpoints. E/W guard/recovery quarter body-yaw is a plausible fighting stance, with head and actual contact orienting E/W; a flat idle torso axis is not required throughout attack. No extra source defect established.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-death-v01.png",
+      "source_sha256": "136b0316e2833dee697807d0783df35b0d41de63899977ad05a608553e2f802d",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r036/NE-death.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "57868e33954ec0109e2e80501f37eafd318e13fdefe35752f32327bf15887940",
+      "frame_rgba_sha256": [
+        "955bd65294f60cf8fda3d281ac95c4fd2ed50acd62f34a7be9ff428b15783556",
+        "29e65e15cf757a7061bab2ab4f1f7277bb73197ba1eb9e7ec35f461820f8cc39",
+        "a6d5bbac751317944d6fcbc34d3906168d0f9d8e3933bf78209fc76bdac1e661",
+        "77a66411e833de56a2b0235935b3a6d0ecb2268b72e151a46133586b998c62d9",
+        "ec2bd7fee042a564beaff1d0a4dadb1f6abf751b7ce3fd07e238f55c047d65f1",
+        "bfc6e3ab9f13d04d019d0c2a356af770baa01181272c8d6ccbc0bcf7a5486446"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected collapse/settle poses retain one head and one blade, body/wing/cape identity and final settled corpse5. E death starts from an open 3/4 battle/impact torso and head/blade remain rightward; permitted physical body-yaw/collapse is distinguished from N 180deg front/back source replacement. NE/S/SW/SE can roll during collapse rather than hold a frozen torso axis.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v04composite01.png",
+      "source_sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/NE-hit.png",
+      "source_geometry_sha256": "ec2749dd4d55ef1687086b50f63345f7f228ddda3b6bea89416537b80654bd92",
+      "geometry_sha256": "9fa8e69ba7a3eea4c9f52118a273162b516ba12ae1461a8a20cb69d51e24ff08",
+      "frame_rgba_sha256": [
+        "541282e8b2c379d4b29f4c1972ef1ec749f982a9031fd17c7d674a4bcf62cfe5",
+        "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+        "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+        "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+        "13a1b30cfc727699ea586a1077cb1e216fd3ccf15094a68d742454c9a662b473",
+        "3cdb4dfdb8b37f714b3a552d9396983fb7afee1f0b112fd3115cf8d7b5acfa8f"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All6 have a single consistent NE closed black/gold horned helmet and dorsal armor, coherent paired wings/cape/tail, exactly one permanent RIGHT-arm blade and opposite EMPTY LEFT guard/release chain. No former extra near hand, detached RIGHT grip, duplicate blade or frontal-back morph. Folded far flight leg may be occluded by near leg/cape; no extra leg endpoint or broken hip/knee/ankle chain appears. NE head/torso/weapon remain true back-up-right; trailing lower legs do not redefine flying heading.",
+        "Actual perpose Cs[2496,2496,2624,2496,2608,2608] retain the rigid helmet/shoulder/waist physical model size of native NEidle C1024 despite new source resolution. Waist/body-root and idle0->hit0/settle5->idle0 are continuous; physical head/torso guard recoil and leg/wing/cape articulation remain. No silhouette bbox size or standing-foot clamp.",
+        "All6 dedicated and distinct:0prepare EMPTYLEFT guard,1tighter guard/start recoil,2peak LEFT forearm raised with torso/head recoil,3guard release,4lowered guarded elbow/settle,5relaxed arm/recovery. RIGHT blade remains RIGHT throughout. New0/4/5 have their own authored body/arm/cloth poses, replacing v03 exact idle reuse; all6 strictly unique from other47 tracks."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r074-NE-hit-runtime-quality-result.json",
+        "sha256": "3aff9aa489a4584bff3c705eccd05869e96f28eea891cc480871fd0f2bd356fb"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "NE",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r044/NE-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "0f60e40fc86f73c0bbf01215d3b7ff8516a3319a672ef67fab06866779c3c0b4",
+      "frame_rgba_sha256": [
+        "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511",
+        "1f838cef9966f40e0c9a5dda6bca5f3cdcb9db5cf4ffbcc293868685ed2033f9",
+        "9bc56e1034724be3165e3e4ec05b61fa899a680e9e7f37ff18a1fc4423b21fa7",
+        "023452ce745c98d9e221f9f8a6c7da04315ae2703cb7c507c1d6289c5cd7f058",
+        "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e",
+        "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-run-v01.png",
+      "source_sha256": "91b6af3ca3bfdba82a37a70169cb1dc170454fbcd069b5aa25d8f8300af22a5f",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r012/NE-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "6748eb2f3f52b617dd4c2ee2a0171831f9b9f954a7584cf754aafa489e2249ec",
+      "frame_rgba_sha256": [
+        "ab74c3db9f777ebe585a003116b7891713dc5cfdfc2a12d53f4f1947100721d0",
+        "ffdbe370677744cf0c82c45a17790f4a221375e01ca3a1896bc9fb7143e63fb7",
+        "febb51a0d43f9d3817522123341e55c1a581988cfdf54fda5ce6b09184b0bc05",
+        "03cfa14242f02b644989514f3322a230c0952179d62952742e51d166499b8a39",
+        "bccf4e5e5811b65acfe0b88d90a0fd2b4d0d275a1f96e9164a64cac6fa00ed84",
+        "e98387bdec05b79778af1c53809528f59acf7bd369a115c490c83a26dc33cad3"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NE",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
+      "source_sha256": "8eaae7e2f362b5500e94d48ac8874735f5bbc0369433d6d16e0d6910dd2b4fea",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r011/NE-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "1037f2de9bcafb7c399a0455b6e0a136ac37308811e436cf9638cc760299c05e",
+      "frame_rgba_sha256": [
+        "5bdcedfd1bd93206581462ca1fccb24ebaa247ed10981e2d8b41ed8d20868267",
+        "3b1079c4b01081c42b664dfcd9f3acc5a4a5f045a4bf412f5c44553c9a8f20b8",
+        "00c2e8b154620b42584dcf081ce07d47ffd498ab3f06d4f89bc117e637db4e1c",
+        "cd6f242bd61c45f845208f72bdc4a53b36147f2f825d89411a423e5b905bf303",
+        "d31fe3f587a4fffd1cff21cd5baecc8d8161f7bc69c9a0a9503f0b826a7fc46c",
+        "a62351edbe8ab2634735c57ae2b28ffb79b0b05aee938a5536e0e052cb44fc43"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-attack-v04composite01.png",
+      "source_sha256": "e33ba0faa5afa825df4d7c7d992de9783ea95a9db2b575a6863eabe8dd02cafe",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r066/NW-attack.png",
+      "source_geometry_sha256": "ec2749dd4d55ef1687086b50f63345f7f228ddda3b6bea89416537b80654bd92",
+      "geometry_sha256": "8c081ef5046fe1ecbdd134032606bdfcc8ce23d9e59e04b31ec44eff82427d7d",
+      "frame_rgba_sha256": [
+        "c475de792e1b90aaa9198897083e7eecd0eefa4cf1aa3c6056f1d711b66b1665",
+        "a764c077900e05ca373832a9ce0657e55b601c609ecfd8c9e07fa47a90da7007",
+        "01951f6e37e739d4eb4215223279181126de8cc50409fa869bd2e285c593bfdf",
+        "17805fe6e4dd938ab62c26efd2e1eed17d64476330bb6e34420f88573c97ed42",
+        "f3f412163a789bbbf2e757263734d36e1f217d22a061d273c37e57e28362af8b",
+        "effc7576415b54dded94a6d86010ae7ad09893b276e2f135f7b57df0b359e3a3"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual poses retain NW rear-up-left body/head/hips and the same Halpas dark/gold armor, paired gold horns, purple wings and red cape. Empty near LEFT arm is distinct from the far RIGHT continuous weapon chain. Guard0 -> raised1 -> load2 -> extended upper-left contact3 -> cross-body follow4 -> recovery5 is a distinct native attack cycle with correct NW blade aim at contact3. No former SW frontal camera, extra hand, detached grip or equipment swap remains.",
+        "Visible near LEFT free hand/forearm and far RIGHT weapon hand/forearm do not branch from one visible socket; the proximal RIGHT upper arm is legitimately hidden by the helmet/near shoulder and upper torso in a cross-body follow-through after phase3. This agrees with the earlier independent occlusion review without claiming to see the hidden humerus.",
+        "Actual perpose texture canvas values keep helmet, neck, shoulder-to-pelvis size coherent between reused0/1/5 and new2/3/4 despite their different native pixel resolution. Source3/4 forward-left torso/arm lunge and leg trailing are preserved. Idle0 -> attack0 and recovery5 -> idle0 do not show a material body scale or pivot pop; no wing/cape bbox size fitting was used."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-NW-attack-runtime-quality-result.json",
+        "sha256": "3a8520978526774b8f0af4f6b5923a58dd455295af296603d632a5d8112e2757"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "NW",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-death-v02.png",
+      "source_sha256": "e3e27205c904a33343bf828f6154a45da9b8cb407ff3a1e43c704975e26dd806",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r067/NW-death.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "ccfc3e05bd20cc942779768441fb782c208bf2a9fd0cb4570f8f99af53e368b2",
+      "frame_rgba_sha256": [
+        "05965462bcbe4cea34ffe63e015127302ca815100fceb64d1fd5873f1b90d896",
+        "0b266522ec8a6a40d4d0e7f5901588246dcb687026f3fd3da6b134c0d4104ceb",
+        "ff7b8d094fb6b60e68b587590469468706bec33293a2e5ab817801cad49e7bf7",
+        "176482ea6901740065a4e36df3ee17ba1d4d9b14e12f6491145ca3582168ae0f",
+        "ad84662a6252baab1842a08a48646fffc8e9a24338e51a3ca22f2405b2d4ba1f",
+        "bd88a64eba15cbe6a348e071c0189c64a2a5cc9e4bd01c30800e4578130bcb6a"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All6 actual selected C1280 bring rigid closed-helmet/shoulder/back-to-pelvis scale into agreement with faithful NWidle; no silhouette/corpse bbox normalization. Same +16 sourceX delta preserves authored horizontal collapse path while aligning initial body root. Initial leg-extension/tilt, natural lowered torso, continuous ground fall and terminal side corpse remain; every source-anchorY and allsourceRGBA unchanged.",
+        "NW dorsal black/gold helmet/back plates remain target-consistent, no old 180-degree SW/front view start. Exactly one head/helmet, two arms/two coherent articulated legs, one RIGHT-hand blade, EMPTY LEFT, one wing pair/cape/tail all6. Brace->buckle->sink->side collapse->settle->terminal corpse; no regrowth/extra equipment/end alive pose."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r073-NW-death-runtime-quality-result.json",
+        "sha256": "0d60f417425b5caf7d3d377f617ad25138a42e99d74c7d9094c8d48bf2d2232f"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "NW",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-hit-v02.png",
+      "source_sha256": "f1087d35ee8aa77a72bf45d49bb1677fef0528262972a9d3ede3d1d86a1b70c4",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r065/NW-hit.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "8ba71cf7d890e31a2061bb440227bf87df7d3a6942ce425b14113c355eafe6da",
+      "frame_rgba_sha256": [
+        "efe20a7ddc9e7fe8ca4e276f933898dede6e31419a8152809471aa526088a52f",
+        "ba2392062f32099e2f1b9628e5c9ead5365abda41a44e450b14991f3c89fe849",
+        "69453bea200f68aa755dea9397f753f41243a388f60b96b132e0da22809991d8",
+        "88201425971b17002c11485214c8e0f70116d95fcbfcb622b3f0ca422b370855",
+        "8b3cc0c55101bef863b03130185f8b2058e008da7d502fc6c125f4dfd4309959",
+        "007cc15df3c24e232760383548e5a029c49954ff07244d654e988fc57b483e69"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Actual perpose C1280 frames match faithful N/E/NW idles in helmet/neck/shoulder/pelvis model scale, with wing/cape area excluded from sizing. N head/hip neutral0 and5 match existing rear reference without prior 25percent size jump; E side body and hip pivot are aligned after perpose X origin correction; NW rear body retains the same physical model as idle while its recoil lean remains visible.",
+        "Actual idle0->hit0 and corrected sixpose recovery5->idle0 have no material body-size or pivot pop. Perpose hip-root X normalization removes source packing movement while all original Y/bob, torso/head recoil and wing/cloth articulation remain. NW deliberate forward torso bend and lifted trailing feet are physical recoil rather than heading error.",
+        "All18 corrected poses retain N/E/NW body/head/hip view, exactly two coherent arms with persistent RIGHT blade and empty LEFT; no old frontal backplate morph, extra empty-fist weapon branch, detached weapon or swapped hand."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-new3hit-runtime-quality-result.json",
+        "sha256": "7fd0f2053bb6bf2b9ff35d1f5f245f36004a50d461c67a267dd9a729cc49817c"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "NW",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NW-idle-v04.png",
+      "source_sha256": "2e080bad8ba69456c89e0ac55b9293d1d622f128eb6b2828667039e64a1444ad",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r059/NW-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "2d30d1813bdf34ad2f9288efc125eb3eb839762e1cc3c5f4c9be111ff4375bd2",
+      "frame_rgba_sha256": [
+        "701bbf022af4edd9246a2c2f0e015a65f28b95b89466c92f7615203e8b2b327b",
+        "ec61a0703e817caf9002392cb7dc9db27cd0a3c3db140eee85bec17078a3bf12",
+        "02522f8096668c0a5c1c45655eb27ae5ac06e3647f1e00dc3cfc87ffd5d57024",
+        "f94e831a568126888512c35f06b9b9fa2639b888e8a32ad03201e4cd9509fc24",
+        "b9d09680f7a61f5115c0d154ea298c24eaa575d8bbf07eb631566605f84f85eb",
+        "4bd9426e40453627e06a41b4fb0a2e99904f270957c031f218e542bdd9077593"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-run-v03.png",
+      "source_sha256": "9dc7c0b492f690ae96e2ab9a76172aad20cfe5686adfa83eb2864ba33240bb38",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r061/NW-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "b15df16ac56a7a79425113fa8088fa0739b4d4478bfe5f46fde571c27a4b127c",
+      "frame_rgba_sha256": [
+        "012554bcf5a035d7f8308c6ddb8ee1acf3cfcf57e41a013937138ab6c8d118a9",
+        "ffd1f6796c41057816d6f7a2f130eab580b43bf462f94f7461cccfb22a7474a6",
+        "70f80bc62f05530250c7f5d9d2f497e56c238dc776c689a24130463d2f5c79b3",
+        "7eee0d1aee542714f7215d49c41d05762dcf7aa953cf22c42a7dd59746906758",
+        "e3f7589ed952da2d9ca512c00896f62afaf511f6a86764edd53af1c935f3a556",
+        "7fe4c06c2d98d16efe18b9d6a6ccf0aafafbbdb74940b53aaa0e45163833cc8a"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "NW",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NW-walk-v03.png",
+      "source_sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r060/NW-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "3aab7314c6670481f63a201fbce55fc107403d6f6922f376bac34f619d493754",
+      "frame_rgba_sha256": [
+        "7ec799a69822c86d2fd2410ec7228b690bceb23e92e1a95f954978ddf967618b",
+        "297cc4cbc5320b336135e12675d93d73717c7d98b6e514d0b134c8dead54a1aa",
+        "d8081a43f5bfabd63894bf3eb1c13abb4e6846b92d7faa1dc978bb9bdd3460fc",
+        "4cb199fecbc9ca2aee435160679f8cd639962b5e5e9cb122590b26fefbe84132",
+        "2b51f67d61d2b938b6ddc33cb690e5519c4810c6466f0383ba4dc7f151378975",
+        "233499445c20e01054b7505997b81fafa199e5b5bf03de9a223bdc23557c2292"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-attack-v02composite01.png",
+      "source_sha256": "ead646b2b0ec303646d2e2379573219cbc71264188e1ae7031ac910457351ba4",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r072/S-attack.png",
+      "source_geometry_sha256": "ec2749dd4d55ef1687086b50f63345f7f228ddda3b6bea89416537b80654bd92",
+      "geometry_sha256": "bb8f7897dc645013107ff22afde795792c274ce5eb6c70a04fe09361a97a5348",
+      "frame_rgba_sha256": [
+        "b7abc8d66da83da9fb06a9c1ab5dcef2400f8eeb5392d70e19251b018c3fa0ce",
+        "6fe8bf1177c776dcee13e701f4a7d4492de716f2444174b9d2a4a5557019091f",
+        "ef182847bf31e1a371892477dcaf114f4aefee4e7a02587908ae195521b97dc9",
+        "f74b8a88fd048b59e184e777d57f90f3746dc968c16e0296655463903874987a",
+        "439266f87d6f7ddb8003d996c3d87b295d05ba7e3a35cf438f62c28a5011b161",
+        "c3dfd1d42dbdbee0c0351611647c2772bad7c7a530d0370daa85d509487c4ba7"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "New source phase3 atC2304 has the same closed gold/black helmet, pauldron/neck-to-waist and armored-leg rigid model size as actual neighboring2/4 atC1024; upright contact versus crouched windup/follow-through is authored joint/torso extension. No silhouette/wing bbox fit. Body-root X and grounded extended-leg stance are coherent; raised torso belongs to the genuine attack extension, not a model scale jump. All five old poses retain exact normalized pixel-to-world mappings.",
+        "Exactly one continuous permanent RIGHT shoulder->arm->wrist->gold grip->purple blade chain, opposite EMPTY LEFT freehand, two arms/two legs, one horned helmet/head, unchanged wing pair/cape/tail. Body turns from quarter S windup2 to frontal S blade-down contact3 and back to S follow-through4; allowed physical combat yaw remains target-consistent. New blade contacts toward screen-bottom/S on phase3; no old extra-arm/duplicate-weapon defect.",
+        "Actual attack5->idle0 privately viewed separately: same helmet/torso/body-root physical size, same permanentRIGHTblade, no position or scale discontinuity. Five old0/1/2/4/5 unchanged proof retained."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r072-S-attack-newcontact-runtime-quality-result.json",
+        "sha256": "6984588d1257235339e58f33fed357491b331752dd3493837e4d3813e2bd5310"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "S",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-death-v01iso01.png",
+      "source_sha256": "ee165e2277abd2603d4aa08b9afcfb116e6d9b9074ccc879737ef49196d80cb7",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r031/S-death.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "dadec696c182ef96ee8eadaea145e3fce14749793d5404dcbf97f0b509674599",
+      "frame_rgba_sha256": [
+        "919940d7d31433fed1119a56db265063169d687d12d77cc3074ea8fe489e3603",
+        "3dfa6081f918abbc6ec10bae7fa2ad6937d1027577024af1b0ecefebd9553be7",
+        "9d5878a2da2eb8ccf58ced9e019d554ff7b5994abccb8a3fe8a65875be94ca88",
+        "a7393b5e7fcc9d3eb093f9dbc6ab4792761293918718e8d71a659038912d6a0e",
+        "9b9f00d877bfcb7f9e57ae102316d433325faa12cf315f5ab08a0697e1cc1626",
+        "6333b63377cf695f40c2324d0ad778a24730687b549173bbfb437282b273fd13"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected collapse/settle poses retain one head and one blade, body/wing/cape identity and final settled corpse5. E death starts from an open 3/4 battle/impact torso and head/blade remain rightward; permitted physical body-yaw/collapse is distinguished from N 180deg front/back source replacement. NE/S/SW/SE can roll during collapse rather than hold a frozen torso axis.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-hit-v01.png",
+      "source_sha256": "0d07e653197623f950c4fe1cbf8d0866841e922273c7e74b1ae325000941cb4a",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r023/S-hit.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "0c620f2e6ed6988f7fc8f617ffa61306976638f0c0f5a5db1f1f91e886266b7f",
+      "frame_rgba_sha256": [
+        "6093e67e45d994a9fdd07932d1e529261ab799c0e586123aca5ee3ee4734155d",
+        "dc22b2afb09cbd086a8d90f34b9c4a34d852dfba6de30540b001ddcdda0fce47",
+        "d80c4991972a5e5ad61cdf55725d628b4b36e6cdd4a642086684ae355e3fe895",
+        "9f7dfe311a67d10f0f0ef5073cd04b7affbde5707501060f52fd649964d1d824",
+        "caddb46b7afa04a36f31e52cc84212ac8cd16b6d114d8ce15440234b89209606",
+        "a2f875380f7b975d989f62671c4ed464ea5e8eaffa3beb9e87c18529bd307aef"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected recoil/recovery poses retain one empty hand and one weapon hand, coherent armor/wing/cloth and return heading; extreme2 has no extra weapon/fist branch.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png",
+      "source_sha256": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r039/S-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "6ef306b6b91e054da7a3e8987a62c542ae4930b9ddd70eacf04b6d4ec3af4c70",
+      "frame_rgba_sha256": [
+        "dd52337b11166b6f1053e8452c5407891c6a9b1da19164ceb37cbaaa0143cfe5",
+        "774d051b8beeea4f1f25904014538a3367892aca5c4177dd35dcb8710382263c",
+        "6f998af7e0b3f4cd61da0c268e43b4ac4d05e4177702fa3074306130d39ab85b",
+        "1b0ba6d08e32d9623bc44785aa81cf07c9313cc775041a1fcbd0ba21439f763e",
+        "dd8bdd746d40eeb0f67c38aa738e9352f2dd037f0849b5c30dc9530e9241a9d0",
+        "4458722ec6fcd28e21c806f4c620361e7223b799dd0f881041b802cdd4dd6727"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-run-v02.png",
+      "source_sha256": "d34c9acd6dba4f03a8a911a4e5d7dfe1276dd906eb68964b2ccd5dd311b2bced",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r002/S-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "99f2710475afe675e691e3edd143e72bd45a64fa7ff8bf3c52f42ffe291063f0",
+      "frame_rgba_sha256": [
+        "40ac108ae2fef79cc01e7241a39da16722b01f4bf2d669f31512fcf08769ad45",
+        "f995de397c10494826f17fe3a56585a587e1a52ffc6f10b7ca664ce67ce2e5b5",
+        "2ff428c31303b8fe74b5007a8c377332fb6af3481965c70b6e1420c40e3d457c",
+        "da769571e266d9d3d0134b37158ad785517240ed22113300da834ffd7a50d35d",
+        "477d8987ffa129381ac2916170cb501c871f6ff41174466b8ba67b4e6c2fbd7c",
+        "98594beeabfc911a760a4a12fbe7a583618177723c4451e3635aedf4cf8feb5d"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "S",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-S-walk-v01.png",
+      "source_sha256": "a3fa7e17f943e80d6d24c5884492d0b5c566c2b6177178ad9a2ec0b5efd43b86",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/S-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "2493f9ddac350db7917f946864655c5236059599b04a7830b16399db12c6254e",
+      "frame_rgba_sha256": [
+        "6a1a6728ae82abe930df58685bc0296371bc3c5374aa2ed0417b831b16d08544",
+        "a8b029707879f48e8448a8a797150e8f1e965bf784309fa2c8d490f230e2b23b",
+        "dbbdabfd2ed343a90403f7a8d87b52135b364d45d2d25ca447d4e3e5ddb83e4b",
+        "9c526de11bff1ce641a87170b5868cef7937eef09a59bec2ea2d16932ba4b73d",
+        "937fdd30c647a72145db80c6f123fd7586f82137a8e382b1c3f994f984228d22",
+        "2b78c03941cc7cf3f3d6398cd6631dd793400cba33ab6a5d9501c1128e03ef25"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-attack-v01.png",
+      "source_sha256": "edd8ffef1aceef92a2b25f87bd0c2fc34d31d5fbfdc2d8995b91eddd42134890",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r014/SE-attack.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "e7755471a8293dcc83d41c793ae47f01b2ba29c07aa0553a0428bc1ba67115c1",
+      "frame_rgba_sha256": [
+        "24a3f4237cead7c53f5ba08a1e77eeec518abff6b574e044cf8096319fcfd08b",
+        "aaaa5ab703513c989180a2d21e2c90a242a41395d6750ff14adba994860bb02b",
+        "6ffc8ac7b017414df28a032a5c733a9151f59974fb988ca1a009a12348bae415",
+        "c5db3e2b29615256c0a166d78781fd4bdff820b0237536674f7fba0a7588fbb8",
+        "eb928343ec8a272551ce3ce75c4d6898496d9f4be2de699705b261374b7fea1b",
+        "0414339bc3a018dfca0595117dc0946d1e5d4735ff4bbfa136f781a7c6d8e325"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected poses form guard/raise/load/contact3/follow/recovery with correct directional blade contact3, continuous right-weapon ownership and at most two arm endpoints. E/W guard/recovery quarter body-yaw is a plausible fighting stance, with head and actual contact orienting E/W; a flat idle torso axis is not required throughout attack. No extra source defect established.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-death-v01iso01.png",
+      "source_sha256": "c87237c73ec9962e3c523fffc1b85c0e2ce84305ccfb6ed856ebec4750bd4d9a",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r030/SE-death.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "3cbf5128601576a7f7dfa31f3f2f5486b6a6aed39428e172a3842e2e56af22bd",
+      "frame_rgba_sha256": [
+        "6c911c8106e8c013ed2d1320030a8055517e0e07aa800b0d1a575376106755f5",
+        "f4bd7fc2554e5ce0e04245675c64773b7f76b90a0b01781bed92f3e9ad856410",
+        "a02cb953ba91782731d88fe4a1acb6a25111e88819393caad79d2d2733bedfd3",
+        "fda11495db0c8ecbed307bc1eeffea72fc89b7f813c819f1ddaadd234b79922b",
+        "60e199be555f3f3df3a7ee40d9437d6ffaa939a9caef3eb3d1c0889f47e900f2",
+        "518d95ea86bf5b6d045d1a6a9c7b9e51dcc8f8168a25325c7683ac33e7bc2945"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected collapse/settle poses retain one head and one blade, body/wing/cape identity and final settled corpse5. E death starts from an open 3/4 battle/impact torso and head/blade remain rightward; permitted physical body-yaw/collapse is distinguished from N 180deg front/back source replacement. NE/S/SW/SE can roll during collapse rather than hold a frozen torso axis.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-hit-v03composite01.png",
+      "source_sha256": "9eb5aa955fc24f381017c96d16fc37c8c67f60c20f2e0b915999a6babfa1d6dd",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r071/SE-hit.png",
+      "source_geometry_sha256": "ec2749dd4d55ef1687086b50f63345f7f228ddda3b6bea89416537b80654bd92",
+      "geometry_sha256": "3e2dd087cd27eb6e9b8e10dc090fb0281fdb49594b2b9a8d3041df81534a5e4f",
+      "frame_rgba_sha256": [
+        "301ad842f8f9a8adc8a888ee737e405379f9c7fdac6d045847afd22f9ca1953c",
+        "7c803a73237ecb7cce3d5ecfc72e5f84cb7e4a4eafc858705ef546cfd3bd5a97",
+        "e28661cea9660ff1a12c30a9c6b3fa8e12d939ab1c839d44b68ad078a1ac4516",
+        "e3010cd23696d6717d663e518a0188a8aaaa9e70bd822c4abc083ccdfbcb8924",
+        "f202d06a47ab5e47a26e4c54ce8119a0e71b9341a70c447c6536ef59644acf57",
+        "a99aabf947d3243ab5daa63c715f7f2ea1760273eb7b3eb2b7b9d4c3cc0d84a2"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Every phase has exactly one RIGHT-hand permanent blade and EMPTY LEFT arm. Newly authored2/3/4 show coherent single shoulder->upperarm->elbow->forearm->hand guard/release, no old extra arm or duplicated blade. Single helmet/head, two coherent legs (occlusion belongs to folded flight leg), one feather-wing pair/cape/tail. SE front-quarter identity retained.",
+        "Rigid helmet/pauldron/pelvic-girdle scale matches SEidle with authored yaw/lean/foreshortening allowed. All6 waist-root positions are continuous; root/body pose motion belongs to recoil, no bbox rescale or foot clamp. New2/3/4 have same physical torso/hips despite larger source-native pixel resolution; all old0/1/5 and new2/3/4 use exact source RGBA.",
+        "0brace ->1LEFTguard/neck recoil ->2stronger torso recoil/LEFTguard ->3release ->4lower LEFT ->5settle, genuine distinct six-phase hit. 0 and5 connect to selected idle without model-size or body-origin jump. Blade stays in RIGHT throughout, flight legs/wing/cape lag retained."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r071-SE-hit-runtime-quality-result.json",
+        "sha256": "ea7dfbe8a7cbb61e6a9b9fe79d82590eab2b2e4115023c0c8aa16ae6713ab6ed"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "SE",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01iso01.png",
+      "source_sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r038/SE-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "cb1f033dd8e4161c70667ab0d020e26b8748d76db297d257fa4c357de0b2a379",
+      "frame_rgba_sha256": [
+        "e6f45f2edbfb4c4dc91f0b1bafe4d2946e9147a9c7fdc373a0535fa1f2b91180",
+        "e5ba8fc9d309bf2b0ebe0a3f6a0e6b9d475e5f36d901194f61aec555c138df45",
+        "0830afc514b811d345e735f43cf8175ae0d5961766c2afd4a9caddd40750c32b",
+        "a463aa1f1f117ca3e5d8fbb70bd55e2b7075031cfb3590d3a9458a9705ccc9c0",
+        "a3b0bb4609cbc927c270f8c2f2fce835c801fc36c63f46b034124909e99ffdf9",
+        "c7f0a841325fb65b62839c01c00ea526b9a345fc6d9d93c299c77710fccb0271"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-run-v02.png",
+      "source_sha256": "02bccf60ec96a28a1fc8ebe2f42dd7a5d4b8e2fc5a8a796a1fc369b88e1e46c1",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/SE-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "e0a1e926ed1e9d4fdd87bdab49fd83f880fc720eeb3cf96d5d616866288943bd",
+      "frame_rgba_sha256": [
+        "371d9013510e88be4c968eff1ef7633ba1a71b1c2c595caef4076d38920a4e92",
+        "bd956577507265c850760ebc031cd61a2d300a86e7732cab84d88252227e4595",
+        "3acacba88dfd7be8728465bc0b7b78482e231f08a7598e83ab39bcb2234fb101",
+        "80e89326c26ea1ed2823cb1f40ade38cdc3052ea571fa983210cdfcece0932a3",
+        "2dfe1db1480f12dafd30483c06d20bd20c487542ed44419e1287421abae9684b",
+        "62b5a653693b9e00f2d6b3797633c0b9a48b51570aec695635b0d89fdcfbf507"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SE",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
+      "source_sha256": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/SE-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "8c24b098b50c5a9f36180eacd30a3e51b51c2a7eb0be7eaf05a5d3c55d2db57a",
+      "frame_rgba_sha256": [
+        "5df0ac443c6bf6a18959b4c3617ad517bf0e5486aac68dd4706855ac2fde6c9f",
+        "bd39fdd363d37d6b53d279fa9e171a79c18ca00da1e7f128abec9b5f9eb3bced",
+        "ab4cffa050bbe8680f11e53d2576dff27b4e5eef8bdba4698b7455daa9b96074",
+        "ceef365330e5c26c53634f60fb8bab646c2ac89e6a5887c3386c39d4581a7a36",
+        "170275edbb9e1f4871d5ac94f05f8469a84d5390ca361070bcade4081b1fe31d",
+        "c766fa56cf775b50cd9ced1ebc534ca276661380b65d22632ac46e4030545498"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-attack-v01iso01.png",
+      "source_sha256": "1204082ac54491651ced77589fb8cf9198824ad9fb41322849b5108ec09ba544",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r016/SW-attack.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "b44e2676761ac46d53ae55cb6044ff90db20236420fdf83a92db4395867d73e0",
+      "frame_rgba_sha256": [
+        "7c0eb19cec1d6dcd080bb34982c6dcf922623902efefa5364f86493e8369163a",
+        "4ac4b0e085540ad7d8501b7f41dd5787f1789613ffd2bec7d55efb7d8ff318aa",
+        "1bce35f9aacc18bab54932c5e1b7301c3da9b2de66d6eb0b480ccf8d1a85a400",
+        "0a0abf062dedccbe48ed0f758eb4eca91e8d80b251b8014e7622ab9b06223bb4",
+        "ab212abda75e8603487a0cab7d76d22be5f792526131f4c3676d47faad8eea41",
+        "36a8a97272f8db0d4fced3b198ab696a21ed8fcca84b0fd6cedb4825f90750a5"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected poses form guard/raise/load/contact3/follow/recovery with correct directional blade contact3, continuous right-weapon ownership and at most two arm endpoints. E/W guard/recovery quarter body-yaw is a plausible fighting stance, with head and actual contact orienting E/W; a flat idle torso axis is not required throughout attack. No extra source defect established.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-death-v01iso01.png",
+      "source_sha256": "b0c9e04bfec6409fc6759877ecde87081bcda1cc9843cc694b935118bc08c54b",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r032/SW-death.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "ec66a94f1145080c72ef47786c1439fe1f3be65cf330401c53ec9c629f6b3363",
+      "frame_rgba_sha256": [
+        "e0260f0d24b30d992bf613dd877ccb31687d575cd3c36ee9514420b62c25fdcf",
+        "282d7ef74bce5bca5062276134a1c21b718cbb2434f980455d65fdc2ac454407",
+        "14d3a85c2e36c24ec349f9c9be02cc589f65b9a8e273cc8def9f17d3be2e1f3e",
+        "724bc3f3cab116996aedbfba66231f0372e781c3a5f0a80f4b26352f7c5bc2c5",
+        "8eb266acfcafb3f5d1de01cd557dde43f769287860a75183dd86bc8c1591264b",
+        "0c918e2ae381ee1ebad14ec6cd6d53fca1cfb285b0a269e2e8d00fbdabe3e0ff"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected collapse/settle poses retain one head and one blade, body/wing/cape identity and final settled corpse5. E death starts from an open 3/4 battle/impact torso and head/blade remain rightward; permitted physical body-yaw/collapse is distinguished from N 180deg front/back source replacement. NE/S/SW/SE can roll during collapse rather than hold a frozen torso axis.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-hit-v01iso01.png",
+      "source_sha256": "241e2bc5b49a031f5538ed919380972b38a08c5eef5e3e1f67c6c0e0f816c3c5",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r024/SW-hit.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "c44f0be9aa8307b1b530ba248d76f76a7f5bdca921939375342adc3fa294ad0c",
+      "frame_rgba_sha256": [
+        "5daf6387793a38ae8c5e6fa91975278785c7e71e28b7f795ba6f29b0ee8242f1",
+        "addb3aaad518618d4744a243cd1eb6d40d3c92cf6b8626adb3bf7e9e0dea6819",
+        "bfd1f465fbd07ff5a24568641d92be6fd572231fb4dbfdda9d031010b6b83ac1",
+        "622bd3222dacc982b8b5dae46892f05d65e4a9ef29a355c55f2d72a55d963a2b",
+        "4d9daa93ca0cbe5bd1dedceb2cedab9d2c7974fcc587449a1bb589bb0f8548cb",
+        "70b78b237652ad4f37d2b4982bb84774b247b146c62ab8525d0d04406674beb6"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected recoil/recovery poses retain one empty hand and one weapon hand, coherent armor/wing/cloth and return heading; extreme2 has no extra weapon/fist branch.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SW-idle-v01iso01.png",
+      "source_sha256": "5d8a262b38675dde9de72b4422753a2389c833083f1e925b7303d2aec44e33b9",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r040/SW-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "963c401ec9fa8e9cb20c754fedaf4f2e6ea465b531304d852e45a2e401d30f9a",
+      "frame_rgba_sha256": [
+        "890340b22460ee1f2dda7b538608805da53c580b96042a4b775a45e969e8b7ee",
+        "c8db9d353c49c38c747641ffe40814292b460235051b6befa6c9ee6ec2c3e8c2",
+        "c0d9dee0f631d8a53db655fe8000c665a3fc625a6960cf7de6de0fb13f29b2b2",
+        "c146eea0457ae3c6e7bec19b9e5d7df428a68e22caf97d41d9dc570d5cc2fdbe",
+        "51e0d3077a7d35f6b74d955587f92fdd75e7df595d701777322eccc208564f41",
+        "2bd4e5bd9d4f4f2da7b8b3568e59c427f71e501a191ca2a3c7a55312bd5afecd"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v02iso01.png",
+      "source_sha256": "fa40845d7487f7062bf60a025ceea53f0ee9cfcc9cf9e1f3ac7f511870eb8462",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r045/SW-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "d208fca5ed3d2fd90e18836616a7b8d6abc7457e14b7a0a538796f054f0b4095",
+      "frame_rgba_sha256": [
+        "aaa31a22dde440ebf4fdbf36f30b0aa506d91109a10b81e7f4e9a76018f338e4",
+        "1863c1e57fb38ee9cd44a03cd7d593d8f6a64af5c798d0294ef3eec691230e22",
+        "bd443d16f80a7daa1615ea08b7af9a39468a261b1360a1d7a57cfd10ed33fb79",
+        "a85e9291f2962db3bb4bf3a621eef8f177ae9a7cc876d39e23f049134595f4f5",
+        "50709ccac90d1cca5aa3b988aff16fc1b176122702f28ce77a3bc003e25efe9e",
+        "280e91391c0be6ee583056f87bec305d7eb693a1804a9a13f6d41de7d0329625"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "SW",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-walk-v01.png",
+      "source_sha256": "e7ca7a65a6d8533c9ffaf264a07c73683b4f95277396a72ec13bb6d657ef8a7a",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r003/SW-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "df98118ec282372c38c2d45e0599f97dbe0a2a6f54f1d927ff16b26823425eb0",
+      "frame_rgba_sha256": [
+        "71fca029f92cec3ca7b0cc15b69bd5a2d300936015e9a8b3be8dca39633b793b",
+        "a8bb1958a5263fe32faf453429bc9fe0f5756502e675d3e7ce5f06a00061afad",
+        "99f4f7a2be5f3a9e529bac64d352d41280e676937b1983abab6a0d8c4a70c986",
+        "20382362044d4f5b5592cb102f200a66f33f289368374a06e9363a178a4f5aa3",
+        "dbdc0bead3392cf1aa9292c58e954228288b3166bb449945dea5517e2bad1507",
+        "29dd5a0abda61fcdffc9b4714d6c82884a157ae20097eedb580e29c39c27bf25"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-attack-v01iso01.png",
+      "source_sha256": "5f0d75d86ed4608271b417f9a0a55916747a98df190dc5c8da69cb8a4a80f991",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r018/W-attack.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "6d6eadb5c69109b8e702c42907d9fb4a904a1487524b0c9c246ac66b52133f94",
+      "frame_rgba_sha256": [
+        "63f59afa957e9173eacc33ea406aab6480ccc50c71c8923676557444c5a13f3e",
+        "4c22462cbff97f9954b2fa7eb9c8d8c210150f0c9953ac612cd30c486f03fd37",
+        "9e7f4b03e0a56d4b9e8189b2abe4cf5c86724b1a6c18a6c7f73b74adde89c7f9",
+        "e1e5f52d02a6157ce8488249d47a6aead2c4b997590d1024078d9b8ca2e6cb82",
+        "6ff6ca7cc55eed6a44bf5996a3bbc0dff25e6090549f21d8614c82fe7b37a380",
+        "d0a2b1ef0420e7212f89d45a53e435e0de7d5e26d578702957b94c3a282fa536"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected poses form guard/raise/load/contact3/follow/recovery with correct directional blade contact3, continuous right-weapon ownership and at most two arm endpoints. E/W guard/recovery quarter body-yaw is a plausible fighting stance, with head and actual contact orienting E/W; a flat idle torso axis is not required throughout attack. No extra source defect established.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "death",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-death-v02composite01.png",
+      "source_sha256": "1b137807768590457b368bcc82f4723e17ca31dd2731155ddb1100e04bfc85f8",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r070/W-death.png",
+      "source_geometry_sha256": "ec2749dd4d55ef1687086b50f63345f7f228ddda3b6bea89416537b80654bd92",
+      "geometry_sha256": "14bc398e70e615b98a798450f68f17ea6057cf8c98b5f97759ca5e117067de34",
+      "frame_rgba_sha256": [
+        "35c9279fc36900927df6dc97c48934064735d89aa28dbc63698fb29d1704db04",
+        "ad63b812b3de1d3ec244ed7cc72e40bfb6696978a4839e3eafe941568867ae12",
+        "076de48dbe057763c6897eb882cce7b8e0945ee0a415c40e4b58ca20c6d87ed4",
+        "f402c80726e76ee271bf352fe9bce69f444a232462d3b0ab65f048e7647f3def",
+        "4828885cc7c804696d85e6804021b97b4370c4616fb64876e1f525f268666def",
+        "54951274608f67353c3ad75a20adbc9a3560ce9e5681a808556fac34d19ad88c"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Existing correct0-3 and new one-head/one-blade corpse4/5 have continuous rigid helmet/boot/plate scale at perposeCs[1024,1024,1024,1024,2048,2048]. Broad helmet in0-3 is physical 45-degree combat/death yaw, not a second head or a bbox rescale trigger. New4/5 retains one RIGHT-hand blade, EMPTY LEFT grounded palm, two bent legs and same wing/cape model. Clear loss of support, side fall, grounded settle and terminal corpse; sourceY/palm-floor anchors preserved."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-N-W-deaths-runtime-quality-result.json",
+        "sha256": "db9c5c4ad7862ba73c70b087c8ea621cdf795b14c2a25aa3e4d21c3fdbde0b95"
+      },
+      "baseline_unchanged_review_reused": false
+    },
+    {
+      "direction": "W",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-hit-v01iso01.png",
+      "source_sha256": "57b6bf7a71f7261b11b24373b0d38a1a9c5ba1dbf4ff488dd8e34f046866a787",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r025/W-hit.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "1c6f4286011cc39ad7377cd4c2a97e3cbc5d22a3e65beabe95ac61d39eb75623",
+      "frame_rgba_sha256": [
+        "7921386e1a7f9da8f66a4262f24371ba6b141803a4112b238a634f81359061fd",
+        "e6f17e4cc56ce7d6638824f501cde0c3864cf74d584e45e03bfaca70c08ef16f",
+        "8889674c1f9defb228aa91534648c7b164a7c3509c241fda27c8b9b475461744",
+        "7bf3f2a7222a091f04f94adccb2942a8322a0994b2464533fb748e2fced8ee34",
+        "1e7c1da1d9c0f34e8c0cc818930afd9535581b488128881a3e84472a7e6f9280",
+        "4b2e786dfc4afe000fd90745f23beb4c911dfcc49260c7b64e9cb75f38adf384"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "Six actual selected recoil/recovery poses retain one empty hand and one weapon hand, coherent armor/wing/cloth and return heading; extreme2 has no extra weapon/fist branch.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+      "source_sha256": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r049/W-idle.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "0a7a826c1083b4cc0269e1e1a65187a54732df88709292b0663b45f52c46d8a7",
+      "frame_rgba_sha256": [
+        "ca145065264291b76f8cdf8b9feb71189e006936015f19ed305c0374e1f603c1",
+        "45eec84fe5ac4997c5b742ee2f7f0df9fd358b54bf7be5de1f55428c5cc763e8",
+        "04a8d86e750e5feb08eba1e05b4a89040fa9c1206dd4a97ccdb6450a0d0e51e9",
+        "f4de4dc641fe7c8c43967ad76af63164a5a9abac3a5e9331c9a7f42c56654d55",
+        "5ee807bb78bb5e940a91afa54f7a8e69e0811c24b447cf6727d9f10b31fad3df",
+        "9de9674c25ab56f93899dd025784e03a8aa75b808276353d9a1831b8afe79ebf"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-run-v03iso01.png",
+      "source_sha256": "3d50892007edc60ce2091584be01d9dfcd272b8a42f177eada40a209973fdd72",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r057/W-run.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "8f856418fa879f47a5a6d7c0eb8d628e8de2caf35f6583563edc9af25ab2a064",
+      "frame_rgba_sha256": [
+        "240ba07ad49432e6449a0604ae5f830f506b6f51b50b640b9f0912e692cfd8b9",
+        "cea5c8bc12314120beeb45a75fdaf2854efc362b400408841686d4455aefd162",
+        "e4d06803c031753a57c7604b973aae212a875fb112b31c0a82906d1f02e77a09",
+        "e6a831ef00535824eb9a475fe0761db6604e9dee76c4c3e2b788ba0b5ce90453",
+        "5b43b2acba18fdea63846c68ae5483caa4aa93d28e77e692a702f00797e6f88d",
+        "41592ed378b6110401cebc84f68af5dd822e4cbaf8305fa178a169591bf764f0"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    },
+    {
+      "direction": "W",
+      "role": "walk",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
+      "source_sha256": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264",
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/halpas_393/r055/W-walk.png",
+      "source_geometry_sha256": "c2b2f00124c42bef2c61124bb13a1d4f142d091188eb46e2524efa0f69ba6564",
+      "geometry_sha256": "d0240d0f0e2de684ad97ef9d12f8fe35b7d0176d80b49e75ad4e9fd0cf21a86c",
+      "frame_rgba_sha256": [
+        "8b738320ac98f46b8bf95e30e42d21e0c39da1669e1162ff654d64a2a5aa5591",
+        "271d692badcc7159ecde99f486bef4abc4e4e732fb0781c1f762672703e74f49",
+        "e6dbd15f8aab6039c1dd2aa033777de0d38e82c08c09b796bf3fa6551ce5ca1f",
+        "a167fb420d6506c410502b938f95d6482c7c471fee17e41289224e3550831ba9",
+        "8189865272a7dda61de20b0f5552c74fe1fda7f15ff508787e001e7c924bda5a",
+        "d603f041e5adeb4d4da7d80072fc7586066df611c194655ef6ec8f49c508ba7d"
+      ],
+      "status": "PASS",
+      "visual_findings": [
+        "All six actual selected frame crops at their per-pose canvas/margins show the intended physical body/head/hips heading, coherent two-arm/two-leg flight anatomy, consistent gold/black armor, purple wings and red cape, continuous blade ownership, genuine role-specific wing/body/cloth changes; no repeated static/color-only completion. Trailing flying toes are not required to match standing toe heading.",
+        "Original independent normalized-source review retained by exact unchanged source bytes, full canvas/foot/anchor/region/margin/RGBA geometry, active animation and functional profile globals."
+      ],
+      "independent_review_evidence": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+        "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+      },
+      "baseline_unchanged_review_reused": true
+    }
+  ],
+  "coverage": {
+    "baseline_exact_unchanged_tracks": 38,
+    "corrected_actual_reviewed_tracks": 10,
+    "tracks": 48,
+    "poses": 288,
+    "new_image_review_of_original38_repeated": false,
+    "pending_quality_HOLDs": 0
+  },
+  "reviewed_staging_frames": {
+    "path": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/SpriteFrames.tres",
+    "sha256": "d6f9deee8ef393ec9abc6511fb756721ace3d7274835d483634ee939756e9012"
+  },
+  "reviewed_staging_profile": {
+    "path": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r074/NativeMotionProfile.tres",
+    "sha256": "85ed5e96e9b1ccf424ce0c05dfc7d65918d70edbcb1a709b6c6f987a524b8618"
+  },
+  "production_functional_equivalence_proof": {
+    "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/halpas-production-r001-independent-actual-frame-proof.json",
+    "sha256": "f281c2d32571dcb108cd53fcbac5448b1247d01318b9d8998632262baa9ec4c6"
+  },
+  "current_scoped_quality_evidence": [
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-N-W-deaths-runtime-quality-result.json",
+      "sha256": "db9c5c4ad7862ba73c70b087c8ea621cdf795b14c2a25aa3e4d21c3fdbde0b95"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-NW-attack-runtime-quality-result.json",
+      "sha256": "3a8520978526774b8f0af4f6b5923a58dd455295af296603d632a5d8112e2757"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r070-new3hit-runtime-quality-result.json",
+      "sha256": "7fd0f2053bb6bf2b9ff35d1f5f245f36004a50d461c67a267dd9a729cc49817c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r071-SE-hit-runtime-quality-result.json",
+      "sha256": "ea7dfbe8a7cbb61e6a9b9fe79d82590eab2b2e4115023c0c8aa16ae6713ab6ed"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r072-S-attack-newcontact-runtime-quality-result.json",
+      "sha256": "6984588d1257235339e58f33fed357491b331752dd3493837e4d3813e2bd5310"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r073-NW-death-runtime-quality-result.json",
+      "sha256": "0d60f417425b5caf7d3d377f617ad25138a42e99d74c7d9094c8d48bf2d2232f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/actual-r074-NE-hit-runtime-quality-result.json",
+      "sha256": "3aff9aa489a4584bff3c705eccd05869e96f28eea891cc480871fd0f2bd356fb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/initial-r062-47-track-review-result.json",
+      "sha256": "e37870f3edfb9bb88383f810159cd1e1aaa4a0f0f7c964f0e5246ef2cbcf2645"
+    }
+  ],
+  "quality_scope": "Strict unique-tier model/equipment/direction/anatomy/genuine role motion/loop-entry-exit/contact3/hit recovery/death5/physical body-scale-root QA. Existing38 source reviews reused only after exact fullgeometry/source/profile checks; changed10 actual selected tracks independently viewed. No image attachments.",
+  "actual_default_Main_status": "Separate root default-Main evidence required; this quality review does not claim default game connection or actor completion.",
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_completed": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

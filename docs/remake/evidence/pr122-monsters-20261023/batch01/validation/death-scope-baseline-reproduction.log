@@ -1,0 +1,15 @@
+test_existing_five_deaths_and_unfinished_s_are_preserved (test_pr122_death_motion_scope.DeathScopeTest.test_existing_five_deaths_and_unfinished_s_are_preserved) ... FAIL
+
+======================================================================
+FAIL: test_existing_five_deaths_and_unfinished_s_are_preserved (test_pr122_death_motion_scope.DeathScopeTest.test_existing_five_deaths_and_unfinished_s_are_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/test_pr122_death_motion_scope.py", line 44, in test_existing_five_deaths_and_unfinished_s_are_preserved
+    self.assertEqual(ledger['existing_connected_source_count'], 5)
+AssertionError: 6 != 5
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
+PRE_EXISTING_FAILURE_CONFIRMED_WITH_UNCHANGED_HEAD_SCOPE_MODULE

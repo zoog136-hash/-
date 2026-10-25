@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "SOURCE_LEG_ART_PASS_AUTHORED_GROUND_ROOT_HOLD",
+  "source_visual_status": "HOLD",
+  "raw_path": "/workspace/scratch/girtas-E-run-right-flight-key-v01/girtas-E-run-right-flight-key-v01.png",
+  "raw_sha256": "c73b58f34dabc85479dfdd4168c4c5a929e8247ec9c780812482dab55227426d",
+  "raw_bytes": 1420068,
+  "request_path": "/workspace/scratch/girtas-E-run-right-flight-key-v01/request-girtas-E-run-right-flight-key-v01.json",
+  "request_sha256": "87b4d28aabef1e5b567e486fae89adef13e3845a66e36d7eb649868963544305",
+  "corrective_reason": "Author missing opposite flight5 from correct RIGHT compressed support: nearRIGHT folds backward clear, farLEFT leads forward, two genuinely articulated airborne leg chains. Final world ground/root arc requires separate six-pose authorship/review; never claim floor embedded in PNG.",
+  "geometry": {
+    "status": "HOLD",
+    "reason": "A visible pose touches the image boundary"
+  },
+  "intended_game_phase": 5,
+  "visual_findings": [
+    "Independent reviewer confirms FAR LEFT leads RIGHT + NEAR RIGHT trails LEFT, two separated coherent chains and visibly flexed knees/complete boots, faithful E identity.",
+    "Aerial leg art is usable candidate between RIGHTcompression4 and LEFTlanding0. Actual world AIR height is not inferred from transparent PNG and remains HOLD until explicit six-pose ground/root authorship and physical review."
+  ],
+  "visual_limitations": [
+    "No six-pose root/composite or actor approval."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "generation_attempts": 1,
+  "source_leg_art_status": "PASS",
+  "independent_review_path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-flight5-v01-independent-review.json",
+  "independent_review_sha256": "d9edc9352ff3738902e1defbb235405e7988aaee664df19cbdb1a81cf684cfa0"
+}

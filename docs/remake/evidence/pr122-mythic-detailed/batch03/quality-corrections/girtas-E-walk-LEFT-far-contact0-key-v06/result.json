@@ -1,0 +1,51 @@
+{
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "version": "v06LEFTcontact0",
+  "status": "GENERATED_SINGLE_LEFT0_CONTACT_CANDIDATE_STRICTGEOMETRY_PASS_PAIR_REVIEW_PENDING",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "game_pose_map": [
+    0
+  ],
+  "request_path": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v06/request.json",
+  "request_sha256": "0c7d43b154d684a72690f8c6de39b03f4a0d925d54668a1a068ce4e399237f95",
+  "original_generated_file": "/workspace/generated_images/exec-8eb056e0-428a-4bbe-a854-0c5b1a5b2ffe.png",
+  "raw_path": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v06/girtas-E-walk-LEFT-far-contact0-v06.png",
+  "raw_png": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v06/girtas-E-walk-LEFT-far-contact0-v06.png",
+  "raw_sha256": "1a73f75d82d9199b6dc156f8a19d5ca5dfd67e0d54d276cae065d08b290228d2",
+  "raw_bytes": 1429077,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "private_preview": "/workspace/scratch/girtas-E-walk-LEFT-far-contact0-key-v06/generated-private.jpg",
+  "private_preview_bytes": 134086,
+  "source_visual_status": "CONDITIONAL_LEFT0_CONTACT_CANDIDATE_NOT_FULLCYCLE_PASS",
+  "integration_ready": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "created_at": "2026-10-19T14:17:42.434309+00:00",
+  "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+  "outer_edge_alpha100_count": 0,
+  "requested_game_pose": 0,
+  "observed_candidate_game_pose": 0,
+  "visual_findings": [
+    "Same faithful currentEidle camera/profile/palehair/HARDthinrays/longrobe/RIGHTnearblade ownership retained; exactlytwoarms/twolegchains, full silhouette and singlegeometryPASS, no clipping/guide artifacts.",
+    "Minimal originalstance method preserved nearRIGHT leg as screenLEFT/rear and farLEFT as screenRIGHT/front under same longrobe. Front boot is heel contact withtoe lifted, rear boot toe contact withheel lifted; bothfeet touch ground, no run/flight.",
+    "Independent alpha>100 last2contactrows in visually located bootROIs: frontheel source[986.28,1181.31], reartoe[657.51,1190.30], front-minus-rear grounddepth=-8.99px (frontUPPER/far lane). First wide-guide v05 gave +29.29px(frontLOWER/near lane), so sign differs. This supports actualopposite LEFTfar front vs RIGHTnear rear with existingEidle hip/camera, not mereleglabel replacement.",
+    "Because far/near bodypartscan be occluded by original longrobe and projecteddepthgap ismodest, preserve as farLEFT0contactcandidate until oppositepair independentjoint/supportcheck before full6approval. Newv06primary neverusedwronglead v05 oroldfailedEwalk sources."
+  ],
+  "visual_limitations": [
+    "One candidateLEFT0 plus prioractualRIGHT3candidate, no completewalk/actorapproval. Need oppositepair model/leg ownership confirmation and fourgenuine midstance/toeoff keys before strict6native connection."
+  ],
+  "independent_opposite_pair_status": "HOLD_NO_CONFIRMED_OPPOSITE_HIP_TO_THIGH_EXCHANGE",
+  "independent_opposite_pair_review": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-A-v05-B-v06-independent-opposite-contact-review.json",
+    "sha256": "d4102300416ac82154ed85ec9af9ba6ff0f2fdb2952759458cacbb658a4cee24",
+    "summary": "BconsistentwithoriginalfarLEFTfront; Aproximalhip/thighcrossingunderrobeunproven, soleYsignaloneinsufficient. Neither declaredcompleteoppositepair."
+  }
+}

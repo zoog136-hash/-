@@ -1,0 +1,116 @@
+{
+  "actor": "monster:죽음의 좀비 로드",
+  "kind": "boss",
+  "quality_tier": "mythic_transform",
+  "status": "HOLD",
+  "approval_preserved": true,
+  "new_approval": false,
+  "approval_mutated": false,
+  "reference_pin": {
+    "path": "assets/monsters/original/atlas_3.png",
+    "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+    "region": [
+      656,
+      299,
+      328,
+      300
+    ],
+    "region_rgba_sha256": "b8a6658e5d03cd4bf3be640e104107660a93c7e386188a58509db581fd6b3b6e",
+    "basis": "monster_world_catalog.visual atlas/cell + art_atlases exact region",
+    "scope": "Existing project art, not verified external original game art"
+  },
+  "reference_scope": "Exact existing-project atlas crop; external original-game authenticity not established",
+  "actual_examined_views": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "actual_examined_roles": [
+    "idle",
+    "run",
+    "attack",
+    "hit",
+    "death_S"
+  ],
+  "identity_observations": [
+    "Great exposed distended belly and broad torso/oversized bare feet restored versus thin legacy proxy.",
+    "Heavy attached chains, rusted shoulder/back spikes, ragged skirt and gold waist plate persist across the viewed poses.",
+    "Exact project reference has empty fists; DB fallback weapon=axe is not visibly supported, so no axe was invented."
+  ],
+  "role_observations": [
+    "Idle breathing/shoulder settle differs from run.",
+    "Four attack keyframes show windup, extended-fist candidate contact, lowered follow-through and elbow recovery.",
+    "Hit torso/head/belly recoil differs from idle and recovers over a second source frame.",
+    "S death progresses buckle/drop/side-fall to an inert horizontal corpse, retaining attached complete limbs/chains."
+  ],
+  "strict_source_geometry": "PASS for selected 116 poses: true RGBA, nonempty, complete connected-body ownership, bounding regions, no clipped image boundary, no repeated visible pose hashes.",
+  "math_anchor_vs_actual_support": "Godot virtual bottom-anchor/region invariants passed. Those invariants do not prove anatomical support, source-plane stability, real weight or target contact.",
+  "unseen_not_reviewed": [
+    "Actual default Main scene and gameplay target/ground contact.",
+    "Frame-interpolated belly/chain dynamics and authored impact weight in game.",
+    "External original-game design authenticity and human mythic-tier approval."
+  ],
+  "source_pixel_edits": 0,
+  "horizontal_mirror_operations": 0,
+  "duplicated_source_poses": 0,
+  "new_walk_sources": 0,
+  "existing_multidirection_death_and_walk_preserved": true,
+  "revision": "r001",
+  "candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/candidate.json",
+    "bytes": 95536,
+    "sha256": "9bae482b3c570c0ad7658ce473ca6c404d45568093ceaccb9ac537672d6b6d6a"
+  },
+  "actual_examined_pose_count": 116,
+  "actual_examined_frame_indices": "All source poses: idle2/run6/attack4/hit2 each of 8 headings; S death4.",
+  "source_plane_evidence": [
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/qa-final-run-0-private.png",
+      "bytes": 1175313,
+      "sha256": "9604205aa3b44c143686afb9244adb5b2b21b92812e31ca5b2ba4473dcc6fb1e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/qa-final-run-1-private.png",
+      "bytes": 1252236,
+      "sha256": "722627b5c0d667522241f8454d92b5fec83d9f01cd421b0ec66b82809da584d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/qa-final-core-0-private.png",
+      "bytes": 1360367,
+      "sha256": "1c922c691c7456b5264c7dcda7f1ee5609799a396fc7880f534055ca21ef521a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/qa-final-core-1-private.png",
+      "bytes": 1301088,
+      "sha256": "f02b7b8b749c820e4c91d2cb52e283e4a0dd45a11f98c45d2664ea76106e72a2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/qa-final-death-0-private.png",
+      "bytes": 443217,
+      "sha256": "0eaa4adc01a1d407c13b98179d9fae809e8637737a4652e4d80fe80cbbf1bd30"
+    }
+  ],
+  "camera_before_after": [
+    "E RUN v01 front-quarter pull improved in v02 to stronger side-facing nose/belly contour; old v01 preserved.",
+    "SW RUN/core v01 frontal pull improved in v02 to leftward nose/feet and leftward punch.",
+    "N RUN v01 strict bbox failure resolved by new spaced 3x2 v02 art; failed original untouched."
+  ],
+  "major_holds": [
+    "RUN E0/E3 still show the near foot forward/planted; source sequence resembles two shorter same-leg cycles.",
+    "RUN S0/S3 retain the same screenLEFT stance; other visible phases do not establish the required consistent six-phase right/left halves.",
+    "SE/SW/W front/side sequences show similarly repeated dominant stance at nominal half-cycle boundaries.",
+    "NW/NE lower-leg ownership is partly obscured by skirt/belly/angle; full anatomical support trace cannot be certified from current source.",
+    "No final target contact or default Main mythic approval."
+  ],
+  "runtime_switch_recommendation": "HOLD: preserve approved runtime; do not replace it based only on geometry/playback.",
+  "godot_playback": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/godot-playback.json",
+    "bytes": 539,
+    "sha256": "a728085a09ddb233b2139155ec6c40473c65a10b1b9457ad311745c00a25d502"
+  }
+}

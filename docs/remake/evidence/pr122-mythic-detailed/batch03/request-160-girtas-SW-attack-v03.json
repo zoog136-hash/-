@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "status": "GENERATED_HOLD_NOT_APPROVED",
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "attack",
+  "version": "v03",
+  "source_batch": "batch03",
+  "expected_poses": 6,
+  "corrective_reason": "Previous SW attack v02 is unapproved mixed-heading/weapon-hand artwork throughout. New conditioning uses faithful SW idle v03 as primary camera and handedness authority; PASS S attack is timing-only. Produce a true SW six-phase right-hand attack without redoing approved work.",
+  "references": [
+    "/workspace/scratch/girtas-SW-attack-repair-v03/reference-primary-faithful-SW-idle-row0.png",
+    "/workspace/scratch/girtas-S-attack-reviewed-owner-v01/girtas-S-attack-v03owners01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-attack-repair-v03/reference-primary-faithful-SW-idle-row0.png": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+    "/workspace/scratch/girtas-S-attack-reviewed-owner-v01/girtas-S-attack-v03owners01.png": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9"
+  },
+  "reference_roles": [
+    "PRIMARY faithful SW idle row0 exact crop: identity, FRONTLEFT/SW heading, original handedness",
+    "SECONDARY PASS S attack v03owners01: phases/timing only, NOT camera"
+  ],
+  "parent_source_pins": {
+    "faithful_SW_idle_v03": {
+      "path": "/workspace/scratch/girtas-SW-idle-repair-v03/girtas-SW-idle-v03.png",
+      "sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+      "status": "source_visual_PASS"
+    },
+    "S_attack_v03owners01": {
+      "path": "/workspace/scratch/girtas-S-attack-reviewed-owner-v01/girtas-S-attack-v03owners01.png",
+      "sha256": "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9",
+      "status": "source_visual_PASS"
+    }
+  },
+  "forbidden_references": [
+    "old wrong SW walk",
+    "old wrong SW attack v02",
+    "right-facing canonical as camera authority"
+  ],
+  "prompt": "EDIT the FIRST reference character into ONE finished six-frame SW / SOUTHWEST attack sprite atlas. This is actual new articulated attack animation of the same unique boss, not six idle variants. FIRST reference is the absolute authority for identity, exact FRONT-LEFT camera, pale face orientation, clothing, weapon and handedness. SECOND reference demonstrates only the six attack timing phases; its FRONT/S camera MUST NOT be copied. Repose the FIRST SW model through those actions while preserving its fixed FRONT-LEFT camera.\n\nABSOLUTE VIEW IN ALL SIX: character faces diagonally towards screen DOWN-LEFT, visible pale face in front-left three-quarter, nose/chin visibly point image LEFT. Keep front chest and the same near LEFT side visible. Head, sternum, pelvis and boots stay SW throughout even during windup/contact. Do not turn into a rear-left/NW back view, pure-left W side view, front S, or right/SE at any frame. A little SW torso torsion is fine but no camera turn.\n\nANATOMY/HAND CONTINUITY is critical: exactly TWO complete arms, two shoulders, two elbows, two wrists, two hands. The weapon stays in the SAME anatomical RIGHT hand for ALL SIX. In this SW view that is the FAR arm attached to the far RIGHT shoulder on image LEFT, matching the first reference. Draw its shoulder-to-upper-arm-to-elbow-to-forearm-to-wrist-to-grip continuous and anatomically coherent through the raised load and the strike. The NEAR anatomical LEFT arm is the foreground arm on image RIGHT and its hand is EMPTY through all frames; use it as an open guard or fist, never transfer the weapon to it. No extra arm/hand, floating weapon, cross-body ownership swap, or disconnected wrist.\n\nKeep this exact original identity: visible pale human face and long flowing pale hair; sharp black-and-GOLD crown/armor; many narrow hard GOLD radial back spines (not orange feathers or a fluffy flame fan); long DARK black skirt/robe with elaborate gold hem and trim, with original boots naturally exposed in a step. Do not replace the long robe with segmented armored pants. Preserve the original very LONG THIN SINUOUS orange/gold weapon with repeated flowing S-bends and narrow tip, full length visible in every pose. It must not become a short straight broad sword. Preserve the character's physical scale and proportions.\n\nSix distinct ordered authored phases, read left-to-right then top-to-bottom:\n0 top LEFT GUARD: original SW guard, RIGHT far hand low near image-left hip holding the long weapon down-left, empty near LEFT hand ready.\n1 top RIGHT RAISE: RIGHT far shoulder and elbow visibly lift the weapon UP on the image-left side, elbow bent, knees begin flexing, near LEFT empty guard counterbalances. Same SW face.\n2 middle LEFT FULL LOAD: a DIFFERENT deeper loaded stance, RIGHT far arm raised and bent back high with full shoulder/elbow/wrist chain, blade arcs high above/behind that SAME hand. Weight coils on the back leg, front foot still SW. No handedness swap.\n3 middle RIGHT CONTACT: powerful articulated right-arm sweep/thrust diagonally DOWN-LEFT toward the SW target. Right elbow extends, RIGHT wrist/grip clearly originates from the image-left far shoulder. Full long sinuous blade reaches diagonally down-left; SW face/chest stay visible. Front leg steps down-left, knees and pelvis shift weight, near LEFT EMPTY guard offsets the force. This is an attack contact, not another low idle.\n4 bottom LEFT FOLLOW-THROUGH: distinct lower committed stance after contact, torso/hips follow the downward-left attack, RIGHT weapon arm extends then lowers with full blade trailing DOWN-LEFT. Near left empty arm balances behind. Preserve SW face plane and shoulder identity.\n5 bottom RIGHT RECOVERY: visibly return toward the original low SW guard, straighten knees partly, RIGHT far elbow retracts down near the image-left hip, weapon low down-left; near LEFT hand empty at image-right side. Recovery must be low and close to frame0, NOT another raised load pose.\n\nOUTPUT GEOMETRY: transparent-alpha sprite sheet 1024 wide x 1536 tall, TWO columns THREE rows of 512px cells. Exactly one COMPLETE separate full-body figure in the center of each cell. Uniformly scale the ENTIRE model plus its complete long weapon, crown and every radial spine so the whole foreground fits at most about 350x350px in each cell, leaving at least 72px clear alpha0 gutters from all cell edges. Body itself about 220px high at the same physical scale in all six; raised weapon stays within the same ample cell. Do NOT shorten the blade to fit, crop spines/hem/weapon, let figures touch, or let stray glow bridge cells. No ground, shadow, labels, text, border, background, haze, smoke, blur or bloom. Orange light only inside the actual thin physical blade and chest ornament, not a broad detached halo. Render crisp detailed coherent original game sprites, same lighting, fixed camera, no mirrored copies. ALL parts of all six figures visible and six distinct actual attack phases.",
+  "actor_approval": false,
+  "image_chat_attachment": false,
+  "attempt_policy": "ONE image edit only; preserve HOLD if quality fails; no retries",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six poses preserve faithful SW/front-left camera: pale nose/chin left, visible front chest, pelvis/boots projecting down-left; no W/NW/rear or right-facing camera substitution.",
+      "Six distinct articulated guard, raise, overhead load, down-left contact3, lower follow-through and low recovery poses show weight transfer, shoulder/elbow movement and cloth/hair response.",
+      "All six retain one continuous anatomical RIGHT far/image-left shoulder-elbow-wrist-grip chain holding the full long thin sinuous weapon; near LEFT/image-right hand is empty, exactly two arms observed.",
+      "Visible pale face, long pale hair, narrow gold radial spines, original black/gold armor and long dark gold-trimmed skirt remain consistent with faithful SW idle master.",
+      "No alpha>100 pixel touches the image outer boundary; all six complete figures visibly retained."
+    ],
+    "visual_limitations": [
+      "Raw strict importer HOLD: pose rectangles overlap another body; alpha16 glow/fringe joins middle-row figures (5 large alpha16 bodies, 6 at alpha32/100). No threshold relaxation, pixel clipping or automatic workaround performed.",
+      "Source visual PASS is artwork-only. Complete game-region geometry, actual Player connection, timing and fresh runtime QA remain required; no actor approval or completion count added."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "6f8394a112a7771545cca2e894663f161e96350fbaca76f849fba7b00cf2233c",
+    "raw_bytes": 2460118,
+    "request_sha256": "bc3c3649172d78533d38626fc8ea6de22f1871de53fe57a506f4aa10fc988e49",
+    "review_sha256": "1cbfc8442456bfa165558c7de94bafebe6301467b8ef420c37c9b79a4cea459d"
+  },
+  "available_repository_reference_sources": {
+    "3d9790864f59032f343c0e3b7a7ff0decfed7421d6ce7e2a281b579703a083e9": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-attack-v03owners01.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3.png",
+      "sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+      "bytes": 403622,
+      "original_reference": "/workspace/scratch/girtas-SW-attack-repair-v03/reference-primary-faithful-SW-idle-row0.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v03.png",
+  "output_sha256": "6f8394a112a7771545cca2e894663f161e96350fbaca76f849fba7b00cf2233c",
+  "output_bytes": 2460118,
+  "original_generated_file": "/workspace/scratch/girtas-SW-attack-repair-v03/girtas-SW-attack-v03.png"
+}

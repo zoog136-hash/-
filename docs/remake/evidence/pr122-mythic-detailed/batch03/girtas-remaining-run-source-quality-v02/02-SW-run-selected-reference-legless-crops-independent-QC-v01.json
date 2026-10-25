@@ -1,0 +1,114 @@
+{
+  "schema": "PR122_GIRTAS_SW_RUN_PREGEN_SELECTED_REFERENCE_LEGLESS_QC_V1",
+  "utc": "2026-10-19T15:47:16.644403+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "REFERENCE_CAMERA_GEAR_AND_LEGLESS_CROPS_PASS",
+  "scope": "Selected SW faithful templates and proposed exact native reference crops only; no newly generated pose or whole6 approval.",
+  "actor_approval_increment": 0,
+  "selected_reference_pins": [
+    {
+      "provenance_path": "/workspace/scratch/girtas-SW-run-production-reference-v01/idle0-provenance.json",
+      "provenance_sha256": "a77c9df3b7b9b2ebe4938e0dc9e657fa69a34841c2996c2120797f6ccbd83fbf",
+      "path": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-idle0-exactRGBA.png",
+      "raw_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
+      "raw_source_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+      "source_region": [
+        0,
+        0,
+        486,
+        499
+      ],
+      "source_anchor_original": [
+        256,
+        495
+      ],
+      "source_anchor_local": [
+        256,
+        495
+      ],
+      "source_canvas": [
+        1024,
+        1024
+      ],
+      "source_frame_canvas": null,
+      "size": [
+        486,
+        499
+      ],
+      "rgba_sha256": "68cb5c313ad3a00b0b963dddfd40aa178c06c2b1c26e7d6577378f3548f59bef",
+      "png_sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3"
+    },
+    {
+      "provenance_path": "/workspace/scratch/girtas-SW-run-production-reference-v01/attack0-provenance.json",
+      "provenance_sha256": "b4d048206e5c396ad27fe0abf30daa77d17ccd704bd2d37e711ed638ef85e693",
+      "path": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-attack0-exactRGBA.png",
+      "raw_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-attack-v04.png",
+      "raw_source_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+      "source_region": [
+        55,
+        87,
+        388,
+        399
+      ],
+      "source_anchor_original": [
+        272,
+        482
+      ],
+      "source_anchor_local": [
+        217,
+        395
+      ],
+      "source_canvas": [
+        824,
+        824
+      ],
+      "source_frame_canvas": null,
+      "size": [
+        388,
+        399
+      ],
+      "rgba_sha256": "6ca24f7966471174311413655d47100d8cc9bf1bd8d81456aa0e436ee1839ba8",
+      "png_sha256": "cfb1f5a3f33113ad1ccb02d02ca8a9fa776c127599ef39690c368c85aba17078"
+    }
+  ],
+  "findings": {
+    "camera": "Correct SW front/down-left camera with pale visible human face and pale hair. Anatomical RIGHT is far on image-left carrying the sinuous blade; anatomical LEFT is near on image-right with empty hand. Do not mirror either source.",
+    "identity": "Hard rigid pointed gold rays, gold crown/pauldrons, dark long gold-trim cloth and long sinuous blade are usable selected identity/material evidence.",
+    "pre_edit_inspection": "Both full exact selected templates privately inspected before source generation. Upperbody and material-only regions verified privately in a separate JPEG; they exclude complete old hip-knee-shin-boot chains."
+  },
+  "approved_reference_crop_ROIs_XYWH": {
+    "SWidle_upperbody": [
+      0,
+      0,
+      486,
+      260
+    ],
+    "SWattack_upperbody": [
+      0,
+      0,
+      388,
+      205
+    ],
+    "SWidle_long_robe_material_only": [
+      248,
+      290,
+      38,
+      70
+    ],
+    "SWidle_sinuous_blade_material_only": [
+      0,
+      310,
+      150,
+      189
+    ]
+  },
+  "crop_rules": "Exact RGBA crops only; no mirror/recolor/old fullleg supply. Native local Y cutoff260 idle and205 attack. Blade crop intentionally excludes upper hand and boots; use as weapon/material shape cue only. 3D guide supplies all newly posed legs.",
+  "remaining_HOLD": [
+    "New actual SW run LEFTlanding0/RIGHTlanding3 sources pending independent visual judgment.",
+    "Guide .60/.58 lengths are not certified character proportions. Compare genuine rigid head/pauldron/waist-to-leg anatomy against selected SW sources without bbox normalization.",
+    "Whole6 source roles, fixedC physical floor/AIR/root evidence, actual compiledTRES and final actor quality remain unapproved."
+  ],
+  "private_preview_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_preview_ledger_sha256": "cb33a0db47e148406bc27bc75fc51e2ac1e887d965585f66526eef1a97886457",
+  "repository_mutations": false
+}

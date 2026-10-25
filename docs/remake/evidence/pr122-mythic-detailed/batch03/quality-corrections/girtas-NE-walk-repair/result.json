@@ -1,0 +1,50 @@
+{
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "walk",
+  "version": "v02",
+  "request_path": "/workspace/scratch/girtas-NE-walk-repair/request.json",
+  "request_sha256": "926e45073eafd3f726e412ace5daecb634dd0a3a065e53eb512a6d45daa315d9",
+  "original_generated_file": "/workspace/generated_images/exec-c1b1c50d-e444-4029-ba25-78cc5df41489.png",
+  "raw_png": "/workspace/scratch/girtas-NE-walk-repair/girtas-NE-walk-v02.png",
+  "raw_sha256": "54948af5eb4e6f21027586c53e710ad6525c4b1d234471aeb0e43a8f593c29b9",
+  "raw_bytes": 2370006,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "created_at": "2026-10-19T10:51:59.744874+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_NOT_APPROVED",
+  "reviewed_at": "2026-10-19T10:52:27.222337+00:00",
+  "private_preview": "/workspace/scratch/girtas-NE-walk-repair/generated-preview.jpg",
+  "private_preview_bytes": 207295,
+  "visual_findings": [
+    "All6 correctly preserve rear NORTHEAST/up-right body and original anatomical right weapon hand, pale hair/thin gold rays/long dark robe.",
+    "HOLD actual walk: all6 retain same left/near leg extended behind and right/far boot bent/lifted ahead. No opposite leg lead or supporting-foot exchange appears anywhere in cycle.",
+    "Small ankle/knee/cloth differences do not produce two valid support half-cycles;2->3 and5->0 keep same lead. This is not a timing-only deviation from requested contact numbers."
+  ],
+  "visual_limitations": [
+    "Do not select as completed NE walk. Genuine alternating leg support is missing.",
+    "One generation attempt only, raw/request preserved; no retry.",
+    "Geometry/runtime or actor approvals not claimed."
+  ],
+  "outer_alpha_gt100": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "intended_opposite_support_frames": [
+    0,
+    3
+  ],
+  "all_actor_approvals": "HOLD_UNTIL_INTEGRATION_AND_FINAL_QUALITY",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "production_receipt": "/workspace/scratch/girtas-NE-walk-repair/production-receipt.json",
+  "production_receipt_sha256": "acda4b214229429115df60244556f56757e2bbd334120f080f6b738bde1812ac"
+}

@@ -1,0 +1,98 @@
+{
+	"camera_zoom": 1.0,
+	"capture_enabled": true,
+	"cases": [
+		{
+			"actual_Monster_reference_speed": 64.0,
+			"capture_count": 8,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-fixes-v01/SpriteFrames.tres",
+			"key": "monster:테베 호루스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-28.6666660308838
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 0.895833333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-fixes-v01/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/reviewed-fixes-v01-thebes_horus/thebes_horus_death/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 64.0,
+					"role": "death",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"death_2:0",
+						"death_2:1",
+						"death_2:2",
+						"death_2:3",
+						"death_2:4",
+						"death_2:5"
+					],
+					"simulated_seconds": 1.35,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.993056
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 64.0,
+			"capture_count": 8,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-fixes-v01/SpriteFrames.tres",
+			"key": "monster:테베 호루스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-28.6666660308838
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 0.895833333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-fixes-v01/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/reviewed-fixes-v01-thebes_horus/thebes_horus_idle/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 64.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"idle_2:2",
+						"idle_2:3",
+						"idle_2:4",
+						"idle_2:5"
+					],
+					"simulated_seconds": 1.45,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.463734
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		}
+	],
+	"display_server": "X11",
+	"engine": "4.7.2-stable (official)",
+	"quality_approval_changes": 0,
+	"schema": "pr122-boss-fix-real-speed-qa-v1",
+	"scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval.",
+	"simulation_dt": 0.0166666666666667,
+	"speed_scale": 1.0,
+	"video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

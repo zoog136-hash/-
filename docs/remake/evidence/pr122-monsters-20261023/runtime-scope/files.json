@@ -1,0 +1,29 @@
+{
+  "changed_files": [
+    {
+      "path": "scripts/animation/transformation_movement_scope.gd",
+      "sha256": "a8e676c94c082389239471e01c72ba8c83110640452aa22fa523b11fe24ac427"
+    },
+    {
+      "path": "tests/pr122_monster_run_only_scope_test.gd",
+      "sha256": "4a90918e1544f4cb208a1e577400a2934d796afe49a25319836958ee08409174"
+    }
+  ],
+  "checks": {
+    "known_scope": 318,
+    "run_playback_cases": 9,
+    "speeds": [
+      100,
+      124,
+      262.5
+    ],
+    "legacy_walk_fallback": "PASS",
+    "transform_unknown_scope": "7 PASS",
+    "batch01_playback": "4 clips 21 poses PASS",
+    "expanded_staged_actors": 3,
+    "expanded_authored_run_tracks": 11,
+    "expanded_playback_cases": 33,
+    "gait_velocity_and_attack_clocks": "UNCHANGED"
+  },
+  "new_approvals": 0
+}

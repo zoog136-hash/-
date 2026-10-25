@@ -1,0 +1,72 @@
+{
+  "label": "bossfix-min011",
+  "checked_new_sheets": 6,
+  "safe_played_clips": 1,
+  "held": [
+    {
+      "slug": "thebes_horus",
+      "clip": "SW-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v02",
+      "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [
+    "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/bossfix-min011/candidate.json"
+  ],
+  "runtime": "/workspace/runtime/bossfix-min011",
+  "source_pins": [
+    {
+      "slug": "thebes_horus",
+      "clip": "SW-hit-v02",
+      "sha256": "1688549cfddf752507c516fe82811bdecaf016fbc161723831d1eaed9d5567d2"
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-attack-v02",
+      "sha256": "045b5f562c59dc4f294975dde9cd139de8c171c876627dddadf26d5381268c7d"
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-hit-v02",
+      "sha256": "9c44837d9761675328885b9df0e608bdfd11a9ef573e275beb954b0da3544e98"
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v02",
+      "sha256": "674d3ad6c921fa30fb47dc1c585c616958b5809eda858b906bfe5d329d31bfe9"
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v02",
+      "sha256": "caf9841e2eecb096c4e894b904d138241fe37e960dfa69fa8048ed01d89c29c0"
+    },
+    {
+      "slug": "ugnus",
+      "clip": "NE-idle-v02",
+      "sha256": "b418ba05ecb8650d5a9cc5d3be1e5cafc9c8e7f2b58d240d6bc626e2246df6d8"
+    }
+  ]
+}

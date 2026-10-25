@@ -1,0 +1,93 @@
+{
+  "schema": "pr122-413-NW-run-independent-constructive-model-numeric-v1",
+  "scope": "read-only numeric candidate pair; no images/art/actual production adoption",
+  "proposal": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/actual-pair-fixed-bone-and-staff-rig-proposal-v01.json",
+    "sha256": "b9fa7f5e90954824da36b3bc812ff0c3239104353357fb4ae8aec33b1b175e74",
+    "bytes": 7372
+  },
+  "author_solver": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/derive-actual-pair-fixed-bone-and-staff-rig-v01.py",
+    "sha256": "5f315d4c5a850ae6ae5ffb30842fbd0b5d3738dc6ff72fd09b377f8996f9cb2b",
+    "bytes": 4876
+  },
+  "actual_source0": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+    "bytes": 762243
+  },
+  "actual_LOAD1": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v04/thunder_female-NW-run-load1-actual-rig-v04.png",
+    "sha256": "abdf295f681b5fd15849988bc13b730fd4367bc28763037803a262116c3f0cde",
+    "bytes": 800743
+  },
+  "status": "CONSTRUCTIVE_MODEL_ARITHMETIC_PASS_ONLY",
+  "independent_recomputation": {
+    "same_four_leg_bones_native": 250,
+    "max_bone_error": 8.526512829121202e-14,
+    "max_forward_projection_error": 1.1368683772161603e-13,
+    "max_model_chain_rederivation_error": 0.0,
+    "actual_knee_angles": [
+      {
+        "phase": 0,
+        "side": "L",
+        "knee_angle_deg": 168.91174641591468
+      },
+      {
+        "phase": 0,
+        "side": "R",
+        "knee_angle_deg": 26.871607109408842
+      },
+      {
+        "phase": 1,
+        "side": "L",
+        "knee_angle_deg": 146.96206956657088
+      },
+      {
+        "phase": 1,
+        "side": "R",
+        "knee_angle_deg": 40.73272430629603
+      }
+    ],
+    "same_body_hip_delta_native3D": [
+      3.6000000000000227,
+      56.15382097240763,
+      -13.846179027592257
+    ],
+    "body_height_drop_Playerworld": 1.312999735373791,
+    "body_ground_recoil_Playerworld": [
+      0.34137931034448216,
+      5.324931299102198
+    ],
+    "world_plant_ground_step": [
+      11.879393923934005,
+      11.879393923933995
+    ],
+    "world_plant_step_length": 16.8,
+    "staff_rigid_node_translation_error": 1.1368683772161603e-13,
+    "staff_lengths": [
+      1096.332522549614,
+      1096.332522549614
+    ],
+    "staff_tip_model_clearance_native": [
+      90.0,
+      76.15382097240774
+    ],
+    "actual_flat_L_shoe_toeout_from_NW_heading_deg": 13.260859204184836,
+    "conditional_actual_R_arm_same_hip_depth_shoulder_constructed_lengths": [
+      129.99999999999997,
+      108.320775094597
+    ]
+  },
+  "claim_limits": [
+    "This proves one declared oblique-projection 3D construction agrees with nominal actual 2D markers and constant body/bone/foot clock; not unique recovered anatomy.",
+    "GroundZ0 and ankleZ100 are declared support-shoe rig choices; staff grounddepth1200 is a chosen constant depth plane. A compatible shoulder/elbow/grip chain can be constructed, but selected depths are not measured from source alpha.",
+    "Right heel/forefoot heights are selected local model offsets -90/-150; the >300native clearance applies to those modeled points, not an independent all-raster-sole or full3D shoe-surface bound.",
+    "All full-source art quality, clean module/joint mattes and physical all6/production binding remain primary QC; source LOAD1 is still art HOLD.",
+    "No data written to source/proposal/author solver, no Git/Godot or extra image view."
+  ],
+  "actual_art_APPROVED": false,
+  "physical_pair_APPROVED": false,
+  "wholecycle_APPROVED": false,
+  "actor_completed_added": 0
+}

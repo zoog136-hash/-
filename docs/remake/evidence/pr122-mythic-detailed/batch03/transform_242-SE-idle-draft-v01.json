@@ -1,0 +1,88 @@
+{
+  "name": "플래티넘 바포메트",
+  "grade": "신화",
+  "reference": "res://assets/catalog/de8b2ddefd09cd8ade958384.png",
+  "key": "transform:242",
+  "direction": "SE",
+  "role": "idle",
+  "reference_sha256": "94457571d8749778f1c2c2548288fa69f4bf5c87e7139a225647dc8787f302f8",
+  "additional_reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-S-attack-draft-v01.png": "7bb808ec654e1c517493b701b03510261e655a259cca06c19d6e22bd333c0e4a"
+  },
+  "policy": "First drafts across active19 before polishing; retain approved267/393 and all413 work. New death S only; no new mythic WALK; no chat images; no final approval inferred.",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new SE IDLE six-pose animation for transform:242, 플래티넘 바포메트. First original catalog reference is authoritative for exact identity, original costume, face, hair, skin, colors, armor, ornaments, footwear and original equipment. Other saved drafts are style/identity and facing guides only, never copy their poses, clipping or errors. Create ONE transparent PNG, exactly SIX new full-body poses in THREE equal columns and TWO equal rows, reading order. ALL six must face SOUTHEAST / screen down-right. A three-quarter front view facing screen DOWN-RIGHT. Keep the same original top-down game camera and painted sprite detail, and the same facing throughout. Newly draw the correct body perspective and occlusion; no whole-image mirroring, flipped equipment, recoloring, rotating a static body or generic substitute. Retain original equipment in the correct anatomical hand, with proper grip and connected joints; never invent a weapon, wings or tail absent from the original. Required progression 0: neutral breathing; 1: inhale begins; 2: inhale peak; 3: weight / equipment settling; 4: exhale; 5: return close to initial guard. A seamless living breathing loop with planted feet, subtle torso, hair, cloth and equipment settling. Six different real poses; frame5 approaches frame0 smoothly, no foot shuffle, locomotion or attack. Consistent body scale and common floor. Every full figure, complete weapon tip, original hair ornament and full toes/heels must stay entirely inside its cell with generous transparent gutters, no overlap between cells or clipping. No ground, opaque background, scenery, labels, grids, text, logos or extra figures. This is an unapproved first animation draft for local game production, output only the one six-pose sheet.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/de8b2ddefd09cd8ade958384.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-S-attack-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_242-SE-idle-draft-v01.png",
+  "source_sha256": "033168c20c65e3484330b65a0faa4c5389952141908e3c872971e6c354ea0d1e",
+  "source_bytes": 2516746,
+  "generated_original_path": "/workspace/generated_images/exec-470c0285-e196-4420-ae5a-2814bbedb321.png",
+  "output_spriteframes": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/draft001/SE-idle-SpriteFrames.tres",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "rgba_sha256": "2985273df001971487d2c636df3adcd2e52cc64ed6d8ee70693c7624126ef032",
+      "visible_pixels": 74095,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "rgba_sha256": "7d9bf90da065e517a5dc65d2c05067fc12d2049b248f3104db2813bc77732297",
+      "visible_pixels": 81363,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 2,
+      "rgba_sha256": "ff15951142dd2b209a6685fbb112d8bbc0f74c999dac2282a116a6c4c7674870",
+      "visible_pixels": 85898,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 3,
+      "rgba_sha256": "6709906d3d1f008e47aba562a068572557eb0b2e4da7b9c1619465b2e1cf2340",
+      "visible_pixels": 87632,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 4,
+      "rgba_sha256": "eeb7277e5bf8448c85d4bca2a35157b2197b5fb0d48d5d988c7060cbb38e0977",
+      "visible_pixels": 81639,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 5,
+      "rgba_sha256": "c3865d0635791b86c5b0a40db7cc73db63d12871bf5faf235ced256fb974bfc1",
+      "visible_pixels": 73652,
+      "border_alpha_pixels": 0
+    }
+  ],
+  "geometry_review": "NOT_RUN",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "compiler_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "generation_request_sha256": "a6ed5143521fb92bd6c1f1570eee8b338eb60be418c81c519497de34d182e849",
+  "generation_service": "image_gen.imagegen",
+  "Godot_resource_six_pose_playback": "PASS_LOOP"
+}

@@ -1,0 +1,48 @@
+{
+  "status": "EXACT_PHYSICAL_OBSERVATION_TRANSFER_ONLY",
+  "from_source_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-candidate-v03.png",
+  "from_source_sha256": "9dd5fbbb708e490dd12ccca63f9428102939442a70f63f00405739389b8b51a4",
+  "to_source_path": "/workspace/scratch/girtas-NE-run-contact3-lowerbody-repair-v01/girtas-NE-run-contact3-lowerbody-bounded-v04.png",
+  "to_source_sha256": "63cb6e43432b3bcfb474fdf5d0f767b3f69bdd88e0922f9d299cc2e6659be47a",
+  "fixed_C_unchanged": 1776,
+  "checks": [
+    {
+      "label": "nearRIGHT_actual_complete_shoe_and_heel",
+      "region_xyxy": [
+        890,
+        875,
+        1100,
+        1025
+      ],
+      "RGBA_byteidentical": true,
+      "rgba_sha256": "ebc2e425acd82717330db2ae2b6c68a34c0c0b9be31b474d586daea1351ce2a6"
+    },
+    {
+      "label": "farLEFT_high_recovery",
+      "region_xyxy": [
+        250,
+        730,
+        620,
+        1080
+      ],
+      "RGBA_byteidentical": true,
+      "rgba_sha256": "7182ddbfc1684a34ce1d90ba326a0bed0ff3f61688b24f167e965eeed3d05a17"
+    },
+    {
+      "label": "rigid_uppercore_reference",
+      "region_xyxy": [
+        590,
+        350,
+        850,
+        580
+      ],
+      "RGBA_byteidentical": true,
+      "rgba_sha256": "f806f6b2a5fbed8083f693c651a135b4de034aae956551f70c31c3ad82469492"
+    }
+  ],
+  "actual_heel_alpha100_native_xy": [
+    934,
+    1018
+  ],
+  "claim_limit": "Only unchanged actualshoe/heel, unchanged uppercore and unchanged farLEFT samples transfer. Newly completed upperthigh/lowerrobe requires its own independent finalsourceverdict; no full6ground/runtime/actor approval implied."
+}

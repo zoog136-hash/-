@@ -1,0 +1,58 @@
+{
+  "status": "FRESH_NEW_W_TASK_INPUT_BUDGET_NO_EXISTING_WORKER_RESET",
+  "initial_context_image_bytes": 0,
+  "prior_workers_unchanged": true,
+  "working_limit_bytes": 6000000,
+  "hard_limit_bytes": 7000000,
+  "reference_sources": [
+    {
+      "label": "Canonical 413 identity",
+      "path": "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png",
+      "sha256": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94",
+      "bytes": 24057,
+      "size": [
+        108,
+        132
+      ],
+      "charged_bytes_conservatively": true,
+      "original_modified": false
+    },
+    {
+      "label": "Own S front wardrobe",
+      "path": "/workspace/scratch/mythic413-S-private-base-generation-fresh-20261020-v01/service-S-fullbody-base-native-r001.png",
+      "sha256": "5f0c143a3ee3c26b4a745b8f58c1e4b435dff354cd613e544f08348edd42fb3a",
+      "bytes": 996497,
+      "size": [
+        1254,
+        1254
+      ],
+      "charged_bytes_conservatively": true,
+      "original_modified": false
+    },
+    {
+      "label": "Own SW material and far RIGHT staff",
+      "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/service-SW-fullbody-base-native-r001.png",
+      "sha256": "1e5de9a93d8755783a2405733eddb21f7f59b3141acb9f5204332228a7a263ee",
+      "bytes": 950319,
+      "size": [
+        1254,
+        1254
+      ],
+      "charged_bytes_conservatively": true,
+      "original_modified": false
+    }
+  ],
+  "reference_board": {
+    "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-three-reference-W-board-v01.jpg",
+    "sha256": "48b3d70010b2f473610a125ad78ea723653dd4dc1548d032b915569fc0f877e4",
+    "bytes": 57231,
+    "size": [
+      1080,
+      650
+    ]
+  },
+  "charged_reference_bytes": 2028104,
+  "conservative_planned_raw_bytes": 1500000,
+  "planned_output_preview_max_bytes": 80000,
+  "planned_total_bytes": 3608104
+}

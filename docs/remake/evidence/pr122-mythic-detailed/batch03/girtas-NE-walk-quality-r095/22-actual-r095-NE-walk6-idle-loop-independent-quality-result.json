@@ -1,0 +1,44 @@
+{
+  "schema": "pr122-independent-actual-native-transition-review-v1",
+  "status": "PASS_SCOPED_ACTUAL_R095_NE_IDLE_WALK6_LOOP",
+  "reviewer": "/root/girtas_nw_walk_author (independent reviewer; did not author NE walk source or layout)",
+  "actual_tres": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/SpriteFrames.tres",
+  "actual_tres_sha256": "91786828e87c9b670cf6d668c3e90ddec6b177ecbdbdf71f8348702e923dd3da",
+  "actual_profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r095/NativeMotionProfile.tres",
+  "actual_profile_sha256": "e5d796d2b07fc5b803c3fa2e2dc93f1208e690c5fdbaf3464569e97c027f8f7a",
+  "actual_global_pixel_scale": 0.219105011732,
+  "source_sha256": "586d247a3c480a757075c1a94ec7b02483616875b084d4b7f65326c6c5f51dfe",
+  "animation": "walk_7",
+  "phase_count": 6,
+  "loop": true,
+  "fps": 12.5,
+  "seconds": 0.48,
+  "numeric_proof": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/actual-r095-NE-walk6-idle-cycle-numeric-proof.json",
+  "numeric_proof_sha256": "1e3db60846aca0660237c1c9ab786e5351fdb7f2e00caec37a1d83bd7f19aa9e",
+  "candidate_source_review_sha256": "c804e84610643b9e8d3a13eed35f872bed82be25ff94c9ec123b34e74226a732",
+  "candidate_physical_review_sha256": "c6506bb6e97bda8bdceb193f5826be6bcf6635aebe0d80ff07e63ffeb5b124cc",
+  "private_preview": "/workspace/scratch/girtas-NE-walk-reviewed-composite-v04/actual-r095-NE-idle-walk6-return-cycle-private.jpg",
+  "private_preview_bytes": 146793,
+  "private_preview_sha256": "11b68e393ae587ba60d579819335d8d1fb1d8561b9adb30e05528d58de4be517",
+  "checks": {
+    "all_six_actual_Texture2D_source_sha_and_cropped_RGBA_match": true,
+    "actual_AtlasTexture_regions_margins_perposeC_roots_match_reviewed_candidate": true,
+    "actual_idle_entry_exit_sourceC832_and_anchor337407_retained": true,
+    "true_NE_camera_model_and_opposite_support_sequence_retained": true,
+    "head_pauldron_waist_core_scale_entry_exit_coherent": true,
+    "projected_support_toe_depth_and_walk_groundroot_unchanged": true,
+    "actual2_to3_forward_RIGHTextent_and5_to0_trueforwardLEFTreach_retained": true,
+    "no_old_wrong0_or5_selected": true
+  },
+  "findings": [
+    "Actual compiled six frames preserve the exact independently reviewed source and per-poseC/root layout. CorrectedLEFT0/5 stay UP-RIGHT forward; support exchange/2\u21923/3\u21924/5\u21920 remains coherent.",
+    "Actual idle\u2192walk\u2192idle keeps the same core body/head scale and camera. Near/far plus forward/rear floor-depth remains authored perspective, not flattened localsoleY or AIR inferred from imageheight.",
+    "The actual profile has the normalized current globalpixel_scale; the metadata candidate did not fix a stale global scale. SpriteFrames loop is six phases at12.5fps,0.48seconds."
+  ],
+  "scope_limitations": [
+    "Scoped NE idle/walk6 transition and compiled layout/source proof only. Root-provided Godot resource/Player/action tests were not redundantly rerun here.",
+    "No fullactor/defaultMain approval, no other-direction/source-history reapproval and no hidden-bone measurement claim."
+  ],
+  "actor_approval_increment": 0,
+  "reviewed_at": "2026-10-19T16:11:42.649254+00:00"
+}

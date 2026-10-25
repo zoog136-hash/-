@@ -1,0 +1,78 @@
+{
+  "schema": "PR122_W_RUN_NEW_REPAIRED_LOAD4_AIR5_INDEPENDENT_SOURCE_QC_V1",
+  "utc": "2026-10-19T16:06:51.365884+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "SOURCE_REPAIRED_LOAD4_AIR5_PASS",
+  "scope": "Only actual repaired4 bladecontinuity retaining farRIGHT load and actualnew5 nearLEFT-leading AIR. Historical original4 detached-tipHOLD retained; no whole6physical/runtimeapproval.",
+  "actor_approval_increment": 0,
+  "source_pins": [
+    {
+      "phase": 4,
+      "raw_path": "/workspace/scratch/girtas-W-run-load4-blade-continuity-repair-v02/girtas-W-run-load4-blade-continuity-repair-v02.png",
+      "raw_sha256": "47d751baed6fb8f6863e2ff070d80bc296b88f5e6d58bbc4235504f0f9ade820",
+      "raw_bytes": 1389825,
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-W-run-load4-blade-continuity-repair-v02/request.json",
+      "request_sha256": "42ba07e22c04eb18ad3371fec90e029e884b3ae934c16c06deee8e2f5ef43e0f",
+      "receipt_path": "/workspace/scratch/girtas-W-run-load4-blade-continuity-repair-v02/generation-receipt.json",
+      "receipt_sha256": "bab5f60497e3f2a1dd9ec7cff85afc7e3bd4e5380311229d3c111cdeffa72fd4",
+      "geometry_path": "/workspace/scratch/girtas-W-run-load4-blade-continuity-repair-v02/geometry-partial1-base2048.json",
+      "geometry_sha256": "1cc8ab5576b7263509ab89e4b92dd704f62deea7e532bf6af80ac6827333e3ca",
+      "reference_pins": {
+        "/workspace/scratch/girtas-W-run-load4-3D-v01/girtas-W-run-load4-3D-v01.png": "be23a011532111c6a3025c887465e28030b929dfa209433ef3530ef197584d4f",
+        "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png": "a18e7741173cd3d8705d6c2329534a5681089ad7d9809659a148880ed7e57035"
+      },
+      "boundary_gt100_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    },
+    {
+      "phase": 5,
+      "raw_path": "/workspace/scratch/girtas-W-run-AIR5-3D-v01/girtas-W-run-AIR5-3D-v01.png",
+      "raw_sha256": "235382f585aaa3440b653e8bf3bd607a7c2c97ff4e4a8425fdbad614c7fdc17e",
+      "raw_bytes": 1426518,
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-W-run-AIR5-3D-v01/request.json",
+      "request_sha256": "8f4f67ebd261a73ac46b85ba38de1143c87752aa9d757e72c1c0a88d2f63a47f",
+      "receipt_path": "/workspace/scratch/girtas-W-run-AIR5-3D-v01/generation-receipt.json",
+      "receipt_sha256": "4ceb62046abacebc387af05df0b07b6e0a652215440f2a3a21b8fc4c86549783",
+      "geometry_path": "/workspace/scratch/girtas-W-run-AIR5-3D-v01/geometry-partial1-base2048.json",
+      "geometry_sha256": "2b4e8d85196fb16e78ca040a8335ac06c7976fd24e0e41e727c078fbebe327cc",
+      "reference_pins": {
+        "/workspace/scratch/girtas-W-run-RIGHT-halfcycles-3D-v02/3D-W-RUN-RIGHT-game5-authority.png": "ec6bcb2ef5388d65ec2ae26840ef423844431874b8d3ac2327f9f3f31a75f707",
+        "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-head-rigid-torso-rays-NO-OLD-ARMS-OR-LEGS.png": "fb8e5354e393d3f4f2eee1c3d79a9c0e4622e688028353202d8d904e67744926",
+        "/workspace/scratch/girtas-W-run-RIGHT-contact3-material-repair-v02/original-W-RIGHT-complete-sinuous-blade-reference-v02.png": "a18e7741173cd3d8705d6c2329534a5681089ad7d9809659a148880ed7e57035",
+        "/workspace/scratch/girtas-W-walk-LEFT-contact0-3D-v02/original-LONG-robe-gold-trim-detail.png": "aaa687f0a6621a91e4d9567f9c1bd02568aa30a0529fba3c25ab2e408d80bca7"
+      },
+      "boundary_gt100_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    }
+  ],
+  "findings": {
+    "repaired4": "Actual farRIGHT support thigh leads under the front/far side of the apron to deeply bent forward knee, shin back/down to a complete broad flat boot. NearLEFT foreground thigh/knee and shin fold back across it to a separate complete raised boot. Genuine compressed load, not contactalias. Blade now has one continuous gold/fire core into a fully tapered endpoint; detached tipfragment resolved without deleted gear.",
+    "AIR5": "NearLEFT thigh emerges from near side of pelvis and drives forward/image-left to flexed knee and separate leading boot. FarRIGHT folds/reaches rear/image-right to its separate boot, genuinely opposite AIR2. Two boots in suspended run configuration; sourcealpha alone proves no worldfloor clearance.",
+    "identity_and_model": "Proper W leftfacing camera, pale human face/long pale hair, hard pointed gold crown/rays/pauldron, long dark gold-trim robe and full permanentfarRIGHT sinuousblade maintained. No new material limb/camera/gear/endpointdefect visible."
+  },
+  "historical_original4_HOLD": "be23a011\u2026 original with detached273pixel blade-tip fragment remains preserved and unselected. Only new47d751\u2026 is sourcePASS.",
+  "remaining_HOLD": [
+    "Exact whole6 source consistency/loop and physical commonCs/root/sole-floor/AIR arc pending.",
+    "Rigid head/neck/pauldron scale and actual hip/slit\u2192knee\u2192ankle proportions require commonphysical draft review; proposedCs are not yet selected.",
+    "ActualcompiledTRES/Godot and finalactor quality pending; actor267 remains0/catalogOFF."
+  ],
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "fc1ec205b2c37aabe903557a36bd3d88e7b576dc70d632abfa78e834364c2b88",
+  "repository_mutations": false
+}

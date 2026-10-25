@@ -1,0 +1,1239 @@
+{
+  "schema": "PR122-own-SE-native-complete-arms-staff-and-core-INPUT-v1",
+  "status": "NATIVE_PARTS_INPUT_PENDING_ACTUAL_JOINT_SOURCE_QC_AND_OCCLUDED_CAPE_RETOUCH",
+  "source": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/SE-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "a322b55c6ff5a0945cb5480512007c4efe2c335ab4a690bdd57bbca18226f076",
+    "bytes": 992950
+  },
+  "once_registration": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/SE-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "7c7ab9bed7adb561762c88a39facb00815b5ab2c23cec533d0adbcf7d757f1c6",
+    "bytes": 3724
+  },
+  "C": 2816.0,
+  "bodyunit": 2.75,
+  "common_rig_root_in_unpadded_frame": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "production_storage_translation": [
+    128,
+    128
+  ],
+  "native_size": [
+    1254,
+    1254
+  ],
+  "actual_native_controls": {
+    "RIGHT_near_shoulder": [
+      620,
+      343
+    ],
+    "RIGHT_near_cuff_elbow": [
+      552,
+      459
+    ],
+    "RIGHT_near_wrist": [
+      417,
+      482
+    ],
+    "RIGHT_original_grip": [
+      382,
+      466
+    ],
+    "LEFT_far_visible_proximal_anchor": [
+      801.0,
+      491.0
+    ],
+    "LEFT_far_cuff_elbow": [
+      823.0,
+      516.0
+    ],
+    "LEFT_far_wrist": [
+      935.0,
+      584.0
+    ]
+  },
+  "parts": {
+    "RIGHT-near-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-RIGHT-near-upper-arm-native-v01.png",
+      "sha256": "a2c594148e08552bf31fdd8549e851f4aae98a21af2e3dec23267665f6d0653d",
+      "bytes": 38215
+    },
+    "RIGHT-near-complete-forearm-grip-hand": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-RIGHT-foregrip-including-all-original-fingers-v04.png",
+      "sha256": "3bc26e02ccf949cc45e6b82ced43d973e375c920517867ebb0a1d02a29519068",
+      "bytes": 46136
+    },
+    "LEFT-far-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-LEFT-far-upper-arm-native-v01.png",
+      "sha256": "6af2715b2cf6c6d57a77e6c818a63b70020933c7a49566ffde93cf06920a590a",
+      "bytes": 17558
+    },
+    "LEFT-far-complete-curved-cuff-forearm-free-hand": {
+      "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/common-own-SE-native-LEFT-materials-v01/original-actual-SE-LEFT-far-complete-curved-cuff-forearm-free-hand-material-v01.png",
+      "sha256": "aaee6ae628c21577a1dd7ab79e09b26e04ee6a192675ff558b1569e3d049e62d",
+      "bytes": 47441
+    },
+    "complete-rigid-RIGHT-near-staff": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-rigid-RIGHT-pole-full-native-contour-without-fingers-v04.png",
+      "sha256": "e78a4101b5fb0b479400725ec3be5fb0a760cb53239cc16e7eff92bcf4839ed8",
+      "bytes": 148496
+    }
+  },
+  "semantic_mattes": {
+    "RIGHT-near-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-RIGHT-near-upper-arm-semantic-matte-v01.png",
+      "sha256": "71e01e04f64756608fa713878f2e24d19b1ac08c75f796e72aae81549f0b11fc",
+      "bytes": 2735
+    },
+    "RIGHT-near-complete-forearm-grip-hand": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-RIGHT-foregrip-all-fingers-semantic-matte-v04.png",
+      "sha256": "51088510845caa56fa6e397bb3c95b6114e6c7da919501f9169cd1aeef591a67",
+      "bytes": 2410
+    },
+    "LEFT-far-upper-arm": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-materials-v01/original-actual-SE-LEFT-far-upper-arm-semantic-matte-v01.png",
+      "sha256": "d94adfd32b189487569d832a86007debcb96496a7450f5c0726121d731890eab",
+      "bytes": 2040
+    },
+    "LEFT-far-complete-curved-cuff-forearm-free-hand": {
+      "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/common-own-SE-native-LEFT-materials-v01/original-actual-SE-LEFT-complete-curved-cuff-forearm-hand-native-ownership-mask-v01.png",
+      "sha256": "593de262c0e69bf3862706e188edbd62df211127b63408d4a7fa97f8a5784a58",
+      "bytes": 3073
+    },
+    "complete-rigid-RIGHT-near-staff": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/original-actual-SE-complete-native-RIGHT-pole-visible-source-erasure-matte-v04.png",
+      "sha256": "cb38787e49318e7e65ebb0dcffe23dfb4b297b87e3c4b95af203093df043de53",
+      "bytes": 6836
+    }
+  },
+  "fullCORE": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-cape-original-visible-hem-join-v05r2/actual-SE-complete-old-arms-pole-erased-CORE-original-boots-natural-native-cape-hem-v05.png",
+    "sha256": "5b0c1816db939df0b6a1028fb7dee527b25882742c72cbef3a5fcfb13d0cd017",
+    "bytes": 785524
+  },
+  "complete_old_erasure_mask": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-cape-original-visible-hem-join-v05r2/actual-SE-complete-old-arms-and-pole-including-original-AA-erasure-mask-v05.png",
+    "sha256": "efca7c9ab6f828f387a25bc617f0d88b24ed4b0a2631a419ccab3625c92bac5a",
+    "bytes": 9266
+  },
+  "shared_LEFT_material": {
+    "path": "/workspace/scratch/mythic413-SE-hit-author-20261020-v01/common-own-SE-native-LEFT-materials-v01/SE-own-native-complete-LEFT-and-old-erased-BODY-readonly-handoff-v01.json",
+    "sha256": "e5f4614e6690a0603f0216d28eb625dfe1717a839503e2ec29755ab261865d3b",
+    "bytes": 4883
+  },
+  "staff_axis_once_from_original_visible_metal": [
+    0.06918523465484805,
+    351.7229676400946
+  ],
+  "upper_pole_actual_component_alpha16_pixels": 23018,
+  "old_original_source_modified": false,
+  "C_OR_root_fitted_OR_actor_resampled": false,
+  "actor_approvals_added": 0,
+  "understaff_cape_status": "ACTUAL_SE_NATIVE_CONTINUOUS_ORIGINAL_VISIBLE_HEM_JOIN_PENDING_INDEPENDENT_QC",
+  "prior_material": {
+    "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-complete-pole-hand-and-expanded-cape-v04/SE-ATTACK-own-complete-native-parts-correct-hand-pole-and-continuous-cape-provenance-v04.json",
+    "sha256": "de671d28e54a032dc98d531efb2294116304ca874f3164ace01f687e48c3dc16",
+    "bytes": 14425
+  },
+  "complete_original_lower_pole_RGBA_transferred": 4851,
+  "lower_native_pole_part_source_RGBA_difference": 0,
+  "actual_local_cape_retouch": {
+    "service_handoff": {
+      "path": "/workspace/scratch/mythic413-SE-cape-clearplate-private-retouch-continuing-20261020-v01/SE-cape-local-retouch-final-handoff-v01.json",
+      "sha256": "b1e216daba74fc07e834690bc461093e29cbebe88c66fa7bf356222dc032f317",
+      "bytes": 2911
+    },
+    "raw_unmodified": {
+      "path": "/workspace/scratch/mythic413-SE-cape-clearplate-private-retouch-continuing-20261020-v01/service-SE-cape-local-retouch-native-r001.png",
+      "sha256": "929dc8242992f1bfaccb1533b3b08108c2041bc3dd98459aa5dc43e75d049a8c",
+      "bytes": 1403251
+    },
+    "fixed_requested_crop_rect": [
+      275,
+      750,
+      525,
+      1000
+    ],
+    "raw_size": [
+      1254,
+      1254
+    ],
+    "local_native_paint": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-local-cape-strict-mask-v03/actual-local-SE-painted-cape-fixed-native250-registration-v03.png",
+      "sha256": "085dcac29157bc22f095e0429dbcf3fec8ea1e1e3e003e69df8a45e74fbfe022",
+      "bytes": 79976
+    },
+    "source_masked_only_plate": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-cape-original-visible-hem-join-v05r2/actual-original-SE-source-only-local-natural-cape-hem-derivative-v05.png",
+      "sha256": "54d555b989b8d19090800eed27b1c9b92ba4309bd63b47b50fa6325689af5261",
+      "bytes": 987489
+    },
+    "replacement_mask": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/SE-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-SE-real-cape-native-mask-250.png",
+      "sha256": "33c5104adbfa41b99d2f150583f07925d1350c9a1604257aa01bbb22795dd39b",
+      "bytes": 1052
+    },
+    "replacement_pixels": 30087,
+    "outside_replacement_source_RGBA_difference": 0,
+    "outside_replacement_CORE_RGBA_difference": 0,
+    "C_root_bodyunit_OR_actor_resampling_OR_perposefit_changed": false,
+    "local_texture_registration": "The one actual new local cloth service crop maps once from1254square to logical250square, actorbody unchanged.",
+    "expanded_actual_cape_mask": {
+      "path": "/workspace/scratch/mythic413-SE-attack-author-20261020-v01/actual-own-SE-ATTACK-native-cape-original-visible-hem-join-v05r2/actual-SE-expanded-local-cape-original-visible-hem-native-allowed-mask-v05.png",
+      "sha256": "fd3dd9ee9b97185a9cb33d9581f9e0b85b7880cec395eeda26c369663373beda",
+      "bytes": 3280
+    },
+    "original6583mask_preserved": true,
+    "native_mask_expansion_basis": "Only actual cape visible bluefold/gold motif/hem plus true oldpole-occluded cape; sourcebody/othergear/boots unchanged. Original visible alpha retained outside native pole/cape occlusion.",
+    "native_original_visible_hem_retouched": "Finite PCHIP interpolation of trusted actual original native visible cape boundary through original pole occlusion; one bounded native cloth-edge RGB warp only, no affine search or body pose fit.",
+    "original_visible_hem_native_trusted_knots": [
+      [
+        0,
+        158.0
+      ],
+      [
+        1,
+        157.0
+      ],
+      [
+        2,
+        155.0
+      ],
+      [
+        3,
+        153.0
+      ],
+      [
+        4,
+        152.0
+      ],
+      [
+        5,
+        150.0
+      ],
+      [
+        6,
+        149.0
+      ],
+      [
+        7,
+        147.0
+      ],
+      [
+        8,
+        145.0
+      ],
+      [
+        28,
+        114.0
+      ],
+      [
+        29,
+        113.0
+      ],
+      [
+        30,
+        111.0
+      ],
+      [
+        31,
+        110.0
+      ],
+      [
+        32,
+        108.0
+      ],
+      [
+        33,
+        106.0
+      ],
+      [
+        34,
+        105.0
+      ],
+      [
+        35,
+        103.0
+      ],
+      [
+        36,
+        101.0
+      ],
+      [
+        37,
+        99.0
+      ],
+      [
+        38,
+        98.0
+      ],
+      [
+        39,
+        96.0
+      ],
+      [
+        40,
+        95.0
+      ],
+      [
+        41,
+        93.0
+      ],
+      [
+        42,
+        92.0
+      ],
+      [
+        43,
+        90.0
+      ],
+      [
+        44,
+        88.0
+      ],
+      [
+        45,
+        87.0
+      ],
+      [
+        46,
+        85.0
+      ],
+      [
+        47,
+        84.0
+      ],
+      [
+        48,
+        82.0
+      ],
+      [
+        49,
+        81.0
+      ],
+      [
+        50,
+        79.0
+      ],
+      [
+        51,
+        78.0
+      ],
+      [
+        52,
+        77.0
+      ],
+      [
+        53,
+        75.0
+      ],
+      [
+        54,
+        73.0
+      ],
+      [
+        55,
+        72.0
+      ],
+      [
+        56,
+        70.0
+      ],
+      [
+        57,
+        68.0
+      ],
+      [
+        58,
+        67.0
+      ],
+      [
+        59,
+        65.0
+      ],
+      [
+        60,
+        64.0
+      ],
+      [
+        61,
+        62.0
+      ],
+      [
+        62,
+        61.0
+      ],
+      [
+        63,
+        59.0
+      ],
+      [
+        64,
+        58.0
+      ],
+      [
+        65,
+        56.0
+      ],
+      [
+        66,
+        55.0
+      ],
+      [
+        67,
+        54.0
+      ],
+      [
+        68,
+        52.0
+      ],
+      [
+        69,
+        50.0
+      ],
+      [
+        70,
+        49.0
+      ],
+      [
+        71,
+        47.0
+      ],
+      [
+        72,
+        46.0
+      ],
+      [
+        73,
+        44.0
+      ],
+      [
+        74,
+        43.0
+      ],
+      [
+        75,
+        42.0
+      ],
+      [
+        76,
+        40.0
+      ],
+      [
+        77,
+        39.0
+      ],
+      [
+        78,
+        38.0
+      ],
+      [
+        79,
+        36.0
+      ],
+      [
+        80,
+        35.0
+      ],
+      [
+        81,
+        34.0
+      ],
+      [
+        82,
+        32.0
+      ],
+      [
+        83,
+        31.0
+      ],
+      [
+        84,
+        30.0
+      ],
+      [
+        85,
+        29.0
+      ],
+      [
+        86,
+        27.0
+      ],
+      [
+        87,
+        26.0
+      ],
+      [
+        88,
+        24.0
+      ],
+      [
+        89,
+        23.0
+      ],
+      [
+        90,
+        22.0
+      ],
+      [
+        91,
+        21.0
+      ],
+      [
+        92,
+        19.0
+      ],
+      [
+        93,
+        18.0
+      ],
+      [
+        94,
+        17.0
+      ],
+      [
+        95,
+        16.0
+      ],
+      [
+        96,
+        15.0
+      ],
+      [
+        97,
+        13.0
+      ],
+      [
+        98,
+        12.0
+      ],
+      [
+        99,
+        11.0
+      ],
+      [
+        100,
+        10.0
+      ],
+      [
+        101,
+        9.0
+      ],
+      [
+        102,
+        7.0
+      ],
+      [
+        103,
+        6.0
+      ],
+      [
+        104,
+        5.0
+      ],
+      [
+        105,
+        4.0
+      ],
+      [
+        106,
+        3.0
+      ],
+      [
+        107,
+        1.0
+      ],
+      [
+        108,
+        0.0
+      ],
+      [
+        109,
+        0.0
+      ],
+      [
+        110,
+        0.0
+      ],
+      [
+        111,
+        0.0
+      ],
+      [
+        112,
+        0.0
+      ],
+      [
+        113,
+        0.0
+      ],
+      [
+        114,
+        0.0
+      ],
+      [
+        115,
+        0.0
+      ],
+      [
+        116,
+        0.0
+      ],
+      [
+        117,
+        0.0
+      ],
+      [
+        118,
+        0.0
+      ],
+      [
+        119,
+        14.0
+      ],
+      [
+        120,
+        22.0
+      ],
+      [
+        121,
+        28.0
+      ],
+      [
+        122,
+        31.0
+      ],
+      [
+        123,
+        34.0
+      ],
+      [
+        124,
+        37.0
+      ],
+      [
+        125,
+        40.0
+      ],
+      [
+        126,
+        43.0
+      ],
+      [
+        127,
+        45.0
+      ],
+      [
+        128,
+        47.0
+      ],
+      [
+        129,
+        49.0
+      ],
+      [
+        130,
+        50.0
+      ],
+      [
+        131,
+        52.0
+      ],
+      [
+        132,
+        54.0
+      ],
+      [
+        133,
+        56.0
+      ],
+      [
+        134,
+        57.0
+      ],
+      [
+        135,
+        59.0
+      ],
+      [
+        136,
+        60.0
+      ],
+      [
+        137,
+        61.0
+      ],
+      [
+        138,
+        62.0
+      ],
+      [
+        139,
+        63.0
+      ],
+      [
+        140,
+        64.0
+      ],
+      [
+        141,
+        65.0
+      ],
+      [
+        142,
+        66.0
+      ],
+      [
+        143,
+        67.0
+      ],
+      [
+        144,
+        68.0
+      ],
+      [
+        145,
+        69.0
+      ],
+      [
+        146,
+        70.0
+      ],
+      [
+        147,
+        71.0
+      ],
+      [
+        148,
+        72.0
+      ],
+      [
+        149,
+        73.0
+      ],
+      [
+        150,
+        74.0
+      ],
+      [
+        151,
+        75.0
+      ],
+      [
+        152,
+        76.0
+      ],
+      [
+        153,
+        77.0
+      ],
+      [
+        154,
+        77.0
+      ],
+      [
+        155,
+        78.0
+      ],
+      [
+        156,
+        78.0
+      ],
+      [
+        157,
+        79.0
+      ],
+      [
+        158,
+        80.0
+      ],
+      [
+        159,
+        80.0
+      ],
+      [
+        160,
+        81.0
+      ],
+      [
+        161,
+        82.0
+      ],
+      [
+        162,
+        83.0
+      ],
+      [
+        163,
+        84.0
+      ],
+      [
+        164,
+        84.0
+      ],
+      [
+        165,
+        85.0
+      ],
+      [
+        166,
+        86.0
+      ],
+      [
+        167,
+        87.0
+      ],
+      [
+        168,
+        88.0
+      ],
+      [
+        169,
+        89.0
+      ],
+      [
+        170,
+        90.0
+      ],
+      [
+        171,
+        91.0
+      ],
+      [
+        172,
+        92.0
+      ],
+      [
+        173,
+        94.0
+      ],
+      [
+        174,
+        95.0
+      ],
+      [
+        175,
+        96.0
+      ],
+      [
+        176,
+        97.0
+      ],
+      [
+        177,
+        98.0
+      ],
+      [
+        225,
+        156.0
+      ],
+      [
+        226,
+        157.0
+      ],
+      [
+        227,
+        158.0
+      ],
+      [
+        229,
+        161.0
+      ],
+      [
+        230,
+        162.0
+      ],
+      [
+        231,
+        163.0
+      ],
+      [
+        232,
+        165.0
+      ],
+      [
+        233,
+        166.0
+      ],
+      [
+        234,
+        167.0
+      ],
+      [
+        238,
+        172.0
+      ],
+      [
+        239,
+        173.0
+      ],
+      [
+        240,
+        174.0
+      ]
+    ],
+    "hidden_hem_max_native_texture_horizontal_shift": 14.0,
+    "actual_original_arm_pole_part_changes_after_v04": 0
+  },
+  "actual_hand_pole_material_ownership": {
+    "original_source_skin_hand_in_foregrip_RGBA_diff": 0,
+    "native_skin_hand_original_pixels": 2926,
+    "wrong_generic_gold_predicate_corrected": true,
+    "source_hand_rect": [
+      348,
+      441,
+      417,
+      497
+    ],
+    "hand_pink_pixels_in_rigid_pole": false,
+    "exposed_real_shaft_above_below_hand_owner": "complete-rigid-RIGHT-near-staff",
+    "source_pole_contour_native_original_trace": {
+      "left": [
+        [
+          394,
+          750
+        ],
+        [
+          395,
+          775
+        ],
+        [
+          392,
+          783
+        ],
+        [
+          391,
+          789
+        ],
+        [
+          387,
+          793
+        ],
+        [
+          383,
+          798
+        ],
+        [
+          389,
+          802
+        ],
+        [
+          391,
+          806
+        ],
+        [
+          391,
+          812
+        ],
+        [
+          395,
+          818
+        ],
+        [
+          394,
+          823
+        ],
+        [
+          390,
+          830
+        ],
+        [
+          385,
+          837
+        ],
+        [
+          384,
+          842
+        ],
+        [
+          391,
+          848
+        ],
+        [
+          395,
+          854
+        ],
+        [
+          389,
+          861
+        ],
+        [
+          384,
+          866
+        ],
+        [
+          382,
+          870
+        ],
+        [
+          389,
+          878
+        ],
+        [
+          390,
+          881
+        ],
+        [
+          384,
+          884
+        ],
+        [
+          381,
+          888
+        ],
+        [
+          379,
+          895
+        ],
+        [
+          382,
+          900
+        ],
+        [
+          389,
+          906
+        ],
+        [
+          390,
+          909
+        ],
+        [
+          387,
+          913
+        ],
+        [
+          381,
+          920
+        ],
+        [
+          377,
+          928
+        ],
+        [
+          376,
+          932
+        ],
+        [
+          383,
+          939
+        ],
+        [
+          387,
+          947
+        ],
+        [
+          391,
+          955
+        ],
+        [
+          399,
+          963
+        ],
+        [
+          402,
+          968
+        ],
+        [
+          399,
+          973
+        ],
+        [
+          393,
+          978
+        ],
+        [
+          388,
+          984
+        ],
+        [
+          386,
+          990
+        ],
+        [
+          383,
+          995
+        ],
+        [
+          382,
+          1000
+        ]
+      ],
+      "right": [
+        [
+          414,
+          750
+        ],
+        [
+          416,
+          778
+        ],
+        [
+          420,
+          783
+        ],
+        [
+          423,
+          787
+        ],
+        [
+          430,
+          790
+        ],
+        [
+          429,
+          794
+        ],
+        [
+          424,
+          798
+        ],
+        [
+          421,
+          804
+        ],
+        [
+          420,
+          809
+        ],
+        [
+          422,
+          816
+        ],
+        [
+          418,
+          823
+        ],
+        [
+          419,
+          830
+        ],
+        [
+          423,
+          838
+        ],
+        [
+          429,
+          842
+        ],
+        [
+          427,
+          847
+        ],
+        [
+          422,
+          852
+        ],
+        [
+          423,
+          857
+        ],
+        [
+          428,
+          862
+        ],
+        [
+          432,
+          867
+        ],
+        [
+          430,
+          870
+        ],
+        [
+          428,
+          875
+        ],
+        [
+          432,
+          879
+        ],
+        [
+          431,
+          885
+        ],
+        [
+          436,
+          889
+        ],
+        [
+          438,
+          896
+        ],
+        [
+          433,
+          901
+        ],
+        [
+          430,
+          906
+        ],
+        [
+          431,
+          911
+        ],
+        [
+          434,
+          917
+        ],
+        [
+          441,
+          925
+        ],
+        [
+          446,
+          932
+        ],
+        [
+          446,
+          935
+        ],
+        [
+          441,
+          942
+        ],
+        [
+          434,
+          950
+        ],
+        [
+          428,
+          958
+        ],
+        [
+          424,
+          967
+        ],
+        [
+          426,
+          975
+        ],
+        [
+          432,
+          980
+        ],
+        [
+          440,
+          986
+        ],
+        [
+          449,
+          994
+        ],
+        [
+          450,
+          1000
+        ]
+      ]
+    },
+    "complete_lower_weapon_on_actual_transparent_native_background": [
+      340,
+      1000,
+      451,
+      1140
+    ],
+    "source_modified": false
+  }
+}

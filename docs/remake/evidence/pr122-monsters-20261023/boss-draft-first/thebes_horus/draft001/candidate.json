@@ -1,0 +1,279 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:테베 호루스": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "idle",
+          "direction": "W",
+          "animation": "idle_4",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/W-idle-v01.png",
+          "source_sha256": "d87289ce41b2e1866185bcd81b24053e480295a7d2640dca52c8ffc60e6826b0",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_horus/sources/W-idle-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "W",
+                "region": [
+                  152,
+                  7,
+                  282,
+                  509
+                ],
+                "margin": [
+                  564,
+                  330,
+                  1054,
+                  827
+                ],
+                "source_anchor": [
+                  256,
+                  512
+                ],
+                "rgba_sha256": "b67f3a7e15a41f3082a2d775f82645c982c45e8fcc98ca60e9c31a51c3a0329e",
+                "canvas_size": [
+                  1336,
+                  1336
+                ],
+                "foot": [
+                  668,
+                  835
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "W",
+                "region": [
+                  629,
+                  6,
+                  300,
+                  510
+                ],
+                "margin": [
+                  529,
+                  329,
+                  1036,
+                  826
+                ],
+                "source_anchor": [
+                  768,
+                  512
+                ],
+                "rgba_sha256": "1da41e290a63c00ba2ab93c2eb532e282fcb5e5cbef8d34bb9de5757100e9e1b",
+                "canvas_size": [
+                  1336,
+                  1336
+                ],
+                "foot": [
+                  668,
+                  835
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "W",
+                "region": [
+                  1109,
+                  6,
+                  316,
+                  510
+                ],
+                "margin": [
+                  497,
+                  329,
+                  1020,
+                  826
+                ],
+                "source_anchor": [
+                  1280,
+                  512
+                ],
+                "rgba_sha256": "273393c9c01888069ad074fc8b3933c6c1420332800fbdbf71f4e8efd1373d65",
+                "canvas_size": [
+                  1336,
+                  1336
+                ],
+                "foot": [
+                  668,
+                  835
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "W",
+                "region": [
+                  137,
+                  518,
+                  302,
+                  506
+                ],
+                "margin": [
+                  549,
+                  332,
+                  1034,
+                  830
+                ],
+                "source_anchor": [
+                  256,
+                  1021
+                ],
+                "rgba_sha256": "94657fef27a41edda3cd4d4cd39901e2f32e45746638acf9e37dbeef7c6ce6b3",
+                "canvas_size": [
+                  1336,
+                  1336
+                ],
+                "foot": [
+                  668,
+                  835
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "W",
+                "region": [
+                  623,
+                  518,
+                  307,
+                  506
+                ],
+                "margin": [
+                  523,
+                  332,
+                  1029,
+                  830
+                ],
+                "source_anchor": [
+                  768,
+                  1021
+                ],
+                "rgba_sha256": "e2934c1ab01785ef4591ce26afa9c3928fee5b71a82f3ae1b63769428d91ee9a",
+                "canvas_size": [
+                  1336,
+                  1336
+                ],
+                "foot": [
+                  668,
+                  835
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "W",
+                "region": [
+                  1131,
+                  518,
+                  289,
+                  506
+                ],
+                "margin": [
+                  519,
+                  331,
+                  1047,
+                  830
+                ],
+                "source_anchor": [
+                  1280,
+                  1022
+                ],
+                "rgba_sha256": "347b10d38468fbffae844d0b7dd59b42f11e373c088902e5907a6ffc466921b7",
+                "canvas_size": [
+                  1336,
+                  1336
+                ],
+                "foot": [
+                  668,
+                  835
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 502.0,
+            "canvas_size": [
+              1336,
+              1336
+            ],
+            "foot": [
+              668,
+              835
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/SpriteFrames.tres",
+      "frames_sha256": "aa60bd5e5629c9f2f4a407497770ec23302d90f5143bd8eae000c32f7f558267",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/NativeMotionProfile.tres",
+      "native_profile_sha256": "cfe6c622ba37f596eaa9c3ab59f825acbc5439a15c6caca5724305835df9777f",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "death_2",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [
+    {
+      "clip": "E-idle-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "S-idle-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "SE-idle-v01",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "clip": "SW-idle-v01",
+      "reason": "A visible pose touches the image boundary"
+    }
+  ],
+  "source_drafts_saved": 5,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "grim_reaper",
+  "actor": "monster:그림 리퍼",
+  "clip": "W-hit-v01",
+  "direction": "W",
+  "role": "hit",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "4c341f23997fc03f8355c4ba92e5de3ca5e699418743190413a4d44cc206807e",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A towering skeletal GRIM REAPER, visible ivory skull deep inside a huge ragged midnight hood, skeletal rib cage partly under layered charcoal robes, iron chain belt, long torn hanging sleeves and hanging robe strips. One giant long-handled curved silver SCYTHE gripped by anatomical RIGHT hand, LEFT skeletal hand empty. Floats slightly above ground, no humanoid knight legs exposed; robe hems and chain react to motion. No smoke or glow.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.\nRESUME CORRECTION TO CAMERA AND SPACING: All SIX poses face screen LEFT in pure LEFT profile. The reference image gives COSTUME ONLY, never copy its right-facing camera. Show near LEFT empty side and FAR RIGHT weapon arm, with no hand swap. Exactly6 full poses, arranged3 columns x2 rows with at least100px of genuinely empty alpha between complete figures. On a1536x1024 sheet each body is about300px tall, each pose including weapon under400px wide, leaving transparent outer margins and clear row gutters. No overlapping source poses. No label text. Keep every limb/held object connected to its own whole body; do not create detached ornaments.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "resume_attempt": 1,
+  "resume_reason": "User requested remaining210 after previous provider reset time elapsed; unchanged existing285 sheets are excluded.",
+  "original_request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/requests/W-hit-v01.json",
+  "original_request_sha256": "5937666264bbe63ab7b56cf86c074c614c8e6945b5d96eed56d081666d2ddc8e",
+  "original_hold_cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+  "order": 11
+}

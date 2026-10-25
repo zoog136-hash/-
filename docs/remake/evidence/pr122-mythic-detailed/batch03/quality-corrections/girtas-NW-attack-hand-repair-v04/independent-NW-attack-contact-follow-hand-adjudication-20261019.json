@@ -1,0 +1,113 @@
+{
+  "schema": "pr122-independent-NW-contact-follow-hand-adjudication-v1",
+  "status": "HOLD_PHASES3_4_NEAR_LEFT_WEAPON_CHAIN",
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "attack",
+  "source": "/workspace/scratch/girtas-NW-attack-repair/girtas-NW-attack-v03.png",
+  "source_sha256": "2832659b8ce6422fc6c52ebb1fc09506e5641132f9c780854fee0ef7f0a9e935",
+  "reference_correct_source_phases": [
+    1,
+    2
+  ],
+  "reference_findings": "Correct1/2 visibly keep the large nearLEFT shoulder/arm free toward lower-left while the weapon is raised from the opposite farRIGHT shoulder/arm behind the head/hair. The pinned corrected guard0 shows the same near-empty/far-weapon ownership.",
+  "corrected_guard_source": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/usable-guard-row0-v04.png",
+  "corrected_guard_sha256": "09552b8d2308ffe13ced3e142ebb19aaa86c71dd557f2ca6e8ee85b9c2fce723",
+  "phase_reviews": [
+    {
+      "source_phase": 3,
+      "status": "HOLD_WRONG_NEAR_LEFT_WEAPON_CHAIN",
+      "camera": "PASS_NW_BACK_LEFT",
+      "chain_evidence": "One continuous weapon hand/wrist -> forearm -> elbow -> upper arm enters the large viewer-left foreground pauldron immediately left of the pale back-hair sheet. That is the same near anatomicalLEFT shoulder whose arm is separately empty/free in correct phases1/2 and corrected guard0.",
+      "cross_body_adjudication": "Not accepted as a normal farRIGHT cross-body reach: the visible weapon upper-arm contour connects directly under the near pauldron/socket, without an independent crossing link from the far shoulder behind the opposite/right hair edge.",
+      "opposite_arm_evidence": "The far shoulder/arm is substantially hair/body-occluded; its empty hand is not independently readable. No extra arm or missing hand is asserted solely from that occlusion. The HOLD rests on the positively traced near-shoulder weapon chain.",
+      "approximate_original_source_landmarks_xy": {
+        "nearLEFT_shoulder": [
+          810,
+          710
+        ],
+        "elbow": [
+          767,
+          681
+        ],
+        "wrist": [
+          712,
+          642
+        ],
+        "grip": [
+          697,
+          630
+        ]
+      },
+      "landmark_precision": "Approximate visual tracing for review only; not a pixel mask, automatic reanchor or final anatomy rewrite.",
+      "upperbody_source_crop_xyxy": [
+        512,
+        512,
+        1024,
+        862
+      ],
+      "upperbody_crop_RGBA_sha256": "3540f086ab0bc66115541b713ced9960f1b448167e8ae0aa09a5ca66d5042b7f",
+      "required_correction": "Retain the NW/back-left torso/head/hair/skirt and genuine contact/follow-through. Re-author only the weapon-arm ownership/near-empty-arm detail into the anatomical farRIGHT chain; preserve all already-correct phases."
+    },
+    {
+      "source_phase": 4,
+      "status": "HOLD_WRONG_NEAR_LEFT_WEAPON_CHAIN",
+      "camera": "PASS_NW_BACK_LEFT",
+      "chain_evidence": "One continuous weapon hand/wrist -> forearm -> elbow -> upper arm enters the large viewer-left foreground pauldron immediately left of the pale back-hair sheet. That is the same near anatomicalLEFT shoulder whose arm is separately empty/free in correct phases1/2 and corrected guard0.",
+      "cross_body_adjudication": "Not accepted as a normal farRIGHT cross-body reach: the visible weapon upper-arm contour connects directly under the near pauldron/socket, without an independent crossing link from the far shoulder behind the opposite/right hair edge.",
+      "opposite_arm_evidence": "The far shoulder/arm is substantially hair/body-occluded; its empty hand is not independently readable. No extra arm or missing hand is asserted solely from that occlusion. The HOLD rests on the positively traced near-shoulder weapon chain.",
+      "approximate_original_source_landmarks_xy": {
+        "nearLEFT_shoulder": [
+          298,
+          1180
+        ],
+        "elbow": [
+          255,
+          1161
+        ],
+        "wrist": [
+          215,
+          1132
+        ],
+        "grip": [
+          208,
+          1125
+        ]
+      },
+      "landmark_precision": "Approximate visual tracing for review only; not a pixel mask, automatic reanchor or final anatomy rewrite.",
+      "upperbody_source_crop_xyxy": [
+        0,
+        1024,
+        512,
+        1374
+      ],
+      "upperbody_crop_RGBA_sha256": "8d1a585dc399862c3a756876039e30a3d5905ad48b6eb0ad3a9cb5654d901b96",
+      "required_correction": "Retain the NW/back-left torso/head/hair/skirt and genuine contact/follow-through. Re-author only the weapon-arm ownership/near-empty-arm detail into the anatomical farRIGHT chain; preserve all already-correct phases."
+    }
+  ],
+  "original_source_result_sha256": "b84f4320fc60cbac86fff4629f3985865fe7b47ef4a9f830e3eb4ce119170850",
+  "original_partial_result_sha256": "152630fcc80f94800dbd11533d12db48a8c54c98e0bcb9cdfe83aa7aeb055536",
+  "original_HOLD_results_preserved": true,
+  "private_previews": [
+    {
+      "path": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/independent-NW-phases1-4-upperbody-private.jpg",
+      "bytes": 113520
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/private-corrected-guard-chain-detail.jpg",
+      "bytes": 58138
+    },
+    {
+      "path": "/workspace/scratch/girtas-NW-attack-hand-repair-v04/independent-NW-contact-follow-arm-detail-private.jpg",
+      "bytes": 132795
+    }
+  ],
+  "scope": "Only original phases3/4 upper-body hand-chain adjudication against correct1/2 and pinned corrected guard0; no full-six cycle or actor approval.",
+  "reviewed_at": "2026-10-19T12:15:33.908138+00:00",
+  "source_pixels_changed": false,
+  "repository_mutated": false,
+  "imagegen_attempts": 0,
+  "main_chat_images_returned": 0,
+  "actor_approval_change": 0,
+  "detailed_completion_change": 0
+}

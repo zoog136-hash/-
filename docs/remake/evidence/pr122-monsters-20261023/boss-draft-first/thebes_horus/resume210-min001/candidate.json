@@ -1,0 +1,262 @@
+{
+  "schema": "pr122-boss-repair-staging-v1",
+  "actors": {
+    "monster:테베 호루스": {
+      "kind": "boss",
+      "quality_tier": "mythic_transform",
+      "tracks": [
+        {
+          "role": "run",
+          "direction": "SW",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_horus/raw/SW-run-v01.png",
+          "source_sha256": "32458ad3215ff11597f4be1706c008a2f6d34b75466c8ceaf8cdcf3dff90ebdc",
+          "texture": "assets/actors/eight_direction/boss_draft_first/thebes_horus/sources/SW-run-v01.png",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  26,
+                  8,
+                  497,
+                  480
+                ],
+                "margin": [
+                  402,
+                  314,
+                  767,
+                  784
+                ],
+                "source_anchor": [
+                  256,
+                  484
+                ],
+                "rgba_sha256": "00f7e2d4adfbeabc49847e57d81c5e2d8674d91c3bff6b9aefc9e70ce12335ca",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  536,
+                  15,
+                  457,
+                  473
+                ],
+                "margin": [
+                  400,
+                  321,
+                  807,
+                  791
+                ],
+                "source_anchor": [
+                  768,
+                  484
+                ],
+                "rgba_sha256": "f2c87fd60ccba7f3b330500bbdfc5b00d8b941214d63a57bf1f08da72193f795",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  1016,
+                  13,
+                  498,
+                  451
+                ],
+                "margin": [
+                  368,
+                  343,
+                  766,
+                  813
+                ],
+                "source_anchor": [
+                  1280,
+                  460
+                ],
+                "rgba_sha256": "9457685abd97c90a8edb41fa7dd1902da95aa0bdd7d50a41e87f4b0ec2cff4e0",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  22,
+                  517,
+                  521,
+                  478
+                ],
+                "margin": [
+                  398,
+                  316,
+                  743,
+                  786
+                ],
+                "source_anchor": [
+                  256,
+                  991
+                ],
+                "rgba_sha256": "f500c0b40f967e0fd03ca5d6d1dc05f151b6104d15318ca3944ae3239830fa8a",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  621,
+                  540,
+                  364,
+                  442
+                ],
+                "margin": [
+                  485,
+                  352,
+                  900,
+                  822
+                ],
+                "source_anchor": [
+                  768,
+                  978
+                ],
+                "rgba_sha256": "a5c3b66365283c5cb4394e31eecac5c6ff8139dfb8a604a721bafff5cd30961f",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  1022,
+                  527,
+                  489,
+                  458
+                ],
+                "margin": [
+                  374,
+                  336,
+                  775,
+                  806
+                ],
+                "source_anchor": [
+                  1280,
+                  981
+                ],
+                "rgba_sha256": "d6139dc837e8da9891c2430d82ccfedace46d7017165434c769952961d7ec60c",
+                "canvas_size": [
+                  1264,
+                  1264
+                ],
+                "foot": [
+                  632,
+                  790
+                ]
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 473.0,
+            "canvas_size": [
+              1264,
+              1264
+            ],
+            "foot": [
+              632,
+              790
+            ],
+            "strict_source_analysis_canvas": 2048
+          },
+          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
+          "production_connected": false
+        }
+      ],
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/resume210-min001/SpriteFrames.tres",
+      "frames_sha256": "bf23a17b5119d8512786c2003ad1a8f66f661fe1e9b86c147c536a01b2031c19",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/resume210-min001/NativeMotionProfile.tres",
+      "native_profile_sha256": "5fa081bfb439ce012f97c0c6e18d69181a643c0e3d3d7a720397c8ebbc0194b3",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "distinct_source_pose_count": 6,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "death_2",
+        "hit_0",
+        "hit_1",
+        "hit_2",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "hit_6",
+        "hit_7",
+        "idle_0",
+        "idle_1",
+        "idle_2",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "idle_6",
+        "idle_7",
+        "run_0",
+        "run_1",
+        "run_2",
+        "run_4",
+        "run_5",
+        "run_6",
+        "run_7"
+      ],
+      "production_connected": false,
+      "detailed_completed": false,
+      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending"
+    }
+  },
+  "source_holds": [],
+  "source_drafts_saved": 1,
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

@@ -1,0 +1,5010 @@
+{
+  "status": "ACTUAL_NEW_DEDICATED_OWN_E_DEATH_SIX_FIRST_NATIVE_SOURCE_PENDING_SOURCE_CYCLE_JOINT_FLOOR_QC",
+  "actor": "transform:413",
+  "direction": "E",
+  "motion": "death",
+  "fixed_C": 2816.0,
+  "bodyunit": 2.75,
+  "common_unpadded_root": [
+    738.7916666666666,
+    1098.2150113422247
+  ],
+  "native_input_canvas": [
+    1254,
+    1254
+  ],
+  "storage_canvas": [
+    2304,
+    2304
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "logical_canvas": 1024,
+  "source_RGBA_scaled": false,
+  "wholeactor_mirror": false,
+  "perpose_root_or_C_fit": false,
+  "fixed_femur_tibia": 318.725,
+  "source_capture_body_U": [
+    0.9,
+    0.35,
+    0.35
+  ],
+  "source_capture_body_V": [
+    0.0,
+    0.0,
+    -1.0
+  ],
+  "native_pelvis_anchor": [
+    724,
+    686
+  ],
+  "runtime_death_seconds": 0.8,
+  "resource_role_seconds": 0.65,
+  "phase_seconds": 0.13333333333333333,
+  "loop": false,
+  "held_dead_terminal": true,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "STAGGER-balance-loss",
+      "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v03/E-DEATH-phase0-actual-native-v03.png",
+      "sha256": "8b5d74e22e09ac1fa7a655a4e2d7ffaa35018b29b376313d8b7f7dba0d875af1",
+      "bytes": 1032475,
+      "state": {
+        "name": "STAGGER-balance-loss",
+        "hip": [
+          0,
+          225,
+          650
+        ],
+        "body": 0,
+        "pelvis": 0,
+        "head": 0,
+        "Rupper": 0,
+        "Lupper": 0,
+        "Lfore": 0,
+        "foot": 0,
+        "heel": [
+          [
+            -195.11249999999995,
+            119.39645617982826,
+            16.11146752205293
+          ],
+          [
+            95.13750000000003,
+            108.55688275146169,
+            9.771894093686354
+          ]
+        ],
+        "cloth": 0
+      },
+      "bones": {
+        "R": {
+          "hip": [
+            -42.300000000000004,
+            208.55,
+            623.55
+          ],
+          "knee": [
+            128.47297793098022,
+            223.6818259466712,
+            354.8619960305175
+          ],
+          "ankle": [
+            -169.01249999999996,
+            197.32227815256283,
+            243.5372894947875
+          ],
+          "heel": [
+            -195.11249999999995,
+            119.39645617982826,
+            16.11146752205293
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "source_foot_heel": [
+            522.0,
+            1201.5
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.40096230954290296,
+              -0.4434643143544508
+            ],
+            [
+              0.40096230954290296,
+              -1.4434643143544508
+            ]
+          ],
+          "foot_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.4246119792568946,
+              1.1286432371517992
+            ],
+            [
+              -0.2902108596588472,
+              -0.004824251945147656
+            ],
+            [
+              0.7178716217568759,
+              -1.3325875858886878
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.7520486303165977,
+              -1.3265762237962053
+            ],
+            [
+              0.4999042817774562,
+              0.04963943593527721
+            ],
+            [
+              -0.2485845898367275,
+              -0.7009468065985741
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              548,
+              847,
+              653,
+              893
+            ],
+            "source_anchor": [
+              622.0,
+              868.0
+            ],
+            "source_blend_y": [
+              856.0,
+              886.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3519,
+            "raster_alpha_gt0_texels": 4144,
+            "source_quad_min_Z": 327.7922632668636,
+            "complete_continuous_surface_quartic_min_Z": 315.8954732214746,
+            "complete_sampled_surface_min_Z": 315.5761080875477,
+            "raster_texel_quad_min_Z": 327.78398391706577,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 312.8954732214746,
+            "above_floor": true,
+            "world_anchor": [
+              128.47297793098022,
+              223.6818259466712,
+              354.8619960305175
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.4246119792568946,
+                1.1286432371517992
+              ],
+              [
+                -0.2902108596588472,
+                -0.004824251945147656
+              ],
+              [
+                0.7178716217568759,
+                -1.3325875858886878
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.7520486303165977,
+                -1.3265762237962053
+              ],
+              [
+                0.4999042817774562,
+                0.04963943593527721
+              ],
+              [
+                -0.2485845898367275,
+                -0.7009468065985741
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              524,
+              1027,
+              585,
+              1069
+            ],
+            "source_anchor": [
+              551.0,
+              1052.0
+            ],
+            "source_blend_y": [
+              1036.0,
+              1060.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 1989,
+            "raster_alpha_gt0_texels": 2678,
+            "source_quad_min_Z": 209.09462710505213,
+            "complete_continuous_surface_quartic_min_Z": 209.09462710505213,
+            "complete_sampled_surface_min_Z": 208.17241379310346,
+            "raster_texel_quad_min_Z": 209.09462710505215,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 206.09462710505213,
+            "above_floor": true,
+            "world_anchor": [
+              -169.01249999999996,
+              197.32227815256283,
+              243.5372894947875
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.7520486303165977,
+                -1.3265762237962053
+              ],
+              [
+                0.4999042817774562,
+                0.04963943593527721
+              ],
+              [
+                -0.2485845898367275,
+                -0.7009468065985741
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.8999999999999999,
+                0.0
+              ],
+              [
+                0.40096230954290296,
+                -0.4434643143544508
+              ],
+              [
+                0.40096230954290296,
+                -1.4434643143544508
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        },
+        "L": {
+          "hip": [
+            41.4,
+            241.1,
+            658.1
+          ],
+          "knee": [
+            -117.63002513315045,
+            333.7494252373921,
+            397.8863171654295
+          ],
+          "ankle": [
+            122.58750000000003,
+            193.80091163500177,
+            242.01592297722644
+          ],
+          "heel": [
+            95.13750000000003,
+            108.55688275146169,
+            9.771894093686354
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "source_foot_heel": [
+            844.5,
+            1197.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.07406035919274208,
+              -0.5645250879466766
+            ],
+            [
+              0.07406035919274208,
+              -1.5645250879466766
+            ]
+          ],
+          "foot_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.5014452454240805,
+              -1.0448438666220734
+            ],
+            [
+              0.36538990649883324,
+              0.39075155164343695
+            ],
+            [
+              -0.6418909778618516,
+              -1.2248631169218753
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.3829846935584674,
+              1.2741897938458255
+            ],
+            [
+              -0.6762717968452494,
+              -0.6258073299677377
+            ],
+            [
+              0.26855814139113904,
+              -0.9597457745760247
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              776,
+              854,
+              868,
+              900
+            ],
+            "source_anchor": [
+              830.0,
+              875.0
+            ],
+            "source_blend_y": [
+              863.0,
+              893.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3399,
+            "raster_alpha_gt0_texels": 5827,
+            "source_quad_min_Z": 360.00468512389097,
+            "complete_continuous_surface_quartic_min_Z": 360.00468512389097,
+            "complete_sampled_surface_min_Z": 359.39053316590736,
+            "raster_texel_quad_min_Z": 359.36620869930505,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 356.36620869930505,
+            "above_floor": true,
+            "world_anchor": [
+              -117.63002513315045,
+              333.7494252373921,
+              397.8863171654295
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.5014452454240805,
+                -1.0448438666220734
+              ],
+              [
+                0.36538990649883324,
+                0.39075155164343695
+              ],
+              [
+                -0.6418909778618516,
+                -1.2248631169218753
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.3829846935584674,
+                1.2741897938458255
+              ],
+              [
+                -0.6762717968452494,
+                -0.6258073299677377
+              ],
+              [
+                0.26855814139113904,
+                -0.9597457745760247
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              821,
+              1025,
+              895,
+              1067
+            ],
+            "source_anchor": [
+              875.0,
+              1050.0
+            ],
+            "source_blend_y": [
+              1034.0,
+              1058.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 2175,
+            "raster_alpha_gt0_texels": 1873,
+            "source_quad_min_Z": 213.34993519718572,
+            "complete_continuous_surface_quartic_min_Z": 212.23902980929458,
+            "complete_sampled_surface_min_Z": 211.41973708572488,
+            "raster_texel_quad_min_Z": 214.3867802258841,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 209.23902980929458,
+            "above_floor": true,
+            "world_anchor": [
+              122.58750000000003,
+              193.80091163500177,
+              242.01592297722644
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.3829846935584674,
+                1.2741897938458255
+              ],
+              [
+                -0.6762717968452494,
+                -0.6258073299677377
+              ],
+              [
+                0.26855814139113904,
+                -0.9597457745760247
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.8999999999999999,
+                0.0
+              ],
+              [
+                0.07406035919274208,
+                -0.5645250879466766
+              ],
+              [
+                0.07406035919274208,
+                -1.5645250879466766
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        }
+      },
+      "pelvis_world": [
+        0.0,
+        225.0,
+        650.0
+      ],
+      "pelvis_SO3": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "torso_waist": [
+        0.0,
+        225.0,
+        735.0
+      ],
+      "torso_SO3": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "head_neck": [
+        -35.1,
+        211.35,
+        1007.35
+      ],
+      "head_SO3": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -91.8,
+            189.3,
+            946.3
+          ],
+          "elbow": [
+            -156.6,
+            164.10000000000002,
+            804.0999999999999
+          ],
+          "source_shoulder": [
+            622,
+            354
+          ],
+          "source_elbow": [
+            550,
+            471
+          ],
+          "source_upper_UV": [
+            [
+              0.9,
+              0.0
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.35,
+              -1.0
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              0.9,
+              0.0
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.35,
+              -1.0
+            ]
+          ],
+          "upper_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "fore_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "upper_length": 158.28746002131692,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": true
+        },
+        "L": {
+          "shoulder": [
+            63.9,
+            249.85,
+            889.85
+          ],
+          "elbow": [
+            75.6,
+            254.4,
+            852.4
+          ],
+          "source_shoulder": [
+            795,
+            471
+          ],
+          "source_elbow": [
+            808,
+            513
+          ],
+          "source_upper_UV": [
+            [
+              0.9,
+              0.0
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.35,
+              -1.0
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              0.9,
+              0.0
+            ],
+            [
+              0.35,
+              0.0
+            ],
+            [
+              0.35,
+              -1.0
+            ]
+          ],
+          "upper_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "fore_SO3": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "upper_length": 39.49803792595273,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": false
+        }
+      },
+      "cloth_actual_surface": {
+        "kind": "ACTUAL_COMPLETE_ORIGINAL_CAPE_CONTINUOUS_PELVIS_ROOT_TO_LAGGING_ARCLENGTH_FLOOR_SURFACE",
+        "source_root": [
+          724.0,
+          600.0
+        ],
+        "world_root": [
+          0.0,
+          225.0,
+          736.0
+        ],
+        "pelvis_native_anchor": [
+          724.0,
+          686.0
+        ],
+        "pelvis_world": [
+          0.0,
+          225.0,
+          650.0
+        ],
+        "pelvis_U": [
+          0.9,
+          0.35,
+          0.35
+        ],
+        "pelvis_V": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "transverse": [
+          0.9,
+          0.35,
+          0.35
+        ],
+        "longitudinal_angle": 0,
+        "source_proximal_blend_y": [
+          680.0,
+          780.0
+        ],
+        "floor_Z": 10.0,
+        "source_complete_surface_min_Z": 10.0,
+        "source_all_quad_corner_min_Z": 24.424999999999955,
+        "raster_all_texel_quad_min_Z": 24.362928008891345,
+        "guard_native": 3.0,
+        "guarded_min_Z": 7.0,
+        "above_floor": true,
+        "actual_source_alpha_gt0_texels": 96442,
+        "actual_raster_alpha_gt0_texels": 99142,
+        "source_RGBA_recolored": false,
+        "source_proximal_to_y680_exact_pelvis_surface": true,
+        "limits": [
+          "Original complete native cape material only, no artificial bridges.",
+          "The original proximal cloth follows the true pelvis surface then continuously relaxes to the dedicated trailing cloth/floor field.",
+          "One fixed arclength drape model after the proximal cloth transition, not a unique hidden3D reconstruction."
+        ]
+      },
+      "strong_components": [
+        371722
+      ],
+      "storage_boundary_alpha_contact": false,
+      "stored_alpha_bbox": [
+        538,
+        250,
+        1284,
+        1478
+      ],
+      "clock_seconds": [
+        0.0,
+        0.13333333333333333
+      ]
+    },
+    {
+      "phase": 1,
+      "name": "BUCKLE-leg-compression",
+      "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v03/E-DEATH-phase1-actual-native-v03.png",
+      "sha256": "ada23c2304cf199c193df0bc9ccd409cef94b7cf0325584a796bface1af0743f",
+      "bytes": 1097641,
+      "state": {
+        "name": "BUCKLE-leg-compression",
+        "hip": [
+          -5,
+          218,
+          535
+        ],
+        "body": 0.12,
+        "pelvis": 0.06,
+        "head": -3,
+        "Rupper": -3,
+        "Lupper": -3,
+        "Lfore": 4,
+        "foot": 0.04,
+        "heel": [
+          [
+            -190,
+            125,
+            35
+          ],
+          [
+            94,
+            115,
+            30
+          ]
+        ],
+        "cloth": 20
+      },
+      "bones": {
+        "R": {
+          "hip": [
+            -48.36589163868415,
+            199.53364560017548,
+            511.8075831884216
+          ],
+          "knee": [
+            167.69861469419112,
+            205.62121448002438,
+            277.5754414288757
+          ],
+          "ankle": [
+            -150.54636994327802,
+            196.65473360110423,
+            262.56352620312947
+          ],
+          "heel": [
+            -190.0,
+            125.0,
+            35.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "source_foot_heel": [
+            522.0,
+            1201.5
+          ],
+          "foot_UV": [
+            [
+              0.9088505789559127,
+              -0.08760510546488644
+            ],
+            [
+              0.4289588786717793,
+              -0.39608646233861283
+            ],
+            [
+              0.3486064441287764,
+              -1.454541400156488
+            ]
+          ],
+          "foot_SO3": [
+            [
+              0.9962901177029398,
+              -0.04372300258112567,
+              0.07412354830115327
+            ],
+            [
+              0.04622151212225574,
+              0.998407801603684,
+              -0.03233316430588175
+            ],
+            [
+              -0.07259182588001688,
+              0.03563931455836178,
+              0.9967247694690925
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.24204741554216058,
+              1.3335878731842683
+            ],
+            [
+              -0.3468491963744516,
+              -0.0755182379113136
+            ],
+            [
+              0.7316494511624958,
+              -1.1278571043349337
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.5952564064666295,
+              -1.4999009770561873
+            ],
+            [
+              0.4827751641640454,
+              0.1375573683517776
+            ],
+            [
+              -0.4390065927207127,
+              -0.2509857788528089
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              548,
+              847,
+              653,
+              893
+            ],
+            "source_anchor": [
+              622.0,
+              868.0
+            ],
+            "source_blend_y": [
+              856.0,
+              886.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3519,
+            "raster_alpha_gt0_texels": 4120,
+            "source_quad_min_Z": 249.8288662807841,
+            "complete_continuous_surface_quartic_min_Z": 236.03652763005158,
+            "complete_sampled_surface_min_Z": 235.78872373076993,
+            "raster_texel_quad_min_Z": 249.91278067867134,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 233.03652763005158,
+            "above_floor": true,
+            "world_anchor": [
+              167.69861469419112,
+              205.62121448002438,
+              277.5754414288757
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.24204741554216058,
+                1.3335878731842683
+              ],
+              [
+                -0.3468491963744516,
+                -0.0755182379113136
+              ],
+              [
+                0.7316494511624958,
+                -1.1278571043349337
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.5952564064666295,
+                -1.4999009770561873
+              ],
+              [
+                0.4827751641640454,
+                0.1375573683517776
+              ],
+              [
+                -0.4390065927207127,
+                -0.2509857788528089
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              524,
+              1027,
+              585,
+              1069
+            ],
+            "source_anchor": [
+              551.0,
+              1052.0
+            ],
+            "source_blend_y": [
+              1036.0,
+              1060.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 1989,
+            "raster_alpha_gt0_texels": 2792,
+            "source_quad_min_Z": 229.32552233113483,
+            "complete_continuous_surface_quartic_min_Z": 229.32552233113483,
+            "complete_sampled_surface_min_Z": 228.4239484089922,
+            "raster_texel_quad_min_Z": 228.33862106687664,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 225.33862106687664,
+            "above_floor": true,
+            "world_anchor": [
+              -150.54636994327802,
+              196.65473360110423,
+              262.56352620312947
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.5952564064666295,
+                -1.4999009770561873
+              ],
+              [
+                0.4827751641640454,
+                0.1375573683517776
+              ],
+              [
+                -0.4390065927207127,
+                -0.2509857788528089
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.9088505789559127,
+                -0.08760510546488644
+              ],
+              [
+                0.4289588786717793,
+                -0.39608646233861283
+              ],
+              [
+                0.3486064441287764,
+                -1.454541400156488
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        },
+        "L": {
+          "hip": [
+            35.76294305741449,
+            236.7647219213075,
+            540.0047661797516
+          ],
+          "knee": [
+            -151.43277947502008,
+            329.1070784648672,
+            299.1390851902386
+          ],
+          "ankle": [
+            132.7134158113138,
+            188.93972356667868,
+            264.5027177400294
+          ],
+          "heel": [
+            94.0,
+            115.0,
+            30.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "source_foot_heel": [
+            844.5,
+            1197.0
+          ],
+          "foot_UV": [
+            [
+              0.8991930847322469,
+              -0.0767892974624508
+            ],
+            [
+              0.10910095272586476,
+              -0.48035472454788974
+            ],
+            [
+              0.02277393447630513,
+              -1.5905313791734836
+            ]
+          ],
+          "foot_SO3": [
+            [
+              0.9971732123418413,
+              -0.04009108214299293,
+              0.06354753905901565
+            ],
+            [
+              0.04348470973573606,
+              0.9976498579353217,
+              -0.052951307640431176
+            ],
+            [
+              -0.06127531809017484,
+              0.05556497182791147,
+              0.9965730626997258
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.4157913617789241,
+              -1.1720619018738674
+            ],
+            [
+              0.40368938297091506,
+              0.37635908047129707
+            ],
+            [
+              -0.6487706366976334,
+              -1.115687529213564
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.11530055317199356,
+              1.5940438308205382
+            ],
+            [
+              -0.6524553433018252,
+              -0.6331820825691793
+            ],
+            [
+              0.4115313768185819,
+              -0.3037444537545448
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              776,
+              854,
+              868,
+              900
+            ],
+            "source_anchor": [
+              830.0,
+              875.0
+            ],
+            "source_blend_y": [
+              863.0,
+              893.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3399,
+            "raster_alpha_gt0_texels": 5549,
+            "source_quad_min_Z": 269.6804174134581,
+            "complete_continuous_surface_quartic_min_Z": 269.6804174134581,
+            "complete_sampled_surface_min_Z": 269.32277949817154,
+            "raster_texel_quad_min_Z": 269.38018856726893,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 266.38018856726893,
+            "above_floor": true,
+            "world_anchor": [
+              -151.43277947502008,
+              329.1070784648672,
+              299.1390851902386
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.4157913617789241,
+                -1.1720619018738674
+              ],
+              [
+                0.40368938297091506,
+                0.37635908047129707
+              ],
+              [
+                -0.6487706366976334,
+                -1.115687529213564
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.11530055317199356,
+                1.5940438308205382
+              ],
+              [
+                -0.6524553433018252,
+                -0.6331820825691793
+              ],
+              [
+                0.4115313768185819,
+                -0.3037444537545448
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              821,
+              1025,
+              895,
+              1067
+            ],
+            "source_anchor": [
+              875.0,
+              1050.0
+            ],
+            "source_blend_y": [
+              1034.0,
+              1058.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 2175,
+            "raster_alpha_gt0_texels": 2172,
+            "source_quad_min_Z": 237.3821535063292,
+            "complete_continuous_surface_quartic_min_Z": 237.0405444891846,
+            "complete_sampled_surface_min_Z": 236.23389183235972,
+            "raster_texel_quad_min_Z": 236.40147651203793,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 233.40147651203793,
+            "above_floor": true,
+            "world_anchor": [
+              132.7134158113138,
+              188.93972356667868,
+              264.5027177400294
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.11530055317199356,
+                1.5940438308205382
+              ],
+              [
+                -0.6524553433018252,
+                -0.6331820825691793
+              ],
+              [
+                0.4115313768185819,
+                -0.3037444537545448
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.8991930847322469,
+                -0.0767892974624508
+              ],
+              [
+                0.10910095272586476,
+                -0.48035472454788974
+              ],
+              [
+                0.02277393447630513,
+                -1.5905313791734836
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        }
+      },
+      "pelvis_world": [
+        -5.0,
+        218.0,
+        535.0
+      ],
+      "pelvis_SO3": [
+        [
+          0.9931081527018955,
+          -0.0693727016323801,
+          0.09446494220214062
+        ],
+        [
+          0.07330993426229518,
+          0.9965517075907522,
+          -0.03886319127933587
+        ],
+        [
+          -0.09144315488590145,
+          0.045520570802452094,
+          0.9947693335936388
+        ]
+      ],
+      "torso_waist": [
+        3.029520087181952,
+        214.69662874125646,
+        619.5553933554593
+      ],
+      "torso_SO3": [
+        [
+          0.9725399224256255,
+          -0.13372798174814282,
+          0.19048077642094768
+        ],
+        [
+          0.1494156063818981,
+          0.986260523055536,
+          -0.0704638718191848
+        ],
+        [
+          -0.17844067882040904,
+          0.09698972914586985,
+          0.9791587800670138
+        ]
+      ],
+      "head_neck": [
+        22.59619521914975,
+        176.79884932758878,
+        891.1686451304657
+      ],
+      "head_SO3": [
+        [
+          0.978035473569984,
+          -0.12452881472438017,
+          0.1671501921688343
+        ],
+        [
+          0.13089746073039846,
+          0.9910117358524378,
+          -0.027596995797944824
+        ],
+        [
+          -0.1622111809126333,
+          0.048870376569850375,
+          0.9855451380230386
+        ]
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -41.22696778533552,
+            150.88175928692183,
+            839.3699645688253
+          ],
+          "elbow": [
+            -125.23429766802434,
+            121.35040089057833,
+            708.5051969755276
+          ],
+          "source_shoulder": [
+            622,
+            354
+          ],
+          "source_elbow": [
+            550,
+            471
+          ],
+          "source_upper_UV": [
+            [
+              0.8951494083185445,
+              -0.1671501921688343
+            ],
+            [
+              0.45500287367643116,
+              0.027596995797944824
+            ],
+            [
+              0.21605536728614114,
+              -0.9855451380230386
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              0.7779654670250307,
+              -0.5460760191446178
+            ],
+            [
+              0.6706342901056637,
+              0.1170237879952698
+            ],
+            [
+              0.0044023915089622815,
+              -0.8295217986035117
+            ]
+          ],
+          "upper_SO3": [
+            [
+              0.978035473569984,
+              -0.12452881472438017,
+              0.1671501921688343
+            ],
+            [
+              0.13089746073039846,
+              0.9910117358524378,
+              -0.027596995797944824
+            ],
+            [
+              -0.1622111809126333,
+              0.048870376569850375,
+              0.9855451380230386
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.7753804887554561,
+              -0.31715308444427426,
+              0.5460760191446178
+            ],
+            [
+              0.4454756126045838,
+              0.8876130415996651,
+              -0.1170237879952698
+            ],
+            [
+              -0.44758974098153853,
+              0.33400151108890824,
+              0.8295217986035117
+            ]
+          ],
+          "upper_length": 158.28746002131692,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": true
+        },
+        "L": {
+          "shoulder": [
+            91.34762901252182,
+            237.84152943578906,
+            762.1859658414871
+          ],
+          "elbow": [
+            95.96426324957186,
+            244.91564061709636,
+            723.6017898192393
+          ],
+          "source_shoulder": [
+            795,
+            471
+          ],
+          "source_elbow": [
+            808,
+            513
+          ],
+          "source_upper_UV": [
+            [
+              0.8951494083185445,
+              -0.1671501921688343
+            ],
+            [
+              0.45500287367643116,
+              0.027596995797944824
+            ],
+            [
+              0.21605536728614114,
+              -0.9855451380230386
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              0.8951494083185446,
+              -0.22203108140676325
+            ],
+            [
+              0.4550028736764313,
+              0.1266556015978409
+            ],
+            [
+              0.21605536728614116,
+              -0.9667784428053994
+            ]
+          ],
+          "upper_SO3": [
+            [
+              0.978035473569984,
+              -0.12452881472438017,
+              0.1671501921688343
+            ],
+            [
+              0.13089746073039846,
+              0.9910117358524378,
+              -0.027596995797944824
+            ],
+            [
+              -0.1622111809126333,
+              0.048870376569850375,
+              0.9855451380230386
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.9643246478455683,
+              -0.1441532949566685,
+              0.22203108140676325
+            ],
+            [
+              0.17511533548372454,
+              0.9763672351437814,
+              -0.1266556015978409
+            ],
+            [
+              -0.19852605077405744,
+              0.161018165716866,
+              0.9667784428053994
+            ]
+          ],
+          "upper_length": 39.49803792595273,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": false
+        }
+      },
+      "cloth_actual_surface": {
+        "kind": "ACTUAL_COMPLETE_ORIGINAL_CAPE_CONTINUOUS_PELVIS_ROOT_TO_LAGGING_ARCLENGTH_FLOOR_SURFACE",
+        "source_root": [
+          724.0,
+          600.0
+        ],
+        "world_root": [
+          3.1239850293840927,
+          214.6577655499771,
+          620.550162689053
+        ],
+        "pelvis_native_anchor": [
+          724.0,
+          686.0
+        ],
+        "pelvis_world": [
+          -5.0,
+          218.0,
+          535.0
+        ],
+        "pelvis_U": [
+          0.902579621631122,
+          0.40116992154506137,
+          0.2818026271413205
+        ],
+        "pelvis_V": [
+          -0.09446494220214062,
+          0.03886319127933587,
+          -0.9947693335936388
+        ],
+        "transverse": [
+          0.902579621631122,
+          0.40116992154506137,
+          0.2818026271413205
+        ],
+        "longitudinal_angle": 20,
+        "source_proximal_blend_y": [
+          680.0,
+          780.0
+        ],
+        "floor_Z": 10.0,
+        "source_complete_surface_min_Z": 10.0,
+        "source_all_quad_corner_min_Z": 10.0,
+        "raster_all_texel_quad_min_Z": 10.0,
+        "guard_native": 3.0,
+        "guarded_min_Z": 7.0,
+        "above_floor": true,
+        "actual_source_alpha_gt0_texels": 96442,
+        "actual_raster_alpha_gt0_texels": 97160,
+        "source_RGBA_recolored": false,
+        "source_proximal_to_y680_exact_pelvis_surface": true,
+        "limits": [
+          "Original complete native cape material only, no artificial bridges.",
+          "The original proximal cloth follows the true pelvis surface then continuously relaxes to the dedicated trailing cloth/floor field.",
+          "One fixed arclength drape model after the proximal cloth transition, not a unique hidden3D reconstruction."
+        ]
+      },
+      "strong_components": [
+        389301
+      ],
+      "storage_boundary_alpha_contact": false,
+      "stored_alpha_bbox": [
+        278,
+        215,
+        1276,
+        1472
+      ],
+      "clock_seconds": [
+        0.13333333333333333,
+        0.26666666666666666
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "KNEES-fall-catch",
+      "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v03/E-DEATH-phase2-actual-native-v03.png",
+      "sha256": "ff297959c25bcad15d9aec47460e50c88827c28906d66927b06fb0a61b24ad27",
+      "bytes": 1091582,
+      "state": {
+        "name": "KNEES-fall-catch",
+        "hip": [
+          15,
+          230,
+          340
+        ],
+        "body": 0.4,
+        "pelvis": 0.28,
+        "head": 6,
+        "Rupper": -7,
+        "Lupper": -7,
+        "Lfore": -2,
+        "foot": 0.25,
+        "heel": [
+          [
+            -130,
+            180,
+            85
+          ],
+          [
+            50,
+            200,
+            70
+          ]
+        ],
+        "cloth": 45
+      },
+      "bones": {
+        "R": {
+          "hip": [
+            -28.332372516645755,
+            202.718166420144,
+            328.2738732481826
+          ],
+          "knee": [
+            -100.37874775447438,
+            -14.748179380502052,
+            106.6811525098789
+          ],
+          "ankle": [
+            -19.30621360685491,
+            229.96292076411447,
+            294.10939824113086
+          ],
+          "heel": [
+            -130.0,
+            180.0,
+            85.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "source_foot_heel": [
+            522.0,
+            1201.5
+          ],
+          "foot_UV": [
+            [
+              0.8711208065679992,
+              -0.5714467090479807
+            ],
+            [
+              0.6034313455514208,
+              -0.217146566843634
+            ],
+            [
+              0.09252404508168546,
+              -1.3807772637709832
+            ]
+          ],
+          "foot_SO3": [
+            [
+              0.8589860229173896,
+              -0.2185265196555254,
+              0.46302178419574297
+            ],
+            [
+              0.31349577715805643,
+              0.9394799591493779,
+              -0.13819480475310802
+            ],
+            [
+              -0.40480045718431706,
+              0.26386277980027173,
+              0.8755072948293698
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.16564618568576844,
+              -0.3659060175878567
+            ],
+            [
+              0.8424025835950522,
+              -0.9949663005983613
+            ],
+            [
+              -0.10186320306690855,
+              -1.3209023075987423
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.3025767738738496,
+              0.5573667668079499
+            ],
+            [
+              -0.8403090924286146,
+              1.0057019270770917
+            ],
+            [
+              0.05151063606471351,
+              1.0385081570209056
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              548,
+              847,
+              653,
+              893
+            ],
+            "source_anchor": [
+              622.0,
+              868.0
+            ],
+            "source_blend_y": [
+              856.0,
+              886.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3519,
+            "raster_alpha_gt0_texels": 2109,
+            "source_quad_min_Z": 105.38038599413585,
+            "complete_continuous_surface_quartic_min_Z": 105.07061168842624,
+            "complete_sampled_surface_min_Z": 105.06893768133827,
+            "raster_texel_quad_min_Z": 106.00703690605997,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 102.07061168842624,
+            "above_floor": true,
+            "world_anchor": [
+              -100.37874775447438,
+              -14.748179380502052,
+              106.6811525098789
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.16564618568576844,
+                -0.3659060175878567
+              ],
+              [
+                0.8424025835950522,
+                -0.9949663005983613
+              ],
+              [
+                -0.10186320306690855,
+                -1.3209023075987423
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.3025767738738496,
+                0.5573667668079499
+              ],
+              [
+                -0.8403090924286146,
+                1.0057019270770917
+              ],
+              [
+                0.05151063606471351,
+                1.0385081570209056
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              524,
+              1027,
+              585,
+              1069
+            ],
+            "source_anchor": [
+              551.0,
+              1052.0
+            ],
+            "source_blend_y": [
+              1036.0,
+              1060.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 1989,
+            "raster_alpha_gt0_texels": 1940,
+            "source_quad_min_Z": 267.7130016269215,
+            "complete_continuous_surface_quartic_min_Z": 267.3009165384038,
+            "complete_sampled_surface_min_Z": 266.755907141861,
+            "raster_texel_quad_min_Z": 266.4374961720433,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 263.4374961720433,
+            "above_floor": true,
+            "world_anchor": [
+              -19.30621360685491,
+              229.96292076411447,
+              294.10939824113086
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.3025767738738496,
+                0.5573667668079499
+              ],
+              [
+                -0.8403090924286146,
+                1.0057019270770917
+              ],
+              [
+                0.05151063606471351,
+                1.0385081570209056
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.8711208065679992,
+                -0.5714467090479807
+              ],
+              [
+                0.6034313455514208,
+                -0.217146566843634
+              ],
+              [
+                0.09252404508168546,
+                -1.3807772637709832
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        },
+        "L": {
+          "hip": [
+            49.535242409287264,
+            258.7623730935334,
+            335.66146041159584
+          ],
+          "knee": [
+            46.942274240181035,
+            389.5095243912665,
+            45.0
+          ],
+          "ankle": [
+            154.68137587951077,
+            223.19636691168725,
+            294.6354246739089
+          ],
+          "heel": [
+            50.0,
+            200.0,
+            70.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "source_foot_heel": [
+            844.5,
+            1197.0
+          ],
+          "foot_UV": [
+            [
+              0.8203128149826314,
+              -0.541917245051296
+            ],
+            [
+              0.3278205957018905,
+              -0.0897812159372761
+            ],
+            [
+              -0.20147063363290604,
+              -1.5699338707463437
+            ]
+          ],
+          "foot_SO3": [
+            [
+              0.8925618872238417,
+              -0.18264190938649497,
+              0.4122804996735471
+            ],
+            [
+              0.311623986613653,
+              0.9106778227730842,
+              -0.27121282063407165
+            ],
+            [
+              -0.32591988040380127,
+              0.37055071993578786,
+              0.8697519160729923
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.8499871029753978,
+              -0.29608947153386794
+            ],
+            [
+              0.21899312079145156,
+              0.649765547238928
+            ],
+            [
+              -0.4828708619655603,
+              -1.445796733114156
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              -0.689151252620629,
+              0.792862331470046
+            ],
+            [
+              -0.3631517621195937,
+              -0.8569790181954146
+            ],
+            [
+              0.4779910277779348,
+              1.3035761624222963
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              776,
+              854,
+              868,
+              900
+            ],
+            "source_anchor": [
+              830.0,
+              875.0
+            ],
+            "source_blend_y": [
+              863.0,
+              893.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3399,
+            "raster_alpha_gt0_texels": 5615,
+            "source_quad_min_Z": 37.29225738716067,
+            "complete_continuous_surface_quartic_min_Z": 36.63507125822002,
+            "complete_sampled_surface_min_Z": 36.47261649339688,
+            "raster_texel_quad_min_Z": 36.97287735997434,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 33.63507125822002,
+            "above_floor": true,
+            "world_anchor": [
+              46.942274240181035,
+              389.5095243912665,
+              45.0
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.8499871029753978,
+                -0.29608947153386794
+              ],
+              [
+                0.21899312079145156,
+                0.649765547238928
+              ],
+              [
+                -0.4828708619655603,
+                -1.445796733114156
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                -0.689151252620629,
+                0.792862331470046
+              ],
+              [
+                -0.3631517621195937,
+                -0.8569790181954146
+              ],
+              [
+                0.4779910277779348,
+                1.3035761624222963
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              821,
+              1025,
+              895,
+              1067
+            ],
+            "source_anchor": [
+              875.0,
+              1050.0
+            ],
+            "source_blend_y": [
+              1034.0,
+              1058.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 2175,
+            "raster_alpha_gt0_texels": 3338,
+            "source_quad_min_Z": 237.12528870844315,
+            "complete_continuous_surface_quartic_min_Z": 237.12528870844315,
+            "complete_sampled_surface_min_Z": 236.23450511334303,
+            "raster_texel_quad_min_Z": 237.20905947510735,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 234.12528870844315,
+            "above_floor": true,
+            "world_anchor": [
+              154.68137587951077,
+              223.19636691168725,
+              294.6354246739089
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                -0.689151252620629,
+                0.792862331470046
+              ],
+              [
+                -0.3631517621195937,
+                -0.8569790181954146
+              ],
+              [
+                0.4779910277779348,
+                1.3035761624222963
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.8203128149826314,
+                -0.541917245051296
+              ],
+              [
+                0.3278205957018905,
+                -0.0897812159372761
+              ],
+              [
+                -0.20147063363290604,
+                -1.5699338707463437
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        }
+      },
+      "pelvis_world": [
+        15.0,
+        230.0,
+        340.0
+      ],
+      "pelvis_SO3": [
+        [
+          0.8539201631279278,
+          -0.2734948270561699,
+          0.442742514987085
+        ],
+        [
+          0.356948547869683,
+          0.9269098732398384,
+          -0.11586984536207712
+        ],
+        [
+          -0.37869260512623976,
+          0.25697989505800395,
+          0.8891306115294195
+        ]
+      ],
+      "torso_waist": [
+        52.633113773902224,
+        220.15106314422346,
+        415.57610198000066
+      ],
+      "torso_SO3": [
+        [
+          0.7106037788622517,
+          -0.3409886945645854,
+          0.6154421009695615
+        ],
+        [
+          0.5063174076878445,
+          0.8552024225944787,
+          -0.11077679838664672
+        ],
+        [
+          -0.48855393984589784,
+          0.390327460688682,
+          0.780358585070592
+        ]
+      ],
+      "head_neck": [
+        199.9610730157039,
+        160.53574802536224,
+        639.9270360741668
+      ],
+      "head_SO3": [
+        [
+          0.6760819908013422,
+          -0.3067258347646398,
+          0.6699495533262398
+        ],
+        [
+          0.5412976925527702,
+          0.8236387952775132,
+          -0.1691624750080618
+        ],
+        [
+          -0.49990994164063207,
+          0.4770098502145855,
+          0.7228773430168622
+        ]
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            129.61589920517156,
+            119.73326113275799,
+            611.3804323366842
+          ],
+          "elbow": [
+            12.682615534302826,
+            72.5966989151164,
+            515.6742586996061
+          ],
+          "source_shoulder": [
+            622,
+            354
+          ],
+          "source_elbow": [
+            550,
+            471
+          ],
+          "source_upper_UV": [
+            [
+              0.7356020932177683,
+              -0.5467515637537559
+            ],
+            [
+              0.7162346353918011,
+              0.03788317547494101
+            ],
+            [
+              -0.029958429845562143,
+              -0.8364374409056289
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              0.28681696974061793,
+              -0.9495928092404233
+            ],
+            [
+              0.9802788579178976,
+              -0.11164855512167954
+            ],
+            [
+              -0.10857894173361755,
+              -0.2929301909638586
+            ]
+          ],
+          "upper_SO3": [
+            [
+              0.7497027689915964,
+              -0.37283841768138054,
+              0.5467515637537559
+            ],
+            [
+              0.46698299127901416,
+              0.8834544418769079,
+              -0.03788317547494101
+            ],
+            [
+              -0.46890579440057795,
+              0.28372480227996544,
+              0.8364374409056289
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.06837546606857436,
+              -0.3059383798721348,
+              0.9495928092404233
+            ],
+            [
+              0.8381646981820251,
+              0.5338675293185347,
+              0.11164855512167954
+            ],
+            [
+              -0.5411143449968228,
+              0.7882811483604928,
+              0.2929301909638586
+            ]
+          ],
+          "upper_length": 158.28746002131692,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": true
+        },
+        "L": {
+          "shoulder": [
+            184.86833551840675,
+            256.6027384667773,
+            514.8956695201427
+          ],
+          "elbow": [
+            171.46759705258,
+            267.5048820968182,
+            479.375837414114
+          ],
+          "source_shoulder": [
+            795,
+            471
+          ],
+          "source_elbow": [
+            808,
+            513
+          ],
+          "source_upper_UV": [
+            [
+              0.7356020932177683,
+              -0.5467515637537559
+            ],
+            [
+              0.7162346353918011,
+              0.03788317547494101
+            ],
+            [
+              -0.029958429845562143,
+              -0.8364374409056289
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              0.7356020932177681,
+              -0.5963378482365469
+            ],
+            [
+              0.7162346353918014,
+              0.09043381199036771
+            ],
+            [
+              -0.02995842984556218,
+              -0.7976232797564877
+            ]
+          ],
+          "upper_SO3": [
+            [
+              0.7497027689915964,
+              -0.37283841768138054,
+              0.5467515637537559
+            ],
+            [
+              0.46698299127901416,
+              0.8834544418769079,
+              -0.03788317547494101
+            ],
+            [
+              -0.46890579440057795,
+              0.28372480227996544,
+              0.8364374409056289
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.721927205449819,
+              -0.3510018244853152,
+              0.5963378482365469
+            ],
+            [
+              0.49489359539627603,
+              0.8642349535193761,
+              -0.09043381199036771
+            ],
+            [
+              -0.48363357954877584,
+              0.360410410953044,
+              0.7976232797564877
+            ]
+          ],
+          "upper_length": 39.49803792595273,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": false
+        }
+      },
+      "cloth_actual_surface": {
+        "kind": "ACTUAL_COMPLETE_ORIGINAL_CAPE_CONTINUOUS_PELVIS_ROOT_TO_LAGGING_ARCLENGTH_FLOOR_SURFACE",
+        "source_root": [
+          724.0,
+          600.0
+        ],
+        "world_root": [
+          53.07585628888931,
+          220.03519329886137,
+          416.4652325915301
+        ],
+        "pelvis_native_anchor": [
+          724.0,
+          686.0
+        ],
+        "pelvis_world": [
+          15.0,
+          230.0,
+          340.0
+        ],
+        "pelvis_U": [
+          0.8277648375909553,
+          0.6051177028399312,
+          0.060315332691982394
+        ],
+        "pelvis_V": [
+          -0.442742514987085,
+          0.11586984536207712,
+          -0.8891306115294195
+        ],
+        "transverse": [
+          0.8277648375909553,
+          0.6051177028399312,
+          0.060315332691982394
+        ],
+        "longitudinal_angle": 45,
+        "source_proximal_blend_y": [
+          680.0,
+          780.0
+        ],
+        "floor_Z": 10.0,
+        "source_complete_surface_min_Z": 10.0,
+        "source_all_quad_corner_min_Z": 10.0,
+        "raster_all_texel_quad_min_Z": 9.999999999999998,
+        "guard_native": 3.0,
+        "guarded_min_Z": 6.999999999999998,
+        "above_floor": true,
+        "actual_source_alpha_gt0_texels": 96442,
+        "actual_raster_alpha_gt0_texels": 105602,
+        "source_RGBA_recolored": false,
+        "source_proximal_to_y680_exact_pelvis_surface": true,
+        "limits": [
+          "Original complete native cape material only, no artificial bridges.",
+          "The original proximal cloth follows the true pelvis surface then continuously relaxes to the dedicated trailing cloth/floor field.",
+          "One fixed arclength drape model after the proximal cloth transition, not a unique hidden3D reconstruction."
+        ]
+      },
+      "strong_components": [
+        408120
+      ],
+      "storage_boundary_alpha_contact": false,
+      "stored_alpha_bbox": [
+        198,
+        372,
+        1445,
+        1714
+      ],
+      "clock_seconds": [
+        0.26666666666666666,
+        0.4000000000000001
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "TORSO-supine-collapse",
+      "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v03/E-DEATH-phase3-actual-native-v03.png",
+      "sha256": "e1eb393a091fc128a17f46db3d80a6f1882aab0bfecbf2b12176595994c00f80",
+      "bytes": 1203119,
+      "state": {
+        "name": "TORSO-supine-collapse",
+        "hip": [
+          70,
+          260,
+          210
+        ],
+        "body": 0.76,
+        "pelvis": 0.64,
+        "head": 9,
+        "Rupper": -10,
+        "Lupper": -8,
+        "Lfore": -6,
+        "foot": 0.6,
+        "heel": [
+          [
+            -80,
+            300,
+            110
+          ],
+          [
+            110,
+            350,
+            100
+          ]
+        ],
+        "cloth": 65
+      },
+      "bones": {
+        "R": {
+          "hip": [
+            39.16484865919472,
+            217.4777668813932,
+            210.74035963996798
+          ],
+          "knee": [
+            -129.82023583740767,
+            430.9251843618823,
+            44.99999999999994
+          ],
+          "ankle": [
+            119.62161306277036,
+            362.61159151443286,
+            231.27303260143066
+          ],
+          "heel": [
+            -80.0,
+            300.0,
+            110.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "source_foot_heel": [
+            522.0,
+            1201.5
+          ],
+          "foot_UV": [
+            [
+              0.537158828283372,
+              -1.2310635922578768
+            ],
+            [
+              0.9060315760535432,
+              -0.2430546876848169
+            ],
+            [
+              -0.14869002568808923,
+              -0.8400337347584298
+            ]
+          ],
+          "foot_SO3": [
+            [
+              0.29075312422346833,
+              -0.23933193292177465,
+              0.9263815880285076
+            ],
+            [
+              0.7169913151476048,
+              0.6956071250296995,
+              -0.04532308033247623
+            ],
+            [
+              -0.6335503727070173,
+              0.677385380335185,
+              0.3738488621768914
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              1.0532366615639055,
+              -0.6456806285499277
+            ],
+            [
+              -0.14868018975433056,
+              1.1934302735116336
+            ],
+            [
+              0.0682150365380817,
+              -0.9417937943626369
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              -1.0233287607496844,
+              0.9607907982986439
+            ],
+            [
+              -0.21884536718261743,
+              -0.455715293029431
+            ],
+            [
+              0.00353004151398828,
+              1.013715573635456
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              548,
+              847,
+              653,
+              893
+            ],
+            "source_anchor": [
+              622.0,
+              868.0
+            ],
+            "source_blend_y": [
+              856.0,
+              886.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3519,
+            "raster_alpha_gt0_texels": 6318,
+            "source_quad_min_Z": 42.417486516923496,
+            "complete_continuous_surface_quartic_min_Z": 41.658084968853544,
+            "complete_sampled_surface_min_Z": 41.637002046569485,
+            "raster_texel_quad_min_Z": 42.37936843164981,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 38.658084968853544,
+            "above_floor": true,
+            "world_anchor": [
+              -129.82023583740767,
+              430.9251843618823,
+              44.99999999999994
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                1.0532366615639055,
+                -0.6456806285499277
+              ],
+              [
+                -0.14868018975433056,
+                1.1934302735116336
+              ],
+              [
+                0.0682150365380817,
+                -0.9417937943626369
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                -1.0233287607496844,
+                0.9607907982986439
+              ],
+              [
+                -0.21884536718261743,
+                -0.455715293029431
+              ],
+              [
+                0.00353004151398828,
+                1.013715573635456
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              524,
+              1027,
+              585,
+              1069
+            ],
+            "source_anchor": [
+              551.0,
+              1052.0
+            ],
+            "source_blend_y": [
+              1036.0,
+              1060.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 1989,
+            "raster_alpha_gt0_texels": 2700,
+            "source_quad_min_Z": 206.3716952793532,
+            "complete_continuous_surface_quartic_min_Z": 206.3434549472413,
+            "complete_sampled_surface_min_Z": 205.83483213966656,
+            "raster_texel_quad_min_Z": 205.54072422291586,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 202.54072422291586,
+            "above_floor": true,
+            "world_anchor": [
+              119.62161306277036,
+              362.61159151443286,
+              231.27303260143066
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                -1.0233287607496844,
+                0.9607907982986439
+              ],
+              [
+                -0.21884536718261743,
+                -0.455715293029431
+              ],
+              [
+                0.00353004151398828,
+                1.013715573635456
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.537158828283372,
+                -1.2310635922578768
+              ],
+              [
+                0.9060315760535432,
+                -0.2430546876848169
+              ],
+              [
+                -0.14869002568808923,
+                -0.8400337347584298
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        },
+        "L": {
+          "hip": [
+            84.64510982246661,
+            301.6670092052401,
+            200.61058563176977
+          ],
+          "knee": [
+            187.46750953611968,
+            560.1211161206911,
+            44.99999999999997
+          ],
+          "ankle": [
+            316.7836011343795,
+            342.2137962050248,
+            238.33746146549532
+          ],
+          "heel": [
+            110.0,
+            350.0,
+            100.0
+          ],
+          "femur": 318.72499999999997,
+          "tibia": 318.72499999999997,
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "source_foot_heel": [
+            844.5,
+            1197.0
+          ],
+          "foot_UV": [
+            [
+              0.4701835904256552,
+              -1.309136065485694
+            ],
+            [
+              0.707838170701712,
+              0.199831755111411
+            ],
+            [
+              -0.3144239001723784,
+              -1.0063087783724685
+            ]
+          ],
+          "foot_SO3": [
+            [
+              0.45985846313290113,
+              -0.11956674805800932,
+              0.8799056691736218
+            ],
+            [
+              0.7680198493046666,
+              0.5509357262801049,
+              -0.3265200400928723
+            ],
+            [
+              -0.44573052953447534,
+              0.8259380232602482,
+              0.34518209219753904
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.993183036369298,
+              0.2388476106712441
+            ],
+            [
+              0.3002464736002455,
+              1.328394024858764
+            ],
+            [
+              -0.13054235993393068,
+              -0.816453281965381
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              -0.6446342395377561,
+              0.9047121850140508
+            ],
+            [
+              -0.4600539907899991,
+              -1.126885087600665
+            ],
+            [
+              0.4261904799092121,
+              0.9951936563976048
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              776,
+              854,
+              868,
+              900
+            ],
+            "source_anchor": [
+              830.0,
+              875.0
+            ],
+            "source_blend_y": [
+              863.0,
+              893.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3399,
+            "raster_alpha_gt0_texels": 6620,
+            "source_quad_min_Z": 34.954342009278704,
+            "complete_continuous_surface_quartic_min_Z": 34.063548548512216,
+            "complete_sampled_surface_min_Z": 33.914347188233734,
+            "raster_texel_quad_min_Z": 34.643823214294535,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 31.063548548512216,
+            "above_floor": true,
+            "world_anchor": [
+              187.46750953611968,
+              560.1211161206911,
+              44.99999999999997
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.993183036369298,
+                0.2388476106712441
+              ],
+              [
+                0.3002464736002455,
+                1.328394024858764
+              ],
+              [
+                -0.13054235993393068,
+                -0.816453281965381
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                -0.6446342395377561,
+                0.9047121850140508
+              ],
+              [
+                -0.4600539907899991,
+                -1.126885087600665
+              ],
+              [
+                0.4261904799092121,
+                0.9951936563976048
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              821,
+              1025,
+              895,
+              1067
+            ],
+            "source_anchor": [
+              875.0,
+              1050.0
+            ],
+            "source_blend_y": [
+              1034.0,
+              1058.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 2175,
+            "raster_alpha_gt0_texels": 4291,
+            "source_quad_min_Z": 191.15402620861116,
+            "complete_continuous_surface_quartic_min_Z": 191.15402620861116,
+            "complete_sampled_surface_min_Z": 190.44333414045775,
+            "raster_texel_quad_min_Z": 191.15197582180758,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 188.15197582180758,
+            "above_floor": true,
+            "world_anchor": [
+              316.7836011343795,
+              342.2137962050248,
+              238.33746146549532
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                -0.6446342395377561,
+                0.9047121850140508
+              ],
+              [
+                -0.4600539907899991,
+                -1.126885087600665
+              ],
+              [
+                0.4261904799092121,
+                0.9951936563976048
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.4701835904256552,
+                -1.309136065485694
+              ],
+              [
+                0.707838170701712,
+                0.199831755111411
+              ],
+              [
+                -0.3144239001723784,
+                -1.0063087783724685
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        }
+      },
+      "pelvis_world": [
+        70.0,
+        260.0,
+        210.0
+      ],
+      "pelvis_SO3": [
+        [
+          0.32425848761127174,
+          -0.3635463333390358,
+          0.8733215311257324
+        ],
+        [
+          0.74958964174152,
+          0.6618969882828643,
+          -0.002783144964559836
+        ],
+        [
+          -0.5770370891076851,
+          0.6555352320187045,
+          0.4871362821391082
+        ]
+      ],
+      "torso_waist": [
+        144.23233014568726,
+        259.7634326780124,
+        251.4065839818242
+      ],
+      "torso_SO3": [
+        [
+          0.10519874170099436,
+          -0.31721061122569894,
+          0.9425023357373423
+        ],
+        [
+          0.828400218173718,
+          0.5522918234670483,
+          0.09341745158790854
+        ],
+        [
+          -0.5501693405436765,
+          0.7709417421940916,
+          0.32087774442686867
+        ]
+      ],
+      "head_neck": [
+        401.5602902932784,
+        248.5900445697566,
+        347.5852267486156
+      ],
+      "head_SO3": [
+        [
+          0.04004656143895669,
+          -0.18844165350933267,
+          0.9812675558376444
+        ],
+        [
+          0.8528660108766902,
+          0.5181068647172457,
+          0.06469037195863987
+        ],
+        [
+          -0.5205918174618165,
+          0.834299118994821,
+          0.18146387970135644
+        ]
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            345.0502480195939,
+            183.73858207241656,
+            342.190976644802
+          ],
+          "elbow": [
+            220.06897674226042,
+            98.35274527508713,
+            295.8891332223052
+          ],
+          "source_shoulder": [
+            622,
+            354
+          ],
+          "source_elbow": [
+            550,
+            471
+          ],
+          "source_upper_UV": [
+            [
+              0.31353097110997014,
+              -0.875273857755689
+            ],
+            [
+              0.971558442625581,
+              -0.1319113583614324
+            ],
+            [
+              -0.1130155861719728,
+              -0.46529030450323794
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              -6.528449450947429e-17,
+              -0.9401522514593958
+            ],
+            [
+              1.027131929208707,
+              -0.34075466845786484
+            ],
+            [
+              1.208587747316404e-16,
+              -5.551115123125783e-17
+            ]
+          ],
+          "upper_SO3": [
+            [
+              0.1822029768267007,
+              -0.44799302356729037,
+              0.875273857755689
+            ],
+            [
+              0.8012543080849285,
+              0.5836016854932689,
+              0.1319113583614324
+            ],
+            [
+              -0.5699066669296221,
+              0.677282307110154,
+              0.46529030450323794
+            ]
+          ],
+          "fore_SO3": [
+            [
+              -0.3175849428522356,
+              -0.12350525555364722,
+              0.9401522514593958
+            ],
+            [
+              0.8762262903202241,
+              0.3407546684578648,
+              0.34075466845786484
+            ],
+            [
+              -0.3624462611549484,
+              0.9320046715412962,
+              5.551115123125783e-17
+            ]
+          ],
+          "upper_length": 158.28746002131692,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": true
+        },
+        "L": {
+          "shoulder": [
+            289.0183327403496,
+            340.88835081085676,
+            285.09658413910705
+          ],
+          "elbow": [
+            255.68607947962408,
+            348.32280977188964,
+            265.2525746521215
+          ],
+          "source_shoulder": [
+            795,
+            471
+          ],
+          "source_elbow": [
+            808,
+            513
+          ],
+          "source_upper_UV": [
+            [
+              0.3135309711099701,
+              -0.8906703782179789
+            ],
+            [
+              0.9715584426255812,
+              -0.12370954269285
+            ],
+            [
+              -0.11301558617197277,
+              -0.43749540158928324
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              0.31353097110997,
+              -0.9051084802940758
+            ],
+            [
+              0.9715584426255811,
+              -0.11574970079569616
+            ],
+            [
+              -0.11301558617197276,
+              -0.4091217980815191
+            ]
+          ],
+          "upper_SO3": [
+            [
+              0.16651840749336452,
+              -0.42305779431528745,
+              0.8906703782179789
+            ],
+            [
+              0.8066426754594231,
+              0.5779476993417222,
+              0.12370954269285
+            ],
+            [
+              -0.5670971822302925,
+              0.697852820797261,
+              0.43749540158928324
+            ]
+          ],
+          "fore_SO3": [
+            [
+              0.1509568286883208,
+              -0.3974804080355577,
+              0.9051084802940758
+            ],
+            [
+              0.8120580595987492,
+              0.5719822677377516,
+              0.11574970079569616
+            ],
+            [
+              -0.5637142394095426,
+              0.7175274284802396,
+              0.4091217980815191
+            ]
+          ],
+          "upper_length": 39.49803792595273,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": false
+        }
+      },
+      "cloth_actual_surface": {
+        "kind": "ACTUAL_COMPLETE_ORIGINAL_CAPE_CONTINUOUS_PELVIS_ROOT_TO_LAGGING_ARCLENGTH_FLOOR_SURFACE",
+        "source_root": [
+          724.0,
+          600.0
+        ],
+        "world_root": [
+          145.10565167681298,
+          259.76064953304785,
+          251.8937202639633
+        ],
+        "pelvis_native_anchor": [
+          724.0,
+          686.0
+        ],
+        "pelvis_world": [
+          70.0,
+          260.0,
+          210.0
+        ],
+        "pelvis_U": [
+          0.47025395807548837,
+          0.9053205227287745,
+          -0.11939835024168222
+        ],
+        "pelvis_V": [
+          -0.8733215311257324,
+          0.002783144964559836,
+          -0.4871362821391082
+        ],
+        "transverse": [
+          0.47025395807548837,
+          0.9053205227287745,
+          -0.11939835024168222
+        ],
+        "longitudinal_angle": 65,
+        "source_proximal_blend_y": [
+          680.0,
+          780.0
+        ],
+        "floor_Z": 10.0,
+        "source_complete_surface_min_Z": 10.0,
+        "source_all_quad_corner_min_Z": 10.0,
+        "raster_all_texel_quad_min_Z": 10.0,
+        "guard_native": 3.0,
+        "guarded_min_Z": 7.0,
+        "above_floor": true,
+        "actual_source_alpha_gt0_texels": 96442,
+        "actual_raster_alpha_gt0_texels": 124167,
+        "source_RGBA_recolored": false,
+        "source_proximal_to_y680_exact_pelvis_surface": true,
+        "limits": [
+          "Original complete native cape material only, no artificial bridges.",
+          "The original proximal cloth follows the true pelvis surface then continuously relaxes to the dedicated trailing cloth/floor field.",
+          "One fixed arclength drape model after the proximal cloth transition, not a unique hidden3D reconstruction."
+        ]
+      },
+      "strong_components": [
+        448144
+      ],
+      "storage_boundary_alpha_contact": false,
+      "stored_alpha_bbox": [
+        383,
+        744,
+        1725,
+        1889
+      ],
+      "clock_seconds": [
+        0.4000000000000001,
+        0.5333333333333333
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "GROUND-body-impact-and-cape-settle",
+      "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v03/E-DEATH-phase4-actual-native-v03.png",
+      "sha256": "2ce1547cfc645952d3a9b4c61c8dedc335e3351b9ccc87313ec41b52aed25eaf",
+      "bytes": 1124994,
+      "state": {
+        "name": "GROUND-body-impact-and-cape-settle",
+        "hip": [
+          110,
+          280,
+          76
+        ],
+        "body": 1,
+        "pelvis": 0.96,
+        "head": 3,
+        "Rupper": -12,
+        "Lupper": -7,
+        "Lfore": -10,
+        "foot": 0.95,
+        "heel": [
+          [
+            -300,
+            390,
+            45
+          ],
+          [
+            -190,
+            480,
+            45
+          ]
+        ],
+        "cloth": 77
+      },
+      "bones": {
+        "R": {
+          "hip": [
+            98.12041293551462,
+            228.836076916573,
+            76.7895479025868
+          ],
+          "knee": [
+            -218.96356537224437,
+            223.1088638356984,
+            44.99999999999996
+          ],
+          "ankle": [
+            -94.03860798711429,
+            516.0422723873105,
+            58.015329487098825
+          ],
+          "heel": [
+            -300.0,
+            390.0,
+            45.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "source_foot_heel": [
+            522.0,
+            1201.5
+          ],
+          "foot_UV": [
+            [
+              0.06182585986654416,
+              -1.3656751978378323
+            ],
+            [
+              1.0610941002296146,
+              -0.6372611604056968
+            ],
+            [
+              -0.04240779241630789,
+              -0.0952853208506472
+            ]
+          ],
+          "foot_SO3": [
+            [
+              -0.3743803119672827,
+              0.06989010845572269,
+              0.9246376342932012
+            ],
+            [
+              0.8557193981619429,
+              0.4101467503762213,
+              0.3154741744821408
+            ],
+            [
+              -0.35718859671137687,
+              0.9093376797955055,
+              -0.21335718990342087
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.5980509824902309,
+              -1.6522742690162577
+            ],
+            [
+              0.48460629016382345,
+              0.12166356324497493
+            ],
+            [
+              -0.42132861056339477,
+              -0.3195501249044974
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.524218866043108,
+              0.8812200917075584
+            ],
+            [
+              -0.7419369108100877,
+              1.3057385211092167
+            ],
+            [
+              0.18347840756437528,
+              0.14153421969657343
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              548,
+              847,
+              653,
+              893
+            ],
+            "source_anchor": [
+              622.0,
+              868.0
+            ],
+            "source_blend_y": [
+              856.0,
+              886.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3519,
+            "raster_alpha_gt0_texels": 7374,
+            "source_quad_min_Z": 34.683155331098106,
+            "complete_continuous_surface_quartic_min_Z": 34.02015913023826,
+            "complete_sampled_surface_min_Z": 33.97021379477451,
+            "raster_texel_quad_min_Z": 34.5868065104609,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 31.020159130238262,
+            "above_floor": true,
+            "world_anchor": [
+              -218.96356537224437,
+              223.1088638356984,
+              44.99999999999996
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.5980509824902309,
+                -1.6522742690162577
+              ],
+              [
+                0.48460629016382345,
+                0.12166356324497493
+              ],
+              [
+                -0.42132861056339477,
+                -0.3195501249044974
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.524218866043108,
+                0.8812200917075584
+              ],
+              [
+                -0.7419369108100877,
+                1.3057385211092167
+              ],
+              [
+                0.18347840756437528,
+                0.14153421969657343
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              524,
+              1027,
+              585,
+              1069
+            ],
+            "source_anchor": [
+              551.0,
+              1052.0
+            ],
+            "source_blend_y": [
+              1036.0,
+              1060.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 1989,
+            "raster_alpha_gt0_texels": 2534,
+            "source_quad_min_Z": 51.15339056459183,
+            "complete_continuous_surface_quartic_min_Z": 49.68556330407683,
+            "complete_sampled_surface_min_Z": 49.52305699044636,
+            "raster_texel_quad_min_Z": 51.04278729835385,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 46.68556330407683,
+            "above_floor": true,
+            "world_anchor": [
+              -94.03860798711429,
+              516.0422723873105,
+              58.015329487098825
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.524218866043108,
+                0.8812200917075584
+              ],
+              [
+                -0.7419369108100877,
+                1.3057385211092167
+              ],
+              [
+                0.18347840756437528,
+                0.14153421969657343
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.06182585986654416,
+                -1.3656751978378323
+              ],
+              [
+                1.0610941002296146,
+                -0.6372611604056968
+              ],
+              [
+                -0.04240779241630789,
+                -0.0952853208506472
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        },
+        "L": {
+          "hip": [
+            104.66138701396592,
+            324.80539632311456,
+            74.33997839954391
+          ],
+          "knee": [
+            -211.8986205388701,
+            347.48915506505875,
+            44.999999999999964
+          ],
+          "ankle": [
+            55.001982526535954,
+            520.974779150562,
+            60.8881069981943
+          ],
+          "heel": [
+            -190.0,
+            480.0,
+            45.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "source_foot_heel": [
+            844.5,
+            1197.0
+          ],
+          "foot_UV": [
+            [
+              0.04969171360181461,
+              -1.6563699677665347
+            ],
+            [
+              0.9027480303359018,
+              -0.0914351307844694
+            ],
+            [
+              -0.05955334525852338,
+              -0.12043866686108345
+            ]
+          ],
+          "foot_SO3": [
+            [
+              -0.04579945710922903,
+              0.2641296603610159,
+              0.9633991552031144
+            ],
+            [
+              0.9913781185406614,
+              0.13054053130713295,
+              0.011340007267629681
+            ],
+            [
+              -0.12276740531296715,
+              0.9556122080653981,
+              -0.267831051204105
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              -0.3973670689994014,
+              -1.617226427695425
+            ],
+            [
+              0.5069264691299065,
+              -0.042717289535083955
+            ],
+            [
+              -0.5179100278729549,
+              0.009583553993554428
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.7768983482553695,
+              1.3253724422509396
+            ],
+            [
+              -0.18850729136950814,
+              1.0398197268407492
+            ],
+            [
+              0.44951243375132716,
+              -0.02479972868923075
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              776,
+              854,
+              868,
+              900
+            ],
+            "source_anchor": [
+              830.0,
+              875.0
+            ],
+            "source_blend_y": [
+              863.0,
+              893.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3399,
+            "raster_alpha_gt0_texels": 5286,
+            "source_quad_min_Z": 20.34349144141781,
+            "complete_continuous_surface_quartic_min_Z": 20.34349144141781,
+            "complete_sampled_surface_min_Z": 20.10633536019753,
+            "raster_texel_quad_min_Z": 19.933453369444173,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 16.933453369444173,
+            "above_floor": true,
+            "world_anchor": [
+              -211.8986205388701,
+              347.48915506505875,
+              44.999999999999964
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                -0.3973670689994014,
+                -1.617226427695425
+              ],
+              [
+                0.5069264691299065,
+                -0.042717289535083955
+              ],
+              [
+                -0.5179100278729549,
+                0.009583553993554428
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.7768983482553695,
+                1.3253724422509396
+              ],
+              [
+                -0.18850729136950814,
+                1.0398197268407492
+              ],
+              [
+                0.44951243375132716,
+                -0.02479972868923075
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              821,
+              1025,
+              895,
+              1067
+            ],
+            "source_anchor": [
+              875.0,
+              1050.0
+            ],
+            "source_blend_y": [
+              1034.0,
+              1058.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 2175,
+            "raster_alpha_gt0_texels": 2595,
+            "source_quad_min_Z": 37.39718568800599,
+            "complete_continuous_surface_quartic_min_Z": 37.234958512053815,
+            "complete_sampled_surface_min_Z": 37.011231234650324,
+            "raster_texel_quad_min_Z": 37.119515611690204,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 34.119515611690204,
+            "above_floor": true,
+            "world_anchor": [
+              55.001982526535954,
+              520.974779150562,
+              60.8881069981943
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.7768983482553695,
+                1.3253724422509396
+              ],
+              [
+                -0.18850729136950814,
+                1.0398197268407492
+              ],
+              [
+                0.44951243375132716,
+                -0.02479972868923075
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.04969171360181461,
+                -1.6563699677665347
+              ],
+              [
+                0.9027480303359018,
+                -0.0914351307844694
+              ],
+              [
+                -0.05955334525852338,
+                -0.12043866686108345
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        }
+      },
+      "pelvis_world": [
+        110.0,
+        280.0,
+        76.0
+      ],
+      "pelvis_SO3": [
+        [
+          -0.2518604462149169,
+          -0.16381124050181012,
+          0.953798822141064
+        ],
+        [
+          0.8789846307034297,
+          0.3736395065938515,
+          0.2962761180038958
+        ],
+        [
+          -0.40491027971586274,
+          0.9129947407283141,
+          0.04988254988330551
+        ]
+      ],
+      "torso_waist": [
+        191.07289988199045,
+        305.18347003033114,
+        80.24001674008097
+      ],
+      "torso_SO3": [
+        [
+          -0.3175849428522356,
+          -0.12350525555364722,
+          0.9401522514593958
+        ],
+        [
+          0.8762262903202241,
+          0.3407546684578648,
+          0.34075466845786484
+        ],
+        [
+          -0.3624462611549484,
+          0.9320046715412962,
+          5.551115123125783e-17
+        ]
+      ],
+      "head_neck": [
+        459.95644379937767,
+        362.5811599701409,
+        80.24001674008099
+      ],
+      "head_SO3": [
+        [
+          -0.3361186753898099,
+          -0.07455864018527894,
+          0.9388638054733616
+        ],
+        [
+          0.876226290320224,
+          0.34075466845786473,
+          0.3407546684578648
+        ],
+        [
+          -0.34532842947816844,
+          0.9371911571808033,
+          -0.049203767094084014
+        ]
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            423.29050599246125,
+            284.58241636013565,
+            80.24001674008097
+          ],
+          "elbow": [
+            315.69640870899053,
+            170.76062124753858,
+            57.370185365516555
+          ],
+          "source_shoulder": [
+            622,
+            354
+          ],
+          "source_elbow": [
+            550,
+            471
+          ],
+          "source_upper_UV": [
+            [
+              -2.5970507280026335e-17,
+              -0.9196076690894935
+            ],
+            [
+              1.0271319292087069,
+              -0.3407546684578648
+            ],
+            [
+              9.419201764722005e-17,
+              -0.19546864422704627
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              -6.528449450947429e-17,
+              -0.9401522514593958
+            ],
+            [
+              1.027131929208707,
+              -0.34075466845786484
+            ],
+            [
+              1.208587747316404e-16,
+              -5.551115123125783e-17
+            ]
+          ],
+          "upper_SO3": [
+            [
+              -0.2352881348927965,
+              -0.31458103650801683,
+              0.9196076690894935
+            ],
+            [
+              0.876226290320224,
+              0.34075466845786473,
+              0.3407546684578648
+            ],
+            [
+              -0.42055556319032084,
+              0.8859599468337791,
+              0.19546864422704627
+            ]
+          ],
+          "fore_SO3": [
+            [
+              -0.3175849428522356,
+              -0.12350525555364722,
+              0.9401522514593958
+            ],
+            [
+              0.8762262903202241,
+              0.3407546684578648,
+              0.34075466845786484
+            ],
+            [
+              -0.3624462611549484,
+              0.9320046715412962,
+              5.551115123125783e-17
+            ]
+          ],
+          "upper_length": 158.28746002131692,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": true
+        },
+        "L": {
+          "shoulder": [
+            313.2926925717119,
+            422.40794390367176,
+            80.24001674008099
+          ],
+          "elbow": [
+            274.1006236077081,
+            421.4489629081546,
+            75.42783576145942
+          ],
+          "source_shoulder": [
+            795,
+            471
+          ],
+          "source_elbow": [
+            808,
+            513
+          ],
+          "source_upper_UV": [
+            [
+              -9.617739918764641e-18,
+              -0.9331444991429478
+            ],
+            [
+              1.0271319292087069,
+              -0.3407546684578648
+            ],
+            [
+              1.036209842911478e-16,
+              -0.11457573758622773
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              -2.610954177859828e-17,
+              -0.9258692262490961
+            ],
+            [
+              1.027131929208707,
+              -0.34075466845786484
+            ],
+            [
+              1.0323396081989543e-16,
+              -0.16325572519538578
+            ]
+          ],
+          "upper_SO3": [
+            [
+              -0.27104662498061144,
+              -0.23616746347851844,
+              0.9331444991429478
+            ],
+            [
+              0.876226290320224,
+              0.34075466845786473,
+              0.3407546684578648
+            ],
+            [
+              -0.3984485101468928,
+              0.9100061456486399,
+              0.11457573758622773
+            ]
+          ],
+          "fore_SO3": [
+            [
+              -0.24982198120907154,
+              -0.2834698459971979,
+              0.9258692262490961
+            ],
+            [
+              0.8762262903202241,
+              0.3407546684578648,
+              0.34075466845786484
+            ],
+            [
+              -0.4120879346164276,
+              0.8963989638182857,
+              0.16325572519538578
+            ]
+          ],
+          "upper_length": 39.49803792595273,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": false
+        }
+      },
+      "cloth_actual_surface": {
+        "kind": "ACTUAL_COMPLETE_ORIGINAL_CAPE_CONTINUOUS_PELVIS_ROOT_TO_LAGGING_ARCLENGTH_FLOOR_SURFACE",
+        "source_root": [
+          724.0,
+          600.0
+        ],
+        "world_root": [
+          192.0266987041315,
+          305.47974614833504,
+          80.28989928996427
+        ],
+        "pelvis_native_anchor": [
+          724.0,
+          686.0
+        ],
+        "pelvis_world": [
+          110.0,
+          280.0,
+          76.0
+        ],
+        "pelvis_U": [
+          0.04982125198031363,
+          1.0255566362422983,
+          -0.02741220003020962
+        ],
+        "pelvis_V": [
+          -0.953798822141064,
+          -0.2962761180038958,
+          -0.04988254988330551
+        ],
+        "transverse": [
+          0.04982125198031363,
+          1.0255566362422983,
+          -0.02741220003020962
+        ],
+        "longitudinal_angle": 77,
+        "source_proximal_blend_y": [
+          680.0,
+          780.0
+        ],
+        "floor_Z": 10.0,
+        "source_complete_surface_min_Z": 10.0,
+        "source_all_quad_corner_min_Z": 10.0,
+        "raster_all_texel_quad_min_Z": 9.903041523705813,
+        "guard_native": 3.0,
+        "guarded_min_Z": 6.903041523705813,
+        "above_floor": true,
+        "actual_source_alpha_gt0_texels": 96442,
+        "actual_raster_alpha_gt0_texels": 114572,
+        "source_RGBA_recolored": false,
+        "source_proximal_to_y680_exact_pelvis_surface": true,
+        "limits": [
+          "Original complete native cape material only, no artificial bridges.",
+          "The original proximal cloth follows the true pelvis surface then continuously relaxes to the dedicated trailing cloth/floor field.",
+          "One fixed arclength drape model after the proximal cloth transition, not a unique hidden3D reconstruction."
+        ]
+      },
+      "strong_components": [
+        399255
+      ],
+      "storage_boundary_alpha_contact": false,
+      "stored_alpha_bbox": [
+        519,
+        1055,
+        1830,
+        1917
+      ],
+      "clock_seconds": [
+        0.5333333333333333,
+        0.6666666666666666
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "DEAD-held-supine-terminal",
+      "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-six-native-v03/E-DEATH-phase5-actual-native-v03.png",
+      "sha256": "1ac338715baaac01204be22f7659dfaa28a36292feb39cc93eed42246e732a93",
+      "bytes": 1145759,
+      "state": {
+        "name": "DEAD-held-supine-terminal",
+        "hip": [
+          115,
+          285,
+          60
+        ],
+        "body": 1,
+        "pelvis": 1,
+        "head": 0,
+        "Rupper": -12,
+        "Lupper": -6,
+        "Lfore": -12,
+        "foot": 1,
+        "heel": [
+          [
+            -370,
+            420,
+            25
+          ],
+          [
+            -260,
+            520,
+            25
+          ]
+        ],
+        "cloth": 80
+      },
+      "bones": {
+        "R": {
+          "hip": [
+            105.59847748540605,
+            233.31725264261212,
+            59.99999999999999
+          ],
+          "knee": [
+            -212.65919876549722,
+            241.8423410512616,
+            44.99999999999998
+          ],
+          "ankle": [
+            -170.8578189264792,
+            557.1806835796547,
+            24.99999999999996
+          ],
+          "heel": [
+            -370.0,
+            420.0,
+            25.0
+          ],
+          "femur": 318.7250000000001,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              677,
+              696
+            ],
+            "knee": [
+              622,
+              868
+            ],
+            "ankle": [
+              551,
+              1052
+            ]
+          },
+          "source_foot_heel": [
+            522.0,
+            1201.5
+          ],
+          "foot_UV": [
+            [
+              -2.38038958972084e-16,
+              -1.3320547228998045
+            ],
+            [
+              1.0637394170321777,
+              -0.7112524447205455
+            ],
+            [
+              2.600147227287736e-16,
+              3.2201532809770187e-16
+            ]
+          ],
+          "foot_SO3": [
+            [
+              -0.4517612355547622,
+              0.13165168029762414,
+              0.8823715890285944
+            ],
+            [
+              0.8460718721047216,
+              0.3769365909759963,
+              0.3769365909759968
+            ],
+            [
+              -0.282973803174863,
+              0.9168351222865574,
+              -0.2816721236802593
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              0.5936929987100971,
+              -1.660491635592139
+            ],
+            [
+              0.4608149734728543,
+              0.19691809273056088
+            ],
+            [
+              -0.44989405785065556,
+              -0.23107077431270973
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.7554164769094635,
+              0.5186736396716843
+            ],
+            [
+              -0.6395959666033411,
+              1.466994722280195
+            ],
+            [
+              0.10050497450842608,
+              -0.06991384135816177
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              548,
+              847,
+              653,
+              893
+            ],
+            "source_anchor": [
+              622.0,
+              868.0
+            ],
+            "source_blend_y": [
+              856.0,
+              886.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3519,
+            "raster_alpha_gt0_texels": 8082,
+            "source_quad_min_Z": 35.296173216581074,
+            "complete_continuous_surface_quartic_min_Z": 33.77343354530251,
+            "complete_sampled_surface_min_Z": 33.57005598842718,
+            "raster_texel_quad_min_Z": 34.9781154974736,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 30.77343354530251,
+            "above_floor": true,
+            "world_anchor": [
+              -212.65919876549722,
+              241.8423410512616,
+              44.99999999999998
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.5936929987100971,
+                -1.660491635592139
+              ],
+              [
+                0.4608149734728543,
+                0.19691809273056088
+              ],
+              [
+                -0.44989405785065556,
+                -0.23107077431270973
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.7554164769094635,
+                0.5186736396716843
+              ],
+              [
+                -0.6395959666033411,
+                1.466994722280195
+              ],
+              [
+                0.10050497450842608,
+                -0.06991384135816177
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              524,
+              1027,
+              585,
+              1069
+            ],
+            "source_anchor": [
+              551.0,
+              1052.0
+            ],
+            "source_blend_y": [
+              1036.0,
+              1060.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 1989,
+            "raster_alpha_gt0_texels": 2861,
+            "source_quad_min_Z": 23.937863657343392,
+            "complete_continuous_surface_quartic_min_Z": 23.31067125791578,
+            "complete_sampled_surface_min_Z": 23.26660491795603,
+            "raster_texel_quad_min_Z": 24.29315632475509,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 20.31067125791578,
+            "above_floor": true,
+            "world_anchor": [
+              -170.8578189264792,
+              557.1806835796547,
+              24.99999999999996
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.7554164769094635,
+                0.5186736396716843
+              ],
+              [
+                -0.6395959666033411,
+                1.466994722280195
+              ],
+              [
+                0.10050497450842608,
+                -0.06991384135816177
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                -2.38038958972084e-16,
+                -1.3320547228998045
+              ],
+              [
+                1.0637394170321777,
+                -0.7112524447205455
+              ],
+              [
+                2.600147227287736e-16,
+                3.2201532809770187e-16
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        },
+        "L": {
+          "hip": [
+            107.47878198832483,
+            329.5220313959376,
+            60.00000000000001
+          ],
+          "knee": [
+            -210.7810696672346,
+            321.07854578978385,
+            45.000000000000014
+          ],
+          "ankle": [
+            -16.843020539463282,
+            573.2167196657643,
+            24.999999999999936
+          ],
+          "heel": [
+            -260.0,
+            520.0,
+            25.0
+          ],
+          "femur": 318.725,
+          "tibia": 318.725,
+          "source_controls": {
+            "hip": [
+              770,
+              694
+            ],
+            "knee": [
+              830,
+              875
+            ],
+            "ankle": [
+              875,
+              1050
+            ]
+          },
+          "source_foot_heel": [
+            844.5,
+            1197.0
+          ],
+          "foot_UV": [
+            [
+              -2.6092386204937095e-16,
+              -1.6541291119764403
+            ],
+            [
+              0.9060738786696789,
+              -0.17402358072339552
+            ],
+            [
+              3.1841647445799433e-16,
+              5.074857471256844e-16
+            ]
+          ],
+          "foot_SO3": [
+            [
+              -0.10450031379792316,
+              0.3326831041065683,
+              0.9372308342442399
+            ],
+            [
+              0.9932964862880755,
+              0.08173766062153695,
+              0.08173766062153764
+            ],
+            [
+              -0.04941431719551331,
+              0.939489705679704,
+              -0.3389945695405231
+            ]
+          ],
+          "thigh_source_world_UV": [
+            [
+              -0.5093302201953848,
+              -1.589502974827825
+            ],
+            [
+              0.46058889107226775,
+              -0.19933049210215356
+            ],
+            [
+              -0.49927344695272274,
+              0.08263208186278105
+            ]
+          ],
+          "calf_source_world_UV": [
+            [
+              0.9506507157470717,
+              0.8637643823951607
+            ],
+            [
+              0.046899560937069096,
+              1.4287296779074996
+            ],
+            [
+              0.2730458548184935,
+              -0.1844975055247559
+            ]
+          ],
+          "actual_continuous_knee": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              776,
+              854,
+              868,
+              900
+            ],
+            "source_anchor": [
+              830.0,
+              875.0
+            ],
+            "source_blend_y": [
+              863.0,
+              893.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 3399,
+            "raster_alpha_gt0_texels": 5967,
+            "source_quad_min_Z": 25.87185788185409,
+            "complete_continuous_surface_quartic_min_Z": 24.5832880610859,
+            "complete_sampled_surface_min_Z": 24.292335296678147,
+            "raster_texel_quad_min_Z": 25.713719908436214,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 21.5832880610859,
+            "above_floor": true,
+            "world_anchor": [
+              -210.7810696672346,
+              321.07854578978385,
+              45.000000000000014
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                -0.5093302201953848,
+                -1.589502974827825
+              ],
+              [
+                0.46058889107226775,
+                -0.19933049210215356
+              ],
+              [
+                -0.49927344695272274,
+                0.08263208186278105
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                0.9506507157470717,
+                0.8637643823951607
+              ],
+              [
+                0.046899560937069096,
+                1.4287296779074996
+              ],
+              [
+                0.2730458548184935,
+                -0.1844975055247559
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "actual_continuous_ankle": {
+            "kind": "ORIGINAL_ACTUAL_NATIVE_JOINT_STRIP_CONTINUOUS_UV_BETWEEN_FIXED_PARENT_SURFACES",
+            "original_native_source_bbox": [
+              821,
+              1025,
+              895,
+              1067
+            ],
+            "source_anchor": [
+              875.0,
+              1050.0
+            ],
+            "source_blend_y": [
+              1034.0,
+              1058.0
+            ],
+            "original_native_RGBA_recolored": false,
+            "large_spherical_cap": false,
+            "source_alpha_gt0_texels": 2175,
+            "raster_alpha_gt0_texels": 2492,
+            "source_quad_min_Z": 14.528439027642978,
+            "complete_continuous_surface_quartic_min_Z": 13.201015657144858,
+            "complete_sampled_surface_min_Z": 13.06628114334387,
+            "raster_texel_quad_min_Z": 13.274934228706872,
+            "conservative_surface_and_raster_guard": 3.0,
+            "guarded_min_Z": 10.201015657144858,
+            "above_floor": true,
+            "world_anchor": [
+              -16.843020539463282,
+              573.2167196657643,
+              24.999999999999936
+            ],
+            "original_parent_bones_unchanged": true,
+            "source_femur_world_UV": [
+              [
+                0.9506507157470717,
+                0.8637643823951607
+              ],
+              [
+                0.046899560937069096,
+                1.4287296779074996
+              ],
+              [
+                0.2730458548184935,
+                -0.1844975055247559
+              ]
+            ],
+            "source_calf_world_UV": [
+              [
+                -2.6092386204937095e-16,
+                -1.6541291119764403
+              ],
+              [
+                0.9060738786696789,
+                -0.17402358072339552
+              ],
+              [
+                3.1841647445799433e-16,
+                5.074857471256844e-16
+              ]
+            ],
+            "limits": [
+              "One fixed native UV skinning surface, using original alpha and original leather/gold pixels only.",
+              "The same source strip continuously blends the two existing fixed-bone surfaces; natural folded inner space stays outside its original alpha.",
+              "All native source texel quads and the continuous quartic source rectangle are bounded. Every painted output texel quad uses its actual selected mesh triangle Z gradient plus 3-native material guard."
+            ]
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirror": false
+        }
+      },
+      "pelvis_world": [
+        115.0,
+        285.0,
+        60.0
+      ],
+      "pelvis_SO3": [
+        [
+          -0.3175849428522356,
+          -0.12350525555364722,
+          0.9401522514593958
+        ],
+        [
+          0.8762262903202241,
+          0.3407546684578648,
+          0.34075466845786484
+        ],
+        [
+          -0.3624462611549484,
+          0.9320046715412962,
+          5.551115123125783e-17
+        ]
+      ],
+      "torso_waist": [
+        194.91294137404864,
+        313.9641468189185,
+        60.00000000000001
+      ],
+      "torso_SO3": [
+        [
+          -0.3175849428522356,
+          -0.12350525555364722,
+          0.9401522514593958
+        ],
+        [
+          0.8762262903202241,
+          0.3407546684578648,
+          0.34075466845786484
+        ],
+        [
+          -0.3624462611549484,
+          0.9320046715412962,
+          5.551115123125783e-17
+        ]
+      ],
+      "head_neck": [
+        463.79648529143583,
+        371.36183675872826,
+        60.00000000000002
+      ],
+      "head_SO3": [
+        [
+          -0.3175849428522356,
+          -0.12350525555364722,
+          0.9401522514593958
+        ],
+        [
+          0.8762262903202241,
+          0.3407546684578648,
+          0.34075466845786484
+        ],
+        [
+          -0.3624462611549484,
+          0.9320046715412962,
+          5.551115123125783e-17
+        ]
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            427.1305474845194,
+            293.363093148723,
+            60.00000000000001
+          ],
+          "elbow": [
+            319.5364502010487,
+            179.54129803612594,
+            37.13016862543559
+          ],
+          "source_shoulder": [
+            622,
+            354
+          ],
+          "source_elbow": [
+            550,
+            471
+          ],
+          "source_upper_UV": [
+            [
+              -2.5970507280026335e-17,
+              -0.9196076690894935
+            ],
+            [
+              1.0271319292087069,
+              -0.3407546684578648
+            ],
+            [
+              9.419201764722005e-17,
+              -0.19546864422704627
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              -6.528449450947429e-17,
+              -0.9401522514593958
+            ],
+            [
+              1.027131929208707,
+              -0.34075466845786484
+            ],
+            [
+              1.208587747316404e-16,
+              -5.551115123125783e-17
+            ]
+          ],
+          "upper_SO3": [
+            [
+              -0.2352881348927965,
+              -0.31458103650801683,
+              0.9196076690894935
+            ],
+            [
+              0.876226290320224,
+              0.34075466845786473,
+              0.3407546684578648
+            ],
+            [
+              -0.42055556319032084,
+              0.8859599468337791,
+              0.19546864422704627
+            ]
+          ],
+          "fore_SO3": [
+            [
+              -0.3175849428522356,
+              -0.12350525555364722,
+              0.9401522514593958
+            ],
+            [
+              0.8762262903202241,
+              0.3407546684578648,
+              0.34075466845786484
+            ],
+            [
+              -0.3624462611549484,
+              0.9320046715412962,
+              5.551115123125783e-17
+            ]
+          ],
+          "upper_length": 158.28746002131692,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": true
+        },
+        "L": {
+          "shoulder": [
+            317.1327340637701,
+            431.1886206922591,
+            60.00000000000002
+          ],
+          "elbow": [
+            277.8626501034119,
+            430.22963969674197,
+            55.87254785652766
+          ],
+          "source_shoulder": [
+            795,
+            471
+          ],
+          "source_elbow": [
+            808,
+            513
+          ],
+          "source_upper_UV": [
+            [
+              1.4432455440494478e-18,
+              -0.9350019990561478
+            ],
+            [
+              1.0271319292087069,
+              -0.3407546684578648
+            ],
+            [
+              1.3590189706741028e-16,
+              -0.09827267008267522
+            ]
+          ],
+          "source_fore_UV": [
+            [
+              -2.5970507280026335e-17,
+              -0.9196076690894935
+            ],
+            [
+              1.0271319292087069,
+              -0.3407546684578648
+            ],
+            [
+              9.419201764722005e-17,
+              -0.19546864422704627
+            ]
+          ],
+          "upper_SO3": [
+            [
+              -0.2779592286101967,
+              -0.220249696915642,
+              0.9350019990561478
+            ],
+            [
+              0.876226290320224,
+              0.34075466845786473,
+              0.3407546684578648
+            ],
+            [
+              -0.3936574086462531,
+              0.9139892378648332,
+              0.09827267008267522
+            ]
+          ],
+          "fore_SO3": [
+            [
+              -0.2352881348927965,
+              -0.31458103650801683,
+              0.9196076690894935
+            ],
+            [
+              0.876226290320224,
+              0.34075466845786473,
+              0.3407546684578648
+            ],
+            [
+              -0.42055556319032084,
+              0.8859599468337791,
+              0.19546864422704627
+            ]
+          ],
+          "upper_length": 39.49803792595273,
+          "whole_RIGHTgrip_and_both_entire_pole_ends_rigid": false
+        }
+      },
+      "cloth_actual_surface": {
+        "kind": "ACTUAL_COMPLETE_ORIGINAL_CAPE_CONTINUOUS_PELVIS_ROOT_TO_LAGGING_ARCLENGTH_FLOOR_SURFACE",
+        "source_root": [
+          724.0,
+          600.0
+        ],
+        "world_root": [
+          195.85309362550805,
+          314.30490148737636,
+          60.00000000000001
+        ],
+        "pelvis_native_anchor": [
+          724.0,
+          686.0
+        ],
+        "pelvis_world": [
+          115.0,
+          285.0,
+          60.0
+        ],
+        "pelvis_U": [
+          -6.528449450947429e-17,
+          1.027131929208707,
+          1.2240328170698537e-16
+        ],
+        "pelvis_V": [
+          -0.9401522514593958,
+          -0.34075466845786484,
+          -5.551115123125783e-17
+        ],
+        "transverse": [
+          -6.528449450947429e-17,
+          1.027131929208707,
+          1.2240328170698537e-16
+        ],
+        "longitudinal_angle": 80,
+        "source_proximal_blend_y": [
+          680.0,
+          780.0
+        ],
+        "floor_Z": 10.0,
+        "source_complete_surface_min_Z": 10.0,
+        "source_all_quad_corner_min_Z": 10.0,
+        "raster_all_texel_quad_min_Z": 9.999999999999998,
+        "guard_native": 3.0,
+        "guarded_min_Z": 6.999999999999998,
+        "above_floor": true,
+        "actual_source_alpha_gt0_texels": 96442,
+        "actual_raster_alpha_gt0_texels": 112402,
+        "source_RGBA_recolored": false,
+        "source_proximal_to_y680_exact_pelvis_surface": true,
+        "limits": [
+          "Original complete native cape material only, no artificial bridges.",
+          "The original proximal cloth follows the true pelvis surface then continuously relaxes to the dedicated trailing cloth/floor field.",
+          "One fixed arclength drape model after the proximal cloth transition, not a unique hidden3D reconstruction."
+        ]
+      },
+      "strong_components": [
+        410542
+      ],
+      "storage_boundary_alpha_contact": false,
+      "stored_alpha_bbox": [
+        526,
+        1084,
+        1834,
+        1963
+      ],
+      "clock_seconds": [
+        0.6666666666666666,
+        0.8000000000000002
+      ]
+    }
+  ],
+  "actual_parts_manifest": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/actual-own-E-DEATH-native-parts-v05/own-E-DEATH-complete-native-materials-and-fixed-registration-handoff-v05.json",
+    "sha256": "119272e01c8e63266e960fc4c9e145bd64beea99410e99da17ef928072d718c4",
+    "bytes": 11627
+  },
+  "once_registration": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "393e66b3d965b2286fc2a1bea1ac561444f9463b2b30de140f3b06ee0f46d886",
+    "bytes": 3295
+  },
+  "canonical_original_sole_capture": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-original-neutral-once-true-sole-and-HIT-six-material-floor-binding-v01.json",
+    "sha256": "d97aa4f359522c632b40eb2942e314f0ba08d0f88a85afd3b508a798a5b6e9e1",
+    "bytes": 16356
+  },
+  "joint_UV_method": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/render-own-E-DEATH-continuous-actual-native-joint-UV-v01.py",
+    "sha256": "08686c60152855f747bf062ec42cb750516bef4d7cc4b73de93290870edd3743",
+    "bytes": 5413
+  },
+  "cloth_UV_method": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/render-own-E-DEATH-pelvis-root-bound-actual-cloth-surface-v01.py",
+    "sha256": "fd07bfcab9f3e23a6a03ab97a167b7bee87b3f689f0179b3fd2b4ab53f5a650f",
+    "bytes": 5160
+  },
+  "transverse_native_surface_rule": "Fixed minimum-norm camera-plane screen-normal W=[normalX/PX,normalY/2,-normalY/2], P(W)=native_normal, not an orthogonal hidden muscle cross section. Same rule everypose, fixed3D bones unchanged.",
+  "renderer": {
+    "path": "/workspace/scratch/mythic413-E-death-author-20261020-v01/author-own-E-DEATH-six-actual-dedicated-native-v03.py",
+    "sha256": "aac42008f0c06dfc13f76fde8184711ea81851f07f0c38527a33c66f03a01f67",
+    "bytes": 12979
+  },
+  "projection_matrix": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "limits": [
+    "Actual ownE original fullbody details, exact original boot materials per side and full original RIGHT pole are used, no wholefigure flip or wholePNG rotation.",
+    "One declared native capture and fixed318.725 limb model. Boot distal sockets are author-defined hidden flex controls near top of gold counter, not the earlier neutral100height sole proxy.",
+    "Separate properSO3 pelvis, torso, head, both upperarms and entire RIGHTforegrip-pole; original directional leather UV strips continuously close knees/ankles on the fixed source materials.",
+    "Front-facing ownE costume lies face-up in the held supine terminal; fixed60native unseen back support thickness below visible material reaches ground0.",
+    "Original/failed material extractions and every actual source remain preserved. First6 requires independent native source/joint/cycle and complete source/raster quad floor audit before game."
+  ],
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

@@ -1,0 +1,129 @@
+{
+  "schema": "pr122-independent-six-pose-physical-candidate-review-v1",
+  "status": "PASS_SCOPED_E_WALK_SIX_FIXED_C_ROOT_AND_TRUE_FORWARD_GAIT_CANDIDATE",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "E",
+  "role": "walk",
+  "selected_source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+  "geometry": "/workspace/scratch/girtas-E-walk-six-single-assembly-v14/physical-candidate-v01.geometry.json",
+  "geometry_sha256": "7fce3cc5e6294d2585805201b5d10ca3b8103fa611b31fb39ef587918d7e851f",
+  "pose_canvases": [
+    2256,
+    2408,
+    2352,
+    2352,
+    2408,
+    2304
+  ],
+  "native_source_anchors": [
+    [
+      647,
+      1208
+    ],
+    [
+      654,
+      1216
+    ],
+    [
+      704,
+      1158
+    ],
+    [
+      664,
+      1200
+    ],
+    [
+      614,
+      1248
+    ],
+    [
+      684,
+      1214
+    ]
+  ],
+  "atlas_anchors": [
+    [
+      788,
+      1349
+    ],
+    [
+      2331,
+      1357
+    ],
+    [
+      845,
+      2835
+    ],
+    [
+      2341,
+      2877
+    ],
+    [
+      755,
+      4461
+    ],
+    [
+      2361,
+      4427
+    ]
+  ],
+  "evidence": {
+    "physical-candidate-v02-seven-private.proof.json": {
+      "path": "/workspace/scratch/girtas-E-walk-six-single-assembly-v14/physical-candidate-v02-seven-private.proof.json",
+      "sha256": "203131a4b14a1a4de8c2cf4e3281d9e8cea67ea23ef5efd00e47122138b446cf"
+    },
+    "physical-candidate-v03-idle-0-1-3-zoom-private.proof.json": {
+      "path": "/workspace/scratch/girtas-E-walk-six-single-assembly-v14/physical-candidate-v03-idle-0-1-3-zoom-private.proof.json",
+      "sha256": "ead1883adb1fbc125ea651d42baa8a12c368dc2452c4fbc50e95c42f8e246312"
+    }
+  },
+  "actual_idle_source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+  "actual_idle_region_margin": {
+    "row": 0,
+    "direction": "E",
+    "region": [
+      46,
+      4,
+      427,
+      495
+    ],
+    "margin": [
+      302,
+      149,
+      597,
+      529
+    ],
+    "source_anchor": [
+      256,
+      495
+    ],
+    "rgba_sha256": "54deab291e7e39110b6dbc084e84eb98472d55acdd394f3258f4d5d058bef264"
+  },
+  "reviewed": [
+    "Source0/1/2 far LEFT support/contact/load/toeoff and near RIGHT passing-to-forward-reach; source3/4/5 near RIGHT support/contact/load/toeoff and far LEFT passing-to-forward-reach are genuine opposite chains.",
+    "Forward foot placement is parallel to E heading on both halves, including2-to3 settling and5-to0 heel-contact entry.",
+    "Both actual boot contacts0/3 fit a common oblique projected ground with a narrower walking foot lane than idle; no actual sole penetration or hidden relabelling to AIR observed.",
+    "Single support1/2/4/5 retains the intended flat sole or rear toe on that projected plane, and the opposite boot is visibly above its projected plane. Runtime numeric clearance remains a separate compiled check.",
+    "At unchanged C and roots, rigid skull/helmetcore, near pauldron, torso and boot proportions remain coherent against the actual compiled E idle.",
+    "Initial15-20percent belt-to-sole concern is not evidence of a uniform leg enlargement: the visible front V-tip is a shifting garment surface, not the anatomical pelvis. Enlarged exact common-world views show credible hip/slit-to-knee-to-ankle chains, extended/upright0 versus the relaxed/foreshortened idle, and no uniform elongation of exposed leg segments.",
+    "Hard gold rays, pale hair, long robe, original RIGHT sinuous blade and empty LEFT remain faithful; no temporary shared animation or colour-only completion."
+  ],
+  "ground_projection": {
+    "forward_slope_y_per_x": 0.028659992885037386,
+    "walking_near_minus_far_lane_canonical": 1.5493472447063796,
+    "standing_neutral_lane_canonical": 23.754459067939898,
+    "basis": "The coordinate fit is supported by actual hip/knee/boot occlusion and projected contact artwork; arithmetic fit alone would not grant source approval."
+  },
+  "corrections": [
+    "Neutral idle near-minus-far20canonical was incorrectly treated as invariant in an earlier informal arithmetic HOLD; that statement was withdrawn.",
+    "Frontbelt Vtip-to-sole is not a skeletal leg-length measurement and did not justify source regeneration. No source pixel or C was changed to hide either concern."
+  ],
+  "limitations": [
+    "This approves this exact candidate source/C/root/gait layout; actual latest-profile fixture, official finalizers and real compiled SpriteFrames/Player checks remain required.",
+    "The panels are private exact-layout reconstructions, not Godot screenshots.",
+    "Manual face/belt markers and hidden hip estimates are not anatomical bone-length metrology.",
+    "Whole-actor approval and completion counts remain unchanged."
+  ],
+  "actor_approval_changed": false
+}

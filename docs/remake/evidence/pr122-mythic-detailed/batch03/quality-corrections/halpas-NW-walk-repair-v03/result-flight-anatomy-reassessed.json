@@ -1,0 +1,68 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_REASSESSED_PASS_NOT_APPROVED",
+  "key": "transform:393",
+  "direction": "NW",
+  "role": "walk",
+  "version": "v03",
+  "source_batch": "batch03",
+  "expected_poses": 6,
+  "request_path": "/workspace/scratch/halpas-NW-walk-repair-v03/request-halpas-NW-walk-v03.json",
+  "request_sha256": "4adedcf230d1e5e83bbbb4b3ab25d35d6b1c7ebd26201edfa9ba47e4bb6b2dad",
+  "original_generated_file": "/workspace/generated_images/exec-736432ff-bc7f-43d6-9b28-e0d9d4001774.png",
+  "raw_png": "/workspace/scratch/halpas-NW-walk-repair-v03/halpas-NW-walk-v03.png",
+  "raw_sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+  "raw_bytes": 2514671,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "source_visual_status": "PASS",
+  "strict_geometry_status": "PASS",
+  "strict_geometry_distinct_complete_poses": 6,
+  "geometry_path": "/workspace/scratch/halpas-NW-walk-repair-v03/source.geometry.json",
+  "geometry_qc": "/workspace/scratch/halpas-NW-walk-repair-v03/source-geometry-qc.json",
+  "visual_findings": [
+    "All six show the same rear-upperLEFT helmet/profile, dorsal spine/back armor and rear-left pelvis with nearLEFT empty arm and original single purple blade in farRIGHT hand. No frontal breastplate/face or NE/right-facing torso turn is visible.",
+    "All six visible paired leg chains descend from coherent pelvis exits through distinct bent knees, trailing calves and continuous ankle/boot openings. Extended ankles continue into the pointed boots LOWER-RIGHT behind the NW-flying body. This is plausible natural plantarflexion; a canvas-direction difference from the standing canonical is not evidence of an anatomical 180-degree boot reversal.",
+    "Independent review traced both legs separately for each authored phase and found no visible extra/disconnected leg, reversed boot or knee/ankle contradiction. Armor/cape obscure exact hip sockets and some joint centers, which limits hidden-skeleton certainty without constituting an observed defect.",
+    "Six distinct normal-flight poses articulate original wing roots/fans through HIGH→mid→LOW→lower return→midrise→HIGH, with changing trailing knee positions and cape lag. This is a new animated cycle, not repeated/tinted canonical art.",
+    "Source geometry retains six distinct complete physical RGBA regions and unchanged PNG pixels. Requested sparse320px/96px gutters were not met (regions about442–467px wide); actual strict complete coverage passes, with no strong outer-edge alpha. Layout/body scale must be reviewed in the actual runtime separately rather than inventing a source-art defect from resolution alone."
+  ],
+  "visual_limitations": [
+    "Only source-art review PASS. No SpriteFrames selection, actualPlayer/runtime-size approval, actor approval or detailed completion is granted.",
+    "Original result.json HOLD and all original PNG/request/receipt bytes remain preserved. This new document records a corrected flying-anatomy criterion and the independent anatomical evidence; it does not silently overwrite the initial assessment.",
+    "Pelvic sockets and some knee/ankle centers are partially covered by ornate armor/cape. Review states visible coherent connections and physical plausibility, not a uniquely proven hidden skeleton.",
+    "Exactly one generation attempt from the new NW canonical was used. No generation, resampling, pose mirroring or PNG patching was performed for this reassessment."
+  ],
+  "phase_contract": [
+    "0 HIGH: wings lifted at both real shoulder-root joints, feather fans high and open; gentle upper-left travel lean, one leg softly forward-bent and the other trailing bent.",
+    "1 MID DOWN: both wing roots rotate through a middle downstroke with articulated feather fans; hips and shoulders counterbalance, leading knee tucks and trailing knee releases.",
+    "2 LOW: deepest coherent downstroke, both complete fan tips low beside the body, shoulder roots and elbows visibly articulated; airborne legs trail and exchange soft bends.",
+    "3 LOWER RETURN: distinct folding return after low stroke, wing fans slightly tucked backward with different silhouette from phase2; opposite knee bends, cape lags behind.",
+    "4 MID RISE: wings rise through midstroke and fan outward, shoulder and torso settle; airborne legs pass toward original arrangement while cape follows with delay.",
+    "5 HIGH RETURN: wings reach a second high recovery with visibly different sweep/elbow/fan angles from phase0; gentle upper-left forward lean continues, leg pose distinct and naturally loops to phase0."
+  ],
+  "production_receipt": "/workspace/scratch/halpas-NW-walk-repair-v03/production-receipt.json",
+  "production_receipt_sha256": "eb482528b2891a1b42d577712498d1ad643743635b7dbc7a0a16a29f8adba5a6",
+  "references_unchanged": true,
+  "strong_alpha_outer_edge_pixels": 0,
+  "private_previews": [
+    "/workspace/scratch/halpas-NW-walk-repair-v03/private-overview.jpg",
+    "/workspace/scratch/halpas-NW-walk-repair-v03/private-boots-review.jpg"
+  ],
+  "private_preview_total_bytes": 275765,
+  "created_at": "2026-10-19T12:17:56.885696+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0,
+  "initial_source_visual_status": "HOLD",
+  "initial_result_path": "/workspace/scratch/halpas-NW-walk-repair-v03/result.json",
+  "initial_result_sha256": "bd4f75e27c19f966cbf22f793f855f4816a1ad210758444d3f1b91547c87246e",
+  "initial_result_preserved": true,
+  "reassessment_basis": "Root clarified that NW flying toes may trail LOWER-RIGHT through coherent plantarflexion. Evaluate complete visible hip-to-knee-to-shin-to-ankle/boot chains and rear-left body/hand identity; do not impose standing boot direction on flight. Fresh independent six-pose anatomical review found no actual boot reversal, knee/ankle contradiction, additional/disconnected leg or NE body turn.",
+  "independent_reassessment": "/workspace/scratch/halpas-NW-walk-repair-v03/independent-flight-anatomy-reassessment.json",
+  "independent_reassessment_sha256": "d817353633d0c879f8574b619a5f43ff997b89c5024949521d306417a83b6e17",
+  "reviewed_at": "2026-10-19T12:21:04.091843+00:00"
+}

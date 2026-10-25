@@ -1,0 +1,103 @@
+[
+  {
+    "request": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/requests/zombie-lord-E-run6-support-columns-v01.json",
+      "bytes": 4419,
+      "sha256": "7dcd4eb6122bbfaff3df67bb7931a88c16a4fa16ee9e21f7a634a0f1a58b9a1c"
+    },
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-run6-support-columns-v01.png",
+      "bytes": 1793391,
+      "sha256": "72820aefdfb5f50ee1b1b6a86d640b16259858efdb0f456f5e01ec06061fea1a"
+    },
+    "direction": "E",
+    "playback_source_rows": [
+      0,
+      2,
+      4,
+      1,
+      3,
+      5
+    ],
+    "new_approval": false,
+    "strict_geometry": "PASS",
+    "status": "HOLD",
+    "actual_visual_finding": "Both top cells still read as near/right-leg plant. Large belly/skirt occlude ownership; opposite support cannot be asserted. No frame selected for r002."
+  },
+  {
+    "request": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/requests/zombie-lord-E-run6-support-columns-v02.json",
+      "bytes": 3981,
+      "sha256": "c30942ae8f343e0a9240ff0c3eee6e52b6c1766d1f71372ffe83900087057d34"
+    },
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-run6-support-columns-v02.png",
+      "bytes": 2523471,
+      "sha256": "ecbac5312f8309ddcc11d0f8ff25f3bf98e83c1eb754f0b539b7eaeb167f663c"
+    },
+    "direction": "E",
+    "playback_source_rows": [
+      0,
+      2,
+      4,
+      1,
+      3,
+      5
+    ],
+    "new_approval": false,
+    "strict_geometry": "PASS",
+    "status": "HOLD",
+    "actual_visual_finding": "Both top cells still read as near/right-leg plant. Large belly/skirt occlude ownership; opposite support cannot be asserted. No frame selected for r002."
+  },
+  {
+    "request": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/requests/zombie-lord-S-run6-support-columns-v01.json",
+      "bytes": 4360,
+      "sha256": "47614216a6e873dacca67a5435df7dd3be1a320dbd92ab19e3ac173bd28052f9"
+    },
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-run6-support-columns-v01.png",
+      "bytes": 2907119,
+      "sha256": "5c52b4890ba86de795253f5cc8d65043a367d0e558fc10c0210ede9e42292cc9"
+    },
+    "direction": "S",
+    "playback_source_rows": [
+      0,
+      2,
+      4,
+      1,
+      3,
+      5
+    ],
+    "new_approval": false,
+    "strict_geometry": "SOURCE_HOLD",
+    "geometry_reason": "A pose rectangle includes another body; cannot safely crop",
+    "status": "SOURCE_HOLD",
+    "actual_visual_finding": "Opposite screen-side support visible, but strict foreign-component/bbox ownership guard failed. Keep all source pixels; no import and no noise cleanup."
+  },
+  {
+    "request": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/requests/zombie-lord-S-run6-support-columns-v02.json",
+      "bytes": 3731,
+      "sha256": "53b2084f9d3522161f1496c5835b1208c4796ebe08af4f828298355dcbac6927"
+    },
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-S-run6-support-columns-v02.png",
+      "bytes": 2697647,
+      "sha256": "b5df37652060618c65d3ab9a61b2c97b190320009484d02c681a9ec1c598a588"
+    },
+    "direction": "S",
+    "playback_source_rows": [
+      0,
+      2,
+      4,
+      1,
+      3,
+      5
+    ],
+    "new_approval": false,
+    "strict_geometry": "PASS",
+    "status": "SELECTED_SOURCE_PLANE_CANDIDATE_MAIN_HOLD",
+    "actual_visual_finding": "Left column screenLEFT/anatomicalRIGHT sole grounded; right column screenRIGHT/anatomicalLEFT sole grounded. Opposite foot clearly airborne. Selected as r002 S RUN with order [0,2,4,1,3,5]."
+  }
+]

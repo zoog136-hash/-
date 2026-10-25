@@ -1,0 +1,28 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_W_ENTRY_PHYSICAL_ROOT_CONTINUITY",
+  "actor_key": "transform:267",
+  "revision": "r080",
+  "checkpoint": "bbb6dedf7354b5bc730a6b65b4fcc7a72af06237",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r080/SpriteFrames.tres",
+  "frames_sha256": "88b7835a5aa62ea52ad6897e2e4079255adf68aa93e925578ab562a850991072",
+  "scope": [
+    "Widle0_to_Whit0",
+    "Widle0_to_Wattack0",
+    "Widle0_to_Wdeath0",
+    "exact_metadata_proof_all6_attack_and_death_relative_trajectories"
+  ],
+  "all_four_actual_entry_tres_regions_margins_and_crop_SHA_match": true,
+  "findings": [
+    "Widle physicalpaired-support/pelvis root now agrees with hit0neck/pelvis convention. The previous approximately19worldpx source-cell placement error is removed; sourcepose reaction compression and early brace remain.",
+    "Attack0ready posture and death0initialslump retain their authored knee/torso/head differences around the common bodyroot; no forced stance/neck/foot equality is imposed.",
+    "Death and attack apply exactly+68sourceX anchor to every phase, sourceRGBA/regions/canvas/foot/allY/order remain identical. Exact prior basegeometry reconstructed and matches SHA-pinned runtimeproof. Thus every relative collapse/lunge trajectory is unchanged under a constant\u221219.14267434420985worldX translation.",
+    "All six hit regions/margins are identical to priorr077; corrected arm chains, recoil compression and authenticbackstep remain intact. No fullsource-art death or attack QA repeated."
+  ],
+  "constant_trajectory_proof": "/workspace/scratch/girtas-r080-W-entry-root-qc/constant-trajectory-preservation-proof.json",
+  "source_RGBA_changed": false,
+  "actor_approval_granted": false,
+  "detailed_complete_added": 0,
+  "private_preview_not_for_chat": true,
+  "private_preview_bytes": 78469
+}

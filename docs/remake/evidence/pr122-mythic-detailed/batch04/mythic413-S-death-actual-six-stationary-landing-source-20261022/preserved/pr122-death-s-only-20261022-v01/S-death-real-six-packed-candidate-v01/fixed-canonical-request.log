@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/pr122-death-s-only-20261022-v01/retained-profile-tools-policy-synced-v02/pr122-build-authored-clip-request-v07.py", line 177, in <module>
+    if __name__ == '__main__': main()
+                               ^^^^^^
+  File "/workspace/scratch/pr122-death-s-only-20261022-v01/retained-profile-tools-policy-synced-v02/pr122-build-authored-clip-request-v07.py", line 120, in main
+    base = advance.staging.importer.analyze(atlas, rows_count=6, reference_rows=[0,3],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/import_original_based_motion.py", line 270, in analyze
+    raise ValueError("Pose cannot fit the foot-anchored canvas")
+ValueError: Pose cannot fit the foot-anchored canvas

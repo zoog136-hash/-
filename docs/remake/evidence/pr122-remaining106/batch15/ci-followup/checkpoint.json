@@ -1,0 +1,36 @@
+{
+  "branch": "feature/twilight-remaining106-20261016",
+  "start_head": "449d1c01652299b2cde55ab45cb51d6aedebb73b",
+  "last_safe_game_commit": "755360cea8428dd71140da80590ca209767e1a7c",
+  "status": "CI_BUDGET_RETRY_PENDING",
+  "workflow_id": 378485460,
+  "first_run": 39142875145,
+  "first_job": 117720713121,
+  "failure": "The job has exceeded the maximum execution time of 1h15m0s",
+  "applicable_regressions_passed": 218,
+  "existing_skipped": [
+    "original_map_catalog_test",
+    "original_world_runtime_test",
+    "remake_door_runtime_test",
+    "remake_source_runtime_test",
+    "source_first_map_test"
+  ],
+  "not_run": 0,
+  "timeout_minutes_before": 75,
+  "timeout_minutes_after": 120,
+  "checks_and_steps_preserved": true,
+  "game_assets_tests_tools_unchanged": true,
+  "unchanged_git_tree_sha256": "0ce284f15d2178bc3881a8b9f1d71987cf8aec2b94071acd355df024c48a4b1a",
+  "unchanged_git_tree_entries": 15090,
+  "excluded_from_tree_identity": [
+    ".github/workflows/combat-animation-validate.yml",
+    "docs/remake/evidence/pr122-remaining106/batch15/ci-followup/"
+  ],
+  "approved_count": 399,
+  "normal_status_count": 385,
+  "frame_insufficient": 14,
+  "hold": 19,
+  "in_progress": 1,
+  "not_authored": 79,
+  "next_action": "Commit/push only deadline plus evidence; dispatch Combat Animation Validate on delivery HEAD. Retain the other 32 original-HEAD workflow outcomes; do not repeat passed source conversion or gameplay checks."
+}

@@ -1,0 +1,3826 @@
+{
+	"boss": [],
+	"checks": 1883,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792374669.62516,
+				"expires_at": 1792375269.62516,
+				"grade": "일반",
+				"hunt_batch": "901453740e170b1c9660abc8ddfd0448",
+				"id": "88bb4662edc687bd3cd2a2a2aa0df4e2",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					25512.0,
+					22844.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1940,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 28
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(82.03125, 0.0)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(58.00781, 58.00781)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 82.03125)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-58.00781, 58.00781)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-82.03125, 0.0)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-58.00781, -58.00781)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -82.03125)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(58.00781, -58.00781)",
+			"name": "알비노 변이된 골렘",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 35,
+			"facing": 0,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		},
+		{
+			"damage": 35,
+			"facing": 1,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		},
+		{
+			"damage": 35,
+			"facing": 2,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		},
+		{
+			"damage": 35,
+			"facing": 3,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		},
+		{
+			"damage": 35,
+			"facing": 4,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		},
+		{
+			"damage": 35,
+			"facing": 5,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		},
+		{
+			"damage": 35,
+			"facing": 6,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		},
+		{
+			"damage": 35,
+			"facing": 7,
+			"kind": "melee",
+			"name": "알비노 변이된 골렘"
+		}
+	],
+	"physics_ticks": 1360,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 3,
+			"track": "walk_0"
+		},
+		{
+			"frame": 4,
+			"track": "walk_0"
+		},
+		{
+			"frame": 5,
+			"track": "walk_0"
+		},
+		{
+			"frame": 6,
+			"track": "walk_0"
+		},
+		{
+			"frame": 7,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 3,
+			"track": "walk_1"
+		},
+		{
+			"frame": 4,
+			"track": "walk_1"
+		},
+		{
+			"frame": 5,
+			"track": "walk_1"
+		},
+		{
+			"frame": 6,
+			"track": "walk_1"
+		},
+		{
+			"frame": 7,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 3,
+			"track": "walk_2"
+		},
+		{
+			"frame": 4,
+			"track": "walk_2"
+		},
+		{
+			"frame": 5,
+			"track": "walk_2"
+		},
+		{
+			"frame": 6,
+			"track": "walk_2"
+		},
+		{
+			"frame": 7,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 3,
+			"track": "walk_3"
+		},
+		{
+			"frame": 4,
+			"track": "walk_3"
+		},
+		{
+			"frame": 5,
+			"track": "walk_3"
+		},
+		{
+			"frame": 6,
+			"track": "walk_3"
+		},
+		{
+			"frame": 7,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 3,
+			"track": "walk_4"
+		},
+		{
+			"frame": 4,
+			"track": "walk_4"
+		},
+		{
+			"frame": 5,
+			"track": "walk_4"
+		},
+		{
+			"frame": 6,
+			"track": "walk_4"
+		},
+		{
+			"frame": 7,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 3,
+			"track": "walk_5"
+		},
+		{
+			"frame": 4,
+			"track": "walk_5"
+		},
+		{
+			"frame": 5,
+			"track": "walk_5"
+		},
+		{
+			"frame": 6,
+			"track": "walk_5"
+		},
+		{
+			"frame": 7,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 3,
+			"track": "walk_6"
+		},
+		{
+			"frame": 4,
+			"track": "walk_6"
+		},
+		{
+			"frame": 5,
+			"track": "walk_6"
+		},
+		{
+			"frame": 6,
+			"track": "walk_6"
+		},
+		{
+			"frame": 7,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 3,
+			"track": "walk_7"
+		},
+		{
+			"frame": 4,
+			"track": "walk_7"
+		},
+		{
+			"frame": 5,
+			"track": "walk_7"
+		},
+		{
+			"frame": 6,
+			"track": "walk_7"
+		},
+		{
+			"frame": 7,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25333.3671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "f327cdf207a6190ce9ae41ea2a82a50a407154c20215207881044ca1fe9657f3",
+			"visible_body_viewport": [
+				560.282592773438,
+				219.577484130859,
+				177.552368164062,
+				225.693389892578
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25333.3671875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-0.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "f327cdf207a6190ce9ae41ea2a82a50a407154c20215207881044ca1fe9657f3",
+			"visible_body_viewport": [
+				560.282592773438,
+				219.577484130859,
+				177.552368164062,
+				225.693389892578
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25337.46875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-1.png",
+			"physics_tick": 22,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "c33f5881fbf4a2bbfd6319a2289a082ed23193bd1f40bfd155638919bb669bd1",
+			"visible_body_viewport": [
+				571.670837402344,
+				219.577484130859,
+				154.25830078125,
+				225.693389892578
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25342.9375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-2.png",
+			"physics_tick": 27,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "4b62adee4f22f7d8ea6196d3ab034d76366cf979e3053fde62c4aee37d6386b4",
+			"visible_body_viewport": [
+				550.964965820312,
+				221.648071289062,
+				190.493530273438,
+				223.622802734375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25347.0390625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-3.png",
+			"physics_tick": 31,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "44f3901e7c36cee5eb3ea3fcb7e075d5c3429999fc63b71aeef29bc59f2b740c",
+			"visible_body_viewport": [
+				571.670837402344,
+				223.20100402832,
+				150.634826660156,
+				222.069869995117
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25352.5078125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-4.png",
+			"physics_tick": 36,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "962184a75eb03c6b78242b367771133e9d1f11a83885d5eecb831b7289228538",
+			"visible_body_viewport": [
+				556.141479492188,
+				222.165710449219,
+				185.317016601562,
+				223.105163574219
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25356.609375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-5.png",
+			"physics_tick": 40,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "036f5151c90412bfb5f3c0a0b0add1a07c8c5f14a6634784012c03ac2ddf5097",
+			"visible_body_viewport": [
+				578.400207519531,
+				221.130432128906,
+				150.634826660156,
+				224.140441894531
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25362.078125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-6.png",
+			"physics_tick": 45,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "9c6eba8114d6ce190dfe5dc9030c0e7f0e4106b47f0bfc9049ff2a2c6bef5285",
+			"visible_body_viewport": [
+				563.388488769531,
+				227.342163085938,
+				166.681823730469,
+				217.9287109375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25367.546875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-walk-native-7.png",
+			"physics_tick": 50,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "39e5a76e5057b28820633a130933b0784d3eec945874610846932cfc8b3d0dfb",
+			"visible_body_viewport": [
+				560.80029296875,
+				221.130432128906,
+				168.752380371094,
+				224.140441894531
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25414.03125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-attack-0.png",
+			"physics_tick": 86,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "3aa06acd191ca7efa24eb9e037115a5f48593c01c6b58cc6097f1019b68285e6",
+			"visible_body_viewport": [
+				525.959838867188,
+				219.563125610352,
+				227.092895507812,
+				225.611862182617
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25414.03125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-attack-1.png",
+			"physics_tick": 104,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "efbad004e51b7d6bc637c6f37f52e7317bf9338cc1ec1c9406d057ea69952afe",
+			"visible_body_viewport": [
+				532.377685546875,
+				221.537841796875,
+				277.448303222656,
+				223.637145996094
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25414.03125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-E-contact.png",
+			"physics_tick": 104,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "efbad004e51b7d6bc637c6f37f52e7317bf9338cc1ec1c9406d057ea69952afe",
+			"visible_body_viewport": [
+				532.377685546875,
+				221.537841796875,
+				277.448303222656,
+				223.637145996094
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25373.97265625,
+				22745.97265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk.png",
+			"physics_tick": 117,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "2c6158956cebd95bb6c9abff4fea6e34aa57fa77837fd340a4fc62b13cc2763c",
+			"visible_body_viewport": [
+				550.602905273438,
+				217.543518066406,
+				198.728759765625,
+				227.810974121094
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25373.97265625,
+				22745.97265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-0.png",
+			"physics_tick": 117,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "2c6158956cebd95bb6c9abff4fea6e34aa57fa77837fd340a4fc62b13cc2763c",
+			"visible_body_viewport": [
+				550.602905273438,
+				217.543518066406,
+				198.728759765625,
+				227.810974121094
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25374.939453125,
+				22746.939453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-1.png",
+			"physics_tick": 119,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "f88c4267f3777227ba46ae7003263616d13f658219d671f050b9c835e63cf88b",
+			"visible_body_viewport": [
+				562.451232910156,
+				210.542236328125,
+				182.033386230469,
+				234.812255859375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25377.83984375,
+				22749.83984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-2.png",
+			"physics_tick": 123,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "10c1602bd5388c070c81aec4fa98a8e24221a54a89fc67f2ed60deac385a756e",
+			"visible_body_viewport": [
+				548.448669433594,
+				212.696487426758,
+				199.805847167969,
+				232.65803527832
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25381.70703125,
+				22753.70703125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-3.png",
+			"physics_tick": 128,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "4b142e0d3f9eaf385ca6ec183d99de1e88bddbc36a4addfb91552c9209fdee7f",
+			"visible_body_viewport": [
+				570.529663085938,
+				213.235046386719,
+				163.183776855469,
+				232.119476318359
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25384.607421875,
+				22756.607421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-4.png",
+			"physics_tick": 132,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "4feb89b4f810ca3ea7c50e069a86cfbb3b92f1ddca000121fd4a899a66ac86e5",
+			"visible_body_viewport": [
+				548.444763183594,
+				208.926559448242,
+				197.651611328125,
+				236.427963256836
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25388.474609375,
+				22760.474609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-5.png",
+			"physics_tick": 137,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "9081d9c5acd11e6bc78e67e5ed0b92fef337f37e90f746d27e2b0862cab957c8",
+			"visible_body_viewport": [
+				557.600280761719,
+				210.542236328125,
+				184.726135253906,
+				234.812255859375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25392.341796875,
+				22764.341796875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-6.png",
+			"physics_tick": 142,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "c289257e72a6f2bce130193adb0f80dd6a6993ef3165a75bd7551499d1551fc5",
+			"visible_body_viewport": [
+				545.751953125,
+				213.235046386719,
+				207.345703125,
+				232.119476318359
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25395.2421875,
+				22767.2421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-walk-native-7.png",
+			"physics_tick": 146,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "5704b238521dba30afe31aa0188639f8aa17f9a10bf6c22eb8e5bf0a8eb568f7",
+			"visible_body_viewport": [
+				558.677368164062,
+				212.696487426758,
+				175.032104492188,
+				232.65803527832
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25431.013671875,
+				22803.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-attack-0.png",
+			"physics_tick": 185,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "e2f798f6ab3bf95b6408473c960f22eab07e031d2fd3b5eea6a320d7f5ae51bc",
+			"visible_body_viewport": [
+				525.466186523438,
+				218.082077026367,
+				230.548706054688,
+				227.092910766602
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25431.013671875,
+				22803.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-attack-1.png",
+			"physics_tick": 203,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "3ef860c929b9060ca2027acca2afd4020d7cc11b251a62ea6e6a16d08aaa16fa",
+			"visible_body_viewport": [
+				524.972473144531,
+				213.638961791992,
+				272.511535644531,
+				231.536026000977
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25431.013671875,
+				22803.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SE-contact.png",
+			"physics_tick": 203,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "3ef860c929b9060ca2027acca2afd4020d7cc11b251a62ea6e6a16d08aaa16fa",
+			"visible_body_viewport": [
+				524.972473144531,
+				213.638961791992,
+				272.511535644531,
+				231.536026000977
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22705.3671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk.png",
+			"physics_tick": 216,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "4b32dd10ffffe99fa69cf7f9d2bc6d3b866ce9bece5a9c6838f155e917aa72b2",
+			"visible_body_viewport": [
+				544.790222167969,
+				220.137390136719,
+				197.492248535156,
+				225.239105224609
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22705.3671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-1.png",
+			"physics_tick": 216,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "4b32dd10ffffe99fa69cf7f9d2bc6d3b866ce9bece5a9c6838f155e917aa72b2",
+			"visible_body_viewport": [
+				544.790222167969,
+				220.137390136719,
+				197.492248535156,
+				225.239105224609
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22708.1015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-2.png",
+			"physics_tick": 219,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "3e8c32edcfa82578dc49c698852c099a9dd8e96ee866aa06c9235d6dc597757a",
+			"visible_body_viewport": [
+				540.981811523438,
+				223.401733398438,
+				194.227905273438,
+				221.974792480469
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22712.203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-3.png",
+			"physics_tick": 223,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "ee50445c33c98f42ddd5e8b302310f58c2c3340822b83ace2a0f34a9c96fc339",
+			"visible_body_viewport": [
+				536.085327148438,
+				217.961166381836,
+				198.580383300781,
+				227.415328979492
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22717.671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-4.png",
+			"physics_tick": 228,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "923dfd53c6035eab7256bb2ba3b6ef8b2258b31dfbce8cb75d7274a83b31f474",
+			"visible_body_viewport": [
+				546.966430664062,
+				223.401733398438,
+				196.9482421875,
+				221.974792480469
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22723.140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-5.png",
+			"physics_tick": 233,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "09dcbb020c189395316e1acbfac80a78ee25e1024b0f32d155439af6a01d52da",
+			"visible_body_viewport": [
+				542.614013671875,
+				217.417114257812,
+				196.9482421875,
+				227.959381103516
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22727.2421875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-6.png",
+			"physics_tick": 237,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "301b3683a368cbb9568d4c9af470dda2a2cfe5885e78c6b48bf74a09684c1609",
+			"visible_body_viewport": [
+				538.805603027344,
+				223.401733398438,
+				196.404113769531,
+				221.974792480469
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22732.7109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-7.png",
+			"physics_tick": 242,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "b2aaa816462608a02fa88c78316649ddb8b8e7249b8f2ebc325cc0807b5c6ad5",
+			"visible_body_viewport": [
+				535.541259765625,
+				219.049285888672,
+				197.492248535156,
+				226.327239990234
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22736.8125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-walk-native-0.png",
+			"physics_tick": 246,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "a0fe75f8d73d2cc681aa3819b73053968a6bd9dc687ac285f070aba9a34c1dd6",
+			"visible_body_viewport": [
+				547.510498046875,
+				219.593338012695,
+				196.9482421875,
+				225.783187866211
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22786.03125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-attack-0.png",
+			"physics_tick": 284,
+			"player_hp": 1800,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "239adfda9b82d71ec869f3c57eb5296c86769fd98813b5626c292bf371136464",
+			"visible_body_viewport": [
+				529.741516113281,
+				222.683364868164,
+				232.422790527344,
+				222.587509155273
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22786.03125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-attack-1.png",
+			"physics_tick": 302,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "64478540b187031923ee37081fa8f4e262b420e7a2d6e71b869bcef796e6ff89",
+			"visible_body_viewport": [
+				539.059143066406,
+				211.812805175781,
+				223.622802734375,
+				233.458068847656
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22786.03125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-S-contact.png",
+			"physics_tick": 302,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "64478540b187031923ee37081fa8f4e262b420e7a2d6e71b869bcef796e6ff89",
+			"visible_body_viewport": [
+				539.059143066406,
+				211.812805175781,
+				223.622802734375,
+				233.458068847656
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25570.02734375,
+				22745.97265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk.png",
+			"physics_tick": 315,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "a82edcc7299a2e8fa98da2fae24df960eee9cb7a913a1736b9d43f51e3b0ccc3",
+			"visible_body_viewport": [
+				543.922973632812,
+				224.123550415039,
+				194.793518066406,
+				221.188339233398
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25570.02734375,
+				22745.97265625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-2.png",
+			"physics_tick": 315,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "a82edcc7299a2e8fa98da2fae24df960eee9cb7a913a1736b9d43f51e3b0ccc3",
+			"visible_body_viewport": [
+				543.922973632812,
+				224.123550415039,
+				194.793518066406,
+				221.188339233398
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25567.126953125,
+				22748.873046875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-3.png",
+			"physics_tick": 319,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "1c21b60a2e3a175c8a78d57ed675b11f021caf63ef4863030bdfc42a01846bb2",
+			"visible_body_viewport": [
+				543.402893066406,
+				223.067749023438,
+				185.291442871094,
+				222.244110107422
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25563.259765625,
+				22752.740234375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-4.png",
+			"physics_tick": 324,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "2dbe9306fee91e34d5cb42283f0015cf88d24717f016efcd208d7d0e082f509f",
+			"visible_body_viewport": [
+				553.960815429688,
+				221.484069824219,
+				187.402954101562,
+				223.827819824219
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25560.359375,
+				22755.640625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-5.png",
+			"physics_tick": 328,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "0beb435759faeb9011b9fe32c7cce1ac5c2b2a3956501ba91890afaadcd1e0d0",
+			"visible_body_viewport": [
+				551.841430664062,
+				226.235137939453,
+				183.707702636719,
+				219.076751708984
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25556.4921875,
+				22759.5078125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-6.png",
+			"physics_tick": 333,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "5c42d35bfc3c256d7ac48b029c6e05ffb72c3ed870ca93d16c50e6ed63ad88b7",
+			"visible_body_viewport": [
+				544.450866699219,
+				222.011962890625,
+				192.681945800781,
+				223.299896240234
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25553.591796875,
+				22762.408203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-7.png",
+			"physics_tick": 337,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "b5ac92f79f6d058d4f490169000703a3d3a7d4936a0fb2f77ca46af3cc82933e",
+			"visible_body_viewport": [
+				541.811401367188,
+				219.900375366211,
+				184.235595703125,
+				225.411483764648
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25549.724609375,
+				22766.275390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-0.png",
+			"physics_tick": 342,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "8e454ae08ba279ae3262c4724e01c1afa81bf02118955a4fc90b9aca3f27a274",
+			"visible_body_viewport": [
+				554.480895996094,
+				218.844589233398,
+				183.179809570312,
+				226.467269897461
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25545.857421875,
+				22770.142578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-walk-native-1.png",
+			"physics_tick": 347,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "99626ca98feb62d5ddb8e5ea1d8c35fbacd2d9110a02f9b2c67b7d36e3eb8ee9",
+			"visible_body_viewport": [
+				549.729858398438,
+				223.067749023438,
+				190.04248046875,
+				222.244110107422
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25512.986328125,
+				22803.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-attack-0.png",
+			"physics_tick": 383,
+			"player_hp": 1768,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "765692e11ab81dc65b89b8d8e54d32ab5a41dccbe01e909d5c5898e0e0ba0bab",
+			"visible_body_viewport": [
+				525.608154296875,
+				213.365737915039,
+				239.669799804688,
+				231.905136108398
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25512.986328125,
+				22803.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-attack-1.png",
+			"physics_tick": 401,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "d51b3905871b23480f27b7ca0278161f68ea3e4fe19d50d6e99f7e55e6178da8",
+			"visible_body_viewport": [
+				511.631774902344,
+				215.436325073242,
+				264.516784667969,
+				229.834548950195
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25512.986328125,
+				22803.013671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-SW-contact.png",
+			"physics_tick": 401,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "d51b3905871b23480f27b7ca0278161f68ea3e4fe19d50d6e99f7e55e6178da8",
+			"visible_body_viewport": [
+				511.631774902344,
+				215.436325073242,
+				264.516784667969,
+				229.834548950195
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25610.6328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk.png",
+			"physics_tick": 414,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "716a7107f3f95913123fedb96aecd072fed53f0410577bd9c42b9e6a9e5e551b",
+			"visible_body_viewport": [
+				553.4951171875,
+				218.505233764648,
+				164.304870605469,
+				226.871292114258
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25610.6328125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-2.png",
+			"physics_tick": 414,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "716a7107f3f95913123fedb96aecd072fed53f0410577bd9c42b9e6a9e5e551b",
+			"visible_body_viewport": [
+				553.4951171875,
+				218.505233764648,
+				164.304870605469,
+				226.871292114258
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25609.265625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-3.png",
+			"physics_tick": 416,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "f31625bfa9c0bde3a89212692d8c5fa7c1fc6e9f5679ffb34f8426ff0973f460",
+			"visible_body_viewport": [
+				541.52587890625,
+				219.049285888672,
+				184.97900390625,
+				226.327239990234
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25605.1640625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-4.png",
+			"physics_tick": 420,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "be9d336f4e17fb7e93e8884e144aedff1adc81cb08b3ff9c04e06b9340480d0e",
+			"visible_body_viewport": [
+				555.127319335938,
+				221.225509643555,
+				183.346801757812,
+				224.151016235352
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25599.6953125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-5.png",
+			"physics_tick": 425,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "ed5b5246ab82473ac3de8f4ae8ecb28a5fef2e72e8700d68fbea66c7649872be",
+			"visible_body_viewport": [
+				554.039184570312,
+				217.417114257812,
+				186.611145019531,
+				227.959381103516
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25595.59375,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-6.png",
+			"physics_tick": 429,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "7f80ca03051432839c8f32e0404f6151cfc83f1bacf699e3c04805e76686b483",
+			"visible_body_viewport": [
+				555.671325683594,
+				217.961166381836,
+				183.346801757812,
+				227.415328979492
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25590.125,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-7.png",
+			"physics_tick": 434,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "aba281f16975f19e7c45cae4ffeeb48c9ed6d84a1d8ed736d747978eed49d117",
+			"visible_body_viewport": [
+				560.56787109375,
+				221.225509643555,
+				175.730041503906,
+				224.151016235352
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25584.65625,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-0.png",
+			"physics_tick": 439,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "f3002bbe8117778c86527af89adbbfc1f5fce4924a9058cdbec87d539fd10d7d",
+			"visible_body_viewport": [
+				556.759460449219,
+				218.505233764648,
+				176.274108886719,
+				226.871292114258
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25580.5546875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-walk-native-1.png",
+			"physics_tick": 443,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "d94cd200bce1e3603950929d6534ac4b3d05edef9dabe72425ae81626f2940da",
+			"visible_body_viewport": [
+				551.318908691406,
+				218.505233764648,
+				173.009765625,
+				226.871292114258
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25529.96875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-attack-0.png",
+			"physics_tick": 482,
+			"player_hp": 1736,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "71ec54f62808d04455dd5a23cdf56ff10f0714ddbd19b17d92c764f4747b406a",
+			"visible_body_viewport": [
+				530.100708007812,
+				222.857681274414,
+				226.871276855469,
+				222.518844604492
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25529.96875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-attack-1.png",
+			"physics_tick": 500,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "11232378d4e7f12888238209d9d6b81fd5c570540eb87d6e0fb402d879474868",
+			"visible_body_viewport": [
+				496.913330078125,
+				216.873062133789,
+				291.06982421875,
+				228.503463745117
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25529.96875,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-W-contact.png",
+			"physics_tick": 500,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "11232378d4e7f12888238209d9d6b81fd5c570540eb87d6e0fb402d879474868",
+			"visible_body_viewport": [
+				496.913330078125,
+				216.873062133789,
+				291.06982421875,
+				228.503463745117
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25570.02734375,
+				22942.02734375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk.png",
+			"physics_tick": 513,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "249618fa37e53b8ed749cf86c171edb0de4fb8dab2797565e68364a3fdafe4b4",
+			"visible_body_viewport": [
+				546.00732421875,
+				218.387451171875,
+				190.733642578125,
+				227.011474609375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25570.02734375,
+				22942.02734375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-3.png",
+			"physics_tick": 513,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "249618fa37e53b8ed749cf86c171edb0de4fb8dab2797565e68364a3fdafe4b4",
+			"visible_body_viewport": [
+				546.00732421875,
+				218.387451171875,
+				190.733642578125,
+				227.011474609375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25568.09375,
+				22940.09375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-4.png",
+			"physics_tick": 516,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "3eb7008d47fc7b3e591409298bf96c85021429b3765b22ee2c3789303091fd99",
+			"visible_body_viewport": [
+				549.85498046875,
+				222.235107421875,
+				198.428955078125,
+				223.163818359375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25565.193359375,
+				22937.193359375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-5.png",
+			"physics_tick": 520,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "2c2f690cfa65c4ddf28539011ceebbb9ca143aac0cdb06d8fc96f7434e9e6864",
+			"visible_body_viewport": [
+				552.603332519531,
+				222.235107421875,
+				194.031616210938,
+				223.163818359375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25561.326171875,
+				22933.326171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-6.png",
+			"physics_tick": 525,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "cab5695b898bb487f9f25239c132daa8c1a49be561be6c5eb8aa6650ad9b0c63",
+			"visible_body_viewport": [
+				547.656372070312,
+				223.884094238281,
+				172.045043945312,
+				221.514831542969
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25557.458984375,
+				22929.458984375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-7.png",
+			"physics_tick": 530,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "75627632f418e78fb0eb1967cc8bd2aab6bb96574d860d3086bcba899cf50e0f",
+			"visible_body_viewport": [
+				546.557006835938,
+				222.235107421875,
+				189.084594726562,
+				223.163818359375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25554.55859375,
+				22926.55859375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-0.png",
+			"physics_tick": 534,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "720a6880fe4396c6424d57b48f0e9f7e3b2b73842a27afc27d8b1673d9f8192b",
+			"visible_body_viewport": [
+				547.106689453125,
+				218.387451171875,
+				189.63427734375,
+				227.011474609375
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25550.69140625,
+				22922.69140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-1.png",
+			"physics_tick": 539,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "006c1d38e7b3b5130fab1fae973457897a22080272d3b9aad5af6f022483b4cc",
+			"visible_body_viewport": [
+				543.259033203125,
+				216.18879699707,
+				192.932250976562,
+				229.21012878418
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25547.791015625,
+				22919.791015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-walk-native-2.png",
+			"physics_tick": 543,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "9e0bf233676e0654c49376764a7c2765d0d12c249e06e472faf3a9ebd0af285f",
+			"visible_body_viewport": [
+				538.31982421875,
+				216.18879699707,
+				202.276611328125,
+				229.21012878418
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25512.986328125,
+				22884.986328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-attack-0.png",
+			"physics_tick": 581,
+			"player_hp": 1704,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "f717b406a0519e2e17224ea40c64f5a0c91e7ef18479e1f08baf0cb18eeb31ab",
+			"visible_body_viewport": [
+				528.476379394531,
+				214.152786254883,
+				229.591552734375,
+				231.223739624023
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25512.986328125,
+				22884.986328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-attack-1.png",
+			"physics_tick": 599,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "3f94f763a37666182a8a1f2492fd2ab851238ec9595ce27f6d91c1733e6e1764",
+			"visible_body_viewport": [
+				501.273559570312,
+				216.329010009766,
+				294.334228515625,
+				229.047515869141
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25512.986328125,
+				22884.986328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NW-contact.png",
+			"physics_tick": 599,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "3f94f763a37666182a8a1f2492fd2ab851238ec9595ce27f6d91c1733e6e1764",
+			"visible_body_viewport": [
+				501.273559570312,
+				216.329010009766,
+				294.334228515625,
+				229.047515869141
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22982.6328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk.png",
+			"physics_tick": 612,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "2bc7bd458698375f439e5ecb502063679c6f9ffb6b1836d01c587067bbac2158",
+			"visible_body_viewport": [
+				550.257690429688,
+				225.707229614258,
+				184.763549804688,
+				219.604629516602
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22982.6328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-4.png",
+			"physics_tick": 612,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "2bc7bd458698375f439e5ecb502063679c6f9ffb6b1836d01c587067bbac2158",
+			"visible_body_viewport": [
+				550.257690429688,
+				225.707229614258,
+				184.763549804688,
+				219.604629516602
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22978.53125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-5.png",
+			"physics_tick": 616,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "52cf66e0e778ecc8682363afd06a80c95d1ec95af99afade42bccdee0cbd69a5",
+			"visible_body_viewport": [
+				552.369323730469,
+				225.179336547852,
+				181.068237304688,
+				220.132522583008
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22973.0625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-6.png",
+			"physics_tick": 621,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "c4d90b83db6fd2a5eb32f6acb0ffe398c908332fb37169455c41e9dd4108bcc9",
+			"visible_body_viewport": [
+				550.257690429688,
+				224.651443481445,
+				182.1240234375,
+				220.660415649414
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22968.9609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-7.png",
+			"physics_tick": 625,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "5fe62628d38094e3631a3224af6045b150a3754f7788d478b24a55a9d9364b91",
+			"visible_body_viewport": [
+				551.841430664062,
+				234.681457519531,
+				179.484558105469,
+				210.630401611328
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22963.4921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-0.png",
+			"physics_tick": 630,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "54289b2d1137e385c04b662b1d41a5e7ca61f80e31bf75bdd7e5c43f25783fd3",
+			"visible_body_viewport": [
+				550.78564453125,
+				218.844589233398,
+				186.34716796875,
+				226.467269897461
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22959.390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-1.png",
+			"physics_tick": 634,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "cbb6a82a8d1fa00293d72aa817ac89c07ec37dd7d5dd3761743321925003a8ce",
+			"visible_body_viewport": [
+				551.841430664062,
+				223.067749023438,
+				184.763549804688,
+				222.244110107422
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22953.921875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-2.png",
+			"physics_tick": 639,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "c05625f92b8bb1a446da78ea9c177c57279c0ebd984652b5e321d192050f6cc2",
+			"visible_body_viewport": [
+				551.313537597656,
+				226.235137939453,
+				182.651916503906,
+				219.076751708984
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22948.453125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-walk-native-3.png",
+			"physics_tick": 644,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "072bcb365897f2c30d98ac067a24416db3bc596c99e217754b9fe237b23beb6d",
+			"visible_body_viewport": [
+				550.78564453125,
+				220.428283691406,
+				182.1240234375,
+				224.883605957031
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22901.96875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-attack-0.png",
+			"physics_tick": 680,
+			"player_hp": 1672,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "235de8528ec5b0d38c07d6d9306dc3521eea75c1ff979a11d45f8cebb0533c4e",
+			"visible_body_viewport": [
+				534.859924316406,
+				225.445770263672,
+				221.242553710938,
+				219.747711181641
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22901.96875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-attack-1.png",
+			"physics_tick": 698,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "d2e84f76d227443851f62e4b8560d231769dd16e371a03f4670a4d8b1d1141cb",
+			"visible_body_viewport": [
+				537.351440429688,
+				204.51741027832,
+				199.317626953125,
+				240.676040649414
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25472.0,
+				22901.96875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-N-contact.png",
+			"physics_tick": 698,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "d2e84f76d227443851f62e4b8560d231769dd16e371a03f4670a4d8b1d1141cb",
+			"visible_body_viewport": [
+				537.351440429688,
+				204.51741027832,
+				199.317626953125,
+				240.676040649414
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25373.97265625,
+				22942.02734375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk.png",
+			"physics_tick": 711,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "756021d054eadcc5e861195f67909c5337246579cb626e0d61f66f225d5f1afb",
+			"visible_body_viewport": [
+				552.218566894531,
+				221.852005004883,
+				193.343139648438,
+				223.502517700195
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25373.97265625,
+				22942.02734375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 4,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-4",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-4.png",
+			"physics_tick": 711,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "756021d054eadcc5e861195f67909c5337246579cb626e0d61f66f225d5f1afb",
+			"visible_body_viewport": [
+				552.218566894531,
+				221.852005004883,
+				193.343139648438,
+				223.502517700195
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25374.939453125,
+				22941.060546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 5,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-5",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-5.png",
+			"physics_tick": 713,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "89ce38cfa91c33a3a5fb97586c0a5747e9c5cd8020804711c9f9bb4e5259f791",
+			"visible_body_viewport": [
+				550.064331054688,
+				223.467681884766,
+				194.420288085938,
+				221.886810302734
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25377.83984375,
+				22938.16015625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 6,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-6",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-6.png",
+			"physics_tick": 717,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "b4e1acb340a1130079d4a1dd4b2a77aebe19e169cc1ba348cb380927fa930bbe",
+			"visible_body_viewport": [
+				550.064331054688,
+				221.313446044922,
+				190.650329589844,
+				224.041076660156
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25381.70703125,
+				22934.29296875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 7,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-7",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-7.png",
+			"physics_tick": 722,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "09d9e030029b91e0bd3fdcfe9378e619f4c61103460f77c962533d2b4a7c806b",
+			"visible_body_viewport": [
+				554.372802734375,
+				219.159210205078,
+				178.802001953125,
+				226.1953125
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25384.607421875,
+				22931.392578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-0.png",
+			"physics_tick": 726,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "41639ff391abf0c83e4183c1d6b885ea7b2e7e1ac1a91146c368a3d11342e00e",
+			"visible_body_viewport": [
+				553.830322265625,
+				217.543518066406,
+				181.494812011719,
+				227.810974121094
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25388.474609375,
+				22927.525390625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-1.png",
+			"physics_tick": 731,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "9f1a20bc2f6ead93d32206238bdc15aa6a940fcca1dd016b1c9dd35648f7656d",
+			"visible_body_viewport": [
+				551.137573242188,
+				222.929122924805,
+				184.726196289062,
+				222.425369262695
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25392.341796875,
+				22923.658203125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-2.png",
+			"physics_tick": 736,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "47f7056a6879da39b553421e44bff3f19ebc95e75045e1eab3cee938cb86523d",
+			"visible_body_viewport": [
+				546.8291015625,
+				217.004959106445,
+				193.343139648438,
+				228.349533081055
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25395.2421875,
+				22920.7578125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 3,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk-native-3",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-walk-native-3.png",
+			"physics_tick": 740,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "bce86b5b2c793e818fa622ade9be58f53d9a85533e6beb9f4385a3ca9cdb73c0",
+			"visible_body_viewport": [
+				550.060424804688,
+				214.850723266602,
+				187.4189453125,
+				230.503799438477
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25431.013671875,
+				22884.986328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-attack-0.png",
+			"physics_tick": 779,
+			"player_hp": 1640,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "778195e9a28a3bef604d5d25d01d8c6b5d48493662c97312ad205c50994db9f0",
+			"visible_body_viewport": [
+				539.842895507812,
+				212.988418579102,
+				216.757934570312,
+				232.205062866211
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25431.013671875,
+				22884.986328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-attack-1.png",
+			"physics_tick": 797,
+			"player_hp": 1608,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "a0bc68060d93828b42dcd463962c3ecd551d48a1f26708b649c54f7e65160ae0",
+			"visible_body_viewport": [
+				535.856567382812,
+				201.029357910156,
+				227.222106933594,
+				244.164123535156
+			]
+		},
+		{
+			"actor_hp": 1940,
+			"actor_world": [
+				25431.013671875,
+				22884.986328125
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.3,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/ai-NE-contact.png",
+			"physics_tick": 797,
+			"player_hp": 1608,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "a0bc68060d93828b42dcd463962c3ecd551d48a1f26708b649c54f7e65160ae0",
+			"visible_body_viewport": [
+				535.856567382812,
+				201.029357910156,
+				227.222106933594,
+				244.164123535156
+			]
+		},
+		{
+			"actor_hp": 1746,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/lifecycle-hit.png",
+			"physics_tick": 820,
+			"player_hp": 1608,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "cded7632045bcddc0f945c56c7ecb5296d9a20fb93e10ad1244eaecb1642e899",
+			"visible_body_viewport": [
+				558.690856933594,
+				216.601028442383,
+				165.950622558594,
+				229.265121459961
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/lifecycle-ground-drop.png",
+			"physics_tick": 1257,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "0468c19dd7d52bfd18ce89b16add50966aab682aa963a241d78d7a4ae24e3fde",
+			"visible_body_viewport": [
+				557.35791015625,
+				216.601028442383,
+				166.617065429688,
+				229.265121459961
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/lifecycle-death-0.png",
+			"physics_tick": 1259,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "94c5f4881590ca8bee3c4c636b4ac00ed0b48b0926dd82357c7d62490f9fd782",
+			"visible_body_viewport": [
+				544.831176757812,
+				229.930404663086,
+				203.523681640625,
+				215.563125610352
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/lifecycle-manual-pickup.png",
+			"physics_tick": 1270,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "01dc25d081d539e46e055d70ce86ff9b783611e4a6d4cb5e38b1de6f1f6c9f8d",
+			"visible_body_viewport": [
+				544.831176757812,
+				229.930404663086,
+				203.523681640625,
+				215.563125610352
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/lifecycle-death-1.png",
+			"physics_tick": 1273,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "9c7ff44341b492da63ad3b3793d2eead287330692d38cb0ec6bd8246df07ac5b",
+			"visible_body_viewport": [
+				543.111267089844,
+				262.608856201172,
+				213.843200683594,
+				182.884674072266
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				25512.0,
+				22844.0
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/runtime/batch17/Preserved-Native-Main/gameplay/captures/preserved-golem/lifecycle-death-2.png",
+			"physics_tick": 1287,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "55ecbdd82adc9de41c80518e42e5bc2956d5f388c1158aa706941bc7bec41b9d",
+			"visible_body_viewport": [
+				513.872680664062,
+				325.099212646484,
+				247.094970703125,
+				120.394287109375
+			]
+		}
+	],
+	"scope": "original-based albino_mutated_golem_batch16_authored, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-walk-native-0.png",
+		"ai-E-walk-native-1.png",
+		"ai-E-walk-native-2.png",
+		"ai-E-walk-native-3.png",
+		"ai-E-walk-native-4.png",
+		"ai-E-walk-native-5.png",
+		"ai-E-walk-native-6.png",
+		"ai-E-walk-native-7.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-walk-native-0.png",
+		"ai-SE-walk-native-1.png",
+		"ai-SE-walk-native-2.png",
+		"ai-SE-walk-native-3.png",
+		"ai-SE-walk-native-4.png",
+		"ai-SE-walk-native-5.png",
+		"ai-SE-walk-native-6.png",
+		"ai-SE-walk-native-7.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-walk-native-1.png",
+		"ai-S-walk-native-2.png",
+		"ai-S-walk-native-3.png",
+		"ai-S-walk-native-4.png",
+		"ai-S-walk-native-5.png",
+		"ai-S-walk-native-6.png",
+		"ai-S-walk-native-7.png",
+		"ai-S-walk-native-0.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-walk-native-2.png",
+		"ai-SW-walk-native-3.png",
+		"ai-SW-walk-native-4.png",
+		"ai-SW-walk-native-5.png",
+		"ai-SW-walk-native-6.png",
+		"ai-SW-walk-native-7.png",
+		"ai-SW-walk-native-0.png",
+		"ai-SW-walk-native-1.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-walk-native-2.png",
+		"ai-W-walk-native-3.png",
+		"ai-W-walk-native-4.png",
+		"ai-W-walk-native-5.png",
+		"ai-W-walk-native-6.png",
+		"ai-W-walk-native-7.png",
+		"ai-W-walk-native-0.png",
+		"ai-W-walk-native-1.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-walk-native-3.png",
+		"ai-NW-walk-native-4.png",
+		"ai-NW-walk-native-5.png",
+		"ai-NW-walk-native-6.png",
+		"ai-NW-walk-native-7.png",
+		"ai-NW-walk-native-0.png",
+		"ai-NW-walk-native-1.png",
+		"ai-NW-walk-native-2.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-walk-native-4.png",
+		"ai-N-walk-native-5.png",
+		"ai-N-walk-native-6.png",
+		"ai-N-walk-native-7.png",
+		"ai-N-walk-native-0.png",
+		"ai-N-walk-native-1.png",
+		"ai-N-walk-native-2.png",
+		"ai-N-walk-native-3.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-walk-native-4.png",
+		"ai-NE-walk-native-5.png",
+		"ai-NE-walk-native-6.png",
+		"ai-NE-walk-native-7.png",
+		"ai-NE-walk-native-0.png",
+		"ai-NE-walk-native-1.png",
+		"ai-NE-walk-native-2.png",
+		"ai-NE-walk-native-3.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-walk-3.png",
+		"authored-E-walk-4.png",
+		"authored-E-walk-5.png",
+		"authored-E-walk-6.png",
+		"authored-E-walk-7.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-walk-3.png",
+		"authored-SE-walk-4.png",
+		"authored-SE-walk-5.png",
+		"authored-SE-walk-6.png",
+		"authored-SE-walk-7.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-walk-3.png",
+		"authored-S-walk-4.png",
+		"authored-S-walk-5.png",
+		"authored-S-walk-6.png",
+		"authored-S-walk-7.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-walk-3.png",
+		"authored-SW-walk-4.png",
+		"authored-SW-walk-5.png",
+		"authored-SW-walk-6.png",
+		"authored-SW-walk-7.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-walk-3.png",
+		"authored-W-walk-4.png",
+		"authored-W-walk-5.png",
+		"authored-W-walk-6.png",
+		"authored-W-walk-7.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-walk-3.png",
+		"authored-NW-walk-4.png",
+		"authored-NW-walk-5.png",
+		"authored-NW-walk-6.png",
+		"authored-NW-walk-7.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-walk-3.png",
+		"authored-N-walk-4.png",
+		"authored-N-walk-5.png",
+		"authored-N-walk-6.png",
+		"authored-N-walk-7.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-walk-3.png",
+		"authored-NE-walk-4.png",
+		"authored-NE-walk-5.png",
+		"authored-NE-walk-6.png",
+		"authored-NE-walk-7.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "알비노 변이된 골렘",
+		"normal_is_existing_population_actor": false,
+		"pickup_recovery_ticks": 0,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				25496.0,
+				22844.0
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_2.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25332.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22984.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22942.994140625
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25472.0,
+					22704.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25373.005859375,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25570.994140625,
+					22745.005859375
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					25612.0,
+					22844.0
+				],
+				"target": [
+					25472.0,
+					22844.0
+				],
+				"unchanged_attack_range": 58.0,
+				"unchanged_start_distance": 140.0,
+				"walkable_line": true
+			}
+		},
+		"visual_lifecycle": {
+			"actor": [
+				25512.0,
+				22844.0
+			],
+			"foreground_and_other_actor_clear": true,
+			"map_modified": false,
+			"original_actor_offset": [
+				40,
+				0
+			],
+			"player": [
+				25472.0,
+				22844.0
+			],
+			"stats_or_combat_changed": false
+		}
+	},
+	"staff_normal": []
+}

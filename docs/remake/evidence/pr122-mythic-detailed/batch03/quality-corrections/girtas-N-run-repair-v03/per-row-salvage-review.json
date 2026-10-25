@@ -1,0 +1,94 @@
+{
+  "key": "transform:267",
+  "direction": "N",
+  "role": "run",
+  "source": "/workspace/scratch/girtas-N-run-repair-v03/girtas-N-run-v03.png",
+  "source_sha256": "38847df29be88702f4c3ecd8f8d34386f8e0a86a043e2cd7b2727c99c9a6b6f0",
+  "reviewed_at": "2026-10-19T12:11:04.397094+00:00",
+  "rows": [
+    {
+      "source_row": 0,
+      "source_region": [
+        122,
+        41,
+        339,
+        392
+      ],
+      "source_region_rgba_sha256": "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e",
+      "candidate_game_phase": 3,
+      "source_role_status": "RIGHT_LANDING_KEY_SOURCE_PASS",
+      "findings": "RIGHT/imageRIGHT leg reaches low support position; LEFT knee/boot visibly raised. Candidate usable only as original RIGHT-support contact, never LEFT landing."
+    },
+    {
+      "source_row": 1,
+      "source_region": [
+        623,
+        39,
+        335,
+        422
+      ],
+      "source_region_rgba_sha256": "3b94f21c6860303ae095b12f88d479764efecc157bb75b1a2dd7b1cb6b5dee61",
+      "candidate_game_phase": 4,
+      "source_role_status": "HOLD_COMPRESSION_NOT_PROVEN",
+      "findings": "RIGHT leg is mostly straight/extended and LEFT knee raised. May be push-off extension, but no specific loaded compression is established; do not relabel it as required compression."
+    },
+    {
+      "source_row": 2,
+      "source_region": [
+        129,
+        532,
+        342,
+        400
+      ],
+      "source_region_rgba_sha256": "ed076773c8cb61e4c7fb8d2aaff20d14f09591afe9ca2701f8ca8aeb7a4270a8",
+      "candidate_game_phase": 5,
+      "source_role_status": "HOLD_FLIGHT_NOT_PROVEN",
+      "findings": "Both sole faces are visible/raised-looking with LEFT forward-short and RIGHT trailing-long roles, but no unambiguous ground-clearance/absence-of-right-support evidence independently establishes true flight."
+    },
+    {
+      "source_row": 3,
+      "source_region": [
+        620,
+        541,
+        342,
+        414
+      ],
+      "source_region_rgba_sha256": "2ff9606a33b56cc4ac1dd8a2f3e43d278cd2ce9c16a628f137bcc79f8b570474",
+      "candidate_game_phase": 3,
+      "source_role_status": "ALTERNATIVE_RIGHT_LANDING_KEY_SOURCE_PASS",
+      "findings": "Same RIGHT lower support/LEFT lifted leg identity as row0, an alternative RIGHT-landing pose rather than a different halfcycle."
+    },
+    {
+      "source_row": 4,
+      "source_region": [
+        122,
+        1031,
+        360,
+        426
+      ],
+      "source_region_rgba_sha256": "8a59dc96110226d659ed23d937a4e9b8325b8035e0319c0d3f4cd8b74bce1867",
+      "candidate_game_phase": 4,
+      "source_role_status": "HOLD_COMPRESSION_NOT_PROVEN",
+      "findings": "RIGHT extended leg and LEFT raised knee repeat right support; no distinct loaded-knee compression clear enough to count."
+    },
+    {
+      "source_row": 5,
+      "source_region": [
+        613,
+        1029,
+        351,
+        408
+      ],
+      "source_region_rgba_sha256": "fc1484b7ec9d46c0e320d4b7556e13a8d4a35ab73a5f5e79879a935bce18ae34",
+      "candidate_game_phase": 5,
+      "source_role_status": "HOLD_FLIGHT_NOT_PROVEN",
+      "findings": "LEFT raised/forward-short and RIGHT long trailing roles match desired second half flight candidate; ankle sole-facing alone is insufficient to certify both-feet-airborne without reviewed ground relation."
+    }
+  ],
+  "whole_source_status": "HOLD_NONALTERNATING_RUN",
+  "left_landing_exists": false,
+  "safe_key_reuse_scope": "RIGHT contact only row0 preferred or row3alternative; no full6clip approval. Compression/flight require further review/authoring.",
+  "actor_approval": false,
+  "new_approvals": 0,
+  "source_PNG_mutations": false
+}

@@ -1,0 +1,86 @@
+{
+  "status": "REVIEWED_DRAFTS_ONLY_NOT_EXECUTED_NOT_APPROVED",
+  "source_packet": {
+    "path": "/workspace/scratch/pr122-girtas-production-prep/exact-pins.json",
+    "sha256": "166a2c26116242472c94bf6f97405cf4fecf23708a659bb1350f25324556415d"
+  },
+  "source_new267_drafts_verified": true,
+  "original393_pins_metadata_only_not_revalidated": [
+    {
+      "path": "/workspace/scratch/prepare-halpas-production-connection.py",
+      "sha256": "e5d30ad1d3323e56deabbc0e621ea459b6f33040d9485dcd14607038b2773468"
+    },
+    {
+      "path": "/workspace/scratch/approve-halpas-production-r001.py",
+      "sha256": "62923592be87b9a4dd1909b2ecfe2e19d3dedee753087422e37608790ab18314"
+    },
+    {
+      "path": "/workspace/scratch/commit-halpas-production-r001.py",
+      "sha256": "980be580c6a39a585aea2ff859ba38f5b2486907036a5ea443f14fbe5984a8f5"
+    },
+    {
+      "path": "/workspace/twilight/tests/pr122_native_default_main_connection_test.gd",
+      "sha256": "7a87758f959adb8d205fb0f32294ce1423524b4eec11e084c180b407fc5f3b7b"
+    }
+  ],
+  "production_gate_module": {
+    "path": "/workspace/twilight/tools/pr122_native_production_approvals.py",
+    "sha256": "2d0305cf49b3d944a2994111855046d37675ba72efa8180862ad5b78291f7706"
+  },
+  "reviewed267_pins": [
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/prepare-girtas-production-connection.py",
+      "sha256": "438bc0ae7de0860944335cce59e508c173db19b46fdeb06dc33de8be1a9c516a",
+      "bytes": 31716
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/approve-girtas-production-r001.py",
+      "sha256": "0bbf5326fd1e79fbacc0e8f632c1df8b1c5b28d8962c2d9c96e16e82952b943c",
+      "bytes": 12967
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/commit-girtas-production-r001.py",
+      "sha256": "5fb04a9923ce8b18d9b210953ac31fa6e9ce6aef205c146a4ee4ae7aac578461",
+      "bytes": 10540
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/girtas_review_guard.py",
+      "sha256": "c45becf1e68e927bf6eb908c5f8304fc1ffeaa64b2be5daaf2fefb187465655f",
+      "bytes": 3685
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/pr122_girtas_native_default_main_connection_test.gd",
+      "sha256": "ededa259eddbbfbea7eb6c8223a849639479b8c2d3ef188bf10704ba8aa61e1b",
+      "bytes": 20028
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/final48-quality-REQUIRED-template.json",
+      "sha256": "436bd541adc9330633562342c54b1ff0087efda6d3fe03ffc58bb9df78475120",
+      "bytes": 1719
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/negative-checks.py",
+      "sha256": "1fc5dee855370682253e65495da49c414fa7eaf4e61257456bec7c3d165c9f08",
+      "bytes": 6705
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/negative-checks.log",
+      "sha256": "1d1f84c5815f07116a0b9dcefb42869353bda050b0a41d6a404e9c0667ea021c",
+      "bytes": 204
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/static-review-not-execution.json",
+      "sha256": "693bef69addd614877d64dae5e971d630c8cd41d184b2b94b073f7f2420a1e22",
+      "bytes": 2293
+    },
+    {
+      "path": "/workspace/scratch/pr122-girtas-production-reviewed/HANDOFF.txt",
+      "sha256": "56d5eafe0f40c960861186e1502eeeef5a9e6b6563477f2604e6c7324014d4a5",
+      "bytes": 4929
+    }
+  ],
+  "approval_issued": false,
+  "repository_mutations": false,
+  "real_actor_quality_status": "HOLD",
+  "isolated_negative_rejections": 33
+}

@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-23",
+  "kind": "boss",
+  "quality_tier": "mythic_transform_requested_not_approved",
+  "new_original_PNGs": 6,
+  "new_clips": 6,
+  "new_poses": 36,
+  "selected_directions": [
+    "SE",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "strict_source_geometry": "6/6 PASS at2048; all source pixels/uniqueness/clipping guards unchanged",
+  "small_140px_calibration_holds": [
+    {
+      "direction": "SE",
+      "status": "HOLD",
+      "canvas_size": 576,
+      "reason": "Pose cannot fit the foot-anchored canvas"
+    },
+    {
+      "direction": "SW",
+      "status": "HOLD",
+      "canvas_size": 544,
+      "reason": "Pose cannot fit the foot-anchored canvas"
+    }
+  ],
+  "Godot_4_7_2_actual_ActorMotion_playback": {
+    "clips": 6,
+    "poses": 36,
+    "status": "PASS"
+  },
+  "one_common_uniform_scale": {
+    "method": "ONE_common_uniform_scale_from_median_native_height",
+    "normalized_neutral_heights": [
+      39.5625,
+      37.25,
+      38.8125,
+      37.25,
+      45.125,
+      37.5
+    ],
+    "shared_reference_height": 38.15625,
+    "pixel_scale": 2.253890253890254,
+    "visual_approval": "HOLD",
+    "note": "Existing E/S r002 body sizing is not automatically merged or approved."
+  },
+  "new_approvals": 0,
+  "production_switches": 0,
+  "boss_completed": false,
+  "prior_E_S_assets": "Preserved; source union now8 directions but common size/identity integration HOLD",
+  "quality_holds": [
+    "Canonical queen identity and absolute camera not independently visually approved",
+    "Real support-foot exchange/flight source-plane anchor review pending",
+    "Inter-direction/source anatomy and previous E/S size integration pending",
+    "Default Main/remaining actions not validated by this batch"
+  ],
+  "files_manifest": "file-manifest.json",
+  "delivery_status": "LOCAL_STAGED_PENDING_ROOT_GIT_COMMIT; subagent made no Git mutations"
+}

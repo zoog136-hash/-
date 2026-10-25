@@ -1,0 +1,393 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:393",
+  "role": "hit",
+  "assembler_sha256": "a9ee1e4f861a30b7c4a458722ddbb55d04948ee3702e69f2ef7e902cd938203c",
+  "direction": "NE",
+  "metadata_sha256": "c5b58064cf63ed244f276d791373e42ae5331cd8253aa58964c1e5572e3f977f",
+  "metadata_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/pose-map.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/halpas-NE-hit-v04composite01.png",
+  "output_sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97",
+  "output_canvas": [
+    3072,
+    4608
+  ],
+  "cell_size": [
+    1536,
+    1536
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/halpas-NE-hit-guard0-key-v04/halpas-NE-hit-guard0-v04.png",
+      "source_sha256": "6e7b78306912b8ae16a1d9e4fa7780b23a4f640825c0c6b16d07393289b3798e",
+      "source_pose": "new_game0",
+      "source_region": [
+        43,
+        36,
+        1179,
+        1118
+      ],
+      "rgba_sha256": "541282e8b2c379d4b29f4c1972ef1ec749f982a9031fd17c7d674a4bcf62cfe5",
+      "visible_pose_sha256": "65657305b68571d1b1e80c30788f39aa6ee41851eef270a423939ac8cd3a02ae",
+      "newly_authored": true,
+      "review_basis": "New genuine game0 SOURCEVISUAL and strictsinglePASS with sameNErear camera/twoarms/lowRIGHTblade/EMPTYLEFT local guard-or-recovery. Replaces prior exactidle duplicate without weakening existing native cross-track uniqueness.",
+      "output_region": [
+        178,
+        209,
+        1179,
+        1118
+      ],
+      "translation": [
+        135,
+        173
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 552778
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+      "source_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+      "source_pose": "new_game1",
+      "source_region": [
+        33,
+        97,
+        1194,
+        1031
+      ],
+      "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+      "visible_pose_sha256": "cbbc7ea182e4a88ad804a862c0dc812f622d59a8110cbfc0c03c1e53a027fb6f",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 1.",
+      "output_region": [
+        1707,
+        252,
+        1194,
+        1031
+      ],
+      "translation": [
+        1674,
+        155
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 518197
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+      "source_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+      "source_pose": "new_game2",
+      "source_region": [
+        29,
+        70,
+        1216,
+        1105
+      ],
+      "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+      "visible_pose_sha256": "dc89a32aa48fc00789d09b3d74b168256c07c4f1c3a5680a1205a47c81df8b60",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 2.",
+      "output_region": [
+        160,
+        1751,
+        1216,
+        1105
+      ],
+      "translation": [
+        131,
+        1681
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 540662
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+      "source_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+      "source_pose": "new_game3",
+      "source_region": [
+        35,
+        92,
+        1210,
+        1082
+      ],
+      "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+      "visible_pose_sha256": "37dfa535d5803461d50cc310876b31e81d77990dc7da6eb180ec91e78358762e",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 3.",
+      "output_region": [
+        1699,
+        1763,
+        1210,
+        1082
+      ],
+      "translation": [
+        1664,
+        1671
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 540670
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/halpas-NE-hit-late4-key-v04/halpas-NE-hit-late4-v04.png",
+      "source_sha256": "387a0e540977eb714f2ba048489efb89d44a03e0dc2b7ef0ff87899c52905ad9",
+      "source_pose": "new_game4",
+      "source_region": [
+        41,
+        89,
+        1207,
+        1088
+      ],
+      "rgba_sha256": "13a1b30cfc727699ea586a1077cb1e216fd3ccf15094a68d742454c9a662b473",
+      "visible_pose_sha256": "32d564570568806a94d38820e71052f0478c483b6a8e7b413785433c23a569b1",
+      "newly_authored": true,
+      "review_basis": "New genuine game4 SOURCEVISUAL and strictsinglePASS with sameNErear camera/twoarms/lowRIGHTblade/EMPTYLEFT local guard-or-recovery. Replaces prior exactidle duplicate without weakening existing native cross-track uniqueness.",
+      "output_region": [
+        164,
+        3296,
+        1207,
+        1088
+      ],
+      "translation": [
+        123,
+        3207
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 550353
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/halpas-NE-hit-settle5-key-v04/halpas-NE-hit-settle5-v04.png",
+      "source_sha256": "21b74b8d17d5265a1b3003b828b0656ac471a374f1f7138142860a05665f4fe3",
+      "source_pose": "new_game5",
+      "source_region": [
+        61,
+        58,
+        1167,
+        1115
+      ],
+      "rgba_sha256": "3cdb4dfdb8b37f714b3a552d9396983fb7afee1f0b112fd3115cf8d7b5acfa8f",
+      "visible_pose_sha256": "b66174b08079291ad0b0e463687e7821590264dd5c27eb8b8a61b7d2716091ad",
+      "newly_authored": true,
+      "review_basis": "New genuine game5 SOURCEVISUAL and strictsinglePASS with sameNErear camera/twoarms/lowRIGHTblade/EMPTYLEFT local guard-or-recovery. Replaces prior exactidle duplicate without weakening existing native cross-track uniqueness.",
+      "output_region": [
+        1720,
+        3282,
+        1167,
+        1115
+      ],
+      "translation": [
+        1659,
+        3224
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 560434
+    }
+  ],
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      3072,
+      4608
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NE",
+        "region": [
+          178,
+          209,
+          1179,
+          1118
+        ],
+        "margin": [
+          434,
+          166,
+          869,
+          930
+        ],
+        "source_anchor": [
+          768,
+          1323
+        ],
+        "rgba_sha256": "541282e8b2c379d4b29f4c1972ef1ec749f982a9031fd17c7d674a4bcf62cfe5"
+      },
+      {
+        "row": 1,
+        "direction": "NE",
+        "region": [
+          1707,
+          252,
+          1194,
+          1031
+        ],
+        "margin": [
+          427,
+          253,
+          854,
+          1017
+        ],
+        "source_anchor": [
+          2304,
+          1279
+        ],
+        "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f"
+      },
+      {
+        "row": 2,
+        "direction": "NE",
+        "region": [
+          160,
+          1751,
+          1216,
+          1105
+        ],
+        "margin": [
+          416,
+          179,
+          832,
+          943
+        ],
+        "source_anchor": [
+          768,
+          2852
+        ],
+        "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c"
+      },
+      {
+        "row": 3,
+        "direction": "NE",
+        "region": [
+          1699,
+          1763,
+          1210,
+          1082
+        ],
+        "margin": [
+          419,
+          202,
+          838,
+          966
+        ],
+        "source_anchor": [
+          2304,
+          2841
+        ],
+        "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9"
+      },
+      {
+        "row": 4,
+        "direction": "NE",
+        "region": [
+          164,
+          3296,
+          1207,
+          1088
+        ],
+        "margin": [
+          420,
+          196,
+          841,
+          960
+        ],
+        "source_anchor": [
+          768,
+          4380
+        ],
+        "rgba_sha256": "13a1b30cfc727699ea586a1077cb1e216fd3ccf15094a68d742454c9a662b473"
+      },
+      {
+        "row": 5,
+        "direction": "NE",
+        "region": [
+          1720,
+          3282,
+          1167,
+          1115
+        ],
+        "margin": [
+          440,
+          169,
+          881,
+          933
+        ],
+        "source_anchor": [
+          2304,
+          4393
+        ],
+        "rgba_sha256": "3cdb4dfdb8b37f714b3a552d9396983fb7afee1f0b112fd3115cf8d7b5acfa8f"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 1094.0,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": {
+    "status": "PENDING_EXTERNAL_SAME_BODY_LANDMARK_PROPOSAL",
+    "no_silhouette_bbox_scaling": true
+  },
+  "region_height_span": [
+    1031,
+    1118
+  ],
+  "possible_region_height_mismatch": false,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+}

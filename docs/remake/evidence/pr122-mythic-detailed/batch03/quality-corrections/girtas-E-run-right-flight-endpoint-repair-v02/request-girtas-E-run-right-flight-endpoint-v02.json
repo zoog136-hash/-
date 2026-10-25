@@ -1,0 +1,61 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_flight_key_endpoint_restoration",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 5,
+  "intended_anatomical_support": "NONE_AIR_LEFTlead_RIGHTtrail",
+  "references": [
+    "/workspace/scratch/girtas-E-run-right-flight-endpoint-repair-v02/reference-only-AIR5-unchangedRGBA-spacious-endpoint-padding.png",
+    "/workspace/scratch/girtas-E-run-right-flight-endpoint-repair-v02/reference-only-clipped-emptyLEFT-fist-endpoint-region-guide.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-run-right-flight-endpoint-repair-v02/reference-only-AIR5-unchangedRGBA-spacious-endpoint-padding.png": "96cd8456c602b9780ce8a64d85914921461c6333a8ec356008ea21b387332a8c",
+    "/workspace/scratch/girtas-E-run-right-flight-endpoint-repair-v02/reference-only-clipped-emptyLEFT-fist-endpoint-region-guide.png": "f2fce8c1ec5f55bae03979ba0a1150ef4dfef6d055bb529e1641c8d5d2afbfab",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "corrective_reason": "AIR5 c73b58f3 has independent leg-art PASS but strict source HOLD from genuinely clipped EMPTY LEFT fist core24pixels at x1253/y501..524. Author ONLY missing fist endpoint with materially spacious exact-source padding; preserve original motion, old raw/HOLD immutable, no threshold/padding-only waiver. New generated body sameness must be independently rechecked, never claim pixel equality before exact assembly.",
+  "prompt": "Make a LOCALIZED ENDPOINT RESTORATION edit of reference1 on the same spacious transparent canvas. This is the already correct GIRTAS E RUN AIR5 pose. Do NOT redesign motion, anatomy, body or equipment. The ONLY defect is source's FAR/EMPTY anatomical LEFT fist outer knuckle/armor was cut by the OLD source right image boundary. Reference2 magenta box/line identifies that old cut now safely INSIDE the transparent padded canvas: original source x1254, native y501..524, after padding(+220,+220). Reconstruct the MISSING rounded OUTER EMPTY LEFT FIST KNUCKLE/gauntlet contour and a few coherent armor pixels continuing right beyond that old cut, complete all fingers/metal, hand stays clenched EMPTY, no second weapon. Preserve original wrist angle, hand physical size and two-arm anatomy; no giant replacement fist. The current AIR5 legs are CORRECT and must stay the SAME: FAR anatomical LEFT LEADS toward imageRIGHT with articulated bent knee/shin/full boot; NEAR anatomical RIGHT TRAILS toward imageLEFT with knee/shin/boot folded back/up; BOTH complete boots flexed clear. Do not move or re-pose legs/feet/hips, do not re-ground either leg, no third limb. Keep physical head/helmet/shoulder/waist proportions and source E camera/slight visible chest; face/nose/travel RIGHT, not diagonal/back. Preserve pale human face/long pale hair, narrow HARD GOLD rays, original ornate black/gold armor and LONG DARK goldtrim ROBE, permanent anatomical RIGHT/near hand holding LONG SINUOUS gold-orange blade trailing LEFT, LEFT hand EMPTY. No redmask/flamefeatherfan/pants/shortblade. Maintain source hair/robe/weapon paths and quality. Follow reference1 SPACIOUS padding: whole figure+all rays/blade+restored hand must fit within about1000x1000 centered in1254-equivalent canvas, with at least90native alpha pixels beyond EVERY extremity, especially restored LEFT fist onRIGHT. If renderer chooses output resolution, whole-figure uniform generation scale may follow padded reference; NEVER crop/shorten body/gear or zoom in to fill frame. All other visible pose design remains identical to source. One full complete figure, transparent alpha; no labels/magenta lines/floor/shadow/haze. This is only missing endpoint restoration of a preserved HOLD source, not a new sixpose run request and not a false padding-only fix.",
+  "requested_at": "2026-10-19T14:42:01.326480+00:00",
+  "user_authorization": "Production image edits authorized, no main-chat images. One localized missing-endpoint repair, no failed full6 regeneration.",
+  "endpoint_repair_proof": {
+    "purpose": "PRODUCTION_REFERENCE_ONLY_NOT_GAME_ART",
+    "source": "/workspace/scratch/girtas-E-run-right-flight-key-v01/girtas-E-run-right-flight-key-v01.png",
+    "source_sha256": "c73b58f34dabc85479dfdd4168c4c5a929e8247ec9c780812482dab55227426d",
+    "source_boundary_review": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-flight5-v01-source-boundary-HOLD-addendum.json",
+    "source_boundary_review_sha256": "17dcf45bc25cb5dada2b86f5e762c45e802b4ea17152eafcd3dc4a5232567cf8",
+    "old_source_clipped_entity": "far empty LEFT fist outerknuckle",
+    "old_source_strong_edge_y": [
+      501,
+      524
+    ],
+    "old_source_right_strong_alpha_count": 24,
+    "exact_source_reference_padding": {
+      "canvas": [
+        1850,
+        1850
+      ],
+      "translation": [
+        220,
+        220
+      ],
+      "rgba_no_resize": true,
+      "reference_sha256": "96cd8456c602b9780ce8a64d85914921461c6333a8ec356008ea21b387332a8c"
+    },
+    "endpoint_guide_sha256": "f2fce8c1ec5f55bae03979ba0a1150ef4dfef6d055bb529e1641c8d5d2afbfab",
+    "old_body_pixel_equality_in_NEW_GENERATED_OUTPUT": "NOT_ASSUMED; fresh fullpose QC required if renderer redraws. Final approved raw pasted exactRGBA only."
+  },
+  "endpoint_repair_proof_sha256": "07a4121ccfc085033c269720baae66807d424b9297f27420717de74c3a9a168f",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false
+}

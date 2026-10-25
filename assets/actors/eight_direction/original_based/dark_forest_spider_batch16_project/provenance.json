@@ -1,0 +1,4467 @@
+{
+  "schema": 1,
+  "source": "Existing approved native articulated motion reused for an exact same project-atlas body; no new source PNGs or native poses authored",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_1.png",
+    "region": [
+      0,
+      12,
+      315,
+      299
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 1,
+    "cell": 0,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "image_size": [
+      1263,
+      1246
+    ],
+    "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+  },
+  "target_keys": [
+    "monster:검은숲 거미"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 1,
+      "cell": 0,
+      "body": "spider",
+      "variant": 4,
+      "width": 0.92,
+      "weapon": "claws",
+      "crest": 0,
+      "accent": "c4aa64"
+    },
+    "animation_profile": {
+      "motion_style": "crawl",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 78
+  },
+  "target_references": {
+    "monster:검은숲 거미": {
+      "path": "res://assets/monsters/original/atlas_1.png",
+      "region": [
+        0,
+        12,
+        315,
+        299
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 1,
+      "cell": 0,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+      "image_size": [
+        1263,
+        1246
+      ],
+      "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+    }
+  },
+  "target_presentations": {
+    "monster:검은숲 거미": {
+      "visual": {
+        "atlas": 1,
+        "cell": 0,
+        "body": "spider",
+        "variant": 4,
+        "width": 0.92,
+        "weapon": "claws",
+        "crest": 0,
+        "accent": "c4aa64"
+      },
+      "animation_profile": {
+        "motion_style": "crawl",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 78
+    }
+  },
+  "sharing_rule": "One target adapter per pinned identical reference/body/weapon/attack contract. Height, bounded width and original tint are explicitly adapted. Multi-target importer guards remain unchanged.",
+  "authoring_instructions": "Batch16: original-project spider atlas1 cell0,128 newly articulated poses, actual8 directions.16 per source:idle2/walk6/attack3/hit2/death3. All source pixels preserved. Not recovered SPX. Original unsuccessful E_v02 contains17 components and is excluded/preserved; earlier complete E16 is used.",
+  "instruction_record_kind": "batch_instructions_with_exact_saved_image_generation_requests",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Source-only reuse: identical authoritative project image/cell/body/weapon and complete approved five-role native matrix. Every source SpriteFrames/region/margin/PNG byte is unchanged. Per-target native display width, height and tint preserve its presentation. Actual target Main, unique boss skills, gait/model/contact and independent final visual judgment remain pending."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 128,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        19,
+        33,
+        300,
+        250
+      ],
+      "margin": [
+        225,
+        234,
+        468,
+        518
+      ],
+      "source_anchor": [
+        178,
+        279
+      ],
+      "rgba_sha256": "9d598c7a8d28604e9c520fee4acf0b34248745fd710698755e703d93d2c212c0",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        373,
+        43,
+        293,
+        230
+      ],
+      "margin": [
+        223,
+        254,
+        475,
+        538
+      ],
+      "source_anchor": [
+        534,
+        269
+      ],
+      "rgba_sha256": "c8c055237eff5f65153251d9f73efd17a201072001f01ae3cf43207591faf834",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        720,
+        42,
+        331,
+        236
+      ],
+      "margin": [
+        214,
+        248,
+        437,
+        532
+      ],
+      "source_anchor": [
+        890,
+        274
+      ],
+      "rgba_sha256": "1eedd8b9ce1d7d6e0e26544245e970aad61595db1434782a1e5b24156025d6df",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        1086,
+        47,
+        306,
+        230
+      ],
+      "margin": [
+        224,
+        254,
+        462,
+        538
+      ],
+      "source_anchor": [
+        1246,
+        273
+      ],
+      "rgba_sha256": "715dcf0c85a098b8333f2ae8553fb98bc0355b927027e5be81e90f112365669e",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        19,
+        321,
+        322,
+        233
+      ],
+      "margin": [
+        225,
+        251,
+        446,
+        535
+      ],
+      "source_anchor": [
+        178,
+        550
+      ],
+      "rgba_sha256": "8d01e27a968a78de3c13adc6c703b6c7edfc5b0b8256704c3aed680f9becbf72",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "E",
+      "region": [
+        375,
+        320,
+        332,
+        232
+      ],
+      "margin": [
+        225,
+        252,
+        436,
+        536
+      ],
+      "source_anchor": [
+        534,
+        548
+      ],
+      "rgba_sha256": "77f3fd04599f1888ed0b2d5f724ec269100d98f3dac624b3ca35a3f69c3a5323",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "E",
+      "region": [
+        736,
+        318,
+        321,
+        237
+      ],
+      "margin": [
+        230,
+        247,
+        447,
+        531
+      ],
+      "source_anchor": [
+        890,
+        551
+      ],
+      "rgba_sha256": "9ac99e094b8c33c42c305c87ec9ceae703975e13e6d1fa65d2fa3a8e5d96608e",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "E",
+      "region": [
+        1085,
+        325,
+        325,
+        229
+      ],
+      "margin": [
+        223,
+        255,
+        443,
+        539
+      ],
+      "source_anchor": [
+        1246,
+        550
+      ],
+      "rgba_sha256": "04c6fe2124c9bc5bb2953806df9862e5d09ea340cae6d917a6d82983d3a3fd2f",
+      "sheet": 0
+    },
+    {
+      "row": 8,
+      "direction": "E",
+      "region": [
+        34,
+        585,
+        314,
+        228
+      ],
+      "margin": [
+        240,
+        256,
+        454,
+        540
+      ],
+      "source_anchor": [
+        178,
+        809
+      ],
+      "rgba_sha256": "2af987335039eea3d216a4d3ca4b544c40565882dfbfa5d3bcf9ae8ca19b8617",
+      "sheet": 0
+    },
+    {
+      "row": 9,
+      "direction": "E",
+      "region": [
+        371,
+        586,
+        364,
+        232
+      ],
+      "margin": [
+        221,
+        252,
+        404,
+        536
+      ],
+      "source_anchor": [
+        534,
+        814
+      ],
+      "rgba_sha256": "ab35e3407f0b10e4f2ce749b5c5c05db57c3c61932f710b30bb769855f11a69a",
+      "sheet": 0
+    },
+    {
+      "row": 10,
+      "direction": "E",
+      "region": [
+        745,
+        586,
+        327,
+        230
+      ],
+      "margin": [
+        239,
+        254,
+        441,
+        538
+      ],
+      "source_anchor": [
+        890,
+        812
+      ],
+      "rgba_sha256": "d23045c662a2593a468bc568fc6b40a609a1619962df813e217841974e67ab00",
+      "sheet": 0
+    },
+    {
+      "row": 11,
+      "direction": "E",
+      "region": [
+        1112,
+        603,
+        279,
+        213
+      ],
+      "margin": [
+        250,
+        271,
+        489,
+        555
+      ],
+      "source_anchor": [
+        1246,
+        812
+      ],
+      "rgba_sha256": "768282f16d915031ed357ae23096ae42a6209db0f1f0bdf72249dd721b535707",
+      "sheet": 0
+    },
+    {
+      "row": 12,
+      "direction": "E",
+      "region": [
+        45,
+        866,
+        276,
+        209
+      ],
+      "margin": [
+        251,
+        275,
+        492,
+        559
+      ],
+      "source_anchor": [
+        178,
+        1071
+      ],
+      "rgba_sha256": "057e98d427ba44bae15b4c4d3b70648b4a3871a89356922418df08de7a512a37",
+      "sheet": 0
+    },
+    {
+      "row": 13,
+      "direction": "E",
+      "region": [
+        400,
+        864,
+        300,
+        208
+      ],
+      "margin": [
+        250,
+        276,
+        468,
+        560
+      ],
+      "source_anchor": [
+        534,
+        1068
+      ],
+      "rgba_sha256": "e58aeb4d6c5c9ab6b269cf96537466c83c2eb5be0371f6e6c44494470d44be44",
+      "sheet": 0
+    },
+    {
+      "row": 14,
+      "direction": "E",
+      "region": [
+        737,
+        865,
+        334,
+        206
+      ],
+      "margin": [
+        231,
+        278,
+        434,
+        562
+      ],
+      "source_anchor": [
+        890,
+        1067
+      ],
+      "rgba_sha256": "bd92c729e28ad05d502e010ace61e5dea99ccb87990a282a1bc46a47d5d66a10",
+      "sheet": 0
+    },
+    {
+      "row": 15,
+      "direction": "E",
+      "region": [
+        1114,
+        884,
+        267,
+        176
+      ],
+      "margin": [
+        252,
+        308,
+        501,
+        592
+      ],
+      "source_anchor": [
+        1246,
+        1056
+      ],
+      "rgba_sha256": "8fad551fe36e0fd68ba11fba081cc7cf24095adb3fe45752aa335c519d944874",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        27,
+        27,
+        297,
+        241
+      ],
+      "margin": [
+        231,
+        243,
+        471,
+        527
+      ],
+      "source_anchor": [
+        180,
+        264
+      ],
+      "rgba_sha256": "4d57bb6047e08dadd52e195a28c0919c72b73c19e8c6cb471b23f4623dab2151",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        379,
+        23,
+        294,
+        245
+      ],
+      "margin": [
+        221,
+        239,
+        474,
+        523
+      ],
+      "source_anchor": [
+        542,
+        264
+      ],
+      "rgba_sha256": "fec0341807de1ef5461f5d790a60dfe812b7cdc9834f1b5e7c72d6a0eb2d76b2",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        738,
+        25,
+        327,
+        243
+      ],
+      "margin": [
+        220,
+        241,
+        441,
+        525
+      ],
+      "source_anchor": [
+        902,
+        264
+      ],
+      "rgba_sha256": "4d422c351891562765a94ad1cf9a06ba68345e608b9f1d1baba58a702148d8e1",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        1114,
+        23,
+        301,
+        237
+      ],
+      "margin": [
+        234,
+        247,
+        467,
+        531
+      ],
+      "source_anchor": [
+        1264,
+        256
+      ],
+      "rgba_sha256": "6ff1012fb1d56e2b5b43efa2923c6a2be91fce0164767704619c0ae61035e5bf",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        15,
+        292,
+        319,
+        241
+      ],
+      "margin": [
+        219,
+        243,
+        449,
+        527
+      ],
+      "source_anchor": [
+        180,
+        529
+      ],
+      "rgba_sha256": "956b83556563eeca0a31385d90bf7ee4b431ac8371118199470ebcba0f589c42",
+      "sheet": 1
+    },
+    {
+      "row": 5,
+      "direction": "SE",
+      "region": [
+        377,
+        290,
+        315,
+        229
+      ],
+      "margin": [
+        219,
+        255,
+        453,
+        539
+      ],
+      "source_anchor": [
+        542,
+        515
+      ],
+      "rgba_sha256": "576c6aa7824b95b88a1238eac59064a47b58ef47ea549f896d0d7f4e36d5eeaa",
+      "sheet": 1
+    },
+    {
+      "row": 6,
+      "direction": "SE",
+      "region": [
+        740,
+        296,
+        317,
+        237
+      ],
+      "margin": [
+        222,
+        247,
+        451,
+        531
+      ],
+      "source_anchor": [
+        902,
+        529
+      ],
+      "rgba_sha256": "6ee42f5f4c6cca71c175e7167ee603b2e1202f4b8f80c30a7ee869cf35b6ddd4",
+      "sheet": 1
+    },
+    {
+      "row": 7,
+      "direction": "SE",
+      "region": [
+        1103,
+        295,
+        316,
+        237
+      ],
+      "margin": [
+        223,
+        247,
+        452,
+        531
+      ],
+      "source_anchor": [
+        1264,
+        528
+      ],
+      "rgba_sha256": "9f2d4b848f8c26f7df86815ff44faadae4fc942d257ff8dd13fb8fecf4e821e8",
+      "sheet": 1
+    },
+    {
+      "row": 8,
+      "direction": "SE",
+      "region": [
+        39,
+        557,
+        300,
+        241
+      ],
+      "margin": [
+        243,
+        243,
+        468,
+        527
+      ],
+      "source_anchor": [
+        180,
+        794
+      ],
+      "rgba_sha256": "3a64f580cb0141e4acf874952d168b551d2954e7185f2421bce5132f9fff14f6",
+      "sheet": 1
+    },
+    {
+      "row": 9,
+      "direction": "SE",
+      "region": [
+        398,
+        557,
+        303,
+        241
+      ],
+      "margin": [
+        240,
+        243,
+        465,
+        527
+      ],
+      "source_anchor": [
+        542,
+        794
+      ],
+      "rgba_sha256": "05d08416d6b7d02f737d67c6ee3b1dcaacb7b1b31d3fbfd5b4bcbfc1ac213a25",
+      "sheet": 1
+    },
+    {
+      "row": 10,
+      "direction": "SE",
+      "region": [
+        732,
+        564,
+        358,
+        234
+      ],
+      "margin": [
+        214,
+        250,
+        410,
+        534
+      ],
+      "source_anchor": [
+        902,
+        794
+      ],
+      "rgba_sha256": "6645078388480ca33dff9a9e1ee26a3ea6207ecd96befb42c5835ac70de63c60",
+      "sheet": 1
+    },
+    {
+      "row": 11,
+      "direction": "SE",
+      "region": [
+        1120,
+        562,
+        301,
+        232
+      ],
+      "margin": [
+        240,
+        252,
+        467,
+        536
+      ],
+      "source_anchor": [
+        1264,
+        790
+      ],
+      "rgba_sha256": "26d9b3a1119020f40f30565be0a37badb3d3e90c6dfbc3e4cde51e69dcc4ad8b",
+      "sheet": 1
+    },
+    {
+      "row": 12,
+      "direction": "SE",
+      "region": [
+        32,
+        821,
+        296,
+        241
+      ],
+      "margin": [
+        236,
+        243,
+        472,
+        527
+      ],
+      "source_anchor": [
+        180,
+        1058
+      ],
+      "rgba_sha256": "13ae9931ebfed3853e951842eeab00f36cbfb0e5fe8179dcb4470feb57dccabe",
+      "sheet": 1
+    },
+    {
+      "row": 13,
+      "direction": "SE",
+      "region": [
+        384,
+        824,
+        322,
+        220
+      ],
+      "margin": [
+        226,
+        264,
+        446,
+        548
+      ],
+      "source_anchor": [
+        542,
+        1040
+      ],
+      "rgba_sha256": "c21c84a2689776f766bc5ba14961095d71186820a95f368db7977e3229fa7f47",
+      "sheet": 1
+    },
+    {
+      "row": 14,
+      "direction": "SE",
+      "region": [
+        757,
+        858,
+        326,
+        196
+      ],
+      "margin": [
+        239,
+        288,
+        442,
+        572
+      ],
+      "source_anchor": [
+        902,
+        1050
+      ],
+      "rgba_sha256": "cdb1efdd77db6f62a96be1a2320a784631b7a496cdfaea45babd0fbc726fc020",
+      "sheet": 1
+    },
+    {
+      "row": 15,
+      "direction": "SE",
+      "region": [
+        1131,
+        866,
+        280,
+        177
+      ],
+      "margin": [
+        251,
+        307,
+        488,
+        591
+      ],
+      "source_anchor": [
+        1264,
+        1039
+      ],
+      "rgba_sha256": "7662164072e2211f9cdd4ecd1d7548640a819e2db119aac91d547ca68f6f8364",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        28,
+        35,
+        296,
+        239
+      ],
+      "margin": [
+        237,
+        245,
+        472,
+        529
+      ],
+      "source_anchor": [
+        175,
+        270
+      ],
+      "rgba_sha256": "529bc281c39bea619eb172314c13cc658d6eff0279b099fc26e1f79ef67421d3",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        386,
+        36,
+        288,
+        234
+      ],
+      "margin": [
+        244,
+        250,
+        480,
+        534
+      ],
+      "source_anchor": [
+        526,
+        266
+      ],
+      "rgba_sha256": "fcb82f9a99d67189583e12b07acd0ccf26b30dcc4f79285c42aef8ecd071ac6a",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        746,
+        39,
+        283,
+        241
+      ],
+      "margin": [
+        254,
+        243,
+        485,
+        527
+      ],
+      "source_anchor": [
+        876,
+        276
+      ],
+      "rgba_sha256": "1f423d042ada43139c09e9ce29a1648c9b50eb7dac0f007fcd384ff37d24dba7",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        1096,
+        36,
+        272,
+        237
+      ],
+      "margin": [
+        253,
+        247,
+        496,
+        531
+      ],
+      "source_anchor": [
+        1227,
+        269
+      ],
+      "rgba_sha256": "b1debc55c089ca08585fa30e1e12cae27b01a51a4109138788dc02832e1b488a",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        32,
+        297,
+        282,
+        236
+      ],
+      "margin": [
+        241,
+        248,
+        486,
+        532
+      ],
+      "source_anchor": [
+        175,
+        529
+      ],
+      "rgba_sha256": "ff817fef4bc3cd93548f596bf1e0fd44b26c839edcb72f960e9a4cbb4b38b3aa",
+      "sheet": 2
+    },
+    {
+      "row": 5,
+      "direction": "S",
+      "region": [
+        389,
+        298,
+        278,
+        245
+      ],
+      "margin": [
+        247,
+        239,
+        490,
+        523
+      ],
+      "source_anchor": [
+        526,
+        539
+      ],
+      "rgba_sha256": "2a6d0e396a0dc92f795dbc72a3dce54a01b8952b79ed29229aa80e486f1e6780",
+      "sheet": 2
+    },
+    {
+      "row": 6,
+      "direction": "S",
+      "region": [
+        749,
+        297,
+        278,
+        241
+      ],
+      "margin": [
+        257,
+        243,
+        490,
+        527
+      ],
+      "source_anchor": [
+        876,
+        534
+      ],
+      "rgba_sha256": "c0ca4a795d4c8f84dbf88936f1de203f217a7bc6ede6199edda4bf44ffa34d11",
+      "sheet": 2
+    },
+    {
+      "row": 7,
+      "direction": "S",
+      "region": [
+        1074,
+        293,
+        298,
+        240
+      ],
+      "margin": [
+        231,
+        244,
+        470,
+        528
+      ],
+      "source_anchor": [
+        1227,
+        529
+      ],
+      "rgba_sha256": "a5ab0c33e5b5360c14b19e025919ae5181de8e1572b2626097d86ad3afeea468",
+      "sheet": 2
+    },
+    {
+      "row": 8,
+      "direction": "S",
+      "region": [
+        28,
+        557,
+        297,
+        240
+      ],
+      "margin": [
+        237,
+        244,
+        471,
+        528
+      ],
+      "source_anchor": [
+        175,
+        793
+      ],
+      "rgba_sha256": "9c336acfadbb5cc3914088c9cc74d72d38f43273cd7c03c5a8b11f365f761371",
+      "sheet": 2
+    },
+    {
+      "row": 9,
+      "direction": "S",
+      "region": [
+        374,
+        558,
+        305,
+        259
+      ],
+      "margin": [
+        232,
+        225,
+        463,
+        509
+      ],
+      "source_anchor": [
+        526,
+        813
+      ],
+      "rgba_sha256": "56fe0d0946e5806c4d250b89c2f106d9cd26385f11ca6757a3ad437e18854d67",
+      "sheet": 2
+    },
+    {
+      "row": 10,
+      "direction": "S",
+      "region": [
+        711,
+        551,
+        328,
+        271
+      ],
+      "margin": [
+        219,
+        213,
+        440,
+        497
+      ],
+      "source_anchor": [
+        876,
+        818
+      ],
+      "rgba_sha256": "c2860004ab4decb7eb8eaa3833bd9da781cc6da5a6bb816b0e06aaea4c06fc82",
+      "sheet": 2
+    },
+    {
+      "row": 11,
+      "direction": "S",
+      "region": [
+        1083,
+        575,
+        293,
+        236
+      ],
+      "margin": [
+        240,
+        248,
+        475,
+        532
+      ],
+      "source_anchor": [
+        1227,
+        807
+      ],
+      "rgba_sha256": "69c0e34670e145aa31b87682879e512315dae63d428828b3b3e3dcd15f2dbf3f",
+      "sheet": 2
+    },
+    {
+      "row": 12,
+      "direction": "S",
+      "region": [
+        30,
+        847,
+        292,
+        239
+      ],
+      "margin": [
+        239,
+        245,
+        476,
+        529
+      ],
+      "source_anchor": [
+        175,
+        1082
+      ],
+      "rgba_sha256": "cf974f409e55f1d8951bc40e6c58ec25a6991d0df447ac690ff625a6cb1d6f97",
+      "sheet": 2
+    },
+    {
+      "row": 13,
+      "direction": "S",
+      "region": [
+        387,
+        855,
+        292,
+        224
+      ],
+      "margin": [
+        245,
+        260,
+        476,
+        544
+      ],
+      "source_anchor": [
+        526,
+        1075
+      ],
+      "rgba_sha256": "5410dc844d4a5456092207dc22a2712c0ccb6c0ccfe94d77324526b95f3a0b2f",
+      "sheet": 2
+    },
+    {
+      "row": 14,
+      "direction": "S",
+      "region": [
+        735,
+        879,
+        292,
+        195
+      ],
+      "margin": [
+        243,
+        289,
+        476,
+        573
+      ],
+      "source_anchor": [
+        876,
+        1070
+      ],
+      "rgba_sha256": "ee789f83b509b7b8604927c9d7f22d425b86f18fc7a196960773ed8b6168050a",
+      "sheet": 2
+    },
+    {
+      "row": 15,
+      "direction": "S",
+      "region": [
+        1082,
+        907,
+        291,
+        169
+      ],
+      "margin": [
+        239,
+        315,
+        477,
+        599
+      ],
+      "source_anchor": [
+        1227,
+        1072
+      ],
+      "rgba_sha256": "87b90527aed87f5a82dfb6a9efbaf4c654cd550dffa3378ee21c0554c1ab1233",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        40,
+        34,
+        284,
+        238
+      ],
+      "margin": [
+        246,
+        246,
+        484,
+        530
+      ],
+      "source_anchor": [
+        178,
+        268
+      ],
+      "rgba_sha256": "49b8e02be610af0d560b6a91259cf6b534fdd795ab18c8b0b2a282476d26be9c",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        388,
+        36,
+        282,
+        237
+      ],
+      "margin": [
+        237,
+        247,
+        486,
+        531
+      ],
+      "source_anchor": [
+        535,
+        269
+      ],
+      "rgba_sha256": "46b3268e7f06c277d38b93ab8c4c2c3c9b3aa8e3257c8b264056f312986a2ea8",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        737,
+        34,
+        306,
+        237
+      ],
+      "margin": [
+        230,
+        247,
+        462,
+        531
+      ],
+      "source_anchor": [
+        891,
+        267
+      ],
+      "rgba_sha256": "7fbfe53862ff206e8ee2c025c2340d587b2236927764a630d5b4ad9f6dc28019",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        1099,
+        34,
+        286,
+        237
+      ],
+      "margin": [
+        235,
+        247,
+        482,
+        531
+      ],
+      "source_anchor": [
+        1248,
+        267
+      ],
+      "rgba_sha256": "8fe79cba942c9c44a3762bd7395bce8cf4c0c172ede180235d90e698dde27c03",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        35,
+        290,
+        290,
+        249
+      ],
+      "margin": [
+        241,
+        235,
+        478,
+        519
+      ],
+      "source_anchor": [
+        178,
+        535
+      ],
+      "rgba_sha256": "8f889fbf53f3c7c03f9630ccb92660a6aa07ea9e44dc08eb6e764921d228a8fa",
+      "sheet": 3
+    },
+    {
+      "row": 5,
+      "direction": "SW",
+      "region": [
+        390,
+        294,
+        297,
+        251
+      ],
+      "margin": [
+        239,
+        233,
+        471,
+        517
+      ],
+      "source_anchor": [
+        535,
+        541
+      ],
+      "rgba_sha256": "2bffda70fb32d222acdad2582538afedf13a711f629dd9a60379644242e96456",
+      "sheet": 3
+    },
+    {
+      "row": 6,
+      "direction": "SW",
+      "region": [
+        727,
+        300,
+        324,
+        242
+      ],
+      "margin": [
+        220,
+        242,
+        444,
+        526
+      ],
+      "source_anchor": [
+        891,
+        538
+      ],
+      "rgba_sha256": "68ee392aad8abe549e7fc1bae4a1e5669291c4df3515521e41e06ec20e738f18",
+      "sheet": 3
+    },
+    {
+      "row": 7,
+      "direction": "SW",
+      "region": [
+        1092,
+        298,
+        296,
+        245
+      ],
+      "margin": [
+        228,
+        239,
+        472,
+        523
+      ],
+      "source_anchor": [
+        1248,
+        539
+      ],
+      "rgba_sha256": "048717e17f6b3d6aada081b66d576a37fb9d1f6203eb5d0cc1e75387784b8cab",
+      "sheet": 3
+    },
+    {
+      "row": 8,
+      "direction": "SW",
+      "region": [
+        37,
+        558,
+        313,
+        261
+      ],
+      "margin": [
+        243,
+        223,
+        455,
+        507
+      ],
+      "source_anchor": [
+        178,
+        815
+      ],
+      "rgba_sha256": "eff556c72708b5c30f3d15f383f9603fca43d36a1897c5c809e42893bfe18779",
+      "sheet": 3
+    },
+    {
+      "row": 9,
+      "direction": "SW",
+      "region": [
+        383,
+        581,
+        329,
+        236
+      ],
+      "margin": [
+        232,
+        248,
+        439,
+        532
+      ],
+      "source_anchor": [
+        535,
+        813
+      ],
+      "rgba_sha256": "0fbe839f9548fd353f3772073290dc4c70587ebd7c8570feb8ba2f4201914e16",
+      "sheet": 3
+    },
+    {
+      "row": 10,
+      "direction": "SW",
+      "region": [
+        747,
+        580,
+        313,
+        237
+      ],
+      "margin": [
+        240,
+        247,
+        455,
+        531
+      ],
+      "source_anchor": [
+        891,
+        813
+      ],
+      "rgba_sha256": "db80ea7c04ca280b622b5749fc6148b5d96e5b7f2f6a81602cc79b215f284759",
+      "sheet": 3
+    },
+    {
+      "row": 11,
+      "direction": "SW",
+      "region": [
+        1121,
+        574,
+        257,
+        242
+      ],
+      "margin": [
+        257,
+        242,
+        511,
+        526
+      ],
+      "source_anchor": [
+        1248,
+        812
+      ],
+      "rgba_sha256": "c4bec1fddd75e005027be896775987075e3efe7b2dfdc0283899014b39c9b793",
+      "sheet": 3
+    },
+    {
+      "row": 12,
+      "direction": "SW",
+      "region": [
+        48,
+        838,
+        271,
+        227
+      ],
+      "margin": [
+        254,
+        257,
+        497,
+        541
+      ],
+      "source_anchor": [
+        178,
+        1061
+      ],
+      "rgba_sha256": "df525bfab3393744a991f54cb68b7b31152c7e3a563b254a06de15b4f805cd31",
+      "sheet": 3
+    },
+    {
+      "row": 13,
+      "direction": "SW",
+      "region": [
+        378,
+        858,
+        312,
+        208
+      ],
+      "margin": [
+        227,
+        276,
+        456,
+        560
+      ],
+      "source_anchor": [
+        535,
+        1062
+      ],
+      "rgba_sha256": "4b7243cc260af7548615972b480dfde7c029583bf93b34403c6b0ab3d4c824a8",
+      "sheet": 3
+    },
+    {
+      "row": 14,
+      "direction": "SW",
+      "region": [
+        748,
+        859,
+        291,
+        206
+      ],
+      "margin": [
+        241,
+        278,
+        477,
+        562
+      ],
+      "source_anchor": [
+        891,
+        1061
+      ],
+      "rgba_sha256": "a8da868553ece48a68017773b8644302c46402c73285a4d5217d62e1cfb6d6f4",
+      "sheet": 3
+    },
+    {
+      "row": 15,
+      "direction": "SW",
+      "region": [
+        1095,
+        881,
+        289,
+        179
+      ],
+      "margin": [
+        231,
+        305,
+        479,
+        589
+      ],
+      "source_anchor": [
+        1248,
+        1056
+      ],
+      "rgba_sha256": "61550b98b5a34eb955d2a276f82f460a1fd428ce3913c69d6b44e356f8f170b3",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        31,
+        32,
+        302,
+        220
+      ],
+      "margin": [
+        236,
+        264,
+        466,
+        548
+      ],
+      "source_anchor": [
+        179,
+        248
+      ],
+      "rgba_sha256": "ce6fa583734ccbebcfd3b7afb7072bf4a1405722258be5c51950d9d704337e3c",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        387,
+        29,
+        304,
+        221
+      ],
+      "margin": [
+        233,
+        263,
+        464,
+        547
+      ],
+      "source_anchor": [
+        538,
+        246
+      ],
+      "rgba_sha256": "38eb313bd9a2d891b33899a1888881542b5ad9ab4c7a75d23fd38de682d218dd",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        742,
+        31,
+        310,
+        217
+      ],
+      "margin": [
+        230,
+        267,
+        458,
+        551
+      ],
+      "source_anchor": [
+        896,
+        244
+      ],
+      "rgba_sha256": "5e0767a764d032e69fecc5955985956fb4ba23fb5f917168034a6871b8a80e87",
+      "sheet": 4
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        1110,
+        34,
+        300,
+        215
+      ],
+      "margin": [
+        239,
+        269,
+        468,
+        553
+      ],
+      "source_anchor": [
+        1255,
+        245
+      ],
+      "rgba_sha256": "7100763db38285d5e7f5a916dfe3c2df1fea41a0d372c4bd86b9ff5287a31572",
+      "sheet": 4
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        29,
+        303,
+        302,
+        220
+      ],
+      "margin": [
+        234,
+        264,
+        466,
+        548
+      ],
+      "source_anchor": [
+        179,
+        519
+      ],
+      "rgba_sha256": "ea2b545e9d98aae153a9e828670d907f78b4bd498aa8ec741dbc830cbec6eb6d",
+      "sheet": 4
+    },
+    {
+      "row": 5,
+      "direction": "W",
+      "region": [
+        383,
+        304,
+        304,
+        220
+      ],
+      "margin": [
+        229,
+        264,
+        464,
+        548
+      ],
+      "source_anchor": [
+        538,
+        520
+      ],
+      "rgba_sha256": "411b1c936346057dcc2b7c8931d117a719b375d434c840c0b7392a31e7dd864e",
+      "sheet": 4
+    },
+    {
+      "row": 6,
+      "direction": "W",
+      "region": [
+        717,
+        303,
+        337,
+        221
+      ],
+      "margin": [
+        205,
+        263,
+        431,
+        547
+      ],
+      "source_anchor": [
+        896,
+        520
+      ],
+      "rgba_sha256": "7b4e11d77ad1388b4a72fd71e2e857d7277d4c94cefa3eb574cf898dd1839309",
+      "sheet": 4
+    },
+    {
+      "row": 7,
+      "direction": "W",
+      "region": [
+        1107,
+        304,
+        306,
+        217
+      ],
+      "margin": [
+        236,
+        267,
+        462,
+        551
+      ],
+      "source_anchor": [
+        1255,
+        517
+      ],
+      "rgba_sha256": "81cc7f9a44517dbeaf8308ff09983381ab1c260cf56254c681829f9884738730",
+      "sheet": 4
+    },
+    {
+      "row": 8,
+      "direction": "W",
+      "region": [
+        30,
+        567,
+        305,
+        220
+      ],
+      "margin": [
+        235,
+        264,
+        463,
+        548
+      ],
+      "source_anchor": [
+        179,
+        783
+      ],
+      "rgba_sha256": "33f16c828017f2e205c07c5bbe42c4f568ae6d505131972fbd34de35d04e57ac",
+      "sheet": 4
+    },
+    {
+      "row": 9,
+      "direction": "W",
+      "region": [
+        376,
+        583,
+        328,
+        199
+      ],
+      "margin": [
+        222,
+        285,
+        440,
+        569
+      ],
+      "source_anchor": [
+        538,
+        778
+      ],
+      "rgba_sha256": "6e95a4e46af3ba4cd665cea622cf3037966ba1d83af48014b0e516c2c519d2a7",
+      "sheet": 4
+    },
+    {
+      "row": 10,
+      "direction": "W",
+      "region": [
+        741,
+        570,
+        325,
+        213
+      ],
+      "margin": [
+        229,
+        271,
+        443,
+        555
+      ],
+      "source_anchor": [
+        896,
+        779
+      ],
+      "rgba_sha256": "c4601614a867159e053f4f69b0b68d50ddfd40073b08d3bca7d5574c362f6cf7",
+      "sheet": 4
+    },
+    {
+      "row": 11,
+      "direction": "W",
+      "region": [
+        1108,
+        565,
+        296,
+        219
+      ],
+      "margin": [
+        237,
+        265,
+        472,
+        549
+      ],
+      "source_anchor": [
+        1255,
+        780
+      ],
+      "rgba_sha256": "3e6cb56bf6c6e8660025fd30fc0edc62e69a0dd0e481c76352674d07308dd5eb",
+      "sheet": 4
+    },
+    {
+      "row": 12,
+      "direction": "W",
+      "region": [
+        44,
+        831,
+        284,
+        224
+      ],
+      "margin": [
+        249,
+        260,
+        484,
+        544
+      ],
+      "source_anchor": [
+        179,
+        1051
+      ],
+      "rgba_sha256": "0acdf0edd1f71818f1ffb57988d33bf329e82ab1ea73465bc8fb1c02af398aa8",
+      "sheet": 4
+    },
+    {
+      "row": 13,
+      "direction": "W",
+      "region": [
+        382,
+        853,
+        313,
+        202
+      ],
+      "margin": [
+        228,
+        282,
+        455,
+        566
+      ],
+      "source_anchor": [
+        538,
+        1051
+      ],
+      "rgba_sha256": "e06445d2e70ddc2700619dd81bbeb8736eba378db6f1ef18d8fe7cf471abceaa",
+      "sheet": 4
+    },
+    {
+      "row": 14,
+      "direction": "W",
+      "region": [
+        740,
+        856,
+        317,
+        187
+      ],
+      "margin": [
+        228,
+        297,
+        451,
+        581
+      ],
+      "source_anchor": [
+        896,
+        1039
+      ],
+      "rgba_sha256": "021456a80af1fd2e4e4967087d9fe65691d6f639e96922b3b16e8d6f2f4f1215",
+      "sheet": 4
+    },
+    {
+      "row": 15,
+      "direction": "W",
+      "region": [
+        1102,
+        872,
+        300,
+        168
+      ],
+      "margin": [
+        231,
+        316,
+        468,
+        600
+      ],
+      "source_anchor": [
+        1255,
+        1036
+      ],
+      "rgba_sha256": "4218c12e01aed552936ebb0a0021352aaf91beb5563303717f039f8c3bf5f662",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        32,
+        45,
+        287,
+        211
+      ],
+      "margin": [
+        241,
+        273,
+        481,
+        557
+      ],
+      "source_anchor": [
+        175,
+        252
+      ],
+      "rgba_sha256": "ef605040db72f098860c810e301949126941f4a5d316489b1520f7d7caa31124",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        391,
+        47,
+        271,
+        211
+      ],
+      "margin": [
+        249,
+        273,
+        497,
+        557
+      ],
+      "source_anchor": [
+        526,
+        254
+      ],
+      "rgba_sha256": "de5436fa63baed5754f404a62d73dfcd7cbaabf00d9a8fba1b881b59662757ad",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        719,
+        34,
+        272,
+        232
+      ],
+      "margin": [
+        227,
+        252,
+        496,
+        536
+      ],
+      "source_anchor": [
+        876,
+        262
+      ],
+      "rgba_sha256": "580309206eebfd99f7acd7214803e108d4d6e057693aefd6fe75b021b27dab7a",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        1067,
+        34,
+        290,
+        228
+      ],
+      "margin": [
+        224,
+        256,
+        478,
+        540
+      ],
+      "source_anchor": [
+        1227,
+        258
+      ],
+      "rgba_sha256": "39716bb29bd8ed2622188f5f3f481f940e4532540db6e62db39355b4f2e124aa",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        37,
+        310,
+        300,
+        234
+      ],
+      "margin": [
+        246,
+        250,
+        468,
+        534
+      ],
+      "source_anchor": [
+        175,
+        540
+      ],
+      "rgba_sha256": "611e4e141f4ca5afa5c006b4d9ec81f1a912c54bab51fb65beabd3c151094bdf",
+      "sheet": 5
+    },
+    {
+      "row": 5,
+      "direction": "NW",
+      "region": [
+        383,
+        302,
+        298,
+        240
+      ],
+      "margin": [
+        241,
+        244,
+        470,
+        528
+      ],
+      "source_anchor": [
+        526,
+        538
+      ],
+      "rgba_sha256": "6e32b0e43f6dd392a47271e5ff09919212f872d1284d84adfe182741ab5eb706",
+      "sheet": 5
+    },
+    {
+      "row": 6,
+      "direction": "NW",
+      "region": [
+        726,
+        303,
+        291,
+        227
+      ],
+      "margin": [
+        234,
+        257,
+        477,
+        541
+      ],
+      "source_anchor": [
+        876,
+        526
+      ],
+      "rgba_sha256": "7c06318f33c30e9421e41667c401ea13d644ac0825289682bee8947e0b5ca1c6",
+      "sheet": 5
+    },
+    {
+      "row": 7,
+      "direction": "NW",
+      "region": [
+        1078,
+        292,
+        291,
+        244
+      ],
+      "margin": [
+        235,
+        240,
+        477,
+        524
+      ],
+      "source_anchor": [
+        1227,
+        532
+      ],
+      "rgba_sha256": "6054d888a2576c59219945dd5a7dd3b61731697eef616b6be6039c1b079d524b",
+      "sheet": 5
+    },
+    {
+      "row": 8,
+      "direction": "NW",
+      "region": [
+        38,
+        576,
+        289,
+        256
+      ],
+      "margin": [
+        247,
+        228,
+        479,
+        512
+      ],
+      "source_anchor": [
+        175,
+        828
+      ],
+      "rgba_sha256": "7e9b1665adf1f13ff6abe06cf3ad968e389b4ac08a9a4a012267b722febb3ab5",
+      "sheet": 5
+    },
+    {
+      "row": 9,
+      "direction": "NW",
+      "region": [
+        383,
+        569,
+        304,
+        259
+      ],
+      "margin": [
+        241,
+        225,
+        464,
+        509
+      ],
+      "source_anchor": [
+        526,
+        824
+      ],
+      "rgba_sha256": "0bb6d4aec36627148f07031a670d427ad199b49493639e45369e41e489f72f57",
+      "sheet": 5
+    },
+    {
+      "row": 10,
+      "direction": "NW",
+      "region": [
+        732,
+        594,
+        287,
+        232
+      ],
+      "margin": [
+        240,
+        252,
+        481,
+        536
+      ],
+      "source_anchor": [
+        876,
+        822
+      ],
+      "rgba_sha256": "e55b6d6de0da49000c5a2c0cf0d5a2232886ef3b085dc65c11cb5e8bd53762bf",
+      "sheet": 5
+    },
+    {
+      "row": 11,
+      "direction": "NW",
+      "region": [
+        1077,
+        618,
+        291,
+        200
+      ],
+      "margin": [
+        234,
+        284,
+        477,
+        568
+      ],
+      "source_anchor": [
+        1227,
+        814
+      ],
+      "rgba_sha256": "e91ac8526c9eb4952269c096d129714a56dda2f3a1ede356e81a3989202c981f",
+      "sheet": 5
+    },
+    {
+      "row": 12,
+      "direction": "NW",
+      "region": [
+        41,
+        891,
+        298,
+        201
+      ],
+      "margin": [
+        250,
+        283,
+        470,
+        567
+      ],
+      "source_anchor": [
+        175,
+        1088
+      ],
+      "rgba_sha256": "621880c20cf5f607b347cc0a99ee37b8ba86a2cc01adfa979cb3d0c6c3323c6d",
+      "sheet": 5
+    },
+    {
+      "row": 13,
+      "direction": "NW",
+      "region": [
+        390,
+        892,
+        300,
+        186
+      ],
+      "margin": [
+        248,
+        298,
+        468,
+        582
+      ],
+      "source_anchor": [
+        526,
+        1074
+      ],
+      "rgba_sha256": "ad4fa7f22ab940beeba70cf130ca26f20f603d411c3a60175f8fc092534bf42c",
+      "sheet": 5
+    },
+    {
+      "row": 14,
+      "direction": "NW",
+      "region": [
+        750,
+        892,
+        270,
+        186
+      ],
+      "margin": [
+        258,
+        298,
+        498,
+        582
+      ],
+      "source_anchor": [
+        876,
+        1074
+      ],
+      "rgba_sha256": "e826150a2a0a9370be92adc592b466dd6396342cdd1e7105796c0cdffb245cc1",
+      "sheet": 5
+    },
+    {
+      "row": 15,
+      "direction": "NW",
+      "region": [
+        1086,
+        914,
+        275,
+        153
+      ],
+      "margin": [
+        243,
+        331,
+        493,
+        615
+      ],
+      "source_anchor": [
+        1227,
+        1063
+      ],
+      "rgba_sha256": "f6ce6a38d7499bfaf227bb027d8aced1ff172b99bc880642901ffe39aa8e6d2a",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        57,
+        32,
+        250,
+        196
+      ],
+      "margin": [
+        260,
+        295,
+        518,
+        572
+      ],
+      "source_anchor": [
+        181,
+        217
+      ],
+      "rgba_sha256": "9c9c7aa5c764482c3189eee678515e6abe18e1e629590513cc74fe482a55b1e3",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        421,
+        37,
+        255,
+        195
+      ],
+      "margin": [
+        262,
+        300,
+        513,
+        573
+      ],
+      "source_anchor": [
+        543,
+        217
+      ],
+      "rgba_sha256": "a62a75f857d439f6b2e974a7880de81848c0c56c5bc93233734c05a8710ff0e1",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        773,
+        33,
+        253,
+        200
+      ],
+      "margin": [
+        252,
+        286,
+        515,
+        568
+      ],
+      "source_anchor": [
+        905,
+        227
+      ],
+      "rgba_sha256": "58a08866a54e927a20029b7fbc681e37a4b1a6797126a7ddf37ba7b3fd8e1d30",
+      "sheet": 6
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1131,
+        30,
+        264,
+        202
+      ],
+      "margin": [
+        248,
+        282,
+        504,
+        566
+      ],
+      "source_anchor": [
+        1267,
+        228
+      ],
+      "rgba_sha256": "0a184b826620b6ca6ff8528e2bd8da490ab1612d0c75bcf1eb15ba5ec2bbecf9",
+      "sheet": 6
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        54,
+        287,
+        277,
+        213
+      ],
+      "margin": [
+        257,
+        271,
+        491,
+        555
+      ],
+      "source_anchor": [
+        181,
+        496
+      ],
+      "rgba_sha256": "0dfe200e130dc392e132c9ce415b37c555da2e50cb5d2524915804769960731b",
+      "sheet": 6
+    },
+    {
+      "row": 5,
+      "direction": "N",
+      "region": [
+        401,
+        285,
+        295,
+        212
+      ],
+      "margin": [
+        242,
+        272,
+        473,
+        556
+      ],
+      "source_anchor": [
+        543,
+        493
+      ],
+      "rgba_sha256": "a6d6fafb5fb9551a858e883437eccfa23cd705bd87019e33139b0e536905aa6a",
+      "sheet": 6
+    },
+    {
+      "row": 6,
+      "direction": "N",
+      "region": [
+        776,
+        284,
+        256,
+        224
+      ],
+      "margin": [
+        255,
+        268,
+        512,
+        544
+      ],
+      "source_anchor": [
+        905,
+        496
+      ],
+      "rgba_sha256": "f28bc8d2b71ee6a082c8cd0e6e739a0781f8fd4a0124ac1add0988fa2d1f68e9",
+      "sheet": 6
+    },
+    {
+      "row": 7,
+      "direction": "N",
+      "region": [
+        1119,
+        282,
+        286,
+        214
+      ],
+      "margin": [
+        236,
+        270,
+        482,
+        554
+      ],
+      "source_anchor": [
+        1267,
+        492
+      ],
+      "rgba_sha256": "d90fea178bc178e1eba9c7d811a769059e4e4996b8504a40f5fe191c31f31d30",
+      "sheet": 6
+    },
+    {
+      "row": 8,
+      "direction": "N",
+      "region": [
+        47,
+        552,
+        275,
+        229
+      ],
+      "margin": [
+        250,
+        255,
+        493,
+        539
+      ],
+      "source_anchor": [
+        181,
+        777
+      ],
+      "rgba_sha256": "544230ab3f21ee0c3fe31fadfe982b7132fa85cbc3daf645c1754b5e0c94d825",
+      "sheet": 6
+    },
+    {
+      "row": 9,
+      "direction": "N",
+      "region": [
+        413,
+        546,
+        262,
+        222
+      ],
+      "margin": [
+        254,
+        270,
+        506,
+        546
+      ],
+      "source_anchor": [
+        543,
+        756
+      ],
+      "rgba_sha256": "b56e9514a4b8f903f936e99d5658a1f5044a1809c11af13b1d984ad012fa8992",
+      "sheet": 6
+    },
+    {
+      "row": 10,
+      "direction": "N",
+      "region": [
+        742,
+        559,
+        308,
+        224
+      ],
+      "margin": [
+        221,
+        265,
+        460,
+        544
+      ],
+      "source_anchor": [
+        905,
+        774
+      ],
+      "rgba_sha256": "5b428c0d9856521489ee64983410a7b70922b4ef0f241971137837e7722c9b5d",
+      "sheet": 6
+    },
+    {
+      "row": 11,
+      "direction": "N",
+      "region": [
+        1130,
+        579,
+        269,
+        196
+      ],
+      "margin": [
+        247,
+        298,
+        499,
+        572
+      ],
+      "source_anchor": [
+        1267,
+        761
+      ],
+      "rgba_sha256": "b89029638ef0f04e1821c24666682950d7ef68d1e9943fb1a06b141a4bfcd995",
+      "sheet": 6
+    },
+    {
+      "row": 12,
+      "direction": "N",
+      "region": [
+        43,
+        844,
+        285,
+        203
+      ],
+      "margin": [
+        246,
+        281,
+        483,
+        565
+      ],
+      "source_anchor": [
+        181,
+        1043
+      ],
+      "rgba_sha256": "b468b2ba744c4059dbd01ddfa4142bf5df7646fc57fb5cb0514aab9ab28339e1",
+      "sheet": 6
+    },
+    {
+      "row": 13,
+      "direction": "N",
+      "region": [
+        410,
+        841,
+        267,
+        216
+      ],
+      "margin": [
+        251,
+        268,
+        501,
+        552
+      ],
+      "source_anchor": [
+        543,
+        1053
+      ],
+      "rgba_sha256": "a21487b839afb1770113b78cebe4f7b477c10567c03a47fe62ae789c0c3974d0",
+      "sheet": 6
+    },
+    {
+      "row": 14,
+      "direction": "N",
+      "region": [
+        771,
+        858,
+        265,
+        188
+      ],
+      "margin": [
+        250,
+        296,
+        503,
+        580
+      ],
+      "source_anchor": [
+        905,
+        1042
+      ],
+      "rgba_sha256": "dcf5092d38e6c1c7095ef4f94072581e61153c76a6baa872afc78a380839cba5",
+      "sheet": 6
+    },
+    {
+      "row": 15,
+      "direction": "N",
+      "region": [
+        1121,
+        895,
+        299,
+        157
+      ],
+      "margin": [
+        238,
+        327,
+        469,
+        611
+      ],
+      "source_anchor": [
+        1267,
+        1048
+      ],
+      "rgba_sha256": "3029ba021d01275204ac517ff011b34eb19a364d870887eeceb59fee31317e1e",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        40,
+        45,
+        278,
+        218
+      ],
+      "margin": [
+        249,
+        266,
+        490,
+        550
+      ],
+      "source_anchor": [
+        175,
+        259
+      ],
+      "rgba_sha256": "1a67e06bee0385db0ca39f282198877a82e57adaba7427cea0f715f6e31e066f",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        392,
+        42,
+        293,
+        230
+      ],
+      "margin": [
+        250,
+        254,
+        475,
+        538
+      ],
+      "source_anchor": [
+        526,
+        268
+      ],
+      "rgba_sha256": "8e7466773be196e29119ff37e2117438bf3bcc4a2292988da6ebe7b829da7be3",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        737,
+        30,
+        299,
+        242
+      ],
+      "margin": [
+        245,
+        242,
+        469,
+        526
+      ],
+      "source_anchor": [
+        876,
+        268
+      ],
+      "rgba_sha256": "39939c04db5f49f2816b45bcb4a8ce1872f4ca4d9ac43aa66d3907b4f8d6a691",
+      "sheet": 7
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1092,
+        39,
+        292,
+        233
+      ],
+      "margin": [
+        249,
+        251,
+        476,
+        535
+      ],
+      "source_anchor": [
+        1227,
+        268
+      ],
+      "rgba_sha256": "37f77638335b35a3c35a9943bfa0a70f058130317a9dd3bde5f25fece46c8a40",
+      "sheet": 7
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        33,
+        309,
+        304,
+        230
+      ],
+      "margin": [
+        242,
+        254,
+        464,
+        538
+      ],
+      "source_anchor": [
+        175,
+        535
+      ],
+      "rgba_sha256": "c852f3bf01f60280d8b56d60e97362b17da3c10c9dcfca8db0112c8ffe8086ce",
+      "sheet": 7
+    },
+    {
+      "row": 5,
+      "direction": "NE",
+      "region": [
+        387,
+        313,
+        312,
+        218
+      ],
+      "margin": [
+        245,
+        266,
+        456,
+        550
+      ],
+      "source_anchor": [
+        526,
+        527
+      ],
+      "rgba_sha256": "12c8fd1d5613327534215cb0f574ef954b9165347fc3d8e6f12d2973251bb1ab",
+      "sheet": 7
+    },
+    {
+      "row": 6,
+      "direction": "NE",
+      "region": [
+        736,
+        304,
+        312,
+        234
+      ],
+      "margin": [
+        244,
+        250,
+        456,
+        534
+      ],
+      "source_anchor": [
+        876,
+        534
+      ],
+      "rgba_sha256": "8cc5f24b376844430688e3b9e3e5f6d29ba35689d6f34d04be40f731b0b3bcdf",
+      "sheet": 7
+    },
+    {
+      "row": 7,
+      "direction": "NE",
+      "region": [
+        1087,
+        312,
+        290,
+        226
+      ],
+      "margin": [
+        244,
+        258,
+        478,
+        542
+      ],
+      "source_anchor": [
+        1227,
+        534
+      ],
+      "rgba_sha256": "e3efc565783f698f08aa3f75b1ff4c62357991d82a3c152e2af22bde70606368",
+      "sheet": 7
+    },
+    {
+      "row": 8,
+      "direction": "NE",
+      "region": [
+        44,
+        576,
+        294,
+        241
+      ],
+      "margin": [
+        253,
+        243,
+        474,
+        527
+      ],
+      "source_anchor": [
+        175,
+        813
+      ],
+      "rgba_sha256": "b429e8b1b9ca3d3efa2f6415b97159601412e7e5d97ca866b21d1ebc40afa40c",
+      "sheet": 7
+    },
+    {
+      "row": 9,
+      "direction": "NE",
+      "region": [
+        387,
+        588,
+        319,
+        210
+      ],
+      "margin": [
+        245,
+        274,
+        449,
+        558
+      ],
+      "source_anchor": [
+        526,
+        794
+      ],
+      "rgba_sha256": "ff5a2d9c7c43e523a7a974fdeac7b2f9749c16b08ee96b894245b45b8d630727",
+      "sheet": 7
+    },
+    {
+      "row": 10,
+      "direction": "NE",
+      "region": [
+        722,
+        572,
+        324,
+        245
+      ],
+      "margin": [
+        230,
+        239,
+        444,
+        523
+      ],
+      "source_anchor": [
+        876,
+        813
+      ],
+      "rgba_sha256": "36806bee1b01879a292c46718db2e5bdcb31688e1d8849f90ae12c2f6716d53d",
+      "sheet": 7
+    },
+    {
+      "row": 11,
+      "direction": "NE",
+      "region": [
+        1103,
+        595,
+        278,
+        210
+      ],
+      "margin": [
+        260,
+        274,
+        490,
+        558
+      ],
+      "source_anchor": [
+        1227,
+        801
+      ],
+      "rgba_sha256": "f1fd62ac13a9ccfa566fed873ca6cd624519700b5562c51719112db7c073d869",
+      "sheet": 7
+    },
+    {
+      "row": 12,
+      "direction": "NE",
+      "region": [
+        47,
+        857,
+        280,
+        237
+      ],
+      "margin": [
+        256,
+        247,
+        488,
+        531
+      ],
+      "source_anchor": [
+        175,
+        1090
+      ],
+      "rgba_sha256": "fd361fc285b50672194f52585a03462a391c5857f2c6fe226f5b841e161830cf",
+      "sheet": 7
+    },
+    {
+      "row": 13,
+      "direction": "NE",
+      "region": [
+        391,
+        877,
+        286,
+        204
+      ],
+      "margin": [
+        249,
+        280,
+        482,
+        564
+      ],
+      "source_anchor": [
+        526,
+        1077
+      ],
+      "rgba_sha256": "551136b1f7578f73e2d84b2a6c2b254869997b9eb85672604f0c7e9b8c1e23f8",
+      "sheet": 7
+    },
+    {
+      "row": 14,
+      "direction": "NE",
+      "region": [
+        746,
+        860,
+        275,
+        226
+      ],
+      "margin": [
+        254,
+        258,
+        493,
+        542
+      ],
+      "source_anchor": [
+        876,
+        1082
+      ],
+      "rgba_sha256": "c0aa024fa64073f0f0e597858e38f4eddc234eccfef5fe6a0045b64bf97903f7",
+      "sheet": 7
+    },
+    {
+      "row": 15,
+      "direction": "NE",
+      "region": [
+        1085,
+        924,
+        282,
+        146
+      ],
+      "margin": [
+        242,
+        338,
+        486,
+        622
+      ],
+      "source_anchor": [
+        1227,
+        1066
+      ],
+      "rgba_sha256": "a5f78c245218e7432d035cf08c1f17eb2477d835def52589fe230fd6cf5e4df0",
+      "sheet": 7
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "sha256": "99a87e4df41f6e8c40aa6a7fa69064c93e751a8f9b51fe6823f87754ab32be7b",
+          "size": [
+            1424,
+            1105
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "sha256": "a220e400d04f966d88e19d59957608d2bf04e5b2c5a8e4ae3f987615d0484f88",
+          "size": [
+            1444,
+            1089
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "sha256": "d5dbbc1035aaf931499d71f2917baea56c6f63f0f8b2b2040066346e3e877a3b",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "sha256": "d65509a553fc191e648eb5b9074535428ecb0513e4d48930b6dd26148b10f009",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "sha256": "157d36d574017d8dd2c664ffe9c092e1e2d2c9c209e079975d13b256c8c0db45",
+          "size": [
+            1434,
+            1097
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "sha256": "b380f2a5f9e40161fc614413307a7bb39fbe51832705c1e291d19518885dc5aa",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "sha256": "1a43090876d3fa00bdaa336c1e349d252666c1255ae2f70a28adc354150da481",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "sha256": "af1b1823506f941a0c1840919eca58ad45d3c671e24b8daa9bb245e77f7979f2",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "sha256": "99a87e4df41f6e8c40aa6a7fa69064c93e751a8f9b51fe6823f87754ab32be7b",
+          "size": [
+            1424,
+            1105
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "sha256": "a220e400d04f966d88e19d59957608d2bf04e5b2c5a8e4ae3f987615d0484f88",
+          "size": [
+            1444,
+            1089
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "sha256": "d5dbbc1035aaf931499d71f2917baea56c6f63f0f8b2b2040066346e3e877a3b",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "sha256": "d65509a553fc191e648eb5b9074535428ecb0513e4d48930b6dd26148b10f009",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "sha256": "157d36d574017d8dd2c664ffe9c092e1e2d2c9c209e079975d13b256c8c0db45",
+          "size": [
+            1434,
+            1097
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "sha256": "b380f2a5f9e40161fc614413307a7bb39fbe51832705c1e291d19518885dc5aa",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "sha256": "1a43090876d3fa00bdaa336c1e349d252666c1255ae2f70a28adc354150da481",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "sha256": "af1b1823506f941a0c1840919eca58ad45d3c671e24b8daa9bb245e77f7979f2",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "source_frames_per_direction": 6,
+      "unique_frames_per_direction": 6,
+      "direction_unique_frames": {
+        "E": 6,
+        "SE": 6,
+        "S": 6,
+        "SW": 6,
+        "W": 6,
+        "NW": 6,
+        "N": 6,
+        "NE": 6
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "sha256": "99a87e4df41f6e8c40aa6a7fa69064c93e751a8f9b51fe6823f87754ab32be7b",
+          "size": [
+            1424,
+            1105
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "sha256": "a220e400d04f966d88e19d59957608d2bf04e5b2c5a8e4ae3f987615d0484f88",
+          "size": [
+            1444,
+            1089
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "sha256": "d5dbbc1035aaf931499d71f2917baea56c6f63f0f8b2b2040066346e3e877a3b",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "sha256": "d65509a553fc191e648eb5b9074535428ecb0513e4d48930b6dd26148b10f009",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "sha256": "157d36d574017d8dd2c664ffe9c092e1e2d2c9c209e079975d13b256c8c0db45",
+          "size": [
+            1434,
+            1097
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "sha256": "b380f2a5f9e40161fc614413307a7bb39fbe51832705c1e291d19518885dc5aa",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "sha256": "1a43090876d3fa00bdaa336c1e349d252666c1255ae2f70a28adc354150da481",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "sha256": "af1b1823506f941a0c1840919eca58ad45d3c671e24b8daa9bb245e77f7979f2",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "sha256": "99a87e4df41f6e8c40aa6a7fa69064c93e751a8f9b51fe6823f87754ab32be7b",
+          "size": [
+            1424,
+            1105
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "sha256": "a220e400d04f966d88e19d59957608d2bf04e5b2c5a8e4ae3f987615d0484f88",
+          "size": [
+            1444,
+            1089
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "sha256": "d5dbbc1035aaf931499d71f2917baea56c6f63f0f8b2b2040066346e3e877a3b",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "sha256": "d65509a553fc191e648eb5b9074535428ecb0513e4d48930b6dd26148b10f009",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "sha256": "157d36d574017d8dd2c664ffe9c092e1e2d2c9c209e079975d13b256c8c0db45",
+          "size": [
+            1434,
+            1097
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "sha256": "b380f2a5f9e40161fc614413307a7bb39fbe51832705c1e291d19518885dc5aa",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "sha256": "1a43090876d3fa00bdaa336c1e349d252666c1255ae2f70a28adc354150da481",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "sha256": "af1b1823506f941a0c1840919eca58ad45d3c671e24b8daa9bb245e77f7979f2",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "sha256": "99a87e4df41f6e8c40aa6a7fa69064c93e751a8f9b51fe6823f87754ab32be7b",
+          "size": [
+            1424,
+            1105
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "sha256": "a220e400d04f966d88e19d59957608d2bf04e5b2c5a8e4ae3f987615d0484f88",
+          "size": [
+            1444,
+            1089
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "sha256": "d5dbbc1035aaf931499d71f2917baea56c6f63f0f8b2b2040066346e3e877a3b",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "sha256": "d65509a553fc191e648eb5b9074535428ecb0513e4d48930b6dd26148b10f009",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "sha256": "157d36d574017d8dd2c664ffe9c092e1e2d2c9c209e079975d13b256c8c0db45",
+          "size": [
+            1434,
+            1097
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "sha256": "b380f2a5f9e40161fc614413307a7bb39fbe51832705c1e291d19518885dc5aa",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "sha256": "1a43090876d3fa00bdaa336c1e349d252666c1255ae2f70a28adc354150da481",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "sha256": "af1b1823506f941a0c1840919eca58ad45d3c671e24b8daa9bb245e77f7979f2",
+          "size": [
+            1402,
+            1122
+          ],
+          "canvas_size": [
+            768,
+            768
+          ],
+          "foot": [
+            384,
+            480
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One identical768 virtual canvas across all8 complete16-pose sources; no per-direction bbox height normalization or per-frame scale changes. Pixel body proportions are retained."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 90.33333333333333,
+  "actual_Main": "NOT_RUN",
+  "completed_added": 0,
+  "independent_target_visual_review": "PENDING",
+  "source_visual_review_preserved": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "All eight raw views reviewed: connected eight-leg roots and mouth appendages, original purple-brown hairy abdomen, genuine front/back eye occlusion, distinct crawl/strike/recoil/collapse. Whole-source ownership/count/uniqueness guard unchanged. Actual Main ground/cadence/scale approval pending."
+  },
+  "retargeting": {
+    "source_id": "monster:스파이더",
+    "source_SpriteFrames": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/SpriteFrames.tres",
+    "source_SpriteFrames_SHA256": "bc77ecee64a8dea81e4691213724c786e0dfe93bec3def0fdf9757f2e269f6bd",
+    "source_provenance_SHA256": "0be0985b29bb19a9be0b9cb80c09afbf14c285fc8040dbca134be594726ba09b",
+    "shared_texture_files": [
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-0.png",
+        "SHA256": "99a87e4df41f6e8c40aa6a7fa69064c93e751a8f9b51fe6823f87754ab32be7b"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-1.png",
+        "SHA256": "a220e400d04f966d88e19d59957608d2bf04e5b2c5a8e4ae3f987615d0484f88"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-2.png",
+        "SHA256": "d5dbbc1035aaf931499d71f2917baea56c6f63f0f8b2b2040066346e3e877a3b"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-3.png",
+        "SHA256": "d65509a553fc191e648eb5b9074535428ecb0513e4d48930b6dd26148b10f009"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-4.png",
+        "SHA256": "157d36d574017d8dd2c664ffe9c092e1e2d2c9c209e079975d13b256c8c0db45"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-5.png",
+        "SHA256": "b380f2a5f9e40161fc614413307a7bb39fbe51832705c1e291d19518885dc5aa"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-6.png",
+        "SHA256": "1a43090876d3fa00bdaa336c1e349d252666c1255ae2f70a28adc354150da481"
+      },
+      {
+        "path": "assets/actors/eight_direction/original_based/spider_project_batch16_authored/poses-7.png",
+        "SHA256": "af1b1823506f941a0c1840919eca58ad45d3c671e24b8daa9bb245e77f7979f2"
+      }
+    ],
+    "new_PNG_files": 0,
+    "new_native_poses": 0,
+    "original_native_poses_preserved": 128,
+    "source_presentation": {
+      "visual": {
+        "atlas": 1,
+        "cell": 0,
+        "body": "spider",
+        "variant": 3,
+        "width": 1.076,
+        "weapon": "claws",
+        "crest": 4,
+        "accent": "8daa7b"
+      },
+      "animation_profile": {
+        "motion_style": "crawl",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 78
+    },
+    "width_ratio": 0.8550185873605948,
+    "height_ratio": 1.0,
+    "tint_multipliers": [
+      1.0072141176470588,
+      0.9979,
+      0.9728235294117648
+    ],
+    "target_profile": {
+      "prior_visual_profile": {
+        "name": "검은숲 거미",
+        "layout": "still",
+        "motion_style": "crawl",
+        "floating": false
+      },
+      "name": "검은숲 거미",
+      "frames_path": "res://assets/actors/eight_direction/original_based/dark_forest_spider_batch16_project/SpriteFrames.tres",
+      "layout": "directional8",
+      "pixel_scale": 0.863469,
+      "color_tint": [
+        1.0072141176470588,
+        0.9979,
+        0.9728235294117648,
+        1.0
+      ],
+      "sprite_offset": [
+        0.0,
+        -27.631008
+      ],
+      "embedded_shadow": false,
+      "authored_motion_weight": 0,
+      "hit_recoil": 0,
+      "action_hit_frames": {
+        "attack": 1
+      },
+      "attack_hit_frame": 1,
+      "death_duration": 0.65,
+      "movement_fps": 12.5,
+      "authoring_reference": "res://assets/monsters/original/atlas_1.png",
+      "native_width_ratio": 0.8550185873605948
+    },
+    "source_actors_changed": false,
+    "transform_global_scale_changed": false,
+    "stats_speed_collision_AI_hitmarker_changed": false
+  }
+}

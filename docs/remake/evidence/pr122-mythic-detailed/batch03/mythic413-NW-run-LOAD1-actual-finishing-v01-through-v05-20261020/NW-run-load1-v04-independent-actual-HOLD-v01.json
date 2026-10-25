@@ -1,0 +1,60 @@
+{
+  "schema": "independent-private-actual-NW-run-load1-v04-gate-v1",
+  "status": "HOLD_VISIBLE_ANKLE_GAPS_AND_UV_ENDPOINT_EXTRUSION",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v04/thunder_female-NW-run-load1-actual-rig-v04.png",
+    "sha256": "abdf295f681b5fd15849988bc13b730fd4367bc28763037803a262116c3f0cde",
+    "bytes": 800743
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "raw_canvas": [
+    1536,
+    1536
+  ],
+  "closed_improvements": [
+    "Clean direct-source shoe modules retain more of the original stiletto design.",
+    "RIGHT recovery remains raised; wholebody/gear/costume retained."
+  ],
+  "remaining_visible_findings": [
+    {
+      "area": "LEFT tarsal-to-shoe",
+      "finding": "Large missing material wedge between calf/ankle and complete rigid shoe counter; final joint not finished."
+    },
+    {
+      "area": "RIGHT ankle/shoe",
+      "finding": "Collar notch and a separate black flat-ended bar extending beyond the real gold structural stiletto heel."
+    },
+    {
+      "area": "Underhem",
+      "finding": "Pointed dark old-material remnant still ends without coherent folded-chain connection."
+    }
+  ],
+  "anatomical_shoe_clarification": {
+    "native_reference_viewed": {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/actual-native-shoe-clean-matte-reference-private-04.jpg",
+      "sha256": "3dc8feb9ba78462ff4854ee9da1de0d1933852e7fee026f98cb706f8e24cd877",
+      "bytes": 48025
+    },
+    "finding": "The original RIGHT gold stiletto heel is valid and must remain. Current separate black flat bar beyond that gold heel is not the same native structural piece."
+  },
+  "concrete_renderer_diagnostic": {
+    "function": "curved_material; v02 recipe lines43\u201346; author asked to check reuse in v04",
+    "mechanism": "Longitudinal projection clamps to segment endpoints, so pixels beyond spline ends sample the same opaque endpoint row. Only best-distance<=100px limits the result; this can extrude flat bars/wedges.",
+    "minimum_fix": "Bound first/last longitudinal mesh domain with intentional small joint overlap and genuine retouch, retain clean true-shoe silhouette, finish shaft/tarsal continuity and coherent underhem occlusion. Do not change body/C/clock/root."
+  },
+  "scope": "Actual final art judged, not automatic rejection of layer rigging. Same source finishing gate as v03. Relative plant clock remains separate from unverified physicalbodyground/staff/fixed3D-bone proof.",
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-load1-v04-frozen.json",
+    "sha256": "faedffb7de0eb07207934beb307b600115b89e85f7e05d893b56e5467afdf68a",
+    "bytes": 9402
+  },
+  "actual_source_phase_approved": false,
+  "physical_planting_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

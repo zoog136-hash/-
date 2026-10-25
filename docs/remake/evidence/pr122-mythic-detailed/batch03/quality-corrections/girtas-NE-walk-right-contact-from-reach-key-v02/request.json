@@ -1,0 +1,37 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "NE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v02",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "one_material_new_forward_RIGHT_heel_contact_after_independent_seam_HOLD",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phases": [
+    3
+  ],
+  "references": [
+    "/workspace/scratch/girtas-NE-walk-right-contact-from-reach-key-v02/correct-NE-RIGHT-reach2-lossless.png",
+    "/workspace/scratch/girtas-NE-walk-right-contact-from-reach-key-v02/RIGHT-forward-heel-contact3-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-walk-right-contact-from-reach-key-v02/correct-NE-RIGHT-reach2-lossless.png": "6f12d36d75ded681937f27a62815254fbbe78cc24a3cf426aa133bd61312f4d0",
+    "/workspace/scratch/girtas-NE-walk-right-contact-from-reach-key-v02/RIGHT-forward-heel-contact3-guide.png": "4e8f612e1de65c0cdaf23718f74a11abb96fda7d717679c9f79ce643c738cf2f"
+  },
+  "transparent_background": true,
+  "corrective_reason": "IndependentmovementQCconfirmed old2→3 actualsource knee/shin/heel retracts underhip instead of landingcontinuation; root authorized ONLY newcontact3 from faithful exactRIGHTreach2. Existing0/1/2/4/5 andold3/HOLD immutable, no root-fix disguise/no full6 regeneration.",
+  "prompt": "Edit FIRST correct GIRTAS NE RIGHT-FORWARD-REACH WALK2 into exactly ONE NEW GAME3 RIGHT HEEL-CONTACT key. SECOND image is ONLY a low-ankle/heel target guide. FIRST image is authoritative for the already-correct NE camera, two hips/knees/shins, leading RIGHT leg and trailing LEFT leg, all identity/equipment. This is a SMALL actual HEEL/WEIGHT change on the same forward-reaching RIGHT leg, NOT a leg swap, not a neutral standing redraw, not a two/six-pose sheet.\n\nCRITICAL ACTUAL NEW MOTION: KEEP anatomical RIGHT NEAR leg at IMAGE RIGHT already extended FORWARD/AWAY UP-RIGHT exactly as FIRST. Do not retract RIGHT knee/shin/ankle/boot under the hip. Keep its reaching horizontal extent. Lower and settle the RIGHT HEEL into a visible, real arriving heel-contact; the knee softens slightly accepting weight, ankle articulates so heel bears weight, forefoot/toes still a little raised at initial contact. The new RIGHT heel/ankle must be visibly lower/more settled than FIRST, while preserving the same forward hip-knee-shin chain. Do NOT return to old vertical under-hip RIGHT flat stance; that exact discontinuous pose is HOLD. Do NOT keep the unchanged floating precontact foot, must create actual heel landing geometry/load.\n\nAnatomical LEFT FAR leg at IMAGE LEFT stays TRAILING from its same farLEFT hip: LEFTheel raised and LEFTtoe briefly planted behind, a normal double-support WALK transition. Do not move LEFT forward, swap legs, transfer weight exclusively LEFT again, or draw running flight. Exactly two connected hip→knee→shin→ankle→boot chains. Body advances slightly NE onto arrivingRIGHT heel; head/shoulder/pelvis/robe proportions remain FIRST, no large torso/body translation, high-knee RUN, bounce, jump or lunge. Projected near/far and fore/aft contact depths are oblique NE, not one arbitrary horizontal floor line; no floor visible in final.\n\nEXACT SAME true NE rear-RIGHT3/4 camera: mostlyBACK and longPALE/SILVERhair, prominent nearRIGHT shoulder and RIGHTweaponarm at IMAGE RIGHT, foreshortened farLEFT shoulder/EMPTYhand at IMAGE LEFT, oblique hips/boots. No pureN symmetric back, frontface or pureEside. Original horned GOLD crown, thin HARD gold radial spines, black/gold armor and LONG DARK goldtrim robe; part original robe folds only enough to read knees/ankles, no pants/shortskirt/newgear. ONE original LONG SINUOUS orangegold weapon continuously in NEAR RIGHT HAND at IMAGE RIGHT, EMPTY FAR LEFT, exactly2arms. Preserve full long blade/hardspines/robe/boots/hair; no redVmask/flamefeatherfan/wings/broadsword/extraarm/gear shortening.\n\nOne complete high-detail figure on true transparent requested1024squareRGBA. Same physical anatomy and art materials as FIRST. Body500–600px, wholegear≤800px; ≥96px clearalpha0 outermargin, no clipping. Hard opaque blade internalshine, no outwardglow/haze/shadow/aura/floor/particles/blur/afterimage/text/labels/grid/pads/arrows/coloredguides. Final actual check: RIGHT NEAR knee/shin/boot still LEADING FORWARD exactly like FIRST but RIGHT HEEL now landed/load accepted; LEFT FAR remains trailing HEELUP/TOEDOWN. No other animation keys remade.",
+  "source_reference_crop_proof": "/workspace/scratch/girtas-NE-walk-right-contact-from-reach-key-v02/reference-crop-proof.json",
+  "source_reference_crop_proof_sha256": "dc0eb6870617ac9681d4ee1b727be67a2138cf2af04f43fb1ebf48b771ad2c74",
+  "user_authorization": "Private production imagegen allowed, no mainchat images; existingPR122 Unique actualanimation production. Root explicitly authorized material single3 after independent seamHOLD.",
+  "root_authorization": "2026-10-19 root confirmed ONE NEW RIGHTcontact3 by lowering leading reachingRIGHT boot/heel from faithful exactRIGHTreach2, alljoint/robe/weapon/camera kept.",
+  "independent_seam_HOLD": "/root/girtas_movement_source_runtime_qc independently confirmed source2→3 retracts forwardnearRIGHT knee/shin/heel into verticalunderhipstance; pinnedJSONpendingpath before genreceipt.",
+  "created_at": "2026-10-19T15:11:39.929604+00:00",
+  "newly_authored_pose_target": 1,
+  "reused_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false,
+  "call_budget": "ONE_material_newcontact3 only; no identicalfailedretry."
+}
