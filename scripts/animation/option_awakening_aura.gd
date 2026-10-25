@@ -115,16 +115,28 @@ func _draw() -> void:
 	var tint: Color = UI.grade(grade)
 	var motion: float = 0.0 if reduced_motion else clock
 	var strength: float = intensity * (0.75 if reduced_motion else 0.82 + sin(motion * 1.7) * 0.12)
-	var contour: PackedVector2Array = _ellipse(radii, 0)
-	if not low_detail:
-		draw_polyline(contour, Color(tint, 0.025 * strength), 10.0, true)
-	draw_polyline(contour, Color(tint, 0.10 * strength), 3.2, true)
-	draw_polyline(_ellipse(radii, motion * 0.65, PI * 1.1), Color(tint, 0.48 * strength), 1.1, true)
+	# Broken edge ribbons leave the face and weapon readable. A closed body
+	# ellipse reads as a selection/target marker at gameplay scale.
 	if category == "성물":
-		draw_polyline(_ellipse(radii * Vector2(1.1, 0.40), -motion * 0.55), Color(tint, 0.30 * strength), 1.0, true)
+		for side: int in range(2):
+			var arc := _ellipse(radii * Vector2(1.05, 0.38), motion * 0.45 + side * PI, PI * 0.65)
+			draw_polyline(arc, Color(tint, 0.38 * strength), 1.0, true)
 	else:
-		# A small second arc wraps the body; it is never a launched projectile.
-		draw_polyline(_ellipse(radii * Vector2(0.84, 0.96), PI - motion * 0.42, PI * 0.72), Color(tint, 0.29 * strength), 0.9, true)
+		# Ground cue is local to this presentation node: never move actor feet.
+		var ground := PackedVector2Array()
+		for index: int in range(25):
+			var angle: float = PI * float(index) / 24.0
+			ground.append(Vector2(cos(angle) * radii.x * 0.78, sin(angle) * 5.0 - 2.0))
+		draw_polyline(ground, Color(tint, 0.26 * strength), 1.0, true)
+		for side: int in [-1, 1]:
+			var edge := PackedVector2Array()
+			for index: int in range(13):
+				var rise: float = float(index) / 12.0
+				var sway: float = sin(rise * PI * 1.4 + motion * 1.3 + side) * 0.10
+				edge.append(center + Vector2(side * radii.x * (0.78 - rise * 0.22 + sway), radii.y * (0.8 - rise * 1.45)))
+			if not low_detail:
+				draw_polyline(edge, Color(tint, 0.045 * strength), 4.0, true)
+			draw_polyline(edge, Color(tint, 0.27 * strength), 1.0, true)
 	if reduced_motion:
 		return
 	var count: int = LOW_MOTES if low_detail else MAX_MOTES

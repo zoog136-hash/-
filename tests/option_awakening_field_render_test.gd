@@ -9,6 +9,7 @@ var checks: int = 0
 var failures: Array[String] = []
 var captures: Array[Dictionary] = []
 var capture_dir: String = ""
+var frame_metrics: Dictionary = {}
 
 func _initialize() -> void:
 	for argument: String in OS.get_cmdline_user_args():
@@ -55,6 +56,16 @@ func _check_anchors(label: String) -> void:
 func _capture(filename: String) -> void:
 	if capture_dir.is_empty() or DisplayServer.get_name() == "headless": return
 	DirAccess.make_dir_recursive_absolute(capture_dir)
+	for category: String in world.option_awakening_auras:
+		var aura: Node2D = world.option_awakening_auras[category]
+		if OS.get_environment("TWILIGHT_AURA_BASELINE") == "1" and not aura.has_meta("baseline"):
+			var active: bool = aura.awakened
+			var grade_name: String = aura.grade
+			aura.set_script(load("res://tests/_baseline_aura.gd"))
+			aura.configure(_sprite(category), category, grade_name, active)
+			aura.set_meta("baseline", true)
+		aura.clock = 1.25
+		aura.queue_redraw()
 	for frame: int in range(3): await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
@@ -67,6 +78,16 @@ func _capture(filename: String) -> void:
 		if is_instance_valid(aura):
 			attachments.append({"category":category, "visible":aura.visible, "foot":str(aura.global_position), "art_center":str(aura.to_global(aura.get("center"))), "radii":str(aura.get("radii"))})
 	captures.append({"path":path, "width":image.get_width(), "height":image.get_height(), "auras":attachments})
+	if filename == "field_all_awakened.png":
+		var samples: Array[float] = []
+		for frame: int in range(120):
+			var before := Time.get_ticks_usec()
+			await process_frame
+			await RenderingServer.frame_post_draw
+			samples.append((Time.get_ticks_usec() - before) / 1000.0)
+		samples.sort()
+		frame_metrics = {"frames":120, "effect_nodes":world.option_awakening_auras.size(), "median_frame_ms":samples[60], "p95_frame_ms":samples[114], "android":"NOT_RUN"}
+
 
 func _capture_committed_result() -> void:
 	var category: String = SAMPLES[0][0]
@@ -100,6 +121,7 @@ func _capture_committed_result() -> void:
 	world.hud._close_workspace()
 
 func _run() -> void:
+	seed(152)
 	root.size = Vector2i(1280, 720)
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
@@ -189,7 +211,7 @@ func _finish() -> void:
 		DirAccess.make_dir_recursive_absolute(capture_dir)
 		var report: FileAccess = FileAccess.open(capture_dir.path_join("field-results.json"), FileAccess.WRITE)
 		if report != null:
-			report.store_string(JSON.stringify({"checks":checks, "failures":failures, "renderer":RenderingServer.get_video_adapter_name(), "method":RenderingServer.get_current_rendering_method(), "captures":captures}, "\t"))
+			report.store_string(JSON.stringify({"checks":checks, "failures":failures, "frame_metrics":frame_metrics, "renderer":RenderingServer.get_video_adapter_name(), "method":RenderingServer.get_current_rendering_method(), "captures":captures}, "\t"))
 			report.close()
 	if is_instance_valid(world): world.queue_free()
 	await process_frame

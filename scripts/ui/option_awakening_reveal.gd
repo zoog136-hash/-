@@ -325,14 +325,22 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 
 func _draw_seal(motion: float, tint: Color, strength: float) -> void:
-	var orbit: float = motion * 0.16
+	# The seal gathers into the card, then settles instead of keeping a
+	# bright mechanical wheel behind the result text. Authored visual timing.
+	var gather: float = smoothstep(0.0, reveal_time(), clock)
+	var settle: float = smoothstep(reveal_time(), SETTLE_AT, clock)
+	var orbit: float = motion * 0.16 * (1.0 - settle)
+	var seal_scale: float = lerpf(1.06, 0.97, gather)
+	strength *= lerpf(1.0, 0.38, settle)
 	for radius: float in [175.0, 192.0, 199.0]:
-		draw_arc(center, radius, 0, TAU, 48 if low_detail else 96, Color(tint, strength * (0.55 if radius == 192.0 else 0.28)), 1.1, true)
+		for quarter: int in range(4):
+			var start: float = float(quarter) * PI * 0.5 + orbit
+			draw_arc(center, radius * seal_scale, start + 0.08, start + PI * 0.5 - 0.08, 12 if low_detail else 24, Color(tint, strength * (0.55 if radius == 192.0 else 0.28)), 1.1, true)
 	for index: int in range(24):
 		var angle: float = float(index) * TAU / 24.0 + orbit
 		var direction := Vector2.from_angle(angle)
 		var tangent := direction.orthogonal()
-		var point: Vector2 = center + direction * 184.0
+		var point: Vector2 = center + direction * 184.0 * seal_scale
 		_stroke(point - direction * 4, point + direction * 4, tint, strength * 0.75)
 		if index % 2 == 0:
 			_stroke(point - tangent * 3, point + tangent * 3 + direction * 3, tint, strength * 0.65)
@@ -340,7 +348,7 @@ func _draw_seal(motion: float, tint: Color, strength: float) -> void:
 			_stroke(point + direction * 3, point + direction * 6 + tangent * 3, tint, strength * 0.65)
 
 func _draw_rays(age: float, flash: float) -> void:
-	var amount: float = (0.08 + exp(-age * 1.8) * 0.33) * intensity
+	var amount: float = (exp(-age * 1.8) * 0.41) * intensity
 	var count: int = 8 if low_detail else 16
 	if reduced_motion:
 		count = 6
