@@ -2,6 +2,7 @@ extends RefCounted
 class_name TwilightSkillVFXLibrary
 
 ## Bounded, pinned atlas cache. Visual admission never gates a combat event.
+const ELECTRIC = preload("res://scripts/skills/lightning_vfx_art.gd")
 const PATH := "res://data/skills/authored_vfx.json"
 const MAX_ATLASES := 8
 const MAX_RGBA_BYTES := 48 * 1024 * 1024
@@ -32,7 +33,8 @@ func acquire(id: String) -> Dictionary:
 	if path.is_empty(): return {}
 	clock += 1
 	if not entries.has(path):
-		var cost := int(profile.get("atlas_rgba_bytes", 6 * 1024 * 1024))
+		var electric_cost: int = ELECTRIC.RGBA_BYTES if ELECTRIC.supports(profile) else 0
+		var cost := int(profile.get("atlas_rgba_bytes", 6 * 1024 * 1024)) + electric_cost
 		if cost > MAX_RGBA_BYTES: return {}
 		while entries.size() >= MAX_ATLASES or resident_rgba_bytes() + cost > MAX_RGBA_BYTES:
 			var victim := ""
@@ -64,10 +66,12 @@ func acquire(id: String) -> Dictionary:
 				texture.region = Rect2(((first + index) % columns) * cell, floori(float(first + index) / float(columns)) * cell, cell, cell)
 				texture.filter_clip = true
 				frames.add_frame(phase, texture, float(clip.durations_ms[index]))
-		entries[path] = {"frames":frames, "users":0, "stamp":clock, "rgba_bytes":atlas.get_width() * atlas.get_height() * 4}
+		var electric_frames: SpriteFrames = ELECTRIC.make_frames(profile) if electric_cost > 0 else null
+		if electric_cost > 0 and electric_frames == null: return {}
+		entries[path] = {"frames":frames, "electric_frames":electric_frames, "users":0, "stamp":clock, "rgba_bytes":atlas.get_width() * atlas.get_height() * 4 + electric_cost}
 	entries[path].users += 1
 	entries[path].stamp = clock
-	return {"frames":entries[path].frames, "key":path, "profile":profile}
+	return {"frames":entries[path].frames, "key":path, "profile":profile, "electric_frames":entries[path].get("electric_frames")}
 
 func release(key: String) -> void:
 	if entries.has(key): entries[key].users = maxi(0, int(entries[key].users) - 1)

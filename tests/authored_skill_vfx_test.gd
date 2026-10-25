@@ -1,6 +1,7 @@
 extends SceneTree
 
 const VFX = preload("res://scripts/skills/skill_vfx.gd")
+const ELECTRIC = preload("res://scripts/skills/lightning_vfx_art.gd")
 const LIBRARY = preload("res://scripts/skills/skill_vfx_library.gd")
 const FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
 var failures: Array[String] = []
@@ -119,7 +120,7 @@ func run() -> void:
 	vfx.set_detail("full")
 	vfx.emit_skill("lm_dcb006041216f9c6", "impact", Vector2(300, 100), Vector2.INF, {"ground_point":Vector2(300, 154)})
 	var lightning_body := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
-	check((lightning_body.global_position + Vector2(0, 42)).distance_to(Vector2(300, 154)) < .01, "lightning feet use actual actor ground independent of hit height")
+	check(_strike_tip(lightning_body).distance_to(Vector2(300,154)) < .01, "painted lightning contact uses actual actor ground independent of hit height")
 	vfx._process(.63)
 	check(vfx.live.size() == 1 and str(vfx.live[0].phase) == "aftermath", "contact transfers to its tail")
 	var tail_body := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
@@ -132,8 +133,8 @@ func run() -> void:
 	var chain_layers: Node2D = vfx.live[0].layers
 	var chain_body := chain_layers.get_child(0) as AnimatedSprite2D
 	var chain_flare := chain_layers.get_child(2) as AnimatedSprite2D
-	check((chain_body.global_transform * Vector2(-56, 0)).distance_to(Vector2(100, 100)) < .01 and (chain_body.global_transform * Vector2(56, 0)).distance_to(Vector2(300, 100)) < .01, "electric bridge terminates at both real link endpoints")
-	check(chain_flare.global_position.distance_to(Vector2(300, 100)) < .01 and chain_flare.scale == Vector2.ONE, "chain collision light stays on target instead of stretching at link midpoint")
+	check(_link_tip(chain_body, false).distance_to(Vector2(100,100)) < .01 and _link_tip(chain_body, true).distance_to(Vector2(300,100)) < .01, "painted electric endpoints terminate at both real link endpoints")
+	check(not chain_flare.visible, "forked lightning has no generic impact star or stretched flare")
 	vfx.clear()
 	for direction_index: int in range(8):
 		var heading := Vector2.from_angle(float(direction_index) * TAU / 8.0)
@@ -145,9 +146,28 @@ func run() -> void:
 	vfx.library.profiles[chain_id]["scale"] = 1.4
 	vfx.emit_skill(chain_id, "impact", Vector2(300,100), Vector2(100,180))
 	var scaled_bridge := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
-	check((scaled_bridge.global_transform * Vector2(-56,0)).distance_to(Vector2(100,180)) < .01 and (scaled_bridge.global_transform * Vector2(56,0)).distance_to(Vector2(300,100)) < .01, "scaled chain art still terminates on both world contacts")
+	check(_link_tip(scaled_bridge, false).distance_to(Vector2(100,180)) < .01 and _link_tip(scaled_bridge, true).distance_to(Vector2(300,100)) < .01, "scaled chain art still terminates on both world contacts")
 	vfx.clear()
 	vfx.library.profiles[chain_id]["scale"] = 1.0
+	for direction_index: int in range(8):
+		var origin := Vector2(300,100) + Vector2.from_angle(direction_index * TAU / 8.0) * 180
+		vfx.emit_skill(chain_id, "impact", Vector2(300,100), origin)
+		var item: Dictionary = vfx.live[0]
+		var link := (item.layers as Node2D).get_child(0) as AnimatedSprite2D
+		for frame_index: int in range(8):
+			link.frame = frame_index
+			check(_link_tip(link, false).distance_to(origin) < .01 and _link_tip(link, true).distance_to(Vector2(300,100)) < .01, "all generated link frames retain both endpoints in eight directions")
+		vfx.clear()
+	vfx.emit_skill("lm_dcb006041216f9c6", "impact", Vector2(300,100), Vector2.INF, {"ground_point":Vector2(300,154)})
+	var strike_item: Dictionary = vfx.live[0]
+	var strike := (strike_item.layers as Node2D).get_child(0) as AnimatedSprite2D
+	check(vfx.library.resident_rgba_bytes() == 6 * 1024 * 1024 + ELECTRIC.RGBA_BYTES, "generated texture bytes are charged to the existing bounded cache")
+	for frame_index: int in range(8):
+		strike.frame = frame_index
+		check(_strike_tip(strike).distance_to(Vector2(300,154)) < .01, "every generated discharge frame terminates at the same foot")
+	vfx.clear()
+	check(vfx.library.resident_rgba_bytes() == 0, "clear releases generated lightning textures too")
+
 	var meteor_token: Dictionary = {}
 	var meteor_flight := {"position":Vector2.ZERO, "previous":Vector2.ZERO, "origin":Vector2.ZERO, "target":weakref(target), "speed":1050.0}
 	var meteor_origin := vfx._flight_visual_pose(meteor_flight, "lm_45cdacd8a42d0e5a", meteor_token)
@@ -188,3 +208,12 @@ func run() -> void:
 	await process_frame
 	print("AUTHORED_VFX_RESULT ", JSON.stringify({"checks":checks, "failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+func _strike_tip(sprite: AnimatedSprite2D) -> Vector2:
+	var cell: Vector2 = sprite.sprite_frames.get_meta("cell")
+	return sprite.global_transform * (ELECTRIC.STRIKE_ANCHORS[sprite.frame] - cell * 0.5 + sprite.offset)
+
+func _link_tip(sprite: AnimatedSprite2D, target: bool) -> Vector2:
+	var cell: Vector2 = sprite.sprite_frames.get_meta("cell")
+	var anchor: Vector2 = ELECTRIC.LINK_ENDS[sprite.frame] if target else ELECTRIC.LINK_STARTS[sprite.frame]
+	return sprite.global_transform * (anchor - cell * 0.5 + sprite.offset)

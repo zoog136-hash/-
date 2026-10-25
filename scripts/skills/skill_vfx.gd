@@ -6,6 +6,8 @@ signal phase_started(id: String, phase: String, point: Vector2)
 const SPX_BRIDGE = preload("res://scripts/skills/skill_spx_bridge.gd")
 const SPX_SHADER = preload("res://assets/effects/source_spx_additive.gdshader")
 const ENERGY_SHADER = preload("res://assets/effects/skill_energy.gdshader")
+const ELECTRIC = preload("res://scripts/skills/lightning_vfx_art.gd")
+const ELECTRIC_SHADER = preload("res://assets/effects/skills/lightning_filament.gdshader")
 const LIBRARY = preload("res://scripts/skills/skill_vfx_library.gd")
 const MAX_EFFECTS := 160
 const MAX_POOL := 160
@@ -105,7 +107,9 @@ func _play_layer(container: Node2D, index: int, frames: SpriteFrames, clip: Stri
 	sprite.position = Vector2.ZERO
 	sprite.rotation = 0
 	sprite.scale = Vector2.ONE
+	sprite.offset = Vector2.ZERO
 	if sprite.material is ShaderMaterial:
+		sprite.material.shader = ENERGY_SHADER
 		sprite.material.set_shader_parameter("dissolve", 0.0)
 		sprite.material.set_shader_parameter("flow", 0.0)
 		sprite.material.set_shader_parameter("energy", 1.0)
@@ -126,7 +130,15 @@ func _authored(id: String, phase: String, point: Vector2, end: Vector2, context:
 	container.scale = Vector2.ONE * float(entry.profile.get("scale", 1.0))
 	container.show()
 	var body := container.get_child(0) as AnimatedSprite2D
-	_play_layer(container, 0, frames, phase, .74 if phase == "persistent" else 1.0)
+	var electric_frames: SpriteFrames = entry.get("electric_frames")
+	var electric: bool = phase == "impact" and electric_frames != null
+	_play_layer(container, 0, electric_frames if electric else frames, phase, .74 if phase == "persistent" else 1.0)
+	var frame_callback: Callable = _electric_frame_changed.bind(container)
+	if electric:
+		body.material.shader = ELECTRIC_SHADER
+		if not body.frame_changed.is_connected(frame_callback): body.frame_changed.connect(frame_callback)
+	elif body.frame_changed.is_connected(frame_callback):
+		body.frame_changed.disconnect(frame_callback)
 	var offset: Array = entry.profile.get("impact_offset", [0, 0]) if phase in ["impact", "aftermath"] else entry.profile.get("persistent_offset", [0, -38]) if phase in ["persistent", "end"] else entry.profile.get("cast_body_offset", [0, -38]) if phase == "cast" else entry.profile.get("status_offset", [0, 0]) if phase == "status" else [0, 0]
 	body.position = Vector2(float(offset[0]), float(offset[1]))
 	var contact: Variant = entry.profile.get("ground_contact_y")
@@ -152,7 +164,7 @@ func _authored(id: String, phase: String, point: Vector2, end: Vector2, context:
 		_play_layer(container, 1, frames, "ground", .8)
 		var ground_offset: Array = entry.profile.get("ground_offset", [0, -40])
 		(container.get_child(1) as AnimatedSprite2D).position = Vector2(float(ground_offset[0]), float(ground_offset[1]))
-	if phase == "impact" and not low_detail:
+	if phase == "impact" and not low_detail and not electric:
 		_play_layer(container, 2, frames, "flare", .8)
 		var flare := container.get_child(2) as AnimatedSprite2D
 		flare.position = body.position
@@ -162,9 +174,10 @@ func _authored(id: String, phase: String, point: Vector2, end: Vector2, context:
 			flare.position = Vector2.ZERO
 			flare.rotation = 0
 			flare.scale = Vector2.ONE
-	var durations: Array[float] = [_clip_duration(frames, phase), 0.0, 0.0]
+	if electric: ELECTRIC.pose(body, container, point, end, ground_point)
+	var durations: Array[float] = [_clip_duration(electric_frames if electric else frames, phase), 0.0, 0.0]
 	if phase == "cast" and not low_detail: durations[1] = _clip_duration(frames, "ground")
-	if phase == "impact" and not low_detail: durations[2] = _clip_duration(frames, "flare")
+	if phase == "impact" and not low_detail and not electric: durations[2] = _clip_duration(frames, "flare")
 	return {"layers":container, "cache_key":entry.key, "duration":durations.max(), "layer_durations":durations}
 
 func _clip_duration(frames: SpriteFrames, phase: String) -> float:
@@ -195,6 +208,9 @@ func _emit(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF
 		"spx_sprite":source.get("sprite", null), "layers":art.get("layers", null),
 		"cache_key":art.get("cache_key", ""), "layer_durations":art.get("layer_durations", []), "context":context.duplicate(false)}, true)
 	live.append(item)
+	var container: Node2D = item.get("layers")
+	if is_instance_valid(container) and (container.get_child(0) as AnimatedSprite2D).sprite_frames.has_meta("electric_form"):
+		container.set_meta("electric_item", item)
 	emitted += 1
 	set_process(true)
 	return item
@@ -308,6 +324,7 @@ func _retire(index: int) -> void:
 	_recycle_source_sprite(item)
 	var layers: Node2D = item.get("layers") as Node2D
 	if is_instance_valid(layers):
+		if layers.has_meta("electric_item"): layers.remove_meta("electric_item")
 		for child: Node in layers.get_children():
 			var sprite := child as AnimatedSprite2D
 			sprite.stop()
@@ -352,6 +369,7 @@ func _process(delta: float) -> void:
 		var layers: Node2D = item.get("layers") as Node2D
 		if is_instance_valid(layers):
 			layers.global_position = item.point
+			_update_electric_pose(item)
 			for layer: int in range(MAX_LAYERS):
 				var sprite := layers.get_child(layer) as AnimatedSprite2D
 				if not sprite.visible: continue
@@ -404,6 +422,19 @@ func _process(delta: float) -> void:
 		spx_bridge.cache.clear()
 		set_process(false)
 
+func _electric_frame_changed(container: Node2D) -> void:
+	# AnimatedSprite can advance after its parent's _process; anchor the newly
+	# selected pixels in the same frame rather than lagging one frame behind.
+	if container.has_meta("electric_item"):
+		_update_electric_pose(container.get_meta("electric_item"))
+
+func _update_electric_pose(item: Dictionary) -> void:
+	var container: Node2D = item.get("layers")
+	if not is_instance_valid(container): return
+	var body := container.get_child(0) as AnimatedSprite2D
+	if body.sprite_frames == null or not body.sprite_frames.has_meta("electric_form"): return
+	ELECTRIC.pose(body, container, item.point, item.end, item.context.get("ground_point", Vector2.INF))
+
 func _seek_layers(item: Dictionary, seconds: float) -> void:
 	var container: Node2D = item.get("layers") as Node2D
 	if not is_instance_valid(container): return
@@ -417,3 +448,5 @@ func _seek_layers(item: Dictionary, seconds: float) -> void:
 				sprite.set_frame_and_progress(frame, remaining / duration)
 				break
 			remaining -= duration
+
+	_update_electric_pose(item)
