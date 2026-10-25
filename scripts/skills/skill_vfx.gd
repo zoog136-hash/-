@@ -132,15 +132,22 @@ func _authored(id: String, phase: String, point: Vector2, end: Vector2, context:
 	var contact: Variant = entry.profile.get("ground_contact_y")
 	var ground_point: Vector2 = context.get("ground_point", Vector2.INF)
 	if phase in ["impact", "aftermath"] and contact != null and ground_point.is_finite():
-		body.position = ground_point - point - Vector2(0, float(contact))
+		body.position = container.to_local(ground_point) - Vector2(0, float(contact))
+	# These atlas tails are ground dust, not a continuation of the directional
+	# blade/bolt. Use their painted origin (128px cells), never rotate or stretch
+	# the dust with the impact. Coordinates come from vfx_raster_painter.py.
+	if phase == "aftermath" and ground_point.is_finite():
+		var program: String = str(entry.profile.program)
+		var dust_y: float = 26.0 if program in ["firestorm", "meteor", "eruption"] else 27.0 if program in ["lightning", "chain_lightning", "storm_field", "storm_ward", "thunder_stun", "plasma"] else 21.0
+		body.position = container.to_local(ground_point) - Vector2(0, dust_y)
 	var direction: Vector2 = context.get("direction", Vector2.ZERO)
 	if phase in ["travel", "release"] or (phase == "impact" and bool(entry.profile.get("directional", false))):
 		if direction.length_squared() > .0001: body.rotation = direction.angle()
 	if phase == "travel": body.position = Vector2(-48, 0).rotated(body.rotation)
 	if str(entry.profile.program) == "chain_lightning" and phase == "impact" and end.is_finite():
-		body.position = to_local(point.lerp(end, .5)) - to_local(point)
-		body.rotation = (point - end).angle()
-		body.scale.x = point.distance_to(end) / 112.0
+		body.position = container.to_local(point.lerp(end, .5))
+		body.rotation = (container.to_local(point) - container.to_local(end)).angle()
+		body.scale.x = container.to_local(point).distance_to(container.to_local(end)) / 112.0
 	if phase == "cast" and not low_detail:
 		_play_layer(container, 1, frames, "ground", .8)
 		var ground_offset: Array = entry.profile.get("ground_offset", [0, -40])
@@ -340,6 +347,8 @@ func _process(delta: float) -> void:
 				_retire(index)
 				continue
 			item.point = owner.global_position
+		var source_sprite: AnimatedSprite2D = item.get("spx_sprite") as AnimatedSprite2D
+		if is_instance_valid(source_sprite): source_sprite.global_position = item.point
 		var layers: Node2D = item.get("layers") as Node2D
 		if is_instance_valid(layers):
 			layers.global_position = item.point

@@ -120,11 +120,10 @@ func run() -> void:
 	vfx.emit_skill("lm_dcb006041216f9c6", "impact", Vector2(300, 100), Vector2.INF, {"ground_point":Vector2(300, 154)})
 	var lightning_body := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
 	check((lightning_body.global_position + Vector2(0, 42)).distance_to(Vector2(300, 154)) < .01, "lightning feet use actual actor ground independent of hit height")
-	var pinned_ground := lightning_body.global_position
 	vfx._process(.63)
 	check(vfx.live.size() == 1 and str(vfx.live[0].phase) == "aftermath", "contact transfers to its tail")
 	var tail_body := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
-	check(tail_body.global_position.distance_to(pinned_ground) < .01, "ground contact cannot jump when the tail begins")
+	check((tail_body.global_transform * Vector2(0, 27)).distance_to(Vector2(300, 154)) < .01, "dust origin stays at actual ground after the lightning column ends")
 	vfx.clear()
 	var chain_id := ""
 	for id: String in vfx.library.profiles:
@@ -136,6 +135,19 @@ func run() -> void:
 	check((chain_body.global_transform * Vector2(-56, 0)).distance_to(Vector2(100, 100)) < .01 and (chain_body.global_transform * Vector2(56, 0)).distance_to(Vector2(300, 100)) < .01, "electric bridge terminates at both real link endpoints")
 	check(chain_flare.global_position.distance_to(Vector2(300, 100)) < .01 and chain_flare.scale == Vector2.ONE, "chain collision light stays on target instead of stretching at link midpoint")
 	vfx.clear()
+	for direction_index: int in range(8):
+		var heading := Vector2.from_angle(float(direction_index) * TAU / 8.0)
+		vfx.emit_skill(arrow, "impact", Vector2(300, 100), Vector2.INF, {"direction":heading, "ground_point":Vector2(300,154)})
+		vfx._process(float(vfx.live[0].ttl) + 0.01)
+		var dust := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
+		check((dust.global_transform * Vector2(0,21)).distance_to(Vector2(300,154)) < .01 and is_zero_approx(dust.rotation), "all headings settle dust at feet without rotating ground particles")
+		vfx.clear()
+	vfx.library.profiles[chain_id]["scale"] = 1.4
+	vfx.emit_skill(chain_id, "impact", Vector2(300,100), Vector2(100,180))
+	var scaled_bridge := (vfx.live[0].layers as Node2D).get_child(0) as AnimatedSprite2D
+	check((scaled_bridge.global_transform * Vector2(-56,0)).distance_to(Vector2(100,180)) < .01 and (scaled_bridge.global_transform * Vector2(56,0)).distance_to(Vector2(300,100)) < .01, "scaled chain art still terminates on both world contacts")
+	vfx.clear()
+	vfx.library.profiles[chain_id]["scale"] = 1.0
 	var meteor_token: Dictionary = {}
 	var meteor_flight := {"position":Vector2.ZERO, "previous":Vector2.ZERO, "origin":Vector2.ZERO, "target":weakref(target), "speed":1050.0}
 	var meteor_origin := vfx._flight_visual_pose(meteor_flight, "lm_45cdacd8a42d0e5a", meteor_token)

@@ -130,14 +130,15 @@ func run() -> void:
 	var peak_effects := 0
 	var peak_texture_bytes := 0
 	var start := Time.get_ticks_usec()
-	for frame: int in range(900):
+	var sample_count := clampi(int(OS.get_environment("TWILIGHT_VFX_MAIN_FRAMES")), 180, 900) if not OS.get_environment("TWILIGHT_VFX_MAIN_FRAMES").is_empty() else 900
+	for frame: int in range(sample_count):
 		var before := Time.get_ticks_usec()
 		await process_frame
 		await RenderingServer.frame_post_draw
 		samples.append((Time.get_ticks_usec() - before) / 1000.0)
 		peak_effects = maxi(peak_effects, world.original_skills.vfx.live.size())
 		peak_texture_bytes = maxi(peak_texture_bytes, world.original_skills.vfx.library.resident_rgba_bytes())
-		if frame == 450:
+		if frame == sample_count / 2:
 			var transform := world._job_transform_record("요정")
 			check(not transform.is_empty(), "existing transform record")
 			if not transform.is_empty(): world._apply_transform_visual(transform)
@@ -150,8 +151,8 @@ func run() -> void:
 	samples.sort()
 	var report := {"status":"PASS" if failures.is_empty() and contacts > 0 else "PARTIAL" if failures.is_empty() else "FAIL", "failures":failures,
 		"renderer":RenderingServer.get_video_adapter_name(), "platform":OS.get_name(), "frames":samples.size(),
-		"simulated_seconds_at_60_hz":15, "wall_seconds":(Time.get_ticks_usec()-start)/1000000.0,
-		"median_frame_wall_ms":samples[450], "p95_frame_wall_ms":samples[855],
+		"simulated_seconds_at_60_hz":float(sample_count) / 60.0, "wall_seconds":(Time.get_ticks_usec()-start)/1000000.0,
+		"median_frame_wall_ms":samples[sample_count / 2], "p95_frame_wall_ms":samples[int(sample_count * .95)],
 		"existing_monsters":dense_count, "rejected_projectile_path_candidates":rejected_projectile_paths, "controlled_marker_observations":marker_observations, "controlled_flight_observations":flight_observations, "controlled_auto_contacts":controlled_contacts, "live_autohunt_contacts":contacts, "peak_vfx":peak_effects,
 		"skill_phase_counts":phase_counts,
 		"peak_atlas_rgba_bytes":peak_texture_bytes, "android_device":"NOT_RUN", "long_duration_autohunt":"NOT_RUN"}
