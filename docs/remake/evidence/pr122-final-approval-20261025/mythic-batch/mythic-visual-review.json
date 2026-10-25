@@ -1,0 +1,2344 @@
+{
+  "reviewed_pages": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+  ],
+  "confirmed_findings": [
+    {
+      "id": "transform:413",
+      "clip": "run_3",
+      "status": "FAIL_DIRECTION",
+      "evidence_page": "page-03.png",
+      "scope": "all six selected source poses",
+      "observation": "SW track consistently faces screen-right, matching SE-like facing rather than screen-left/down; Main no-mirror assertion passed, so the authored source direction is wrong. Do not repair by mirroring asymmetric costume/weapon.",
+      "source_changes": 0,
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/thunder_female_413/r008/SW-run.png",
+      "source_sha256": "c367e529ead2fd717e8cc0682ad288aeec86ad9579e54cd9435c36dc3aa48870",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-run-v01.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_1",
+      "status": "HOLD_ROLE_SEPARATION",
+      "evidence_page": "page-11.png",
+      "observation": "Selected IDLE sequence contains pronounced backward recoil then forward crouch matching HIT-like reaction; inspect source selection before any approval. Not an inferred pixel duplication.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_133/native001/SE-idle.png",
+      "source_sha256": "120e514532e166c93bfd07d6f2eb304ce00ac1a93c2f91ced3737539646fa252",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-reviewed-batch-v01/transform_133/SE-idle.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_3",
+      "status": "HOLD_ROLE_SEPARATION",
+      "evidence_page": "page-11.png",
+      "observation": "Selected IDLE sequence contains pronounced backward recoil then forward crouch matching HIT-like reaction; inspect source selection before any approval. Not an inferred pixel duplication.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_133/native001/SW-idle.png",
+      "source_sha256": "cdebd73e76b5abe497238077db957bf64ba13d59ab2efe29ea728407dfac57ba",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-reviewed-batch-v01/transform_133/SW-idle.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_5",
+      "status": "FAIL_ROLE_SEPARATION",
+      "evidence_page": "page-13.png",
+      "observation": "IDLE contains clear bow raise/draw/aim sequence across middle phases rather than a neutral idle. Source role must be corrected; do not suppress phases.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_135/native001/NW-idle.png",
+      "source_sha256": "06ea1260eb5f95ea7ddee250343f52ef08952bf49125a5ba3cbe51c9cf0dc9d6",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-reviewed-batch-v01/transform_135/NW-idle.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:141",
+      "clip": "attack_3",
+      "status": "FAIL_DIRECTION",
+      "evidence_page": "page-24.png",
+      "observation": "SW attack aims and fires screen-right in phases 2–5; the left-facing W attack on the same page provides a clear comparison.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_141/native003/SW-attack.png",
+      "source_sha256": "7ea338b5945996cf615c0068bbb68c8f3bcb8a7840a1c6434451f94e6b23989f",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/SW-attack-whole-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_3",
+      "status": "HOLD_DIRECTION",
+      "evidence_page": "page-24.png",
+      "observation": "SW idle retains right-facing gun and torso presentation similar to SE; needs authored-direction review.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_141/native001/SW-idle.png",
+      "source_sha256": "04dad66b6c272d6ace11ca09e7675a2e12b8b5d91875e19016f515ae87012f3d",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-reviewed-batch-v01/transform_141/SW-idle.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_3",
+      "status": "HOLD_DIRECTION",
+      "evidence_page": "page-24.png",
+      "observation": "SW hit returns to the same right-facing presentation as its idle; needs authored-direction review.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_141/native004/SW-hit.png",
+      "source_sha256": "739f94bdda3c2bbe0db17281ba68c3004f743c09ada2fa53d23a3d06ea7dd5ef",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_141/SW-hit-expanded-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_7",
+      "status": "HOLD_DIRECTION_STABILITY",
+      "evidence_page": "page-25.png",
+      "observation": "NE idle rotates from frontal to right profile and back within one cycle rather than maintaining the requested facing.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_174/native003/NE-idle.png",
+      "source_sha256": "cd2245248842034fd265e18c028647917195bcfe5ad77e79dfa5a792afb42823",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/NE-idle-whole-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_1",
+      "status": "HOLD_DIRECTION_STABILITY",
+      "evidence_page": "page-26.png",
+      "observation": "SE idle rotates from frontal to right profile and back; inspect source-facing consistency.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_174/native003/SE-idle.png",
+      "source_sha256": "7ef295f685ecc26dbe0b82cb0857f90b88247ecf8bfd791df8651770a39483ac",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/SE-idle-whole-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_3",
+      "status": "HOLD_DIRECTION_STABILITY",
+      "evidence_page": "page-26.png",
+      "observation": "SW idle middle poses turn screen-right; source-facing consistency is unresolved.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_174/native001/SW-idle.png",
+      "source_sha256": "7a8e89e7b8e44df4d937ae634e4be8a70576c17075e7268c963ff2937a473710",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/native-reviewed-batch-v01/transform_174/SW-idle.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:174",
+      "clip": "run_3",
+      "status": "FAIL_DIRECTION",
+      "evidence_page": "page-26.png",
+      "observation": "SW run middle and final phases travel/fold toward screen-right instead of left/down.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_174/native003/SW-run.png",
+      "source_sha256": "e555fba051c7857d20e36bfb9912d853519d3225f67e527b917aa4cc7c9bde4a",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_174/SW-run-whole-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:189",
+      "clip": "attack_3",
+      "status": "HOLD_AIM_DIRECTION",
+      "evidence_page": "page-29.png",
+      "observation": "SW attack windup and strike extend screen-right; distinguish intended sweep from target aim before approval.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SW-attack.png",
+      "source_sha256": "74e6ae7d38a3981cdd0299e32da268faeb61036630d9e7a9fae754404d0ecb51",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/transform_189/SW-attack/poses.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:242",
+      "clip": "run_2",
+      "status": "FAIL_HANDEDNESS",
+      "evidence_page": "page-31.png",
+      "observation": "S run carries the glowing staff on screen-left in phases 1–3 and screen-right in phases 4–6 with no transfer pose; source hand continuity breaks.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_242/native003/S-run.png",
+      "source_sha256": "9febb146707b40dcd0e4e369d9dbce4353a8073bda9915660972e243a98036c5",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_242/S-run-whole-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:367",
+      "clip": "run_6",
+      "status": "FAIL_HANDEDNESS",
+      "evidence_page": "page-35.png",
+      "observation": "N run switches sword from screen-left in phases 1–3 to screen-right in phases 4–6; cape also reverses sides.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_367/native004/N-run.png",
+      "source_sha256": "6b7027b85b03c526000475975bab7f627ce2527cdf5d7b152b3fcb57440a49c8",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_367/N-run-expanded-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    },
+    {
+      "id": "transform:367",
+      "clip": "run_4",
+      "status": "FAIL_DIRECTION",
+      "evidence_page": "page-36.png",
+      "observation": "W run first four phases face left, final two face right. The direction reverses inside the authored cycle.",
+      "approval_added": false,
+      "texture": "assets/actors/eight_direction/native_locomotion_staging/transform_367/native003/W-run.png",
+      "source_sha256": "d689ed18f8c959093527aa975a74e57f04ea5316b6bace716710ef3775643f71",
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/source-region-repair-v01/transform_367/W-run-whole-source.png",
+      "resolution": "Requires authored-source correction or direction/role confirmation; no safe pointer-only correction established. Original preserved."
+    }
+  ],
+  "review_notes": [
+    "All six poses in each viewed row are visibly separated; transparent diagnostic backdrop is not original art.",
+    "transform:413 death_2 final pose remains diagonal/partly lifted; ground-contact semantics require further review, not counted as confirmed failure.",
+    "transform:135 attack_2/attack_6: arrow release appears screen-right while declared aim is S/N; HOLD_AIM_DIRECTION pending full source camera/foreshortening assessment, not counted as confirmed source failure."
+  ],
+  "new_quality_approvals": 0,
+  "reviewed_clips": 301,
+  "technical_main_pass_clips": 300,
+  "final_approval_status": "HOLD: visual exceptions and uncompleted fine runtime visual review; no automatic promotion from technical PASS",
+  "rows": [
+    {
+      "id": "transform:413",
+      "clip": "attack_0",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_0",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_0",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_0",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "attack_6",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_6",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_6",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_6",
+      "page": "page-00.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "attack_7",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_7",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_7",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_7",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "attack_5",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_5",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_5",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_5",
+      "page": "page-01.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "attack_2",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "death_2",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_2",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_2",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_2",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "attack_1",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_1",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_1",
+      "page": "page-02.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_1",
+      "page": "page-03.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "attack_3",
+      "page": "page-03.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_3",
+      "page": "page-03.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_3",
+      "page": "page-03.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_3",
+      "page": "page-03.png",
+      "visual_status": "FAIL_DIRECTION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "attack_4",
+      "page": "page-03.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "hit_4",
+      "page": "page-03.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "idle_4",
+      "page": "page-03.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:413",
+      "clip": "run_4",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_0",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_0",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "run_0",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "attack_6",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_6",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_6",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "run_6",
+      "page": "page-04.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "attack_7",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_7",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_7",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "run_7",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_5",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_5",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "run_5",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "attack_2",
+      "page": "page-05.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "death_2",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_2",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_2",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "run_2",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "attack_1",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_1",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_1",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "run_1",
+      "page": "page-06.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "attack_3",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_3",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_3",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "run_3",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "attack_4",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "hit_4",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:412",
+      "clip": "idle_4",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "hit_0",
+      "page": "page-07.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "run_0",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "hit_6",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "idle_6",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "run_6",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "idle_7",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "idle_5",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "run_5",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "death_2",
+      "page": "page-08.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:130",
+      "clip": "run_2",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_0",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_0",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_0",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_6",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_6",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_6",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_7",
+      "page": "page-09.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_7",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_7",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_5",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_5",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_5",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "death_2",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_2",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_2",
+      "page": "page-10.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_2",
+      "page": "page-11.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_1",
+      "page": "page-11.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_1",
+      "page": "page-11.png",
+      "visual_status": "HOLD_ROLE_SEPARATION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_1",
+      "page": "page-11.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_3",
+      "page": "page-11.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_3",
+      "page": "page-11.png",
+      "visual_status": "HOLD_ROLE_SEPARATION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_3",
+      "page": "page-11.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "hit_4",
+      "page": "page-11.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "idle_4",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:133",
+      "clip": "run_4",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "attack_0",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_0",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_0",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "run_0",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "attack_6",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_6",
+      "page": "page-12.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_6",
+      "page": "page-13.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "run_6",
+      "page": "page-13.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_7",
+      "page": "page-13.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "run_7",
+      "page": "page-13.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_5",
+      "page": "page-13.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_5",
+      "page": "page-13.png",
+      "visual_status": "FAIL_ROLE_SEPARATION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "attack_2",
+      "page": "page-13.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "death_2",
+      "page": "page-13.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_2",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_2",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "run_2",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "attack_1",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_1",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_1",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "run_1",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_3",
+      "page": "page-14.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_3",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "run_3",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "attack_4",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "hit_4",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "idle_4",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:135",
+      "clip": "run_4",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "hit_0",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "idle_0",
+      "page": "page-15.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "run_0",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "run_6",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "hit_7",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "idle_7",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "hit_5",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "idle_5",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "run_5",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "attack_2",
+      "page": "page-16.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "death_2",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "idle_2",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "run_2",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "attack_1",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "hit_1",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "run_1",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "attack_3",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "run_3",
+      "page": "page-17.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "attack_4",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "hit_4",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "idle_4",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:137",
+      "clip": "run_4",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "hit_0",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_0",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "run_0",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "hit_6",
+      "page": "page-18.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_6",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "run_6",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "hit_7",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_7",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "run_7",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "hit_5",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_5",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "run_5",
+      "page": "page-19.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "hit_2",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_2",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "run_2",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "hit_1",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_1",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "hit_3",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_3",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "run_3",
+      "page": "page-20.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "attack_4",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "idle_4",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:139",
+      "clip": "run_4",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_0",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_0",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_0",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "attack_6",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_6",
+      "page": "page-21.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_6",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_6",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_7",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_7",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_7",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "attack_5",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_5",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_5",
+      "page": "page-22.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_5",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "death_2",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_2",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_2",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_2",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_1",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_1",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_1",
+      "page": "page-23.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "attack_3",
+      "page": "page-24.png",
+      "visual_status": "FAIL_DIRECTION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_3",
+      "page": "page-24.png",
+      "visual_status": "HOLD_DIRECTION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_3",
+      "page": "page-24.png",
+      "visual_status": "HOLD_DIRECTION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_3",
+      "page": "page-24.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "attack_4",
+      "page": "page-24.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "hit_4",
+      "page": "page-24.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "idle_4",
+      "page": "page-24.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:141",
+      "clip": "run_4",
+      "page": "page-24.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_0",
+      "page": "page-25.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "run_6",
+      "page": "page-25.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_7",
+      "page": "page-25.png",
+      "visual_status": "HOLD_DIRECTION_STABILITY",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "run_7",
+      "page": "page-25.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "hit_5",
+      "page": "page-25.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "death_2",
+      "page": "page-25.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "hit_2",
+      "page": "page-25.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_2",
+      "page": "page-25.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "run_2",
+      "page": "page-26.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "hit_1",
+      "page": "page-26.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_1",
+      "page": "page-26.png",
+      "visual_status": "HOLD_DIRECTION_STABILITY",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "hit_3",
+      "page": "page-26.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_3",
+      "page": "page-26.png",
+      "visual_status": "HOLD_DIRECTION_STABILITY",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "run_3",
+      "page": "page-26.png",
+      "visual_status": "FAIL_DIRECTION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "idle_4",
+      "page": "page-26.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:174",
+      "clip": "run_4",
+      "page": "page-26.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_0",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_0",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "run_0",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_6",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_6",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "run_6",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_7",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_7",
+      "page": "page-27.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_5",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_5",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "run_5",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_2",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_2",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "run_2",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "attack_1",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_1",
+      "page": "page-28.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_1",
+      "page": "page-29.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "run_1",
+      "page": "page-29.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "attack_3",
+      "page": "page-29.png",
+      "visual_status": "HOLD_AIM_DIRECTION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_3",
+      "page": "page-29.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_3",
+      "page": "page-29.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "run_3",
+      "page": "page-29.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "hit_4",
+      "page": "page-29.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "idle_4",
+      "page": "page-29.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:189",
+      "clip": "run_4",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "hit_0",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "run_0",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "hit_6",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "idle_6",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "run_6",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "idle_7",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "run_7",
+      "page": "page-30.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "hit_5",
+      "page": "page-31.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "run_2",
+      "page": "page-31.png",
+      "visual_status": "FAIL_HANDEDNESS",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "idle_1",
+      "page": "page-31.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "hit_3",
+      "page": "page-31.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "idle_3",
+      "page": "page-31.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "run_3",
+      "page": "page-31.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "hit_4",
+      "page": "page-31.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "idle_4",
+      "page": "page-31.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:242",
+      "clip": "run_4",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "hit_0",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "idle_0",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_0",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "attack_6",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "hit_6",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "idle_6",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_6",
+      "page": "page-32.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "hit_7",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "idle_7",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_7",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "hit_5",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "idle_5",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_5",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "death_2",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "idle_2",
+      "page": "page-33.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_2",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "hit_1",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_1",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "hit_3",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "idle_3",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_3",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "hit_4",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "idle_4",
+      "page": "page-34.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:346",
+      "clip": "run_4",
+      "page": "page-35.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "hit_0",
+      "page": "page-35.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "run_0",
+      "page": "page-35.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "run_6",
+      "page": "page-35.png",
+      "visual_status": "FAIL_HANDEDNESS",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "hit_7",
+      "page": "page-35.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "death_2",
+      "page": "page-35.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "idle_2",
+      "page": "page-35.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "run_2",
+      "page": "page-35.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "idle_4",
+      "page": "page-36.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:367",
+      "clip": "run_4",
+      "page": "page-36.png",
+      "visual_status": "FAIL_DIRECTION",
+      "final_approved": false
+    },
+    {
+      "id": "transform:399",
+      "clip": "idle_2",
+      "page": "page-36.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:411",
+      "clip": "run_6",
+      "page": "page-36.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:411",
+      "clip": "idle_7",
+      "page": "page-36.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:411",
+      "clip": "run_7",
+      "page": "page-36.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:411",
+      "clip": "idle_5",
+      "page": "page-36.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:411",
+      "clip": "idle_1",
+      "page": "page-36.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:411",
+      "clip": "hit_4",
+      "page": "page-37.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:411",
+      "clip": "idle_4",
+      "page": "page-37.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:212",
+      "clip": "idle_1",
+      "page": "page-37.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:212",
+      "clip": "run_3",
+      "page": "page-37.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    },
+    {
+      "id": "transform:212",
+      "clip": "run_4",
+      "page": "page-37.png",
+      "visual_status": "REVIEWED_NO_ADDITIONAL_OBVIOUS_SOURCE_DEFECT",
+      "final_approved": false
+    }
+  ]
+}
