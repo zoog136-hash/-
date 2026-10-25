@@ -5,7 +5,7 @@
   "checks": {
     "boot": {
       "status": "PASS",
-      "summary": "evidence/integration/summary.json"
+      "summary": "evidence/raster-regression/summary.json"
     },
     "card_draw_fusion_test": {
       "status": "PASS",
@@ -25,11 +25,11 @@
     },
     "input_routing_test": {
       "status": "PASS",
-      "summary": "evidence/integration/summary.json"
+      "summary": "evidence/raster-regression/summary.json"
     },
     "minimap_geography_cache_test": {
       "status": "PASS",
-      "summary": "evidence/recheck-final/summary.json"
+      "summary": "evidence/raster-regression/summary.json"
     },
     "original_skill_audio_test": {
       "status": "PASS",
@@ -49,7 +49,7 @@
     },
     "ui_fidelity_regression_test": {
       "status": "PASS",
-      "summary": "evidence/compact-final/summary.json"
+      "summary": "evidence/raster-regression/summary.json"
     },
     "ui_renewal_integration_test": {
       "status": "PASS",
@@ -75,5 +75,13 @@
     "summary": "evidence/final-boot/summary.json",
     "passed": 2,
     "failed": []
+  },
+  "raster_followup": {
+    "targeted_summary": "evidence/raster-regression/summary.json",
+    "passed": 4,
+    "failed": [],
+    "same_instance_benchmark": "performance/minimap-raster.json",
+    "pixel_parity": "performance/raster-pixel-comparison.json",
+    "resource_integrity": "evidence/raster-resource-integrity.log"
   }
 }

@@ -3,8 +3,12 @@ class_name FieldMinimap
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
+const RASTER_CACHE = preload("res://scripts/maps/minimap_raster_cache.gd")
 const GEOGRAPHY_CACHE = preload("res://scripts/maps/minimap_geography_cache.gd")
 var geography_cache = GEOGRAPHY_CACHE.new()
+var raster_cache = RASTER_CACHE.new()
+var static_cache_enabled: bool = true
+var static_only: bool = false
 var source_overview: Texture2D
 var world: Node
 var field: PlayableField
@@ -19,14 +23,24 @@ func configure(controller: Node, value: PlayableField) -> void:
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
 	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
 	if field is NativePngField: source_overview = field.overview_texture()
+	if not static_only: raster_cache.invalidate()
 	queue_redraw()
 
 func _ready() -> void:
+	if static_only:
+		clip_contents = true
+		set_process(false)
+		return
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = true
 	tooltip_text = "클릭: 이동 경로 · 청록: 이동석 · 금색: 마을 · 빨강: 보스"
 
+func set_static_cache_enabled(enabled: bool) -> void:
+	static_cache_enabled = enabled
+	queue_redraw()
+
 func _process(delta: float) -> void:
+	if not static_only and is_visible_in_tree(): raster_cache.prepare(self)
 	clock -= delta
 	if clock <= 0.0:
 		clock = .12
@@ -36,15 +50,28 @@ func _point(p: Vector2) -> Vector2:
 	return COORD.world_to_minimap(p,bounds,area)
 
 func _draw() -> void:
-	if world == null:
+	if world == null: return
+	if static_only:
+		_draw_static()
 		return
+	_draw_frame()
+	if static_cache_enabled and raster_cache.ready:
+		draw_texture_rect(raster_cache.texture(), Rect2(raster_cache.logical_origin, raster_cache.logical_extent), false)
+	else:
+		_draw_static()
+	_draw_dynamic()
+
+func _draw_frame() -> void:
+	# Keep text and translucent chrome in the main canvas at native DPI.
 	draw_style_box(_panel(),Rect2(Vector2.ZERO,size))
-	draw_rect(area,Color("202e27"))
-	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	var font: Font = get_theme_default_font()
 	var heading: String = str(field.data.get("minimap",{}).get("title","ADEN  /  WORLD")) if field != null else "REGION  /  MAP"
 	if field is OriginalPlayableField: heading = str(field.data.map_name)
 	draw_string(font,Vector2(10,18),heading.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("decfae"))
+
+func _draw_static() -> void:
+	draw_rect(area,Color("202e27"))
+	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	if field != null:
 		_draw_structure_geography()
 		for surface: Dictionary in field.data.get("surfaces",[]):
@@ -88,6 +115,9 @@ func _draw() -> void:
 				draw_circle(_point(COORD.array_vector(region["center"])),3.0,Color("e6c16f") if str(region["type"])=="safe" else Color("dd7762"))
 		_draw_boss_regions()
 		_draw_hunting_obstacles()
+
+func _draw_dynamic() -> void:
+	var font: Font = get_theme_default_font()
 	for monster: TwilightMonster in world.monsters_root.get_children():
 		if monster.global_position.distance_squared_to(world.player.global_position) < 1600000:
 			draw_circle(_point(monster.global_position),1.3,Color("d68b73"))

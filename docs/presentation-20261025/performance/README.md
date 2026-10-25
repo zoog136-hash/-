@@ -1,3 +1,58 @@
+# Latest validated result: complete static minimap raster cache
+
+The final helper source preserves every existing static map/dot drawing command, renders it once at the actual screen-pixel scale/phase, and keeps the border, heading and dynamic actor/camera overlays direct. It does not change PR155's separate boss MultiMesh implementation, source PNGs, geometry, coordinates, actor count, AI schedules or gameplay values. The earlier investigations and failed probes below are historical evidence, not the final result.
+
+**Final Godot 4.7.2 llvmpipe run: PASS**, `minimap-raster.json` / `minimap-raster.log`. Normal HUD mounting was completed before measuring. All modes used the same loaded Main and already-created cache nodes.
+
+| Frozen same-state, 180 frames each | Direct A | Cache B | Direct A repeat | Cache B repeat |
+| --- | ---: | ---: | ---: | ---: |
+| Draw calls/frame | 2467 | 272 | 2467 | 272 |
+| Median frame, ms | 33.067 | 12.036 | 26.427 | 13.371 |
+| p95, ms | 40.820 | 15.621 | 33.843 | 15.106 |
+| p99, ms | 43.752 | 23.716 | 51.096 | 15.773 |
+| Maximum, ms | 44.204 | 26.148 | 99.559 | 18.044 |
+
+The repeated frozen comparison is the strongest controlled attribution: it removes **2195 per-frame draw calls while preserving the displayed map**. Frame-time variation between repeats is retained rather than averaged away.
+
+## Real active combat, same instance
+
+One continuous 960-frame / 16-simulated-second AUTO battle used 120-frame blocks in **ABBA BAAB** order. The first 8 frames of each block were excluded, preserving the normal 0.12-second minimap redraw cadence. This yields 448 measured frames per mode. Original node identities and AI staggering remained unchanged. Blocks occur at different moments of one battle; they are supporting same-run evidence, **not identical saved-state replays**.
+
+| Warmed active combat observation | Direct | Cached |
+| --- | ---: | ---: |
+| Median frame, ms | 36.850 | 18.982 |
+| p95, ms | 50.361 | 28.109 |
+| p99, ms | 59.632 | 34.133 |
+| Maximum, ms | 66.908 | 49.012 |
+| Frames over 50 ms / over 100 ms | 24 / 0 | 0 / 0 |
+| Median draw calls | 2561 | 365 |
+| Sampled process RSS, KiB | 1568232 | 1568232 |
+
+Real player strikes 56 and observed incoming signals 23 occurred; existing habitat activation retained 133→165 actors. Cache builds remained **4→4** throughout active measurement, so switches introduced no new cache nodes or texture rebuilds. This was a combat fixture, not an unmodified ordinary player session: player current/max HP was set to 999999 as a test-only survival reserve shared by both modes. Monster records, damage rules and attack timing were unchanged. The 16 seconds are fixed simulation time under `--fixed-fps 60`, not real wall-clock duration. No screenshots were read back during timing.
+
+**Remaining performance limits:** the transition warmup excludes initial habitat activation and other startup spikes. Earlier complete-combat probes retained roughly 355–362 ms spikes, and the final physics monitor retained a 353.825 ms value whose exact frame cannot be assigned from its low-frequency readings. This does not establish loading/entry stutter resolution, stable 60 FPS, long-session memory stability, all-map improvement, or Android device performance. GPU memory is unknown; RSS is process memory including software-renderer allocations. Physics/process monitor values can update less frequently than frames, so wall-clock frame intervals are the primary timing evidence.
+
+## Final rendered parity and cache lifecycle
+
+- Captured direct/cached actual Main at 1280×720, requested 854×480 (actual render 853×480 due existing aspect handling), and 1920×1080. Final read-only pixel analysis `raster-pixel-comparison.json` asserts **maximum channel difference ≤2 on an 8-bit scale at all three sizes**; no pixels exceed 2. Differences are confined to cached geography. They are not byte-identical, and no exact-pixel-equality claim is made. Full screenshots were visually inspected; no geometry/dot was removed or blurred by downsampling.
+- Initial 854 scaling produced a maximum 117 difference because a fractional screen-origin phase was omitted. The final helper aligns both the raster canvas and displayed texture to the same pixel phase. The failed images/report remain under `*-fractional-before.*` rather than being reported as passing.
+- Final cache sizes were 168×148,113×100,252×222. Each scale change rebuilt once. Invalidation immediately cleared ready state and old painter field/overview references, then rebuilt exactly once. Actor/camera motion issued a dynamic redraw without a static rebuild. Direct/cache toggles retained allocations. Lifecycle final builds 4→5; dynamic draw notifications 3; restored field matches active field.
+- `minimap-raster-parity.json` is the earlier short final-source parity/lifecycle-only pass; `minimap-raster.json` includes the final timings plus lifecycle checks. `minimap-raster-first.*` retains the initial unmounted-HUD fixture failure, and `minimap-raster-aborted-per-frame.log` retains the stopped, rejected per-frame-toggle design.
+
+Reproduce final measurements with an isolated data directory and exclusive renderer access:
+
+```bash
+DISPLAY=:97 XDG_DATA_HOME=/tmp/lineagem-raster-verified-data XDG_CACHE_HOME=/tmp/lineagem-raster-cache \
+TWILIGHT_PERF_OUTPUT=/workspace/-/docs/presentation-20261025/performance/minimap-raster.json \
+/workspace/tooling/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 \
+  --audio-driver Dummy --disable-vsync --fixed-fps 60 --max-fps 0 --path /workspace/- \
+  --script tests/benchmark_minimap_raster.gd -- --native-png-maps
+```
+
+Add `--parity-only` after `--native-png-maps` for the shorter image/scale/lifecycle check without timing or active combat.
+
+---
+
 # Presentation performance: measured scope
 
 Base: `cba19558de2764839feb4887a8af8f69b905257a`. These measurements were made in this work session, with Godot **4.7.2 official** and Linux llvmpipe Compatibility rendering. `/usr/local/bin/godot` is 4.6.3 here and was not used for the reported tests.
@@ -76,3 +131,29 @@ The identified source is unchanged monster AI's per-instance scheduling: `repath
 | Inventory median draw calls | 2691 | 2678 |
 
 GPU memory is unknown; process RSS includes CPU and software-renderer allocations, not measured device VRAM. Geometry/map texture prewarm did not warm active combat effects or newly activated habitats, so first-combat setup spikes remain included. Full-frame stability is not demonstrated. The first baseline attempt (`combat-before-first.log`) completed combat but failed its menu harness call; corrected `world._open_inventory()` and reran, preserving that failed attempt.
+
+
+## Dominant-cost isolation: same loaded scene, repeated ablation
+
+`benchmark_presentation_cost.gd` changed only minimap visibility for diagnosis, then restored it. This is **not a product optimization or removal**. It used one actual native Escaros Main instance, 133 unchanged actors, player `(7433,2904)`, camera zoom1, and frozen simulation/RNG. PNG streaming was prewarmed and each phase discarded30 frames before180 measured frames. No screenshot readback occurred. The four phases alternated visible→hidden→visible→hidden.
+
+| Diagnostic phase | Visible A | Hidden B | Visible A repeat | Hidden B repeat |
+| --- | ---: | ---: | ---: | ---: |
+| Draw calls/frame | 2465 | 213 | 2465 | 213 |
+| Median frame, ms | 31.394 | 9.546 | 31.373 | 12.061 |
+| p95 frame, ms | 41.989 | 15.623 | 41.742 | 14.846 |
+| p99 frame, ms | 45.779 | 18.491 | 54.167 | 17.243 |
+| Maximum frame, ms | 47.051 | 18.774 | 57.394 | 18.373 |
+| >50ms frames | 0 | 0 | 2 | 0 |
+| Sampled RSS, KiB | 1591112 | 1591120 | 1591124 | 1591124 |
+
+The minimap accounts for **2252 retained draw commands per displayed frame** in this frozen scene. The repeated ablation supports it being the dominant render cost here, independent of gameplay/AUTO behavior. It does not prove Android results, active-combat frame-time gain, or that hiding the map is acceptable. It supports caching the complete static minimap imagery while preserving every dot/shape and keeping dynamic actor/camera overlays live. PR155's separate boss-dot MultiMesh batching is not implemented by this work.
+
+Raw `presentation-cost.json` includes process/physics monitor distributions. Godot's monitor values may be sampled less frequently than displayed frames; use wall-clock frame intervals as the primary timing evidence. GPU memory remains unknown. `presentation-cost.log` records a successful run with unchanged population, player/camera and RNG.
+
+
+### Raster prototype first probe: retained failure
+
+`minimap-raster-first.*` is a failed prototype probe, not final validation. It found a single cache rebuild1→2 when active simulation resumed. Inspection identified the test harness froze Main before `renewal_hud.gd::_process` completed its initial minimap reparent/layout. Initial static samples used the old Root222×191 control; active HUD correctly mounted it to its normal168×148 control, triggering required cache invalidation. The corrected harness explicitly executes normal HUD mounting before preparing/freezing the raster. The earlier hide/restore attribution likewise used the unmounted but equal-in-both-arms layout; its draw-cost attribution is valid for that stated scene, not a completed normal-HUD validation.
+
+First screenshot comparisons (`raster-*-first.png`) retain the first full-panel caching approach. All differences were inside the minimap; panel-corner alpha composition and one overlapping inner pixel differed most. These are superseded by the follow-up implementation which keeps border/title direct and caches opaque geography. The aborted per-frame active-mode design was stopped during its first static phase (`minimap-raster-aborted-per-frame.log`) because per-frame toggling would redraw the old geometry more often than its normal 0.12-second cadence. The corrected active test switches120frame blocks and discards the first 8 frames per block, without changing production AI schedules.

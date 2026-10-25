@@ -1,0 +1,62 @@
+{
+  "active": {},
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "android": "NOT_RUN",
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "gpu_memory": "UNKNOWN",
+  "lifecycle": {
+    "builds_after": 5,
+    "builds_before": 4,
+    "draw_notifications": 3,
+    "field_restored": true
+  },
+  "map": "escaros_world",
+  "parity_only": true,
+  "population": 133,
+  "position": [
+    7433.0,
+    2904.0
+  ],
+  "samples": [],
+  "scale_checks": [
+    {
+      "builds": 2,
+      "byte_identical": false,
+      "cached": "raster-cached-854.png",
+      "direct": "raster-direct-854.png",
+      "raster_size": "(113, 100)",
+      "size": [
+        853,
+        480
+      ]
+    },
+    {
+      "builds": 3,
+      "byte_identical": false,
+      "cached": "raster-cached-1920.png",
+      "direct": "raster-direct-1920.png",
+      "raster_size": "(252, 222)",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "scope": "same loaded Main; frozen180frame direct/cache/direct/cache; then continuous960activeframes alternating120frameblocks direct/cache; all cachednodes prebuilt; no screenshot readback during measurements; no AI phase normalization",
+  "visual": {
+    "builds": 1,
+    "byte_identical": false,
+    "cached": "raster-cached.png",
+    "direct": "raster-direct.png",
+    "raster_size": "(168, 148)",
+    "size": [
+      1280,
+      720
+    ]
+  },
+  "zoom": [
+    1.0,
+    1.0
+  ]
+}

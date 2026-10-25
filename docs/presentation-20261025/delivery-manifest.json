@@ -1,11 +1,10 @@
 {
-  "source_commit": "0cee5e7f",
   "base": "cba19558de2764839feb4887a8af8f69b905257a",
   "files": [
     {
       "path": "OWNERSHIP.md",
-      "bytes": 2371,
-      "sha256": "f06405a5a1b32aed4bcfa3902b6f0c54562ab52012b0f2fab9955803b5c460fc"
+      "bytes": 2741,
+      "sha256": "8dfd4197d7bbce749929d9eace33b85cb47043b44e0f4f959613d89ec7ea3ada"
     },
     {
       "path": "PERFORMANCE_SCOPE.md",
@@ -14,13 +13,18 @@
     },
     {
       "path": "README.md",
-      "bytes": 4302,
-      "sha256": "8e922b221f56fff02ce111362dcd4e8c79778a9700e864b1e7a14792ca986cd5"
+      "bytes": 5617,
+      "sha256": "08bdc1c159b05a55a39f79d46d0db930d1606f03da0a406b6bcbfad87b1974b4"
     },
     {
       "path": "REFERENCE.md",
       "bytes": 3004,
       "sha256": "f0fd60afbe591e4191c7ef7f885c188a722ec83072beda4949bb6dc6ec850cc0"
+    },
+    {
+      "path": "REMAINING_SCOPE.md",
+      "bytes": 1815,
+      "sha256": "2f9ba64f483f70933e0271d34e67e5cc51e477e32e89947f245367019cde0bbc"
     },
     {
       "path": "evidence/audio/original-skill-audio-regression.log",
@@ -179,6 +183,36 @@
     },
     {
       "path": "evidence/integrity.log",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    {
+      "path": "evidence/raster-regression/boot.log",
+      "bytes": 137,
+      "sha256": "03ec8cbb9bea0492319a3549ec61107699c4aec7919f0190c7564813cc5abee8"
+    },
+    {
+      "path": "evidence/raster-regression/input_routing_test.log",
+      "bytes": 413,
+      "sha256": "a765c25d7279f89d01e0e82d065fb077e954a891c158d54c634cf727bcf22d02"
+    },
+    {
+      "path": "evidence/raster-regression/minimap_geography_cache_test.log",
+      "bytes": 203,
+      "sha256": "a64c995c7814e5eea4773decad4f8cbc8397b641317722cff2713baedcb9675b"
+    },
+    {
+      "path": "evidence/raster-regression/summary.json",
+      "bytes": 10908,
+      "sha256": "812856de59338dedf4150f61b144b4806179042ea637092f4dffb058d1329c72"
+    },
+    {
+      "path": "evidence/raster-regression/ui_fidelity_regression_test.log",
+      "bytes": 177,
+      "sha256": "fce6e434851a1dd099a536430c17fad246c46dafdfd70e30484aeefc0ecf439d"
+    },
+    {
+      "path": "evidence/raster-resource-integrity.log",
       "bytes": 219,
       "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
     },
@@ -398,82 +432,82 @@
       "sha256": "f96bbca018051c5334cb8ac89e767bb886aa2e249316c1f92762668a4af60368"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\ub9c8\ubc95\uc778\ud615-1280x720.png",
+      "path": "evidence/ui/after/catalog-detail-마법인형-1280x720.png",
       "bytes": 275025,
       "sha256": "42064499e6e94f0cf22b8dafc7cccecdd2449ab6de7a833dcc48c0687cbbcde6"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\ub9c8\ubc95\uc778\ud615-854x480.png",
+      "path": "evidence/ui/after/catalog-detail-마법인형-854x480.png",
       "bytes": 71505,
       "sha256": "e3b22c53b95fae72da5b74868f6200450b461e6e35e67109222492af3d43af06"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\ubcc0\uc2e0-1280x720.png",
+      "path": "evidence/ui/after/catalog-detail-변신-1280x720.png",
       "bytes": 391578,
       "sha256": "eb0ca26e9b0f5caa21301052fcf987e2dbea4dbfbf29e4c05ecfe8f13113c9b1"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\ubcc0\uc2e0-854x480.png",
+      "path": "evidence/ui/after/catalog-detail-변신-854x480.png",
       "bytes": 101192,
       "sha256": "e7ed0b65635532c474e7ee3c96089906aa9ae204371a6b778932d586fa70f80d"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\uc131\ubb3c-1280x720.png",
+      "path": "evidence/ui/after/catalog-detail-성물-1280x720.png",
       "bytes": 336017,
       "sha256": "189832d005faed48e420dde5026af1f94ab42320bad7004bf12aa04def33178e"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\uc131\ubb3c-854x480.png",
+      "path": "evidence/ui/after/catalog-detail-성물-854x480.png",
       "bytes": 94850,
       "sha256": "292777d7969f8e76d2a6d32e175ae5eb910f7684a2d6659ea340c6aef91f2e3c"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\uc544\uc774\ud15c-1280x720.png",
+      "path": "evidence/ui/after/catalog-detail-아이템-1280x720.png",
       "bytes": 277007,
       "sha256": "35144a9ac3c9b45d455f8bfddb09a7707b85ba7065e11cda97c2427e48b3b2d4"
     },
     {
-      "path": "evidence/ui/after/catalog-detail-\uc544\uc774\ud15c-854x480.png",
+      "path": "evidence/ui/after/catalog-detail-아이템-854x480.png",
       "bytes": 83075,
       "sha256": "c7b802c9cb6dca418c63cee199deecd8840e240efc51e80b30cc070d45feabda"
     },
     {
-      "path": "evidence/ui/after/catalog-\ub9c8\ubc95\uc778\ud615-1280x720.png",
+      "path": "evidence/ui/after/catalog-마법인형-1280x720.png",
       "bytes": 275025,
       "sha256": "42064499e6e94f0cf22b8dafc7cccecdd2449ab6de7a833dcc48c0687cbbcde6"
     },
     {
-      "path": "evidence/ui/after/catalog-\ub9c8\ubc95\uc778\ud615-854x480.png",
+      "path": "evidence/ui/after/catalog-마법인형-854x480.png",
       "bytes": 112323,
       "sha256": "6a5f1035070f691b264a510b0021a58b8ed9edaed018be0c69536b2ffdabe585"
     },
     {
-      "path": "evidence/ui/after/catalog-\ubcc0\uc2e0-1280x720.png",
+      "path": "evidence/ui/after/catalog-변신-1280x720.png",
       "bytes": 391578,
       "sha256": "eb0ca26e9b0f5caa21301052fcf987e2dbea4dbfbf29e4c05ecfe8f13113c9b1"
     },
     {
-      "path": "evidence/ui/after/catalog-\ubcc0\uc2e0-854x480.png",
+      "path": "evidence/ui/after/catalog-변신-854x480.png",
       "bytes": 137508,
       "sha256": "59fb36158ed19edd6cec8e25743ab1d7c8309b53231e2a30d1da1ec0f28363e2"
     },
     {
-      "path": "evidence/ui/after/catalog-\uc131\ubb3c-1280x720.png",
+      "path": "evidence/ui/after/catalog-성물-1280x720.png",
       "bytes": 336017,
       "sha256": "189832d005faed48e420dde5026af1f94ab42320bad7004bf12aa04def33178e"
     },
     {
-      "path": "evidence/ui/after/catalog-\uc131\ubb3c-854x480.png",
+      "path": "evidence/ui/after/catalog-성물-854x480.png",
       "bytes": 142099,
       "sha256": "1750838b640160425cdadc9d43631b5967878d6ff8c48d5e678cbc3ed7b38677"
     },
     {
-      "path": "evidence/ui/after/catalog-\uc544\uc774\ud15c-1280x720.png",
+      "path": "evidence/ui/after/catalog-아이템-1280x720.png",
       "bytes": 277656,
       "sha256": "e72157f528078161a458b4222018aa56a64a37376de48c6f4b9e4dcbdd64019e"
     },
     {
-      "path": "evidence/ui/after/catalog-\uc544\uc774\ud15c-854x480.png",
+      "path": "evidence/ui/after/catalog-아이템-854x480.png",
       "bytes": 118339,
       "sha256": "7a8783e83682b2f542269509a9731cbe94d04378532b7c94fd2bb60d2078bb74"
     },
@@ -713,82 +747,82 @@
       "sha256": "b6e425c0945125aa8b52f8bfdcc01be3d643c85eb91003305a80326d9d87b903"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\ub9c8\ubc95\uc778\ud615-1280x720.png",
+      "path": "evidence/ui/before/catalog-detail-마법인형-1280x720.png",
       "bytes": 267806,
       "sha256": "86433362cfd4378351e82b15c53e006399856c3656fc9f59c02e1e2ebb872423"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\ub9c8\ubc95\uc778\ud615-854x480.png",
+      "path": "evidence/ui/before/catalog-detail-마법인형-854x480.png",
       "bytes": 48906,
       "sha256": "9c4323a775e34ceab5572e8a99833946b24e2ce58b6ec9f7871b21618001a7dd"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\ubcc0\uc2e0-1280x720.png",
+      "path": "evidence/ui/before/catalog-detail-변신-1280x720.png",
       "bytes": 384153,
       "sha256": "7f1d44be4940304f51ff1aa51178f71813887bf203d63aa668d46b09653f10d3"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\ubcc0\uc2e0-854x480.png",
+      "path": "evidence/ui/before/catalog-detail-변신-854x480.png",
       "bytes": 47680,
       "sha256": "c443411c1f82faa77eeabb386c9bf1de6e35bd7f2253a1203d0cfbf2d1aca958"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\uc131\ubb3c-1280x720.png",
+      "path": "evidence/ui/before/catalog-detail-성물-1280x720.png",
       "bytes": 329259,
       "sha256": "f0db3e6c04398e03f1e5706bf9bdc54566fba2eb836fa45e0939462c6be523ca"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\uc131\ubb3c-854x480.png",
+      "path": "evidence/ui/before/catalog-detail-성물-854x480.png",
       "bytes": 48852,
       "sha256": "6bb0a0840ea392ea58d57b9ba0422b7b635c9540167133b5e015eeb10dfced25"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\uc544\uc774\ud15c-1280x720.png",
+      "path": "evidence/ui/before/catalog-detail-아이템-1280x720.png",
       "bytes": 270289,
       "sha256": "8d06af039e7d6ff0ab534e6b74c2a35cec988675fa5d4f2b019c7573b6225e53"
     },
     {
-      "path": "evidence/ui/before/catalog-detail-\uc544\uc774\ud15c-854x480.png",
+      "path": "evidence/ui/before/catalog-detail-아이템-854x480.png",
       "bytes": 62281,
       "sha256": "872479c2445cf38df078ab4f9bf64c0bb9731191ae9a1dee4d710800cc58aaf1"
     },
     {
-      "path": "evidence/ui/before/catalog-\ub9c8\ubc95\uc778\ud615-1280x720.png",
+      "path": "evidence/ui/before/catalog-마법인형-1280x720.png",
       "bytes": 267806,
       "sha256": "86433362cfd4378351e82b15c53e006399856c3656fc9f59c02e1e2ebb872423"
     },
     {
-      "path": "evidence/ui/before/catalog-\ub9c8\ubc95\uc778\ud615-854x480.png",
+      "path": "evidence/ui/before/catalog-마법인형-854x480.png",
       "bytes": 110571,
       "sha256": "29e1c8097a825967073f66315563bac30f7ba08c1aa86679f927d6c1619db71f"
     },
     {
-      "path": "evidence/ui/before/catalog-\ubcc0\uc2e0-1280x720.png",
+      "path": "evidence/ui/before/catalog-변신-1280x720.png",
       "bytes": 384153,
       "sha256": "7f1d44be4940304f51ff1aa51178f71813887bf203d63aa668d46b09653f10d3"
     },
     {
-      "path": "evidence/ui/before/catalog-\ubcc0\uc2e0-854x480.png",
+      "path": "evidence/ui/before/catalog-변신-854x480.png",
       "bytes": 135290,
       "sha256": "738ab91340db103dbb920182b31523c6a529eefbf969ec5be8783b8d946f890b"
     },
     {
-      "path": "evidence/ui/before/catalog-\uc131\ubb3c-1280x720.png",
+      "path": "evidence/ui/before/catalog-성물-1280x720.png",
       "bytes": 329259,
       "sha256": "f0db3e6c04398e03f1e5706bf9bdc54566fba2eb836fa45e0939462c6be523ca"
     },
     {
-      "path": "evidence/ui/before/catalog-\uc131\ubb3c-854x480.png",
+      "path": "evidence/ui/before/catalog-성물-854x480.png",
       "bytes": 140375,
       "sha256": "226128d7b3908679e89ff0c4b259f75fc7fc31057037943b198db3d79187ecf5"
     },
     {
-      "path": "evidence/ui/before/catalog-\uc544\uc774\ud15c-1280x720.png",
+      "path": "evidence/ui/before/catalog-아이템-1280x720.png",
       "bytes": 270289,
       "sha256": "8d06af039e7d6ff0ab534e6b74c2a35cec988675fa5d4f2b019c7573b6225e53"
     },
     {
-      "path": "evidence/ui/before/catalog-\uc544\uc774\ud15c-854x480.png",
+      "path": "evidence/ui/before/catalog-아이템-854x480.png",
       "bytes": 116246,
       "sha256": "f7e7b54548a2758b8d2282f3101854f380aa9beb4e46a6f61bd4ac4c3384ef9b"
     },
@@ -1159,8 +1193,8 @@
     },
     {
       "path": "performance/README.md",
-      "bytes": 8745,
-      "sha256": "2669ef06cc0c9a7487790bceeb8af71435096ce04f118493c95a99c85a9004f2"
+      "bytes": 17874,
+      "sha256": "b6f00eb14638eed72c92493605887f7e704c47303d76ef7934de764947ff2ab1"
     },
     {
       "path": "performance/auto-selection-runner.log",
@@ -1223,6 +1257,146 @@
       "sha256": "540724ecb48a2d30bf305e1d09e0e8957c2635fbe509a8983b1b93072b553022"
     },
     {
+      "path": "performance/minimap-raster-aborted-per-frame.log",
+      "bytes": 626,
+      "sha256": "610d356978f758ff61fcbb3f4c0fc0078d9e7068912f55d9d622637a52c15896"
+    },
+    {
+      "path": "performance/minimap-raster-first.json",
+      "bytes": 5727,
+      "sha256": "b421cba0370a28c83535602b45154d4ec7a4513e7fa686a405441d9236adf0cf"
+    },
+    {
+      "path": "performance/minimap-raster-first.log",
+      "bytes": 819,
+      "sha256": "cfa704a3ce4348c06541db44efd88f91fd485c70a65b4fadb995a261dc2f374d"
+    },
+    {
+      "path": "performance/minimap-raster-fractional-before.json",
+      "bytes": 6160,
+      "sha256": "6d47528fa1fddc40c12074dcc9d31d7a9bdd927a27bcb365ad6b6aa1f6c4a053"
+    },
+    {
+      "path": "performance/minimap-raster-fractional-before.log",
+      "bytes": 690,
+      "sha256": "1f100aefc4f272c4a989087ba65500ee8ae9dad8ed7e9cf1a9752536aa8a9ae4"
+    },
+    {
+      "path": "performance/minimap-raster-parity.json",
+      "bytes": 1402,
+      "sha256": "3a4ed4018e09a933f1916aac40b6dbcddc1069e7398dfc48000b354d0c57585f"
+    },
+    {
+      "path": "performance/minimap-raster-parity.log",
+      "bytes": 406,
+      "sha256": "c67ed24e437ec3d021397da45cb4137bcae0e065baf1bf52bab7937f6675bc2a"
+    },
+    {
+      "path": "performance/minimap-raster.json",
+      "bytes": 6301,
+      "sha256": "224e2479b14584c82b39468b5854250bf73111a7ce12deb53428baca913c578e"
+    },
+    {
+      "path": "performance/minimap-raster.log",
+      "bytes": 690,
+      "sha256": "1f100aefc4f272c4a989087ba65500ee8ae9dad8ed7e9cf1a9752536aa8a9ae4"
+    },
+    {
+      "path": "performance/presentation-cost.json",
+      "bytes": 3437,
+      "sha256": "d730143ad252acff003615832f0f2a16cf8b371037292ffe5a62c5fd6454732a"
+    },
+    {
+      "path": "performance/presentation-cost.log",
+      "bytes": 663,
+      "sha256": "87986b5e6145f9bbba23b82d2962ccfb07b25c9d0189d2c5ccaa482e10261ba4"
+    },
+    {
+      "path": "performance/raster-cached-1920-fractional-before.png",
+      "bytes": 2645258,
+      "sha256": "e56490dca77e30598c0641ac627e64d8ee5d2c62e6a9c2f06c6cc4e0d3495b02"
+    },
+    {
+      "path": "performance/raster-cached-1920.png",
+      "bytes": 2645258,
+      "sha256": "e56490dca77e30598c0641ac627e64d8ee5d2c62e6a9c2f06c6cc4e0d3495b02"
+    },
+    {
+      "path": "performance/raster-cached-854-fractional-before.png",
+      "bytes": 1109843,
+      "sha256": "bdc81596e8d6862cb074425ae314cc870ceb628bd7d71e32e4398ec906d0b839"
+    },
+    {
+      "path": "performance/raster-cached-854.png",
+      "bytes": 1110142,
+      "sha256": "abafe5cde3f30bc205729207c797a1147e0251e6c78e16fd39bbffb74aa43aaf"
+    },
+    {
+      "path": "performance/raster-cached-first.png",
+      "bytes": 2381074,
+      "sha256": "99eccc6d42e7b056c40e6472739eda964c24597cef1b9039b4ea261e571970dd"
+    },
+    {
+      "path": "performance/raster-cached-fractional-before.png",
+      "bytes": 2401193,
+      "sha256": "161b051558977ce4a0ed0ca4b25c1c22d6f5ab27b970f15522babd6b60330295"
+    },
+    {
+      "path": "performance/raster-cached.png",
+      "bytes": 2401193,
+      "sha256": "161b051558977ce4a0ed0ca4b25c1c22d6f5ab27b970f15522babd6b60330295"
+    },
+    {
+      "path": "performance/raster-direct-1920-fractional-before.png",
+      "bytes": 2645383,
+      "sha256": "0cd5de19d09a7c2832627346de098a4ee492a59755152f1a6ab945443a1b62a8"
+    },
+    {
+      "path": "performance/raster-direct-1920.png",
+      "bytes": 2645383,
+      "sha256": "0cd5de19d09a7c2832627346de098a4ee492a59755152f1a6ab945443a1b62a8"
+    },
+    {
+      "path": "performance/raster-direct-854-fractional-before.png",
+      "bytes": 1110126,
+      "sha256": "82f0153056c6b5e37dde7417c1708ac5e1be51f2b5e2453c045640a5f1bcf807"
+    },
+    {
+      "path": "performance/raster-direct-854.png",
+      "bytes": 1110126,
+      "sha256": "82f0153056c6b5e37dde7417c1708ac5e1be51f2b5e2453c045640a5f1bcf807"
+    },
+    {
+      "path": "performance/raster-direct-first.png",
+      "bytes": 2381136,
+      "sha256": "566b938c5e5b43ff1f51de719f7a9610aa4674fbad1dc297bf1ecd9d46c97eb5"
+    },
+    {
+      "path": "performance/raster-direct-fractional-before.png",
+      "bytes": 2401155,
+      "sha256": "f7bc035f4f35cc4cef128fc27bb940ae8b9fc95091d17ff8360cac79c96527e2"
+    },
+    {
+      "path": "performance/raster-direct.png",
+      "bytes": 2401155,
+      "sha256": "f7bc035f4f35cc4cef128fc27bb940ae8b9fc95091d17ff8360cac79c96527e2"
+    },
+    {
+      "path": "performance/raster-pixel-comparison-first.json",
+      "bytes": 185,
+      "sha256": "e3ef481830933102e9522ad80d3fad0c522d4c5a223902ed7afea422d6b231b1"
+    },
+    {
+      "path": "performance/raster-pixel-comparison-fractional-before.json",
+      "bytes": 784,
+      "sha256": "786a0a57585189781ca60685a90f6a2cc5d57b31591fdc5af76342a5a823fcf8"
+    },
+    {
+      "path": "performance/raster-pixel-comparison.json",
+      "bytes": 1709,
+      "sha256": "376a17e078d332756b37f633179ab7d03841ebcc14063f9f509d5e42e13a8bdb"
+    },
+    {
       "path": "performance/stationary-after.png",
       "bytes": 2383021,
       "sha256": "8b9210d790d4fac29f5ddcdff35f45d2728f195e744460eae3bae546aa345aee"
@@ -1269,9 +1443,73 @@
     },
     {
       "path": "validation.json",
-      "bytes": 2276,
-      "sha256": "44738a1023287e4c57dd07616367be9fc8d14305debf8060fe050fe5fc179500"
+      "bytes": 2623,
+      "sha256": "53376c6f17af6ded13412d2ea4fce43591f71bf069d5bde39996e6381bb239b9"
     }
   ],
-  "total_bytes": 94232721
+  "total_bytes": 94232721,
+  "source_revision": "Containing Git commit; exact runtime source hashes below",
+  "previous_remote_commit": "d9e95ca7a2333e04d461f8b585268351c1620b27",
+  "runtime_sources": [
+    {
+      "path": "scripts/audio/presentation_audio.gd",
+      "bytes": 3491,
+      "sha256": "16473a25cf78ed60b0826cb7cd3f5b3a9ac368840a23920a305a1e0e532dbcf5"
+    },
+    {
+      "path": "scripts/maps/field_minimap.gd",
+      "bytes": 9452,
+      "sha256": "1d7c535ffe93726732957633eaf75b81b5c411d637abe1ba0aae66c3fb4ffcd0"
+    },
+    {
+      "path": "scripts/maps/minimap_geography_cache.gd",
+      "bytes": 1783,
+      "sha256": "d2b69e9946c45e9b4a85d07eb335335160f7eccbac2e1563e1b0a98b01e03e9c"
+    },
+    {
+      "path": "scripts/maps/minimap_raster_cache.gd",
+      "bytes": 3139,
+      "sha256": "c7d3e3a78e6c2cdfc874fbbd952a012d80846789a3ddb224fefef83713834a43"
+    },
+    {
+      "path": "scripts/maps/native_png_renderer.gd",
+      "bytes": 11033,
+      "sha256": "1709ba22e83a608ebf13383e2ad8b6adcc17947fbacc6701f400f1973fd96549"
+    },
+    {
+      "path": "scripts/ui/renewal_hud.gd",
+      "bytes": 90631,
+      "sha256": "041cdd76e5a14931a2fb4b9c3ab2e55720d11190189ff4c67c2d1f32bf584ab9"
+    },
+    {
+      "path": "scripts/ui/renewal_icons.gd",
+      "bytes": 3156,
+      "sha256": "4c93a30af17cdef27d9dbaf11c01b2e2787e410aa117f1f92790bd48cc9be2ef"
+    },
+    {
+      "path": "scripts/ui/renewal_material_style.gd",
+      "bytes": 1750,
+      "sha256": "2a475ba9d5a1173d94d4906bb429eb98562ff6a85b988670b2c20c044e2a6d63"
+    },
+    {
+      "path": "scripts/ui/renewal_surface.gd",
+      "bytes": 1187,
+      "sha256": "973fc6fb2b2556d952fb0a024646188dc1c49fee16696a3b87d582dd3686bfc5"
+    },
+    {
+      "path": "scripts/ui/renewal_theme.gd",
+      "bytes": 9290,
+      "sha256": "8771379978b9f0f66b5f399a2411f0dedf1b6c9f0efea222cdc64fdd5a249af5"
+    },
+    {
+      "path": "scripts/ui/renewal_window.gd",
+      "bytes": 12298,
+      "sha256": "bff463e6ae1a497782f068e742b233b16a81a53f09f1007eac6dbe0a3dcc614c"
+    },
+    {
+      "path": "scripts/world.gd",
+      "bytes": 317355,
+      "sha256": "8006b5a9710ecb0371b2706beb15e22ae86acd0591a6173998c9756deed9e76f"
+    }
+  ]
 }

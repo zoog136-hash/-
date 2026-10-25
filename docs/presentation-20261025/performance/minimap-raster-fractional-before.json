@@ -1,0 +1,265 @@
+{
+  "active": {
+    "cache_builds_end": 4,
+    "cache_builds_start": 4,
+    "incoming": 18,
+    "interpretation": "one continuous960frame16second combat;120frame blocks ABBA BAAB with first8frames discarded; unchanged0.12s minimap cadence; different combat moments not identical replay trajectories; original AI/node identities unchanged",
+    "population_end": 165,
+    "population_start": 133,
+    "position_start": [
+      3953.0,
+      5016.0
+    ],
+    "rng_final": "7636461644330432712",
+    "samples": [
+      {
+        "draw_calls": {
+          "max": 2638.0,
+          "median": 2552.0,
+          "p95": 2609.0,
+          "p99": 2624.0
+        },
+        "frame_ms": {
+          "max": 68.02,
+          "median": 37.469,
+          "p95": 50.772,
+          "p99": 55.957
+        },
+        "frames": 448,
+        "peak_sampled_rss_kib": 1566996,
+        "physics_monitor_ms": {
+          "max": 345.601,
+          "median": 11.075,
+          "p95": 345.601,
+          "p99": 345.601
+        },
+        "process_monitor_ms": {
+          "max": 239.936,
+          "median": 49.266,
+          "p95": 77.361,
+          "p99": 239.936
+        },
+        "raster_enabled": false,
+        "stalls_over100ms": 0,
+        "stalls_over50ms": 27
+      },
+      {
+        "draw_calls": {
+          "max": 443.0,
+          "median": 365.0,
+          "p95": 406.0,
+          "p99": 427.0
+        },
+        "frame_ms": {
+          "max": 242.597,
+          "median": 17.69,
+          "p95": 25.957,
+          "p99": 34.758
+        },
+        "frames": 448,
+        "peak_sampled_rss_kib": 1566996,
+        "physics_monitor_ms": {
+          "max": 20.214,
+          "median": 11.542,
+          "p95": 20.214,
+          "p99": 20.214
+        },
+        "process_monitor_ms": {
+          "max": 239.936,
+          "median": 35.101,
+          "p95": 45.822,
+          "p99": 239.936
+        },
+        "raster_enabled": true,
+        "stalls_over100ms": 1,
+        "stalls_over50ms": 1
+      }
+    ],
+    "strikes": 56
+  },
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "android": "NOT_RUN",
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "gpu_memory": "UNKNOWN",
+  "map": "escaros_world",
+  "population": 133,
+  "position": [
+    7433.0,
+    2904.0
+  ],
+  "samples": [
+    {
+      "draw_calls": {
+        "max": 2467.0,
+        "median": 2467.0,
+        "p95": 2467.0,
+        "p99": 2467.0
+      },
+      "frame_ms": {
+        "max": 42.85,
+        "median": 27.555,
+        "p95": 35.271,
+        "p99": 40.763
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1569832,
+      "phase": 0,
+      "physics_monitor_ms": {
+        "max": 0.099,
+        "median": 0.081,
+        "p95": 0.093,
+        "p99": 0.099
+      },
+      "process_monitor_ms": {
+        "max": 46.074,
+        "median": 37.252,
+        "p95": 46.074,
+        "p99": 46.074
+      },
+      "raster_enabled": false,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 345513151.0
+    },
+    {
+      "draw_calls": {
+        "max": 272.0,
+        "median": 272.0,
+        "p95": 272.0,
+        "p99": 272.0
+      },
+      "frame_ms": {
+        "max": 21.064,
+        "median": 10.611,
+        "p95": 16.059,
+        "p99": 18.908
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1569840,
+      "phase": 1,
+      "physics_monitor_ms": {
+        "max": 0.152,
+        "median": 0.148,
+        "p95": 0.152,
+        "p99": 0.152
+      },
+      "process_monitor_ms": {
+        "max": 34.055,
+        "median": 20.991,
+        "p95": 34.055,
+        "p99": 34.055
+      },
+      "raster_enabled": true,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 345272187.0
+    },
+    {
+      "draw_calls": {
+        "max": 2467.0,
+        "median": 2467.0,
+        "p95": 2467.0,
+        "p99": 2467.0
+      },
+      "frame_ms": {
+        "max": 70.336,
+        "median": 27.237,
+        "p95": 35.847,
+        "p99": 50.716
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1569840,
+      "phase": 2,
+      "physics_monitor_ms": {
+        "max": 0.322,
+        "median": 0.094,
+        "p95": 0.322,
+        "p99": 0.322
+      },
+      "process_monitor_ms": {
+        "max": 69.987,
+        "median": 35.797,
+        "p95": 69.987,
+        "p99": 69.987
+      },
+      "raster_enabled": false,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 2,
+      "static_memory_bytes": 345520727.0
+    },
+    {
+      "draw_calls": {
+        "max": 272.0,
+        "median": 272.0,
+        "p95": 272.0,
+        "p99": 272.0
+      },
+      "frame_ms": {
+        "max": 24.806,
+        "median": 12.915,
+        "p95": 16.153,
+        "p99": 21.987
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1569840,
+      "phase": 3,
+      "physics_monitor_ms": {
+        "max": 0.078,
+        "median": 0.075,
+        "p95": 0.078,
+        "p99": 0.078
+      },
+      "process_monitor_ms": {
+        "max": 50.645,
+        "median": 31.785,
+        "p95": 50.645,
+        "p99": 50.645
+      },
+      "raster_enabled": true,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 345279707.0
+    }
+  ],
+  "scale_checks": [
+    {
+      "builds": 2,
+      "byte_identical": false,
+      "cached": "raster-cached-854.png",
+      "direct": "raster-direct-854.png",
+      "raster_size": "(112, 99)",
+      "size": [
+        853,
+        480
+      ]
+    },
+    {
+      "builds": 3,
+      "byte_identical": false,
+      "cached": "raster-cached-1920.png",
+      "direct": "raster-direct-1920.png",
+      "raster_size": "(252, 222)",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "scope": "same loaded Main; frozen180frame direct/cache/direct/cache; then continuous960activeframes alternating120frameblocks direct/cache; all cachednodes prebuilt; no screenshot readback during measurements; no AI phase normalization",
+  "visual": {
+    "builds": 1,
+    "byte_identical": false,
+    "cached": "raster-cached.png",
+    "direct": "raster-direct.png",
+    "raster_size": "(168, 148)",
+    "size": [
+      1280,
+      720
+    ]
+  },
+  "zoom": [
+    1.0,
+    1.0
+  ]
+}
