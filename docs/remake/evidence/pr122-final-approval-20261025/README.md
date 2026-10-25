@@ -1,5 +1,10 @@
 # PR122 별도 최종 승인 검증 — HOLD 유지
 
+**추가 CI 조사:** [partial locomotion CI 실패 추적](locomotion-ci-followup/README.md).
+초기 Main 캡처는 격리 runner의 PNG 맵 번들 누락으로 기존 맵을 사용했다.
+이 누락을 수정하고 실제 번들 PNG 맵에서 보스 6종 검사를 다시 통과했다.
+이전 CI의 clearing 실패 원인은 아직 미확정이며 후보 연결 이전 NOT_EVALUATED다.
+
 기준 저장소는 `zoog136-hash/-`. 조사 시 PR122는 OPEN, 미병합이며 HEAD는
 `d76a098b96f33efcccf2721ca3b8102bac8dcc75`, main은
 `cba19558de2764839feb4887a8af8f69b905257a`이다. 이 결과는 PR122 기준 별도

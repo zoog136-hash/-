@@ -6,11 +6,11 @@ boss Main harness. This is not a substitute for native import/export CI.
 import argparse,json,os,re,subprocess,time
 from pathlib import Path
 
-def run(root,out,godot,mode,plan,xvfb):
+def run(root,out,godot,mode,plan,xvfb,script_override=None):
     out.mkdir(parents=True,exist_ok=False)
     project=out/'project';project.mkdir()
     (project/'project.godot').write_bytes((root/'project.godot').read_bytes())
-    for name in ['scripts','data','assets','scenes','docs','tests','addons','Main.tscn']:
+    for name in ['scripts','data','assets','scenes','docs','tests','addons','external_map_packs','Main.tscn']:
         p=root/name
         if p.exists():(project/name).symlink_to(p,target_is_directory=p.is_dir())
     def base(f):
@@ -32,6 +32,9 @@ def run(root,out,godot,mode,plan,xvfb):
         p=out/kind.lower();p.mkdir();env['XDG_'+kind+'_HOME']=str(p)
     env.update(PR122_APPROVAL_PLAN=str(plan or ''),PR122_APPROVAL_REPORT=str(out/'resource-report.json'),BOSS_DEFAULT_MAIN_OUTPUT=str(out),LIBGL_ALWAYS_SOFTWARE='1')
     script='pr122_approval_resource_audit.gd' if mode=='resources' else 'pr122_published_boss_approval_main.gd'
+    if script_override:
+        assert Path(script_override).name == script_override and script_override.endswith('.gd')
+        script=script_override
     cmd=[str(godot),'--path',str(project),'--audio-driver','Dummy','--script','res://tests/'+script]
     display=None;xlog=None
     if mode=='resources':cmd+=['--headless']
@@ -64,5 +67,5 @@ def run(root,out,godot,mode,plan,xvfb):
         if xlog:xlog.close()
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]);p.add_argument('--output',type=Path,required=True);p.add_argument('--godot',type=Path,required=True);p.add_argument('--mode',choices=['resources','main'],required=True);p.add_argument('--plan',type=Path);p.add_argument('--xvfb',type=Path);a=p.parse_args()
-    raise SystemExit(run(a.root.resolve(),a.output.resolve(),a.godot.resolve(),a.mode,a.plan.resolve() if a.plan else None,a.xvfb.resolve() if a.xvfb else None))
+    p=argparse.ArgumentParser();p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]);p.add_argument('--output',type=Path,required=True);p.add_argument('--godot',type=Path,required=True);p.add_argument('--mode',choices=['resources','main'],required=True);p.add_argument('--plan',type=Path);p.add_argument('--xvfb',type=Path);p.add_argument('--script',help='A test script filename for a scoped investigation');a=p.parse_args()
+    raise SystemExit(run(a.root.resolve(),a.output.resolve(),a.godot.resolve(),a.mode,a.plan.resolve() if a.plan else None,a.xvfb.resolve() if a.xvfb else None,a.script))

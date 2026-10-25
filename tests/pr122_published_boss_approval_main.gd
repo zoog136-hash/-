@@ -107,6 +107,11 @@ func run() -> void:
 	if bool(world.hud.get("class_picker_initial")): world.hud.complete_class_selection()
 	world.player.camera.make_current()
 	world.player.camera.force_update_scroll()
+	report["active_map_id"] = world.active_map_id
+	report["field_script"] = world.field_map.get_script().resource_path
+	var registry = load("res://scripts/maps/native_png_registry.gd")
+	report["bundled_native_png_installed"] = registry.installed()
+	check(bool(report.bundled_native_png_installed) and str(report.field_script).ends_with("native_png_field.gd"), "Actual bundled PNG map is present; no missing-pack fallback")
 	var before := _world_state(world)
 	var monster_scene = load("res://scenes/Monster.tscn")
 	for expected: Dictionary in plan.actors:
