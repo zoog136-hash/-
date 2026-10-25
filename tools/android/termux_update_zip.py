@@ -69,28 +69,87 @@ def sha1_of_blob(path, size):
 
 
 def get_inventory():
+    """Read a complete Git tree even after GitHub's recursive response limit.
+
+    A recursive request for the entire repository can return HTTP 200 with
+    `truncated=true` when its JSON result is too large. Never trust that
+    partial inventory: a missing row might otherwise be treated as deletion.
+    Read the root's direct children and shard by their *immutable tree SHAs*.
+    If a subtree is itself truncated, subdivide it again.
+    """
     commit = fetch_json(API + '/commits/main')
     sha = commit['sha']
     tree_sha = commit['commit']['tree']['sha']
-    tree = fetch_json(API + '/git/trees/' + tree_sha + '?recursive=1')
-    if tree.get('truncated') or tree.get('sha') != tree_sha:
-        raise RuntimeError('Incomplete GitHub inventory. No project files updated.')
+    if not isinstance(sha, str) or len(sha) != 40 or not isinstance(tree_sha, str) or len(tree_sha) != 40:
+        raise RuntimeError('Invalid pinned GitHub commit/tree response')
     rows = {}
-    for row in tree['tree']:
-        if row['type'] != 'blob':
-            continue
-        if row['mode'] not in ('100644', '100755'):
-            raise RuntimeError('Unsupported file mode: ' + row['path'])
-        path = row['path']
-        safe_path(path)
-        size = row.get('size')
-        if not isinstance(size, int) or size < 0 or len(row['sha']) != 40:
-            raise RuntimeError('Incomplete GitHub file metadata: ' + path)
-        rows[path] = {'size': size, 'sha': row['sha'], 'mode': row['mode']}
+
+    def validated_tree(tree_id, recursive):
+        url = API + '/git/trees/' + tree_id
+        if recursive:
+            url += '?recursive=1'
+        data = fetch_json(url)
+        if (not isinstance(data, dict) or data.get('sha') != tree_id
+                or not isinstance(data.get('tree'), list)
+                or not isinstance(data.get('truncated'), bool)):
+            raise RuntimeError('Incomplete GitHub tree metadata; no files updated')
+        return data
+
+    def add_blob(path, entry):
+        relative = safe_path(path)
+        size = entry.get('size')
+        blob_sha = entry.get('sha')
+        mode = entry.get('mode')
+        if (mode not in ('100644', '100755') or not isinstance(size, int)
+                or size < 0 or not isinstance(blob_sha, str) or len(blob_sha) != 40):
+            raise RuntimeError('Unsupported or incomplete GitHub blob: ' + path)
+        if path in rows:
+            raise RuntimeError('Duplicate GitHub path: ' + path)
+        rows[str(relative)] = {'size': size, 'sha': blob_sha, 'mode': mode}
+
+    def walk(tree_id, prefix='', depth=0, ancestors=()):
+        if depth > 32 or tree_id in ancestors:
+            raise RuntimeError('Unexpected cyclic/deep GitHub tree; no files updated')
+        # Root direct listing is intentionally small. Avoid repeatedly fetching
+        # the known-truncated whole-repository recursive response.
+        recursive = validated_tree(tree_id, True) if prefix else None
+        if recursive is not None and not recursive['truncated']:
+            for entry in recursive['tree']:
+                relative = entry.get('path')
+                safe_path(relative)
+                path = prefix + relative
+                if entry.get('type') == 'blob':
+                    add_blob(path, entry)
+                elif entry.get('type') == 'tree' and entry.get('mode') == '040000':
+                    continue
+                else:
+                    raise RuntimeError('Unsupported GitHub tree entry: ' + path)
+            return
+
+        # A truncated recursive response is discarded altogether. An immutable
+        # nonrecursive tree has every immediate child and can be split safely.
+        direct = validated_tree(tree_id, False)
+        if direct['truncated']:
+            raise RuntimeError('Incomplete direct GitHub tree; no files updated')
+        for entry in direct['tree']:
+            relative = entry.get('path')
+            safe_path(relative)
+            path = prefix + relative
+            if entry.get('type') == 'blob':
+                add_blob(path, entry)
+            elif entry.get('type') == 'tree' and entry.get('mode') == '040000':
+                child_sha = entry.get('sha')
+                if not isinstance(child_sha, str) or len(child_sha) != 40:
+                    raise RuntimeError('Invalid child GitHub tree: ' + path)
+                walk(child_sha, path + '/', depth + 1, ancestors + (tree_id,))
+            else:
+                raise RuntimeError('Unsupported GitHub tree entry: ' + path)
+
+    walk(tree_sha)
     if not rows or not {'project.godot', 'Main.tscn'}.issubset(rows):
         raise RuntimeError('Missing required Godot project files')
+    print('GitHub inventory complete (sharded trees):', len(rows), flush=True)
     return sha, rows
-
 
 def download_verified(commit_sha, relative, row, dest):
     safe_path(relative)
