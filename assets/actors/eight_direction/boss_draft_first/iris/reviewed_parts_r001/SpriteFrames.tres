@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=197 format=3]
+[gd_resource type="SpriteFrames" load_steps=204 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/owned_parts_v01/E-hit-v01.png" id="1"]
 
@@ -57,6 +57,8 @@
 
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/reviewed_parts_r001/E-attack.png" id="28"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/reviewed_parts_r001/W-run.png" id="repair_r002_W_run_texture"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1068,6 +1070,43 @@ region = Rect2(1128, 2176, 667, 342)
 margin = Rect2(91, 316, 373, 698)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_run_0"]
+atlas = ExtResource("repair_r002_W_run_texture")
+region = Rect2(80,80,733,384)
+margin = Rect2(179,298,307,656)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_run_1"]
+atlas = ExtResource("repair_r002_W_run_texture")
+region = Rect2(1080,80,787,384)
+margin = Rect2(101,298,253,656)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_run_2"]
+atlas = ExtResource("repair_r002_W_run_texture")
+region = Rect2(80,1080,757,349)
+margin = Rect2(159,308,283,691)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_run_3"]
+atlas = ExtResource("repair_r002_W_run_texture")
+region = Rect2(1080,1080,787,397)
+margin = Rect2(97,305,253,643)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_run_4"]
+atlas = ExtResource("repair_r002_W_run_texture")
+region = Rect2(80,2080,834,395)
+margin = Rect2(136,271,206,645)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_run_5"]
+atlas = ExtResource("repair_r002_W_run_texture")
+region = Rect2(1080,2080,761,361)
+margin = Rect2(97,300,279,679)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1237,7 +1276,8 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_27_2")},
 {"duration": 1.0, "texture": SubResource("draft_27_3")},
 {"duration": 1.0, "texture": SubResource("draft_27_4")},
-{"duration": 1.0, "texture": SubResource("draft_27_5")}], "loop": false, "name": &"attack_0", "speed": 14.285714285714286}
+{"duration": 1.0, "texture": SubResource("draft_27_5")}], "loop": false, "name": &"attack_0", "speed": 14.285714285714286},
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_W_run_0")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_1")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_2")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_3")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_4")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_5")}],"loop":true,"name":&"run_4","speed":12.5}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
 metadata/twilight_production_connected = false
