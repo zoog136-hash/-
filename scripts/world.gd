@@ -2850,6 +2850,7 @@ func _use_card_pack_item(item_name: String) -> void:
 	# Persist an atomic (card ownership + ticket debit) transaction. Never show
 	# a new card or consume the ticket if the old save cannot be replaced.
 	var cards_before: Dictionary = card_draw_fusion.export_state()
+	var roll_before: int = card_draw_fusion.rng.state
 	var ticket_before: int = int(inventory.get(item_name, 0))
 	var outcome: Dictionary = card_draw_fusion.draw_cards(category, count)
 	if not bool(outcome.get("ok", false)):
@@ -2870,6 +2871,7 @@ func _use_card_pack_item(item_name: String) -> void:
 		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
 	if _save_game(true) != OK:
 		card_draw_fusion.import_state(cards_before)
+		card_draw_fusion.rng.state = roll_before
 		inventory[item_name] = ticket_before
 		hud.refresh_inventory(inventory)
 		hud.show_message("뽑기 저장 실패 · 뽑기권과 카드 보유 상태를 복구했습니다")
@@ -5607,6 +5609,7 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
 	var cards_before: Dictionary = card_draw_fusion.export_state()
+	var roll_before: int = card_draw_fusion.rng.state
 	var result: Dictionary = card_draw_fusion.draw_pack(category)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "뽑기 실패")))
@@ -5623,6 +5626,7 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	]
 	if _save_game(true) != OK:
 		card_draw_fusion.import_state(cards_before)
+		card_draw_fusion.rng.state = roll_before
 		hud.show_message("뽑기 저장 실패 · 카드 획득 내역을 복구했습니다")
 		return
 	_update_hud()
@@ -5636,6 +5640,7 @@ func _on_card_fusion_requested(category: String, grade: String) -> void:
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
 	var cards_before: Dictionary = card_draw_fusion.export_state()
+	var roll_before: int = card_draw_fusion.rng.state
 	var result: Dictionary = card_draw_fusion.fuse(category, grade)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "합성 실패")))
@@ -5650,6 +5655,7 @@ func _on_card_fusion_requested(category: String, grade: String) -> void:
 		message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
 	if _save_game(true) != OK:
 		card_draw_fusion.import_state(cards_before)
+		card_draw_fusion.rng.state = roll_before
 		hud.show_message("합성 저장 실패 · 중복 카드 재료를 복구했습니다")
 		return
 	_update_hud()
