@@ -51398,17 +51398,207 @@
           "quality_review": "Replacement source visually reviewed; whole actor default verification pending",
           "production_connected": false,
           "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/NE-hit.json"
+        },
+        {
+          "role": "idle",
+          "direction": "NW",
+          "animation": "idle_5",
+          "source": "assets/actors/eight_direction/boss_draft_first/isabelle/repaired_source_r002/NW-idle-part0.png",
+          "source_sha256": "0642f919387036ce33d2468db87b486089d05191cb243dc9b91d67e220a4ff3d",
+          "texture": "assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/NW-idle.png",
+          "geometry": {
+            "image_size": [
+              2672,
+              4008
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "NW",
+                "region": [
+                  80,
+                  80,
+                  748,
+                  394
+                ],
+                "margin": [
+                  60,
+                  225,
+                  212,
+                  566
+                ],
+                "source_anchor": [
+                  500,
+                  455
+                ],
+                "rgba_sha256": "440587abe32151e9348023df62cb986229d73a9fecbfc75a6977a781d388b408",
+                "canvas_size": [
+                  960,
+                  960
+                ],
+                "source_part": 0,
+                "source_neutral_height": 360.0
+              },
+              {
+                "row": 1,
+                "direction": "NW",
+                "region": [
+                  1416,
+                  80,
+                  759,
+                  386
+                ],
+                "margin": [
+                  28,
+                  225,
+                  201,
+                  574
+                ],
+                "source_anchor": [
+                  1868,
+                  455
+                ],
+                "rgba_sha256": "1b887cb948fa64c60521c80967b0fd69c2996cb3bad9b93d510aa16e142d3e7a",
+                "canvas_size": [
+                  960,
+                  960
+                ],
+                "source_part": 0,
+                "source_neutral_height": 360.0
+              },
+              {
+                "row": 2,
+                "direction": "NW",
+                "region": [
+                  80,
+                  1416,
+                  1136,
+                  691
+                ],
+                "margin": [
+                  258,
+                  436,
+                  608,
+                  1053
+                ],
+                "source_anchor": [
+                  694,
+                  2070
+                ],
+                "rgba_sha256": "c76b4f50a9168b5e99229bdc4a64bbc9872c22770caa1af4e2f5350ab39f9190",
+                "canvas_size": [
+                  1744,
+                  1744
+                ],
+                "source_part": 1,
+                "source_neutral_height": 653.5
+              },
+              {
+                "row": 3,
+                "direction": "NW",
+                "region": [
+                  1416,
+                  1416,
+                  743,
+                  470
+                ],
+                "margin": [
+                  5,
+                  164,
+                  217,
+                  490
+                ],
+                "source_anchor": [
+                  1891,
+                  1852
+                ],
+                "rgba_sha256": "fe2872ad95f0993ac4eac37298fd612116ad7f1d84dce79f51c928599da551ba",
+                "canvas_size": [
+                  960,
+                  960
+                ],
+                "source_part": 0,
+                "source_neutral_height": 360.0
+              },
+              {
+                "row": 4,
+                "direction": "NW",
+                "region": [
+                  80,
+                  2752,
+                  1169,
+                  731
+                ],
+                "margin": [
+                  90,
+                  432,
+                  575,
+                  1013
+                ],
+                "source_anchor": [
+                  862,
+                  3410
+                ],
+                "rgba_sha256": "f3a18510e4e77a54f34442534ec0e7f0fe1b157a72f25d30d7e5f8399c3de290",
+                "canvas_size": [
+                  1744,
+                  1744
+                ],
+                "source_part": 1,
+                "source_neutral_height": 653.5
+              },
+              {
+                "row": 5,
+                "direction": "NW",
+                "region": [
+                  1416,
+                  2752,
+                  755,
+                  377
+                ],
+                "margin": [
+                  30,
+                  226,
+                  205,
+                  583
+                ],
+                "source_anchor": [
+                  1866,
+                  3126
+                ],
+                "rgba_sha256": "7556a1512fd0e9ab164fb6e07207ad152eaad78d2868574e3f9f41ce0e178903",
+                "canvas_size": [
+                  960,
+                  960
+                ],
+                "source_part": 0,
+                "source_neutral_height": 360.0
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 360.0,
+            "canvas_size": [
+              960,
+              960
+            ],
+            "foot": [
+              480,
+              600
+            ]
+          },
+          "quality_review": "Replacement source visually reviewed; whole actor default verification pending",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/NW-idle.json"
         }
       ],
       "frames": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/SpriteFrames.tres",
-      "frames_sha256": "b0710bb796608059c7b8dba497027b06e843b97ca74c7f7310307cab33969fa5",
+      "frames_sha256": "1b1270ba9c022d854c2d92c320353e20268acf0d44fea0db9cb1d0a23bfdd758",
       "native_profile": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/NativeMotionProfile.tres",
       "native_profile_sha256": "d9d03a3d41186cf6fadc58dfe1b5cb249d970dd8a5329aa5c71644e3c5199fe9",
-      "native_track_count": 31,
-      "native_pose_count": 186,
-      "distinct_source_pose_count": 186,
+      "native_track_count": 32,
+      "native_pose_count": 192,
+      "distinct_source_pose_count": 192,
       "missing_required_tracks": [
-        "idle_5",
         "run_6"
       ],
       "production_connected": false,

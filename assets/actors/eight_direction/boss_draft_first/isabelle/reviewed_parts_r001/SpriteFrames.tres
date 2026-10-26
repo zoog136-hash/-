@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=218 format=3]
+[gd_resource type="SpriteFrames" load_steps=225 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/isabelle/owned_parts_v01/E-attack-v01.png" id="1"]
 
@@ -62,6 +62,8 @@
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/NE-idle.png" id="30"]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/NE-hit.png" id="repair_r002_NE_hit_texture"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed_parts_r001/NW-idle.png" id="repair_r002_NW_idle_texture"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1181,6 +1183,43 @@ region = Rect2(1648,864,559,529)
 margin = Rect2(365,356,785,815)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="repair_r002_NW_idle_0"]
+atlas = ExtResource("repair_r002_NW_idle_texture")
+region = Rect2(80,80,748,394)
+margin = Rect2(60,225,212,566)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_NW_idle_1"]
+atlas = ExtResource("repair_r002_NW_idle_texture")
+region = Rect2(1416,80,759,386)
+margin = Rect2(28,225,201,574)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_NW_idle_2"]
+atlas = ExtResource("repair_r002_NW_idle_texture")
+region = Rect2(80,1416,1136,691)
+margin = Rect2(258,436,608,1053)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_NW_idle_3"]
+atlas = ExtResource("repair_r002_NW_idle_texture")
+region = Rect2(1416,1416,743,470)
+margin = Rect2(5,164,217,490)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_NW_idle_4"]
+atlas = ExtResource("repair_r002_NW_idle_texture")
+region = Rect2(80,2752,1169,731)
+margin = Rect2(90,432,575,1013)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_NW_idle_5"]
+atlas = ExtResource("repair_r002_NW_idle_texture")
+region = Rect2(1416,2752,755,377)
+margin = Rect2(30,226,205,583)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1363,7 +1402,8 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_29_3")},
 {"duration": 1.0, "texture": SubResource("draft_29_4")},
 {"duration": 1.0, "texture": SubResource("draft_29_5")}], "loop": true, "name": &"idle_7", "speed": 5},
-{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_0")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_1")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_2")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_3")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_4")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_5")}],"loop":false,"name":&"hit_7","speed":27.272727272727273}
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_0")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_1")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_2")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_3")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_4")},{"duration":1.0,"texture":SubResource("repair_r002_NE_hit_5")}],"loop":false,"name":&"hit_7","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_NW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_NW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_NW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_NW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_NW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_NW_idle_5")}],"loop":true,"name":&"idle_5","speed":5}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
 metadata/twilight_production_connected = false
