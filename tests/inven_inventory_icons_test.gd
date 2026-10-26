@@ -1,6 +1,7 @@
 extends SceneTree
 const RESOLVER = preload("res://scripts/ui/item_visual_resolver.gd")
 const INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
+const TICKETS = preload("res://scripts/card_pack_items.gd")
 const UNRESOLVED: Array[String] = []
 var checks: int = 0
 var failures: Array[String] = []
@@ -21,6 +22,12 @@ func inspect(record: Dictionary, group: String) -> void:
 	var texture: Texture2D = RESOLVER.texture(record, item_name)
 	if item_name in UNRESOLVED and str(record.get("sourceId", "")).is_empty():
 		check(texture != null and info.status == "self_authored_substitute", "honest unresolved source:" + item_name)
+	elif group == "runtime" and TICKETS.is_pack(item_name):
+		# New TWILIGHT-drawn pack artwork is not a verified third-party Inven
+		# original and must not be counted among Inven source-image bindings.
+		var authored_path: String = str(TICKETS.inventory_record(item_name).get("image_path", ""))
+		check(str(info.get("path", "")) == authored_path and info.get("status", "") == "original_review_pending", "authored draw icon path: " + item_name)
+		check(texture != null and not texture.has_meta("item_family"), "draw icon is not a family placeholder: " + item_name)
 	else:
 		check(texture != null and not texture.has_meta("item_family"), group + ":real picture:" + item_name)
 		check(not str(info.path).is_empty() and info.status in ["original_linked", "inven_exact_name", "inven_visual_alias"], group + ":audited path:" + item_name)
@@ -31,7 +38,11 @@ func inspect(record: Dictionary, group: String) -> void:
 		check(info.path == record.get("image_path", ""), "catalog path unchanged:" + item_name)
 	var ground: Dictionary = RESOLVER.describe(record, item_name, {}, true)
 	var before_ground: Dictionary = RESOLVER._describe_original(record, item_name, {}, true)
-	if before_ground.route in ["reviewed_ground", "l1j_dedicated_ground_candidate"]:
+	if group == "runtime" and TICKETS.is_pack(item_name):
+		# Authored ticket art may also be used on the ground, with no alias to
+		# an unrelated publisher image or change to item identity.
+		check(ground.get("name", "") == item_name, "draw pack ground identity unchanged: " + item_name)
+	elif before_ground.route in ["reviewed_ground", "l1j_dedicated_ground_candidate"]:
 		check(JSON.stringify(ground) == JSON.stringify(before_ground), "dedicated ground unchanged:" + item_name)
 	else:
 		check(ground.get("route", "") == "ground_category" and ground.get("name", "") == item_name, "independent ground category preserves item name:" + item_name)
