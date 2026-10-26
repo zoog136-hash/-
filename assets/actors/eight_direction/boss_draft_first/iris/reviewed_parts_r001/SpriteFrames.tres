@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=190 format=3]
+[gd_resource type="SpriteFrames" load_steps=197 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/owned_parts_v01/E-hit-v01.png" id="1"]
 
@@ -54,6 +54,9 @@
 
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/reviewed_parts_r001/E-idle.png" id="27"]
+
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/reviewed_parts_r001/E-attack.png" id="28"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1028,6 +1031,43 @@ region = Rect2(1032, 1984, 737, 338)
 margin = Rect2(229, 444, 511, 910)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="draft_27_0"]
+atlas = ExtResource("28")
+region = Rect2(80, 80, 688, 392)
+margin = Rect2(136, 264, 352, 648)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_27_1"]
+atlas = ExtResource("28")
+region = Rect2(1128, 80, 855, 437)
+margin = Rect2(5, 281, 185, 603)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_27_2"]
+atlas = ExtResource("28")
+region = Rect2(80, 1128, 888, 473)
+margin = Rect2(136, 254, 152, 567)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_27_3"]
+atlas = ExtResource("28")
+region = Rect2(1128, 1128, 740, 379)
+margin = Rect2(119, 311, 300, 661)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_27_4"]
+atlas = ExtResource("28")
+region = Rect2(80, 2176, 768, 381)
+margin = Rect2(136, 277, 272, 659)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="draft_27_5"]
+atlas = ExtResource("28")
+region = Rect2(1128, 2176, 667, 342)
+margin = Rect2(91, 316, 373, 698)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1191,7 +1231,13 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_26_2")},
 {"duration": 1.0, "texture": SubResource("draft_26_3")},
 {"duration": 1.0, "texture": SubResource("draft_26_4")},
-{"duration": 1.0, "texture": SubResource("draft_26_5")}], "loop": true, "name": &"idle_0", "speed": 5}
+{"duration": 1.0, "texture": SubResource("draft_26_5")}], "loop": true, "name": &"idle_0", "speed": 5},
+{"frames": [{"duration": 1.0, "texture": SubResource("draft_27_0")},
+{"duration": 1.0, "texture": SubResource("draft_27_1")},
+{"duration": 1.0, "texture": SubResource("draft_27_2")},
+{"duration": 1.0, "texture": SubResource("draft_27_3")},
+{"duration": 1.0, "texture": SubResource("draft_27_4")},
+{"duration": 1.0, "texture": SubResource("draft_27_5")}], "loop": false, "name": &"attack_0", "speed": 14.285714285714286}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
 metadata/twilight_production_connected = false
