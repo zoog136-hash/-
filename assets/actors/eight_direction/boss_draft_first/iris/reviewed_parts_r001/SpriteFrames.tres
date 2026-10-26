@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=211 format=3]
+[gd_resource type="SpriteFrames" load_steps=218 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/owned_parts_v01/E-hit-v01.png" id="1"]
 
@@ -61,6 +61,8 @@
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/reviewed_parts_r001/W-run.png" id="repair_r002_W_run_texture"]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/reviewed_parts_r001/SW-idle.png" id="repair_r002_SW_idle_texture"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/iris/reviewed_parts_r001/W-hit.png" id="repair_r002_W_hit_texture"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1146,6 +1148,43 @@ region = Rect2(1168,2256,781,356)
 margin = Rect2(113,236,155,580)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_hit_0"]
+atlas = ExtResource("repair_r002_W_hit_texture")
+region = Rect2(80,80,784,376)
+margin = Rect2(4,233,160,568)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_hit_1"]
+atlas = ExtResource("repair_r002_W_hit_texture")
+region = Rect2(1408,80,804,410)
+margin = Rect2(7,237,172,566)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_hit_2"]
+atlas = ExtResource("repair_r002_W_hit_texture")
+region = Rect2(80,1408,797,374)
+margin = Rect2(5,265,163,586)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_hit_3"]
+atlas = ExtResource("repair_r002_W_hit_texture")
+region = Rect2(1408,1408,1168,719)
+margin = Rect2(33,287,352,801)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_hit_4"]
+atlas = ExtResource("repair_r002_W_hit_texture")
+region = Rect2(80,2736,745,355)
+margin = Rect2(7,233,175,565)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_W_hit_5"]
+atlas = ExtResource("repair_r002_W_hit_texture")
+region = Rect2(1408,2736,1069,675)
+margin = Rect2(75,304,451,845)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1317,10 +1356,11 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_27_4")},
 {"duration": 1.0, "texture": SubResource("draft_27_5")}], "loop": false, "name": &"attack_0", "speed": 14.285714285714286},
 {"frames":[{"duration":1.0,"texture":SubResource("repair_r002_W_run_0")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_1")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_2")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_3")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_4")},{"duration":1.0,"texture":SubResource("repair_r002_W_run_5")}],"loop":true,"name":&"run_4","speed":12.5},
-{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_5")}],"loop":true,"name":&"idle_3","speed":5}
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_5")}],"loop":true,"name":&"idle_3","speed":5},
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_W_hit_0")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_1")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_2")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_3")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_4")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_5")}],"loop":false,"name":&"hit_4","speed":27.272727272727273}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
 metadata/twilight_production_connected = false
 metadata/twilight_detailed_completed = false
 metadata/twilight_native_locomotion_staging = true
-metadata/twilight_reviewed_frame_registration = {"attack_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)}]}}
+metadata/twilight_reviewed_frame_registration = {"attack_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(520,650),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)}]},"hit_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(472,590),"scale":Vector2(0.278260869565,0.278260869565),"target":Vector2(0,0)},{"anchor":Vector2(488,610),"scale":Vector2(0.278260869565,0.278260869565),"target":Vector2(0,0)},{"anchor":Vector2(480,600),"scale":Vector2(0.278260869565,0.278260869565),"target":Vector2(0,0)},{"anchor":Vector2(760,950),"scale":Vector2(0.168421052632,0.168421052632),"target":Vector2(0,0)},{"anchor":Vector2(460,575),"scale":Vector2(0.278260869565,0.278260869565),"target":Vector2(0,0)},{"anchor":Vector2(760,950),"scale":Vector2(0.168421052632,0.168421052632),"target":Vector2(0,0)}]}}
