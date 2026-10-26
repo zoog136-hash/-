@@ -28,3 +28,7 @@ The original PR #160 workflow contract validator is extended with an exact allow
 2. Run `python3 tools/ci/validate_workflow_refactor.py --baseline-ref bddfbb9725891dd2dcbdb5f2b774d91c499aa856` with the required git history and PyYAML available.
 3. Compare cache hit/miss and end-to-end Godot import durations on representative future PR checks. Revert the **five restore steps** if cache-transfer overhead exceeds the observed import savings; do not skip any tests.
 4. Only merge after the relevant checks pass and the branch is conflict free. No automatic full CI dispatch or pre-existing PR mutation is part of this patch.
+
+## Explicit PR validation trigger
+
+The preceding authoring commits used `[skip ci]`. This documentation-only follow-up commit intentionally omits that directive so the actual PR check workflows can execute before Ready/merge. No original tests, validation assertions, cache ownership, jobs, or thresholds are changed by the trigger. A queued or absent run is not considered passed.
