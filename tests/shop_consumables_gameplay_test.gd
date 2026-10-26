@@ -2,6 +2,8 @@ extends SceneTree
 
 const SHOP = preload("res://scripts/shop/shop_catalog.gd")
 const SHOP_UI = preload("res://scripts/ui/renewal_shop.gd")
+const PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
+const RESOLVER = preload("res://scripts/ui/item_visual_resolver.gd")
 var failures: int = 0
 var checks: int = 0
 func _initialize() -> void: call_deferred("_run")
@@ -23,6 +25,15 @@ func _run() -> void:
 	var inventory: Dictionary = world.get("inventory") as Dictionary
 	inventory.clear()
 	world.set("gold", 1000000000)
+	# This is the live catalog used by inventory/detail/quickslot, not merely
+	# the separate NPC shop listing. It must carry all six physical item icons.
+	for item_name: String in PACK_ITEMS.PACKS:
+		var inventory_record: Dictionary = world.call("_find_catalog_item_record", item_name)
+		var expected: Dictionary = PACK_ITEMS.inventory_record(item_name)
+		check(inventory_record.get("image_path", "") == expected.get("image_path", ""), "runtime icon registered: " + item_name)
+		check(inventory_record.get("slot", "") == "consumable", "pack displays under consumables: " + item_name)
+		var icon: Texture2D = RESOLVER.texture(inventory_record, item_name)
+		check(icon != null and not icon.has_meta("item_family"), "runtime renders actual pack image: " + item_name)
 	for item_name: String in ["마나 회복 물약", "힘센 한우 스테이크", "귀환 주문서", "화령의 무기 강화 주문서", "엘릭서", "최상급 변신 뽑기권 11회 팩", "화살", "왕실 회복 물약"]:
 		var before_gold: int = int(world.get("gold"))
 		var before_count: int = int(inventory.get(item_name, 0))
@@ -54,6 +65,18 @@ func _run() -> void:
 	search.text = "최상급"
 	panel.call("_refresh")
 	check(listing.item_count == 6, "all six draw products searchable")
+	for row: int in range(listing.item_count):
+		check(listing.get_item_icon(row) != null and not listing.get_item_icon(row).has_meta("item_family"), "shop row is an image, not a fallback symbol: " + str(row))
+
+	var amount: SpinBox = panel.get("purchase_quantity") as SpinBox
+	check(int(amount.max_value) == 1000, "quantity selector accepts up to 1000")
+	for quantity: int in [1, 10, 100, 1000]:
+		var button: Button = panel.find_child("ShopQuantity" + str(quantity), true, false) as Button
+		check(button != null, "quantity preset button exists " + str(quantity))
+		if button != null:
+			button.pressed.emit()
+			check(int(amount.value) == quantity, "quantity preset updates selector " + str(quantity))
+	panel.call("_set_purchase_quantity", 1)
 	search.text = "마나 회복 물약"
 	panel.call("_refresh")
 	check(listing.item_count >= 1, "new potion searchable")
