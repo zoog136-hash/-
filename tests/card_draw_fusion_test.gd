@@ -75,6 +75,14 @@ func _run() -> void:
 	a.rng.seed = 12345
 	b.rng.seed = 12345
 	_check(a.draw_pack("성물") == b.draw_pack("성물"), "seeded reproducible equal-weight draws")
+	_check(int(a.category_totals("성물").get("total", -1)) == 11, "first eleven cards recorded as total ownership")
+	_check(int(a.category_totals("변신").get("total", -1)) == 0, "first draw never affects another card category")
+	_check(bool(a.draw_cards("성물", 1).get("ok", false)), "second single draw succeeds")
+	_check(int(a.category_totals("성물").get("total", -1)) == 12, "every awarded card increases total by one, even duplicates")
+	var owned_reload = RULES.new()
+	owned_reload.configure(_fixture())
+	owned_reload.import_state(a.export_state())
+	_check(owned_reload.category_totals("성물") == a.category_totals("성물"), "save/load preserves total and spare counts")
 	_check(a.draw_pack("아이템").get("ok", false) == false, "non-card categories fail closed")
 
 	var incomplete: Dictionary = _fixture()
@@ -99,12 +107,17 @@ func _run() -> void:
 		"pity": {}
 	})
 	_check(fusion.spare_count("변신", "고급") == 4, "four duplicate materials imported")
+	_check(fusion.total_count("변신", common_id) == 5, "catalog displays 1 permanent plus 4 duplicates")
+	_check(int(fusion.category_totals("변신").get("total", 0)) == 5, "category summary includes permanent unlock")
+	_check(fusion.total_count("마법인형", common_id) == 0, "same card ID cannot leak between categories")
 	var fused: Dictionary = fusion.fuse("변신", "고급")
 	_check(bool(fused.get("ok", false)), "valid fusion resolves")
 	_check(int(fused.get("consumed", 0)) == 4, "four duplicates consumed")
 	_check(bool((fusion.export_state()["owned"] as Dictionary)["변신"].get(common_id, false)), "base unlock survives fusion")
 	var gain: int = 1 if str(fused.get("to_grade", "")) == "고급" and not bool((fused.get("result", {}) as Dictionary).get("new", false)) else 0
 	_check(fusion.spare_count("변신", "고급") == gain, "material debit and failed-result return are exact")
+	_check(int(fusion.category_totals("변신").get("total", 0)) == 2, "four spent and one returned produce two remaining cards")
+	_check(fusion.total_count("변신", common_id) >= 1, "permanent unlock survives material spending")
 	var snapshot: Dictionary = fusion.export_state()
 	_check(not bool(fusion.fuse("변신", "고급").get("ok", true)), "insufficient duplicates rejected")
 	_check(fusion.export_state() == snapshot, "rejected fusion never spends materials")
