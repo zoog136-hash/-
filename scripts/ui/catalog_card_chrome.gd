@@ -6,6 +6,17 @@ const ATLAS=preload("res://assets/ui/card_frame_atlas.png")
 const METAL=preload("res://assets/effects/catalog_card_metal.gdshader")
 const AURA=preload("res://assets/effects/catalog_card_aura.gdshader")
 const GRADES: Array[String]=["일반","고급","희귀","영웅","전설","신화","유일"]
+# Presentation tuning, shared by all three catalogs and their details.
+# Original-game RGB/timing measurements are not implied by these profiles.
+const AURA_PROFILES: Array[Dictionary]=[
+	{"aura_radius":.46,"band_width":.018,"light_strength":.025,"ribbon_layers":1.0,"mote_count":0.0,"rotation_speed":0.0,"flow_speed":0.0,"ray_count":0.0},
+	{"aura_radius":.51,"band_width":.028,"light_strength":.065,"ribbon_layers":1.0,"mote_count":0.0,"rotation_speed":0.0,"flow_speed":0.0,"ray_count":0.0},
+	{"aura_radius":.58,"band_width":.035,"light_strength":.18,"ribbon_layers":1.0,"mote_count":2.0,"rotation_speed":0.0,"flow_speed":.25,"ray_count":0.0},
+	{"aura_radius":.64,"band_width":.046,"light_strength":.27,"ribbon_layers":2.0,"mote_count":4.0,"rotation_speed":0.0,"flow_speed":.50,"ray_count":0.0},
+	{"aura_radius":.70,"band_width":.054,"light_strength":.36,"ribbon_layers":2.0,"mote_count":6.0,"rotation_speed":0.0,"flow_speed":.65,"ray_count":3.0},
+	{"aura_radius":.76,"band_width":.061,"light_strength":.44,"ribbon_layers":3.0,"mote_count":8.0,"rotation_speed":.22,"flow_speed":.75,"ray_count":6.0},
+	{"aura_radius":.82,"band_width":.068,"light_strength":.52,"ribbon_layers":3.0,"mote_count":12.0,"rotation_speed":-.28,"flow_speed":.85,"ray_count":10.0}
+]
 # Inspected game screens, used for structure/color hierarchy, not extracted assets:
 # https://www.inven.co.kr/webzine/news/?news=286630&site=lineagem
 # https://www.inven.co.kr/board/lineagem/5019/488524
@@ -50,6 +61,8 @@ static func material_for(rank: int, aura: bool, detail: bool=false, reduced: boo
 		if aura:
 			material.set_shader_parameter("detail_view",detail)
 			material.set_shader_parameter("intensity",0.65 if low else 1.0)
+			for field: String in AURA_PROFILES[rank]:material.set_shader_parameter(field,AURA_PROFILES[rank][field])
+			if low:material.set_shader_parameter("mote_count",floorf(float(AURA_PROFILES[rank].mote_count)*.5))
 		materials[key]=material
 	return materials[key]
 

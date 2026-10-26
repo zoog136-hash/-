@@ -24,6 +24,45 @@ func preview_pixels(hud: Node) -> PackedByteArray:
 	var image: Image=root.get_texture().get_image()
 	check(Rect2(Vector2.ZERO,image.get_size()).encloses(rect),"rendered preview remains in the physical framebuffer")
 	return image.get_region(Rect2i(rect)).get_data()
+func compare_aura_masks() -> void:
+	# Render the same shared slot materials over transparency. Alpha/radius
+	# comparisons exclude hue and source illustrations, so color alone cannot pass.
+	var viewport:=SubViewport.new()
+	viewport.size=Vector2i(96,128)
+	viewport.transparent_bg=true
+	viewport.disable_3d=true
+	viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
+	var patch:=ColorRect.new()
+	patch.size=Vector2(96,128)
+	viewport.add_child(patch)
+	var previous_energy: float=-1.0
+	var previous_radius: float=-1.0
+	for rank: int in range(Chrome.GRADES.size()):
+		patch.material=Chrome.material_for(rank,true,false,true)
+		await frames(2);await RenderingServer.frame_post_draw
+		var image: Image=viewport.get_texture().get_image()
+		image.convert(Image.FORMAT_RGBA8)
+		var pixels: PackedByteArray=image.get_data()
+		var energy: float=0.0
+		var radius_energy: float=0.0
+		for y: int in range(image.get_height()):
+			for x: int in range(image.get_width()):
+				var alpha: float=float(pixels[(y*image.get_width()+x)*4+3])
+				var point:=Vector2((x+.5)/image.get_width()*2-1,(y+.5)/image.get_height()*2-1)
+				energy+=alpha
+				radius_energy+=alpha*point.length()
+		var radius: float=radius_energy/maxf(1,energy)
+		check(energy>previous_energy,"rendered aura brightness/coverage rises independently of hue "+Chrome.GRADES[rank])
+		check(radius>previous_radius,"rendered aura range rises independently of hue "+Chrome.GRADES[rank])
+		previous_energy=energy;previous_radius=radius
+		patch.material=Chrome.material_for(rank,true)
+		await frames(2);await RenderingServer.frame_post_draw
+		var first: PackedByteArray=viewport.get_texture().get_image().get_data()
+		await create_timer(.3).timeout;await RenderingServer.frame_post_draw
+		var later: PackedByteArray=viewport.get_texture().get_image().get_data()
+		check(first!=later if rank>=2 else first==later,"actual tier motion matches its static/flowing rule "+Chrome.GRADES[rank])
+	viewport.queue_free();await frames()
 func run() -> void:
 	root.size=Vector2i(1280,720);DisplayServer.window_set_size(root.size)
 	var world: TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(world);await frames(8)
@@ -58,6 +97,7 @@ func run() -> void:
 				check(chrome.preview_frame.material.get_shader_parameter("grade_color")==UI.grade(grade),"existing palette preserved "+grade)
 				check(hud.catalog_preview.texture.resource_path==str(hud.selected_catalog_record.image_path),"original selected PNG unchanged "+category+grade)
 				check(chrome.frame_layers[rank].material==Chrome.material_for(rank,false),"metal material reused across catalogs and detail")
+				check(chrome.aura_layers[rank].material==Chrome.material_for(rank,true) and chrome.preview_aura.material==Chrome.material_for(rank,true,true),"same grade aura rules drive slots/details in every catalog")
 				check(chrome.visible_cards.all(func(card: Dictionary) -> bool:return card.rect.size.x<=hud.catalog_list.fixed_column_width+hud.catalog_list.get_theme_constant("h_separation")),"painted frames stay within native columns "+category+str(extent))
 			if category!="성물" and hud.catalog_details_tab.is_visible_in_tree():tap(hud.catalog_details_tab);await frames()
 			check(chrome.preview_frame.is_visible_in_tree(),"selected detail remains reachable on small screen "+category)
@@ -76,10 +116,13 @@ func run() -> void:
 			hud.open_catalog("아이템");await frames()
 			check(not chrome.active and not chrome.slots.is_visible_in_tree() and not chrome.preview.visible,"card chrome removed from item catalog")
 			hud._close_workspace()
+			chrome.refresh();await frames()
+			check(not chrome.pending_layout and not chrome.slots.is_visible_in_tree() and not chrome.preview_aura.is_visible_in_tree(),"closed catalogs schedule no aura update or rendering")
 	check(world.inventory==inventory and world.gold==gold and world.card_draw_fusion.export_state()==cards,"presentation never mutates items, currency, owned cards or fusion rules")
 	for rank: int in range(7):
 		var image: Image=Chrome.texture_for(rank).get_image()
 		check(image.get_pixel(image.get_width()/2,image.get_height()/2).a==0,"painted frame keeps transparent art window "+str(rank))
+	await compare_aura_masks()
 	world.queue_free();await frames()
 	print("CARD_CHROME_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
