@@ -10,7 +10,12 @@ func run() -> void:
 	world.save_timer = -10000.0
 	if bool(world.hud.get("class_picker_initial")): world.hud.complete_class_selection()
 	world.player.camera.make_current(); world.player.camera.force_update_scroll()
-	check(world.field_map.get_script().resource_path.ends_with("native_png_field.gd"), "Actual bundled PNG map")
+	check(world.field_map != null and world.field_renderer != null, "Actual default production map and renderer")
+	check(world.field_renderer.field == world.field_map and str(world.field_map.data.map_id) == world.active_map_id, "Renderer owns the active game map")
+	if world.field_renderer.has_method("settle_visible"):
+		check(await world.field_renderer.settle_visible(10000), "Visible production chunks ready before capture")
+	if load("res://scripts/maps/native_png_registry.gd").enabled():
+		check(world.field_map.get_script().resource_path.ends_with("native_png_field.gd"), "Explicit native PNG mode retains its map requirement")
 	var before := _world_state(world)
 	var original_player = world.player
 	var original_visible: bool = original_player.visible
