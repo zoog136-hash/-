@@ -1,0 +1,206 @@
+{
+  "source_archive": {
+    "name": "a2002.zip",
+    "bytes": 150480291,
+    "sha256": "d5438f74b486e42481ad34badb527794bbda10a591388c2177e580f2af8c34d7",
+    "crc": "PASS"
+  },
+  "rebuilt_private_pack": {
+    "name": "TWILIGHT_skill_SPX_private.zip",
+    "bytes": 1300955,
+    "sha256": "f5cc620371e5533bd02394048d753a6917fc42d4c0652b9cb85d936bdf014cfa",
+    "local_installed_files": 82,
+    "delivery": "LOCAL_ONLY_NOT_DISTRIBUTED"
+  },
+  "families": {
+    "foe_slayer": {
+      "animations": {
+        "cast": 12,
+        "impact": 16
+      },
+      "sources": {
+        "21930": {
+          "member": "sprite/21930-0.spx",
+          "sha256": "533954db7fcacd240cd656f12ebec2bc0f762573935d1a5f5012eb298ba5af0d",
+          "frames": 12
+        },
+        "21931": {
+          "member": "sprite/21931-0.spx",
+          "sha256": "50857bfb71d9814577e10bdfbea2fafc91fd4b9870087225d9e1f767beba0d2e",
+          "frames": 12
+        },
+        "21928": {
+          "member": "sprite/21928-0.spx",
+          "sha256": "f157c14ebe4b1809fd00dfe2c266104678c2eef388ca4089568a81c5fb8a9b02",
+          "frames": 16
+        },
+        "21929": {
+          "member": "sprite/21929-0.spx",
+          "sha256": "4fbc1a29515378582f4eaade82acbb2be6beb983ba3a887ec05adff2d66270e5",
+          "frames": 16
+        }
+      },
+      "resource": "assets/external_spx/skills/foe_slayer/SpriteFrames.tres",
+      "layout": {
+        "cast": {
+          "source_canvas_origin": [
+            -144,
+            -264
+          ],
+          "source_canvas_size": [
+            384,
+            360
+          ],
+          "delivered_size": [
+            384,
+            360
+          ],
+          "sprite_offset": [
+            -144.0,
+            -264.0
+          ],
+          "absolute_timing": "UNVERIFIED_NO_ACTION_TABLE",
+          "preview_fps": 14.0,
+          "direction_alignment": "UNVERIFIED_FIXED_SOURCE_VIEW",
+          "empty_composite_frames": []
+        },
+        "impact": {
+          "source_canvas_origin": [
+            -96,
+            -144
+          ],
+          "source_canvas_size": [
+            288,
+            216
+          ],
+          "delivered_size": [
+            288,
+            216
+          ],
+          "sprite_offset": [
+            -96.0,
+            -144.0
+          ],
+          "absolute_timing": "UNVERIFIED_NO_ACTION_TABLE",
+          "preview_fps": 14.0,
+          "direction_alignment": "UNVERIFIED_FIXED_SOURCE_VIEW",
+          "empty_composite_frames": [
+            6,
+            7,
+            14,
+            15
+          ]
+        }
+      }
+    },
+    "aurakiya": {
+      "animations": {
+        "cast": 12,
+        "impact": 19,
+        "pvp_impact": 19
+      },
+      "sources": {
+        "19521": {
+          "member": "sprite/19521-0.spx",
+          "sha256": "dd88d3bb12802c21e77509620447aba19a9679d60e2bf7ac8ae3de9f6e27b257",
+          "frames": 12
+        },
+        "19522": {
+          "member": "sprite/19522-0.spx",
+          "sha256": "99dc6090824f501141385cef9ab56e44759e7e34c829ed279f3b6347dbe76eda",
+          "frames": 12
+        },
+        "21970": {
+          "member": "sprite/21970-0.spx",
+          "sha256": "af3ddd49585671f650f13e91fc1b51cf8e385c94610d1a64ec565aa5bd7f6367",
+          "frames": 19
+        },
+        "21971": {
+          "member": "sprite/21971-0.spx",
+          "sha256": "ab8c8f275578b38ff34351345be99781e412a911c7ddd6e9f2db37bd1eac03bb",
+          "frames": 19
+        },
+        "21968": {
+          "member": "sprite/21968-0.spx",
+          "sha256": "39de3d1f98e588d4079e7f60c4e7ec5b71f05123fda51c8bbc3906d4a97ffd49",
+          "frames": 19
+        },
+        "21969": {
+          "member": "sprite/21969-0.spx",
+          "sha256": "3c5f90d01979253f3446d66cddd292b5f6bfff0b9b5ffab4a7ceed605d84413f",
+          "frames": 19
+        }
+      },
+      "resource": "assets/external_spx/skills/aurakiya/SpriteFrames.tres",
+      "layout": {
+        "cast": {
+          "source_canvas_origin": [
+            -48,
+            -240
+          ],
+          "source_canvas_size": [
+            192,
+            312
+          ],
+          "delivered_size": [
+            192,
+            312
+          ],
+          "sprite_offset": [
+            -48.0,
+            -240.0
+          ],
+          "absolute_timing": "UNVERIFIED_NO_ACTION_TABLE",
+          "preview_fps": 14.0,
+          "direction_alignment": "UNVERIFIED_FIXED_SOURCE_VIEW",
+          "empty_composite_frames": []
+        },
+        "impact": {
+          "source_canvas_origin": [
+            -720,
+            -888
+          ],
+          "source_canvas_size": [
+            1584,
+            1272
+          ],
+          "delivered_size": [
+            384,
+            308
+          ],
+          "sprite_offset": [
+            -174.54545454545453,
+            -215.0188679245283
+          ],
+          "absolute_timing": "UNVERIFIED_NO_ACTION_TABLE",
+          "preview_fps": 14.0,
+          "direction_alignment": "UNVERIFIED_FIXED_SOURCE_VIEW",
+          "empty_composite_frames": []
+        },
+        "pvp_impact": {
+          "source_canvas_origin": [
+            -720,
+            -888
+          ],
+          "source_canvas_size": [
+            1584,
+            1272
+          ],
+          "delivered_size": [
+            384,
+            308
+          ],
+          "sprite_offset": [
+            -174.54545454545453,
+            -215.0188679245283
+          ],
+          "absolute_timing": "UNVERIFIED_NO_ACTION_TABLE",
+          "preview_fps": 14.0,
+          "direction_alignment": "UNVERIFIED_FIXED_SOURCE_VIEW",
+          "empty_composite_frames": []
+        }
+      }
+    }
+  },
+  "public_third_party_images_added": 0
+}

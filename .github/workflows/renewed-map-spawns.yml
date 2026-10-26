@@ -1,8 +1,6 @@
 name: TWILIGHT renewed-map spawn validation
 
 on:
-  push:
-    branches: [feature/renewed-map-spawns-20261012]
   pull_request:
     paths:
       - 'data/maps/**'
@@ -59,7 +57,10 @@ jobs:
       - name: Import scripts and resources
         run: |
           set -o pipefail
-          timeout 900s "$GODOT" --headless --import --path . 2>&1 | tee /tmp/spawn-validation/test-results/import.log
+          # After resource growth, the cold Godot import reached 96% at the former
+          # 900s timeout (exit 124) on run 40222470650; no spawn test executed.
+          # Keep a finite ceiling and the existing 120-minute job limit.
+          timeout 1800s "$GODOT" --headless --import --path . 2>&1 | tee /tmp/spawn-validation/test-results/import.log
       - name: Validate all 25 current maps and export effective placements
         run: |
           timeout 600s "$GODOT" --headless --path . --script res://tests/renewed_map_spawn_test.gd -- --output /tmp/spawn-validation/test-results/renewed-map-spawns.json 2>&1 | tee /tmp/spawn-validation/test-results/terrain.log

@@ -1,8 +1,6 @@
 name: TWILIGHT Remake Regression
 
 on:
-  push:
-    branches: [feature/twilight-remake-20261013]
   pull_request:
     branches: [main]
   workflow_dispatch:

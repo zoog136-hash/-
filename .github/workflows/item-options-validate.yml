@@ -1,8 +1,6 @@
 name: Twilight Item Options Runtime
 
 on:
-  push:
-    branches: ['codex/item-options-runtime-*']
   pull_request:
     branches: [main]
     paths:

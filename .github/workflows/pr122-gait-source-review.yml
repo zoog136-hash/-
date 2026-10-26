@@ -2,11 +2,6 @@ name: PR122 wolf and wild dog source review
 
 on:
   workflow_dispatch:
-  push:
-    branches: [feature/twilight-remaining106-20261016]
-    paths:
-      - 'tools/pr122_pinned_gait_source_review.py'
-      - '.github/workflows/pr122-gait-source-review.yml'
   pull_request:
     paths:
       - 'tools/pr122_pinned_gait_source_review.py'

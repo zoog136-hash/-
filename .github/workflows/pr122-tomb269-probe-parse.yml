@@ -2,11 +2,6 @@ name: PR122 Tomb269 additive probe parse
 
 on:
   workflow_dispatch:
-  push:
-    branches: [feature/twilight-remaining106-20261016]
-    paths:
-      - 'tests/pr122_tomb269_small_native_sw_probe.gd'
-      - '.github/workflows/pr122-tomb269-probe-parse.yml'
   pull_request:
     paths:
       - 'tests/pr122_tomb269_small_native_sw_probe.gd'

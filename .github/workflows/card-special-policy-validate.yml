@@ -1,8 +1,6 @@
 name: TWILIGHT Card Special Policy Validate
 
 on:
-  push:
-    branches: ['feature/card-special-policy-20261012']
   pull_request:
     branches: ['main', 'feature/pve-only-scope-prune-20261012']
     paths:

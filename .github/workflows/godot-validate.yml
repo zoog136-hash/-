@@ -2,7 +2,7 @@ name: Godot Validate
 
 on:
   push:
-    branches: [main, 'codex/world-regions-*']
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -47,13 +47,45 @@ jobs:
           if-no-files-found: error
           compression-level: 6
 
+      - name: Restore pinned Godot engine cache
+        id: engine-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
       - name: Install Godot 4.7.2
         run: |
-          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
-          unzip -q godot.zip
-          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          set -euo pipefail
+          if ! { test -x /tmp/Godot_v4.7.2-stable_linux.x86_64 && /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'; }; then
+            rm -f /tmp/Godot_v4.7.2-stable_linux.x86_64
+            curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+            unzip -q /tmp/godot.zip -d /tmp
+            chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          fi
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'
+          ln -sf /tmp/Godot_v4.7.2-stable_linux.x86_64 Godot_v4.7.2-stable_linux.x86_64
           ./Godot_v4.7.2-stable_linux.x86_64 --version
 
+      - name: Save verified Godot engine cache on trusted main
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.engine-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+      - name: Restore trusted Godot imported resources
+        id: imported-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v1
+      - name: Start Godot import timing
+        shell: bash
+        run: date +%s > "$RUNNER_TEMP/twilight-import-start"
       - name: Import and parse project
         shell: bash
         run: |
@@ -64,6 +96,26 @@ jobs:
             exit 1
           fi
 
+      - name: Report Godot import time and enforce cache size limit
+        id: import-metrics
+        shell: bash
+        run: |
+          set -euo pipefail
+          start="$(cat "$RUNNER_TEMP/twilight-import-start")"
+          elapsed=$(( $(date +%s) - start ))
+          bytes=0
+          if [[ -d .godot/imported ]]; then
+            bytes="$(du -sb .godot/imported | cut -f1)"
+          fi
+          echo "TWILIGHT_IMPORT_SECONDS=$elapsed"
+          echo "TWILIGHT_IMPORTED_BYTES=$bytes"
+          echo "TWILIGHT_CACHE_RESTORED=${{ steps.imported-cache.outputs.cache-hit }}"
+          if (( bytes > 0 && bytes < 1610612736 )); then
+            echo "cacheable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cacheable=false" >> "$GITHUB_OUTPUT"
+            echo "Import cache skipped: empty or at least 1.5 GiB"
+          fi
       - name: Validate actual Godot import of all 125 skill icon textures
         shell: bash
         run: |
@@ -316,3 +368,13 @@ jobs:
             world-region-shards/*.log
             world-region-shards/summary.json
           if-no-files-found: error
+
+      - name: Save fully validated Godot import cache on trusted main
+        if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.imported-cache.outputs.cache-hit != 'true' && steps.import-metrics.outputs.cacheable == 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v1

@@ -1,0 +1,9 @@
+name: setup-software-gl
+description: Install the existing Ubuntu software OpenGL capture dependencies
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri

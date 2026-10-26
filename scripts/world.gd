@@ -7019,7 +7019,11 @@ func _queue_player_area_attack(skill: Dictionary) -> bool:
 	return true
 
 func _cancel_player_attack(id: int) -> void:
-	if int(pending_attack.get("id", -1)) == id: pending_attack.clear()
+	if int(pending_attack.get("id", -1)) == id:
+		var original: Dictionary = pending_attack.get("original_skill", pending_attack.get("area_skill", {}))
+		if original_skills != null and not original.is_empty():
+			original_skills.vfx.cancel_cast(TwilightOriginalSkillService.presentation_id(original))
+		pending_attack.clear()
 
 func _release_player_attack(id: int) -> void:
 	if int(pending_attack.get("id", -1)) != id: return

@@ -143,6 +143,37 @@ func run() -> void:
 	await process_frame
 	quit()
 
+func position_turn_undead_fixture(world: TwilightWorld, dummy: TwilightMonster) -> bool:
+	# The guardian pair proves a foot-to-foot route, not the elevated spell
+	# flight. Select a real source pair using the production projectile anchors
+	# and LOS function; never remove obstruction or manufacture an impact.
+	var qa_rng := RandomNumberGenerator.new()
+	qa_rng.seed = 20261024
+	var old_player: Vector2 = world.player.global_position
+	var old_target: Vector2 = dummy.global_position
+	for attempt: int in range(64):
+		var pair: Dictionary = ADEN_COMBAT_QA.find_source_combat_pair(world.field_map as RemakePlayableField, qa_rng)
+		if pair.is_empty(): break
+		world.player.global_position = pair["player"]
+		dummy.global_position = pair["monster"]
+		world.player.face_target(dummy.global_position)
+		var origin: Vector2 = world.player.combat_projectile_origin()
+		var endpoint: Vector2 = dummy.combat_hit_position()
+		# Leave room for the existing pre-impact projectile capture.
+		if origin.distance_to(endpoint) < 16.0: continue
+		if not world._has_line_of_sight_world(world.player.global_position, dummy.global_position): continue
+		if not world._has_line_of_sight_world(origin, endpoint): continue
+		world.player.camera.reset_smoothing()
+		world.player.camera.force_update_scroll()
+		world.field_renderer.refresh_visible()
+		print("ORIGINAL_TURN_UNDEAD_ROUTE ", JSON.stringify({"attempt":attempt,
+			"player":str(world.player.global_position), "target":str(dummy.global_position),
+			"origin":str(origin), "endpoint":str(endpoint), "production_los":true}))
+		return true
+	world.player.global_position = old_player
+	dummy.global_position = old_target
+	return false
+
 func capture_turn_undead(world: TwilightWorld, dummy: TwilightMonster) -> void:
 	world._clear_combat_actions()
 	world.set_process(false)
@@ -167,6 +198,9 @@ func capture_turn_undead(world: TwilightWorld, dummy: TwilightMonster) -> void:
 	dummy.magic_resistance = 150
 	dummy.hp = 10000
 	dummy.max_hp = 10000
+	if not position_turn_undead_fixture(world, dummy):
+		push_error("Turn Undead capture requires a real unobstructed projectile route")
+		quit(1); return
 	world.selected_monster = dummy
 	world._update_hud()
 	world._on_quickslot_assignment_requested(0, "skill_auto", str(base.id))
@@ -189,6 +223,7 @@ func capture_turn_undead(world: TwilightWorld, dummy: TwilightMonster) -> void:
 		quit(1); return
 	await capture("09-turn-undead-learning")
 	world.hud._close_workspace()
+	var resolved_before: int = world.combat_flights.resolved_count
 	if not world._cast_job_skill(str(base.id)) or world.mp != 999 - int(base.mp):
 		push_error("Turn Undead render requires a real paid cast")
 		quit(1); return
@@ -212,8 +247,16 @@ func capture_turn_undead(world: TwilightWorld, dummy: TwilightMonster) -> void:
 	if not forced:
 		push_error("No valid deterministic Turn Undead success seed")
 		quit(1); return
-	for _step: int in range(20): world.combat_flights._physics_process(.02)
-	if not dummy.dead or dummy.hp != 0 or service.vfx.audio_pool.last_phase != "impact":
+	# Follow the real bounded flight lifecycle, not an assumed 0.4s arrival.
+	# A blocked/expired shot still fails: exactly one real resolution is required.
+	for _step: int in range(151):
+		if world.combat_flights.flights.is_empty(): break
+		world.combat_flights._physics_process(.02)
+	var resolved: int = world.combat_flights.resolved_count - resolved_before
+	if resolved != 1 or not world.combat_flights.flights.is_empty() or not dummy.dead or dummy.hp != 0 or service.vfx.audio_pool.last_phase != "impact":
+		print("ORIGINAL_TURN_UNDEAD_DIAGNOSTIC ", JSON.stringify({"resolved":resolved,
+			"flights":world.combat_flights.flights.size(), "dead":dummy.dead, "hp":dummy.hp,
+			"audio_phase":service.vfx.audio_pool.last_phase}))
 		push_error("Turn Undead impact capture requires actual death and confirmed-hit sound")
 		quit(1); return
 	if str(world.hud.v20_status_name.text) != "황혼의 마법사":

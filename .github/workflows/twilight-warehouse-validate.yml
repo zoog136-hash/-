@@ -1,9 +1,6 @@
 name: TWILIGHT Warehouse Persistence
 
 on:
-  push:
-    branches:
-      - feature/twilight-warehouse-persistent-instances-20261010
   pull_request:
     branches:
       - main
@@ -22,10 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot 4.7.2
-        run: |
-          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
-          unzip -q /tmp/godot.zip -d /tmp
-          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+        uses: ./.github/actions/setup-godot-linux
       - name: Import and parse scripts
         run: |
           set -o pipefail

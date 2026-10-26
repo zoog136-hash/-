@@ -16,7 +16,7 @@ func _ready() -> void:
 func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, speed: float = 1100.0, delay: float = 0.0, options: Dictionary = {}) -> void:
 	if not is_instance_valid(target): return
 	var record: Dictionary = available.pop_back() if not available.is_empty() else {}
-	record.merge({"position":origin, "previous":origin, "target":weakref(target), "kind":kind,
+	record.merge({"origin":origin, "position":origin, "previous":origin, "target":weakref(target), "kind":kind,
 		"callback":impact, "speed":speed, "age":-maxf(0.0, delay)})
 	record.merge(options,true)
 	if target is TwilightMonster: record["target_life_id"] = target.life_id
@@ -26,6 +26,8 @@ func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, spe
 func _retire(index: int) -> Callable:
 	var flight: Dictionary = flights[index]
 	var callback: Callable = flight.callback
+	var visual_end: Callable = flight.get("visual_end", Callable())
+	if visual_end.is_valid(): visual_end.call()
 	flights.remove_at(index)
 	flight.clear()
 	if available.size() < MAX_POOL: available.append(flight)
@@ -51,6 +53,7 @@ func _physics_process(delta: float) -> void:
 		flight.age += maxf(0.0, delta)
 		if flight.age < 0.0: continue
 		if flight.kind == "timed":
+			_step_visual(flight)
 			var timed_callback: Callable = _retire(i)
 			if timed_callback.is_valid(): timed_callback.call()
 			continue
@@ -68,6 +71,7 @@ func _physics_process(delta: float) -> void:
 		if obstruction.is_valid() and not obstruction.call(flight.previous,flight.position):
 			_retire(i)
 			continue
+		_step_visual(flight)
 		if (flight.position as Vector2).distance_squared_to(end) <= 0.25:
 			if flight.has("aim") and end.distance_to(target.combat_hit_position())>float(flight.get("hit_radius",28.)):
 				_retire(i)
@@ -78,6 +82,10 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 	if flights.is_empty(): set_physics_process(false)
 
+func _step_visual(flight: Dictionary) -> void:
+	var observer: Callable = flight.get("visual_step", Callable())
+	if observer.is_valid(): flight["visual_active"] = bool(observer.call(flight))
+
 func _draw() -> void:
 	var drawn: int = 0
 	var view: Rect2 = get_viewport_rect().grow(32)
@@ -85,6 +93,7 @@ func _draw() -> void:
 	for i: int in range(flights.size()):
 		var flight: Dictionary = flights[i]
 		if flight.age < 0.0 or flight.kind == "timed": continue
+		if bool(flight.get("visual_active", false)): continue
 		var tip: Vector2 = to_local(flight.position)
 		if not view.has_point(canvas * tip): continue
 		if drawn >= visual_limit: break

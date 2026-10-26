@@ -1,0 +1,42 @@
+{
+  "cutoff_exclusive": "2026-10-23",
+  "sources": [
+    {
+      "key": "knight-20240925",
+      "class": "기사",
+      "version": "VANGUARD / 2024-09-25",
+      "url": "https://lineagem.plaync.com/preorder/record/vanguard/index",
+      "status": "BLOCKED_VIDEO",
+      "note": "Official video link found via dated article; YouTube blocked by proxy (403)."
+    },
+    {
+      "key": "thunder-20250618",
+      "class": "뇌신",
+      "version": "RISING STORM / 2025-06-18",
+      "url": "https://lineagem.plaync.com/conts/250604_update",
+      "status": "PARTIAL_METADATA_ONLY",
+      "note": "Official branding MP4 inspected at 30fps, duration 31.866667s. Cinematic, not in-game skill timing."
+    },
+    {
+      "key": "holy-20260318",
+      "class": "신성검사",
+      "version": "ContiNew / 2026-03-18",
+      "url": "https://lounge.plaync.com/feed/62463",
+      "video": "https://www.youtube.com/watch?v=l9IgJrC1y0A",
+      "status": "BLOCKED_VIDEO",
+      "note": "Official embedded video identity found; no decoded combat frames."
+    },
+    {
+      "key": "dragon-20260909",
+      "class": "투사",
+      "version": "THE GOLDEN AGE / 2026-09-09",
+      "url": "https://lounge.plaync.com/feed/80923?country=KR&locale=ko-KR",
+      "video": "https://www.youtube.com/watch?v=H82Svb2lihs",
+      "status": "BLOCKED_VIDEO",
+      "note": "YouTube 403. Four direct official MP4s inspected: 5/6/6/4 seconds, 30fps; animated key art, not combat."
+    }
+  ],
+  "measurement_rule": "Original ms/frame fields remain null until a decoded in-game sequence is inspected.",
+  "original_skill_sequences_measured": 0,
+  "additional_decoded_reference_review": "evidence/reference-review-r2.json"
+}
