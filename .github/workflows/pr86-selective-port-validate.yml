@@ -31,7 +31,7 @@ concurrency:
 jobs:
   navigation-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Godot
