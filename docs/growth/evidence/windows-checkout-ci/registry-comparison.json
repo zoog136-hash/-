@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "scenario": "crlf-before",
+      "returncode": 1,
+      "report": {
+        "aden_field_loaded": false,
+        "domination_sha256": "7dcc8b6f47e73b6509a29a7fe30b47e689fdd316a8d5ccf571d7ba23ed693a52",
+        "expected_sha256": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+        "plan_nonempty": false
+      }
+    },
+    {
+      "scenario": "lf-preserved",
+      "returncode": 0,
+      "report": {
+        "aden_field_loaded": true,
+        "domination_sha256": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+        "expected_sha256": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+        "plan_nonempty": true
+      }
+    }
+  ],
+  "source_restored": true
+}
