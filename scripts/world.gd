@@ -21,7 +21,9 @@ const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
-const NATIVE_PNG_RENDERER = preload("res://scripts/maps/native_png_renderer.gd")
+const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
+# Do not preload this heavy optional renderer while parsing the main game class.
+# Android editor import may otherwise resolve the PNG class graph recursively.
 # PR #137's shipped entry-only PNG plan (594438d). Only this reviewed layout
 # upgrade may cross a plan hash; unknown plans still fail before state changes.
 const NATIVE_PNG_SAVE_MIGRATIONS: Dictionary = {
@@ -1302,7 +1304,13 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if field_map is NativePngField: field_renderer = NATIVE_PNG_RENDERER.new()
+		if field_map is NativePngField:
+			# Instantiate only when an actual native-PNG field is active.
+			var native_renderer_script: Variant = load(NATIVE_PNG_RENDERER_PATH)
+			if native_renderer_script == null:
+				push_error("Native PNG renderer script could not be loaded")
+				return
+			field_renderer = native_renderer_script.new() as FieldRenderer
 		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
