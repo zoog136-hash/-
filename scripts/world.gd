@@ -1173,6 +1173,8 @@ func _connect_signals() -> void:
 	if hud.has_signal("ain_auto_changed"):
 		hud.connect("ain_auto_changed", _on_ain_auto_changed)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
+	if hud.has_signal("blessing_target_requested"):
+		hud.connect("blessing_target_requested", _on_blessing_target_requested)
 	hud.enhancement_requested.connect(_attempt_enhancement)
 	# Optional validation tools live only in the isolated playtest HUD branch.
 	if hud.has_signal("playtest_catalog_grant_requested"):
@@ -2844,6 +2846,14 @@ func _use_card_pack_item(item_name: String) -> void:
 	hud.append_log(message)
 	_save_game(true)
 	hud.call("present_card_reveal", category, outcome, false)
+
+func _on_blessing_target_requested(scroll_name: String, target_reference: String) -> void:
+	if consumable_service == null: return
+	if int(inventory.get(scroll_name, 0)) < 1:
+		hud.show_message("축복 주문서가 없습니다")
+		return
+	consumable_service.call("apply_bless_scroll", scroll_name, target_reference)
+	_update_hud()
 
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
