@@ -1,0 +1,45 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_226/reviewed_parts_r014/N-run.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="pose_0"]
+atlas = ExtResource("1")
+region = Rect2(80,80,544,501)
+margin = Rect2(268,288,656,699)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1"]
+atlas = ExtResource("1")
+region = Rect2(816,80,571,501)
+margin = Rect2(283,281,629,699)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_2"]
+atlas = ExtResource("1")
+region = Rect2(80,816,483,487)
+margin = Rect2(269,311,717,713)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_3"]
+atlas = ExtResource("1")
+region = Rect2(816,816,530,553)
+margin = Rect2(400,209,622,599)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_4"]
+atlas = ExtResource("1")
+region = Rect2(80,1552,555,552)
+margin = Rect2(361,214,597,600)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_5"]
+atlas = ExtResource("1")
+region = Rect2(816,1552,531,563)
+margin = Rect2(368,226,621,589)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("pose_0")},{"duration":1.0,"texture":SubResource("pose_1")},{"duration":1.0,"texture":SubResource("pose_2")},{"duration":1.0,"texture":SubResource("pose_3")},{"duration":1.0,"texture":SubResource("pose_4")},{"duration":1.0,"texture":SubResource("pose_5")}],"loop":true,"name":&"run_6","speed":12.5}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_OTHER_CLIPS"
+metadata/twilight_reviewed_frame_registration = {"run_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(600,750),"scale":Vector2(0.21333333333333335,0.21333333333333335),"target":Vector2(0,0)},{"anchor":Vector2(600,750),"scale":Vector2(0.21333333333333335,0.21333333333333335),"target":Vector2(0,0)},{"anchor":Vector2(600,750),"scale":Vector2(0.21333333333333335,0.21333333333333335),"target":Vector2(0,0)},{"anchor":Vector2(576,720),"scale":Vector2(0.2222222222222222,0.2222222222222222),"target":Vector2(0,0)},{"anchor":Vector2(576,720),"scale":Vector2(0.2222222222222222,0.2222222222222222),"target":Vector2(0,0)},{"anchor":Vector2(576,720),"scale":Vector2(0.2222222222222222,0.2222222222222222),"target":Vector2(0,0)}]}}
