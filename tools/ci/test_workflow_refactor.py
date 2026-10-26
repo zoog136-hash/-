@@ -1,6 +1,12 @@
 """Guard against hiding changed CI coverage behind a shared setup action."""
 import copy
 import unittest
+import pathlib
+import yaml
+import os
+import subprocess
+import tempfile
+import time
 from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader
 
 
@@ -99,14 +105,50 @@ class GodotCacheContracts(unittest.TestCase):
             "set -euo pipefail\n" + cached_script(ENGINE_MAIN_INSTALL, symlink=True))
         after['jobs']['validate']['steps'].insert(0, copy.deepcopy(ENGINE_CACHE_RESTORE))
         after['jobs']['validate']['steps'].insert(2, copy.deepcopy(ENGINE_CACHE_SAVE))
+        # The real normalizer also requires the four import-cache stages.
+        # Keep those contracts present when isolating the engine-cache test.
+        workflow = yaml.safe_load((pathlib.Path(__file__).resolve().parents[2] /
+                                   '.github/workflows/godot-validate.yml').read_text())
+        after['jobs']['validate']['steps'].extend(copy.deepcopy(step) for step in
+            workflow['jobs']['validate']['steps'] if step.get('name') in IMPORT_EXTRA_NAMES)
         self.assertEqual(normalize_cached_direct('.github/workflows/godot-validate.yml', before, after), before)
-        after['jobs']['validate']['steps'][-1]['run'] = 'skip-all-tests\n'
+        after['jobs']['validate']['steps'][3]['run'] = 'skip-all-tests\n'
         with self.assertRaises(AssertionError):
             normalize_cached_direct('.github/workflows/godot-validate.yml', before, after)
 
 
 
 class ImportCacheSafetyContract(unittest.TestCase):
+    def test_large_png_imports_do_not_disable_the_bounded_cache(self):
+        workflow = yaml.safe_load((pathlib.Path(__file__).resolve().parents[2] /
+                                   '.github/workflows/godot-validate.yml').read_text())
+        script = next(step['run'] for step in workflow['jobs']['validate']['steps']
+                      if step.get('id') == 'import-metrics')
+        script = script.replace('${{ steps.imported-cache.outputs.cache-hit }}', 'false')
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            imported = root / '.godot/imported'
+            imported.mkdir(parents=True)
+            (imported / 'motion.webp-test.ctex').write_bytes(b'w' * 32)
+            (imported / 'icon.svg-test.md5').write_bytes(b'm' * 8)
+            (root / 'motion.webp.import').write_bytes(b'i' * 16)
+            with (imported / 'source.png-test.ctex').open('wb') as large:
+                large.truncate(2 * 1024**3)
+            (root / 'twilight-import-start').write_text(str(int(time.time())))
+            output = root / 'output'
+            result = subprocess.run(['bash', '-e', '-c', script], cwd=root,
+                env={**os.environ, 'RUNNER_TEMP': str(root), 'GITHUB_OUTPUT': str(output)},
+                text=True, capture_output=True, check=True)
+            self.assertIn('TWILIGHT_IMPORTED_BYTES=56\n', result.stdout)
+            self.assertIn('cacheable=true', output.read_text())
+
+    def test_new_main_revision_can_refresh_the_immutable_cache(self):
+        reader = SHARED_IMPORT_READER['with']
+        self.assertIn('github.event.pull_request.base.sha || github.sha', reader['key'])
+        self.assertNotIn('github.head_ref', reader['key'])
+        self.assertEqual(reader['restore-keys'].splitlines(), [
+            'twilight-godot-import-4.7.2-linux-compat-main-v2-'])
+
     def test_default_branch_is_the_only_writer(self):
         self.assertIn("github.ref == 'refs/heads/main'", IMPORT_MAIN_ONLY)
         self.assertIn("github.event_name == 'push'", IMPORT_MAIN_ONLY)

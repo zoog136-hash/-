@@ -128,8 +128,9 @@ def validate_cached_setup_action(action):
 
 # Import artifacts from the default-branch-only cache are revalidated by the
 # unchanged real --import and full Godot checks. No PR can seed this cache.
-IMPORT_CACHE_PATHS = ".godot/imported\n**/*.import\n"
-IMPORT_CACHE_KEY = "twilight-godot-import-4.7.2-linux-compat-main-v1"
+IMPORT_CACHE_PATHS = ".godot/imported/*.webp-*\n.godot/imported/*.svg-*\n.godot/imported/*.ttf-*\n.godot/imported/*.wav-*\n**/*.import\n"
+IMPORT_CACHE_KEY = "twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}"
+IMPORT_RESTORE_KEYS = "twilight-godot-import-4.7.2-linux-compat-main-v2-\n"
 
 # Phase 2 only restores immutable, default-branch-produced import artifacts.
 # PRs cannot write this cache; every original Godot import/test still runs.
@@ -146,7 +147,7 @@ SHARED_IMPORT_READER = {
     'id': 'trusted-import-cache',
     'uses': 'actions/cache/restore@v4',
     'continue-on-error': True,
-    'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY},
+    'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY, 'restore-keys': IMPORT_RESTORE_KEYS},
 }
 
 
@@ -186,7 +187,7 @@ def assert_import_cache_contract(steps):
     assert by_name[IMPORT_EXTRA_NAMES[0]] == {
         'name': IMPORT_EXTRA_NAMES[0], 'id': 'imported-cache',
         'uses': 'actions/cache/restore@v4', 'continue-on-error': True,
-        'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY}}
+        'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY, 'restore-keys': IMPORT_RESTORE_KEYS}}
     assert by_name[IMPORT_EXTRA_NAMES[1]] == {
         'name': IMPORT_EXTRA_NAMES[1], 'shell': 'bash',
         'run': 'date +%s > "$RUNNER_TEMP/twilight-import-start"'}
