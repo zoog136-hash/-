@@ -119,7 +119,7 @@ func _select(index: int) -> void:
 	var reference: String = str(entry.get("target_id",entry.get("name","")))
 	UI.apply_item_visual(preview,hud.lineage_inventory_ui._find_item_record(reference),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
 	if mode == "blessing":
-		detail.text = "[font_size=20][color=#d8b878]%s +%d[/color][/font_size]\\n\\n축복 성공률: %.1f%% (TWILIGHT 임시값)\\n축복 옵션: %s\\n\\n성공/실패 모두 주문서 1장 소모 · 장비 유지" % [
+		detail.text = "[font_size=20][color=#d8b878]%s +%d[/color][/font_size]\n\n축복 성공률: %.1f%% (TWILIGHT 임시값)\n축복 옵션: %s\n\n성공/실패 모두 주문서 1장 소모 · 장비 유지" % [
 			UI.safe(entry.get("name","")), int(entry.get("level",0)), float(entry.get("success_chance",0.0)), UI.safe(entry.get("bonus_text",""))
 		]
 		action.text = "축복 부여 · 주문서 1장"
@@ -147,7 +147,7 @@ func _execute() -> void:
 		var target_reference: String = str(entry.get("target_id", ""))
 		if not target_reference.is_empty():
 			var blessing_scroll: String = scroll_name
-			hud.confirm_action("축복 부여 확인", "%s +%d\\n%s 1장 사용\\n축복 성공률 %.1f%% · 실패해도 장비 유지" % [
+			hud.confirm_action("축복 부여 확인", "%s +%d\n%s 1장 사용\n축복 성공률 %.1f%% · 실패해도 장비 유지" % [
 				str(entry.get("name", "")), int(entry.get("level", 0)), blessing_scroll, float(entry.get("success_chance", 0))
 			], "축복 부여", func(_count: int) -> void: hud.blessing_target_requested.emit(blessing_scroll, target_reference))
 	elif mode == "scroll":
