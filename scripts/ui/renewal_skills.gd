@@ -212,10 +212,7 @@ func refresh() -> void:
 		cards.set_item_custom_fg_color(index,color)
 		cards.set_item_custom_bg_color(index,Color(color,.07))
 	if filtered.is_empty():
-		selected={}
-		detail.text="검색 조건에 맞는 스킬이 없습니다."
-		use_button.disabled=true
-		quick_button.disabled=true
+		_clear_selection()
 	else:
 		var chosen: int = 0
 		for i: int in range(filtered.size()):
@@ -226,7 +223,18 @@ func refresh() -> void:
 
 func select(index: int) -> void:
 	if index<0 or index>=filtered.size(): return
+	if str(selected.get("id",selected.get("name","")))!=str(filtered[index].get("id",filtered[index].get("name",""))):
+		preview_vfx.clear()
+		preview_container.hide()
 	selected=filtered[index]
+	summon_controls.hide()
+	learn_button.disabled=true
+	book_button.disabled=true
+	preview_button.disabled=true
+	learn_button.tooltip_text="이 스킬은 습득 조작을 지원하지 않습니다."
+	book_button.tooltip_text="이 스킬은 스킬북 구입을 지원하지 않습니다."
+	use_button.tooltip_text=""
+	quick_button.tooltip_text=""
 	if selected.get("origin", "") == "LINEAGEM_20250617":
 		select_original()
 		return
@@ -242,6 +250,18 @@ func select(index: int) -> void:
 	use_button.text="패시브 · 자동 적용" if passive else "스킬 사용"
 	clock=0
 
+func _clear_selection() -> void:
+	selected={}
+	detail.text="검색 조건에 맞는 스킬이 없습니다."
+	cooldown.text=""
+	for button: Button in [learn_button,book_button,use_button,quick_button,preview_button]:
+		button.disabled=true
+		button.tooltip_text="스킬을 먼저 선택하세요."
+	use_button.text="스킬 사용"
+	summon_controls.hide()
+	preview_vfx.clear()
+	preview_container.hide()
+
 func original_field_text(value: String, field: Dictionary) -> String:
 	var display := UI.safe(value)
 	match str(field.get("status", "UNKNOWN")):
@@ -256,6 +276,8 @@ func select_original() -> void:
 	var service: TwilightOriginalSkillService = world.original_skills
 	var catalog: TwilightOriginalSkillCatalog = service.catalog
 	var skill: Dictionary = catalog.resolve(selected)
+	preview_button.disabled=skill.is_empty()
+	preview_button.tooltip_text="선택한 스킬의 기존 이펙트 미리보기" if not preview_button.disabled else "미리보기를 지원하지 않는 스킬입니다."
 	var learned: bool = catalog.owned(selected)
 	var passive: bool = RULES.is_passive(selected)
 	var base_cooldown: float = float(skill.get("cooldown",0))

@@ -12,7 +12,8 @@ const MAX_CACHE: int = 256
 const LOCAL_ITEM_ICONS: Dictionary = {
 	"HP 물약":"res://assets/ui/potionRed.png",
 	"강력 HP 물약":"res://assets/ui/potionRed.png",
-	"축복받은 HP 물약":"res://assets/ui/potionRed.png"
+	"축복받은 HP 물약":"res://assets/ui/potionRed.png",
+	"초록 잎":"res://assets/ui/items/green_leaf_painted.png"
 }
 static var _loaded: bool = false
 static var _ids: Dictionary = {}

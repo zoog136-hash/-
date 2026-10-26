@@ -15,6 +15,14 @@ func configure(state: Dictionary) -> void:
 	var columns := HBoxContainer.new()
 	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	add_child(columns)
+	# The status sheet lives in its own window, rather than the main workspace.
+	# Reuse that window's native finger capture for this read-only table.
+	var window: Node=get_parent()
+	while window!=null:
+		if window.has_method("register_scroll_drag"):
+			window.register_scroll_drag(self,columns)
+			break
+		window=window.get_parent()
 	var stacks: Array[VBoxContainer] = []
 	for i: int in range(2):
 		var stack := VBoxContainer.new()
