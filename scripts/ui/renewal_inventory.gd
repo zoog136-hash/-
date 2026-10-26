@@ -1,6 +1,7 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Layout=preload("res://scripts/ui/reference_layout.gd")
 const NATIVE_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
 const ITEM_NAME_DURATION_MS: int = 5000
 const ITEM_NAME_GAP: float = 4.0
@@ -30,6 +31,7 @@ var gesture_origin: Vector2 = Vector2.ZERO
 var gesture_last: Vector2 = Vector2.ZERO
 var gesture_horizontal: float = 0.0
 var gesture_equipping: bool = false
+var category_tabs: Control
 
 func _ready() -> void:
 	super._ready()
@@ -38,7 +40,7 @@ func _ready() -> void:
 	item_grid.sort_children.connect(item_grid.queue_redraw)
 	z_index = 1
 	inventory_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	inventory_panel.add_theme_stylebox_override("panel",UI.box(Color("17140f"),Color("514131"),2))
+	inventory_panel.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,0),Color(0,0,0,0),0))
 	var layout: VBoxContainer = inventory_panel.get_child(0)
 	layout.add_theme_constant_override("separation",3)
 	var header: HBoxContainer = layout.get_child(0)
@@ -50,8 +52,8 @@ func _ready() -> void:
 	capacity_label.add_theme_font_size_override("font_size",11)
 	grid_scroll.name = "InventoryGridScroll"
 	grid_scroll.add_theme_stylebox_override("panel",UI.box(Color("15120f"),Color("4b3d2e"),5))
-	item_grid.add_theme_constant_override("h_separation",8)
-	item_grid.add_theme_constant_override("v_separation",8)
+	item_grid.add_theme_constant_override("h_separation",6)
+	item_grid.add_theme_constant_override("v_separation",6)
 	item_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	search_row = HBoxContainer.new()
 	layout.add_child(search_row)
@@ -67,33 +69,46 @@ func _ready() -> void:
 	search_row.hide()
 	header.hide()
 	for button: Button in tab_buttons.values():
-		button.custom_minimum_size = Vector2(68,32)
+		button.custom_minimum_size = Vector2(56,44)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	category_tabs=(tab_buttons.values()[0] as Control).get_parent()
 	detail_panel.reparent(self)
 	detail_panel.z_index = 10
-	detail_panel.custom_minimum_size = Vector2(300,0)
-	detail_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color("181714"),UI.BRONZE,12))
+	detail_panel.custom_minimum_size = Vector2(320,0)
+	detail_panel.add_theme_stylebox_override("panel",UI.screen_frame())
 	detail_panel.minimum_size_changed.connect(_queue_detail_layout)
 	detail_grade.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail_type.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	detail_text.set_script(UI.NATIVE_TEXT)
+	detail_text.call("bind_gestures")
 	var detail_stack: VBoxContainer = detail_panel.get_child(0)
 	var close_row := HBoxContainer.new()
-	close_row.add_child(UI.label("아이템 정보",15,UI.GOLD))
+	close_row.add_child(UI.label("아이템 정보",19,UI.TEXT))
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	close_row.add_child(spacer)
-	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,30))
+	var detail_close: Button = UI.button("",func() -> void: detail_active=false; _reflow(),Vector2(44,44))
+	detail_close.icon=UI.icon("close")
+	detail_close.tooltip_text="아이템 정보 닫기"
 	detail_close.set_script(NATIVE_BUTTON)
 	detail_close.name = "InventoryDetailClose"
 	close_row.add_child(detail_close)
 	detail_stack.add_child(close_row)
 	detail_stack.move_child(close_row,0)
-	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,32))
+	var hero:=PanelContainer.new()
+	hero.add_theme_stylebox_override("panel",UI.box(Color("0b0c0c"),Color("4a3c2b"),8))
+	var item_header: Control=detail_stack.get_child(1)
+	detail_stack.add_child(hero)
+	detail_stack.move_child(hero,1)
+	item_header.reparent(hero)
+	detail_text.add_theme_constant_override("line_separation",4)
+	detail_text.add_theme_stylebox_override("normal",UI.box(Color(.025,.025,.023,.65),Color(.3,.25,.18,.35),8))
+	UI.primary_button(detail_action)
+	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,42))
 	lock_button.name = "InventoryLock"
 	detail_stack.add_child(lock_button)
 	weight_readout = UI.label("",11,UI.MUTED)
-	layout.add_child(weight_readout)
-	weight_readout.hide()
+	gold_label.get_parent().add_child(weight_readout)
 	weight_gauge = ProgressBar.new()
 	weight_gauge.name = "InventoryWeight"
 	weight_gauge.show_percentage = false
@@ -101,15 +116,17 @@ func _ready() -> void:
 	layout.add_child(weight_gauge)
 	var actions := HBoxContainer.new()
 	layout.add_child(actions)
-	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,34)))
-	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,34))
+	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(52,44)))
+	expand_button = UI.button("확장",_toggle_expanded,Vector2(52,44))
 	expand_button.name = "ExpandInventory"
 	actions.add_child(expand_button)
-	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,34))
+	var detail_button: Button = UI.button("상세 정보",open_detail,Vector2(110,44))
+	detail_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	UI.primary_button(detail_button)
 	detail_button.set_script(NATIVE_BUTTON)
 	detail_button.name = "InventoryDetail"
 	actions.add_child(detail_button)
-	actions.add_child(UI.button("장비",func() -> void: controller.show_companion_equipment(),Vector2(64,34)))
+	actions.add_child(UI.button("장비",func() -> void: controller.show_companion_equipment(),Vector2(62,44)))
 	compact_tabs = HBoxContainer.new()
 	compact_tabs.hide()
 	layout.add_child(compact_tabs)
@@ -147,10 +164,24 @@ func _reflow() -> void:
 	item_grid.columns = 8 if window != null and window.get_meta("expanded",false) else 4
 	inventory_left.show()
 	var small: bool = get_window().size.x < 760
-	detail_panel.position = Vector2(0 if small else -318,0 if small else -54)
-	detail_panel.size = Vector2(width if small else 310,minf(508,maxf(260,inventory_panel.size.y+(0 if small else 54))))
+	detail_panel.position = Vector2(0 if small else -358,0 if small else -81)
+	var height: float=window.size.y if window is Control and not small else inventory_panel.size.y
+	detail_panel.size = Vector2(width if small else 336,maxf(detail_panel.get_combined_minimum_size().y,height))
 	detail_panel.visible = detail_active and not selected_item.is_empty()
 	compact_tabs.hide()
+
+func mount_window_header(window: Control) -> void:
+	window.mount_header_filters(category_tabs)
+	_reflow()
+
+func gesture_bounds() -> Control:
+	# Category tabs now belong to the window header. A fast swipe reaching
+	# that header must remain a scroll rather than start an item transfer.
+	var parent: Node=get_parent()
+	while parent!=null:
+		if parent is Control and parent.has_method("mount_header_filters"):return parent
+		parent=parent.get_parent()
+	return inventory_panel
 
 func _queue_detail_layout() -> void:
 	if detail_layout_queued or not detail_active: return
@@ -340,21 +371,21 @@ func _refresh_inventory_grid() -> void:
 		var record: Dictionary = _find_item_record(reference)
 		button.icon = null
 		button.text = ""
-		button.custom_minimum_size = Vector2(72,72)
+		button.custom_minimum_size = Layout.SLOT
 		button.tooltip_text = "" # Only the timed, grade-colored name is shown.
 		var icon := TextureRect.new()
 		UI.apply_item_visual(icon,record,item_name,item_image_index.get("아이템",{}),"inventory")
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position = Vector2(7,7)
-		icon.size = Vector2(58,58)
+		icon.position = Vector2(8,8)
+		icon.size = Vector2(64,64)
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(icon)
 		var level: int = _enhance_level(reference)
 		var badge := UI.label("+%d" % level if level > 0 else "", 12, UI.GOLD)
 		badge.name = "InventoryEnhancement"
 		badge.position = Vector2(25, 2)
-		badge.size = Vector2(42,18)
+		badge.size = Vector2(50,18)
 		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		button.add_child(badge)
 		var equipped: bool = _is_item_equipped(reference)
@@ -373,8 +404,8 @@ func _refresh_inventory_grid() -> void:
 		var count := UI.label(UI.number_text(amount) if amount > 1 or _ref_instance_id(reference).is_empty() else "", 13, UI.GOLD)
 		count.name = "InventoryQuantity"
 		var locked: bool = bool(character_state.get("item_locks",{}).get(reference,false))
-		count.position = Vector2(24 if locked else 4,49)
-		count.size = Vector2(44 if locked else 64,20)
+		count.position = Vector2(24 if locked else 4,57)
+		count.size = Vector2(52 if locked else 72,20)
 		count.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		count.tooltip_text = "보유 "+UI.number_text(amount)+"개"
 		count.add_theme_color_override("font_outline_color",Color.BLACK)
@@ -388,14 +419,14 @@ func _refresh_inventory_grid() -> void:
 			lock_mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			lock_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			lock_mark.size = Vector2(18,18)
-			lock_mark.position = Vector2(4,48)
+			lock_mark.position = Vector2(4,56)
 			button.add_child(lock_mark)
 	_refresh_slot_states()
 	# Empty cells are real noninteractive slots, so the 4-column silhouette survives filtering.
 	var count: int = item_grid.get_child_count()
 	for i: int in range(maxi(0,20-count)):
 		var empty := Panel.new()
-		empty.custom_minimum_size = Vector2(72,72)
+		empty.custom_minimum_size = Layout.SLOT
 		empty.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var empty_style: StyleBoxFlat = UI.slot_frame()
 		empty_style.bg_color.a = 0
@@ -425,10 +456,10 @@ func _refresh_weight() -> void:
 		var current_weight: float = float(character_state.get("current_weight", 0))
 		var max_weight: float = float(character_state.get("max_weight", character_state.get("carrying_capacity", 0)))
 		var ratio: float = 100*current_weight/maxf(1,max_weight)
-		weight_readout.text = "무게  %.0f / %.0f  (%.1f%%)" % [current_weight,max_weight,ratio]
+		weight_readout.text = "무게 %.0f%%" % ratio
 		weight_gauge.value = minf(100,ratio)
 		weight_gauge.tooltip_text = weight_readout.text
-		capacity_label.text = "%d%% · %s" % [roundi(ratio),capacity_label.text.get_slice(" · ",capacity_label.text.get_slice_count(" · ")-1)]
+		capacity_label.text = "%d / %d" % [_inventory_entries().size(),max_slots]
 
 func _refresh_detail(item_reference: String) -> void:
 	super._refresh_detail(item_reference)

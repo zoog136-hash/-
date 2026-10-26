@@ -151,13 +151,13 @@ func _input(event: InputEvent) -> void:
 			if pointer >= 0 and elapsed < L.TOUCH_HOLD_SECONDS:
 				if source.from == "inventory":
 					# Crossing the grid edge into the bag header is still a scroll.
-					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(hud.lineage_inventory_ui.inventory_panel,position) else "drag"
+					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(_inventory_gesture_frame(),position) else "drag"
 				elif source.from != "quick": mode = "scroll"
 				elif absf(distance.x) > absf(distance.y)*1.5: mode = "page"
 				else: mode = "drag"
 			else: mode = "drag"
 		# Only leaving the bag itself converts a vertical swipe into a transfer.
-		if mode == "scroll" and source.from == "inventory" and not inside(hud.lineage_inventory_ui.inventory_panel,position): mode = "drag"
+		if mode == "scroll" and source.from == "inventory" and not inside(_inventory_gesture_frame(),position): mode = "drag"
 		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
 			var bar: VScrollBar
@@ -319,3 +319,7 @@ func _finish_gesture() -> void:
 	if hud != null:
 		for button: Button in hud.v20_quickslot_buttons: button.modulate = Color.WHITE
 		for button: Button in hud.lineage_side_ui.equipment_buttons.values(): button.modulate = Color.WHITE
+
+func _inventory_gesture_frame() -> Control:
+	var bag: Control=hud.lineage_inventory_ui
+	return bag.gesture_bounds() if bag.has_method("gesture_bounds") else bag.inventory_panel

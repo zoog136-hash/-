@@ -36,7 +36,12 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	npc_mode = at_npc
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(UI.section("구매" if npc_mode else "아데나 상점",16))
+	var wallet_row:=HBoxContainer.new()
+	wallet_row.custom_minimum_size.y=38
+	var heading: Label=UI.section("판매 상품",17)
+	heading.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	wallet_row.add_child(heading)
+	add_child(wallet_row)
 	vendor_profiles = REVIEWED.profiles(hud.catalog_data.get("아이템", []))
 	vendor_filter = OptionButton.new()
 	vendor_filter.name = "ShopVendor"
@@ -57,7 +62,7 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 		selected_vendor_id = ""
 		vendor_filter.select(0)
 	wallet = UI.label("",15,UI.GOLD)
-	add_child(wallet)
+	wallet_row.add_child(wallet)
 	var filters := HBoxContainer.new()
 	add_child(filters)
 	search_field = LineEdit.new()
@@ -83,12 +88,13 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	listing.fixed_column_width = 0 if npc_mode else 176
 	listing.same_column_width = true
 	listing.max_text_lines = 3
-	listing.add_theme_font_size_override("font_size",12)
+	listing.add_theme_font_size_override("font_size",13)
 	listing.add_theme_constant_override("v_separation",8 if npc_mode else 30)
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	listing.item_selected.connect(_select)
 	listing.gui_input.connect(_on_listing_input)
+	listing.resized.connect(_fit_product_grid)
 	row.add_child(listing)
 	var side := VBoxContainer.new()
 	side.custom_minimum_size.x = 315
@@ -114,6 +120,7 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	purchase_quantity.value_changed.connect(func(_value: float) -> void: _refresh_selection())
 	amount_row.add_child(purchase_quantity)
 	purchase = UI.button("상품 선택",_buy,Vector2(0,54))
+	UI.primary_button(purchase)
 	purchase.name = "ShopBuy"
 	side.add_child(purchase)
 	purchase_state = UI.label("",12,UI.MUTED)
@@ -292,3 +299,8 @@ func _buy() -> void:
 			hud.emit_signal("reviewed_shop_buy_requested",vendor,name,quantity)
 		elif hud.has_signal("shop_bulk_buy_requested"):
 			hud.emit_signal("shop_bulk_buy_requested",name,quantity))
+
+func _fit_product_grid() -> void:
+	if npc_mode or listing==null or listing.size.x<100:return
+	listing.max_columns=clampi(floori(listing.size.x/150.0),2,4)
+	listing.fixed_column_width=maxi(100,floori((listing.size.x-24-listing.max_columns*24)/listing.max_columns))

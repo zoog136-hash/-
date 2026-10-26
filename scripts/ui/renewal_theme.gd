@@ -6,6 +6,7 @@ extends RefCounted
 const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
 const ICONS = preload("res://scripts/ui/renewal_icons.gd")
 const MATERIAL = preload("res://scripts/ui/renewal_material_style.gd")
+const NATIVE_TEXT=preload("res://scripts/ui/native_touch_text.gd")
 static var source_icon_cache: Dictionary = {}
 static var recess_style: StyleBoxTexture
 
@@ -47,6 +48,15 @@ static func chrome_panel(bg: Color = Color("0c0d11"), rim: Color = GOLD, margin:
 	s.shadow_color = Color(0,0,0,.55)
 	return s
 
+static func screen_frame() -> StyleBoxTexture:
+	return MATERIAL.window_frame()
+
+static func primary_button(button: Button) -> void:
+	button.add_theme_stylebox_override("normal",MATERIAL.from_flat(box(Color("493822"),Color("b69a65"),7)))
+	button.add_theme_stylebox_override("hover",MATERIAL.from_flat(box(Color("5b4629"),GOLD,7)))
+	button.add_theme_stylebox_override("pressed",MATERIAL.from_flat(box(Color("302414"),GOLD,7),true))
+	button.add_theme_color_override("font_color",Color("f7e8c9"))
+
 static func slot_frame(rim: Color = BRONZE, active: bool = false) -> StyleBoxFlat:
 	var s := box(Color("29251e") if active else Color("0c0b09"), rim, 3)
 	s.set_corner_radius_all(1)
@@ -77,6 +87,9 @@ static func menu_tile(active: bool = false) -> StyleBoxFlat:
 	style.border_width_right = 1 if active else 0
 	return style
 static func icon(kind: String) -> Texture2D:
+	# Service navigation shares one embossed symbol family. Item/skill art
+	# continues through its existing record-based resolvers below.
+	if ICONS.PATHS.has(str(ICONS.ALIASES.get(kind,kind))): return ICONS.texture(kind)
 	var files: Dictionary = {"inventory":"bag","shop":"shop","skills":"skill","settings":"settings","auto":"macro","map":"teleport","attack":"attack","return":"return","enhance":"sword"}
 	if files.has(kind):
 		if source_icon_cache.has(kind): return source_icon_cache[kind]
@@ -112,7 +125,7 @@ static func make_theme() -> Theme:
 	var readable := FontVariation.new()
 	readable.base_font = FONT
 	# Font axes use integer OpenType tags (wght), not string keys.
-	readable.variation_opentype = {2003265652:500.0}
+	readable.variation_opentype = {2003265652:550.0}
 	t.default_font = readable
 	t.default_font_size = 14
 
@@ -164,8 +177,8 @@ static func make_theme() -> Theme:
 	t.set_color("font_selected_color","RichTextLabel",GOLD)
 	t.set_font_size("normal_font_size","RichTextLabel",14)
 	t.set_font_size("bold_font_size","RichTextLabel",14)
-	t.set_constant("separation","VBoxContainer",7)
-	t.set_constant("separation","HBoxContainer",7)
+	t.set_constant("separation","VBoxContainer",9)
+	t.set_constant("separation","HBoxContainer",9)
 	t.set_constant("h_separation","GridContainer",6)
 	t.set_constant("v_separation","GridContainer",6)
 	var track := box(Color("0e0f12"),Color("25201c"),0)
@@ -192,7 +205,7 @@ static func label(value: String, font_size: int = 14, color: Color = TEXT) -> La
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
-static func button(value: String, action: Callable, min_size: Vector2 = Vector2(0,40)) -> Button:
+static func button(value: String, action: Callable, min_size: Vector2 = Vector2(0,44)) -> Button:
 	var b := Button.new()
 	b.text = value
 	b.custom_minimum_size = min_size
@@ -207,6 +220,7 @@ static func button(value: String, action: Callable, min_size: Vector2 = Vector2(
 
 static func rich(value: String) -> RichTextLabel:
 	var r := RichTextLabel.new()
+	r.set_script(NATIVE_TEXT)
 	r.bbcode_enabled = true
 	r.text = value
 	r.fit_content = true

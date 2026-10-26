@@ -79,13 +79,14 @@ func configure(controller: Node) -> void:
 	cards.max_columns=4
 	cards.fixed_column_width=76
 	cards.fixed_icon_size=Vector2i(54,54)
-	cards.add_theme_font_size_override("font_size",11)
+	cards.add_theme_font_size_override("font_size",13)
 	cards.add_theme_constant_override("h_separation",6)
 	cards.add_theme_constant_override("v_separation",6)
 	cards.icon_mode=ItemList.ICON_MODE_TOP
-	cards.max_text_lines=2
+	cards.max_text_lines=3
 	cards.same_column_width=true
 	cards.item_selected.connect(select)
+	cards.resized.connect(_fit_cards)
 	# Shared PointerTransfer handles native touch, scrolling and actual drops.
 	body.add_child(cards)
 	var side_scroll := ScrollContainer.new()
@@ -313,3 +314,10 @@ func _touch(event: InputEvent) -> void:
 		if dragging:
 			cards.get_v_scroll_bar().value-=event.relative.y
 			cards.accept_event()
+
+func _fit_cards() -> void:
+	if cards==null or cards.size.x<100:return
+	cards.max_columns=4 if cards.size.x>=420 else 3
+	cards.fixed_column_width=maxi(78,floori((cards.size.x-24-cards.max_columns*18)/cards.max_columns))
+	cards.fixed_icon_size=Vector2i(64,64)
+	cards.add_theme_constant_override("v_separation",14)

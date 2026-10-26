@@ -17,7 +17,7 @@ var equipment_page_index: int = 0
 func _ready() -> void:
 	super._ready()
 	theme = UI.make_theme()
-	character_panel.add_theme_stylebox_override("panel",UI.box(Color("101219"),UI.BRONZE,8))
+	character_panel.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,0),Color(0,0,0,0),0))
 	var outer: VBoxContainer = character_panel.get_child(0)
 	outer.add_theme_constant_override("separation",4)
 	var header: HBoxContainer = outer.get_child(0)
@@ -36,7 +36,7 @@ func _ready() -> void:
 	(identity.get_child(0) as Control).hide()
 	(identity.get_child(2) as Control).hide()
 	(identity.get_child(0) as Control).custom_minimum_size = Vector2(54,54)
-	character_name.add_theme_font_size_override("font_size",17)
+	character_name.add_theme_font_size_override("font_size",20)
 	character_level.hide()
 	weight_bar.custom_minimum_size.y = 4
 	weight_label.add_theme_font_size_override("font_size",11)

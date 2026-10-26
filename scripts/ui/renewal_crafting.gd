@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Browser=preload("res://scripts/ui/renewal_browser.gd")
 var hud: Node
 var world: Node
 var listing: ItemList
@@ -19,7 +20,7 @@ func configure(controller: Node) -> void:
 	world = hud.get_parent()
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(UI.label("제작 장인 · TWILIGHT 로컬 제작법",20,UI.GOLD))
+	add_child(UI.section("제작법",19))
 	add_child(UI.label("재료 및 아데나를 확인한 뒤 제작합니다. 강화·장착 장비는 재료로 소모되지 않습니다.",12,UI.MUTED))
 	var filters := HBoxContainer.new()
 	add_child(filters)
@@ -56,12 +57,14 @@ func configure(controller: Node) -> void:
 	amount.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(amount)
 	action = UI.button("제작 실행",_craft,Vector2(180,42))
+	UI.primary_button(action)
 	action.name = "CraftExecute"
 	row.add_child(action)
-	var layout := HBoxContainer.new()
+	var layout := Browser.new()
 	layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(layout)
 	listing = ItemList.new()
+	listing.set_script(preload("res://scripts/ui/native_touch_list.gd"))
 	listing.name = "CraftRecipes"
 	listing.fixed_icon_size = Vector2i(36,36)
 	listing.custom_minimum_size.x = 260
@@ -69,12 +72,17 @@ func configure(controller: Node) -> void:
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	listing.item_selected.connect(_select)
 	layout.add_child(listing)
+	var inspector:=VBoxContainer.new()
+	inspector.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	layout.add_child(inspector)
 	detail = UI.rich("")
 	detail.fit_content = false
 	detail.scroll_active = true
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	layout.add_child(detail)
+	inspector.add_child(detail)
+	row.reparent(inspector)
+	layout.configure(listing,inspector,330)
 	var data: Object = world.get("crafting")
 	var registry: Dictionary = data.get("recipes")
 	for raw_id: Variant in registry.keys():
@@ -143,7 +151,6 @@ func _refresh_quote() -> void:
 			var name: String = str(material.get("item",""))
 			content += "· %s ×%d / 보유 %d\n" % [UI.safe(name),int(material.get("quantity",0))*count,int(inventory.get(name,0))]
 	content += "\n" + ("제작 가능" if bool(quote.get("ok",false)) else UI.safe(quote.get("reason","제작 불가")))
-	content += "\n\n[color=#8999a8]TWILIGHT 자체 제작식 · 원작 재료/비용/성공률을 재현한 것이 아닙니다.[/color]"
 	detail.text = content
 	action.disabled = not bool(quote.get("ok",false))
 	action.text = "제작 실행 · %d개" % count

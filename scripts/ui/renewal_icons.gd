@@ -39,6 +39,7 @@ static func texture(kind: String) -> Texture2D:
 	if cache.has(key): return cache[key]
 	var shape: String=str(PATHS[key])
 	var svg: String='<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#f4e2b2"/><stop offset="1" stop-color="#ae8550"/></linearGradient></defs><path fill="none" stroke="url(#gold)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" d="'+shape+'"/></svg>'
+	svg=svg.replace('<path fill="none" stroke="url(#gold)"','<path fill="none" stroke="#000" stroke-opacity=".8" stroke-width="4" transform="translate(0 1)" d="'+shape+'"/><path fill="#b59a64" fill-opacity=".12" stroke="url(#gold)"')
 	var source:=Image.new()
 	if source.load_svg_from_string(svg) != OK: return null
 	var icon: ImageTexture=ImageTexture.create_from_image(source)

@@ -38,12 +38,14 @@ func configure(controller: Node) -> void:
 	action = Button.new()
 	action.name = "WarehouseTransfer"
 	action.text = "선택 아이템 이동"
+	action.custom_minimum_size.y=44
+	UI.primary_button(action)
 	action.pressed.connect(_transfer)
 	listing = ItemList.new()
 	listing.name = "WarehouseItems"
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	listing.fixed_icon_size = Vector2i(32,32)
+	listing.fixed_icon_size = Vector2i(40,40)
 	listing.item_selected.connect(_selected)
 	add_child(listing)
 	add_child(action)

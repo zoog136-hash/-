@@ -8,26 +8,15 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func _draw() -> void:
-	if size.x < 8 or size.y < 8:
-		return
-	var bounds := Rect2(Vector2.ZERO,size)
-	draw_rect(bounds,Color(0.025,0.022,0.019,0.12))
-	# Unequal narrow bands suggest worn brushed material at restrained contrast.
+	if size.x<24 or size.y<24:return
+	# The same fixed title plate spans every connected screen. No animated
+	# decoration or secondary viewport is needed for the chrome.
+	var width: float=size.x-20
 	for band: int in range(12):
-		var y: float = size.y*float(band)/12.0
-		var alpha: float = 0.025*(1.0-float(band)/12.0)
-		draw_rect(Rect2(0,y,size.x,size.y/12.0+1),Color(0.85,0.79,0.67,alpha))
-	for line: int in range(mini(32,int(size.y/14.0))):
-		var y: float = 9.0+float(line)*14.0
-		draw_line(Vector2(3,y),Vector2(size.x-3,y),Color(0,0,0,0.055),1)
-	# A shallow warm title plate and black inner seam keep the window chrome
-	# distinct from recessed lists. Static draws only; no additional texture.
-	for band: int in range(6):
-		draw_rect(Rect2(3,3+band*6,size.x-6,6),Color(0.45,0.31,0.18,0.12-float(band)*0.013))
-	draw_line(Vector2(3,42),Vector2(size.x-3,42),Color(0,0,0,.6),1)
-	draw_line(Vector2(3,43),Vector2(size.x-3,43),Color(.72,.58,.39,.14),1)
-	draw_rect(Rect2(3,3,size.x-6,size.y-6),Color(.57,.45,.31,.16),false,1)
-	draw_line(Vector2(1,1),Vector2(size.x-1,1),Color(0.76,0.68,0.55,0.12),1)
-	draw_line(Vector2(1,1),Vector2(1,size.y-1),Color(0.76,0.68,0.55,0.08),1)
-	draw_line(Vector2(1,size.y-1),Vector2(size.x-1,size.y-1),Color(0,0,0,0.4),1)
-	draw_line(Vector2(size.x-1,1),Vector2(size.x-1,size.y-1),Color(0,0,0,0.4),1)
+		var t: float=float(band)/12.0
+		draw_rect(Rect2(10,10+band*4,width,4),Color(.30-.12*t,.23-.10*t,.15-.07*t,.68))
+	draw_line(Vector2(12,63),Vector2(size.x-12,63),Color("0a0806"),2)
+	draw_line(Vector2(12,65),Vector2(size.x-12,65),Color(.74,.61,.39,.45),1)
+	draw_line(Vector2(16,11),Vector2(size.x-16,11),Color(.9,.78,.56,.22),1)
+	for x: float in [18.,size.x-18]:
+		draw_line(Vector2(x,74),Vector2(x,size.y-18),Color(.48,.38,.25,.10),1)
