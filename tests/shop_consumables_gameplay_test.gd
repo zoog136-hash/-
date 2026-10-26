@@ -54,6 +54,15 @@ func _run() -> void:
 	search.text = "최상급"
 	panel.call("_refresh")
 	check(listing.item_count == 6, "all six draw products searchable")
+	var amount: SpinBox = panel.get("purchase_quantity") as SpinBox
+	check(int(amount.max_value) == 1000, "quantity selector accepts up to 1000")
+	for quantity: int in [1, 10, 100, 1000]:
+		var button: Button = panel.find_child("ShopQuantity" + str(quantity), true, false) as Button
+		check(button != null, "quantity preset button exists " + str(quantity))
+		if button != null:
+			button.pressed.emit()
+			check(int(amount.value) == quantity, "quantity preset updates selector " + str(quantity))
+	panel.call("_set_purchase_quantity", 1)
 	search.text = "마나 회복 물약"
 	panel.call("_refresh")
 	check(listing.item_count >= 1, "new potion searchable")
