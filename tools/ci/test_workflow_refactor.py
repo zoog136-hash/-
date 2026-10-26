@@ -90,7 +90,7 @@ class RefactorContractTest(unittest.TestCase):
 
 class SupersededCIContractTest(unittest.TestCase):
     def test_only_allowlisted_pr_cancel_field_can_change(self):
-        name = '.github/workflows/twilight-shop-buyback.yml'
+        name = '.github/workflows/skill-mechanism-validate.yml'
         before = {'concurrency': {'group': 'one-pr', 'cancel-in-progress': False},
                   'jobs': {'check': {'steps': [{'run': 'run-tests'}]}}}
         after = copy.deepcopy(before)
@@ -236,7 +236,7 @@ class PhaseTwoImportReaderContract(unittest.TestCase):
                     normalize_shared_import_cache_reader(path, moved)
 
     def test_no_existing_check_may_be_removed(self):
-        path = '.github/workflows/twilight-local-crafting.yml'
+        path = '.github/workflows/original-skills-validate.yml'
         before = {'jobs': {'ci': {'steps': [
             {'uses': 'actions/checkout@v4'},
             {'name': SHARED_IMPORT_READER_STEPS[path], 'run': 'mandatory-tests'},
