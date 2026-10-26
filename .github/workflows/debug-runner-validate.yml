@@ -21,9 +21,14 @@ concurrency:
 jobs:
   runner:
     runs-on: ubuntu-latest
+    # Repository checkout contains large map/animation binaries. Python runner tests
+    # only require these scripts; use a sparse working tree to avoid checkout timeout.
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -42,7 +47,8 @@ jobs:
   turn-undead:
     needs: runner
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # This job needs the complete Godot game/resources and cannot use sparse checkout.
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Resource preflight and pinned project engine

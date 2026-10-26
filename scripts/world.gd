@@ -52,6 +52,11 @@ var equipment_collections = EQUIPMENT_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
 var growth = GROWTH.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
+const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
+const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
+var option_awakening = OPTION_AWAKENING.new()
+var option_awakening_auras: Dictionary = {}
+var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
@@ -319,6 +324,7 @@ func _ready() -> void:
 	crafting.load_recipes()
 	_load_data()
 	card_draw_fusion.configure(catalog_db)
+	option_awakening.configure(self)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
@@ -799,7 +805,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1159,6 +1165,10 @@ func _connect_signals() -> void:
 		hud.connect("card_pack_draw_requested", _on_card_pack_draw_requested)
 	if hud.has_signal("card_fusion_requested"):
 		hud.connect("card_fusion_requested", _on_card_fusion_requested)
+	if hud.has_signal("option_awakening_open_requested"):
+		hud.connect("option_awakening_open_requested", _on_option_awakening_open_requested)
+		hud.connect("option_awakening_feed_requested", _on_option_awakening_feed_requested)
+		hud.connect("option_awakening_attempt_requested", _on_option_awakening_attempt_requested)
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.job_class_selected.connect(_on_job_class_selected)
@@ -2825,6 +2835,7 @@ func _grant_playtest_aden() -> void:
 	_save_game(true)
 
 func _use_card_pack_item(item_name: String) -> void:
+	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
 	var spec: Dictionary = CARD_PACK_ITEMS.definition(item_name)
@@ -2855,7 +2866,7 @@ func _use_card_pack_item(item_name: String) -> void:
 		category, count, int(grades.get("고급", 0)), int(grades.get("희귀", 0)),
 		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
 	hud.refresh_inventory(inventory)
-	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_update_hud()
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.show_message(message)
 	hud.append_log(message)
@@ -3857,6 +3868,8 @@ func _update_hud() -> void:
 	hud.set_character_state(character_state)
 	if hud.has_method("set_card_collection_state"):
 		hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	if hud.has_method("set_option_awakening_state"):
+		hud.call("set_option_awakening_state", option_awakening.export_state())
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
@@ -3877,19 +3890,22 @@ func save_path() -> String:
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if option_awakening.save_blocked or not option_awakening.problem.is_empty():
+		if not quiet: hud.show_message("각성 저장 보호 중 · 정상 저장을 다시 불러오세요")
+		return ERR_UNAVAILABLE
 	if equipment_collections.save_blocked:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","growth"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
 		return ERR_UNAVAILABLE
-	# The collection transaction already validated a staged inventory; do not mutate live gear before disk commit.
-	if not collection_override.has("inventory"): _sync_item_instances()
+	# Transactions supply validated staged state. Commit it before mutating live resources.
+	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
@@ -3939,6 +3955,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"card_draw_fusion": card_draw_fusion.export_state(),
+		"card_option_awakening": option_awakening.export_state(),
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
@@ -3993,6 +4010,11 @@ func _load_game(quiet: bool) -> void:
 	if not collection_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(collection_error)
+		return
+	var awakening_error: String = option_awakening.check_load(data)
+	if not awakening_error.is_empty():
+		equipment_collections.save_blocked = true
+		hud.show_message(awakening_error)
 		return
 	var saved_map_id: String = str(data.get("map_id", ""))
 	if saved_map_id in ["albino_03","albino_04"]:
@@ -4092,7 +4114,14 @@ func _load_game(quiet: bool) -> void:
 			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
 			if not quiet: hud.show_message("저장 이전 백업 실패")
 			return
+	if not option_awakening.prepare_load(data):
+		equipment_collections.save_blocked = true
+		hud.show_message("각성 저장 이전 실패 · 기존 저장을 보존합니다")
+		return
 	if not equipment_collections.accept_load(data): return
+	if not option_awakening.accept_load(data):
+		equipment_collections.save_blocked = true
+		return
 	growth.restore(data.get("growth",growth.empty_state()))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -5566,6 +5595,7 @@ func _on_class_selected(value: int) -> void:
 func _on_card_pack_draw_requested(category: String) -> void:
 	if not OS.is_debug_build():
 		return
+	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
 	var result: Dictionary = card_draw_fusion.draw_pack(category)
@@ -5585,11 +5615,12 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
-	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_update_hud()
 	_save_game(true)
 	hud.call("present_card_reveal", category, result, false)
 
 func _on_card_fusion_requested(category: String, grade: String) -> void:
+	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
 	var result: Dictionary = card_draw_fusion.fuse(category, grade)
@@ -5607,9 +5638,57 @@ func _on_card_fusion_requested(category: String, grade: String) -> void:
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
-	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_update_hud()
 	_save_game(true)
 	hud.call("present_card_reveal", category, result, true)
+
+func _option_awakening_busy() -> bool:
+	return option_awakening_transaction_busy or (hud.has_method("is_option_awakening_busy") and bool(hud.call("is_option_awakening_busy")))
+
+func _on_option_awakening_open_requested(category: String, target_id: String) -> void:
+	if _option_awakening_busy(): return
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return
+	hud.call("set_option_awakening_view", option_awakening.view(category, target_id))
+
+func _on_option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary) -> void:
+	if _option_awakening_busy(): return
+	option_awakening_transaction_busy = true
+	var result: Dictionary = option_awakening.feed(category, target_id, materials)
+	option_awakening_transaction_busy = false
+	var snapshot: Dictionary = result.get("snapshot", option_awakening.view(category, target_id))
+	hud.call("set_option_awakening_view", snapshot)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "각성 재료를 적용하지 못했습니다")))
+		return
+	_update_hud()
+	var message: String = "옵션 각성 경험치 %d / %d · 중복 카드 재료 적용 완료" % [int(snapshot.get("experience", 0)), int(snapshot.get("required_experience", 100))]
+	hud.show_message(message)
+	hud.append_log(message)
+
+func _on_option_awakening_attempt_requested(category: String, target_id: String) -> void:
+	if _option_awakening_busy(): return
+	option_awakening_transaction_busy = true
+	var result: Dictionary = option_awakening.awaken(category, target_id)
+	option_awakening_transaction_busy = false
+	var snapshot: Dictionary = result.get("snapshot", option_awakening.view(category, target_id))
+	hud.call("set_option_awakening_view", snapshot)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "옵션 각성을 진행하지 못했습니다")))
+		return
+	_update_hud()
+	# The runtime commits gold, experience, outcome and RNG together before this point.
+	_sync_option_awakening_auras()
+	var card: Dictionary = snapshot.get("target_record", {})
+	var success: bool = bool(result.get("success", false))
+	var message: String = "%s 옵션 각성 %s" % [str(card.get("name", "")), "성공" if success else "실패"]
+	if not success:
+		message += " · 경험치 %d 환급" % int(result.get("refunded_experience", 0))
+	hud.append_log(message)
+	var presentation: Dictionary = result.duplicate(true)
+	presentation["category"] = category
+	presentation["message"] = message
+	presentation["bonus_lines"] = snapshot.get("applied_options", []) if success else []
+	hud.call("present_option_awakening_result", card, presentation, presentation_settings)
 
 func _equip_catalog(category: String, record: Dictionary) -> void:
 	if category == "아이템":
@@ -5749,13 +5828,16 @@ func _directional_image_path(kind: String, record: Dictionary) -> String:
 func _apply_transform_visual(record: Dictionary) -> void:
 	if record.is_empty():
 		player.clear_transform_visual()
+		_sync_option_awakening_aura("변신")
 		return
 	var path: String = _directional_image_path("transform", record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
 	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", record, path))
+	_sync_option_awakening_aura("변신")
 
 func _apply_doll_visual(record: Dictionary) -> void:
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
+	_sync_option_awakening_aura("마법인형")
 
 func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
 	var frames: SpriteFrames = SpriteFrames.new()
@@ -5785,6 +5867,42 @@ func _direction_animation_name(direction_value: int) -> String:
 
 func _apply_relic_visual(record: Dictionary) -> void:
 	relic_motion.configure(record, relic_sprite, player, _drop_grade_color(str(record.get("grade", "일반"))))
+	_sync_option_awakening_aura("성물")
+
+func _sync_option_awakening_auras() -> void:
+	for category: String in ["변신", "마법인형", "성물"]:
+		_sync_option_awakening_aura(category)
+
+func _sync_option_awakening_aura(category: String) -> void:
+	var raw: Variant = equipped_catalog.get(category, {})
+	var record: Dictionary = raw if raw is Dictionary else {}
+	var awakened: bool = not record.is_empty() and option_awakening.is_awakened(category, record)
+	var aura: Node2D = option_awakening_auras.get(category) as Node2D
+	if not awakened:
+		if is_instance_valid(aura): aura.call("set_awakened", false)
+		return
+	var target: Node2D
+	var parent: Node2D
+	match category:
+		"변신":
+			target = player.transform_sprite
+			parent = player
+		"마법인형":
+			target = companion_sprite
+			parent = $Companion
+		"성물":
+			target = relic_sprite
+			parent = self
+		_:
+			return
+	if not is_instance_valid(target): return
+	if not is_instance_valid(aura):
+		aura = OPTION_AWAKENING_AURA.new()
+		aura.name = "OptionAwakeningAura"
+		parent.add_child(aura)
+		option_awakening_auras[category] = aura
+	aura.call("configure", target, category, str(record.get("grade", "영웅")), awakened, presentation_settings)
+	aura.z_index = target.z_index
 
 func _restore_equipped_visuals() -> void:
 	var transform_value: Variant = equipped_catalog.get("변신", {})
@@ -5812,6 +5930,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not collection_record.is_empty(): records.append(collection_record)
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
+	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	return records
 
 func _normalized_weapon_type(raw_type: String) -> String:
@@ -6189,7 +6308,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = 0
+	var total: int = option_awakening.accuracy_bonus(kind)
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -6226,8 +6345,12 @@ func _record_attack_speed_percent(record: Dictionary) -> float:
 
 func _effective_move_speed_multiplier() -> float:
 	var multiplier: float = 1.0
+	var awakening_percent: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		multiplier *= _record_move_speed_multiplier(record)
+		awakening_percent += float(record.get("speedBonusPct", 0.0))
+	# Awakening adds percentage points before the existing buff/encumbrance factors.
+	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
 	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
 	multiplier *= _inventory_encumbrance_multiplier()
@@ -6924,7 +7047,11 @@ func _queue_player_area_attack(skill: Dictionary) -> bool:
 	return true
 
 func _cancel_player_attack(id: int) -> void:
-	if int(pending_attack.get("id", -1)) == id: pending_attack.clear()
+	if int(pending_attack.get("id", -1)) == id:
+		var original: Dictionary = pending_attack.get("original_skill", pending_attack.get("area_skill", {}))
+		if original_skills != null and not original.is_empty():
+			original_skills.vfx.cancel_cast(TwilightOriginalSkillService.presentation_id(original))
+		pending_attack.clear()
 
 func _release_player_attack(id: int) -> void:
 	if int(pending_attack.get("id", -1)) != id: return
@@ -7014,6 +7141,10 @@ func apply_presentation_settings(settings: Dictionary) -> void:
 		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
 	if is_instance_valid(combat_flights):
 		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+	for raw: Variant in option_awakening_auras.values():
+		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
+	if is_instance_valid(hud) and hud.has_method("apply_option_awakening_settings"):
+		hud.call("apply_option_awakening_settings", presentation_settings)
 	if is_instance_valid(player):
 		player.motion.reduced_motion = presentation_settings.reduced_motion
 		if bool(presentation_settings.reduced_motion): player.motion.visual_hold = 0.0

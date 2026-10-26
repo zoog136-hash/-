@@ -3,6 +3,9 @@ extends "res://scripts/hud_v20.gd"
 # Debug-build tools. Requests are also checked by the authoritative world.
 signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String)
+signal option_awakening_open_requested(category: String, target_id: String)
+signal option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary)
+signal option_awakening_attempt_requested(category: String, target_id: String)
 signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
@@ -34,6 +37,18 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 var card_reveal_stage: Control
+const OptionAwakeningView = preload("res://scripts/ui/option_awakening_view.gd")
+const OptionAwakeningBorder = preload("res://scripts/ui/option_awakening_border.gd")
+const OptionAwakeningReveal = preload("res://scripts/ui/option_awakening_reveal.gd")
+const OptionAwakeningTouchButton = preload("res://scripts/ui/native_touch_button.gd")
+var option_awakening_state: Dictionary = {}
+var option_awakening_snapshot: Dictionary = {}
+var option_awakening_view: Control
+var option_awakening_button: Button
+var option_awakening_catalog_status: Label
+var option_awakening_catalog_border: Control
+var option_awakening_reveal: Control
+var option_awakening_source_detail: bool = false
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
@@ -261,7 +276,8 @@ func set_character_state(value: Dictionary) -> void:
 	if is_instance_valid(status_view): status_view.refresh(value)
 
 func blocks_keyboard_input() -> bool:
-	if is_enhancement_presenting(): return true
+	if is_enhancement_presenting() or is_option_awakening_busy(): return true
+	if active_section == "option_awakening" and is_instance_valid(option_awakening_view): return true
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused is LineEdit or focused is TextEdit: return true
 	if pointer_transfer != null and pointer_transfer.pointer != -2: return true
@@ -270,7 +286,7 @@ func blocks_keyboard_input() -> bool:
 	return false
 
 func blocks_world_input(point: Vector2) -> bool:
-	if is_enhancement_presenting(): return true
+	if is_enhancement_presenting() or is_option_awakening_busy(): return true
 	# Native ScreenTouch may reach _unhandled_input on passive panel areas.
 	# Use the same canvas and clipping coordinates as the real controls so
 	# responsive shelves and dragged windows cannot issue a world destination.
@@ -672,7 +688,7 @@ func append_log(value: String) -> void:
 		combat_log_view.text = "\n".join(log_history)
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if is_enhancement_presenting():
+	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		if is_instance_valid(detail_window) and detail_window.visible:
@@ -750,6 +766,9 @@ func _restore_navigation(section: String) -> void:
 
 func _go_back() -> void:
 	if class_picker_initial: return
+	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and option_awakening_view.cancel_review():
+		return
+	var restore_card_details: bool = active_section == "option_awakening" and option_awakening_source_detail
 	if active_section == "inventory" and lineage_inventory_ui.detail_active:
 		lineage_inventory_ui.detail_active = false
 		lineage_inventory_ui._reflow()
@@ -769,6 +788,8 @@ func _go_back() -> void:
 		return
 	navigation_memory.returning = true
 	_navigate(previous)
+	if restore_card_details and CARD_RULES.CATEGORIES.has(previous):
+		_set_catalog_detail_view(true)
 	navigation_memory.returning = false
 	if workspace != null:
 		workspace.set_back_available(navigation_memory.has_history())
@@ -802,6 +823,9 @@ func _navigate(section: String) -> void:
 	if class_picker_initial:
 		return
 	match section:
+		"option_awakening":
+			if not option_awakening_snapshot.is_empty():
+				option_awakening_open_requested.emit(str(option_awakening_snapshot.get("category", "")), str(option_awakening_snapshot.get("target_id", "")))
 		"equipment_collections": open_equipment_collections()
 		"emblems", "guardians": open_growth(section)
 		"class_select": open_class_selection()
@@ -1239,6 +1263,10 @@ func _build_catalog_panel() -> void:
 	catalog_preview.custom_minimum_size = Vector2(180,0)
 	catalog_preview.size_flags_horizontal = Control.SIZE_FILL
 	catalog_preview.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	option_awakening_catalog_border = OptionAwakeningBorder.new()
+	catalog_preview.add_child(option_awakening_catalog_border)
+	option_awakening_catalog_border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	option_awakening_catalog_border.configure("", false, _option_awakening_settings())
 	catalog_detail.reparent(preview_row)
 	catalog_detail.custom_minimum_size = Vector2(0,0)
 	catalog_detail.fit_content = false
@@ -1255,6 +1283,16 @@ func _build_catalog_panel() -> void:
 			confirm_action("적용 해제",category+" 적용을 해제하시겠습니까?","해제",func(_count: int) -> void: catalog_equip_requested.emit(category,{})))
 	catalog_clear_button.name = "ClearCatalog"
 	right.add_child(catalog_clear_button)
+	option_awakening_catalog_status = UI.label("", 12, UI.MUTED)
+	option_awakening_catalog_status.name = "CatalogOptionAwakeningStatus"
+	option_awakening_catalog_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	right.add_child(option_awakening_catalog_status)
+	option_awakening_button = OptionAwakeningTouchButton.new()
+	option_awakening_button.name = "OpenOptionAwakening"
+	option_awakening_button.text = "옵션 각성"
+	option_awakening_button.custom_minimum_size.y = 48
+	option_awakening_button.pressed.connect(_request_option_awakening_open)
+	right.add_child(option_awakening_button)
 	# Card ownership is a new sidecar state; existing catalog/equip behavior is
 	# preserved to avoid invalidating old playtest saves. No paid/free packs
 	# exist yet: only debug builds can generate 11-card top-tier samples.
@@ -1324,6 +1362,128 @@ func set_card_collection_state(value: Dictionary) -> void:
 	card_collection_state = value.duplicate(true)
 	_refresh_card_controls()
 
+func set_option_awakening_state(value: Dictionary) -> void:
+	if option_awakening_state == value:
+		return
+	option_awakening_state = value.duplicate(true)
+	_refresh_option_awakening_markers()
+	_refresh_option_awakening_entry()
+
+func set_option_awakening_view(snapshot: Dictionary) -> void:
+	if not bool(snapshot.get("ok", false)):
+		if active_section == "option_awakening" and is_instance_valid(option_awakening_view):
+			option_awakening_view.set_snapshot(snapshot)
+		show_message(str(snapshot.get("error", "각성 정보를 확인할 수 없습니다.")))
+		return
+	var category: String = str(snapshot.get("category", ""))
+	var target_id: String = str(snapshot.get("target_id", ""))
+	var same_target: bool = category == str(option_awakening_snapshot.get("category", "")) and target_id == str(option_awakening_snapshot.get("target_id", ""))
+	option_awakening_snapshot = snapshot.duplicate(true)
+	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and not option_awakening_view.is_queued_for_deletion() and same_target:
+		option_awakening_view.set_snapshot(snapshot)
+		option_awakening_view.apply_settings(_option_awakening_settings())
+		return
+	if CARD_RULES.CATEGORIES.has(active_section):
+		option_awakening_source_detail = catalog_details_active
+	_open_window("option_awakening", category + " 옵션 각성", "")
+	var view: Control = OptionAwakeningView.new()
+	option_awakening_view = view
+	workspace.mount(view)
+	view.configure(snapshot, _option_awakening_settings())
+	view.feed_requested.connect(func(materials: Dictionary) -> void:
+		option_awakening_feed_requested.emit(category, target_id, materials))
+	view.attempt_requested.connect(func() -> void:
+		option_awakening_attempt_requested.emit(category, target_id))
+	for scroll_name: String in ["AwakeningContentScroll", "AwakeningInfoScroll", "AwakeningConfirmationScroll"]:
+		var scroll: ScrollContainer = view.find_child(scroll_name, true, false) as ScrollContainer
+		if scroll != null:
+			workspace.register_scroll_drag(scroll, scroll)
+
+func is_option_awakening_busy() -> bool:
+	# The form locks its own submission before emitting. Do not include that
+	# lock here: World's transaction guard must accept the request just emitted.
+	return is_instance_valid(option_awakening_reveal) and not option_awakening_reveal.is_queued_for_deletion()
+
+func present_option_awakening_result(record: Dictionary, result: Dictionary, settings: Dictionary = {}) -> void:
+	if is_option_awakening_busy() or not bool(result.get("ok", false)) or not result.get("success") is bool:
+		return
+	# A saved result is supplied by World. This view never rolls or consumes.
+	var outcome: Dictionary = result.duplicate(true)
+	var snapshot: Dictionary = outcome.get("snapshot", option_awakening_snapshot) as Dictionary
+	outcome["category"] = str(outcome.get("category", snapshot.get("category", record.get("category", ""))))
+	if not outcome.has("bonus_lines") and bool(outcome.get("success", false)):
+		outcome["bonus_lines"] = snapshot.get("applied_options", [])
+	if not outcome.has("message"):
+		outcome["message"] = "옵션 각성이 완료되었습니다." if bool(outcome.get("success", false)) else "각성에 실패했습니다. 경험치 %d가 남았습니다." % int(snapshot.get("experience", 0))
+	var layer := CanvasLayer.new()
+	layer.name = "OptionAwakeningRevealLayer"
+	layer.layer = 112
+	add_child(layer)
+	var stage: Control = OptionAwakeningReveal.new()
+	option_awakening_reveal = stage
+	layer.add_child(stage)
+	stage.finished.connect(func() -> void:
+		option_awakening_reveal = null
+		layer.queue_free()
+		_refresh_option_awakening_entry())
+	stage.present(record, outcome, _option_awakening_settings() if settings.is_empty() else settings)
+	_refresh_option_awakening_entry()
+
+func _option_awakening_settings() -> Dictionary:
+	var value: Variant = get_parent().get("presentation_settings") if get_parent() != null else {}
+	return value as Dictionary if value is Dictionary else {}
+
+func apply_option_awakening_settings(settings: Dictionary) -> void:
+	if is_instance_valid(option_awakening_catalog_border):
+		option_awakening_catalog_border.apply_settings(settings)
+	if is_instance_valid(option_awakening_view) and not option_awakening_view.is_queued_for_deletion():
+		option_awakening_view.apply_settings(settings)
+
+func _option_awakening_card_state(category: String, record: Dictionary) -> Dictionary:
+	var categories: Dictionary = option_awakening_state.get("cards", {}) as Dictionary
+	var cards: Dictionary = categories.get(category, {}) as Dictionary
+	return cards.get(CARD_RULES.card_id(record), {}) as Dictionary
+
+func _refresh_option_awakening_markers() -> void:
+	if catalog_list == null or not CARD_RULES.CATEGORIES.has(catalog_category):
+		return
+	for index: int in range(mini(catalog_results.size(), catalog_list.item_count)):
+		var record: Dictionary = catalog_results[index]
+		var awakened: bool = bool(_option_awakening_card_state(catalog_category, record).get("awakened", false))
+		catalog_list.set_item_text(index, ("[각성] " if awakened else "") + str(record.get("name", "")))
+
+func _refresh_option_awakening_entry() -> void:
+	if not is_instance_valid(option_awakening_button):
+		return
+	var category_valid: bool = CARD_RULES.CATEGORIES.has(catalog_category)
+	option_awakening_button.visible = category_valid
+	option_awakening_catalog_status.visible = category_valid
+	var record: Dictionary = selected_catalog_record
+	var grade_name: String = str(record.get("grade", ""))
+	var eligible: bool = category_valid and not record.is_empty() and grade_name in ["영웅", "전설", "신화", "유일"]
+	var owned: Dictionary = (card_collection_state.get("owned", {}) as Dictionary).get(catalog_category, {}) as Dictionary
+	var acquired: bool = owned.has(CARD_RULES.card_id(record)) if not record.is_empty() else false
+	var progress: Dictionary = _option_awakening_card_state(catalog_category, record)
+	var awakened: bool = category_valid and bool(progress.get("awakened", false))
+	option_awakening_catalog_border.configure(grade_name, awakened, _option_awakening_settings())
+	option_awakening_button.disabled = not eligible or not acquired or is_option_awakening_busy() or is_card_reveal_busy() or is_enhancement_presenting()
+	option_awakening_button.text = "[각성] 옵션 확인" if awakened else "옵션 각성"
+	if not eligible:
+		option_awakening_catalog_status.text = "영웅 이상 카드부터 옵션 각성을 진행할 수 있습니다."
+	elif not acquired:
+		option_awakening_catalog_status.text = "카드를 획득하면 옵션 각성을 진행할 수 있습니다."
+	elif awakened:
+		option_awakening_catalog_status.text = "[각성] 완료 · 지원 옵션과 각성 표식 적용"
+	else:
+		option_awakening_catalog_status.text = "각성 경험치 %d / 100 · 중복 카드로 충전" % int(progress.get("experience", 0))
+	option_awakening_button.tooltip_text = option_awakening_catalog_status.text
+
+func _request_option_awakening_open() -> void:
+	_refresh_option_awakening_entry()
+	if option_awakening_button.disabled or selected_catalog_record.is_empty():
+		return
+	option_awakening_open_requested.emit(catalog_category, CARD_RULES.card_id(selected_catalog_record))
+
 func set_card_draw_fusion_result(category: String, result_text: String) -> void:
 	if category == catalog_category and card_result_label != null:
 		card_result_label.text = result_text
@@ -1385,6 +1545,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
 
 func _refresh_card_controls() -> void:
+	_refresh_option_awakening_entry()
 	if card_controls == null or card_fusion_grade_select == null:
 		return
 	var category: String = catalog_category
@@ -1608,6 +1769,8 @@ func _apply_catalog_page() -> void:
 			if path != "" and ResourceLoader.exists(path):
 				catalog_list.set_item_icon(index, load(path) as Texture2D)
 		catalog_list.set_item_tooltip(index,"%s · %s · 원본 ID: %s" % [grade_name,record.get("name",""),record.get("sourceId","")])
+	_refresh_option_awakening_markers()
+	_refresh_option_awakening_entry()
 	if catalog_results.is_empty():
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
 		catalog_equip_button.disabled=true
@@ -1668,6 +1831,7 @@ func _on_catalog_item_selected(index: int) -> void:
 	super._on_catalog_item_selected(index)
 	if selected_catalog_record.is_empty():
 		if playtest_grant_button != null: playtest_grant_button.disabled = true
+		_refresh_option_awakening_entry()
 		return
 	if playtest_grant_button != null:
 		playtest_grant_button.disabled = catalog_category != "아이템"
@@ -1712,6 +1876,7 @@ func _on_catalog_item_selected(index: int) -> void:
 			"획득" if category_unlocks.has(identity) else "미획득",
 			int(category_extras.get(identity, 0))
 		]
+	_refresh_option_awakening_entry()
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return
