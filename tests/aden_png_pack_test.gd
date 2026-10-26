@@ -72,6 +72,14 @@ func run() -> void:
 	inconsistent.regions.append(row.duplicate(true))
 	inconsistent.regions[1].cuts[0].sha256 = "0".repeat(64)
 	rejected(inconsistent,"LAYER_HASH_MISMATCH")
+	# The same valid file referenced twice should be hashed/decoded once,
+	# but both reviewed source regions remain fully checked.
+	var repeated_valid: Dictionary = value.duplicate(true)
+	repeated_valid.regions.append(row.duplicate(true))
+	save_manifest(repeated_valid)
+	var repeat_pack := PACK.new()
+	check(repeat_pack.configure("user://pack-contract",field),"duplicate reviewed region still verifies")
+	check(repeat_pack.verified_png_decodes == 2,"reused verified PNG files are decoded once per configure")
 	save_manifest(value)
 	var valid := PACK.new()
 	check(valid.configure("user://pack-contract",field),"accepted synthetic layer contract")

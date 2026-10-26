@@ -8,6 +8,7 @@ var regions: Array[Dictionary] = []
 var root_path: String = ""
 var rejection: String = "NOT_INSTALLED"
 var textures: Dictionary = {}
+var verified_png_decodes: int = 0 # Per-configure measured unique PNG validations.
 var review_active: bool = false
 
 static func pair(value: Variant) -> bool:
@@ -31,7 +32,7 @@ func reject(reason: String) -> bool:
 	return false
 
 func configure(path: String, field: OriginalPlayableField) -> bool:
-	regions.clear(); textures.clear(); root_path = path
+	regions.clear(); textures.clear(); verified_png_decodes = 0; root_path = path
 	if path.is_empty(): return reject("NOT_INSTALLED")
 	if str(field.data.map_id) != "aden_world" or str(field.definition.source_sha256) != GRID_SHA: return reject("SOURCE_GRID_MISMATCH")
 	var manifest_path: String = path.path_join("manifest.json")
@@ -85,6 +86,7 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 				if not FileAccess.file_exists(file) or FileAccess.get_sha256(file) != expected_sha: return reject("LAYER_HASH_MISMATCH")
 				var image := Image.new()
 				if image.load(file) != OK or image.is_empty() or image.get_width()>2048 or image.get_height()>2048: return reject("INVALID_LAYER_IMAGE")
+				verified_png_decodes += 1
 				dimensions = Vector2(image.get_width(),image.get_height())
 				verified_layer_sizes[file] = {"sha256":expected_sha,"size":dimensions}
 			if ground_size == Vector2.ZERO: ground_size = dimensions

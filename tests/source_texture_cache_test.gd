@@ -21,19 +21,19 @@ func run() -> void:
 		return
 	var renderer = SOURCE_RENDERER.new()
 	var mapping: Dictionary = {}
-	for i: int in range(renderer.SOURCE_TEXTURE_LIMIT+1):
+	for i: int in range(SOURCE_RENDERER.SOURCE_TEXTURE_LIMIT+1):
 		mapping[str(i)] = {"images":{"0":{"path":ART}}}
 	renderer.tile_mapping = mapping
-	for i: int in range(renderer.SOURCE_TEXTURE_LIMIT):
+	for i: int in range(SOURCE_RENDERER.SOURCE_TEXTURE_LIMIT):
 		check(renderer.tile_texture(i,0)!=null,"source atlas loads "+str(i))
-	check(renderer.source_textures.size()==renderer.SOURCE_TEXTURE_LIMIT,"cache stays bounded")
+	check(renderer.source_textures.size()==SOURCE_RENDERER.SOURCE_TEXTURE_LIMIT,"cache stays bounded")
 	check(renderer.tile_texture(0,0)!=null,"recently used atlas is reused")
-	check(renderer.tile_texture(renderer.SOURCE_TEXTURE_LIMIT,0)!=null,"new atlas key loads")
-	check(renderer.source_textures.size()==renderer.SOURCE_TEXTURE_LIMIT,"cache cap never expands")
+	check(renderer.tile_texture(SOURCE_RENDERER.SOURCE_TEXTURE_LIMIT,0)!=null,"new atlas key loads")
+	check(renderer.source_textures.size()==SOURCE_RENDERER.SOURCE_TEXTURE_LIMIT,"cache cap never expands")
 	check(renderer.source_textures.has("0:0"),"recently used atlas key survives")
 	check(not renderer.source_textures.has("1:0"),"oldest untouched atlas key is evicted")
 	check(renderer.tile_texture(1,1)==null,"unknown atlas index stays absent")
-	check(renderer.source_textures.size()==renderer.SOURCE_TEXTURE_LIMIT,"missing texture is not cached")
+	check(renderer.source_textures.size()==SOURCE_RENDERER.SOURCE_TEXTURE_LIMIT,"missing texture is not cached")
 	renderer.free()
 	finish()
 
