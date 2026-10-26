@@ -107,11 +107,22 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY
 	purchase_quantity.step = 1
 	purchase_quantity.value = 1
-	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY if selected_vendor_id.is_empty() else 1
-	purchase_quantity.editable = selected_vendor_id.is_empty()
+	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY
+	purchase_quantity.editable = true
 	purchase_quantity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	purchase_quantity.value_changed.connect(func(_value: float) -> void: _refresh_selection())
 	amount_row.add_child(purchase_quantity)
+	# Always-visible mobile-friendly quantity presets; SpinBox stays editable.
+	var preset_row := HBoxContainer.new()
+	preset_row.name = "ShopQuantityPresets"
+	preset_row.add_theme_constant_override("separation", 4)
+	side.add_child(preset_row)
+	for amount: int in [1, 10, 100, 1000]:
+		var preset: int = amount
+		var button: Button = UI.button(str(amount), func() -> void: _set_purchase_quantity(preset), Vector2(52, 44))
+		button.name = "ShopQuantity" + str(amount)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		preset_row.add_child(button)
 	purchase = UI.button("상품 선택",_buy,Vector2(0,54))
 	purchase.name = "ShopBuy"
 	side.add_child(purchase)
@@ -154,9 +165,14 @@ func _change_vendor(index: int) -> void:
 	search_field.text = ""
 	category_filter.select(0)
 	purchase_quantity.value = 1
-	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY if selected_vendor_id.is_empty() else 1
-	purchase_quantity.editable = selected_vendor_id.is_empty()
+	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY
+	purchase_quantity.editable = true
 	_refresh()
+
+func _set_purchase_quantity(amount: int) -> void:
+	if purchase_quantity == null: return
+	purchase_quantity.value = clampi(amount, 1, SHOP_CATALOG.MAX_QUANTITY)
+	_refresh_selection()
 
 func _goods() -> Array:
 	if selected_vendor_id.is_empty(): return SHOP_CATALOG.GOODS.duplicate(true)
