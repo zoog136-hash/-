@@ -1,0 +1,97 @@
+name: Cancel superseded original PR152-155 runs (preserve PR174 checks)
+on:
+  push:
+    branches: [ci/cancel-original-pr152-155-runs-20261026]
+permissions:
+  contents: read
+  pull-requests: read
+  actions: write
+concurrency:
+  group: one-time-pr152-155-original-cleanup
+  cancel-in-progress: false
+jobs:
+  cleanup:
+    if: ${{ github.repository == 'zoog136-hash/-' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Cancel only redundant source-PR runs, never PR174 or main
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const integratedNumber = 174;
+            const integratedSha = '7abbaa030030bd2d5b350384b1bba6e4b407a0ec';
+            const originals = new Map([
+              [152, '5513f3d66c01112d31a5a5af619df6fe35858d9f'],
+              [153, 'c67cd6401f733cee29a0dd35020b4c839e53f67f'],
+              [154, '8d4b0bf6ed54b43316d8d88728258847df69ff6e'],
+              [155, '5e7264944579ddf258e974cf3660f9af96d4ee43'],
+            ]);
+            const active = new Set(['queued', 'in_progress', 'waiting', 'pending', 'requested']);
+            const integrated = (await github.rest.pulls.get({
+              owner, repo, pull_number: integratedNumber
+            })).data;
+            if (integrated.state !== 'open' || integrated.head.sha !== integratedSha ||
+                integrated.base.ref !== 'main' ||
+                integrated.head.ref !== 'integration/twilight-pr152-155-20261026') {
+              throw new Error('PR174 changed; no cancellations issued');
+            }
+            // Prove the four original commits are all already in the combined PR.
+            for (const [number, sha] of originals) {
+              const comp = (await github.rest.repos.compareCommits({
+                owner, repo, base: sha, head: integratedSha
+              })).data;
+              if (!['ahead', 'identical'].includes(comp.status)) {
+                throw new Error('Original PR ' + number + ' is not contained by integration SHA');
+              }
+            }
+            let requests = 0;
+            const summary = [];
+            for (const [number, sha] of originals) {
+              const pr = (await github.rest.pulls.get({owner, repo, pull_number: number})).data;
+              if (pr.state !== 'open' || pr.head.sha !== sha || pr.head.repo.full_name !== owner + '/' + repo) {
+                core.warning('PR ' + number + ' changed; preserve its existing runs');
+                continue;
+              }
+              const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+                owner, repo, branch: pr.head.ref, per_page: 100
+              });
+              let found = 0;
+              let cancelled = 0;
+              for (const run of runs) {
+                if (run.event !== 'pull_request' || run.head_sha !== sha ||
+                    run.head_branch !== pr.head.ref || !active.has(run.status) ||
+                    !(run.pull_requests || []).some(p => p.number === number)) continue;
+                found++;
+                if (found > 100) throw new Error('Unexpectedly many active runs for PR ' + number);
+                const fresh = (await github.rest.actions.getWorkflowRun({owner,repo,run_id:run.id})).data;
+                if (!active.has(fresh.status) || fresh.head_sha !== sha ||
+                    fresh.head_branch !== pr.head.ref || fresh.event !== 'pull_request' ||
+                    !(fresh.pull_requests || []).some(p => p.number === number)) continue;
+                try {
+                  await github.rest.actions.cancelWorkflowRun({owner,repo,run_id:run.id});
+                  cancelled++; requests++;
+                } catch (error) {
+                  if (error.status !== 409) throw error;
+                }
+              }
+              summary.push('PR #' + number + ': eligible=' + found + ', cancel requested=' + cancelled);
+            }
+            // Earlier alternative combined-branch run is superseded by PR #174.
+            const oldId = 40255252878;
+            const oldRun = (await github.rest.actions.getWorkflowRun({owner,repo,run_id:oldId})).data;
+            if (active.has(oldRun.status) && oldRun.event === 'push' &&
+                oldRun.head_sha === '58088fbc0a06771c725548ccd5935a63ea5d8442' &&
+                oldRun.head_branch === 'integration/pr152-155-ci-20261026') {
+              try {
+                await github.rest.actions.cancelWorkflowRun({owner,repo,run_id:oldId});
+                requests++;
+                summary.push('Obsolete alternate integration run #' + oldId + ': cancellation requested');
+              } catch (error) {
+                if (error.status !== 409) throw error;
+              }
+            }
+            core.notice(summary.join('; '));
+            core.notice('Total cancellation requests=' + requests +
+                        '; PR #174 and main runs intentionally untouched.');
