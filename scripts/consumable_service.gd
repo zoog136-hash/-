@@ -384,7 +384,6 @@ func _use_bless_scroll(scroll_name: String) -> void:
 	# Use the game's native touch-friendly equipment chooser, not a floating
 	# ConfirmationDialog which can be unreachable in Android editor/play mode.
 	var views: Array = []
-	var instances: Dictionary = world.get("item_instances") as Dictionary
 	for reference: String in candidates:
 		var parts: PackedStringArray = reference.split("@@@", false, 1)
 		if parts.size() != 2: continue
