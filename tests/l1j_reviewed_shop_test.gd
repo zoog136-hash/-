@@ -134,7 +134,11 @@ func _run() -> void:
 		selector.select(index)
 		selector.item_selected.emit(index)
 		check(shop.filtered.size() == 1 and str(shop.selected[0]) == "은장검", "reviewed source item selected")
-		check(shop.purchase_quantity.max_value == 1 and not shop.purchase_quantity.editable, "source pack quantity is one")
+		check(shop.purchase_quantity.max_value == SHOP.MAX_QUANTITY and shop.purchase_quantity.editable, "source pack of one means one weapon per unit, not one unit per order")
+		for supported_count: int in [1, 10, 100, 1000]:
+			shop.call("_set_purchase_quantity", supported_count)
+			check(int(shop.purchase_quantity.value) == supported_count, "reviewed vendor quantity selector: " + str(supported_count))
+		shop.call("_set_purchase_quantity", 1)
 		var before: Dictionary = _snapshot()
 		shop.call("_buy")
 		check(world.gold == int(before.gold),"source shop awaits purchase confirmation")
@@ -157,7 +161,9 @@ func _run() -> void:
 		purchases += 1
 
 	var guard: Dictionary = _snapshot()
-	for bad_quantity: int in [-1,0,2,100]:
+	# Quantities 2..1000 are legitimate if funds and weight allow; only
+	# malformed/out-of-range quantities may be used in this no-mutation guard.
+	for bad_quantity: int in [-1,0,1001,1000000]:
 		world._buy_reviewed_shop_item("ext:a3:npc:70039","은장검",bad_quantity)
 	world._buy_reviewed_shop_item("unknown-vendor","은장검",1)
 	world._buy_reviewed_shop_item("ext:a3:npc:70039","진명황의 집행검",1)

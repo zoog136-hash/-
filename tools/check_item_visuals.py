@@ -9,10 +9,45 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+from xml.etree import ElementTree
 from PIL import Image
 
 
 STATES = ("original_linked", "inven_exact_name", "inven_visual_alias", "original_review_pending", "self_authored_substitute", "bundled_ui_art", "image_missing")
+
+
+def runtime_image_dimensions(path: Path) -> list[int]:
+    """Verify Godot-loadable runtime artwork without treating SVG as a raster."""
+    if path.suffix.lower() != ".svg":
+        with Image.open(path) as image:
+            image.load()
+            return list(image.size)
+    raw = path.read_bytes()
+    if len(raw) > 1024 * 1024 or b"<!doctype" in raw.lower() or b"<!entity" in raw.lower():
+        raise ValueError("unsafe/oversized SVG")
+    root = ElementTree.fromstring(raw)
+    if root.tag != "{http://www.w3.org/2000/svg}svg":
+        raise ValueError("not an SVG root")
+    view_box = root.get("viewBox", "").replace(",", " ").split()
+    if len(view_box) != 4:
+        raise ValueError("runtime SVG requires a four-number viewBox")
+    dimensions = [float(view_box[2]), float(view_box[3])]
+    if not all(0 < value <= 8192 for value in dimensions):
+        raise ValueError("invalid SVG viewport")
+    drawable = {"path", "rect", "circle", "ellipse", "line", "polyline", "polygon", "text", "use"}
+    found_art = False
+    for element in root.iter():
+        kind = element.tag.rsplit("}", 1)[-1]
+        if kind in {"script", "foreignObject"}:
+            raise ValueError("active SVG content forbidden")
+        for key, value in element.attrib.items():
+            if (key == "href" or key.endswith("}href")) and not value.startswith("#"):
+                raise ValueError("external SVG resource forbidden")
+        if kind in drawable:
+            found_art = True
+    if not found_art:
+        raise ValueError("SVG has no drawable content")
+    return [int(dimensions[0]), int(dimensions[1])]
 
 
 def sha(path: Path) -> str:
@@ -133,10 +168,12 @@ def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, di
             if path and path not in files:
                 local = root / path.removeprefix("res://")
                 if local.is_file():
-                    with Image.open(local) as image:
-                        image.load()
-                        files[path] = {"sha256":sha(local),"bytes":local.stat().st_size,"size":list(image.size),
+                    try:
+                        dimensions = runtime_image_dimensions(local)
+                        files[path] = {"sha256":sha(local),"bytes":local.stat().st_size,"size":dimensions,
                                        "decoded":True,"tracked":path.removeprefix("res://") in tracked}
+                    except (OSError, ValueError, ElementTree.ParseError) as exc:
+                        errors.append(f"runtime image decode failed {path}: {exc}")
             if path in files:
                 row["sha256"] = files[path]["sha256"]
                 if not files[path]["tracked"]: errors.append("untracked runtime image: " + path)
