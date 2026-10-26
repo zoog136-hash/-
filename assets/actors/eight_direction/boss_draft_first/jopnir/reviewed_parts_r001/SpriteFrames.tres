@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=225 format=3]
+[gd_resource type="SpriteFrames" load_steps=232 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/jopnir/owned_parts_v01/E-attack-v01.png" id="1"]
 
@@ -63,6 +63,8 @@
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/jopnir/sources/W-run-v01.png" id="31"]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed_parts_r001/SW-idle.png" id="repair_r002_SW_idle_texture"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed_parts_r001/SW-hit.png" id="repair_r002_SW_hit_texture"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1217,6 +1219,43 @@ region = Rect2(1232,2384,775,339)
 margin = Rect2(83,246,145,581)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_hit_0"]
+atlas = ExtResource("repair_r002_SW_hit_texture")
+region = Rect2(80,80,768,393)
+margin = Rect2(7,232,136,511)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_hit_1"]
+atlas = ExtResource("repair_r002_SW_hit_texture")
+region = Rect2(1352,80,735,360)
+margin = Rect2(87,212,153,528)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_hit_2"]
+atlas = ExtResource("repair_r002_SW_hit_texture")
+region = Rect2(80,1352,1107,695)
+margin = Rect2(255,369,589,1001)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_hit_3"]
+atlas = ExtResource("repair_r002_SW_hit_texture")
+region = Rect2(1352,1352,677,433)
+margin = Rect2(111,204,211,455)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_hit_4"]
+atlas = ExtResource("repair_r002_SW_hit_texture")
+region = Rect2(80,2624,1097,667)
+margin = Rect2(213,404,599,1029)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_hit_5"]
+atlas = ExtResource("repair_r002_SW_hit_texture")
+region = Rect2(1352,2624,739,351)
+margin = Rect2(86,214,149,537)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1405,9 +1444,11 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_30_3")},
 {"duration": 1.0, "texture": SubResource("draft_30_4")},
 {"duration": 1.0, "texture": SubResource("draft_30_5")}], "loop": true, "name": &"run_4", "speed": 12.500000000},
-{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_5")}],"loop":true,"name":&"idle_3","speed":5}
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_5")}],"loop":true,"name":&"idle_3","speed":5},
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_hit_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_hit_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_hit_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_hit_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_hit_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_hit_5")}],"loop":false,"name":&"hit_3","speed":27.272727272727273}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
 metadata/twilight_production_connected = false
 metadata/twilight_detailed_completed = false
 metadata/twilight_native_locomotion_staging = true
+metadata/twilight_reviewed_frame_registration = {"hit_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(452,565),"scale":Vector2(0.288288288288,0.288288288288),"target":Vector2(0,0)},{"anchor":Vector2(444,555),"scale":Vector2(0.288288288288,0.288288288288),"target":Vector2(0,0)},{"anchor":Vector2(848,1060),"scale":Vector2(0.150943396226,0.150943396226),"target":Vector2(0,0)},{"anchor":Vector2(444,555),"scale":Vector2(0.288288288288,0.288288288288),"target":Vector2(0,0)},{"anchor":Vector2(848,1060),"scale":Vector2(0.150943396226,0.150943396226),"target":Vector2(0,0)},{"anchor":Vector2(444,555),"scale":Vector2(0.288288288288,0.288288288288),"target":Vector2(0,0)}]}}
