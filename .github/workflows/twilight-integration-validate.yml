@@ -54,6 +54,7 @@ jobs:
           path: /tmp/Godot_v4.7.2-stable_linux.x86_64
           key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
       - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
         id: trusted-import-cache
         uses: actions/cache/restore@v4
         continue-on-error: true

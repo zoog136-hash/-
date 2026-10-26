@@ -132,6 +132,8 @@ class ImportCacheSafetyContract(unittest.TestCase):
 class PhaseTwoImportReaderContract(unittest.TestCase):
     def test_each_reader_is_exactly_read_only_and_before_real_tests(self):
         self.assertEqual(SHARED_IMPORT_READER['uses'], 'actions/cache/restore@v4')
+        self.assertIn('github.event.pull_request.number != 157', SHARED_IMPORT_READER['if'])
+        self.assertIn('github.event.pull_request.number != 158', SHARED_IMPORT_READER['if'])
         self.assertEqual(SHARED_IMPORT_READER['with']['key'], IMPORT_CACHE_KEY)
         self.assertEqual(SHARED_IMPORT_READER['with']['path'], IMPORT_CACHE_PATHS)
         self.assertTrue(SHARED_IMPORT_READER['continue-on-error'])

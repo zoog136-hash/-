@@ -24,6 +24,7 @@ jobs:
       - name: Dated data and graph invariants
         run: python3 tools/validate_original_skills.py --report test-results/data-validation.json
       - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
         id: trusted-import-cache
         uses: actions/cache/restore@v4
         continue-on-error: true

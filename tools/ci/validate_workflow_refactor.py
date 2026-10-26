@@ -142,6 +142,7 @@ SHARED_IMPORT_READER_STEPS = {
 }
 SHARED_IMPORT_READER = {
     'name': 'Restore trusted Godot imported resources',
+    'if': "${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}",
     'id': 'trusted-import-cache',
     'uses': 'actions/cache/restore@v4',
     'continue-on-error': True,

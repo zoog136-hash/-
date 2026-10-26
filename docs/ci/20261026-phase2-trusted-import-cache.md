@@ -12,7 +12,7 @@ Five real-game-data Linux checks restore the **same** Godot 4.7.2 import cache a
 - Original Skill Migration Validation
 - TWILIGHT Integration Validate
 
-The existing key is `twilight-godot-import-4.7.2-linux-compat-main-v1`; paths are only `.godot/imported` and generated `**/*.import` metadata. Readers use `actions/cache/restore@v4` with `continue-on-error`. They never save, upload, trust PR-created caches, or copy gameplay source/secret files. Cache absence or restore failure leaves the original import and tests running exactly as before.
+The existing key is `twilight-godot-import-4.7.2-linux-compat-main-v1`; paths are only `.godot/imported` and generated `**/*.import` metadata. Readers use `actions/cache/restore@v4` with `continue-on-error`. These reader steps never save or upload cache entries. PR caches are not a security boundary against deliberately changed PR workflow code, so full Godot reimport and every existing assertion remain mandatory. Cache reuse is explicitly disabled for PR #157 and #158. Cache absence or restore failure leaves the original import and tests running exactly as before.
 
 **No existing checks, commands, tests, validation conditions, warnings, evidence uploads, timeouts, filters, job names, or branch protections are removed or bypassed.** Every source change still flows through Godot's original reimport/parse and all gameplay/render checks. No cache is restored in synthetic fixture, isolated L1J, platform-specific Android export or PR #157/#158 branches by these edits.
 
