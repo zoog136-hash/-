@@ -65719,6 +65719,25 @@
       },
       "production_connected": false,
       "detailed_completed": false
+    },
+    {
+      "key": "transform:413",
+      "direction": "SW",
+      "role": "walk",
+      "source": "assets/actors/eight_direction/native_production/thunder_female_413/r002/SW-walk.png",
+      "sha256": "f6bcdd795e3eacd6b48becb9a42b1c8065573b3569f4bea0a34a59965dd7f915",
+      "bytes": 9242849,
+      "requested_poses": 6,
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "frames": 6,
+        "distinct_pixel_frames": 6,
+        "canvas": 2048
+      },
+      "production_connected": false,
+      "detailed_completed": false,
+      "scope": "PRESERVED_POLICY_EXCLUDED_WALK",
+      "source_pixels_resampled": false
     }
   ],
   "mythic_detail_total": 31,
@@ -65758,18 +65777,11 @@
     "transform:267:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-run-v03composite03.png",
     "transform:267:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-walk-v03composite04.png",
     "transform:267:NE:run": "assets/actors/eight_direction/native_production/girtas_267/r002/NE-run.png",
-    "transform:413:E:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png",
     "transform:413:E:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-run-ErunFinalNative04.png",
-    "transform:413:SE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-walk-v01.png",
     "transform:413:SE:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-run-v01.png",
-    "transform:413:S:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-walk-v01.png",
     "transform:413:S:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-run-SrunCapeNative06.png",
-    "transform:413:SW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-walk-v01.png",
     "transform:413:SW:run": "docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/transform_413-run_3.png",
-    "transform:413:W:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-walk-v01.png",
     "transform:413:W:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-run-WrunOwnNative06.png",
-    "transform:413:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png",
-    "transform:413:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-walk-NWwalkSixActualRig01.png",
     "transform:413:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-run-NWrunSixActualRig01.png",
     "transform:413:N:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-run-NrunSixActualRig01.png",
     "transform:413:NE:run": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-run-NErunSixActualRig01.png",
@@ -82011,5 +82023,49 @@
       },
       "actor_approval_added": 0
     }
-  ]
+  ],
+  "preserved_policy_excluded_walk_sources": {
+    "transform:413:E:walk": {
+      "prior_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png",
+      "retained_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-E-walk-v01.png",
+      "default_selected": false,
+      "quality_approval": false
+    },
+    "transform:413:N:walk": {
+      "prior_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png",
+      "retained_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-N-walk-NwalkSixActualRig02.png",
+      "default_selected": false,
+      "quality_approval": false
+    },
+    "transform:413:NW:walk": {
+      "prior_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-walk-NWwalkSixActualRig01.png",
+      "retained_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NW-walk-NWwalkSixActualRig01.png",
+      "default_selected": false,
+      "quality_approval": false
+    },
+    "transform:413:S:walk": {
+      "prior_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-walk-v01.png",
+      "retained_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-S-walk-v01.png",
+      "default_selected": false,
+      "quality_approval": false
+    },
+    "transform:413:SE:walk": {
+      "prior_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-walk-v01.png",
+      "retained_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SE-walk-v01.png",
+      "default_selected": false,
+      "quality_approval": false
+    },
+    "transform:413:SW:walk": {
+      "prior_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-SW-walk-v01.png",
+      "retained_source": "assets/actors/eight_direction/native_production/thunder_female_413/r002/SW-walk.png",
+      "default_selected": false,
+      "quality_approval": false
+    },
+    "transform:413:W:walk": {
+      "prior_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-walk-v01.png",
+      "retained_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-W-walk-v01.png",
+      "default_selected": false,
+      "quality_approval": false
+    }
+  }
 }

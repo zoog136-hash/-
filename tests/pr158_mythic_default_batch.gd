@@ -42,6 +42,8 @@ func run() -> void:
 		var frames:SpriteFrames=sprite.sprite_frames
 		var state_before:=invariant(world)
 		var record_before:=JSON.stringify(selected)
+		var exercised_poses: Dictionary={}
+		var exercised_tracks: Dictionary={}
 		print("PR158_DEFAULT_BINDING ",key," ",frames.resource_path)
 		if before_mode:
 			actor.motion.advance(.5,Vector2.ZERO)
@@ -65,7 +67,10 @@ func run() -> void:
 					var seen:Dictionary={};var marker_seen:=false
 					for n in range(300):
 						tick(actor,velocity)
-						if str(sprite.animation)==name:seen[sprite.frame]=true
+						if str(sprite.animation)==name:
+							seen[sprite.frame]=true
+							exercised_tracks[name]=true
+							exercised_poses[name+":"+str(sprite.frame)]=true
 						if role=="run" and str(sprite.animation)==name and frames.has_meta("twilight_reviewed_frame_registration"):
 							var registered: Dictionary=frames.get_meta("twilight_reviewed_frame_registration")[name]
 							check(registered.semantic_review=="PASS","Reviewed RUN registration")
@@ -89,6 +94,8 @@ func run() -> void:
 					tick(actor,Vector2.ZERO)
 					check(str(sprite.animation)==death_name,"Preserved same-form death direction policy")
 					death_seen[sprite.frame]=true
+					exercised_tracks[death_name]=true
+					exercised_poses[death_name+":"+str(sprite.frame)]=true
 				check(death_seen.size()==frames.get_frame_count(death_name),"Every death phase")
 				check(sprite.frame==frames.get_frame_count(death_name)-1 and actor.motion.state=="corpse","Terminal death hold")
 			actor.motion.dead=false;actor.motion.cancel_attack();actor.motion.hit_clock=0.
@@ -102,7 +109,10 @@ func run() -> void:
 		if not before_mode and report.errors.is_empty():
 			var count:=frames.get_animation_names().size()
 			if key=="413":
-				print("PR122_NATIVE_DEFAULT_MAIN_PASS key=transform:",key," tracks=",count," poses=",count*6," candidate_injection=0")
+				print("PR158_DEFAULT_RUNTIME_COVERAGE key=transform:",key," exercised_tracks=",exercised_tracks.size()," exercised_poses=",exercised_poses.size()," authored_tracks=",count," authored_poses=",count*6," WALK excluded by existing transform scope")
+				check(exercised_tracks.size()==38 and exercised_poses.size()==228,"Every policy-required track and pose actually played")
+				if report.errors.is_empty():
+					print("PR122_NATIVE_DEFAULT_MAIN_PASS key=transform:",key," tracks=",exercised_tracks.size()," poses=",exercised_poses.size()," candidate_injection=0")
 			else:
 				print("PR158_REAPER_DEFAULT_PASS id=",key," run_tracks=8 run_poses=48 candidate_injection=0")
 	world.queue_free();await process_frame
