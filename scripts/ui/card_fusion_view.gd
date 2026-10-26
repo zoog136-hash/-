@@ -154,7 +154,9 @@ func _refresh() -> void:
 		displayed += 1
 		var label: String = "%s · 보유 %d장 / 합성 재료 %d장" % [str(record.get("name", "")), copies, duplicates]
 		var path: String = str(record.get("image_path", ""))
-		var texture: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+		var texture: Texture2D = null
+		if not path.is_empty() and ResourceLoader.exists(path):
+			texture = load(path) as Texture2D
 		_cards.add_item(label, texture)
 		_cards.set_item_custom_fg_color(_cards.item_count-1, UI.grade(current_grade))
 	var required: int = int(Cards.FUSION_MATERIALS[grade])
