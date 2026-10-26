@@ -66744,7 +66744,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/E-attack-v01.json"
         },
         {
@@ -66948,7 +66948,7 @@
             "strict_source_analysis_canvas": 2048
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false
+          "production_connected": true
         },
         {
           "role": "idle",
@@ -67162,7 +67162,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/E-idle-v01.json"
         },
         {
@@ -67377,7 +67377,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/E-run-v01.json"
         },
         {
@@ -67581,7 +67581,7 @@
             "strict_source_analysis_canvas": 2048
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false
+          "production_connected": true
         },
         {
           "role": "hit",
@@ -67784,7 +67784,7 @@
             "strict_source_analysis_canvas": 2048
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false
+          "production_connected": true
         },
         {
           "role": "idle",
@@ -67998,223 +67998,209 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/N-idle-v01.json"
         },
         {
           "role": "run",
           "direction": "N",
           "animation": "run_6",
-          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/N-run-v01.png",
-          "source_sha256": "83fbdf2ddfeda5076d56ac192081e19992b442d3b9ae3ab1467cb2dd0db6ca48",
-          "texture": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/N-run-v01.png",
+          "source": "assets/actors/eight_direction/boss_draft_first/zeros/repaired_source_r008/N-run-part0.png",
+          "source_sha256": "f6577d3aa4be48adf8bfd021fdd9c9cc43771f8342c7eb7b79bfb9b1269a747c",
+          "texture": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/N-run.png",
           "geometry": {
             "image_size": [
-              1800,
-              1200
+              1504,
+              2256
             ],
             "frames": [
               {
                 "row": 0,
                 "direction": "N",
                 "region": [
-                  3,
-                  3,
+                  80,
+                  80,
                   588,
                   547
                 ],
                 "margin": [
-                  432,
-                  376,
-                  788,
-                  829
+                  346,
+                  321,
+                  700,
+                  741
                 ],
                 "source_anchor": [
-                  259,
-                  487
+                  378,
+                  564
                 ],
                 "rgba_sha256": "950717fa409add6258648bfb654e9e8d4e97aa20950942a3daea5a024356f7fa",
-                "original_source_region": [
-                  0,
-                  13,
-                  588,
-                  547
+                "canvas_size": [
+                  1288,
+                  1288
                 ],
-                "original_source_anchor": [
-                  256,
-                  497
-                ]
+                "source_part": 0,
+                "source_neutral_height": 481.0,
+                "registration_scale": 0.19875776397515527
               },
               {
                 "row": 1,
                 "direction": "N",
                 "region": [
-                  603,
-                  3,
+                  832,
+                  80,
                   557,
                   582
                 ],
                 "margin": [
-                  433,
-                  383,
-                  819,
-                  794
+                  333,
+                  328,
+                  731,
+                  706
                 ],
                 "source_anchor": [
-                  858,
-                  480
+                  1143,
+                  557
                 ],
                 "rgba_sha256": "ad546c0bc4b9e12e90186e42b4eb1d38b23ffff38b6c898cba2beaa7f073dd22",
-                "original_source_region": [
-                  513,
-                  10,
-                  557,
-                  582
+                "canvas_size": [
+                  1288,
+                  1288
                 ],
-                "original_source_anchor": [
-                  768,
-                  487
-                ]
+                "source_part": 0,
+                "source_neutral_height": 481.0,
+                "registration_scale": 0.19875776397515527
               },
               {
                 "row": 2,
                 "direction": "N",
                 "region": [
-                  1203,
-                  3,
+                  80,
+                  832,
                   501,
                   564
                 ],
                 "margin": [
-                  425,
-                  374,
-                  875,
-                  812
+                  347,
+                  319,
+                  787,
+                  724
                 ],
                 "source_anchor": [
-                  1466,
-                  489
+                  377,
+                  1318
                 ],
                 "rgba_sha256": "b4b51bed9391473beee8d369e8d6308155ff9434b58a5bbaa8f181e11e9b667b",
-                "original_source_region": [
-                  1017,
-                  10,
-                  501,
-                  564
+                "canvas_size": [
+                  1288,
+                  1288
                 ],
-                "original_source_anchor": [
-                  1280,
-                  496
-                ]
+                "source_part": 0,
+                "source_neutral_height": 481.0,
+                "registration_scale": 0.19875776397515527
               },
               {
                 "row": 3,
                 "direction": "N",
                 "region": [
-                  3,
-                  603,
-                  526,
-                  487
+                  832,
+                  832,
+                  538,
+                  535
                 ],
                 "margin": [
-                  432,
-                  377,
-                  850,
-                  889
+                  297,
+                  265,
+                  606,
+                  609
                 ],
                 "source_anchor": [
-                  259,
-                  1086
+                  1107,
+                  1282
                 ],
-                "rgba_sha256": "ed332f95b90e46d060b0fa0af99cf48d8531256834b516d5257cdc158d142e65",
-                "original_source_region": [
-                  0,
-                  510,
-                  526,
-                  487
+                "rgba_sha256": "e85a6009db2fc2fbb64f8da002c4dc790c5f1f98bce693e5d116b4f5635d1fd0",
+                "canvas_size": [
+                  1144,
+                  1144
                 ],
-                "original_source_anchor": [
-                  256,
-                  993
-                ]
+                "source_part": 1,
+                "source_neutral_height": 429.0,
+                "registration_scale": 0.22377622377622378
               },
               {
                 "row": 4,
                 "direction": "N",
                 "region": [
-                  603,
-                  603,
-                  549,
-                  490
+                  80,
+                  1584,
+                  570,
+                  536
                 ],
                 "margin": [
-                  417,
-                  402,
-                  827,
-                  886
+                  276,
+                  251,
+                  574,
+                  608
                 ],
                 "source_anchor": [
-                  874,
-                  1061
+                  376,
+                  2048
                 ],
-                "rgba_sha256": "070165962e174aa98998041ef2a2cb97917ee6c89ae0786845d9ff01e1417b7f",
-                "original_source_region": [
-                  497,
-                  510,
-                  549,
-                  490
+                "rgba_sha256": "87ee093d61ecf924aa99b36b479001e9c4c9ade7eecbdd1bb9f777db57901d92",
+                "canvas_size": [
+                  1144,
+                  1144
                 ],
-                "original_source_anchor": [
-                  768,
-                  968
-                ]
+                "source_part": 1,
+                "source_neutral_height": 429.0,
+                "registration_scale": 0.22377622377622378
               },
               {
                 "row": 5,
                 "direction": "N",
                 "region": [
-                  1203,
-                  603,
-                  541,
-                  515
+                  832,
+                  1584,
+                  496,
+                  525
                 ],
                 "margin": [
-                  385,
-                  374,
-                  835,
-                  861
+                  270,
+                  254,
+                  648,
+                  619
                 ],
                 "source_anchor": [
-                  1506,
-                  1089
+                  1134,
+                  2045
                 ],
-                "rgba_sha256": "67f64c93fb2dfe9d37d2061f93bb89ad273c09d1f371e04a561bca63e5a0bd64",
-                "original_source_region": [
-                  977,
-                  509,
-                  541,
-                  515
+                "rgba_sha256": "a8f62628cef256c3834d353f7ade4256b901fb4e117ca58f3cd83230aa91841b",
+                "canvas_size": [
+                  1144,
+                  1144
                 ],
-                "original_source_anchor": [
-                  1280,
-                  995
-                ]
+                "source_part": 1,
+                "source_neutral_height": 429.0,
+                "registration_scale": 0.22377622377622378
               }
             ],
             "distinct_pixel_frames": 6,
-            "neutral_height": 517.0,
+            "neutral_height": 481.0,
             "canvas_size": [
-              1376,
-              1376
+              1288,
+              1288
             ],
             "foot": [
-              688,
-              860
+              644,
+              805
             ]
           },
-          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
-          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/N-run-v01.json"
+          "quality_review": "Replacement source visually reviewed; whole actor default verification pending",
+          "production_connected": true,
+          "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/N-run.json",
+          "replaced_source": {
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/N-run-v01.png",
+            "source_sha256": "83fbdf2ddfeda5076d56ac192081e19992b442d3b9ae3ab1467cb2dd0db6ca48"
+          }
         },
         {
           "role": "attack",
@@ -68428,7 +68414,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/NE-attack-v01.json"
         },
         {
@@ -68643,7 +68629,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/resume210-v01/whole-review-v01/owned-parts-repair/zeros/NE-hit-v01.json"
         },
         {
@@ -68847,7 +68833,7 @@
             "strict_source_analysis_canvas": 2048
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false
+          "production_connected": true
         },
         {
           "role": "run",
@@ -69061,223 +69047,209 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/NE-run-v01.json"
         },
         {
           "role": "attack",
           "direction": "NW",
           "animation": "attack_5",
-          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/NW-attack-v01.png",
-          "source_sha256": "bca3c16c132004b528168ee81ac2acf3907829e72ed729dd1d33f4b1d20b7bce",
-          "texture": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/NW-attack-v01.png",
+          "source": "assets/actors/eight_direction/boss_draft_first/zeros/repaired_source_r008/NW-attack-part0.png",
+          "source_sha256": "cbd1b57f76adf1195d52f70ba451cea9ed5dae02c625423befbe0cf8f9ca7e38",
+          "texture": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/NW-attack.png",
           "geometry": {
             "image_size": [
-              1920,
-              1280
+              3360,
+              5040
             ],
             "frames": [
               {
                 "row": 0,
                 "direction": "NW",
                 "region": [
-                  3,
-                  3,
-                  545,
-                  494
+                  80,
+                  80,
+                  523,
+                  600
                 ],
                 "margin": [
-                  439,
-                  370,
-                  783,
-                  834
+                  363,
+                  317,
+                  749,
+                  672
                 ],
                 "source_anchor": [
-                  228,
-                  463
+                  353,
+                  558
                 ],
-                "rgba_sha256": "7aac32b773a988cd2771b0421520b1b69e358aabeaf94cf97e7b5fcc6ce557d6",
-                "original_source_region": [
-                  31,
-                  39,
-                  545,
-                  494
+                "rgba_sha256": "0c5a5f0c86fc83d2366bd4c9389a56d3314502e669a569fc023d6f026495e70f",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  256,
-                  499
-                ]
+                "source_part": 1,
+                "source_neutral_height": 475.5,
+                "registration_scale": 0.20125786163522014
               },
               {
                 "row": 1,
                 "direction": "NW",
                 "region": [
-                  643,
-                  3,
+                  1760,
+                  80,
                   569,
-                  560
+                  550
                 ],
                 "margin": [
-                  409,
-                  374,
-                  759,
-                  768
+                  338,
+                  299,
+                  639,
+                  658
                 ],
                 "source_anchor": [
-                  898,
-                  459
+                  2026,
+                  536
                 ],
-                "rgba_sha256": "820cd2eb15704021fc0f4d413709223bb695c999b3413f85c10f44a2f9f18d58",
-                "original_source_region": [
-                  513,
-                  31,
-                  569,
-                  560
+                "rgba_sha256": "6f7235aaba60d4614c84b2391d3318d33c7f11130571616a4bad71d562aecb6f",
+                "canvas_size": [
+                  1208,
+                  1208
                 ],
-                "original_source_anchor": [
-                  768,
-                  487
-                ]
+                "source_part": 0,
+                "source_neutral_height": 453.0,
+                "registration_scale": 0.2119205298013245
               },
               {
                 "row": 2,
                 "direction": "NW",
                 "region": [
-                  1283,
-                  3,
+                  80,
+                  1760,
                   583,
                   613
                 ],
                 "margin": [
-                  337,
-                  366,
-                  745,
-                  715
+                  231,
+                  291,
+                  625,
+                  595
                 ],
                 "source_anchor": [
-                  1610,
-                  467
+                  453,
+                  2224
                 ],
                 "rgba_sha256": "dd80fe02ae4c2df7a712e6d4268ea0d400e126cbf161db410f8eb2ccbf320ccd",
-                "original_source_region": [
-                  953,
-                  17,
-                  583,
-                  613
+                "canvas_size": [
+                  1208,
+                  1208
                 ],
-                "original_source_anchor": [
-                  1280,
-                  481
-                ]
+                "source_part": 0,
+                "source_neutral_height": 453.0,
+                "registration_scale": 0.2119205298013245
               },
               {
                 "row": 3,
                 "direction": "NW",
                 "region": [
-                  3,
-                  643,
-                  628,
-                  504
+                  1760,
+                  1760,
+                  1514,
+                  985
                 ],
                 "margin": [
-                  408,
-                  391,
-                  700,
-                  824
+                  279,
+                  601,
+                  918,
+                  1447
                 ],
                 "source_anchor": [
-                  259,
-                  1082
+                  2697,
+                  2679
                 ],
-                "rgba_sha256": "4d8919198551d0882dd152ae35b267173e150a56cf621f4ceb942d1cd343f264",
-                "original_source_region": [
-                  0,
-                  520,
-                  628,
-                  504
+                "rgba_sha256": "98720e742ab0c45bbeb2216f3d19c6f29c9f918c59f1e70e443ecce2ab468081",
+                "canvas_size": [
+                  2432,
+                  2432
                 ],
-                "original_source_anchor": [
-                  256,
-                  959
-                ]
+                "source_part": 2,
+                "source_neutral_height": 911.0,
+                "registration_scale": 0.10526315789473684
               },
               {
                 "row": 4,
                 "direction": "NW",
                 "region": [
-                  643,
-                  643,
+                  80,
+                  3440,
                   453,
-                  521
+                  611
                 ],
                 "margin": [
-                  509,
-                  336,
-                  875,
-                  807
+                  405,
+                  171,
+                  755,
+                  597
                 ],
                 "source_anchor": [
-                  798,
-                  1137
+                  279,
+                  4024
                 ],
-                "rgba_sha256": "08922e6f28f99abf822966ba33a9d9d75f86db66ec9037dc23915a0e625db970",
-                "original_source_region": [
-                  613,
-                  478,
-                  453,
-                  521
+                "rgba_sha256": "fafd9fef6ede140781f4d747bf108c85274a03a237f6f5e4fbbfc754a026808c",
+                "canvas_size": [
+                  1208,
+                  1208
                 ],
-                "original_source_anchor": [
-                  768,
-                  972
-                ]
+                "source_part": 0,
+                "source_neutral_height": 453.0,
+                "registration_scale": 0.2119205298013245
               },
               {
                 "row": 5,
                 "direction": "NW",
                 "region": [
-                  1283,
-                  643,
-                  513,
-                  463
+                  1760,
+                  3440,
+                  524,
+                  495
                 ],
                 "margin": [
-                  401,
-                  371,
-                  815,
-                  865
+                  302,
+                  310,
+                  748,
+                  777
                 ],
                 "source_anchor": [
-                  1546,
-                  1102
+                  2094,
+                  3925
                 ],
-                "rgba_sha256": "c217cf1a3c95861a3351b6d0b2960d1da17ad544c410b7b6b437f5e5bdd0e7ab",
-                "original_source_region": [
-                  1017,
-                  516,
-                  513,
-                  463
+                "rgba_sha256": "2f0feadf9126a8280805fe77944ea3ba9ba4bc3db76f185b439520310c99d5df",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  1280,
-                  975
-                ]
+                "source_part": 1,
+                "source_neutral_height": 475.5,
+                "registration_scale": 0.20125786163522014
               }
             ],
             "distinct_pixel_frames": 6,
-            "neutral_height": 499.0,
+            "neutral_height": 475.5,
             "canvas_size": [
-              1328,
-              1328
+              1272,
+              1272
             ],
             "foot": [
-              664,
-              830
+              636,
+              795
             ]
           },
-          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
-          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/NW-attack-v01.json"
+          "quality_review": "Replacement source visually reviewed; whole actor default verification pending",
+          "production_connected": true,
+          "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/NW-attack.json",
+          "replaced_source": {
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/NW-attack-v01.png",
+            "source_sha256": "bca3c16c132004b528168ee81ac2acf3907829e72ed729dd1d33f4b1d20b7bce"
+          }
         },
         {
           "role": "hit",
@@ -69491,223 +69463,209 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/NW-hit-v01.json"
         },
         {
           "role": "idle",
           "direction": "NW",
           "animation": "idle_5",
-          "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/NW-idle-v01.png",
-          "source_sha256": "db2e1f84b6876d21b9020d1f3a2ef6a5563b67a3e5bfb4e37abf73a02cf1f0f7",
-          "texture": "assets/actors/eight_direction/boss_draft_first/zeros/owned_parts_v01/NW-idle-v01.png",
+          "source": "assets/actors/eight_direction/boss_draft_first/zeros/repaired_source_r008/NW-idle-part0.png",
+          "source_sha256": "1493e23b7facae3addd3d40c61855a193b18917666a20aeacb6ac18d15c92b80",
+          "texture": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/NW-idle.png",
           "geometry": {
             "image_size": [
-              1872,
-              1248
+              1552,
+              2328
             ],
             "frames": [
               {
                 "row": 0,
                 "direction": "NW",
                 "region": [
-                  3,
-                  3,
-                  571,
-                  594
+                  80,
+                  80,
+                  523,
+                  600
                 ],
                 "margin": [
-                  493,
-                  437,
-                  885,
-                  862
+                  363,
+                  317,
+                  749,
+                  672
                 ],
                 "source_anchor": [
-                  238,
-                  476
+                  353,
+                  558
                 ],
-                "rgba_sha256": "397a0a6021245084c5dcd1f7843a22a320da12b2778bba7e1251e6559758f309",
-                "original_source_region": [
-                  21,
-                  9,
-                  571,
-                  594
+                "rgba_sha256": "0c5a5f0c86fc83d2366bd4c9389a56d3314502e669a569fc023d6f026495e70f",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  256,
-                  482
-                ]
+                "source_part": 0,
+                "source_neutral_height": 476.5,
+                "registration_scale": 0.20125786163522014
               },
               {
                 "row": 1,
                 "direction": "NW",
                 "region": [
-                  627,
-                  3,
-                  555,
-                  616
+                  856,
+                  80,
+                  541,
+                  612
                 ],
                 "margin": [
-                  489,
-                  428,
-                  901,
-                  840
+                  307,
+                  314,
+                  731,
+                  660
                 ],
                 "source_anchor": [
-                  866,
-                  485
+                  1185,
+                  561
                 ],
-                "rgba_sha256": "f0926e1438105b048eb390ed0352eed0f7c593e01553e5a85d6165823b6216b3",
-                "original_source_region": [
-                  529,
-                  0,
-                  555,
-                  616
+                "rgba_sha256": "789bff5170c29ba0aae69a955cf42866fe6a6f73138da353e650a248e7c0746d",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  768,
-                  482
-                ]
+                "source_part": 0,
+                "source_neutral_height": 476.5,
+                "registration_scale": 0.20125786163522014
               },
               {
                 "row": 2,
                 "direction": "NW",
                 "region": [
-                  1251,
-                  3,
-                  525,
-                  568
+                  80,
+                  856,
+                  531,
+                  502
                 ],
                 "margin": [
-                  459,
-                  428,
-                  931,
-                  888
+                  298,
+                  315,
+                  741,
+                  770
                 ],
                 "source_anchor": [
-                  1520,
-                  485
+                  418,
+                  1336
                 ],
-                "rgba_sha256": "e070119da7a3873f71f5e9bc3a323298bfb68290a71396d74474c7ae18f3ece8",
-                "original_source_region": [
-                  1011,
-                  0,
-                  525,
-                  568
+                "rgba_sha256": "deacbbdce1133f6d38d581932c8b6ddf1a4e8265b50ff08ab49196a729dc5dd7",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  1280,
-                  482
-                ]
+                "source_part": 0,
+                "source_neutral_height": 476.5,
+                "registration_scale": 0.20125786163522014
               },
               {
                 "row": 3,
                 "direction": "NW",
                 "region": [
-                  3,
-                  627,
-                  557,
-                  495
+                  856,
+                  856,
+                  462,
+                  493
                 ],
                 "margin": [
-                  511,
-                  433,
-                  899,
-                  961
+                  407,
+                  312,
+                  810,
+                  779
                 ],
                 "source_anchor": [
-                  220,
-                  1104
+                  1085,
+                  1339
                 ],
-                "rgba_sha256": "62af5a64cbee925d81d680f23126b025cffd85bb8dc038e6ad99a955ca2443dd",
-                "original_source_region": [
-                  39,
-                  513,
-                  557,
-                  495
+                "rgba_sha256": "0db11a676f69de8353b811dde0d57bbd61f2aa77548c43bcf902ab97e6758830",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  256,
-                  990
-                ]
+                "source_part": 0,
+                "source_neutral_height": 476.5,
+                "registration_scale": 0.20125786163522014
               },
               {
                 "row": 4,
                 "direction": "NW",
                 "region": [
-                  627,
-                  627,
-                  524,
-                  511
+                  80,
+                  1632,
+                  573,
+                  502
                 ],
                 "margin": [
-                  475,
-                  433,
-                  932,
-                  945
+                  308,
+                  311,
+                  699,
+                  770
                 ],
                 "source_anchor": [
-                  880,
-                  1104
+                  408,
+                  2116
                 ],
-                "rgba_sha256": "5986f5aa30d0cc211ffc3a4b34ea12acdfdeb4b895e313d9fd550089741e0b13",
-                "original_source_region": [
-                  515,
-                  513,
-                  524,
-                  511
+                "rgba_sha256": "f09ec41cf5c1955ae85fc28da83f1a3372056a27b93147c350c9b5da05fc6462",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  768,
-                  990
-                ]
+                "source_part": 0,
+                "source_neutral_height": 476.5,
+                "registration_scale": 0.20125786163522014
               },
               {
                 "row": 5,
                 "direction": "NW",
                 "region": [
-                  1251,
-                  627,
-                  512,
-                  485
+                  856,
+                  1632,
+                  524,
+                  495
                 ],
                 "margin": [
-                  458,
-                  433,
-                  944,
-                  971
+                  302,
+                  310,
+                  748,
+                  777
                 ],
                 "source_anchor": [
-                  1521,
-                  1104
+                  1190,
+                  2117
                 ],
-                "rgba_sha256": "5a0c9075dbf0c79e65d1229b9c9d2677a96c86a0ed7b98e3e21e735c3db5ea88",
-                "original_source_region": [
-                  1010,
-                  513,
-                  512,
-                  485
+                "rgba_sha256": "2f0feadf9126a8280805fe77944ea3ba9ba4bc3db76f185b439520310c99d5df",
+                "canvas_size": [
+                  1272,
+                  1272
                 ],
-                "original_source_anchor": [
-                  1280,
-                  990
-                ]
+                "source_part": 0,
+                "source_neutral_height": 476.5,
+                "registration_scale": 0.20125786163522014
               }
             ],
             "distinct_pixel_frames": 6,
-            "neutral_height": 544.5,
+            "neutral_height": 476.5,
             "canvas_size": [
-              1456,
-              1456
+              1272,
+              1272
             ],
             "foot": [
-              728,
-              910
+              636,
+              795
             ]
           },
-          "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
-          "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/NW-idle-v01.json"
+          "quality_review": "Replacement source visually reviewed; whole actor default verification pending",
+          "production_connected": true,
+          "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/NW-idle.json",
+          "replaced_source": {
+            "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/NW-idle-v01.png",
+            "source_sha256": "db2e1f84b6876d21b9020d1f3a2ef6a5563b67a3e5bfb4e37abf73a02cf1f0f7"
+          }
         },
         {
           "role": "run",
@@ -69910,7 +69868,7 @@
             "strict_source_analysis_canvas": 2048
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false
+          "production_connected": true
         },
         {
           "role": "attack",
@@ -70124,7 +70082,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/S-attack-v01.json"
         },
         {
@@ -70339,7 +70297,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/resume210-v01/whole-review-v01/owned-parts-repair/zeros/S-death-v01.json",
           "reviewed_frame_adjustment": {
             "source_sha256": "31bf31266459b917f6a43a3ba50f1f653702d79cde6591708ef1778ca33ab258",
@@ -70561,7 +70519,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/S-hit-v01.json"
         },
         {
@@ -70776,7 +70734,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/S-idle-v01.json"
         },
         {
@@ -70991,7 +70949,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/S-run-v01.json"
         },
         {
@@ -71206,7 +71164,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/SE-attack-v01.json"
         },
         {
@@ -71421,7 +71379,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/SE-hit-v01.json"
         },
         {
@@ -71636,7 +71594,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/SE-idle-v01.json"
         },
         {
@@ -71851,7 +71809,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/SE-run-v01.json"
         },
         {
@@ -72066,7 +72024,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/affected-review-v01/owned-parts-repair/zeros/SW-attack-v02.json"
         },
         {
@@ -72281,7 +72239,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/affected-review-v01/owned-parts-repair/zeros/SW-hit-v02.json"
         },
         {
@@ -72496,7 +72454,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/affected-review-v01/owned-parts-repair/zeros/SW-idle-v02.json"
         },
         {
@@ -72711,7 +72669,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/whole-review-v01/owned-parts-repair/zeros/SW-run-v01.json"
         },
         {
@@ -72915,7 +72873,7 @@
             "strict_source_analysis_canvas": 2048
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false
+          "production_connected": true
         },
         {
           "role": "idle",
@@ -73129,7 +73087,7 @@
             ]
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/affected-review-v01/owned-parts-repair/zeros/W-idle-v02.json"
         },
         {
@@ -73333,7 +73291,7 @@
             "strict_source_analysis_canvas": 2048
           },
           "quality_review": "FIRST_DRAFT_ONLY; full review deferred",
-          "production_connected": false
+          "production_connected": true
         },
         {
           "role": "hit",
@@ -73547,21 +73505,21 @@
             ]
           },
           "quality_review": "EXTRACTION_PASS; six original poses played in actual Main/Monster, original foot and attack marker retained; actor-wide quality remains HOLD",
-          "production_connected": false,
+          "production_connected": true,
           "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r001/W-hit.json"
         }
       ],
-      "frames": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r001/SpriteFrames.tres",
-      "frames_sha256": "217b1782f24454f1f39c9ead67c86ce133ceee65a113eef8f07b9114233113bb",
-      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r001/NativeMotionProfile.tres",
-      "native_profile_sha256": "10a9d79d6b9060d9a4f4732da603b19a0d512c7a60a654857eb7a9800a04500c",
+      "frames": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/SpriteFrames.tres",
+      "frames_sha256": "5d7184dd79cc4e1e536163e38dc49d564fb870cf8f66b1ed52df1bd8ff797554",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed_parts_r008/NativeMotionProfile.tres",
+      "native_profile_sha256": "87f8069468e3a3f02392c387a7a6672c95454f901183873ec0bb369e128e7520",
       "native_track_count": 33,
       "native_pose_count": 198,
       "distinct_source_pose_count": 198,
       "missing_required_tracks": [],
-      "production_connected": false,
+      "production_connected": true,
       "detailed_completed": false,
-      "quality_review": "HOLD: restored missing source clip losslessly; whole actor contact/air alternation and cross-action scale require correction before default connection",
+      "quality_review": "All 33 selected clips visually reviewed. N RUN hand continuity, NW idle direction, NW attack bookends and impact hand repaired. Actual default Main/Monster.setup locally verified 33/33 clips and 198 phases with zero profile injections and zero engine/test errors. Native import/export and device approval not claimed.",
       "pr158_native_contract": {
         "prior": {
           "frames": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/SpriteFrames.tres",
