@@ -42,7 +42,7 @@ static func _valid(path: String) -> bool:
 	if ResourceLoader.exists(path): return true
 	# Optional/local PNGs may exist before editor import. Do not mistake missing
 	# .godot import metadata for a deleted image; exported .ctex still uses load().
-	return path.get_extension().to_lower() in ["png", "webp", "jpg", "jpeg"] and FileAccess.file_exists(path)
+	return path.get_extension().to_lower() in ["png", "webp", "jpg", "jpeg", "svg"] and FileAccess.file_exists(path)
 
 static func _load_path(path: String) -> Texture2D:
 	if not _valid(path): return null
@@ -54,6 +54,7 @@ static func _load_path(path: String) -> Texture2D:
 		"png": error = pixels.load_png_from_buffer(bytes)
 		"webp": error = pixels.load_webp_from_buffer(bytes)
 		"jpg", "jpeg": error = pixels.load_jpg_from_buffer(bytes)
+		"svg": error = pixels.load_svg_from_buffer(bytes, 1.0)
 	return ImageTexture.create_from_image(pixels) if error == OK and not pixels.is_empty() else null
 
 static func _source(record: Dictionary, name_value: String) -> Dictionary:
