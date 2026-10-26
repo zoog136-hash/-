@@ -28,6 +28,7 @@ func run() -> void:
 	var completed: int = 0
 	var expected: int = 0
 	var selected_repairs: Array = []
+	var use_default_binding := OS.get_environment("PR158_BOSS_DEFAULT_BINDING") == "1"
 	var selection_path: String = OS.get_environment("PR122_APPROVAL_PLAN")
 	if not selection_path.is_empty():
 		var selection: Variant = JSON.parse_string(FileAccess.get_file_as_string(selection_path))
@@ -39,7 +40,8 @@ func run() -> void:
 		report["repair_plan"] = selection_path
 	for key: String in register.actors:
 		var entry: Dictionary = register.actors[key]
-		if entry.get("kind", "") != "boss" or entry.get("production_connected", false): continue
+		if entry.get("kind", "") != "boss": continue
+		if entry.get("production_connected", false) and not use_default_binding: continue
 		if not entry.has("native_profile"):
 			report.blocked.append({"id":key,"reason":"No authored locomotion sizing reference; no profile invented"});continue
 		var tracks: Array = []
@@ -71,11 +73,17 @@ func run() -> void:
 			var collision: Transform2D = actor.get_node("CollisionShape2D").transform
 			var prior_hp: int = actor.max_hp
 			var prior_interval: float = actor.attack_interval
-			actor.motion.profile=profile
-			actor.motion.frame_source=load(entry.frames)
-			actor.sprite.material=null
-			actor.animation_base_scale=Vector2.ONE*profile.pixel_scale
-			actor.animation_base_scale.x*=profile.native_width_ratio
+			if use_default_binding:
+				check(entry.get("production_connected",false),"Default validation requires an explicit production binding")
+				check(actor.motion.profile.frames_path==entry.frames and actor.motion.frame_source.resource_path==entry.frames,"Real Monster.setup selects exact default SpriteFrames without injection")
+				check(actor.sprite.material==null and actor.motion.profile.color_tint==Color.WHITE,"Default authored appearance has no portrait shader or proxy tint")
+				profile=actor.motion.profile
+			else:
+				actor.motion.profile=profile
+				actor.motion.frame_source=load(entry.frames)
+				actor.sprite.material=null
+				actor.animation_base_scale=Vector2.ONE*profile.pixel_scale
+				actor.animation_base_scale.x*=profile.native_width_ratio
 			check(actor.motion.profile == profile and actor.motion.frame_source.resource_path==entry.frames,"Exact selected profile and SpriteFrames")
 			var sprite: Sprite2D = actor.sprite
 			var frames: SpriteFrames = actor.motion.frame_source
@@ -83,6 +91,10 @@ func run() -> void:
 			var direction: int = ["E","SE","S","SW","W","NW","N","NE"].find(track.direction)
 			var aim := Vector2.RIGHT.rotated(direction*PI/4.0)
 			motion.face(aim);motion.advance(.25,Vector2.ZERO)
+			if use_default_binding and track.role=="run":
+				motion.advance(.25,aim*profile.reference_speed*.5)
+				motion.apply(sprite,actor.animation_base_scale)
+				check(motion._resolved_key==track.animation,"Default WALK selects same-facing authored locomotion")
 			var strikes: Array = []
 			motion.strike.connect(func(sequence: int) -> void:strikes.append(sequence))
 			var duration: float = 1.5
@@ -102,7 +114,7 @@ func run() -> void:
 						if frames.get_frame_texture(track.animation,candidate_index)==sprite.texture: pose_index=candidate_index
 					check(pose_index>=0,"Actual Sprite2D owns a selected authored pose")
 					var canvas: Vector2 = sprite.texture.get_size()
-					check((sprite.position+Vector2(0,canvas.y/8.0)*sprite.scale).is_equal_approx(Vector2.ZERO),"Saved virtual foot anchor: "+key+" "+track.animation)
+					check((sprite.position+(Vector2(0,canvas.y/8.0)+sprite.offset)*sprite.scale).is_equal_approx(Vector2.ZERO),"Saved virtual foot anchor including registered source offset: "+key+" "+track.animation)
 					if not seen.has(pose_index):
 						seen[pose_index]=true
 						await RenderingServer.frame_post_draw
@@ -131,7 +143,8 @@ func run() -> void:
 		print("BOSS_UNPUBLISHED_BATCH_PROGRESS clips=%d actor=%s approvals_added=0" % [completed,key])
 	original_player.visible=original_visible
 	check(_world_state(world)==before,"Main state preserved")
-	report["candidate_injections"]=completed
+	report["candidate_injections"]=0 if use_default_binding else completed
+	if use_default_binding: report["scope"]="Explicit default boss batch in actual Main/Monster.setup; no profile or SpriteFrames injection"
 	report["completed_clips"]=completed;report["expected_clips"]=expected
 	check(completed==expected and expected==(392 if selected_repairs.is_empty() else selected_repairs.size()),"Whole unpublished boss candidate denominator")
 	world.queue_free();await process_frame

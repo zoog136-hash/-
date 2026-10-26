@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=225 format=3]
+[gd_resource type="SpriteFrames" load_steps=232 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/sources/E-attack-v01.png" id="1"]
 
@@ -64,6 +64,8 @@
 
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed_parts_r001/SW-attack.png" id="32"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed_parts_r001/SW-idle.png" id="repair_r002_SW_idle_texture"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1218,6 +1220,43 @@ region = Rect2(1000, 1920, 755, 343)
 margin = Rect2(163, 351, 349, 761)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_0"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(80,80,533,608)
+margin = Rect2(527,460,987,912)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_1"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(848,80,531,564)
+margin = Rect2(497,460,989,956)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_2"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(1616,80,511,554)
+margin = Rect2(481,460,1009,966)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_3"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(80,848,515,529)
+margin = Rect2(545,459,1005,991)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_4"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(848,848,491,517)
+margin = Rect2(529,454,1029,1003)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_5"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(1616,848,505,505)
+margin = Rect2(491,457,1015,1015)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1411,9 +1450,10 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_31_2")},
 {"duration": 1.0, "texture": SubResource("draft_31_3")},
 {"duration": 1.0, "texture": SubResource("draft_31_4")},
-{"duration": 1.0, "texture": SubResource("draft_31_5")}], "loop": false, "name": &"attack_3", "speed": 14.285714285714286}
+{"duration": 1.0, "texture": SubResource("draft_31_5")}], "loop": false, "name": &"attack_3", "speed": 14.285714285714286},
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_5")}],"loop":true,"name":&"idle_3","speed":5}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
-metadata/twilight_production_connected = false
+metadata/twilight_production_connected = true
 metadata/twilight_detailed_completed = false
 metadata/twilight_native_locomotion_staging = true
