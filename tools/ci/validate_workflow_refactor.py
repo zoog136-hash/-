@@ -54,6 +54,7 @@ def assert_preserved_workflow(path, before, after, action_loader):
     expanded = normalize_runtime_checkout(path, before, expanded)
     expanded = normalize_lookup_paths(path, before, expanded)
     expanded = normalize_shared_import_cache_reader(path, expanded)
+    expanded = normalize_phase3_services(path, before, expanded)
     if path in STALE_WORKFLOWS:
         original = before['concurrency']
         assert original['cancel-in-progress'] is False, path
@@ -63,6 +64,80 @@ def assert_preserved_workflow(path, before, after, action_loader):
         expanded['concurrency'] = original
     expanded = normalize_cached_direct(path, before, expanded)
     assert expanded == before, path + ': effective workflow contract changed'
+
+
+
+# Phase 3: only five proven subset service jobs are suppressed on ordinary PRs.
+# Buyback remains the automatic superset test for every original target base.
+PHASE3_SUBSET_JOBS = {
+    '.github/workflows/twilight-shop-authority.yml': 'shop-authority',
+    '.github/workflows/twilight-warehouse-validate.yml': 'local-warehouse',
+    '.github/workflows/twilight-npc-teleport.yml': 'npc-transit',
+    '.github/workflows/twilight-local-crafting.yml': 'crafting',
+    '.github/workflows/twilight-npc-dialogue.yml': 'npc-dialogue',
+}
+PHASE3_MANUAL_OR_PROTECTED = "${{ github.event_name != 'pull_request' || github.event.pull_request.number == 157 || github.event.pull_request.number == 158 }}"
+PHASE3_BUYBACK = '.github/workflows/twilight-shop-buyback.yml'
+PHASE3_EXTRA_BASES = (
+    'feature/twilight-shop-authoritative-transactions-20261010',
+    'feature/twilight-warehouse-persistent-instances-20261010',
+    'feature/twilight-npc-teleport-20261010',
+    'feature/twilight-shop-buyback-20261010',
+)
+PHASE3_COVERED_TESTS = (
+    'tests/npc_dialogue_branching_test.gd', 'tests/shop_buyback_test.gd', 'tests/local_crafting_test.gd',
+    'tests/npc_teleport_test.gd', 'tests/warehouse_persistence_test.gd',
+    'tests/shop_authority_test.gd',
+)
+PHASE3_COVERED_MARKERS = (
+    'BUYBACK_OK', 'NPC_DIALOGUE_OK', 'CRAFT_OK', 'NPC_TELEPORT_OK', 'WAREHOUSE_OK',
+    'SHOP_AUTHORITY_OK',
+)
+
+
+def normalize_phase3_services(path, before, expanded):
+    if path not in PHASE3_SUBSET_JOBS and path != PHASE3_BUYBACK:
+        return expanded
+    result = copy.deepcopy(expanded)
+    if path in PHASE3_SUBSET_JOBS:
+        job = PHASE3_SUBSET_JOBS[path]
+        assert list(result['jobs']) == [job], path + ': job identity changed'
+        assert 'if' not in before['jobs'][job], path + ': baseline already had a gate'
+        assert result['jobs'][job].pop('if', None) == PHASE3_MANUAL_OR_PROTECTED, (
+            path + ': missing protected-PR/manual fallback')
+    else:
+        event_key = 'on' if 'on' in result else True  # PyYAML 1.1 bool coercion
+        baseline_key = 'on' if 'on' in before else True
+        branches = result[event_key]['pull_request']['branches']
+        original_branches = before[baseline_key]['pull_request']['branches']
+        required = set(original_branches) | set(PHASE3_EXTRA_BASES)
+        assert len(branches) == len(required) and set(branches) == required, (
+            path + ': original or historical PR base omitted')
+        assert result[event_key]['workflow_dispatch'] == before[baseline_key]['workflow_dispatch'], (
+            path + ': manual trigger changed')
+        step = [x for x in result['jobs']['item-buyback']['steps']
+                if x.get('name') == 'Buyback and earlier stage regression']
+        assert len(step) == 1, path + ': canonical test step missing'
+        body = step[0].get('run', '')
+        original_steps = [x for x in before['jobs']['item-buyback']['steps']
+                          if x.get('name') == 'Buyback and earlier stage regression']
+        assert len(original_steps) == 1, path + ': original canonical test missing'
+        original_body = original_steps[0]['run']
+        expected_body = original_body.replace(
+            'for test in tests/shop_buyback_test.gd ',
+            'for test in tests/npc_dialogue_branching_test.gd tests/shop_buyback_test.gd ')
+        expected_body = expected_body.replace(
+            'for marker in BUYBACK_OK CRAFT_OK ',
+            'for marker in BUYBACK_OK NPC_DIALOGUE_OK CRAFT_OK ')
+        assert expected_body != original_body and body == expected_body, (
+            path + ': canonical suite must only add NPC dialogue and marker')
+        for required_test in PHASE3_COVERED_TESTS:
+            assert required_test in body, path + ': missing ' + required_test
+        for required_marker in PHASE3_COVERED_MARKERS:
+            assert required_marker in body, path + ': missing ' + required_marker
+        result[event_key]['pull_request']['branches'] = copy.deepcopy(original_branches)
+        step[0]['run'] = original_body
+    return result
 
 
 RUNTIME_CHECKOUT_WORKFLOWS = {
@@ -187,6 +262,7 @@ SHARED_IMPORT_READER_STEPS = {
     '.github/workflows/twilight-crafting-validate.yml': 'Import project and GDScript',
     '.github/workflows/original-skills-validate.yml': 'Skill behavior and combat regressions',
     '.github/workflows/twilight-integration-validate.yml': 'Full project regression, import, boot and all smoke tests',
+    '.github/workflows/twilight-shop-buyback.yml': 'Godot import and parse project',
 }
 SHARED_IMPORT_READER = {
     'name': 'Restore trusted Godot imported resources',
