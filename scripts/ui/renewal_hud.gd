@@ -36,7 +36,12 @@ var quick_page_buttons: Array[Button] = []
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
+const CardFusionView = preload("res://scripts/ui/card_fusion_view.gd")
 var card_reveal_stage: Control
+var card_fusion_view: Control
+var card_fusion_tab: Button
+var card_awakening_tab: Button
+var card_fusion_return_category: String = "변신"
 const OptionAwakeningView = preload("res://scripts/ui/option_awakening_view.gd")
 const OptionAwakeningBorder = preload("res://scripts/ui/option_awakening_border.gd")
 const OptionAwakeningReveal = preload("res://scripts/ui/option_awakening_reveal.gd")
@@ -823,6 +828,7 @@ func _navigate(section: String) -> void:
 	if class_picker_initial:
 		return
 	match section:
+		"card_fusion": open_card_fusion(card_fusion_return_category)
 		"option_awakening":
 			if not option_awakening_snapshot.is_empty():
 				option_awakening_open_requested.emit(str(option_awakening_snapshot.get("category", "")), str(option_awakening_snapshot.get("target_id", "")))
@@ -1096,6 +1102,16 @@ func _open_utility_panel(title: String) -> void:
 	var box: VBoxContainer = utility_panel.get_child(0)
 	(box.get_child(box.get_child_count()-1) as Control).hide()
 
+func open_card_fusion(category: String) -> void:
+	if not CARD_RULES.CATEGORIES.has(category): return
+	card_fusion_return_category = category
+	_open_window("card_fusion", category + " 카드 합성", "")
+	var view: Control = CardFusionView.new()
+	card_fusion_view = view
+	workspace.mount(view)
+	view.configure(catalog_data, card_collection_state, category)
+	view.fuse_requested.connect(_confirm_card_fusion_request)
+
 func open_catalog(category: String) -> void:
 	_reset_catalog_drag()
 	_open_window(category,category,"")
@@ -1123,6 +1139,9 @@ func open_catalog(category: String) -> void:
 		grant.visible = category == "아이템"
 	catalog_clear_button.visible = category != "아이템"
 	catalog_test_toggle.visible = category == "아이템" and playtest_tools_enabled()
+	if is_instance_valid(card_fusion_tab):
+		card_fusion_tab.visible = CARD_RULES.CATEGORIES.has(category)
+		card_awakening_tab.visible = CARD_RULES.CATEGORIES.has(category)
 	catalog_test_tools.hide()
 	catalog_test_toggle.button_pressed = false
 	_refresh_catalog_list("")
@@ -1184,6 +1203,12 @@ func _build_catalog_panel() -> void:
 	catalog_details_tab = UI.button("선택 상세", func() -> void: _set_catalog_detail_view(true), Vector2(115, 34))
 	catalog_view_tabs.add_child(catalog_list_tab)
 	catalog_view_tabs.add_child(catalog_details_tab)
+	card_fusion_tab = UI.button("합성", func() -> void: open_card_fusion(catalog_category), Vector2(85, 36))
+	card_fusion_tab.name = "OpenCardFusion"
+	card_awakening_tab = UI.button("각성", _request_option_awakening_open, Vector2(85, 36))
+	card_awakening_tab.name = "OpenCardAwakening"
+	catalog_view_tabs.add_child(card_fusion_tab)
+	catalog_view_tabs.add_child(card_awakening_tab)
 	col.add_child(catalog_view_tabs)
 	catalog_view_tabs.hide()
 	var body := HBoxContainer.new()
@@ -1698,7 +1723,7 @@ func _fit_catalog_browser_layout() -> void:
 	catalog_list.fixed_icon_size = Vector2i(78,92) if short else Vector2i(94,116)
 	catalog_list.add_theme_constant_override("v_separation",10)
 	catalog_search.custom_minimum_size.y = 34
-	catalog_view_tabs.visible = compact and active_section in ["아이템","변신","마법인형","성물"]
+	catalog_view_tabs.visible = (compact or CARD_RULES.CATEGORIES.has(active_section)) and active_section in ["아이템","변신","마법인형","성물"]
 	catalog_grade_column.visible = not compact
 	rarity_filter.visible = compact
 	catalog_body_left.visible = not compact or not catalog_details_active
