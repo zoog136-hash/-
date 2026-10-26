@@ -237,8 +237,8 @@ func _polish_hud_chrome() -> void:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
 	if v20_map_name != null:
 		v20_map_name.add_theme_color_override("font_color",UI.GOLD)
-		_place(v20_map_name.get_parent(),755,10,933,44)
-		v20_map_name.add_theme_font_size_override("font_size",11)
+		_place(v20_map_name.get_parent(),746,16,930,48)
+		v20_map_name.add_theme_font_size_override("font_size",13)
 		v20_map_name.clip_text = true
 
 func _build_lineage_inventory_ui() -> void:
@@ -319,8 +319,8 @@ func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "MainShortcuts"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,943,9,1268,78)
-	panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	_place(panel,950,10,1268,83)
+	panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.07,.06,.045,.80),UI.BRONZE,4))
 	v20_layer.add_child(panel)
 	var row := HBoxContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -328,7 +328,7 @@ func _build_v20_top_menu() -> void:
 	panel.add_child(row)
 	for spec: Array in [["shop","상점","shop.png"],["inventory","가방","bag.png"],["skills","스킬","skill.png"],["map","지도","quest.png"],["menu","메뉴","menu.png"]]:
 		var id := str(spec[0])
-		var b := UI.button("",_navigate.bind(id),Vector2(59,53))
+		var b := UI.button("",_navigate.bind(id),Vector2(58,60))
 		b.name = "Shortcut_"+id
 		b.tooltip_text = str(spec[1])
 		b.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
@@ -339,12 +339,12 @@ func _build_v20_top_menu() -> void:
 		artwork.texture = UI.icon(id)
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		artwork.position = Vector2(14,3)
-		artwork.size = Vector2(28,28)
+		artwork.position = Vector2(11,2)
+		artwork.size = Vector2(36,36)
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(artwork)
-		var label := UI.label(str(spec[1]),11,UI.TEXT)
-		label.position = Vector2(0,34)
+		var label := UI.label(str(spec[1]),12,UI.TEXT)
+		label.position = Vector2(0,40)
 		label.size = Vector2(59,16)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		b.add_child(label)
@@ -354,14 +354,15 @@ func _build_v20_right_controls() -> void:
 	v20_self_button.name = "SelfMode"
 	v20_self_button.toggle_mode = true
 	v20_self_button.tooltip_text = "SELF OFF: 퀵슬롯 버프 자동 재사용 · ON: 수동 사용"
-	_place(v20_self_button,1120,454,1176,510)
+	_place(v20_self_button,1070.5,438,1138.5,494)
 	v20_self_button.add_theme_stylebox_override("normal",_round_button_style(.78,28,UI.BRONZE))
 	v20_self_button.add_theme_font_size_override("font_size",11)
 	v20_layer.add_child(v20_self_button)
 	var target := UI.button("",func() -> void: target_pressed.emit())
 	target.name = "SelectTarget"
 	target.icon = UI.icon("target")
-	_place(target,1200,450,1258,508)
+	target.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_place(target,1183.5,437,1241.5,495)
 	target.add_theme_stylebox_override("normal",_round_button_style(.78,29,UI.BRONZE))
 	target.tooltip_text="대상 선택"
 	v20_layer.add_child(target)
@@ -387,6 +388,7 @@ func _build_v20_right_controls() -> void:
 	attack.add_theme_font_size_override("font_size",14)
 	attack.text = ""
 	attack.icon = UI.icon("attack")
+	attack.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	attack.expand_icon = true
 	attack.add_theme_constant_override("icon_max_width",86)
 	_place(attack,1157,514,1268,625)
@@ -542,7 +544,7 @@ func _fit_hud() -> void:
 			control.set_meta("renewal_base_position",control.position)
 		var base: Vector2 = control.get_meta("renewal_base_position")
 		control.position = base
-		if base.y >= 449: control.position.y += extra_y
+		if base.y >= 449 or control.name in ["SelfMode","SelectTarget"]: control.position.y += extra_y
 		if base.x >= 943: control.position.x += extra_x
 		elif control.name == "Quickslots" or control == v20_target_panel:
 			control.position.x += extra_x*.5
