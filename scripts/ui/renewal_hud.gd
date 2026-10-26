@@ -1640,15 +1640,16 @@ func _request_card_pack_draw() -> void:
 		card_pack_draw_requested.emit(catalog_category)
 
 func _request_card_fusion() -> void:
-	if card_fusion_grade_select == null or not CARD_RULES.CATEGORIES.has(catalog_category):
-		return
-	if card_fusion_button.disabled:
-		return
-	var source_grades: Array[String] = ["일반", "고급", "희귀", "영웅", "전설", "신화"]
-	var grade_name: String = source_grades[clampi(card_fusion_grade_select.selected, 0, source_grades.size() - 1)]
-	var category: String = catalog_category
+	if card_fusion_grade_select == null or not CARD_RULES.CATEGORIES.has(catalog_category): return
+	if card_fusion_button.disabled: return
+	var grades: Array[String] = ["일반", "고급", "희귀", "영웅", "전설", "신화"]
+	var grade_name: String = grades[clampi(card_fusion_grade_select.selected, 0, grades.size() - 1)]
+	_confirm_card_fusion_request(catalog_category, grade_name)
+
+func _confirm_card_fusion_request(category: String, grade_name: String) -> void:
+	if not CARD_RULES.CATEGORIES.has(category) or not CARD_RULES.FUSION_MATERIALS.has(grade_name) or is_card_reveal_busy(): return
 	var required: int = int(CARD_RULES.FUSION_MATERIALS[grade_name])
-	confirm_action("카드 합성", "%s %s 중복 카드 %d장을 소모하시겠습니까? 실패 시 같은 등급 카드 1장을 획득합니다." % [
+	confirm_action("카드 합성", "%s %s 중복 카드 %d장을 소모하시겠습니까? 최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다." % [
 		category, grade_name, required
 	], "합성", func(_count: int) -> void: card_fusion_requested.emit(category, grade_name))
 
