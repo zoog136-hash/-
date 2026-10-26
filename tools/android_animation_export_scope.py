@@ -124,7 +124,13 @@ def audit_authoring_exclusions(root: Path) -> dict:
             raise ValueError("Exported runtime catalog references excluded Aden preview renderer: " + relative)
         if not excluded_by_preset and any(("res://" + name) in content for name in archived_map_json):
             raise ValueError("Exported runtime catalog references excluded Aden authoring JSON: " + relative)
-        if not excluded_by_preset and any(name in content for name in offline_json):
+        # The tracked delivery ledger inventories original and offline sources;
+        # it is not a runtime loader. Preserve its audit records without
+        # mistaking inventory filenames for exported dependency references.
+        # All other exported JSON and runtime scripts retain the strict gate.
+        if (relative != "data/resource_delivery_ledger.json"
+                and not excluded_by_preset
+                and any(name in content for name in offline_json)):
             raise ValueError("Exported runtime catalog references excluded offline JSON: " + relative)
         if excluded_by_preset:
             # Only audited, exact authoring JSON paths may be omitted; a new
