@@ -7,6 +7,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 const SafeArea = preload("res://scripts/ui/safe_area.gd")
 const Surface = preload("res://scripts/ui/renewal_surface.gd")
+const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 var heading: Label
 var subtitle: Label
 var footer: Label
@@ -52,7 +53,7 @@ func _ready() -> void:
 	title_row.custom_minimum_size.y = 32
 	layout.add_child(title_row)
 	filter_drag_handle=UI.label("⋮",22,UI.MUTED)
-	filter_drag_handle.custom_minimum_size=Vector2(12,44)
+	filter_drag_handle.custom_minimum_size=Vector2(8,32)
 	filter_drag_handle.mouse_filter=Control.MOUSE_FILTER_STOP
 	filter_drag_handle.mouse_default_cursor_shape=Control.CURSOR_DRAG
 	filter_drag_handle.tooltip_text="창 이동"
@@ -281,6 +282,14 @@ func _on_title_drag_input(event: InputEvent) -> void:
 
 func open(section: String, title: String, description: String) -> void:
 	current_section = section
+	var full_browser: bool=section in ["변신","마법인형","성물","아이템","shop","equipment_collections"]
+	get_node("WindowMaterialSurface").visible=not full_browser
+	if full_browser:
+		add_theme_stylebox_override("panel",ReferenceSurfaces.inset(8))
+	else:
+		var frame: StyleBoxTexture=UI.screen_frame()
+		for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:frame.set_content_margin(side,8)
+		add_theme_stylebox_override("panel",frame)
 	title_dragged = false
 	heading.text = title
 	section_icon.texture = UI.icon({"stats":"character","npc_shop":"shop","detailed_status":"character"}.get(section,section))
@@ -329,7 +338,7 @@ func mount_header_filters(filters: Control) -> void:
 	heading.hide()
 	section_icon.hide()
 	compact_menu_button.hide()
-	filter_drag_handle.show()
+	filter_drag_handle.hide()
 
 func _restore_header_filters() -> void:
 	if is_instance_valid(header_filters) and is_instance_valid(filters_home):

@@ -2,6 +2,7 @@ extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
 var hud: Node
 var records: Array = []
@@ -34,6 +35,10 @@ func configure(controller: Node) -> void:
 	visibility_changed.connect(_sync_visibility)
 	records=hud.job_skills
 	var toolbar := HFlowContainer.new()
+	var filters_button: Button=UI.button("검색 · 필터",func() -> void:toolbar.visible=not toolbar.visible,Vector2(0,32))
+	filters_button.name="SkillFiltersToggle"
+	add_child(filters_button)
+	toolbar.hide()
 	add_child(toolbar)
 	search=LineEdit.new()
 	search.name="SkillSearch"
@@ -168,6 +173,11 @@ func configure(controller: Node) -> void:
 	summon_controls.add_child(summon_order)
 	summon_controls.add_child(UI.button("소환 해제",func() -> void: hud.get_parent().original_skills.summons.command("dismiss")))
 	body.configure(cards,side_scroll,278)
+	body.move_child(body.tabs,body.get_child_count()-1)
+	(body.tabs.get_child(0) as Button).text="스킬 목록"
+	(body.tabs.get_child(1) as Button).text="상세보기"
+	cards.add_theme_stylebox_override("panel",ReferenceSurfaces.inset(4))
+	for button: Button in [learn_button,book_button,use_button,quick_button]:ReferenceSurfaces.action(button)
 	hud.workspace.register_scroll_drag(side_scroll,side_scroll)
 	refresh()
 

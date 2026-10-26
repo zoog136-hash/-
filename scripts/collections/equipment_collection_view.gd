@@ -3,6 +3,8 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Art = preload("res://scripts/ui/item_icon_art.gd")
 const Core = preload("res://scripts/collections/equipment_collection_service.gd")
+const Rows=preload("res://scripts/collections/collection_rows.gd")
+const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
 var hud
 var runtime
 var rows: Array = []
@@ -13,7 +15,9 @@ var grade: OptionButton
 var status: OptionButton
 var favorites: CheckButton
 var summary_label: Label
-var list: ItemList
+var list
+var grade_column: VBoxContainer
+var grade_buttons: Array[Button]=[]
 var body: HBoxContainer
 var detail_scroll: ScrollContainer
 var detail: VBoxContainer
@@ -64,21 +68,31 @@ func configure(owner_hud: Node) -> void:
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation",10)
 	add_child(body)
-	list = ItemList.new()
-	list.name = "EquipmentCollectionsList"
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	list.size_flags_stretch_ratio = 0.40
-	list.add_theme_font_size_override("font_size",13)
-	list.add_theme_constant_override("v_separation",10)
+	grade_column=VBoxContainer.new()
+	grade_column.hide()
+	grade_column.custom_minimum_size.x=108
+	body.add_child(grade_column)
+	for index: int in range(grade.item_count):
+		var button: Button=UI.button("전체" if index==0 else grade.get_item_text(index),func() -> void:grade.select(index);_filter(),Vector2(0,54))
+		button.toggle_mode=true
+		Surfaces.grade_row(button)
+		grade_column.add_child(button)
+		grade_buttons.append(button)
+	list=Rows.new()
+	list.name="EquipmentCollectionsList"
+	list.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	list.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	list.size_flags_stretch_ratio=1.65
 	list.item_selected.connect(_select)
 	body.add_child(list)
+	list.configure(hud)
 	detail_scroll = ScrollContainer.new()
 	detail_scroll.name = "CollectionDetailScroll"
 	detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	detail_scroll.size_flags_stretch_ratio = 0.60
+	detail_scroll.size_flags_stretch_ratio = 1.0
+	detail_scroll.add_theme_stylebox_override("panel",Surfaces.inset(6))
 	body.add_child(detail_scroll)
 	detail = VBoxContainer.new()
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -92,6 +106,8 @@ func _fit() -> void:
 	if not is_instance_valid(tabs): return
 	var compact: bool = size.x < 660
 	tabs.visible = compact
+	grade_column.visible=not compact and size.y>=420
+	grade.visible=not grade_column.visible
 	list.visible = not compact or not show_detail
 	detail_scroll.visible = not compact or show_detail
 
@@ -124,9 +140,16 @@ func _filter() -> void:
 			done += runtime.slot_count(str(row.id),str(req.slot_id))
 			required += int(req.quantity)
 		var mark: String = "완성" if runtime.completed(str(row.id)) else ("%d/%d" % [done,required] if bool(runtime.availability(str(row.id)).get("ok",false)) else "보류")
-		var index: int = list.add_item("%s %s  [%s]" % ["★" if runtime.progress.favorites.has(str(row.id)) else "",row.name,mark])
-		list.set_item_custom_fg_color(index,UI.grade(str(row.grade)))
-		list.set_item_tooltip(index,str(row.name)+"\n"+str(row.get("raw_effects","")))
+		list.add_collection(row,mark,runtime.progress.favorites.has(str(row.id)))
+	for index: int in range(grade_buttons.size()):
+		var total: int=0
+		var completed: int=0
+		for row: Dictionary in rows:
+			if index==0 or str(row.grade)==grade.get_item_text(index):
+				total+=1
+				if runtime.completed(str(row.id)):completed+=1
+		grade_buttons[index].text="%s\n(%d/%d)" % ["전체" if index==0 else grade.get_item_text(index),completed,total]
+		grade_buttons[index].button_pressed=grade.selected==index
 	var selected_index: int = -1
 	for i: int in range(filtered.size()):
 		if str(filtered[i].id) == selected_id: selected_index=i; break
@@ -142,6 +165,7 @@ func _filter() -> void:
 func _select(index: int) -> void:
 	if index < 0 or index >= filtered.size(): return
 	selected_id = str(filtered[index].id)
+	list.select(index)
 	show_detail = true
 	_render_detail()
 	_fit()
@@ -212,6 +236,7 @@ func _choose(cid: String, sid: String) -> void:
 		_text("조건에 맞는 미장착·잠금 해제 장비가 없습니다. 강화 수치와 장비 원본 ID도 검사합니다.",13,UI.MUTED)
 		return
 	candidates_list = ItemList.new()
+	candidates_list.set_script(preload("res://scripts/ui/native_touch_list.gd"))
 	candidates_list.name = "CollectionCandidates"
 	candidates_list.custom_minimum_size.y = 125
 	detail.add_child(candidates_list)

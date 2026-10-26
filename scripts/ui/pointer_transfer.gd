@@ -150,14 +150,15 @@ func _input(event: InputEvent) -> void:
 		if mode == "pending" and distance.length() > (L.TOUCH_SCROLL_DISTANCE if pointer >= 0 else L.MOUSE_DRAG_DISTANCE):
 			if pointer >= 0 and elapsed < L.TOUCH_HOLD_SECONDS:
 				if source.from == "inventory":
-					# Crossing the grid edge into the bag header is still a scroll.
-					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(_inventory_gesture_frame(),position) else "drag"
+					# A fast vertical swipe stays owned by its starting inventory,
+					# even when a compact header lets the finger cross its boundary.
+					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(_inventory_gesture_frame(),origin) else "drag"
 				elif source.from != "quick": mode = "scroll"
 				elif absf(distance.x) > absf(distance.y)*1.5: mode = "page"
 				else: mode = "drag"
 			else: mode = "drag"
-		# Only leaving the bag itself converts a vertical swipe into a transfer.
-		if mode == "scroll" and source.from == "inventory" and not inside(_inventory_gesture_frame(),position): mode = "drag"
+		# Captured scrolling never turns into an item drop at the window edge.
+		# Deliberate hold/horizontal drags retain the existing transfer path.
 		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
 			var bar: VScrollBar

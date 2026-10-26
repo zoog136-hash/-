@@ -32,6 +32,7 @@ var quick_page_buttons: Array[Button] = []
 var screen_backdrop: ColorRect
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 var card_reveal_stage: Control
@@ -931,7 +932,9 @@ func show_companion_bag() -> void:
 func show_companion_equipment() -> void:
 	var window: PanelContainer = _companion("character","장비")
 	window.mount(lineage_side_ui.character_panel)
+	lineage_side_ui.bind_item_art(self)
 	lineage_side_ui.show_character(character_state)
+	lineage_side_ui.mount_window_header(window)
 
 func open_npc_dialogue(npc_id: String) -> void:
 	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
@@ -1021,7 +1024,9 @@ func open_character() -> void:
 	panel.custom_minimum_size = Vector2.ZERO
 	workspace.mount(panel)
 	panel.show()
+	lineage_side_ui.bind_item_art(self)
 	lineage_side_ui.show_character(character_state)
+	lineage_side_ui.mount_window_header(workspace)
 
 func open_detailed_status() -> void:
 	if not is_instance_valid(detail_window):
@@ -1267,6 +1272,7 @@ func _build_catalog_panel() -> void:
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	body.add_child(right_scroll)
+	ReferenceSurfaces.catalog(self)
 	var right := VBoxContainer.new()
 	right.custom_minimum_size = Vector2(500,0)
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1431,6 +1437,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
 
 func _refresh_card_controls() -> void:
+	ReferenceSurfaces.refresh_grade_counts(self)
 	if card_controls == null or card_fusion_grade_select == null:
 		return
 	var category: String = catalog_category
@@ -1616,6 +1623,7 @@ func _refresh_item_filter_controls() -> void:
 		rarity_filter.select(maxi(0,["전체","일반","고급","희귀","영웅","전설","신화","유일"].find(item_grade_filter)))
 
 func _refresh_catalog_list(filter_text: String) -> void:
+	ReferenceSurfaces.refresh_grade_counts(self)
 	# The original paging, selection and native touch handler remain in use.
 	catalog_filtered_results.clear()
 	catalog_variant_counts.clear()

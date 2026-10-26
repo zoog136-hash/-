@@ -79,6 +79,18 @@ func _run() -> void:
 	var slot0: Vector2 = point(hud.v20_quickslot_buttons[0])
 	var slot9: Vector2 = point(hud.v20_quickslot_buttons[9])
 	var old_position: Vector2 = world.player.global_position
+	# A fast inventory scroll can leave the short header on a mobile screen.
+	# It must never become a world drop or consume the touched item on release.
+	var above_bag: Vector2=Vector2(source.x,bag.get_global_transform_with_canvas().origin.y-32)
+	touch(source,true)
+	touch_motion(source-Vector2(0,35),Vector2(0,-35))
+	touch_motion(above_bag,above_bag-(source-Vector2(0,35)))
+	touch(above_bag,false)
+	await frames()
+	check(world.inventory["HP 물약"]==30 and world.player.click_path.is_empty(),"inventory flick past window edge neither drops nor uses an item")
+	bag.grid_scroll.get_v_scroll_bar().value=0
+	await frames()
+	source=point(bag.slot_buttons["HP 물약"])
 	await drag(source,slot0)
 	check(world.quickslots[0].get("id","") == "HP 물약","mouse bag to real quickslot")
 	check(int(world.inventory["HP 물약"]) == 30,"registration never consumes an item")

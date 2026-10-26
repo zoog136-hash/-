@@ -3,7 +3,7 @@ extends VBoxContainer
 # Enhancement probabilities and transactions are supplied by the world.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
-const Stage = preload("res://scripts/ui/renewal_stage.gd")
+const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 
 var hud: Node
 var mode: String = "scroll"
@@ -47,8 +47,8 @@ func _build() -> void:
 	listing.name = "EnhancementChoices"
 	listing.icon_mode = ItemList.ICON_MODE_TOP
 	listing.fixed_icon_size = Vector2i(54,54)
-	listing.max_columns = 3
-	listing.fixed_column_width = 140
+	listing.max_columns = 4
+	listing.fixed_column_width = 76
 	listing.same_column_width = true
 	listing.max_text_lines = 2
 	listing.add_theme_font_size_override("font_size",12)
@@ -60,19 +60,28 @@ func _build() -> void:
 	side.custom_minimum_size.x = 320
 	body.add_child(side)
 	side.add_child(UI.label("상세 정보",18,UI.GOLD))
-	var stage := Stage.new()
-	stage.custom_minimum_size.y = 130
+	var stage:=PanelContainer.new()
+	stage.custom_minimum_size.y=130
+	stage.add_theme_stylebox_override("panel",UI.MATERIAL.from_flat(UI.box(Color("241811"),Color("655343"),10),true))
 	side.add_child(stage)
-	preview = TextureRect.new()
-	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stage.add_child(preview)
-	preview.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	preview.offset_left = 65
-	preview.offset_right = -65
-	preview.offset_top = 14
-	preview.offset_bottom = -14
+	var pair:=HBoxContainer.new()
+	pair.alignment=BoxContainer.ALIGNMENT_CENTER
+	pair.add_theme_constant_override("separation",16)
+	stage.add_child(pair)
+	if mode=="target":
+		var scroll_icon:=TextureRect.new()
+		scroll_icon.custom_minimum_size=Vector2(72,72)
+		scroll_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		scroll_icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		pair.add_child(scroll_icon)
+		UI.apply_item_visual(scroll_icon,hud.lineage_inventory_ui._find_item_record(scroll_name),scroll_name,hud.item_image_index.get("아이템",{}),"detail")
+		pair.add_child(UI.label("+",28,UI.TEXT))
+	preview=TextureRect.new()
+	preview.custom_minimum_size=Vector2(84,84)
+	preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	preview.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	pair.add_child(preview)
 	detail = UI.rich("")
 	detail.fit_content = false
 	detail.scroll_active = true
@@ -80,6 +89,8 @@ func _build() -> void:
 	side.add_child(detail)
 	action = UI.button("선택",_execute,Vector2(0,54))
 	action.name = "EnhanceAction"
+	action.add_theme_stylebox_override("normal",UI.MATERIAL.from_flat(UI.box(Color("63352a"),Color("aa8170"),7)))
+	action.add_theme_stylebox_override("pressed",UI.MATERIAL.from_flat(UI.box(Color("3b1b17"),Color("bd9682"),7),true))
 	side.add_child(action)
 	if mode == "target":
 		side.add_child(UI.button("다른 주문서 선택",func() -> void: hud._open_enhance_chooser()))
@@ -96,7 +107,12 @@ func _build() -> void:
 		listing.set_item_icon(listing.item_count-1,UI.item_icon(info,str(entry.get("name","")),hud.item_image_index.get("아이템",{})))
 		listing.set_item_custom_fg_color(listing.item_count-1,UI.grade(str(info.get("grade","일반"))))
 		listing.set_item_tooltip(listing.item_count-1,str(entry.get("name",""))+" · 장비 ID "+str(entry.get("instance_id","")))
-	body.configure(listing,side,290)
+	body.configure(listing,side,380)
+	body.panes.move_child(body.detail_frame,0)
+	body.move_child(body.tabs,body.get_child_count()-1)
+	(body.tabs.get_child(0) as Button).text="보유 목록"
+	(body.tabs.get_child(1) as Button).text="강화 정보"
+	listing.add_theme_stylebox_override("panel",ReferenceSurfaces.inset(4))
 	body.enable_item_touch()
 	if values.is_empty():
 		detail.text = "보유 강화 주문서가 없습니다. 상점에서 구매하세요." if mode == "scroll" else "이 주문서로 강화 가능한 장비가 없습니다."

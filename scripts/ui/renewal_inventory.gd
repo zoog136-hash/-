@@ -31,6 +31,7 @@ var gesture_origin: Vector2 = Vector2.ZERO
 var gesture_last: Vector2 = Vector2.ZERO
 var gesture_horizontal: float = 0.0
 var gesture_equipping: bool = false
+var category_tabs: Control
 
 func _ready() -> void:
 	super._ready()
@@ -68,8 +69,10 @@ func _ready() -> void:
 	search_row.hide()
 	header.hide()
 	for button: Button in tab_buttons.values():
-		button.custom_minimum_size = Vector2(68,32)
+		button.custom_minimum_size = Vector2(0,32)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	category_tabs=(tab_buttons.values()[0] as Control).get_parent()
+	category_tabs.add_theme_constant_override("separation",0)
 	detail_panel.reparent(self)
 	detail_panel.z_index = 10
 	detail_panel.custom_minimum_size = Vector2(300,0)
@@ -159,7 +162,8 @@ func _reflow() -> void:
 	detail_panel.visible = detail_active and not selected_item.is_empty()
 	compact_tabs.hide()
 
-func mount_window_header(_window: Control) -> void:
+func mount_window_header(window: Control) -> void:
+	window.mount_header_filters(category_tabs)
 	_reflow()
 
 func gesture_bounds() -> Control:
