@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=218 format=3]
+[gd_resource type="SpriteFrames" load_steps=225 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/thebes_horus/owned_parts_v01/E-attack-v01.png" id="1"]
 
@@ -61,6 +61,8 @@
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed_parts_r001/W-attack.png" id="repair_r002_W_attack_texture"]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed_parts_r001/W-hit.png" id="repair_r002_W_hit_texture"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed_parts_r001/SW-idle.png" id="repair_r002_SW_idle_texture"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1181,6 +1183,43 @@ region = Rect2(1552,816,493,484)
 margin = Rect2(421,365,859,868)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_0"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(80,80,734,406)
+margin = Rect2(49,239,226,554)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_1"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(1248,80,755,403)
+margin = Rect2(42,240,205,557)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_2"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(80,1248,709,420)
+margin = Rect2(91,239,251,540)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_3"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(1248,1248,744,413)
+margin = Rect2(48,232,216,547)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_4"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(80,2416,1004,836)
+margin = Rect2(445,502,1020,1188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SW_idle_5"]
+atlas = ExtResource("repair_r002_SW_idle_texture")
+region = Rect2(1248,2416,844,849)
+margin = Rect2(481,508,1180,1175)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1353,7 +1392,8 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_27_5")}], "loop": true, "name": &"run_3", "speed": 12.500000000},
 {"frames":[{"duration":1.0,"texture":SubResource("repair_r002_W_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_W_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_W_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_W_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_W_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_W_idle_5")}],"loop":true,"name":&"idle_4","speed":5},
 {"frames":[{"duration":1.0,"texture":SubResource("repair_r002_W_attack_0")},{"duration":1.0,"texture":SubResource("repair_r002_W_attack_1")},{"duration":1.0,"texture":SubResource("repair_r002_W_attack_2")},{"duration":1.0,"texture":SubResource("repair_r002_W_attack_3")},{"duration":1.0,"texture":SubResource("repair_r002_W_attack_4")},{"duration":1.0,"texture":SubResource("repair_r002_W_attack_5")}],"loop":false,"name":&"attack_4","speed":14.285714285714286},
-{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_W_hit_0")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_1")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_2")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_3")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_4")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_5")}],"loop":false,"name":&"hit_4","speed":27.272727272727273}
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_W_hit_0")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_1")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_2")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_3")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_4")},{"duration":1.0,"texture":SubResource("repair_r002_W_hit_5")}],"loop":false,"name":&"hit_4","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_5")}],"loop":true,"name":&"idle_3","speed":5}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
 metadata/twilight_production_connected = false
