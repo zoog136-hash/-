@@ -1,7 +1,7 @@
 {
   "schema": "pr122-native-locomotion-staging-v1",
   "approved_history_preserved": 405,
-  "detailed_complete": 2,
+  "detailed_complete": 1,
   "detailed_total": 31,
   "actors": {
     "transform:393": {
@@ -19821,10 +19821,10 @@
         "death": []
       },
       "production_connected": true,
-      "detailed_completed": true,
-      "completed_added": 1,
-      "status": "APPROVED_DETAILED_PRODUCTION",
-      "visual_review": "PASS",
+      "detailed_completed": false,
+      "completed_added": 0,
+      "status": "PRODUCTION_QUALITY_REGRESSION",
+      "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
       "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r001/NativeMotionProfile.tres",
@@ -19930,7 +19930,7 @@
       },
       "visual_quality_hold": {
         "key": "transform:267",
-        "status": "RESOLVED",
+        "status": "REOPENED_RUNTIME_REGRESSION",
         "scope": "all_native_clips",
         "clips": 48,
         "reason": "Original pale face, narrow gold radial spines, long dark goldtrim skirt and sinuous weapon were redesigned; several action headings reverse",
@@ -20877,7 +20877,9 @@
           "full_directional_tracks": 48,
           "native_poses": 288,
           "historical_approval_count_preserved": 405
-        }
+        },
+        "prior_status": "RESOLVED",
+        "current_regression": "User-reported severe RUN bounce; historical final approval revoked. Original sources, corrections and existing runtime binding are preserved pending verified directional repair."
       }
     },
     "transform:413": {
