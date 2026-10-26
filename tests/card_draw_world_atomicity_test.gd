@@ -21,16 +21,17 @@ func _run() -> void:
 	world.set_physics_process(false)
 	world.set("source_save_blocked", true)
 	var cards: Object = world.get("card_draw_fusion")
+	var generator: RandomNumberGenerator = cards.get("rng") as RandomNumberGenerator
 	var inventory: Dictionary = world.get("inventory")
 	var ticket: String = "최상급 성물 뽑기권 11회 팩"
 	inventory[ticket] = 1
 	check(bool(cards.call("can_draw", "성물")), "relic card pool supports a real draw")
 	var before: Dictionary = cards.call("export_state")
-	var roll_before: int = cards.rng.state
+	var roll_before: int = generator.state
 	world.call("_use_card_pack_item", ticket)
 	check(int(inventory.get(ticket, 0)) == 1, "blocked save does not spend ticket")
 	check(cards.call("export_state") == before, "blocked save does not award unrecoverable cards")
-	check(cards.rng.state == roll_before, "failed transaction restores draw RNG state")
+	check(generator.state == roll_before, "failed transaction restores draw RNG state")
 	var chosen: String = ""
 	for raw: Variant in (world.get("catalog_db") as Dictionary).get("변신", []):
 		if raw is Dictionary and str((raw as Dictionary).get("grade", "")) == "고급":
@@ -38,12 +39,16 @@ func _run() -> void:
 			break
 	check(not chosen.is_empty(), "source catalog contains fusion material")
 	if not chosen.is_empty():
-		cards.call("import_state", {"owned":{"변신":{chosen:true}}, "spare":{"변신":{chosen:4}}, "pity":{}})
+		var unlocked: Dictionary = {}
+		unlocked[chosen] = true
+		var extras: Dictionary = {}
+		extras[chosen] = 4
+		cards.call("import_state", {"owned":{"변신":unlocked}, "spare":{"변신":extras}, "pity":{}})
 		before = cards.call("export_state")
-		roll_before = cards.rng.state
+		roll_before = generator.state
 		world.call("_on_card_fusion_requested", "변신", "고급")
 		check(cards.call("export_state") == before, "blocked save restores all fused duplicate cards")
-		check(cards.rng.state == roll_before, "blocked fusion restores RNG state")
+		check(generator.state == roll_before, "blocked fusion restores RNG state")
 	world.queue_free()
 	await process_frame
 	if errors.is_empty(): print("CARD_DRAW_WORLD_ATOMICITY_OK")
