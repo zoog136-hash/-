@@ -8,6 +8,7 @@ var regions: Array[Dictionary] = []
 var root_path: String = ""
 var rejection: String = "NOT_INSTALLED"
 var textures: Dictionary = {}
+var verified_png_decodes: int = 0 # Per-configure measured unique PNG validations.
 var review_active: bool = false
 
 static func pair(value: Variant) -> bool:
@@ -31,7 +32,7 @@ func reject(reason: String) -> bool:
 	return false
 
 func configure(path: String, field: OriginalPlayableField) -> bool:
-	regions.clear(); textures.clear(); root_path = path
+	regions.clear(); textures.clear(); verified_png_decodes = 0; root_path = path
 	if path.is_empty(): return reject("NOT_INSTALLED")
 	if str(field.data.map_id) != "aden_world" or str(field.definition.source_sha256) != GRID_SHA: return reject("SOURCE_GRID_MISMATCH")
 	var manifest_path: String = path.path_join("manifest.json")
@@ -41,6 +42,9 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 	if value.get("original_png_sha256") != PNG_SHA or value.get("source_grid_sha256") != GRID_SHA: return reject("IDENTITY_MISMATCH")
 	if value.get("source_definition_sha256") != FileAccess.get_sha256("res://data/map_remake/private/aden/definitions/aden_world.json"): return reject("DEFINITION_MISMATCH")
 	if not value.get("regions") is Array or value.regions.is_empty(): return reject("NO_REVIEWED_REGIONS")
+	# Memoize only verified dimensions inside this configure call. Never retain
+	# decoded images or upload textures before a chunk becomes visible.
+	var verified_layer_sizes: Dictionary = {}
 	for row: Variant in value.regions:
 		if not row is Dictionary or row.get("status") != "VERIFIED" or row.get("collision_status") != "VERIFIED" or row.get("occlusion_status") != "VERIFIED": return reject("REGION_NOT_VERIFIED")
 		if not row.get("control_points") is Array or row.control_points.size() < 5: return reject("INSUFFICIENT_CONTROL_POINTS")
@@ -68,15 +72,27 @@ func configure(path: String, field: OriginalPlayableField) -> bool:
 		if not pair(row.get("image_origin")) or not row.get("cuts") is Array: return reject("INVALID_LAYER_METADATA")
 		for cut: Variant in row.cuts:
 			if not cut is Dictionary or not pair(cut.get("image_origin")) or not pair(cut.get("foot_world")): return reject("INVALID_CUT")
+		var ground_size: Vector2 = Vector2.ZERO
 		for layer: Dictionary in [row]+row.cuts:
 			if not safe_file(layer.get("file")) or not layer.get("sha256") is String: return reject("INVALID_LAYER_PATH")
 			var file: String = root_path.path_join(layer.file)
-			if not FileAccess.file_exists(file) or FileAccess.get_sha256(file) != layer.sha256: return reject("LAYER_HASH_MISMATCH")
-			var image := Image.new()
-			if image.load(file) != OK or image.is_empty() or image.get_width()>2048 or image.get_height()>2048: return reject("INVALID_LAYER_IMAGE")
-			textures[file] = ImageTexture.create_from_image(image)
-		var ground: Texture2D = textures[root_path.path_join(row.file)]
-		var coverage := Rect2(Vector2(row.image_origin[0],row.image_origin[1]),ground.get_size())
+			var expected_sha: String = str(layer.sha256)
+			var dimensions: Vector2 = Vector2.ZERO
+			if verified_layer_sizes.has(file):
+				var verified: Dictionary = verified_layer_sizes[file]
+				if str(verified.sha256) != expected_sha: return reject("LAYER_HASH_MISMATCH")
+				dimensions = verified.size
+			else:
+				if not FileAccess.file_exists(file) or FileAccess.get_sha256(file) != expected_sha: return reject("LAYER_HASH_MISMATCH")
+				var image := Image.new()
+				if image.load(file) != OK or image.is_empty() or image.get_width()>2048 or image.get_height()>2048: return reject("INVALID_LAYER_IMAGE")
+				verified_png_decodes += 1
+				dimensions = Vector2(image.get_width(),image.get_height())
+				verified_layer_sizes[file] = {"sha256":expected_sha,"size":dimensions}
+			if ground_size == Vector2.ZERO: ground_size = dimensions
+		# The existing PNG chunk renderer creates/shares the GPU texture on first
+		# display. Geometry uses the independently SHA-verified image dimensions.
+		var coverage := Rect2(Vector2(row.image_origin[0],row.image_origin[1]),ground_size)
 		for corner: Vector2i in [bounds.position,Vector2i(bounds.end.x,bounds.position.y),bounds.end,Vector2i(bounds.position.x,bounds.end.y)]:
 			var point: Vector2 = transform*field.coordinates.grid_to_world(corner.x,corner.y)
 			if not coverage.grow(.01).has_point(point): return reject("GROUND_DOES_NOT_COVER_SOURCE_REGION")
