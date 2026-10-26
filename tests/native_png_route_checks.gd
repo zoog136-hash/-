@@ -93,7 +93,11 @@ static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 		var target:=Vector2(raw[0],raw[1])
 		var path: PackedVector2Array=field.path(spawn,target)
 		verify.call(field.walkable(target) and not path.is_empty(),"reviewed route remains connected "+str(raw))
-		for i: int in range(1,path.size()): verify.call(field.line_clear(path[i-1],path[i]),"route respects native obstacle corners")
+		for i: int in range(1,path.size()):
+			var edge_clear: bool=field.line_clear(path[i-1],path[i])
+			if not edge_clear and result.failures.size()<6:
+				printerr("NATIVE_ROUTE_EDGE_DIAGNOSTIC map=",str(field.data.map_id)," from=",path[i-1]," to=",path[i]," from_cell=",field.world_to_cell(path[i-1])," to_cell=",field.world_to_cell(path[i]))
+			verify.call(edge_clear,"route respects native obstacle corners")
 	var portal_routes: Dictionary={}
 	if str(field.data.map_id)=="aden_world" and bool(field.data.get("portal_connected_regions",false)):
 		portal_routes=portal_service_routes(field,spawn,verify)

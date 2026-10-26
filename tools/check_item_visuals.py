@@ -173,7 +173,7 @@ def main() -> None:
     parser.add_argument("--runtime", type=Path, required=True)
     parser.add_argument("--source-evidence", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--base", default="434b904d957fd2146b6d2e73325693a402028035")
+    parser.add_argument("--base", default="f24c0a8372adc33dda4dcf76735b90ec7e537aba")
     parser.add_argument("--write-provenance", action="store_true")
     args = parser.parse_args()
     report, proofs = audit(args.root, json.loads(args.runtime.read_text()), json.loads(args.source_evidence.read_text()), args.base)
