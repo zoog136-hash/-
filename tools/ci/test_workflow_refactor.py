@@ -1,10 +1,54 @@
 """Guard against hiding changed CI coverage behind a shared setup action."""
 import copy
 import unittest
+import pathlib
+import yaml
+import os
+import subprocess
+import tempfile
+import time
+from validate_workflow_refactor import normalize_runtime_checkout, RUNTIME_CHECKOUT_PATHS, normalize_lookup_paths, LOOKUP_DEPENDENCIES
 from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader, PHASE3_SUBSET_JOBS, PHASE3_MANUAL_OR_PROTECTED, PHASE3_BUYBACK, PHASE3_EXTRA_BASES, PHASE3_COVERED_TESTS, PHASE3_COVERED_MARKERS, normalize_phase3_services
 
 
 class RefactorContractTest(unittest.TestCase):
+    def test_consumable_paths_keep_original_and_new_lookup_coverage(self):
+        before = {'on': {'push': {'paths': ['scripts/world.gd']},
+                         'pull_request': {'paths': ['scripts/world.gd']}}}
+        after = copy.deepcopy(before)
+        for event in ('push', 'pull_request'):
+            after['on'][event]['paths'].extend(LOOKUP_DEPENDENCIES)
+        path = '.github/workflows/consumable-validate.yml'
+        self.assertEqual(normalize_lookup_paths(path, before, after), before)
+        for target in ['scripts/world.gd', *LOOKUP_DEPENDENCIES]:
+            damaged = copy.deepcopy(after)
+            damaged['on']['pull_request']['paths'].remove(target)
+            with self.subTest(target=target), self.assertRaises(AssertionError):
+                normalize_lookup_paths(path, before, damaged)
+
+    def test_sparse_checkout_keeps_runtime_test_inputs_and_credentials(self):
+        root = pathlib.Path(__file__).resolve().parents[2]
+        directories = set(subprocess.check_output(
+            ['git', 'ls-tree', '-d', '--name-only', 'HEAD'], cwd=root, text=True).splitlines())
+        self.assertEqual(set(RUNTIME_CHECKOUT_PATHS.splitlines()), directories - {'docs'})
+        for name in ('consumable-validate.yml', 'twilight-crafting-validate.yml'):
+            path = '.github/workflows/' + name
+            before = {'jobs': {'check': {'steps': [
+                {'uses': 'actions/checkout@v4', 'with': {'persist-credentials': False}}]}}}
+            after = copy.deepcopy(before)
+            inputs = after['jobs']['check']['steps'][0]['with']
+            inputs['sparse-checkout'] = RUNTIME_CHECKOUT_PATHS
+            self.assertEqual(normalize_runtime_checkout(path, before, after), before)
+            for change in ('assets', 'tests', 'data', 'credentials'):
+                damaged = copy.deepcopy(after)
+                settings = damaged['jobs']['check']['steps'][0]['with']
+                if change == 'credentials':
+                    settings['persist-credentials'] = True
+                else:
+                    settings['sparse-checkout'] = settings['sparse-checkout'].replace(change + '\n', '')
+                with self.subTest(path=path, change=change), self.assertRaises(AssertionError):
+                    normalize_runtime_checkout(path, before, damaged)
+
     def setUp(self):
         self.action = {'runs': {'using': 'composite', 'steps': [{'shell': 'bash', 'run': 'curl --fail pinned.zip\n'}]}}
         self.before = {'name': 'stable check', 'on': {'pull_request': None}, 'jobs': {'regression': {'runs-on': 'ubuntu-latest', 'steps': [{'name': 'engine', 'run': 'curl --fail pinned.zip\n'}, {'run': 'run-test && grep -q EXPECTED evidence.log\n'}]}}}
@@ -46,7 +90,7 @@ class RefactorContractTest(unittest.TestCase):
 
 class SupersededCIContractTest(unittest.TestCase):
     def test_only_allowlisted_pr_cancel_field_can_change(self):
-        name = '.github/workflows/twilight-shop-buyback.yml'
+        name = '.github/workflows/skill-mechanism-validate.yml'
         before = {'concurrency': {'group': 'one-pr', 'cancel-in-progress': False},
                   'jobs': {'check': {'steps': [{'run': 'run-tests'}]}}}
         after = copy.deepcopy(before)
@@ -99,14 +143,50 @@ class GodotCacheContracts(unittest.TestCase):
             "set -euo pipefail\n" + cached_script(ENGINE_MAIN_INSTALL, symlink=True))
         after['jobs']['validate']['steps'].insert(0, copy.deepcopy(ENGINE_CACHE_RESTORE))
         after['jobs']['validate']['steps'].insert(2, copy.deepcopy(ENGINE_CACHE_SAVE))
+        # The real normalizer also requires the four import-cache stages.
+        # Keep those contracts present when isolating the engine-cache test.
+        workflow = yaml.safe_load((pathlib.Path(__file__).resolve().parents[2] /
+                                   '.github/workflows/godot-validate.yml').read_text())
+        after['jobs']['validate']['steps'].extend(copy.deepcopy(step) for step in
+            workflow['jobs']['validate']['steps'] if step.get('name') in IMPORT_EXTRA_NAMES)
         self.assertEqual(normalize_cached_direct('.github/workflows/godot-validate.yml', before, after), before)
-        after['jobs']['validate']['steps'][-1]['run'] = 'skip-all-tests\n'
+        after['jobs']['validate']['steps'][3]['run'] = 'skip-all-tests\n'
         with self.assertRaises(AssertionError):
             normalize_cached_direct('.github/workflows/godot-validate.yml', before, after)
 
 
 
 class ImportCacheSafetyContract(unittest.TestCase):
+    def test_large_png_imports_do_not_disable_the_bounded_cache(self):
+        workflow = yaml.safe_load((pathlib.Path(__file__).resolve().parents[2] /
+                                   '.github/workflows/godot-validate.yml').read_text())
+        script = next(step['run'] for step in workflow['jobs']['validate']['steps']
+                      if step.get('id') == 'import-metrics')
+        script = script.replace('${{ steps.imported-cache.outputs.cache-hit }}', 'false')
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            imported = root / '.godot/imported'
+            imported.mkdir(parents=True)
+            (imported / 'motion.webp-test.ctex').write_bytes(b'w' * 32)
+            (imported / 'icon.svg-test.md5').write_bytes(b'm' * 8)
+            (root / 'motion.webp.import').write_bytes(b'i' * 16)
+            with (imported / 'source.png-test.ctex').open('wb') as large:
+                large.truncate(2 * 1024**3)
+            (root / 'twilight-import-start').write_text(str(int(time.time())))
+            output = root / 'output'
+            result = subprocess.run(['bash', '-e', '-c', script], cwd=root,
+                env={**os.environ, 'RUNNER_TEMP': str(root), 'GITHUB_OUTPUT': str(output)},
+                text=True, capture_output=True, check=True)
+            self.assertIn('TWILIGHT_IMPORTED_BYTES=56\n', result.stdout)
+            self.assertIn('cacheable=true', output.read_text())
+
+    def test_new_main_revision_can_refresh_the_immutable_cache(self):
+        reader = SHARED_IMPORT_READER['with']
+        self.assertIn('github.event.pull_request.base.sha || github.sha', reader['key'])
+        self.assertNotIn('github.head_ref', reader['key'])
+        self.assertEqual(reader['restore-keys'].splitlines(), [
+            'twilight-godot-import-4.7.2-linux-compat-main-v2-'])
+
     def test_default_branch_is_the_only_writer(self):
         self.assertIn("github.ref == 'refs/heads/main'", IMPORT_MAIN_ONLY)
         self.assertIn("github.event_name == 'push'", IMPORT_MAIN_ONLY)
@@ -156,7 +236,7 @@ class PhaseTwoImportReaderContract(unittest.TestCase):
                     normalize_shared_import_cache_reader(path, moved)
 
     def test_no_existing_check_may_be_removed(self):
-        path = '.github/workflows/twilight-local-crafting.yml'
+        path = '.github/workflows/original-skills-validate.yml'
         before = {'jobs': {'ci': {'steps': [
             {'uses': 'actions/checkout@v4'},
             {'name': SHARED_IMPORT_READER_STEPS[path], 'run': 'mandatory-tests'},

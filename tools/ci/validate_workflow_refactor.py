@@ -51,6 +51,8 @@ NEW_WORKFLOW = '.github/workflows/cancel-superseded-pr-ci.yml'
 
 def assert_preserved_workflow(path, before, after, action_loader):
     expanded = expand(after, action_loader)
+    expanded = normalize_runtime_checkout(path, before, expanded)
+    expanded = normalize_lookup_paths(path, before, expanded)
     expanded = normalize_shared_import_cache_reader(path, expanded)
     expanded = normalize_phase3_services(path, before, expanded)
     if path in STALE_WORKFLOWS:
@@ -138,6 +140,51 @@ def normalize_phase3_services(path, before, expanded):
     return result
 
 
+RUNTIME_CHECKOUT_WORKFLOWS = {
+    '.github/workflows/consumable-validate.yml',
+    '.github/workflows/twilight-crafting-validate.yml',
+}
+RUNTIME_CHECKOUT_PATHS = '\n'.join((
+    '.github', 'addons', 'assets', 'data', 'external_map_packs', 'legacy',
+    'samples', 'scenes', 'scripts', 'tests', 'tools', ''))
+LOOKUP_DEPENDENCIES = [
+    'scripts/catalog_item_lookup.gd', 'tests/catalog_item_lookup_test.gd',
+    'tests/consumable_definition_cache_test.gd',
+]
+
+
+def normalize_lookup_paths(path, before, expanded):
+    if path != '.github/workflows/consumable-validate.yml':
+        return expanded
+    result = copy.deepcopy(expanded)
+    event_key = 'on' if 'on' in result else True
+    baseline_key = 'on' if 'on' in before else True
+    for event in ('push', 'pull_request'):
+        original = before[baseline_key][event]['paths']
+        assert result[event_key][event]['paths'] == original + LOOKUP_DEPENDENCIES, (
+            path + ': original or new lookup dependencies omitted')
+        result[event_key][event]['paths'] = copy.deepcopy(original)
+    return result
+
+
+def normalize_runtime_checkout(path, before, expanded):
+    if path not in RUNTIME_CHECKOUT_WORKFLOWS:
+        return expanded
+    result = copy.deepcopy(expanded)
+    for name, job in result['jobs'].items():
+        original = [s for s in before['jobs'][name]['steps']
+                    if s.get('uses') == 'actions/checkout@v4']
+        checkouts = [s for s in job['steps'] if s.get('uses') == 'actions/checkout@v4']
+        assert len(original) == len(checkouts) == 1, path + ': checkout identity changed'
+        expected = {**original[0].get('with', {}), 'sparse-checkout': RUNTIME_CHECKOUT_PATHS}
+        assert checkouts[0].get('with') == expected, path + ': runtime inputs or checkout permissions changed'
+        if 'with' in original[0]:
+            checkouts[0]['with'] = copy.deepcopy(original[0]['with'])
+        else:
+            checkouts[0].pop('with')
+    return result
+
+
 def assert_new_cleanup(doc):
     assert doc.get('name') == 'Cancel superseded PR CI'
     assert doc.get('on') == {'pull_request_target': {'types': ['synchronize']}}
@@ -203,8 +250,9 @@ def validate_cached_setup_action(action):
 
 # Import artifacts from the default-branch-only cache are revalidated by the
 # unchanged real --import and full Godot checks. No PR can seed this cache.
-IMPORT_CACHE_PATHS = ".godot/imported\n**/*.import\n"
-IMPORT_CACHE_KEY = "twilight-godot-import-4.7.2-linux-compat-main-v1"
+IMPORT_CACHE_PATHS = ".godot/imported/*.webp-*\n.godot/imported/*.svg-*\n.godot/imported/*.ttf-*\n.godot/imported/*.wav-*\n**/*.import\n"
+IMPORT_CACHE_KEY = "twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}"
+IMPORT_RESTORE_KEYS = "twilight-godot-import-4.7.2-linux-compat-main-v2-\n"
 
 # Phase 2 only restores immutable, default-branch-produced import artifacts.
 # PRs cannot write this cache; every original Godot import/test still runs.
@@ -222,7 +270,7 @@ SHARED_IMPORT_READER = {
     'id': 'trusted-import-cache',
     'uses': 'actions/cache/restore@v4',
     'continue-on-error': True,
-    'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY},
+    'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY, 'restore-keys': IMPORT_RESTORE_KEYS},
 }
 
 
@@ -262,7 +310,7 @@ def assert_import_cache_contract(steps):
     assert by_name[IMPORT_EXTRA_NAMES[0]] == {
         'name': IMPORT_EXTRA_NAMES[0], 'id': 'imported-cache',
         'uses': 'actions/cache/restore@v4', 'continue-on-error': True,
-        'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY}}
+        'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY, 'restore-keys': IMPORT_RESTORE_KEYS}}
     assert by_name[IMPORT_EXTRA_NAMES[1]] == {
         'name': IMPORT_EXTRA_NAMES[1], 'shell': 'bash',
         'run': 'date +%s > "$RUNNER_TEMP/twilight-import-start"'}
