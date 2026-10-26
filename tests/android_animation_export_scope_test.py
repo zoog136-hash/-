@@ -80,6 +80,61 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Non-archive runtime resource excluded'):
                 audit_authoring_exclusions(root)
 
+    def test_offline_json_allowlist_and_live_reference_guard(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            relative = "data/map_remake/private/aden/effective_layouts_build.json"
+            preset = root / "export_presets.cfg"
+            preset.write_text(preset.read_text().replace(
+                DRAFT_EXPORT_PATTERN, DRAFT_EXPORT_PATTERN + "," + relative))
+            offline = root / relative
+            offline.parent.mkdir(parents=True, exist_ok=True)
+            offline.write_text("{}")
+            ledger = root / "data/resource_delivery_ledger.json"
+            ledger.write_text('{"tracked_source": "' + relative + '"}')
+            self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
+            runtime = root / "scripts/map_loader.gd"
+            runtime.parent.mkdir(parents=True, exist_ok=True)
+            runtime.write_text('load("res://' + relative + '")')
+            with self.assertRaisesRegex(ValueError, "excluded offline JSON"):
+                audit_authoring_exclusions(root)
+            runtime.unlink()
+            unexpected = root / "data/unexpected_catalog.json"
+            unexpected.write_text("{}")
+            preset.write_text(preset.read_text().replace(relative, relative + ",data/unexpected_catalog.json"))
+            with self.assertRaisesRegex(ValueError, "Runtime catalog excluded"):
+                audit_authoring_exclusions(root)
+
+    def test_each_offline_json_exclusion_is_checked(self):
+        # Regress the real Android export failure: non-runtime source/build
+        # manifests may be excluded, but a runtime dependency must fail closed.
+        for relative in (
+            "data/map_remake/private/aden/effective_layouts_build.json",
+            "data/skills/research_inventory.json",
+        ):
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                self.fixture(root)
+                preset = root / "export_presets.cfg"
+                preset.write_text(preset.read_text().replace(
+                    DRAFT_EXPORT_PATTERN, DRAFT_EXPORT_PATTERN + "," + relative))
+                offline = root / relative
+                offline.parent.mkdir(parents=True, exist_ok=True)
+                offline.write_text("{}\n")
+                self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
+
+                runtime_manifest = root / "data/runtime_references_offline.json"
+                runtime_manifest.write_text('{"resource": "' + relative + '"}\n')
+                with self.assertRaisesRegex(ValueError, "excluded offline JSON"):
+                    audit_authoring_exclusions(root)
+                runtime_manifest.unlink()
+
+                scene = root / "Main.tscn"
+                scene.write_text('load("res://' + relative + '")\n')
+                with self.assertRaisesRegex(ValueError, "excluded offline JSON"):
+                    audit_authoring_exclusions(root)
+
     def test_unknown_archive_contents_fail_closed(self):
         for change in ('extra_png', 'different_source', 'different_type'):
             with self.subTest(change=change), tempfile.TemporaryDirectory() as directory:

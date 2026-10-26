@@ -10,6 +10,13 @@ import re
 
 DRAFT_EXPORT_PATTERN = "assets/actors/eight_direction/native_locomotion_staging/transform_*/draft001/*"
 DRAFT_ROOT = "assets/actors/eight_direction/native_locomotion_staging"
+# These source/build JSON files are not runtime catalogs. They may be excluded
+# only while no exported script/resource/manifest loads them.
+OFFLINE_AUTHORING_JSON = frozenset((
+    "data/map_remake/private/aden/effective_layouts_build.json",
+    "data/skills/research_inventory.json",
+))
+
 RESOURCE_PATH = re.compile(r'"(res://[^"\n]+)"')
 REQUIRED_RUNTIME_JSON = (
     "data/combat_animation_profiles.json", "data/animation_presentation.json",
@@ -30,6 +37,8 @@ def audit_authoring_exclusions(root: Path) -> dict:
     if len(filters) != 1 or DRAFT_EXPORT_PATTERN not in filters[0].split(","):
         raise ValueError("Android preset must explicitly exclude only the archived draft001 scope")
     excluded_patterns = filters[0].split(",")
+    offline_json = {name for name in OFFLINE_AUTHORING_JSON if (root / name).is_file()
+                    and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
     excluded = []
     for folder in sorted((root / DRAFT_ROOT).glob("transform_*/draft001")):
         actor = folder.parent.name
@@ -66,11 +75,16 @@ def audit_authoring_exclusions(root: Path) -> dict:
         relative = path.relative_to(root).as_posix()
         content = path.read_text(encoding="utf-8")
         json.loads(content)
-        if any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns):
+        excluded_by_preset = any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns)
+        if excluded_by_preset and relative not in OFFLINE_AUTHORING_JSON:
             raise ValueError("Runtime catalog excluded by Android preset: " + relative)
         if forbidden.search(content):
             raise ValueError("Runtime or selected staging manifest references excluded draft001: " + relative)
-        checked += 1
+        if not excluded_by_preset and relative != "data/resource_delivery_ledger.json":
+            if any(name in content for name in offline_json):
+                raise ValueError("Exported runtime catalog references excluded offline JSON: " + relative)
+        if not excluded_by_preset:
+            checked += 1
     files = [root / "Main.tscn", root / "project.godot"]
     for top in ("assets", "scenes", "scripts"):
         files.extend(path for path in (root / top).rglob("*")
@@ -81,8 +95,12 @@ def audit_authoring_exclusions(root: Path) -> dict:
             continue
         if any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns):
             raise ValueError("Non-archive runtime resource excluded by Android preset: " + relative)
-        if path.suffix not in {".png", ".webp"} and forbidden.search(path.read_text(encoding="utf-8")):
-            raise ValueError("Exported code/resource references excluded draft001: " + relative)
+        if path.suffix not in {".png", ".webp"}:
+            runtime_text = path.read_text(encoding="utf-8")
+            if forbidden.search(runtime_text):
+                raise ValueError("Exported code/resource references excluded draft001: " + relative)
+            if any(name in runtime_text for name in offline_json):
+                raise ValueError("Exported code/resource references excluded offline JSON: " + relative)
         checked += 1
     return {"excluded_authoring_resources": excluded,
             "excluded_count": len(excluded), "runtime_closure_files_checked": checked,
