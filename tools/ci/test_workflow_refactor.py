@@ -7,10 +7,48 @@ import os
 import subprocess
 import tempfile
 import time
+from validate_workflow_refactor import normalize_runtime_checkout, RUNTIME_CHECKOUT_PATHS, normalize_lookup_paths, LOOKUP_DEPENDENCIES
 from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader
 
 
 class RefactorContractTest(unittest.TestCase):
+    def test_consumable_paths_keep_original_and_new_lookup_coverage(self):
+        before = {'on': {'push': {'paths': ['scripts/world.gd']},
+                         'pull_request': {'paths': ['scripts/world.gd']}}}
+        after = copy.deepcopy(before)
+        for event in ('push', 'pull_request'):
+            after['on'][event]['paths'].extend(LOOKUP_DEPENDENCIES)
+        path = '.github/workflows/consumable-validate.yml'
+        self.assertEqual(normalize_lookup_paths(path, before, after), before)
+        for target in ['scripts/world.gd', *LOOKUP_DEPENDENCIES]:
+            damaged = copy.deepcopy(after)
+            damaged['on']['pull_request']['paths'].remove(target)
+            with self.subTest(target=target), self.assertRaises(AssertionError):
+                normalize_lookup_paths(path, before, damaged)
+
+    def test_sparse_checkout_keeps_runtime_test_inputs_and_credentials(self):
+        root = pathlib.Path(__file__).resolve().parents[2]
+        directories = set(subprocess.check_output(
+            ['git', 'ls-tree', '-d', '--name-only', 'HEAD'], cwd=root, text=True).splitlines())
+        self.assertEqual(set(RUNTIME_CHECKOUT_PATHS.splitlines()), directories - {'docs'})
+        for name in ('consumable-validate.yml', 'twilight-crafting-validate.yml'):
+            path = '.github/workflows/' + name
+            before = {'jobs': {'check': {'steps': [
+                {'uses': 'actions/checkout@v4', 'with': {'persist-credentials': False}}]}}}
+            after = copy.deepcopy(before)
+            inputs = after['jobs']['check']['steps'][0]['with']
+            inputs['sparse-checkout'] = RUNTIME_CHECKOUT_PATHS
+            self.assertEqual(normalize_runtime_checkout(path, before, after), before)
+            for change in ('assets', 'tests', 'data', 'credentials'):
+                damaged = copy.deepcopy(after)
+                settings = damaged['jobs']['check']['steps'][0]['with']
+                if change == 'credentials':
+                    settings['persist-credentials'] = True
+                else:
+                    settings['sparse-checkout'] = settings['sparse-checkout'].replace(change + '\n', '')
+                with self.subTest(path=path, change=change), self.assertRaises(AssertionError):
+                    normalize_runtime_checkout(path, before, damaged)
+
     def setUp(self):
         self.action = {'runs': {'using': 'composite', 'steps': [{'shell': 'bash', 'run': 'curl --fail pinned.zip\n'}]}}
         self.before = {'name': 'stable check', 'on': {'pull_request': None}, 'jobs': {'regression': {'runs-on': 'ubuntu-latest', 'steps': [{'name': 'engine', 'run': 'curl --fail pinned.zip\n'}, {'run': 'run-test && grep -q EXPECTED evidence.log\n'}]}}}

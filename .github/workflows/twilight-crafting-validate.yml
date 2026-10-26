@@ -18,6 +18,19 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+            addons
+            assets
+            data
+            external_map_packs
+            legacy
+            samples
+            scenes
+            scripts
+            tests
+            tools
       - name: Install official Godot 4.7.2
         uses: ./.github/actions/setup-godot-linux
       - name: Restore trusted Godot imported resources

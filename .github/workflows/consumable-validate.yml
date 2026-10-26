@@ -21,6 +21,9 @@ on:
       - 'tests/per_instance_enchantments_smoke_test.gd'
       - 'tests/equipment_blessing_smoke_test.gd'
       - '.github/workflows/consumable-validate.yml'
+      - 'scripts/catalog_item_lookup.gd'
+      - 'tests/catalog_item_lookup_test.gd'
+      - 'tests/consumable_definition_cache_test.gd'
   pull_request:
     branches: [main]
     paths:
@@ -40,6 +43,9 @@ on:
       - 'tests/per_instance_enchantments_smoke_test.gd'
       - 'tests/equipment_blessing_smoke_test.gd'
       - '.github/workflows/consumable-validate.yml'
+      - 'scripts/catalog_item_lookup.gd'
+      - 'tests/catalog_item_lookup_test.gd'
+      - 'tests/consumable_definition_cache_test.gd'
   workflow_dispatch:
 
 permissions:
@@ -57,6 +63,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          sparse-checkout: |
+            .github
+            addons
+            assets
+            data
+            external_map_packs
+            legacy
+            samples
+            scenes
+            scripts
+            tests
+            tools
       - name: Resource integrity before tests
         run: |
           set -euo pipefail
