@@ -45,7 +45,11 @@ static func plan() -> Dictionary:
 		if not valid_polygon(cut.get("polygon_image"),extra.sources["Aden.png"].size) or not valid_point(cut.get("foot_image"),extra.sources["Aden.png"].size):return {}
 	extra.maps.aden_world["runtime_foreground"]=display_review.get("foreground",[])
 	for replacement: Dictionary in display_review.get("collision_replace",[]):
-		if replacement.get("shape")!="circle" or not valid_point(replacement.get("center"),extra.sources["Aden.png"].size) or float(replacement.get("radius",0))<=0:return {}
+		if replacement.get("shape")=="circle":
+			if not valid_point(replacement.get("center"),extra.sources["Aden.png"].size) or float(replacement.get("radius",0))<=0:return {}
+		elif replacement.get("shape")=="polygon":
+			if not valid_polygon(replacement.get("points"),extra.sources["Aden.png"].size):return {}
+		else:return {}
 		var found: bool=false
 		for i: int in range(extra.maps.aden_world.collision.size()):
 			if extra.maps.aden_world.collision[i].id==replacement.id:extra.maps.aden_world.collision[i]=replacement;found=true;break
