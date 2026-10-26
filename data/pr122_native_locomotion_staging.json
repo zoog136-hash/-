@@ -31899,7 +31899,22 @@
         "actual_Player_dedicated_actions_and_markers": "PASS",
         "runtime_registration": "SOURCE_PRESERVING_VISUAL_REVIEW",
         "optional_WALK_default_selected": false,
-        "device": "NOT_TESTED"
+        "device": "NOT_TESTED",
+        "run_quality_exceptions": [
+          {
+            "direction": "E",
+            "role": "run",
+            "status": "HOLD",
+            "reason": "Side-view gait needs unambiguous opposite-leg contact across phases 0 and 3; runtime coverage alone does not prove gait quality."
+          },
+          {
+            "direction": "W",
+            "role": "run",
+            "status": "FAIL",
+            "reason": "Selected gait reads as walking instead of the required RUN; do not resolve with playback speed or mirrored poses."
+          }
+        ],
+        "required_default_connection": "NOT_ENABLED_PENDING_RUN_QUALITY"
       },
       "pr158_source_repair_status": "SPECIFIC_DEFECT_FIXED; runtime and final quality gates separate",
       "preserved_excluded_walk": {
