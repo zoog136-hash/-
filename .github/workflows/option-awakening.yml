@@ -69,7 +69,9 @@ jobs:
       - name: Check tracked runtime resource integrity
         run: python3 tools/check_resource_integrity.py --root .
       - name: Run isolated awakening and card regressions
+        shell: bash
         run: |
+          set -euo pipefail
           python3 tools/test_project.py \
             --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 \
             --logs option-awakening-results \
