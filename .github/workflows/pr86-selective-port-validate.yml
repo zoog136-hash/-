@@ -31,7 +31,7 @@ concurrency:
 jobs:
   navigation-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Godot
@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-import"
           GODOT=./Godot_v4.7.2-stable_linux.x86_64
-          timeout 1500 "$GODOT" --headless --path . --import 2>&1 | tee import.log
+          timeout 900 "$GODOT" --headless --path . --import 2>&1 | tee import.log
           if grep -E 'SCRIPT ERROR:|ERROR:' import.log; then
             exit 1
           fi
