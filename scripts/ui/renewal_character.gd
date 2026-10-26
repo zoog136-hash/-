@@ -36,7 +36,7 @@ func _ready() -> void:
 	(identity.get_child(0) as Control).hide()
 	(identity.get_child(2) as Control).hide()
 	(identity.get_child(0) as Control).custom_minimum_size = Vector2(54,54)
-	character_name.add_theme_font_size_override("font_size",20)
+	character_name.add_theme_font_size_override("font_size",17)
 	character_level.hide()
 	weight_bar.custom_minimum_size.y = 4
 	weight_label.add_theme_font_size_override("font_size",11)

@@ -54,7 +54,6 @@ func configure(controller: Node) -> void:
 	action = Button.new()
 	action.name = "SellConfirm"
 	action.text = "판매"
-	action.custom_minimum_size.y=44
 	UI.primary_button(action)
 	action.pressed.connect(_sell)
 	action.size_flags_horizontal = Control.SIZE_EXPAND_FILL

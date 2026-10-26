@@ -54,7 +54,7 @@ func _run() -> void:
 	_check(surface.mouse_filter == Control.MOUSE_FILTER_IGNORE and surface.focus_mode == Control.FOCUS_NONE,"window material cannot capture gestures/focus")
 	_check(not surface.is_processing() and not surface.is_physics_processing(),"material has no frame callback")
 	_check(surface.get_index() < window.content.get_parent().get_index(),"material stays below text and content")
-	_check(is_equal_approx(window.size.x,400) and window.position.x > 800,"redesigned inventory shelf uses its exact400px width and leaves the field open")
+	_check(is_equal_approx(window.size.x,378) and window.position.x > 800,"restored inventory shelf uses its exact378px width and leaves the field open")
 	var probe := AudioProbe.new()
 	root.add_child(probe)
 	probe.add_to_group("presentation_audio")

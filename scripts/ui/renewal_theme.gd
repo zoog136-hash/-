@@ -87,6 +87,9 @@ static func menu_tile(active: bool = false) -> StyleBoxFlat:
 	style.border_width_right = 1 if active else 0
 	return style
 static func icon(kind: String) -> Texture2D:
+	if kind == "attack":
+		if not source_icon_cache.has(kind):source_icon_cache[kind]=load("res://assets/ui/attack_sword_painted.png")
+		return source_icon_cache[kind]
 	# Service navigation shares one embossed symbol family. Item/skill art
 	# continues through its existing record-based resolvers below.
 	if ICONS.PATHS.has(str(ICONS.ALIASES.get(kind,kind))): return ICONS.texture(kind)
@@ -177,8 +180,8 @@ static func make_theme() -> Theme:
 	t.set_color("font_selected_color","RichTextLabel",GOLD)
 	t.set_font_size("normal_font_size","RichTextLabel",14)
 	t.set_font_size("bold_font_size","RichTextLabel",14)
-	t.set_constant("separation","VBoxContainer",9)
-	t.set_constant("separation","HBoxContainer",9)
+	t.set_constant("separation","VBoxContainer",7)
+	t.set_constant("separation","HBoxContainer",7)
 	t.set_constant("h_separation","GridContainer",6)
 	t.set_constant("v_separation","GridContainer",6)
 	var track := box(Color("0e0f12"),Color("25201c"),0)
@@ -205,7 +208,7 @@ static func label(value: String, font_size: int = 14, color: Color = TEXT) -> La
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
-static func button(value: String, action: Callable, min_size: Vector2 = Vector2(0,44)) -> Button:
+static func button(value: String, action: Callable, min_size: Vector2 = Vector2(0,40)) -> Button:
 	var b := Button.new()
 	b.text = value
 	b.custom_minimum_size = min_size

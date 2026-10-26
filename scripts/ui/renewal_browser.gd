@@ -30,7 +30,7 @@ func configure(list_control: Control, detail_control: Control, width: float = 28
 	detail_frame=PanelContainer.new()
 	detail_frame.name="SelectionInspector"
 	detail_frame.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	detail_frame.add_theme_stylebox_override("panel",UI.box(Color("10100e"),Color("584631"),12))
+	detail_frame.add_theme_stylebox_override("panel",UI.box(Color("10100e"),Color("584631"),6))
 	panes.add_child(detail_frame)
 	details.reparent(detail_frame)
 	resized.connect(reflow)
@@ -43,7 +43,7 @@ func reflow() -> void:
 	listing.visible = not compact or not detail_active
 	detail_frame.visible = not compact or detail_active
 	details.show()
-	detail_frame.custom_minimum_size.x = 0 if compact else detail_width+24
+	detail_frame.custom_minimum_size.x = 0 if compact else detail_width
 	detail_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	details.custom_minimum_size.x = 0
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL

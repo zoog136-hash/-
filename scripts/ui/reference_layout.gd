@@ -3,9 +3,9 @@ extends RefCounted
 # Connected landscape UI baseline. These are project layout choices informed
 # by LineageM screen density, not claims of measured original pixel dimensions.
 const BASE = Vector2(1280,720)
-const SHELF = Rect2(868,88,400,530)
-const CHARACTER = Rect2(12,106,720,582)
-const SLOT = Vector2(80,80)
+const SHELF = Rect2(890,82,378,508)
+const CHARACTER = Rect2(12,82,378,610)
+const SLOT = Vector2(72,72)
 const BAG_COLUMNS = 4
 const QUICK_GROUP_SIZE = 5
 const QUICK_PAGE_COUNT = 5

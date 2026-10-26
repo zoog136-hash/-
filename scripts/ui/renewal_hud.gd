@@ -118,33 +118,30 @@ var card_result_label: Label
 
 func _build_v20_status() -> void:
 	super._build_v20_status()
-	var panel: PanelContainer=v20_layer.get_node("StatusPanel")
-	_place(panel,12,10,360,98)
-	panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.07,.06,.045,.92),UI.BRONZE,0))
-	var content: Control=panel.get_child(0)
-	content.custom_minimum_size=Vector2(348,88)
-	var portrait: Control=content.get_child(0)
-	portrait.show()
-	_place(portrait,5,5,69,79)
-	portrait.add_theme_stylebox_override("panel",UI.slot_frame(UI.BRONZE))
-	_place(content.get_node("CharacterShortcut"),0,0,72,88)
-	_place(v20_level_badge,15,57,63,84)
-	v20_level_badge.add_theme_font_size_override("font_size",20)
-	_place(v20_status_name,80,7,335,28)
-	v20_status_name.add_theme_font_size_override("font_size",14)
-	_place(hp_bar,80,32,335,47)
-	_place(v20_hp_text,80,30,335,49)
-	_place(mp_bar,80,51,335,60)
-	_place(v20_mp_text,80,47,335,65)
-	_place(v20_stat_text,80,66,338,83)
+	var panel: PanelContainer = v20_layer.get_node("StatusPanel")
+	_place(panel,8,8,307,76)
+	panel.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,.2),Color(0,0,0,0),0))
+	var content: Control = panel.get_child(0)
+	content.custom_minimum_size = Vector2(299,68)
+	(content.get_child(0) as Control).hide()
+	_place(content.get_node("CharacterShortcut"),0,0,44,52)
+	_place(v20_level_badge,2,14,43,48)
+	v20_level_badge.add_theme_font_size_override("font_size",24)
+	_place(v20_status_name,48,0,291,18)
+	v20_status_name.add_theme_font_size_override("font_size",11)
+	_place(hp_bar,48,20,291,35)
+	_place(v20_hp_text,48,18,291,37)
+	_place(mp_bar,48,39,291,49)
+	_place(v20_mp_text,48,36,291,53)
+	_place(v20_stat_text,48,51,291,68)
 	v20_stat_text.add_theme_font_size_override("font_size",11)
 	for child: Node in v20_layer.get_children():
 		if child is Button and is_equal_approx(child.position.x,380.0):
-			_place(child,374,14,428,72)
+			_place(child,318,8,365,62)
 		elif child is Button and is_equal_approx(child.position.x,442.0):
-			_place(child,438,14,492,72)
-	_place(v20_potion_count,376,55,426,75)
-	_place(v20_leaf_count,440,55,490,75)
+			_place(child,373,8,420,62)
+	_place(v20_potion_count,318,43,365,64)
+	_place(v20_leaf_count,373,43,420,64)
 
 func set_auto(enabled: bool) -> void:
 	super.set_auto(enabled)
@@ -235,13 +232,13 @@ func _polish_hud_chrome() -> void:
 	# Restrict the pass to StyleBoxes; never duplicate gameplay state.
 	var status: PanelContainer = v20_layer.get_node_or_null("StatusPanel") as PanelContainer
 	if status != null:
-		status.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.07,.06,.045,.92),UI.BRONZE,0))
+		status.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,.22),Color(0,0,0,0),0))
 	if v20_target_panel != null:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
 	if v20_map_name != null:
 		v20_map_name.add_theme_color_override("font_color",UI.GOLD)
-		_place(v20_map_name.get_parent(),746,16,930,48)
-		v20_map_name.add_theme_font_size_override("font_size",13)
+		_place(v20_map_name.get_parent(),755,10,933,44)
+		v20_map_name.add_theme_font_size_override("font_size",11)
 		v20_map_name.clip_text = true
 
 func _build_lineage_inventory_ui() -> void:
@@ -322,8 +319,8 @@ func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "MainShortcuts"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,950,10,1268,83)
-	panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.07,.06,.045,.80),UI.BRONZE,4))
+	_place(panel,943,9,1268,78)
+	panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
 	v20_layer.add_child(panel)
 	var row := HBoxContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -331,7 +328,7 @@ func _build_v20_top_menu() -> void:
 	panel.add_child(row)
 	for spec: Array in [["shop","상점","shop.png"],["inventory","가방","bag.png"],["skills","스킬","skill.png"],["map","지도","quest.png"],["menu","메뉴","menu.png"]]:
 		var id := str(spec[0])
-		var b := UI.button("",_navigate.bind(id),Vector2(58,60))
+		var b := UI.button("",_navigate.bind(id),Vector2(59,53))
 		b.name = "Shortcut_"+id
 		b.tooltip_text = str(spec[1])
 		b.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
@@ -342,12 +339,12 @@ func _build_v20_top_menu() -> void:
 		artwork.texture = UI.icon(id)
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		artwork.position = Vector2(11,2)
-		artwork.size = Vector2(36,36)
+		artwork.position = Vector2(14,3)
+		artwork.size = Vector2(28,28)
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(artwork)
-		var label := UI.label(str(spec[1]),12,UI.TEXT)
-		label.position = Vector2(0,40)
+		var label := UI.label(str(spec[1]),11,UI.TEXT)
+		label.position = Vector2(0,34)
 		label.size = Vector2(59,16)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		b.add_child(label)
@@ -370,7 +367,7 @@ func _build_v20_right_controls() -> void:
 	v20_layer.add_child(target)
 	v20_auto_button = UI.button("AUTO",func() -> void: auto_pressed.emit())
 	v20_auto_button.name = "AutoHunt"
-	_place(v20_auto_button,1078,534,1154,610)
+	_place(v20_auto_button,1062,532,1147,611)
 	v20_auto_button.add_theme_stylebox_override("normal",_round_button_style(.92,40,UI.BRONZE))
 	v20_auto_button.add_theme_stylebox_override("hover",_round_button_style(.98,40,UI.GOLD))
 	v20_auto_button.add_theme_stylebox_override("pressed",_round_button_style(.98,40,UI.GOLD))
@@ -391,8 +388,8 @@ func _build_v20_right_controls() -> void:
 	attack.text = ""
 	attack.icon = UI.icon("attack")
 	attack.expand_icon = true
-	attack.add_theme_constant_override("icon_max_width",66)
-	_place(attack,1166,516,1268,618)
+	attack.add_theme_constant_override("icon_max_width",86)
+	_place(attack,1157,514,1268,625)
 	attack.add_theme_stylebox_override("normal",_round_button_style(.9,56,UI.GOLD))
 	attack.add_theme_stylebox_override("hover",_round_button_style(.98,56,UI.GOLD))
 	attack.add_theme_stylebox_override("pressed",_round_button_style(1.0,56,Color("f2d29a")))
@@ -406,20 +403,12 @@ func _build_v20_bottom_bar() -> void:
 	v20_skill_container = HBoxContainer.new()
 	v20_skill_container.hide()
 	panel.add_child(v20_skill_container)
-	for group: int in range(2):
-		var tray:=Panel.new()
-		tray.name="QuickTray%d" % group
-		tray.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		tray.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.055,.047,.035,.86),UI.BRONZE,0))
-		tray.position=Vector2(Layout.quick_x(group*5)-8,Layout.QUICK_Y-8)
-		tray.size=Vector2(346,80)
-		panel.add_child(tray)
 	for index: int in range(10):
 		var b := UI.button("",_emit_quickslot.bind(index),Vector2(62,62))
 		b.name = "Quickslot_%d" % index
 		b.position = Vector2(Layout.quick_x(index),Layout.QUICK_Y)
 		b.size = Vector2(62,62)
-		b.add_theme_stylebox_override("normal",UI.MATERIAL.from_flat(UI.slot_frame(),true))
+		b.add_theme_stylebox_override("normal",UI.slot_frame())
 		b.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		b.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		panel.add_child(b)
@@ -488,7 +477,7 @@ func _build_v20_bottom_bar() -> void:
 		button.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
 		sys.add_child(button)
 	currency_readout = UI.label("",13,UI.GOLD)
-	_place(currency_readout,512,20,735,46)
+	_place(currency_readout,470,10,733,36)
 	v20_layer.add_child(currency_readout)
 	coordinates_readout = UI.label("",10,UI.MUTED)
 	_place(coordinates_readout,1038,238,1268,258)
@@ -515,16 +504,16 @@ func _build_v20_message_and_log() -> void:
 	log_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	log_label.add_theme_font_size_override("normal_font_size",11)
 	log_label.add_theme_color_override("default_color",UI.MUTED)
-	_place(log_label,210,548,533,604)
+	_place(log_label,197,536,595,625)
 	v20_layer.add_child(log_label)
 
 	# Combat history must not cover the playable world with an opaque panel.
 	# Full logs remain accessible in the workspace's 전투 기록 tab.
 	var clear_panel := StyleBoxEmpty.new()
-	log_label.add_theme_stylebox_override("normal",UI.box(Color(.035,.03,.025,.62),Color(.4,.32,.2,.3),5))
+	log_label.add_theme_stylebox_override("normal",clear_panel)
 	log_label.add_theme_stylebox_override("focus",clear_panel)
 	log_label.add_theme_color_override("default_color",Color("ebdcbd"))
-	log_label.add_theme_font_size_override("normal_font_size",11)
+	log_label.add_theme_font_size_override("normal_font_size",12)
 	log_label.add_theme_color_override("font_shadow_color",Color(0,0,0,.95))
 	log_label.add_theme_constant_override("shadow_offset_x",1)
 	log_label.add_theme_constant_override("shadow_offset_y",1)
@@ -562,9 +551,6 @@ func _fit_hud() -> void:
 	quick_panel.size = logical
 	for i: int in range(v20_quickslot_buttons.size()):
 		v20_quickslot_buttons[i].position = Vector2(Layout.quick_x(i)+(extra_x*.5 if i < 5 else extra_x),Layout.QUICK_Y+extra_y)
-	for group: int in range(2):
-		var tray: Control=quick_panel.get_node("QuickTray%d" % group)
-		tray.position=v20_quickslot_buttons[group*5].position-Vector2(8,8)
 	for i: int in range(quick_page_buttons.size()):
 		quick_page_buttons[i].position = Vector2((550 if i < 5 else 1017)+(i%5)*26+(extra_x*.5 if i < 5 else extra_x),690+extra_y)
 	exp_bar.size.x = logical.x
@@ -1053,7 +1039,9 @@ func toggle_menu() -> void:
 		return
 	_open_window("menu","전체 메뉴","")
 	var col: VBoxContainer=workspace.column()
-	var categories:=HBoxContainer.new()
+	var categories:=OptionButton.new()
+	categories.name="MenuCategoryFilter"
+	categories.custom_minimum_size.y=32
 	col.add_child(categories)
 	var menu_scroll:=ScrollContainer.new()
 	menu_scroll.name="MenuContentScroll"
@@ -1064,27 +1052,23 @@ func toggle_menu() -> void:
 	col.add_child(menu_scroll)
 	var grid:=GridContainer.new()
 	grid.name="MenuGrid"
-	grid.columns=6
+	grid.columns=4
 	grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	grid.add_theme_constant_override("h_separation",8)
-	grid.add_theme_constant_override("v_separation",10)
+	grid.add_theme_constant_override("h_separation",6)
+	grid.add_theme_constant_override("v_separation",6)
 	menu_scroll.add_child(grid)
-	menu_scroll.resized.connect(func() -> void: grid.columns=clampi(floori(menu_scroll.size.x/112.0),3,6))
+	menu_scroll.resized.connect(func() -> void: grid.columns=clampi(floori(menu_scroll.size.x/99.0),2,4))
 	var tiles: Array[Control]=[]
-	var filters: Array[Button]=[]
-	for category: String in ["전체","캐릭터·성장","사냥·모험","상점·생활"]:
-		var filter: Button=UI.button(category,func() -> void:
-			for tile: Control in tiles:tile.visible=category=="전체" or tile.get_meta("menu_category")==category
-			for control: Button in filters:control.button_pressed=control.text==category
-			menu_scroll.scroll_vertical=0,Vector2(112,42))
-		filter.toggle_mode=true
-		filter.button_pressed=category=="전체"
-		filters.append(filter)
-		categories.add_child(filter)
+	var category_names: Array[String]=["전체","캐릭터·성장","사냥·모험","상점·생활"]
+	for category: String in category_names:categories.add_item(category)
+	categories.item_selected.connect(func(index: int) -> void:
+		var category: String=category_names[index]
+		for tile: Control in tiles:tile.visible=category=="전체" or tile.get_meta("menu_category")==category
+		menu_scroll.scroll_vertical=0)
 	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["equipment_collections","컬렉션"],["inventory","가방"],["skills","스킬"],["map","월드맵"],["auto","자동사냥"],["enhance","장비 강화"],["아이템","아이템 도감"],["shop","상점"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["log","전투 기록"],["settings","설정"]]:
 		var section_id: String=str(pair[0])
 		var button: Button=UI.button("",func() -> void:
-			if not workspace.was_scroll_dragged(menu_scroll):_navigate(section_id),Vector2(104,106))
+			if not workspace.was_scroll_dragged(menu_scroll):_navigate(section_id),Vector2(92,88))
 		button.name="MenuTile_"+section_id
 		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.set_meta("menu_category","캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections"] else ("사냥·모험" if section_id in ["inventory","skills","map","auto","enhance","아이템"] else "상점·생활"))
@@ -1095,26 +1079,19 @@ func toggle_menu() -> void:
 		artwork.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.anchor_left=.5;artwork.anchor_right=.5
-		artwork.offset_left=-25;artwork.offset_right=25
-		artwork.offset_top=10;artwork.offset_bottom=60
+		artwork.offset_left=-20;artwork.offset_right=20
+		artwork.offset_top=8;artwork.offset_bottom=48
 		artwork.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		button.add_child(artwork)
-		var caption:=UI.label(str(pair[1]),13,UI.TEXT)
+		var caption:=UI.label(str(pair[1]),12,UI.TEXT)
 		caption.anchor_right=1
 		caption.offset_left=2;caption.offset_right=-2
-		caption.offset_top=72;caption.offset_bottom=98
+		caption.offset_top=58;caption.offset_bottom=78
 		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		button.add_child(caption)
 		grid.add_child(button)
 		tiles.append(button)
 		workspace.register_scroll_drag(menu_scroll,button)
-	var menu_footer:=HBoxContainer.new()
-	menu_footer.custom_minimum_size.y=44
-	col.add_child(menu_footer)
-	var place: Label=UI.label("%s  ·  Lv.%d %s" % [v20_map_name.text,int(character_state.get("level",1)),str(character_state.get("job_class","기사"))],13,UI.MUTED)
-	place.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	menu_footer.add_child(place)
-	menu_footer.add_child(UI.button("게임으로 돌아가기",_close_workspace,Vector2(160,44)))
 
 func _open_utility_panel(title: String) -> void:
 	var section := "utility"
