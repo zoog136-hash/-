@@ -1662,6 +1662,8 @@ func _apply_catalog_page() -> void:
 	catalog_icon_generation += 1
 	var request_id: int = catalog_icon_generation
 	super._apply_catalog_page()
+	# A fresh relic page starts at its first row; open_catalog restores saved views afterwards.
+	if catalog_category=="성물":catalog_list.get_v_scroll_bar().value=0
 	for index: int in range(catalog_results.size()):
 		var record: Dictionary = catalog_results[index]
 		var grade_name := str(record.get("grade","일반"))
