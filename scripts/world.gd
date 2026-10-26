@@ -1119,6 +1119,25 @@ func _merge_local_consumables_into_catalog() -> void:
 				break
 		if not found:
 			catalog_items.append(spec.duplicate(true))
+	# The six shop/draw items must also be present in the runtime catalog:
+	# inventory, shop, details and quickslot all resolve the same real icon.
+	for item_name: String in CARD_PACK_ITEMS.PACKS:
+		var pack_record: Dictionary = CARD_PACK_ITEMS.inventory_record(item_name)
+		var present: bool = false
+		for index: int in range(catalog_items.size()):
+			var raw: Variant = catalog_items[index]
+			if not (raw is Dictionary) or str((raw as Dictionary).get("name", "")) != item_name:
+				continue
+			var existing: Dictionary = raw as Dictionary
+			# Never reinterpret an existing verified source-ID item as a local pack.
+			if str(existing.get("sourceId", "")).is_empty():
+				var merged: Dictionary = existing.duplicate(true)
+				merged.merge(pack_record, true)
+				catalog_items[index] = merged
+			present = true
+			break
+		if not present:
+			catalog_items.append(pack_record)
 	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
@@ -1199,6 +1218,8 @@ func _connect_signals() -> void:
 	if hud.has_signal("ain_auto_changed"):
 		hud.connect("ain_auto_changed", _on_ain_auto_changed)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
+	if hud.has_signal("blessing_target_requested"):
+		hud.connect("blessing_target_requested", _on_blessing_target_requested)
 	hud.enhancement_requested.connect(_attempt_enhancement)
 	# Optional validation tools live only in the isolated playtest HUD branch.
 	if hud.has_signal("playtest_catalog_grant_requested"):
@@ -2882,6 +2903,14 @@ func _use_card_pack_item(item_name: String) -> void:
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("present_card_reveal", category, outcome, false)
+
+func _on_blessing_target_requested(scroll_name: String, target_reference: String) -> void:
+	if consumable_service == null: return
+	if int(inventory.get(scroll_name, 0)) < 1:
+		hud.show_message("축복 주문서가 없습니다")
+		return
+	consumable_service.call("apply_bless_scroll", scroll_name, target_reference)
+	_update_hud()
 
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
