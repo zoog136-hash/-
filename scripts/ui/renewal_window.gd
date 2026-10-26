@@ -179,7 +179,7 @@ func fit_viewport() -> void:
 	var viewport: Vector2 = available.size/scale
 	var shelf: bool = current_section in ["inventory","skills","menu","quickbind"]
 	var left: bool = current_section in ["character","stats","warehouse","sell"]
-	var fullscreen: bool = current_section in ["변신","마법인형","성물","shop","map","class_select","아이템","option_awakening"]
+	var fullscreen: bool = current_section in ["변신","마법인형","성물","shop","map","class_select","아이템","option_awakening","emblems","guardians"]
 	var width: float = 378 if shelf or left else 840
 	var height: float = minf(508,viewport.y-150)
 	if current_section == "menu": width = 450
