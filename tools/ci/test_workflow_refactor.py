@@ -7,7 +7,7 @@ import os
 import subprocess
 import tempfile
 import time
-from validate_workflow_refactor import normalize_runtime_checkout, RUNTIME_CHECKOUT_PATHS, normalize_lookup_paths, LOOKUP_DEPENDENCIES, TARGETED_IMPORT_DEADLINES, normalize_targeted_import_deadlines
+from validate_workflow_refactor import normalize_runtime_checkout, RUNTIME_CHECKOUT_PATHS, normalize_lookup_paths, LOOKUP_DEPENDENCIES, TARGETED_IMPORT_DEADLINES, normalize_targeted_import_deadlines, normalize_audited_ci_job_budget
 from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader, PHASE3_SUBSET_JOBS, PHASE3_MANUAL_OR_PROTECTED, PHASE3_BUYBACK, PHASE3_EXTRA_BASES, PHASE3_COVERED_TESTS, PHASE3_COVERED_MARKERS, normalize_phase3_services
 
 
@@ -278,6 +278,21 @@ class TargetedColdImportContract(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     normalize_targeted_import_deadlines(path, before, after)
 
+    def test_audited_job_timeouts_preserve_full_test_contracts(self):
+        cases = (
+            ('.github/workflows/aden-png-source-validate.yml', 'source-main-physics', 45, 75),
+            ('.github/workflows/pr86-selective-port-validate.yml', 'navigation-regression', 30, 45),
+        )
+        for path, job, original, allowed in cases:
+            with self.subTest(path=path):
+                before = {'jobs': {job: {'timeout-minutes': original}}}
+                after = copy.deepcopy(before)
+                after['jobs'][job]['timeout-minutes'] = allowed
+                self.assertEqual(normalize_audited_ci_job_budget(path, before, after), before)
+                after['jobs'][job]['timeout-minutes'] = allowed + 5
+                with self.assertRaises(AssertionError):
+                    normalize_audited_ci_job_budget(path, before, after)
+
     def test_cold_cache_is_read_only_and_protected_workflows_keep_originals(self):
         self.assertIn('github.event.pull_request.number != 157', SHARED_IMPORT_READER['if'])
         self.assertIn('github.event.pull_request.number != 158', SHARED_IMPORT_READER['if'])
@@ -285,6 +300,9 @@ class TargetedColdImportContract(unittest.TestCase):
         self.assertTrue(SHARED_IMPORT_READER['continue-on-error'])
         self.assertIn('.github/workflows/combat-animation-validate.yml', SHARED_IMPORT_READER_STEPS)
         self.assertIn('.github/workflows/monster-world-validate.yml', SHARED_IMPORT_READER_STEPS)
+        self.assertIn('.github/workflows/twilight-monster-ai.yml', SHARED_IMPORT_READER_STEPS)
+        self.assertIn('.github/workflows/pr86-selective-port-validate.yml', SHARED_IMPORT_READER_STEPS)
+        self.assertIn('.github/workflows/aden-png-source-validate.yml', SHARED_IMPORT_READER_STEPS)
 
 
 class PhaseThreeServiceConsolidationContract(unittest.TestCase):

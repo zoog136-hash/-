@@ -55,6 +55,7 @@ def assert_preserved_workflow(path, before, after, action_loader):
     expanded = normalize_lookup_paths(path, before, expanded)
     expanded = normalize_shared_import_cache_reader(path, expanded)
     expanded = normalize_targeted_import_deadlines(path, before, expanded)
+    expanded = normalize_audited_ci_job_budget(path, before, expanded)
     expanded = normalize_phase3_services(path, before, expanded)
     if path in STALE_WORKFLOWS:
         original = before['concurrency']
@@ -266,6 +267,9 @@ SHARED_IMPORT_READER_STEPS = {
     '.github/workflows/twilight-shop-buyback.yml': 'Godot import and parse project',
     '.github/workflows/combat-animation-validate.yml': 'Combat animation and timing regressions',
     '.github/workflows/monster-world-validate.yml': 'Reproducible catalog and monster-world regressions',
+    '.github/workflows/twilight-monster-ai.yml': 'Monster AI, navigation and combat regressions',
+    '.github/workflows/aden-png-source-validate.yml': 'Import and parse all production scripts',
+    '.github/workflows/pr86-selective-port-validate.yml': 'Import and run isolated navigation, landing and PR91 regressions',
 }
 SHARED_IMPORT_READER = {
     'name': 'Restore trusted Godot imported resources',
@@ -315,6 +319,13 @@ TARGETED_IMPORT_DEADLINES = {
         ('turn-undead', 'Execute real reward regression in isolated user data',
          'timeout 900 "$ENGINE" --headless --path . --import',
          'timeout 1500 "$ENGINE" --headless --path . --import'),
+    '.github/workflows/twilight-monster-ai.yml':
+        ('monster-ai', 'Monster AI, navigation and combat regressions',
+         ' --logs test-results', ' --import-timeout 1500 --logs test-results'),
+    '.github/workflows/pr86-selective-port-validate.yml':
+        ('navigation-regression', 'Import and run isolated navigation, landing and PR91 regressions',
+         'timeout 300 "$GODOT" --headless --path . --import',
+         'timeout 1500 "$GODOT" --headless --path . --import'),
 }
 
 
@@ -346,6 +357,27 @@ def normalize_targeted_import_deadlines(path, before, expanded):
     expected = original_run.replace(old_token, new_token)
     assert current_tests[0]['run'] == expected, path + ': changed more than import budget'
     current_tests[0]['run'] = original_run
+    return result
+
+
+# Bounded job deadlines: Aden ran out of its 45-minute budget while tests
+# were still passing; PR86 needs more than its original 30 minutes for a cold
+# 1500-second import plus six unchanged navigation regressions.
+AUDITED_CI_JOB_BUDGETS = {
+    '.github/workflows/aden-png-source-validate.yml': ('source-main-physics', 45, 75),
+    '.github/workflows/pr86-selective-port-validate.yml': ('navigation-regression', 30, 45),
+}
+
+
+def normalize_audited_ci_job_budget(path, before, expanded):
+    if path not in AUDITED_CI_JOB_BUDGETS:
+        return expanded
+    name, original_limit, target_limit = AUDITED_CI_JOB_BUDGETS[path]
+    assert before['jobs'][name]['timeout-minutes'] == original_limit, path + ': baseline deadline moved'
+    result = copy.deepcopy(expanded)
+    job = result['jobs'][name]
+    assert job['timeout-minutes'] == target_limit, path + ': unauthorized job timeout'
+    job['timeout-minutes'] = original_limit
     return result
 
 

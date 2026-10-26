@@ -6,7 +6,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from android_animation_export_scope import ADEN_PREVIEW_RENDERER, DRAFT_EXPORT_PATTERN, DRAFT_ROOT, audit_authoring_exclusions
+from android_animation_export_scope import ADEN_PREVIEW_RENDERER, OFFLINE_AUTHORING_JSON, DRAFT_EXPORT_PATTERN, DRAFT_ROOT, audit_authoring_exclusions
 
 
 class AndroidAnimationExportScopeTest(unittest.TestCase):
@@ -113,6 +113,48 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
             live.write_text('load("res://assets/maps/aden_city_region/layout.json")')
             with self.assertRaisesRegex(ValueError, "Exported code/resource references excluded Aden"):
                 audit_authoring_exclusions(root)
+
+    def test_two_offline_json_exclusions_preserve_live_runtime_guards(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            additions = sorted(OFFLINE_AUTHORING_JSON)
+            preset = root / "export_presets.cfg"
+            preset.write_text(preset.read_text().replace(
+                DRAFT_EXPORT_PATTERN, DRAFT_EXPORT_PATTERN + "," + ",".join(additions)))
+            for relative in additions:
+                source = root / relative
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_text('{"schema": 1}')
+            # The map's runtime manifest must still be shipped and valid.
+            with self.assertRaisesRegex(ValueError, "runtime pack manifest is missing"):
+                audit_authoring_exclusions(root)
+            runtime = root / "data/maps/aden_mobile_pack.json"
+            runtime.parent.mkdir(parents=True)
+            runtime.write_text('{"schema": 1, "map_id": "aden_world", "manifest_sha256": "' + "a"*64 + '"}')
+            self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
+            # No other excluded JSON is allowed to masquerade as research.
+            sneaky = root / "data/live_inventory.json"
+            sneaky.write_text("{}")
+            preset.write_text(preset.read_text().replace(
+                ",".join(additions), ",".join(additions) + ",data/live_inventory.json"))
+            with self.assertRaisesRegex(ValueError, "Runtime catalog excluded"):
+                audit_authoring_exclusions(root)
+            sneaky.unlink()
+            preset.write_text(preset.read_text().replace(",data/live_inventory.json", ""))
+            for relative in additions:
+                with self.subTest(relative=relative):
+                    loader = root / "scripts/live_loader.gd"
+                    loader.parent.mkdir(exist_ok=True)
+                    loader.write_text('var live = "res://' + relative + '"')
+                    with self.assertRaisesRegex(ValueError, "excluded offline JSON"):
+                        audit_authoring_exclusions(root)
+                    loader.unlink()
+                    manifest = root / "data/other_runtime_catalog.json"
+                    manifest.write_text('{"path": "res://' + relative + '"}')
+                    with self.assertRaisesRegex(ValueError, "excluded offline JSON"):
+                        audit_authoring_exclusions(root)
+                    manifest.unlink()
 
     def test_unknown_archive_contents_fail_closed(self):
         for change in ('extra_png', 'different_source', 'different_type'):

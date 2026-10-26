@@ -30,6 +30,14 @@ ADEN_AUTHORING_ROOTS = (
     "assets/maps/aden_rebuild_preview/",
     "assets/maps/aden_world_draft/",
 )
+# Exactly two build/research files filtered by the Android preset. These
+# are inputs to offline map/skill tools, not executable catalog data. Keep
+# this allowlist narrow; a newly excluded runtime JSON must fail closed.
+OFFLINE_AUTHORING_JSON = frozenset((
+    "data/map_remake/private/aden/effective_layouts_build.json",
+    "data/skills/research_inventory.json",
+))
+
 ADEN_AUTHORING_JSON = frozenset((
     ARCHIVED_SOURCE_MANIFEST,
     "assets/maps/aden_city_region/layout.json",
@@ -71,6 +79,8 @@ def audit_authoring_exclusions(root: Path) -> dict:
         raise ValueError("Android preset must explicitly exclude the authoring-only Aden preview renderer")
     archived_map_json = {name for name in ADEN_AUTHORING_JSON if (root / name).is_file()
                          and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
+    offline_json = {name for name in OFFLINE_AUTHORING_JSON if (root / name).is_file()
+                    and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
     excluded = []
     for folder in sorted((root / DRAFT_ROOT).glob("transform_*/draft001")):
         actor = folder.parent.name
@@ -114,19 +124,24 @@ def audit_authoring_exclusions(root: Path) -> dict:
             raise ValueError("Exported runtime catalog references excluded Aden preview renderer: " + relative)
         if not excluded_by_preset and any(("res://" + name) in content for name in archived_map_json):
             raise ValueError("Exported runtime catalog references excluded Aden authoring JSON: " + relative)
+        if not excluded_by_preset and any(name in content for name in offline_json):
+            raise ValueError("Exported runtime catalog references excluded offline JSON: " + relative)
         if excluded_by_preset:
             # Only audited, exact authoring JSON paths may be omitted; a new
             # gameplay catalog must never be silently excluded from the APK.
-            if relative not in ADEN_AUTHORING_JSON:
+            if relative not in ADEN_AUTHORING_JSON and relative not in OFFLINE_AUTHORING_JSON:
                 raise ValueError("Runtime catalog excluded by Android preset: " + relative)
-            runtime = root / ADEN_RUNTIME_MANIFEST
-            if not runtime.is_file() or any(fnmatch.fnmatchcase(ADEN_RUNTIME_MANIFEST, pattern)
-                                            for pattern in excluded_patterns):
-                raise ValueError("Aden runtime pack manifest is missing from Android export")
-            pack = json.loads(runtime.read_text(encoding="utf-8"))
-            if pack.get("schema") != 1 or pack.get("map_id") != "aden_world" or not re.fullmatch(
-                    r"[0-9a-f]{64}", str(pack.get("manifest_sha256", ""))):
-                raise ValueError("Invalid Aden runtime pack manifest")
+            # Aden inputs require a pinned exported runtime pack. Skill research
+            # is purely an offline curation inventory and needs no map fixture.
+            if relative != "data/skills/research_inventory.json":
+                runtime = root / ADEN_RUNTIME_MANIFEST
+                if not runtime.is_file() or any(fnmatch.fnmatchcase(ADEN_RUNTIME_MANIFEST, pattern)
+                                                for pattern in excluded_patterns):
+                    raise ValueError("Aden runtime pack manifest is missing from Android export")
+                pack = json.loads(runtime.read_text(encoding="utf-8"))
+                if pack.get("schema") != 1 or pack.get("map_id") != "aden_world" or not re.fullmatch(
+                        r"[0-9a-f]{64}", str(pack.get("manifest_sha256", ""))):
+                    raise ValueError("Invalid Aden runtime pack manifest")
             continue
         checked += 1
     files = [root / "Main.tscn", root / "project.godot"]
@@ -153,6 +168,8 @@ def audit_authoring_exclusions(root: Path) -> dict:
                 raise ValueError("Exported code/resource references excluded Aden preview renderer: " + relative)
             if any(("res://" + folder) in runtime_text for folder in ADEN_AUTHORING_ROOTS):
                 raise ValueError("Exported code/resource references excluded Aden authoring input: " + relative)
+            if any(name in runtime_text for name in offline_json):
+                raise ValueError("Exported code/resource references excluded offline JSON: " + relative)
         checked += 1
     return {"excluded_authoring_resources": excluded,
             "excluded_count": len(excluded), "runtime_closure_files_checked": checked,
