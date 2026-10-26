@@ -78,6 +78,22 @@ jobs:
           with zipfile.ZipFile('godot.zip') as z: z.extractall('engine')
           exe = pathlib.Path('engine/${{ matrix.executable }}')
           exe.chmod(0o755)
+      # Read only caches produced by trusted main; imported large PNGs stay
+      # uncached. Resource preflight and every assertion still run.
+      - name: Restore trusted compact Godot import cache (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Generate synthetic fixtures (no third-party game art)
         run: |
           python tools/l1j_ci_make_fixture.py --root .
@@ -106,7 +122,7 @@ jobs:
                   extra = ['--import'] if name == 'import' else ['--script', 'res://tests/' + name + '.gd']
                   command = [engine, '--headless', '--path', str(root), *extra]
                   try:
-                      result = run_isolated(command, env=env, cwd=str(root), timeout=1200 if name == 'import' else 450)
+                      result = run_isolated(command, env=env, cwd=str(root), timeout=1800 if name == 'import' else 450)
                       output = result.stdout + result.stderr
                       ok, skipped = classify_result(name, result.returncode, output)
                   except subprocess.TimeoutExpired as error:
@@ -159,7 +175,7 @@ jobs:
         shell: python
         run: |
           import json, os, pathlib, subprocess, sys
-          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450']
+          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '1800'
           resumed = os.environ['TWILIGHT_CI_RETRY_SCOPE'] == 'linux_remaining'
           if resumed:
               proof = json.loads(pathlib.Path('l1j-test-results/authenticated-linux-prefix.json').read_text(encoding='utf-8'))
