@@ -3,6 +3,7 @@ extends "res://scripts/hud_v20.gd"
 # Debug-build tools. Requests are also checked by the authoritative world.
 signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String)
+signal blessing_target_requested(scroll_name: String, target_reference: String)
 signal option_awakening_open_requested(category: String, target_id: String)
 signal option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary)
 signal option_awakening_attempt_requested(category: String, target_id: String)
@@ -2054,6 +2055,12 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 	stage.finished.connect(func() -> void:
 		enhancement_reveal = null
 		layer.queue_free())
+
+func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
+	_open_window("enhance", "장비 축복 부여", scroll_name + " · 장비 개체별 축복")
+	var forge := ForgeUI.new()
+	workspace.mount(forge)
+	forge.configure_blessing(self, scroll_name, candidates)
 
 func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	enhancement_scroll_name = scroll_name
