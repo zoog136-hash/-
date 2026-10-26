@@ -58,6 +58,7 @@ func _run() -> void:
 	var first: String = "낡은 장검@@@" + ids[0]
 	var second: String = "낡은 장검@@@" + ids[1]
 	world.call("_update_hud")
+	hud.call("toggle_inventory")
 	await process_frame
 	var slots: Dictionary = inventory_ui.get("slot_buttons") as Dictionary
 	_check(slots.has(first) and slots.has(second), "Renewed inventory has distinct buttons for identical swords")

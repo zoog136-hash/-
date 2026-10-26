@@ -2301,6 +2301,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
+	var level_before: int = level
 	_check_level_up()
 	if player.auto_enabled:
 		_auto_recharge_ain()
@@ -2310,7 +2311,14 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		auto_target = null
 	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
 		monster.reparent(combat_corpses, true)
-	_update_hud()
+	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
+	# equipment, skill, collection and inventory surface here stalls the very
+	# frame in which loot appears. Level changes still publish all new stats.
+	if level != level_before:
+		_update_hud()
+	else:
+		_refresh_combat_hud()
+		_update_ain_hud()
 	call_deferred("_ensure_monster_count")
 
 func recycle_monster(monster: TwilightMonster) -> bool:
@@ -2361,7 +2369,6 @@ func _collect_ground_drop(drop: Button) -> bool:
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	if pending_ground_pickup == drop: pending_ground_pickup = null
-	hud.refresh_inventory(inventory)
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	_update_hud()
@@ -3836,6 +3843,7 @@ func _refresh_combat_hud() -> void:
 	# HP-only changes must not queue an equipment/character/inventory rebuild.
 	var display_max_hp: int = int(hud.character_state.get("max_hp", max_hp))
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
+	hud.character_state["gold"] = gold
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func save_path() -> String:
@@ -4134,6 +4142,8 @@ func _load_game(quiet: bool) -> void:
 		enhancement_levels = enhancement_value as Dictionary
 	var stored_instances: Variant = data.get("item_instances", {})
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
+	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
+		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
 	for raw_id: Variant in item_instances.keys():
 		if str(raw_id).is_valid_int():

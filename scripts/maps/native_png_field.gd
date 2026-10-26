@@ -155,12 +155,29 @@ func line_clear(from: Vector2,to: Vector2) -> bool:
 	# The raster physics occupies entire cells. Center-only shortcut tests can
 	# cut a solid cell corner with the real foot, stranding a click path before
 	# its next waypoint. Use the same foot for shortcutting and actor motion.
+	# Ordinary per-frame movement spans only one or two raster cells. Prove the
+	# whole swept foot's bounding box clear once, rather than checking the same
+	# cells nine times per two-pixel sample. When that conservative test fails,
+	# retain the exact original samples (including narrow/corner paths).
+	var raster_clear: bool = _foot_raster_box_clear(from, to)
 	var steps: int=maxi(1,ceili(from.distance_to(to)/2.0))
 	for i: int in range(steps+1):
 		var point: Vector2=from.lerp(to,float(i)/steps)
-		if not walkable(point) or not point_clear(point,4.0):return false
-		for offset: Vector2 in LANDING_BODY_OFFSETS:
-			if not walkable(point+offset):return false
+		if not point_clear(point,4.0):return false
+		if not raster_clear:
+			if not walkable(point): return false
+			for offset: Vector2 in LANDING_BODY_OFFSETS:
+				if not walkable(point+offset):return false
+	return true
+
+func _foot_raster_box_clear(from: Vector2, to: Vector2) -> bool:
+	var low: Vector2i = world_to_cell(from.min(to) - Vector2.ONE * 4.0)
+	var high: Vector2i = world_to_cell(from.max(to) + Vector2.ONE * 4.0)
+	var span: Vector2i = high - low + Vector2i.ONE
+	if span.x * span.y > 16 or not astar.is_in_boundsv(low) or not astar.is_in_boundsv(high): return false
+	for y: int in range(low.y, high.y + 1):
+		for x: int in range(low.x, high.x + 1):
+			if astar.is_point_solid(Vector2i(x, y)): return false
 	return true
 
 func _flood_portal_component(start: Vector2i) -> void:

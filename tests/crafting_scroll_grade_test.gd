@@ -26,7 +26,7 @@ func _run() -> void:
 		items[str(item.get("name",""))] = item
 	var service := CRAFT.new()
 	service.load_recipes()
-	_check(service.recipes.size() == 413,"413 original and new crafting recipes")
+	_check(service.recipes.size() == 414,"414 original and new crafting recipes")
 	var catalog: Dictionary = LOOT.build_catalog(db.get("아이템",[]))
 	var pools: Dictionary = catalog.get("equipment_by_grade",{})
 	var source_rows: Dictionary = catalog.get("crafting_drops",{})
@@ -65,7 +65,7 @@ func _run() -> void:
 		if CRAFT._is_equipment(item) and str(item.get("grade","")) in GRADES:
 			covered_count += 1
 			_check(covered.has(str(item["name"])),"all rare-plus equipment outputs craftable "+str(item["name"]))
-	_check(covered.size() == covered_count and covered_count == 355,"all 355 rare+ equipment outputs covered")
+	_check(covered.size() == covered_count and covered_count == 346,"all 346 rare+ equipment outputs covered")
 
 	# Each registered scroll drop consumes an equipment-grade slot, not a
 	# second material or potion roll. Source rows are exact grade fallbacks.
@@ -119,7 +119,7 @@ func _run() -> void:
 	var denied: Dictionary = service.quote("blade_mithril",1,bag,1000000,items,physical,{},1000,100000)
 	_check(not bool(denied.get("ok",false)),"wrong grade gate invalid even when materials exist")
 	if failures.is_empty():
-		print("CRAFT_SCROLL_OK: five nonwearable scrolls, same-rarity gear drops, 355 rare-plus equipment recipes, atomic consumption")
+		print("CRAFT_SCROLL_OK: five nonwearable scrolls, same-rarity gear drops, 346 rare-plus equipment recipes, atomic consumption")
 		quit(0)
 	else:
 		print("CRAFT_SCROLL_FAILED: %d" % failures.size())

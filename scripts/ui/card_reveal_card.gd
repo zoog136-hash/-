@@ -1,5 +1,7 @@
 extends Control
 
+signal reveal_requested
+
 const FX = preload("res://scripts/ui/card_reveal_effects.gd")
 const PROFILES = preload("res://scripts/ui/card_reveal_profiles.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -22,6 +24,8 @@ var show_grade_heading: bool = false
 var reduced_motion: bool = false
 var detail_scale: float = 1.0
 var intensity_scale: float = 1.0
+var waiting_for_press: bool = false
+var reveal_button: Button
 
 class Face extends Control:
 	var artwork: Texture2D
@@ -130,6 +134,15 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	grade_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	grade_heading.visible = show_grade_heading
 	add_child(grade_heading)
+	# Use the shared themed button for mouse, keyboard, and native touch.
+	# start_reveal is idempotent if a platform also delivers an emulated event.
+	reveal_button = UI.button("",func() -> void: reveal_requested.emit(),Vector2.ZERO)
+	reveal_button.name = "RevealCard"
+	reveal_button.tooltip_text = "카드를 눌러 뒤집기"
+	for state: String in ["normal", "hover", "pressed", "disabled"]:
+		reveal_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+	reveal_button.visible = waiting_for_press
+	add_child(reveal_button)
 	resized.connect(_fit)
 	_fit()
 
@@ -150,6 +163,17 @@ func _fit() -> void:
 	grade_label.size = Vector2(size.x,22)
 	grade_heading.position = Vector2(-size.x*0.2,-54)
 	grade_heading.size = Vector2(size.x*1.4,40)
+	if reveal_button != null:
+		reveal_button.size = size
+
+func start_reveal(at_time: float) -> bool:
+	if not waiting_for_press:
+		return false
+	waiting_for_press = false
+	open_at = at_time
+	reveal_button.disabled = true
+	reveal_button.hide()
+	return true
 
 func lightning_at() -> float:
 	return open_at+reel_seconds-LIGHTNING_EARLY_SECONDS
@@ -163,6 +187,12 @@ func promotion_at() -> float:
 
 func seek(value: float, successful_fusion: bool = false) -> void:
 	clock = value
+	if waiting_for_press:
+		face.elapsed = -1.0
+		name_label.hide()
+		grade_label.hide()
+		# Unopened cards do not leak the result, run lightning, or redraw FX.
+		return
 	var local: float = clock-open_at
 	var revealed: bool = clock >= reveal_at()
 	face.elapsed = local

@@ -166,7 +166,7 @@ func _run() -> void:
 	world.hud.open_catalog("아이템")
 	check(not world.hud.equipment_collection_button.disabled,"actual item encyclopedia shortcut enabled")
 	world.hud.open_catalog("변신")
-	check(world.hud.equipment_collection_button.disabled,"card collections are not falsely enabled")
+	check(not world.hud.equipment_collection_button.disabled and world.hud.equipment_collection_button.text=="장비 컬렉션","card window exposes clearly named equipment collection route")
 	world.hud.open_equipment_collections()
 	await process_frame
 	var view: Node = world.hud.workspace.content.get_child(0)
