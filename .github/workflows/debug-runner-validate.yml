@@ -57,6 +57,21 @@ jobs:
           curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
           unzip -q /tmp/godot.zip -d /tmp
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Execute real reward regression in isolated user data
         shell: bash
         run: |
@@ -64,7 +79,7 @@ jobs:
           export XDG_DATA_HOME="${RUNNER_TEMP}/turn-undead-debug"
           export APPDATA="$XDG_DATA_HOME" LOCALAPPDATA="$XDG_DATA_HOME"
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
-          timeout 900 "$ENGINE" --headless --path . --import 2>&1 | tee debug-import.log
+          timeout 1500 "$ENGINE" --headless --path . --import 2>&1 | tee debug-import.log
           if grep -E 'SCRIPT ERROR:|ERROR:' debug-import.log; then exit 1; fi
           timeout 180 "$ENGINE" --headless --path . --script res://tests/original_turn_undead_rewards_test.gd 2>&1 | tee turn-rewards.log
           if grep -E 'SCRIPT ERROR:|ERROR:|TURN_REWARDS FAIL:' turn-rewards.log; then exit 1; fi

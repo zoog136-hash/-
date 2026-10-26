@@ -41,6 +41,7 @@ const ORIGINAL_SKILLS = preload("res://scripts/skills/skill_service.gd")
 var original_skills: TwilightOriginalSkillService = null
 var legacy_skills_db: Array = []
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
+const ITEM_CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd")
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
@@ -3298,25 +3299,8 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
-	if CONSUMABLE_RULES.is_removed_item(item_name):
-		return {}
-	var sources: Array = [catalog_db.get("아이템", []), item_db]
-	for source_value: Variant in sources:
-		if not (source_value is Array):
-			continue
-		for value: Variant in source_value as Array:
-			if not (value is Dictionary):
-				continue
-			var record: Dictionary = value as Dictionary
-			if str(record.get("name", "")) == item_name:
-				return record
-	# Runtime-earned / generated equipment may not exist in either catalog.
-	for raw_instance: Variant in item_instances.values():
-		if raw_instance is Dictionary:
-			var physical: Dictionary = raw_instance as Dictionary
-			if str(physical.get("name", "")) == item_name and physical.get("record", {}) is Dictionary:
-				return (physical.get("record", {}) as Dictionary).duplicate(true)
-	return {}
+	return ITEM_CATALOG_LOOKUP.find_many(
+		[catalog_db.get("아이템", []), item_db], item_instances, [item_name]).get(item_name, {})
 
 func _safe_enhancement_level(kind: String) -> int:
 	match kind:
@@ -4789,6 +4773,11 @@ func _run_auto_item_quickslots(delta: float) -> void:
 	var settings: Dictionary = get_consumable_auto_settings()
 	var candidates: Array[Dictionary] = []
 	var seen: Dictionary = {}
+	var active_entries: Array[Dictionary] = []
+	# Candidate collection does not consume items or change buffs. Reuse these
+	# expensive derived stats for this poll; the next poll reads fresh values.
+	var maximum_hp: int = -1
+	var maximum_mp: int = -1
 	for value: Variant in quickslots:
 		if not value is Dictionary:
 			continue
@@ -4799,11 +4788,19 @@ func _run_auto_item_quickslots(delta: float) -> void:
 		if seen.has(item) or int(inventory.get(item, 0)) <= 0 or float(item_use_cooldowns.get(item, 0)) > 0:
 			continue
 		seen[item] = true
-		var record: Dictionary = _find_catalog_item_record(item)
+		active_entries.append(entry)
+	var records: Dictionary = ITEM_CATALOG_LOOKUP.find_many(
+		[catalog_db.get("아이템", []), item_db], item_instances, seen.keys())
+	for entry: Dictionary in active_entries:
+		var item: String = str(entry.get("id", ""))
+		var record: Dictionary = records.get(item, {})
 		if int(record.get("heal", 0)) > 0 and float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0:
 			continue
 		var spec: Dictionary = CONSUMABLE_RULES.definition(item)
-		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, _effective_max_hp(), mp, _effective_max_mp(), job_class, active_item_buffs):
+		if maximum_hp < 0:
+			maximum_hp = _effective_max_hp()
+			maximum_mp = _effective_max_mp()
+		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, maximum_hp, mp, maximum_mp, job_class, active_item_buffs):
 			continue
 		if not _quickslot_auto_allowed(entry):
 			continue

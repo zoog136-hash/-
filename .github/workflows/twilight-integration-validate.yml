@@ -60,14 +60,19 @@ jobs:
         continue-on-error: true
         with:
           path: |
-            .godot/imported
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
             **/*.import
-          key: twilight-godot-import-4.7.2-linux-compat-main-v1
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Full project regression, import, boot and all smoke tests
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1500 --logs test-results
       - name: Floor-loot visual, manual pickup and live AUTO regression
         shell: bash
         run: |

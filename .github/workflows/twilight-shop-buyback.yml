@@ -32,9 +32,14 @@ jobs:
         continue-on-error: true
         with:
           path: |
-            .godot/imported
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
             **/*.import
-          key: twilight-godot-import-4.7.2-linux-compat-main-v1
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Godot import and parse project
         run: |
           set -o pipefail

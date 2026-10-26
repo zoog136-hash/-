@@ -101,12 +101,16 @@ static func records() -> Array[Dictionary]:
 		 "desc":"50레벨 이상 · 마법 대미지 영구 +1 · 하프 엘릭서 최대 10회"}
 	]
 
+static var _definitions: Dictionary = {}
+
 static func definition(item_name: String) -> Dictionary:
-	var name: String = normalize_name(item_name)
-	for record: Dictionary in records():
-		if str(record["name"]) == name:
-			return record.duplicate(true)
-	return {}
+	# AUTO polls every 0.2 seconds. Build the fixed catalog once, keeping the
+	# existing fresh-copy contract for callers that modify nested buff data.
+	if _definitions.is_empty():
+		for record: Dictionary in records():
+			_definitions[str(record["name"])] = record
+	var record: Dictionary = _definitions.get(normalize_name(item_name), {})
+	return record.duplicate(true)
 
 static func element_success_chance(current_level: int) -> float:
 	return ELEMENT_CHANCES[current_level] if current_level >= 0 and current_level < ELEMENT_CHANCES.size() else 0.0
