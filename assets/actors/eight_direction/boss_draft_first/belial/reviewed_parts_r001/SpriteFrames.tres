@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=225 format=3]
+[gd_resource type="SpriteFrames" load_steps=232 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/belial/owned_parts_v01/E-attack-v01.png" id="1"]
 
@@ -65,6 +65,8 @@
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/SW-idle.png" id="repair_r002_SW_idle_texture"]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/SW-attack.png" id="repair_r002_SW_attack_texture"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/SE-attack.png" id="repair_r002_SE_attack_texture"]
 
 [sub_resource type="AtlasTexture" id="draft_0_0"]
 atlas = ExtResource("1")
@@ -1222,6 +1224,43 @@ region = Rect2(1080,2080,699,383)
 margin = Rect2(203,290,373,689)
 filter_clip = true
 
+
+[sub_resource type="AtlasTexture" id="repair_r002_SE_attack_0"]
+atlas = ExtResource("repair_r002_SE_attack_texture")
+region = Rect2(80,80,1486,997)
+margin = Rect2(448,648,1114,1603)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SE_attack_1"]
+atlas = ExtResource("repair_r002_SE_attack_texture")
+region = Rect2(1776,80,810,424)
+margin = Rect2(64,208,142,528)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SE_attack_2"]
+atlas = ExtResource("repair_r002_SE_attack_texture")
+region = Rect2(80,1776,1536,1001)
+margin = Rect2(182,304,192,727)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SE_attack_3"]
+atlas = ExtResource("repair_r002_SE_attack_texture")
+region = Rect2(1776,1776,1520,1015)
+margin = Rect2(308,416,544,1049)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SE_attack_4"]
+atlas = ExtResource("repair_r002_SE_attack_texture")
+region = Rect2(80,3472,766,341)
+margin = Rect2(22,261,186,611)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="repair_r002_SE_attack_5"]
+atlas = ExtResource("repair_r002_SE_attack_texture")
+region = Rect2(1776,3472,1516,971)
+margin = Rect2(307,572,828,1373)
+filter_clip = true
+
 [resource]
 animations = [
 {"frames": [{"duration": 1.0, "texture": SubResource("draft_0_0")},
@@ -1405,10 +1444,11 @@ animations = [
 {"duration": 1.0, "texture": SubResource("draft_29_4")},
 {"duration": 1.0, "texture": SubResource("draft_29_5")}], "loop": false, "name": &"attack_4", "speed": 14.285714285714286},
 {"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_idle_5")}],"loop":true,"name":&"idle_3","speed":5},
-{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_5")}],"loop":false,"name":&"attack_3","speed":14.285714285714286}
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_0")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_1")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_2")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_3")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_4")},{"duration":1.0,"texture":SubResource("repair_r002_SW_attack_5")}],"loop":false,"name":&"attack_3","speed":14.285714285714286},
+{"frames":[{"duration":1.0,"texture":SubResource("repair_r002_SE_attack_0")},{"duration":1.0,"texture":SubResource("repair_r002_SE_attack_1")},{"duration":1.0,"texture":SubResource("repair_r002_SE_attack_2")},{"duration":1.0,"texture":SubResource("repair_r002_SE_attack_3")},{"duration":1.0,"texture":SubResource("repair_r002_SE_attack_4")},{"duration":1.0,"texture":SubResource("repair_r002_SE_attack_5")}],"loop":false,"name":&"attack_1","speed":14.285714285714286}
 ]
 metadata/twilight_canvas_size = Vector2(256, 256)
 metadata/twilight_production_connected = false
 metadata/twilight_detailed_completed = false
 metadata/twilight_native_locomotion_staging = true
-metadata/twilight_reviewed_frame_registration = {"idle_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(452,565),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)},{"anchor":Vector2(936,1170),"scale":Vector2(0.136752136752,0.136752136752),"target":Vector2(0,0)},{"anchor":Vector2(452,565),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)},{"anchor":Vector2(936,1170),"scale":Vector2(0.136752136752,0.136752136752),"target":Vector2(0,0)},{"anchor":Vector2(464,580),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)},{"anchor":Vector2(452,565),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)}]},"attack_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)}]}}
+metadata/twilight_reviewed_frame_registration = {"idle_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(452,565),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)},{"anchor":Vector2(936,1170),"scale":Vector2(0.136752136752,0.136752136752),"target":Vector2(0,0)},{"anchor":Vector2(452,565),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)},{"anchor":Vector2(936,1170),"scale":Vector2(0.136752136752,0.136752136752),"target":Vector2(0,0)},{"anchor":Vector2(464,580),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)},{"anchor":Vector2(452,565),"scale":Vector2(0.283185840708,0.283185840708),"target":Vector2(0,0)}]},"attack_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)},{"anchor":Vector2(536,670),"scale":Vector2(0.238805970149,0.238805970149),"target":Vector2(0,0)}]},"attack_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(1300,1625),"scale":Vector2(0.0984615384615,0.0984615384615),"target":Vector2(0,0)},{"anchor":Vector2(476,595),"scale":Vector2(0.268907563025,0.268907563025),"target":Vector2(0,0)},{"anchor":Vector2(864,1080),"scale":Vector2(0.148148148148,0.148148148148),"target":Vector2(0,0)},{"anchor":Vector2(1032,1290),"scale":Vector2(0.124031007752,0.124031007752),"target":Vector2(0,0)},{"anchor":Vector2(476,595),"scale":Vector2(0.268907563025,0.268907563025),"target":Vector2(0,0)},{"anchor":Vector2(1172,1465),"scale":Vector2(0.109215017065,0.109215017065),"target":Vector2(0,0)}]}}

@@ -58909,21 +58909,216 @@
           "quality_review": "Replacement source visually reviewed; whole actor default verification pending",
           "production_connected": false,
           "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/SW-attack.json"
+        },
+        {
+          "role": "attack",
+          "direction": "SE",
+          "animation": "attack_1",
+          "source": "assets/actors/eight_direction/boss_draft_first/belial/repaired_source_r002/SE-attack-part0.png",
+          "source_sha256": "685782f5cad1b2fd5e08dcd240237228277154a429e5f11e8c51c46c32d1856b",
+          "texture": "assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/SE-attack.png",
+          "geometry": {
+            "image_size": [
+              3392,
+              5088
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SE",
+                "region": [
+                  80,
+                  80,
+                  1486,
+                  997
+                ],
+                "margin": [
+                  448,
+                  648,
+                  1114,
+                  1603
+                ],
+                "source_anchor": [
+                  932,
+                  1057
+                ],
+                "rgba_sha256": "5f2349851d0332ddf333aeab6cf8b39b81cc5e6bee13dc236ffa297422761438",
+                "canvas_size": [
+                  2600,
+                  2600
+                ],
+                "source_part": 1,
+                "source_neutral_height": 975.0,
+                "registration_scale": 0.09846153846153846
+              },
+              {
+                "row": 1,
+                "direction": "SE",
+                "region": [
+                  1776,
+                  80,
+                  810,
+                  424
+                ],
+                "margin": [
+                  64,
+                  208,
+                  142,
+                  528
+                ],
+                "source_anchor": [
+                  2188,
+                  467
+                ],
+                "rgba_sha256": "ad48069959105ae747c35f1b13c9918e22c2a44d958f4e4bc0c84541fba170fc",
+                "canvas_size": [
+                  952,
+                  952
+                ],
+                "source_part": 0,
+                "source_neutral_height": 354.5,
+                "registration_scale": 0.2689075630252101
+              },
+              {
+                "row": 2,
+                "direction": "SE",
+                "region": [
+                  80,
+                  1776,
+                  1536,
+                  1001
+                ],
+                "margin": [
+                  182,
+                  304,
+                  192,
+                  727
+                ],
+                "source_anchor": [
+                  762,
+                  2552
+                ],
+                "rgba_sha256": "e61b7893b72a2b4c70ad89058bf29f82b0b90c0c0694f7d569f35eae05a1d83e",
+                "canvas_size": [
+                  1728,
+                  1728
+                ],
+                "source_part": 2,
+                "source_neutral_height": 646.0,
+                "registration_scale": 0.14814814814814814
+              },
+              {
+                "row": 3,
+                "direction": "SE",
+                "region": [
+                  1776,
+                  1776,
+                  1520,
+                  1015
+                ],
+                "margin": [
+                  308,
+                  416,
+                  544,
+                  1049
+                ],
+                "source_anchor": [
+                  2500,
+                  2650
+                ],
+                "rgba_sha256": "b4d12f53d9c4833e15f610b1719bc321c22f9b1f9d7a6dff33d727cdfed208ef",
+                "canvas_size": [
+                  2064,
+                  2064
+                ],
+                "source_part": 3,
+                "source_neutral_height": 773.0,
+                "registration_scale": 0.12403100775193798
+              },
+              {
+                "row": 4,
+                "direction": "SE",
+                "region": [
+                  80,
+                  3472,
+                  766,
+                  341
+                ],
+                "margin": [
+                  22,
+                  261,
+                  186,
+                  611
+                ],
+                "source_anchor": [
+                  534,
+                  3806
+                ],
+                "rgba_sha256": "cebf379826105e0e9f0d23c555d2d82db442acde2e7dfdaf128f6b670ac1b48a",
+                "canvas_size": [
+                  952,
+                  952
+                ],
+                "source_part": 0,
+                "source_neutral_height": 354.5,
+                "registration_scale": 0.2689075630252101
+              },
+              {
+                "row": 5,
+                "direction": "SE",
+                "region": [
+                  1776,
+                  3472,
+                  1516,
+                  971
+                ],
+                "margin": [
+                  307,
+                  572,
+                  828,
+                  1373
+                ],
+                "source_anchor": [
+                  2641,
+                  4365
+                ],
+                "rgba_sha256": "dcf61bcbb79541f49fd05e70e6a027eb2da7475296c6d372d69aa448ab21753f",
+                "canvas_size": [
+                  2344,
+                  2344
+                ],
+                "source_part": 4,
+                "source_neutral_height": 878.0,
+                "registration_scale": 0.10921501706484642
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 975.0,
+            "canvas_size": [
+              2600,
+              2600
+            ],
+            "foot": [
+              1300,
+              1625
+            ]
+          },
+          "quality_review": "Six distinct full poses visually reviewed; original phases 1/4 retained exactly, failed overlapping phases 0/2/3/5 replaced. Bounded Godot Main playback, foot registration and attack marker passed; whole actor default remains HOLD_DIRECTION.",
+          "production_connected": false,
+          "lossless_source_ownership_proof": "assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/SE-attack.json"
         }
       ],
       "frames": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/SpriteFrames.tres",
-      "frames_sha256": "453f8a4be21df7d8beaf18cfa0b94643fa32e6ef8e82033b2be7893bbd628c6f",
+      "frames_sha256": "c4883c2d924df874e9290d9b744095e63577f6ea5de918f90990247098ec1b6e",
       "native_profile": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed_parts_r001/NativeMotionProfile.tres",
       "native_profile_sha256": "98830c9d86e8ac904b6cebc1e82dfe7ec0a3cd0ddd8b22d1a9f680f4616abc2b",
-      "native_track_count": 32,
-      "native_pose_count": 192,
-      "distinct_source_pose_count": 192,
-      "missing_required_tracks": [
-        "attack_1"
-      ],
+      "native_track_count": 33,
+      "native_pose_count": 198,
+      "distinct_source_pose_count": 198,
+      "missing_required_tracks": [],
       "production_connected": false,
       "detailed_completed": false,
-      "quality_review": "DRAFT_ONLY; minimum structural pass; whole-scope one-pass review/fixes pending",
+      "quality_review": "HOLD_DIRECTION: NW idle/hit and NW attack guard poses face toward NE while NW run/attack impact face NW. SE attack repaired and bounded Main playback passed; whole actor default activation remains blocked.",
       "pr158_native_contract": {
         "prior": {
           "frames": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
