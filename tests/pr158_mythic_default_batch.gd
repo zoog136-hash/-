@@ -33,6 +33,11 @@ func run() -> void:
 		world._apply_transform_visual(selected)
 		var actor=world.player
 		actor.camera.make_current();actor.camera.force_update_scroll()
+		# A disabled QA world must still finish the production renderer's
+		# pending source chunks before comparing the same actor on screen.
+		if world.field_renderer!=null and world.field_renderer.has_method("settle_visible"):
+			check(await world.field_renderer.settle_visible(10000),"Actual visible map chunks ready before capture")
+			actor.camera.force_update_scroll()
 		var sprite:AnimatedSprite2D=actor.transform_sprite
 		var frames:SpriteFrames=sprite.sprite_frames
 		var state_before:=invariant(world)
