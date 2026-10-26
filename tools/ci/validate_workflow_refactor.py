@@ -65,7 +65,7 @@ def assert_preserved_workflow(path, before, after, action_loader):
 
 
 
-# Phase 3: only three proven subset service jobs are suppressed on ordinary PRs.
+# Phase 3: only five proven subset service jobs are suppressed on ordinary PRs.
 # Buyback remains the automatic superset test for every original target base.
 PHASE3_SUBSET_JOBS = {
     '.github/workflows/twilight-shop-authority.yml': 'shop-authority',

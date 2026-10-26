@@ -2,7 +2,7 @@ name: TWILIGHT Shop Buyback
 
 on:
   pull_request:
-    # Union of the four original PR base branches, retaining legacy coverage.
+    # Union of all six original service PR base branches, retaining legacy coverage.
     branches:
       - feature/twilight-local-crafting-v2-20261010
       - feature/twilight-shop-authoritative-transactions-20261010
