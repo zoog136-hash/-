@@ -1,0 +1,3472 @@
+{
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "actor": "transform:387",
+  "required_clips": 33,
+  "registered_frames": 198,
+  "pixel_preservation": "UNCHANGED_SOURCE_BYTES_AND_ATLAS_REGIONS",
+  "death_scale_basis": "STANDING_FIRST_PHASE_NOT_MEDIAN_COLLAPSED_HEIGHT",
+  "tracks": [
+    {
+      "direction": "E",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "bf8883036893c45bead4a9d33e87c36786893f9a14b343bafefbf8b50a1f3b1a",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-idle-source-v01.png",
+          "9fb69ea43391356e66f677951871d526b330eda6d861be5d0a18187a1a36165d"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-attack-source-v01.png",
+          "23c8f3c7e7b580bd2ecd9818105b74b478a1968ea5d60b507df7107d1168a1d6"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            256.5,
+            455.33
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            337.5,
+            595
+          ],
+          "scale": [
+            0.290046,
+            0.290046
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            915,
+            595
+          ],
+          "scale": [
+            0.290046,
+            0.290046
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            270,
+            1168
+          ],
+          "scale": [
+            0.290046,
+            0.290046
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            600,
+            1080
+          ],
+          "scale": [
+            0.1462,
+            0.1462
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            229.0,
+            446.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ],
+      "repaired_sources": [
+        {
+          "phase": 1,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/E-attack-1.png",
+          "sha256": "f0dc9644d52da18eb6f43eb5aa6efaf3e7ff83e8cc08ca88dd834ca765d3f0c7",
+          "registration": {
+            "anchor": [
+              337.5,
+              595
+            ],
+            "scale": [
+              0.290046,
+              0.290046
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        },
+        {
+          "phase": 2,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/E-attack-2.png",
+          "sha256": "4cda86231f46008bffc1d4d07534fe63073a78365c9099b0561ecf85271cc5c9",
+          "registration": {
+            "anchor": [
+              915,
+              595
+            ],
+            "scale": [
+              0.290046,
+              0.290046
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        },
+        {
+          "phase": 3,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/E-attack-3.png",
+          "sha256": "f35494ba25323ccbb1695415c323cf9e46b253cfb537702c4d8159c13beb420b",
+          "registration": {
+            "anchor": [
+              270,
+              1168
+            ],
+            "scale": [
+              0.290046,
+              0.290046
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        },
+        {
+          "phase": 4,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/E-attack-4.png",
+          "sha256": "8860904d947826e3f1b3df1dda23919bd34f32ab30527f03f6520dfef54f746d",
+          "registration": {
+            "anchor": [
+              600,
+              1080
+            ],
+            "scale": [
+              0.1462,
+              0.1462
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        }
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/E-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "76635ed721d13464b5a0c92ae487dd2898ffc05e0a02391acfe0dd0e8ab499b7",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-idle-source-v01.png",
+          "9fb69ea43391356e66f677951871d526b330eda6d861be5d0a18187a1a36165d"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/E-hit-source-v01-isolated.png",
+          "f35ee4c27a405ecbbc86f23d08fc757abb634c63e918ff34c984787deb3547be"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            256.5,
+            455.33
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            357.0,
+            604.67
+          ],
+          "scale": [
+            0.237239,
+            0.237239
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            328.25,
+            605.67
+          ],
+          "scale": [
+            0.237239,
+            0.237239
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            368.0,
+            576.67
+          ],
+          "scale": [
+            0.237239,
+            0.237239
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            314.0,
+            581.67
+          ],
+          "scale": [
+            0.237239,
+            0.237239
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            229.0,
+            446.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "b865cecf56401982d75ce5ddb02243fc9cd6a8a4fbd194683ff4d3136d502053",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-idle-source-v01.png",
+          "9fb69ea43391356e66f677951871d526b330eda6d861be5d0a18187a1a36165d"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            256.5,
+            455.33
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            221.0,
+            456.0
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            227.5,
+            456.33
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            257.5,
+            446.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            249.25,
+            446.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            229.0,
+            446.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "E",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-run-SpriteFrames.tres",
+      "selected_frames_sha256": "dc9950f4bae375d736c298de70702b3952c9072edc59a2925e26ea4e0fb1c071",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/E-run-source-v01.png",
+          "9ebfcd8bd6fbd1e95050377458507f01382715f129dccfd6baeecc69eb9e76bb"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            252.5,
+            469.0
+          ],
+          "scale": [
+            0.334855,
+            0.334855
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            114.0,
+            453.5
+          ],
+          "scale": [
+            0.334855,
+            0.334855
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            134.0,
+            436.0
+          ],
+          "scale": [
+            0.334855,
+            0.334855
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            259.0,
+            421.67
+          ],
+          "scale": [
+            0.334855,
+            0.334855
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            138.5,
+            429.5
+          ],
+          "scale": [
+            0.334855,
+            0.334855
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            133.5,
+            407.33
+          ],
+          "scale": [
+            0.334855,
+            0.334855
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/quality-isolation-v07-008/N-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "8b590defe2e7cc87754ffdd0e45a59e27153f1c3cfb09d8332bacd8dce517995",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-idle-source-v01.png",
+          "b93eff3372d796dfb82148f13d2b858a5fe17979f6c7f871c2ea0f08a33a629c"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/quality-isolation-v07-008/N-attack-source-v02-isolated.png",
+          "8c3ea3a8100aca382bab2f518eb3009628449119ffd5982d158ac501729a6dd7"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            236.5,
+            459.33
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            215.25,
+            682.5
+          ],
+          "scale": [
+            0.23367,
+            0.23367
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            297.0,
+            705.0
+          ],
+          "scale": [
+            0.23367,
+            0.23367
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            272.0,
+            662.0
+          ],
+          "scale": [
+            0.23367,
+            0.23367
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            477.0,
+            635.5
+          ],
+          "scale": [
+            0.23367,
+            0.23367
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            216.25,
+            455.0
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "b8c38511a0ac517a0d9f2c38676229d2b629233c13040dd32b794cd7c6fd984a",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-idle-source-v01.png",
+          "b93eff3372d796dfb82148f13d2b858a5fe17979f6c7f871c2ea0f08a33a629c"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-hit-source-v01.png",
+          "9c374b7ad16ce2bd98f2c079e62feabba8c65d2a0e7c077b89250a5fb2f39268"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            236.5,
+            459.33
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            320.5,
+            584.33
+          ],
+          "scale": [
+            0.2484,
+            0.2484
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            323.5,
+            589.0
+          ],
+          "scale": [
+            0.2484,
+            0.2484
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            340.0,
+            568.33
+          ],
+          "scale": [
+            0.2484,
+            0.2484
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            290.5,
+            579.33
+          ],
+          "scale": [
+            0.2484,
+            0.2484
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            216.25,
+            455.0
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "4f6d74deb871e475654976f4bcb0ea984f978dc18b46d57c9e5040fe94210945",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-idle-source-v01.png",
+          "b93eff3372d796dfb82148f13d2b858a5fe17979f6c7f871c2ea0f08a33a629c"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            236.5,
+            459.33
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            219.0,
+            459.67
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            211.75,
+            460.33
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            230.0,
+            456.0
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            230.0,
+            441.25
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            216.25,
+            455.0
+          ],
+          "scale": [
+            0.276846,
+            0.276846
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "N",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-run-SpriteFrames.tres",
+      "selected_frames_sha256": "acd8c88c3eb7df426c859782240617fa67b55d8248e71bc6c4995d7107577b5c",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/N-run-source-v01.png",
+          "c140f9719988969702e54284d4573a88af14ba269d878a78c9b6b50366b98e83"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            165.25,
+            471.5
+          ],
+          "scale": [
+            0.266505,
+            0.266505
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            173.5,
+            471.5
+          ],
+          "scale": [
+            0.266505,
+            0.266505
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            184.0,
+            472.5
+          ],
+          "scale": [
+            0.266505,
+            0.266505
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            175.75,
+            457.5
+          ],
+          "scale": [
+            0.266505,
+            0.266505
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            160.25,
+            463.5
+          ],
+          "scale": [
+            0.266505,
+            0.266505
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            185.0,
+            458.0
+          ],
+          "scale": [
+            0.266505,
+            0.266505
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "6d8ac86ed0bbfeeb4c7c14269c2d09722532ae682035c302a895bc27e04251d3",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-idle-source-v01-isolated.png",
+          "603ae045ac4de6509ff35c2ed6aadfe7e8f15f6016dd81824e753085d478e543"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-attack-source-v01-isolated.png",
+          "7efc020882c6122d8b63d7c01740a4a17849d2ad8c7f105dde76b25ff7203367"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            265.0,
+            532.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            410.5,
+            649.5
+          ],
+          "scale": [
+            0.25463,
+            0.25463
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            328.25,
+            636.5
+          ],
+          "scale": [
+            0.25463,
+            0.25463
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            308.5,
+            566.0
+          ],
+          "scale": [
+            0.25463,
+            0.25463
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            361.0,
+            590.5
+          ],
+          "scale": [
+            0.25463,
+            0.25463
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            265.5,
+            511.0
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "afeb5d24703176feb14b8ec5a6e3e4eb50a0b0895109d15437fee6d6b2fff9ab",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-idle-source-v01-isolated.png",
+          "603ae045ac4de6509ff35c2ed6aadfe7e8f15f6016dd81824e753085d478e543"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/NE-hit-source-v01.png",
+          "73c5a3382d5f239ce793b389196dd65ecad5f02c893ea536610c987134501638"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            265.0,
+            532.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            282.25,
+            584.67
+          ],
+          "scale": [
+            0.221849,
+            0.221849
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            231.5,
+            583.0
+          ],
+          "scale": [
+            0.221849,
+            0.221849
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            287.0,
+            552.0
+          ],
+          "scale": [
+            0.221849,
+            0.221849
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            242.75,
+            569.33
+          ],
+          "scale": [
+            0.221849,
+            0.221849
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            265.5,
+            511.0
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "6ddb6e136358f7de33630a747d9d2578682ebcdf092637aa96d5b48408121f5d",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-idle-source-v01-isolated.png",
+          "603ae045ac4de6509ff35c2ed6aadfe7e8f15f6016dd81824e753085d478e543"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            265.0,
+            532.67
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            243.0,
+            532.33
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            264.75,
+            531.0
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            266.0,
+            512.33
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            235.5,
+            511.33
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            265.5,
+            511.0
+          ],
+          "scale": [
+            0.266129,
+            0.266129
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NE",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-run-SpriteFrames.tres",
+      "selected_frames_sha256": "2f44e4b7834cb71aaa7aed2d2081106c9f5b5f586c4af36dd4c6fc911bf5962e",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NE-run-source-v01-isolated.png",
+          "ce319ed8511719646e39cbe2c6cec3faed3e833cad9d99fcc291ec52aee5b15d"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            262.0,
+            642.0
+          ],
+          "scale": [
+            0.270936,
+            0.270936
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            239.0,
+            631.0
+          ],
+          "scale": [
+            0.270936,
+            0.270936
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            196.0,
+            630.0
+          ],
+          "scale": [
+            0.270936,
+            0.270936
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            265.0,
+            623.5
+          ],
+          "scale": [
+            0.270936,
+            0.270936
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            228.25,
+            618.5
+          ],
+          "scale": [
+            0.270936,
+            0.270936
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            197.0,
+            623.0
+          ],
+          "scale": [
+            0.270936,
+            0.270936
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NW-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "c70e93dd09463ed08b2afa05051eddffdb04e74943f0f2c9fe1214f94b9c4924",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/NW-idle-source-v01.png",
+          "d9c107608f9a949d0e3ce6fc5e76be6e08ddbede1e097dd8593297840806bd11"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NW-attack-source-v01-isolated.png",
+          "59162415882f337b781a6847760cf68f75fc388f16e96164b16b69a98e59d80b"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            304.0,
+            446.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            558.5,
+            793.5
+          ],
+          "scale": [
+            0.263947,
+            0.263947
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            546.0,
+            794.5
+          ],
+          "scale": [
+            0.263947,
+            0.263947
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            671.25,
+            759.5
+          ],
+          "scale": [
+            0.263947,
+            0.263947
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            595.25,
+            785.0
+          ],
+          "scale": [
+            0.263947,
+            0.263947
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            331.5,
+            443.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NW-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "30b6f2c7f2459ebfa019a69fcdf47b1c45c47f517877bd315cccf1c4593a4727",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/NW-idle-source-v01.png",
+          "d9c107608f9a949d0e3ce6fc5e76be6e08ddbede1e097dd8593297840806bd11"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/NW-hit-source-v01-isolated.png",
+          "c8b78839a79170b7ffe4495f83e4a6ad3a8c49b0a5e18cf1a88d4b63cf98ab5e"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            304.0,
+            446.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            524.5,
+            782.33
+          ],
+          "scale": [
+            0.259536,
+            0.259536
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            482.5,
+            799.67
+          ],
+          "scale": [
+            0.259536,
+            0.259536
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            499.0,
+            769.33
+          ],
+          "scale": [
+            0.259536,
+            0.259536
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            474.25,
+            786.67
+          ],
+          "scale": [
+            0.259536,
+            0.259536
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            331.5,
+            443.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/NW-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "49bf9aadb242ff1fc4cc02266665c16117383f9dc0175e7d38d3178a9c26d4d0",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/NW-idle-source-v01.png",
+          "d9c107608f9a949d0e3ce6fc5e76be6e08ddbede1e097dd8593297840806bd11"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            304.0,
+            446.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            314.0,
+            448.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            329.0,
+            453.0
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            307.5,
+            441.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            324.0,
+            441.0
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            331.5,
+            443.67
+          ],
+          "scale": [
+            0.308411,
+            0.308411
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "NW",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/NW-run-SpriteFrames.tres",
+      "selected_frames_sha256": "39561e0d65d2dc5eb1fe02930acd06f60213e92a7933282765a5c6febac26e01",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/NW-run-source-v01.png",
+          "2fdbe442b63d8e39ddf8f5819e02cd4d4a6b7cb1b3231eacc36e8a4715dad8b6"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            302.0,
+            434.0
+          ],
+          "scale": [
+            0.303867,
+            0.303867
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            266.0,
+            475.0
+          ],
+          "scale": [
+            0.303867,
+            0.303867
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            335.0,
+            490.0
+          ],
+          "scale": [
+            0.303867,
+            0.303867
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            277.0,
+            469.0
+          ],
+          "scale": [
+            0.303867,
+            0.303867
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            230.5,
+            470.0
+          ],
+          "scale": [
+            0.303867,
+            0.303867
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            343.0,
+            466.0
+          ],
+          "scale": [
+            0.303867,
+            0.303867
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "d55d1bff8878c9b68cb7d477a7671a9d813853eb4d7096d797ef30f0256e8521",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-attack-source-v01.png",
+          "06bad6313a792f33681d6801089ed5d918aee22ecb2cff31a9667560d7ab5c02"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            250.5,
+            445.0
+          ],
+          "scale": [
+            0.280971,
+            0.280971
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            377.0,
+            479.0
+          ],
+          "scale": [
+            0.280971,
+            0.280971
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            210.0,
+            464.5
+          ],
+          "scale": [
+            0.280971,
+            0.280971
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            300.0,
+            475.0
+          ],
+          "scale": [
+            0.280971,
+            0.280971
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            281.5,
+            451.5
+          ],
+          "scale": [
+            0.280971,
+            0.280971
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            224.75,
+            446.33
+          ],
+          "scale": [
+            0.280971,
+            0.280971
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "death",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/S-death-SpriteFrames.tres",
+      "selected_frames_sha256": "08a9c57353d3b36af1fd2fed868df749f0bcc041ce39f2aca34aae308e5081e2",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/S-death-source-v01-isolated.png",
+          "9d0175890f65013a4f282eb51934e9a762457eee0d76d6061ed925dd1ad2683a"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            378.0,
+            521.67
+          ],
+          "scale": [
+            0.25841614396128454,
+            0.25841614396128454
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            378.0,
+            508.33
+          ],
+          "scale": [
+            0.25841614396128454,
+            0.25841614396128454
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            287.5,
+            499.0
+          ],
+          "scale": [
+            0.25841614396128454,
+            0.25841614396128454
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            150.0,
+            445.0
+          ],
+          "scale": [
+            0.25841614396128454,
+            0.25841614396128454
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            222.0,
+            450.0
+          ],
+          "scale": [
+            0.25841614396128454,
+            0.25841614396128454
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            212.0,
+            449.0
+          ],
+          "scale": [
+            0.25841614396128454,
+            0.25841614396128454
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "2c734a932471f72278882ab925e20053de7db9a57067b9fd5a7230c4198189b1",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-hit-source-v01.png",
+          "0cb8467a4554ff1ad6f3f655d40cad647e680393a54f4bc29994fb6ce902ea7e"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            225.5,
+            463.33
+          ],
+          "scale": [
+            0.314585,
+            0.314585
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            238.5,
+            451.33
+          ],
+          "scale": [
+            0.314585,
+            0.314585
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            246.75,
+            452.33
+          ],
+          "scale": [
+            0.314585,
+            0.314585
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            250.25,
+            428.75
+          ],
+          "scale": [
+            0.314585,
+            0.314585
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            243.25,
+            431.0
+          ],
+          "scale": [
+            0.314585,
+            0.314585
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            235.25,
+            454.67
+          ],
+          "scale": [
+            0.314585,
+            0.314585
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "51e12e5e02124db4a372da382a2881e0aff7f21f90cefebf1accbdb85ca0fb28",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-idle-source-v01.png",
+          "4208b74db5e831411d5ade66965e0bff99ddf71014d579b2c162679872a40da3"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            305.5,
+            469.5
+          ],
+          "scale": [
+            0.268263,
+            0.268263
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            277.5,
+            468.5
+          ],
+          "scale": [
+            0.268263,
+            0.268263
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            290.5,
+            469.0
+          ],
+          "scale": [
+            0.268263,
+            0.268263
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            309.25,
+            466.5
+          ],
+          "scale": [
+            0.268263,
+            0.268263
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            278.0,
+            466.5
+          ],
+          "scale": [
+            0.268263,
+            0.268263
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            301.0,
+            465.5
+          ],
+          "scale": [
+            0.268263,
+            0.268263
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "S",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-run-SpriteFrames.tres",
+      "selected_frames_sha256": "cb6e3f481fcb347dfaf1bf2172cb0c7b450c77b13498d16f742ad660434fc8f5",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/S-run-source-v01.png",
+          "c8548ebd6f30421e329c7b308c962ab68f33a13f9553b4cafbedced6237a027a"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            194.25,
+            461.5
+          ],
+          "scale": [
+            0.301164,
+            0.301164
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            166.0,
+            457.0
+          ],
+          "scale": [
+            0.301164,
+            0.301164
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            131.5,
+            451.0
+          ],
+          "scale": [
+            0.301164,
+            0.301164
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            186.5,
+            442.0
+          ],
+          "scale": [
+            0.301164,
+            0.301164
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            159.75,
+            422.0
+          ],
+          "scale": [
+            0.301164,
+            0.301164
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            170.75,
+            435.0
+          ],
+          "scale": [
+            0.301164,
+            0.301164
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SE-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "c0b6fa7c86514dbbfbd50473b6fe278073e0923f1e077c7ebc5c7095bbd5aa8f",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SE-idle-source-v01.png",
+          "09017cf715149d63369c7e372c4c39ec538a500fa11c8f25cf93eda541ebb962"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SE-attack-source-v01-isolated.png",
+          "a0ad6926ae68490f8fd62df16d3aee871d656a8d37dc64cc54a9975768bf8066"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            246.25,
+            446.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            423.75,
+            629.5
+          ],
+          "scale": [
+            0.25409,
+            0.25409
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            358.5,
+            608.5
+          ],
+          "scale": [
+            0.25409,
+            0.25409
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            382.0,
+            566.5
+          ],
+          "scale": [
+            0.25409,
+            0.25409
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            421.0,
+            558.33
+          ],
+          "scale": [
+            0.25409,
+            0.25409
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            244.0,
+            444.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SE-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "9fa162657de27de8f7cd4859413f7efa638ec2210603643653e60b1a34bd9879",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SE-idle-source-v01.png",
+          "09017cf715149d63369c7e372c4c39ec538a500fa11c8f25cf93eda541ebb962"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SE-hit-source-v01-isolated.png",
+          "82a7a03eab33e355a0d60ca0ed85fd4feb36eb9eb89a744973d69c4291731845"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            246.25,
+            446.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            380.0,
+            647.67
+          ],
+          "scale": [
+            0.221031,
+            0.221031
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            342.25,
+            651.33
+          ],
+          "scale": [
+            0.221031,
+            0.221031
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            381.25,
+            620.67
+          ],
+          "scale": [
+            0.221031,
+            0.221031
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            352.5,
+            627.0
+          ],
+          "scale": [
+            0.221031,
+            0.221031
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            244.0,
+            444.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SE-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "b311e17575e9d88b325be4bdc07258e17236628199b2e60c0bcc381529a56b74",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SE-idle-source-v01.png",
+          "09017cf715149d63369c7e372c4c39ec538a500fa11c8f25cf93eda541ebb962"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            246.25,
+            446.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            241.5,
+            446.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            240.0,
+            445.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            262.0,
+            447.0
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            247.0,
+            444.0
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            244.0,
+            444.67
+          ],
+          "scale": [
+            0.282449,
+            0.282449
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SE-run-SpriteFrames.tres",
+      "selected_frames_sha256": "6491ca15466bb96971762fde7e106282831e8bfce3c9269e5c4c91cc91872b41",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SE-run-source-v01.png",
+          "3edae97c12f2f3c84ec5cb39391a0d1eb2448ed3ea9af6d75ea6368b529d9915"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            409.0,
+            481.0
+          ],
+          "scale": [
+            0.354743,
+            0.354743
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            151.5,
+            438.0
+          ],
+          "scale": [
+            0.354743,
+            0.354743
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            165.5,
+            406.0
+          ],
+          "scale": [
+            0.354743,
+            0.354743
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            436.0,
+            460.0
+          ],
+          "scale": [
+            0.354743,
+            0.354743
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            152.5,
+            415.5
+          ],
+          "scale": [
+            0.354743,
+            0.354743
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            169.25,
+            394.67
+          ],
+          "scale": [
+            0.354743,
+            0.354743
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SW-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "482f0804e275030f314996f9a28c539757c40ad6844c8048516adf1b814c6398",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SW-idle-source-v01.png",
+          "6f2fb312b733a47bda912838b2a07cdf0da1b5dc30455ae50dd921720ddf7d5c"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SW-attack-source-v01.png",
+          "8c87a05ffe8b227bc58096a4000b075a27e74a1bcc90e7478e9b1e1b512b0779"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            258.75,
+            463.0
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            392.5,
+            588
+          ],
+          "scale": [
+            0.264978,
+            0.264978
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            1016,
+            592
+          ],
+          "scale": [
+            0.264978,
+            0.264978
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            910,
+            960
+          ],
+          "scale": [
+            0.176,
+            0.176
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            760,
+            1060
+          ],
+          "scale": [
+            0.151,
+            0.151
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            231.0,
+            451.67
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ],
+      "repaired_sources": [
+        {
+          "phase": 1,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/SW-attack-1.png",
+          "sha256": "c02ff231d2e91b0d289f125bf3c464f83a645d2fc92263bcea075e8a985a9cda",
+          "registration": {
+            "anchor": [
+              392.5,
+              588
+            ],
+            "scale": [
+              0.264978,
+              0.264978
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        },
+        {
+          "phase": 2,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/SW-attack-2.png",
+          "sha256": "111691406227f0b53b337f4d013ccb942592bb23476d9d76089ce8bd85c1de25",
+          "registration": {
+            "anchor": [
+              1016,
+              592
+            ],
+            "scale": [
+              0.264978,
+              0.264978
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        },
+        {
+          "phase": 3,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/SW-attack-3.png",
+          "sha256": "9d29e9a18a3b3c86671ade9d800cb09fbe77c8623179d75acf0d921c44cb8cd5",
+          "registration": {
+            "anchor": [
+              910,
+              960
+            ],
+            "scale": [
+              0.176,
+              0.176
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        },
+        {
+          "phase": 4,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_387/r001/SW-attack-4.png",
+          "sha256": "23ec9afcc5f1774ff106a72795caa34497b277a2ac937f214c9f59660dedcb43",
+          "registration": {
+            "anchor": [
+              760,
+              1060
+            ],
+            "scale": [
+              0.151,
+              0.151
+            ],
+            "target": [
+              0,
+              0
+            ]
+          },
+          "defect": "fixed-cell clipping/foreign pose fragments",
+          "normal_other_tracks_changed": false
+        }
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SW-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "87c2d061ac95e83f0ff9e6c36013c577bf413eab1440da7413b217b210ace602",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SW-idle-source-v01.png",
+          "6f2fb312b733a47bda912838b2a07cdf0da1b5dc30455ae50dd921720ddf7d5c"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SW-hit-source-v01-isolated.png",
+          "776ccfa98c827cf4771c4095819887fa064a060aaa8f8a4e0378db5e93114d26"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            258.75,
+            463.0
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            336.25,
+            616.33
+          ],
+          "scale": [
+            0.243993,
+            0.243993
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            286.0,
+            629.67
+          ],
+          "scale": [
+            0.243993,
+            0.243993
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            352.25,
+            576.67
+          ],
+          "scale": [
+            0.243993,
+            0.243993
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            303.0,
+            585.0
+          ],
+          "scale": [
+            0.243993,
+            0.243993
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            231.0,
+            451.67
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SW-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "c20e564fad5022335cf6f2c3e3909779312147061cccfb01c322255723aab98f",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/SW-idle-source-v01.png",
+          "6f2fb312b733a47bda912838b2a07cdf0da1b5dc30455ae50dd921720ddf7d5c"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            258.75,
+            463.0
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            234.5,
+            463.67
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            220.0,
+            466.67
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            253.5,
+            454.33
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            237.25,
+            450.67
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            231.0,
+            451.67
+          ],
+          "scale": [
+            0.291134,
+            0.291134
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "SW",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SW-run-SpriteFrames.tres",
+      "selected_frames_sha256": "5b5754d74234456acbc70cfd092797606463c8269e138534c89030f40307a00a",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/SW-run-source-v01-isolated.png",
+          "60d4933be6333e3cd733d42d518fbc91d626e053e1ee0ce4291228ba3b54bd15"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            203.0,
+            569.5
+          ],
+          "scale": [
+            0.30689,
+            0.30689
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            269.5,
+            555.0
+          ],
+          "scale": [
+            0.30689,
+            0.30689
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            164.5,
+            550.5
+          ],
+          "scale": [
+            0.30689,
+            0.30689
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            209.5,
+            550.5
+          ],
+          "scale": [
+            0.30689,
+            0.30689
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            282.5,
+            523.0
+          ],
+          "scale": [
+            0.30689,
+            0.30689
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            195.0,
+            534.5
+          ],
+          "scale": [
+            0.30689,
+            0.30689
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "attack",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/W-attack-SpriteFrames.tres",
+      "selected_frames_sha256": "aae4ab28dfa8fe54f69bc7c9d4e01db4d45830d77c1853a7fe20776d2c252a31",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-idle-source-v01.png",
+          "b0a1e7bffbc6f4aea2b60c746b66a73aace0a2feb7ea4e20116f9625716a6926"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/W-attack-source-v01-isolated.png",
+          "e27f158cc0f4a8e233364c78c44ead3c912046a9b062e387f42345e76ea79779"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            199.5,
+            456.67
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            460.5,
+            626.0
+          ],
+          "scale": [
+            0.240437,
+            0.240437
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            454.5,
+            627.0
+          ],
+          "scale": [
+            0.240437,
+            0.240437
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            602.0,
+            570.0
+          ],
+          "scale": [
+            0.240437,
+            0.240437
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            444.5,
+            578.5
+          ],
+          "scale": [
+            0.240437,
+            0.240437
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            190.5,
+            453.67
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "hit",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/W-hit-SpriteFrames.tres",
+      "selected_frames_sha256": "e3759785c11edb32c06025a521e1436aebdf99abc36e97584921e97ea037632f",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-idle-source-v01.png",
+          "b0a1e7bffbc6f4aea2b60c746b66a73aace0a2feb7ea4e20116f9625716a6926"
+        ],
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/W-hit-source-v01-isolated.png",
+          "ffb6bdd439fba0a0bb6970d36af947747a3573c60f965437cc684b92467c578a"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            199.5,
+            456.67
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            306.0,
+            577.33
+          ],
+          "scale": [
+            0.23639,
+            0.23639
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            243.0,
+            583.0
+          ],
+          "scale": [
+            0.23639,
+            0.23639
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            314.5,
+            563.33
+          ],
+          "scale": [
+            0.23639,
+            0.23639
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            279.0,
+            566.33
+          ],
+          "scale": [
+            0.23639,
+            0.23639
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            190.5,
+            453.67
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "idle",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-idle-SpriteFrames.tres",
+      "selected_frames_sha256": "dd770fe121d3984d7cccf6d1970a05655fb64805a43e4b845bf6de58f32d27db",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/draft001/W-idle-source-v01.png",
+          "b0a1e7bffbc6f4aea2b60c746b66a73aace0a2feb7ea4e20116f9625716a6926"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            199.5,
+            456.67
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            187.25,
+            457.33
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            192.5,
+            456.33
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            193.0,
+            453.67
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            188.25,
+            453.33
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            190.5,
+            453.67
+          ],
+          "scale": [
+            0.261076,
+            0.261076
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "W",
+      "role": "run",
+      "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/W-run-SpriteFrames.tres",
+      "selected_frames_sha256": "084003c359719cd5c6d58c47ab9a94585a6cba08ef85b4897e1c163eb2a60ab9",
+      "sources": [
+        [
+          "res://assets/actors/eight_direction/legendary_parallel/transform_387/corrections/isolation-v20/W-run-source-v01-isolated.png",
+          "512ba2393b74f0fda5ab3008a51273e75e2fc52768c3be7016afe240ae640fca"
+        ]
+      ],
+      "registration": [
+        {
+          "anchor": [
+            320.0,
+            536.0
+          ],
+          "scale": [
+            0.284054,
+            0.284054
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            379.0,
+            544.0
+          ],
+          "scale": [
+            0.284054,
+            0.284054
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            504.0,
+            543.0
+          ],
+          "scale": [
+            0.284054,
+            0.284054
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            350.5,
+            492.5
+          ],
+          "scale": [
+            0.284054,
+            0.284054
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            363.0,
+            486.5
+          ],
+          "scale": [
+            0.284054,
+            0.284054
+          ],
+          "target": [
+            0,
+            0
+          ]
+        },
+        {
+          "anchor": [
+            322.75,
+            496.5
+          ],
+          "scale": [
+            0.284054,
+            0.284054
+          ],
+          "target": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}
