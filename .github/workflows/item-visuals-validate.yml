@@ -37,7 +37,8 @@ jobs:
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
           python3 -m pip install Pillow
           python3 tools/test_item_source_verification.py
-          git fetch --depth=1 origin 434b904d957fd2146b6d2e73325693a402028035
+          # Pin catalog identity to the checked PR base, not an obsolete 2026-10-12 main.
+          git fetch --depth=1 origin "${{ github.event.pull_request.base.sha || github.sha }}"
       - name: Import and identity, input, save, equipment regressions
         shell: bash
         run: |
@@ -64,7 +65,7 @@ jobs:
           /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tools/export_item_visual_audit.gd > test-results/audit.txt 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|_FAILED' test-results/audit.txt; then exit 1; fi
           grep -q 'ITEM_VISUAL_AUDIT_OK' test-results/audit.txt
-          python3 tools/check_item_visuals.py --runtime test-results/runtime.json --source-evidence docs/item-visuals/evidence/source-verification.json --output test-results/audit
+          python3 tools/check_item_visuals.py --runtime test-results/runtime.json --source-evidence docs/item-visuals/evidence/source-verification.json --output test-results/audit --base "${{ github.event.pull_request.base.sha || github.sha }}"
       - name: Actual Compatibility renders, sequence, and measured stress case
         shell: bash
         run: |

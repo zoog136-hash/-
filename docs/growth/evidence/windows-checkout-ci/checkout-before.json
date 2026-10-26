@@ -1,0 +1,33 @@
+{
+  "core_autocrlf": true,
+  "plans": [
+    {
+      "path": "data/maps/native_png_plan.json",
+      "bytes": 57146,
+      "lf": 1025,
+      "crlf": 0,
+      "expected": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+      "actual": "97cfd51a0a758bf4ee95362470d4990baeab6ad57aa048d14bbf76d538cbaed0",
+      "sha_matches": true
+    },
+    {
+      "path": "data/maps/aden_faith_png_plan.json",
+      "bytes": 72605,
+      "lf": 3657,
+      "crlf": 0,
+      "expected": "6ec5ef89bed215ea4a7f7ea8c03c5fe889f59c29d12284db704a607f6e287180",
+      "actual": "6ec5ef89bed215ea4a7f7ea8c03c5fe889f59c29d12284db704a607f6e287180",
+      "sha_matches": true
+    },
+    {
+      "path": "data/maps/domination_png_plan.json",
+      "bytes": 13542,
+      "lf": 695,
+      "crlf": 695,
+      "expected": "80db63cde9dba6dc0ca4b33e4f12d40c1f108a8f77a87a420fec0eb6e778fea4",
+      "actual": "7dcc8b6f47e73b6509a29a7fe30b47e689fdd316a8d5ccf571d7ba23ed693a52",
+      "sha_matches": false
+    }
+  ],
+  "all_authenticated_bytes_preserved": false
+}

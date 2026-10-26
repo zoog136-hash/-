@@ -1,0 +1,7 @@
+TIMEOUT Command '['/workspace/tooling/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64', '--rendering-driver', 'opengl3', '--audio-driver', 'Dummy', '--path', '/workspace/pr154-ci-base', '--script', 'res://tests/aden_faith_png_runtime_test.gd']' timed out after 150 seconds
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)

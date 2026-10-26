@@ -52,7 +52,7 @@ concurrency:
 jobs:
   consumables:
     runs-on: ubuntu-latest
-    timeout-minutes: 24
+    timeout-minutes: 42
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,9 +72,9 @@ jobs:
         run: |
           set -euo pipefail
           git rev-parse HEAD | tee consumable-tested-sha.txt
-          # PR122's complete authored asset import took 665s in the APK job;
-          # use the existing full-suite 900s import budget, without skipping art.
-          timeout 900 "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee consumable-import.log
+          # Full-asset Godot reimport reached 98% at 900s in run 40196220860.
+          # Keep all art and parsing checks; allow first-time import to finish.
+          timeout 1200 "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee consumable-import.log
           if grep -E 'SCRIPT ERROR:|ERROR:|Parse Error|Failed to load script' consumable-import.log; then exit 1; fi
       - name: Automatic use, all-class cooking and saved settings
         run: |
