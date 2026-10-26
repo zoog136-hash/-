@@ -37,7 +37,6 @@ jobs:
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
           python3 -m pip install Pillow
           python3 tools/test_item_source_verification.py
-          # Pin catalog identity to the checked PR base, not an obsolete 2026-10-12 main.
           git fetch --depth=1 origin "${{ github.event.pull_request.base.sha || github.sha }}"
       - name: Import and identity, input, save, equipment regressions
         shell: bash
