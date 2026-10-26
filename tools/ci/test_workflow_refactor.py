@@ -1,7 +1,7 @@
 """Guard against hiding changed CI coverage behind a shared setup action."""
 import copy
 import unittest
-from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE
+from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader
 
 
 class RefactorContractTest(unittest.TestCase):
@@ -126,6 +126,53 @@ class ImportCacheSafetyContract(unittest.TestCase):
         self.assertEqual(len(IMPORT_EXTRA_NAMES), 4)
         self.assertNotIn("Import and parse project", IMPORT_EXTRA_NAMES)
         self.assertNotIn("Boot main scene", IMPORT_EXTRA_NAMES)
+
+
+
+class PhaseTwoImportReaderContract(unittest.TestCase):
+    def test_each_reader_is_exactly_read_only_and_before_real_tests(self):
+        self.assertEqual(SHARED_IMPORT_READER['uses'], 'actions/cache/restore@v4')
+        self.assertEqual(SHARED_IMPORT_READER['with']['key'], IMPORT_CACHE_KEY)
+        self.assertEqual(SHARED_IMPORT_READER['with']['path'], IMPORT_CACHE_PATHS)
+        self.assertTrue(SHARED_IMPORT_READER['continue-on-error'])
+        for path, named_step in SHARED_IMPORT_READER_STEPS.items():
+            with self.subTest(path=path):
+                before = {'jobs': {'ci': {'steps': [
+                    {'uses': 'actions/checkout@v4'},
+                    {'name': named_step, 'run': 'run-all-original-checks'},
+                ]}}}
+                after = copy.deepcopy(before)
+                after['jobs']['ci']['steps'].insert(1, copy.deepcopy(SHARED_IMPORT_READER))
+                self.assertEqual(normalize_shared_import_cache_reader(path, after), before)
+                damaged = copy.deepcopy(after)
+                damaged['jobs']['ci']['steps'][1]['with']['key'] += '-untrusted'
+                with self.assertRaises(AssertionError):
+                    normalize_shared_import_cache_reader(path, damaged)
+                moved = copy.deepcopy(after)
+                moved['jobs']['ci']['steps'].append(moved['jobs']['ci']['steps'].pop(1))
+                with self.assertRaises(AssertionError):
+                    normalize_shared_import_cache_reader(path, moved)
+
+    def test_no_existing_check_may_be_removed(self):
+        path = '.github/workflows/twilight-local-crafting.yml'
+        before = {'jobs': {'ci': {'steps': [
+            {'uses': 'actions/checkout@v4'},
+            {'name': SHARED_IMPORT_READER_STEPS[path], 'run': 'mandatory-tests'},
+        ]}}}
+        after = copy.deepcopy(before)
+        after['jobs']['ci']['steps'].insert(1, copy.deepcopy(SHARED_IMPORT_READER))
+        assert_preserved_workflow(path, before, after, lambda _: None)
+        after['jobs']['ci']['steps'][2]['run'] = 'true'
+        with self.assertRaises(AssertionError):
+            assert_preserved_workflow(path, before, after, lambda _: None)
+
+    def test_unrelated_workflow_cannot_use_reader(self):
+        before = {'jobs': {'ci': {'steps': [{'uses': 'actions/checkout@v4'}]}}}
+        after = copy.deepcopy(before)
+        after['jobs']['ci']['steps'].append(copy.deepcopy(SHARED_IMPORT_READER))
+        with self.assertRaises(AssertionError):
+            assert_preserved_workflow('.github/workflows/resource-integrity.yml',
+                                      before, after, lambda _: None)
 
 
 if __name__ == '__main__':

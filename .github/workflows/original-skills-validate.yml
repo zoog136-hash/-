@@ -23,6 +23,15 @@ jobs:
         uses: ./.github/actions/setup-software-gl
       - name: Dated data and graph invariants
         run: python3 tools/validate_original_skills.py --report test-results/data-validation.json
+      - name: Restore trusted Godot imported resources
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v1
       - name: Skill behavior and combat regressions
         # Every PR also runs Integration's unfiltered suite; other events keep it here.
         env:

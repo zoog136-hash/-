@@ -53,6 +53,15 @@ jobs:
         with:
           path: /tmp/Godot_v4.7.2-stable_linux.x86_64
           key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+      - name: Restore trusted Godot imported resources
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v1
       - name: Full project regression, import, boot and all smoke tests
         shell: bash
         run: |

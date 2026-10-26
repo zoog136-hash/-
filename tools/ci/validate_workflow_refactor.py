@@ -51,6 +51,7 @@ NEW_WORKFLOW = '.github/workflows/cancel-superseded-pr-ci.yml'
 
 def assert_preserved_workflow(path, before, after, action_loader):
     expanded = expand(after, action_loader)
+    expanded = normalize_shared_import_cache_reader(path, expanded)
     if path in STALE_WORKFLOWS:
         original = before['concurrency']
         assert original['cancel-in-progress'] is False, path
@@ -129,6 +130,46 @@ def validate_cached_setup_action(action):
 # unchanged real --import and full Godot checks. No PR can seed this cache.
 IMPORT_CACHE_PATHS = ".godot/imported\n**/*.import\n"
 IMPORT_CACHE_KEY = "twilight-godot-import-4.7.2-linux-compat-main-v1"
+
+# Phase 2 only restores immutable, default-branch-produced import artifacts.
+# PRs cannot write this cache; every original Godot import/test still runs.
+SHARED_IMPORT_READER_STEPS = {
+    '.github/workflows/twilight-local-crafting.yml': 'Project asset import and GDScript parse',
+    '.github/workflows/twilight-npc-dialogue.yml': 'Import and parse entire project',
+    '.github/workflows/twilight-crafting-validate.yml': 'Import project and GDScript',
+    '.github/workflows/original-skills-validate.yml': 'Skill behavior and combat regressions',
+    '.github/workflows/twilight-integration-validate.yml': 'Full project regression, import, boot and all smoke tests',
+}
+SHARED_IMPORT_READER = {
+    'name': 'Restore trusted Godot imported resources',
+    'id': 'trusted-import-cache',
+    'uses': 'actions/cache/restore@v4',
+    'continue-on-error': True,
+    'with': {'path': IMPORT_CACHE_PATHS, 'key': IMPORT_CACHE_KEY},
+}
+
+
+def normalize_shared_import_cache_reader(path, expanded):
+    if path not in SHARED_IMPORT_READER_STEPS:
+        return expanded
+    result = copy.deepcopy(expanded)
+    jobs = result['jobs']
+    assert len(jobs) == 1, path + ': unexpectedly changed job count'
+    steps = next(iter(jobs.values()))['steps']
+    positions = [i for i, step in enumerate(steps)
+                 if step.get('id') == 'trusted-import-cache' or
+                 step.get('name') == SHARED_IMPORT_READER['name']]
+    assert len(positions) == 1, path + ': reader missing or duplicated'
+    index = positions[0]
+    assert steps[index] == SHARED_IMPORT_READER, path + ': cache reader not read-only/exact'
+    checkout = [i for i, step in enumerate(steps) if step.get('uses') == 'actions/checkout@v4']
+    checks = [i for i, step in enumerate(steps)
+              if step.get('name') == SHARED_IMPORT_READER_STEPS[path]]
+    assert len(checkout) >= 1 and len(checks) == 1, path + ': anchor changed'
+    assert checkout[0] < index < checks[0], path + ': cache restore must precede full validation'
+    steps.pop(index)
+    return result
+
 IMPORT_EXTRA_NAMES = (
     "Restore trusted Godot imported resources",
     "Start Godot import timing",
