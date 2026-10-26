@@ -350,7 +350,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p test-results/batch${{ matrix.batch }} "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 1200 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch${{ matrix.batch }}/import.txt
+          timeout 300 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch${{ matrix.batch }}/import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/batch${{ matrix.batch }}/import.txt; then exit 1; fi
       - name: Configured production Main cases in one headless engine
         shell: bash
