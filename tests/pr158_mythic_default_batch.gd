@@ -40,6 +40,7 @@ func run() -> void:
 			actor.camera.force_update_scroll()
 		var sprite:AnimatedSprite2D=actor.transform_sprite
 		var frames:SpriteFrames=sprite.sprite_frames
+		var legendary:=frames.resource_path.contains("legendary_production/")
 		var state_before:=invariant(world)
 		var record_before:=JSON.stringify(selected)
 		var exercised_poses: Dictionary={}
@@ -49,7 +50,7 @@ func run() -> void:
 			actor.motion.advance(.5,Vector2.ZERO)
 			for n in range(6):tick(actor,Vector2(1,-1).normalized()*300.)
 		else:
-			check(frames.resource_path.contains("native_production/") if key=="413" else frames.resource_path.contains("reaper_"),"Expected authored default path "+key)
+			check(legendary or (frames.resource_path.contains("native_production/") if key=="413" else frames.resource_path.contains("reaper_")),"Expected authored default path "+key)
 			for d in range(8):
 				var aim:=Vector2.RIGHT.rotated(d*PI/4.)
 				for role: String in ["idle","run","attack","hit"]:
@@ -108,7 +109,11 @@ func run() -> void:
 		check(crop.save_png(output.path_join(key+".png"))==OK,"Actual game comparison capture")
 		if not before_mode and report.errors.is_empty():
 			var count:=frames.get_animation_names().size()
-			if key=="413":
+			if legendary:
+				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All legendary required tracks and poses actually played")
+				if report.errors.is_empty():
+					print("PR158_LEGENDARY_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
+			elif key=="413":
 				print("PR158_DEFAULT_RUNTIME_COVERAGE key=transform:",key," exercised_tracks=",exercised_tracks.size()," exercised_poses=",exercised_poses.size()," authored_tracks=",count," authored_poses=",count*6," WALK excluded by existing transform scope")
 				check(exercised_tracks.size()==38 and exercised_poses.size()==228,"Every policy-required track and pose actually played")
 				if report.errors.is_empty():
