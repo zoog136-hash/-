@@ -381,7 +381,23 @@ func _use_bless_scroll(scroll_name: String) -> void:
 	if candidates.is_empty():
 		_message("축복 부여가 가능한 미축복 무기·방어구가 없습니다")
 		return
-	_select_option(scroll_name, candidates, "blessing", false)
+	# Use the game's native touch-friendly equipment chooser, not a floating
+	# ConfirmationDialog which can be unreachable in Android editor/play mode.
+	var views: Array = []
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	for reference: String in candidates:
+		var parts: PackedStringArray = reference.split("@@@", false, 1)
+		if parts.size() != 2: continue
+		var physical: Dictionary = instances.get(parts[1], {}) as Dictionary
+		var record: Dictionary = world.call("_find_catalog_item_record", parts[0])
+		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
+			record = physical["record"] as Dictionary
+		var grade: String = str(record.get("grade", "일반"))
+		var kind: String = str(world.call("_enhancement_kind_for_record", record))
+		views.append({"name": parts[0], "target_id": reference, "instance_id": parts[1],
+			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade),
+			"bonus_text": BLESSING.effect_text(grade, kind), "equipped": false})
+	world.hud.call("open_blessing_targets", scroll_name, views)
 
 # The physical instance ID is mandatory: two copies of the same weapon can
 # have different blessings, enchants, pinned catalog variants and equip state.
