@@ -21,14 +21,9 @@ concurrency:
 jobs:
   runner:
     runs-on: ubuntu-latest
-    # Repository checkout contains large map/animation binaries. Python runner tests
-    # only require these scripts; use a sparse working tree to avoid checkout timeout.
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            tools
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -47,8 +42,7 @@ jobs:
   turn-undead:
     needs: runner
     runs-on: ubuntu-latest
-    # This job needs the complete Godot game/resources and cannot use sparse checkout.
-    timeout-minutes: 35
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - name: Resource preflight and pinned project engine
@@ -64,7 +58,7 @@ jobs:
           export XDG_DATA_HOME="${RUNNER_TEMP}/turn-undead-debug"
           export APPDATA="$XDG_DATA_HOME" LOCALAPPDATA="$XDG_DATA_HOME"
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
-          timeout 900 "$ENGINE" --headless --path . --import 2>&1 | tee debug-import.log
+          timeout 300 "$ENGINE" --headless --path . --import 2>&1 | tee debug-import.log
           if grep -E 'SCRIPT ERROR:|ERROR:' debug-import.log; then exit 1; fi
           timeout 180 "$ENGINE" --headless --path . --script res://tests/original_turn_undead_rewards_test.gd 2>&1 | tee turn-rewards.log
           if grep -E 'SCRIPT ERROR:|ERROR:|TURN_REWARDS FAIL:' turn-rewards.log; then exit 1; fi
