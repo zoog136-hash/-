@@ -82,6 +82,7 @@ jobs:
           if grep -E 'SCRIPT ERROR:|ERROR:' import.log; then
             exit 1
           fi
+          echo 'PR86_FULL_IMPORT_OK'
           failed=0
           for test in ui_navigation_preservation_test pr93_landing_bounds_test ui_pointer_transfer_test quickslot_smoke_test ui_renewal_integration_test ui_fidelity_regression_test; do
             export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-${test}"
