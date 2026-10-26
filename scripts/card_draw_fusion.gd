@@ -132,6 +132,27 @@ func draw_cards(category: String, count: int) -> Dictionary:
 		results.append(_receive(category, card))
 	return {"ok": true, "category": category, "results": results}
 
+# Total displayed copies include the permanently unlocked card as well as
+# spendable duplicates. Exported owned/spare schema is unchanged.
+func total_count(category: String, identity: String) -> int:
+	if not CATEGORIES.has(category):
+		return 0
+	if not (known_ids.get(category, {}) as Dictionary).has(identity):
+		return 0
+	var permanent: Dictionary = owned.get(category, {}) as Dictionary
+	var duplicates: Dictionary = spare.get(category, {}) as Dictionary
+	return (1 if permanent.has(identity) else 0) + maxi(0, int(duplicates.get(identity, 0)))
+
+func category_totals(category: String) -> Dictionary:
+	if not CATEGORIES.has(category):
+		return {"unique": 0, "total": 0, "spare": 0}
+	var permanent: Dictionary = owned.get(category, {}) as Dictionary
+	var duplicates: Dictionary = spare.get(category, {}) as Dictionary
+	var duplicate_count: int = 0
+	for identity: String in permanent:
+		duplicate_count += maxi(0, int(duplicates.get(identity, 0)))
+	return {"unique": permanent.size(), "total": permanent.size() + duplicate_count, "spare": duplicate_count}
+
 func spare_count(category: String, grade: String) -> int:
 	if not CATEGORIES.has(category) or not GRADES.has(grade):
 		return 0
