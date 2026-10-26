@@ -2847,12 +2847,15 @@ func _use_card_pack_item(item_name: String) -> void:
 	if not card_draw_fusion.can_draw(category):
 		hud.show_message("해당 종류의 뽑기 카드 목록이 부족합니다")
 		return
-	# The draw service validates before granting; spend only on success.
+	# Persist an atomic (card ownership + ticket debit) transaction. Never show
+	# a new card or consume the ticket if the old save cannot be replaced.
+	var cards_before: Dictionary = card_draw_fusion.export_state()
+	var ticket_before: int = int(inventory.get(item_name, 0))
 	var outcome: Dictionary = card_draw_fusion.draw_cards(category, count)
 	if not bool(outcome.get("ok", false)):
 		hud.show_message(str(outcome.get("error", "뽑기 실패")))
 		return
-	var remaining: int = int(inventory.get(item_name, 0)) - 1
+	var remaining: int = ticket_before - 1
 	if remaining == 0:
 		inventory.erase(item_name)
 	else:
@@ -2865,12 +2868,17 @@ func _use_card_pack_item(item_name: String) -> void:
 	var message: String = "%s %d회 완료 · 고급 %d · 희귀 %d · 영웅 %d · 전설 %d" % [
 		category, count, int(grades.get("고급", 0)), int(grades.get("희귀", 0)),
 		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
+	if _save_game(true) != OK:
+		card_draw_fusion.import_state(cards_before)
+		inventory[item_name] = ticket_before
+		hud.refresh_inventory(inventory)
+		hud.show_message("뽑기 저장 실패 · 뽑기권과 카드 보유 상태를 복구했습니다")
+		return
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.show_message(message)
 	hud.append_log(message)
-	_save_game(true)
 	hud.call("present_card_reveal", category, outcome, false)
 
 func _on_inventory_item_activated(item_name: String) -> void:
@@ -5598,6 +5606,7 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
+	var cards_before: Dictionary = card_draw_fusion.export_state()
 	var result: Dictionary = card_draw_fusion.draw_pack(category)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "뽑기 실패")))
@@ -5612,17 +5621,21 @@ func _on_card_pack_draw_requested(category: String) -> void:
 		category, int(grades["고급"]), int(grades["희귀"]),
 		int(grades["영웅"]), int(grades["전설"])
 	]
+	if _save_game(true) != OK:
+		card_draw_fusion.import_state(cards_before)
+		hud.show_message("뽑기 저장 실패 · 카드 획득 내역을 복구했습니다")
+		return
+	_update_hud()
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
-	_update_hud()
-	_save_game(true)
 	hud.call("present_card_reveal", category, result, false)
 
 func _on_card_fusion_requested(category: String, grade: String) -> void:
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
+	var cards_before: Dictionary = card_draw_fusion.export_state()
 	var result: Dictionary = card_draw_fusion.fuse(category, grade)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "합성 실패")))
@@ -5635,11 +5648,14 @@ func _on_card_fusion_requested(category: String, grade: String) -> void:
 	var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
 	if not pity_card.is_empty():
 		message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
+	if _save_game(true) != OK:
+		card_draw_fusion.import_state(cards_before)
+		hud.show_message("합성 저장 실패 · 중복 카드 재료를 복구했습니다")
+		return
+	_update_hud()
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
-	_update_hud()
-	_save_game(true)
 	hud.call("present_card_reveal", category, result, true)
 
 func _option_awakening_busy() -> bool:
