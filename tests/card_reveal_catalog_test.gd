@@ -34,11 +34,11 @@ func verify_cards(stage: Control, category: String) -> void:
 		if expected.is_empty():continue
 		check(card.grade==str(expected.grade) and card.name_label.text==str(expected.name),"grade/name match awarded stable ID "+identity)
 		check(not card.art_missing and card.face.artwork!=null and card.face.artwork.resource_path==str(expected.image_path),"revealed art is exact current catalog PNG "+category+identity)
-		check(card.confirmed_chrome.visible and not card.get_node("MetalRim").visible,"painted frame replaces neutral back rim only after confirmation")
+		check(card.confirmed_chrome.visible and card.get_node("MetalRim").visible,"internal aura and original card rim remain visible after confirmation")
 		var rank: int=maxi(0,Chrome.GRADES.find(card.grade))
 		var low: bool=card.detail_scale<.8
 		check(card.confirmed_chrome.rank==rank and card.confirmed_chrome.glow.material==Chrome.material_for(rank,true,false,card.reduced_motion,low),"same cached rarity aura as catalog "+category+identity)
-		check(card.confirmed_chrome.metal.material==Chrome.material_for(rank,false,false,card.reduced_motion,low),"same cached painted border as catalog")
+		check(card.confirmed_chrome.find_children("PaintedCardBorder","",true,false).is_empty(),"revealed/result cards never add the catalog's decorative border")
 		check(card.confirmed_chrome.size==card.size and not card.confirmed_chrome.is_processing(),"existing card geometry and bounded presentation lifetime")
 func run() -> void:
 	root.size=Vector2i(1280,720);DisplayServer.window_set_size(root.size)

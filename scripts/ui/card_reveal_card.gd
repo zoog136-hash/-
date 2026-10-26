@@ -180,7 +180,7 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 	grade_label.visible = revealed
 	var tint: Color = PROFILES.color(grade) if revealed else Color("9b8a6b")
 	var rim: Panel = get_node("MetalRim")
-	rim.visible=not revealed
+	rim.show()
 	confirmed_chrome.visible=revealed
 	(rim.get_theme_stylebox("panel") as StyleBoxFlat).border_color = tint
 	queue_redraw()
