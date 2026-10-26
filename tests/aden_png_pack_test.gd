@@ -66,12 +66,21 @@ func run() -> void:
 	var foot: Vector2 = field.cell_to_world(Vector2i(975,750))
 	row.cuts = [{"id":"contract-cut","file":"cut.png","sha256":FileAccess.get_sha256("user://pack-contract/cut.png"),"image_origin":[8,8],"foot_world":[foot.x,foot.y]}]
 	value.regions = [row];save_manifest(value)
+	# A repeated layer path with a different digest must still fail even if
+	# its dimensions were memoized earlier in the same manifest inspection.
+	var inconsistent: Dictionary = value.duplicate(true)
+	inconsistent.regions.append(row.duplicate(true))
+	inconsistent.regions[1].cuts[0].sha256 = "0".repeat(64)
+	rejected(inconsistent,"LAYER_HASH_MISMATCH")
+	save_manifest(value)
 	var valid := PACK.new()
 	check(valid.configure("user://pack-contract",field),"accepted synthetic layer contract")
+	check(valid.textures.is_empty(),"verified pack defers all GPU texture uploads until visible")
 	check(not valid.region_for(Vector2i(30,23)).is_empty() and valid.region_for(Vector2i.ZERO).is_empty(),"region clips to reviewed source chunks")
 	if not valid.regions.is_empty():
 		var chunk := CHUNK.new();root.add_child(chunk);chunk.texture_cache = valid.textures
 		chunk.build_png(field,Vector2i(30,23),valid,valid.regions[0])
+		check(valid.textures.has("user://pack-contract/fixture.png") and valid.textures.has("user://pack-contract/cut.png"),"visible ground and foreground load on first use")
 		check(chunk.get_child_count() == 2 and chunk.has_node("Ground") and chunk.y_sort_enabled,"ground and one foreground instance")
 		var foreground := chunk.get_node_or_null("Foreground_contract-cut") as Sprite2D
 		check(foreground != null and foreground.global_position.distance_to(foot)<.01,"foreground Y-sort origin uses world foot")

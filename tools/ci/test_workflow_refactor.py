@@ -185,8 +185,11 @@ class PhaseThreeServiceConsolidationContract(unittest.TestCase):
         self.assertIn("github.event_name != 'pull_request'", PHASE3_MANUAL_OR_PROTECTED)
         for path, name in PHASE3_SUBSET_JOBS.items():
             with self.subTest(path=path):
-                before = {'jobs': {name: {'steps': [{'run': 'mandatory-test'}]}}}
+                before = {'concurrency': {'group': 'isolated', 'cancel-in-progress': False},
+                          'jobs': {name: {'steps': [{'run': 'mandatory-test'}]}}}
                 after = copy.deepcopy(before)
+                if path.endswith('/twilight-npc-teleport.yml'):
+                    after['concurrency']['cancel-in-progress'] = STALE_POLICY
                 after['jobs'][name]['if'] = PHASE3_MANUAL_OR_PROTECTED
                 assert_preserved_workflow(path, before, after, lambda _: None)
                 after['jobs'][name]['if'] = '${{ true }}'
