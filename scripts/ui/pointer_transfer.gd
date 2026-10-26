@@ -98,6 +98,12 @@ func _source_at(point: Vector2) -> Dictionary:
 
 func _input(event: InputEvent) -> void:
 	if hud == null: return
+	# The reveal lives above HUD in another CanvasLayer; quickslot hit testing
+	# must yield without consuming native transport-button touches.
+	if hud.has_method("is_card_reveal_busy") and hud.is_card_reveal_busy():
+		cancel()
+		reset_tap_history()
+		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and pointer != -2:
 		cancel()
 		get_viewport().set_input_as_handled()

@@ -6,6 +6,7 @@ signal finished
 const CARD = preload("res://scripts/ui/card_reveal_card.gd")
 const PROFILES = preload("res://scripts/ui/card_reveal_profiles.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
 const BACKGROUND = preload("res://assets/card_reveal/authored_background.webp")
 const IMPACT = preload("res://assets/card_reveal/impact.wav")
 const UPGRADE = preload("res://assets/card_reveal/upgrade.wav")
@@ -52,12 +53,15 @@ func _ready() -> void:
 	board.add_child(result_note)
 	pause_button = UI.button("일시정지",func() -> void: playing = not playing; _refresh_transport(),Vector2(144,46))
 	pause_button.name = "PauseReveal"
+	pause_button.set_script(NativeTouchButton)
 	board.add_child(pause_button)
 	var skip := UI.button("모두 확인",skip_to_result,Vector2(144,46))
 	skip.name = "SkipReveal"
+	skip.set_script(NativeTouchButton)
 	board.add_child(skip)
 	var confirm := UI.button("확인",close_reveal,Vector2(144,46))
 	confirm.name = "ConfirmReveal"
+	confirm.set_script(NativeTouchButton)
 	board.add_child(confirm)
 	sound_player = AudioStreamPlayer.new()
 	sound_player.volume_db = -13
@@ -216,6 +220,8 @@ func _draw() -> void:
 				draw_rect(Rect2(Vector2.ZERO,size),Color(PROFILES.color(card.grade),minf(0.055,power*0.023*intensity_scale)))
 
 func _refresh_transport() -> void:
+	for card: Control in cards:
+		card.set_sequence_playing(playing or clock>=duration)
 	if pause_button != null:
 		pause_button.text = "일시정지" if playing else "재생"
 		pause_button.disabled = clock >= duration

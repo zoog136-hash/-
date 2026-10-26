@@ -38,6 +38,7 @@ const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 var card_reveal_stage: Control
 var relic_reference_view: Control
 var catalog_card_chrome: Node
+var companion_detail_view: Node
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
@@ -271,6 +272,7 @@ func _build_lineage_side_ui() -> void:
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if is_instance_valid(status_view): status_view.refresh(value)
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 
 func blocks_keyboard_input() -> bool:
 	if is_enhancement_presenting(): return true
@@ -714,6 +716,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
 	if class_picker_initial:
@@ -784,6 +787,9 @@ func _restore_navigation(section: String) -> void:
 
 func _go_back() -> void:
 	if class_picker_initial: return
+	if is_instance_valid(companion_detail_view) and companion_detail_view.active and companion_detail_view.active_tab==1:
+		companion_detail_view.select_tab(0)
+		return
 	if active_section == "inventory" and lineage_inventory_ui.detail_active:
 		lineage_inventory_ui.detail_active = false
 		lineage_inventory_ui._reflow()
@@ -1174,6 +1180,12 @@ func open_catalog(category: String) -> void:
 			catalog_panel.add_child(relic_reference_view)
 			relic_reference_view.configure(self)
 		relic_reference_view.activate()
+	if category in ["변신","마법인형"]:
+		if not is_instance_valid(companion_detail_view):
+			companion_detail_view=preload("res://scripts/ui/companion_detail_view.gd").new()
+			add_child(companion_detail_view)
+			companion_detail_view.configure(self)
+		companion_detail_view.activate(category)
 	if CARD_RULES.CATEGORIES.has(category):
 		if not is_instance_valid(catalog_card_chrome):
 			catalog_card_chrome=preload("res://scripts/ui/catalog_card_chrome.gd").new()
@@ -1453,6 +1465,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
 
 func _refresh_card_controls() -> void:
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	ReferenceSurfaces.refresh_grade_counts(self)
 	if card_controls == null or card_fusion_grade_select == null:
@@ -1625,6 +1638,7 @@ func _fit_catalog_browser_layout() -> void:
 	actions_content.custom_minimum_size.x = 0 if compact else 500
 	catalog_list_tab.disabled = compact and not catalog_details_active
 	catalog_details_tab.disabled = compact and catalog_details_active
+	if is_instance_valid(companion_detail_view):companion_detail_view.fit_layout()
 
 func _select_catalog_group_index(index: int) -> void:
 	item_slot_filter = "all" if index == 0 else str(ITEM_SLOT_FILTERS[index - 1][0])
@@ -1693,6 +1707,7 @@ func _apply_catalog_page() -> void:
 	(catalog_panel.find_child("ClearCatalog",true,false) as Button).visible=catalog_category!="아이템"
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state(true)
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 	# Render the original source-ID icons in small batches so all item names
 	# appear immediately instead of the browser blocking during 40 image effects.
 	if catalog_category == "아이템" and not catalog_results.is_empty():
@@ -1795,6 +1810,7 @@ func _on_catalog_item_selected(index: int) -> void:
 		]
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return
