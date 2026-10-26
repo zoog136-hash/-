@@ -37,6 +37,7 @@ const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 var card_reveal_stage: Control
 var relic_reference_view: Control
+var catalog_card_chrome: Node
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
@@ -713,6 +714,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
 	if class_picker_initial:
 		return
@@ -1172,6 +1174,12 @@ func open_catalog(category: String) -> void:
 			catalog_panel.add_child(relic_reference_view)
 			relic_reference_view.configure(self)
 		relic_reference_view.activate()
+	if CARD_RULES.CATEGORIES.has(category):
+		if not is_instance_valid(catalog_card_chrome):
+			catalog_card_chrome=preload("res://scripts/ui/catalog_card_chrome.gd").new()
+			add_child(catalog_card_chrome)
+			catalog_card_chrome.configure(self)
+		catalog_card_chrome.activate()
 
 func _build_catalog_panel() -> void:
 	super._build_catalog_panel()
@@ -1684,6 +1692,7 @@ func _apply_catalog_page() -> void:
 		catalog_equip_button.disabled=true
 	(catalog_panel.find_child("ClearCatalog",true,false) as Button).visible=catalog_category!="아이템"
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state(true)
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 	# Render the original source-ID icons in small batches so all item names
 	# appear immediately instead of the browser blocking during 40 image effects.
 	if catalog_category == "아이템" and not catalog_results.is_empty():
@@ -1785,6 +1794,7 @@ func _on_catalog_item_selected(index: int) -> void:
 			int(category_extras.get(identity, 0))
 		]
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return

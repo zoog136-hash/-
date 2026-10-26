@@ -21,7 +21,6 @@ var right_pane: VBoxContainer
 var right_scroll: ScrollContainer
 var right: VBoxContainer
 var preview_stage: Control
-var aura: TextureRect
 var name_label: Label
 var grade_label: Label
 var option_rows: GridContainer
@@ -45,7 +44,6 @@ var selected_key: String=""
 var page_key: String=""
 var number_pattern: RegEx=RegEx.new()
 var card_frames: Control
-var preview_material: ShaderMaterial
 
 func configure(controller: Node) -> void:
 	hud=controller
@@ -133,12 +131,6 @@ func configure(controller: Node) -> void:
 	preview_stage.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	preview_stage.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	hero.add_child(preview_stage)
-	aura=TextureRect.new()
-	aura.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	aura.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	aura.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	preview_stage.add_child(aura)
-	aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var information:=VBoxContainer.new()
 	information.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	information.size_flags_stretch_ratio=1.10
@@ -221,8 +213,6 @@ func configure(controller: Node) -> void:
 	fusion_column.add_child(UI.section("성물 카드 합성",18))
 	fusion_column.add_child(UI.label("보유 중복 카드와 기존 합성 규칙을 사용합니다.",12,UI.MUTED))
 	number_pattern.compile("[+-]?[0-9]")
-	preview_material=ShaderMaterial.new()
-	preview_material.shader=load("res://assets/effects/relic_glow.gdshader")
 	card_frames=Control.new()
 	card_frames.name="RelicCardFrames"
 	card_frames.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -276,7 +266,6 @@ func activate() -> void:
 	hud.catalog_preview.custom_minimum_size=Vector2.ZERO
 	hud.catalog_preview.offset_left=6;hud.catalog_preview.offset_right=-6
 	hud.catalog_preview.offset_top=18;hud.catalog_preview.offset_bottom=-18
-	hud.catalog_preview.material=preview_material
 	hud.catalog_equip_button.reparent(summon_row,false)
 	hud.catalog_equip_button.custom_minimum_size=Vector2(128,38)
 	hud.catalog_clear_button.reparent(summon_row,false)
@@ -428,17 +417,6 @@ func _fill_options(record: Dictionary) -> void:
 	name_label.add_theme_color_override("font_color",tint)
 	grade_label.text=grade+" · "+str(record.get("type",""))
 	grade_label.add_theme_color_override("font_color",tint)
-	hud.catalog_preview.material=preview_material
-	preview_material.set_shader_parameter("aura_color",tint)
-	var gradient:=Gradient.new()
-	gradient.offsets=PackedFloat32Array([0,.38,1])
-	gradient.colors=PackedColorArray([Color(tint,.33),Color(tint,.16),Color(tint,0)])
-	var texture:=GradientTexture2D.new()
-	texture.width=192;texture.height=192
-	texture.gradient=gradient
-	texture.fill=GradientTexture2D.FILL_RADIAL
-	texture.fill_from=Vector2(.5,.5);texture.fill_to=Vector2(1,.5)
-	aura.texture=texture
 	var unsupported: bool=false
 	for raw: Variant in record.get("sourceOptions",[]):
 		var option: String=str(raw).replace("PVP","PVE").replace("PvP","PvE")
@@ -466,15 +444,15 @@ func _draw_card_frames() -> void:
 	if not active:return
 	var owned: Dictionary=hud.card_collection_state.get("owned",{}).get("성물",{})
 	var spare: Dictionary=hud.card_collection_state.get("spare",{}).get("성물",{})
-	var chosen: PackedInt32Array=hud.catalog_list.get_selected_items()
 	for index: int in range(hud.catalog_results.size()):
-		var rect: Rect2=hud.catalog_list.get_item_rect(index)
+		var rect: Rect2=hud.catalog_list.get_item_rect(index,false)
 		rect.position.y-=hud.catalog_list.get_v_scroll_bar().value
 		if not Rect2(Vector2.ZERO,hud.catalog_list.size).intersects(rect):continue
 		var record: Dictionary=hud.catalog_results[index]
-		var tint: Color=UI.grade(str(record.get("grade","일반")))
-		card_frames.draw_rect(rect.grow(-1),UI.GOLD if chosen.has(index) else tint.darkened(.58),false,1)
-		card_frames.draw_rect(rect.grow(-3),Color(0,0,0,.75),false,1)
 		var id: String=CardRules.card_id(record)
 		var count: int=(1 if owned.has(id) else 0)+int(spare.get(id,0))
-		if count>0:card_frames.draw_string(UI.FONT,Vector2(rect.position.x+6,rect.end.y-5),str(count),HORIZONTAL_ALIGNMENT_RIGHT,maxf(1,rect.size.x-12),14,UI.TEXT)
+		if count>0:
+			var at:=Vector2(rect.position.x+6,rect.end.y-5)
+			var width: float=maxf(1,rect.size.x-12)
+			card_frames.draw_string_outline(UI.FONT,at,str(count),HORIZONTAL_ALIGNMENT_RIGHT,width,14,3,Color.BLACK)
+			card_frames.draw_string(UI.FONT,at,str(count),HORIZONTAL_ALIGNMENT_RIGHT,width,14,UI.TEXT)
