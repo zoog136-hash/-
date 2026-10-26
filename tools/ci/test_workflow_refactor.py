@@ -1,7 +1,7 @@
 """Guard against hiding changed CI coverage behind a shared setup action."""
 import copy
 import unittest
-from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader
+from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader, PHASE3_SUBSET_JOBS, PHASE3_MANUAL_OR_PROTECTED, PHASE3_BUYBACK, PHASE3_EXTRA_BASES, PHASE3_COVERED_TESTS, PHASE3_COVERED_MARKERS, normalize_phase3_services
 
 
 class RefactorContractTest(unittest.TestCase):
@@ -175,6 +175,50 @@ class PhaseTwoImportReaderContract(unittest.TestCase):
         with self.assertRaises(AssertionError):
             assert_preserved_workflow('.github/workflows/resource-integrity.yml',
                                       before, after, lambda _: None)
+
+
+
+class PhaseThreeServiceConsolidationContract(unittest.TestCase):
+    def test_subset_jobs_run_for_protected_prs_and_manual_dispatch(self):
+        self.assertIn("number == 157", PHASE3_MANUAL_OR_PROTECTED)
+        self.assertIn("number == 158", PHASE3_MANUAL_OR_PROTECTED)
+        self.assertIn("github.event_name != 'pull_request'", PHASE3_MANUAL_OR_PROTECTED)
+        for path, name in PHASE3_SUBSET_JOBS.items():
+            with self.subTest(path=path):
+                before = {'jobs': {name: {'steps': [{'run': 'mandatory-test'}]}}}
+                after = copy.deepcopy(before)
+                after['jobs'][name]['if'] = PHASE3_MANUAL_OR_PROTECTED
+                assert_preserved_workflow(path, before, after, lambda _: None)
+                after['jobs'][name]['if'] = '${{ true }}'
+                with self.assertRaises(AssertionError):
+                    assert_preserved_workflow(path, before, after, lambda _: None)
+                after['jobs'][name]['if'] = PHASE3_MANUAL_OR_PROTECTED
+                after['jobs'][name]['steps'][0]['run'] = 'true'
+                with self.assertRaises(AssertionError):
+                    assert_preserved_workflow(path, before, after, lambda _: None)
+
+    def test_canonical_covers_all_tests_and_original_base_branches(self):
+        baseline = {'on': {
+            'pull_request': {'branches': ['feature/twilight-local-crafting-v2-20261010', 'main']},
+            'workflow_dispatch': None},
+            'jobs': {'item-buyback': {'steps': [
+                {'name': 'Buyback and earlier stage regression',
+                 'run': ' '.join(PHASE3_COVERED_TESTS + PHASE3_COVERED_MARKERS)}]}}}
+        after = copy.deepcopy(baseline)
+        after['on']['pull_request']['branches'].extend(PHASE3_EXTRA_BASES)
+        self.assertEqual(normalize_phase3_services(PHASE3_BUYBACK, baseline, after), baseline)
+        for change in ('drop_base', 'drop_test', 'drop_marker', 'disable_manual'):
+            damaged = copy.deepcopy(after)
+            if change == 'drop_base':
+                damaged['on']['pull_request']['branches'].remove('main')
+            elif change == 'drop_test':
+                damaged['jobs']['item-buyback']['steps'][0]['run'] = ' '.join(PHASE3_COVERED_TESTS[1:] + PHASE3_COVERED_MARKERS)
+            elif change == 'drop_marker':
+                damaged['jobs']['item-buyback']['steps'][0]['run'] = ' '.join(PHASE3_COVERED_TESTS + PHASE3_COVERED_MARKERS[:-1])
+            else:
+                damaged['on']['workflow_dispatch'] = {'disabled': True}
+            with self.subTest(change=change), self.assertRaises(AssertionError):
+                normalize_phase3_services(PHASE3_BUYBACK, baseline, damaged)
 
 
 if __name__ == '__main__':

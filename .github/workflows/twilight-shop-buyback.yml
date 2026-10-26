@@ -2,8 +2,11 @@ name: TWILIGHT Shop Buyback
 
 on:
   pull_request:
+    # Union of the four original PR base branches, retaining legacy coverage.
     branches:
       - feature/twilight-local-crafting-v2-20261010
+      - feature/twilight-shop-authoritative-transactions-20261010
+      - feature/twilight-warehouse-persistent-instances-20261010
       - main
   workflow_dispatch:
 
@@ -20,6 +23,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install official Godot 4.7.2
         uses: ./.github/actions/setup-godot-linux
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v1
       - name: Godot import and parse project
         run: |
           set -o pipefail
