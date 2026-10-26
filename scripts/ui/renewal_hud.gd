@@ -36,6 +36,7 @@ const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 var card_reveal_stage: Control
+var relic_reference_view: Control
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
@@ -712,6 +713,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
 	if class_picker_initial:
 		return
 	catalog_icon_generation += 1
@@ -1164,6 +1166,12 @@ func open_catalog(category: String) -> void:
 	if card_result_label != null:
 		card_result_label.text = "뽑기·합성 결과가 이곳에 표시됩니다"
 	_refresh_card_controls()
+	if category=="성물":
+		if not is_instance_valid(relic_reference_view):
+			relic_reference_view=preload("res://scripts/ui/relic_reference_view.gd").new()
+			catalog_panel.add_child(relic_reference_view)
+			relic_reference_view.configure(self)
+		relic_reference_view.activate()
 
 func _build_catalog_panel() -> void:
 	super._build_catalog_panel()
@@ -1437,6 +1445,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
 
 func _refresh_card_controls() -> void:
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	ReferenceSurfaces.refresh_grade_counts(self)
 	if card_controls == null or card_fusion_grade_select == null:
 		return
@@ -1582,6 +1591,9 @@ func _set_catalog_detail_view(show_details: bool) -> void:
 	_fit_catalog_browser_layout()
 
 func _fit_catalog_browser_layout() -> void:
+	if is_instance_valid(relic_reference_view) and relic_reference_view.active:
+		relic_reference_view.fit_layout()
+		return
 	if workspace == null or catalog_body_left == null or catalog_body_actions == null: return
 	var compact: bool = workspace.content.size.x < 1040
 	var short: bool = workspace.content.size.y < 430
@@ -1640,6 +1652,7 @@ func _refresh_catalog_list(filter_text: String) -> void:
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
 		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
 		if query!="" and not searchable.to_lower().contains(query): continue
+		if catalog_category=="성물" and is_instance_valid(relic_reference_view) and not relic_reference_view.matches_type(record):continue
 		catalog_filtered_results.append(record)
 	catalog_page=0
 	_apply_catalog_page()
@@ -1668,6 +1681,7 @@ func _apply_catalog_page() -> void:
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
 		catalog_equip_button.disabled=true
 	(catalog_panel.find_child("ClearCatalog",true,false) as Button).visible=catalog_category!="아이템"
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state(true)
 	# Render the original source-ID icons in small batches so all item names
 	# appear immediately instead of the browser blocking during 40 image effects.
 	if catalog_category == "아이템" and not catalog_results.is_empty():
@@ -1768,6 +1782,7 @@ func _on_catalog_item_selected(index: int) -> void:
 			"획득" if category_unlocks.has(identity) else "미획득",
 			int(category_extras.get(identity, 0))
 		]
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return
