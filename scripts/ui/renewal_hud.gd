@@ -1384,8 +1384,16 @@ func _build_catalog_panel() -> void:
 	old.queue_free()
 
 func set_card_collection_state(value: Dictionary) -> void:
+	if card_collection_state == value: return
 	card_collection_state = value.duplicate(true)
 	_refresh_card_controls()
+	_refresh_option_awakening_markers()
+	if active_section == "card_fusion" and is_instance_valid(card_fusion_view) and not card_fusion_view.is_queued_for_deletion():
+		card_fusion_view.set_collection_state(card_collection_state)
+	elif active_section == catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list != null:
+		var selected_indices: PackedInt32Array = catalog_list.get_selected_items()
+		if not selected_indices.is_empty() and selected_indices[0] < catalog_results.size():
+			_on_catalog_item_selected(selected_indices[0])
 
 func set_option_awakening_state(value: Dictionary) -> void:
 	if option_awakening_state == value:
@@ -1470,12 +1478,18 @@ func _option_awakening_card_state(category: String, record: Dictionary) -> Dicti
 	return cards.get(CARD_RULES.card_id(record), {}) as Dictionary
 
 func _refresh_option_awakening_markers() -> void:
-	if catalog_list == null or not CARD_RULES.CATEGORIES.has(catalog_category):
-		return
+	if catalog_list == null or not CARD_RULES.CATEGORIES.has(catalog_category): return
+	var owned: Dictionary = (card_collection_state.get("owned", {}) as Dictionary).get(catalog_category, {}) as Dictionary
+	var spare: Dictionary = (card_collection_state.get("spare", {}) as Dictionary).get(catalog_category, {}) as Dictionary
 	for index: int in range(mini(catalog_results.size(), catalog_list.item_count)):
 		var record: Dictionary = catalog_results[index]
+		var identity: String = CARD_RULES.card_id(record)
+		var duplicates: int = maxi(0, int(spare.get(identity, 0)))
+		var copies: int = (1 if owned.has(identity) else 0) + duplicates
 		var awakened: bool = bool(_option_awakening_card_state(catalog_category, record).get("awakened", false))
-		catalog_list.set_item_text(index, ("[각성] " if awakened else "") + str(record.get("name", "")))
+		var title: String = str(record.get("name", ""))
+		catalog_list.set_item_text(index, ("%s%s\n보유 %d장 · 중복 %d" % ["[각성] " if awakened else "", title, copies, duplicates]) if copies > 0 else title + "\n미보유")
+		catalog_list.set_item_tooltip(index, "%s · %s · 총 %d장 · 합성/각성 재료 %d장" % [str(record.get("grade", "")), title, copies, duplicates])
 
 func _refresh_option_awakening_entry() -> void:
 	if not is_instance_valid(option_awakening_button):
@@ -1505,13 +1519,20 @@ func _refresh_option_awakening_entry() -> void:
 
 func _request_option_awakening_open() -> void:
 	_refresh_option_awakening_entry()
-	if option_awakening_button.disabled or selected_catalog_record.is_empty():
+	if not CARD_RULES.CATEGORIES.has(catalog_category): return
+	if selected_catalog_record.is_empty():
+		show_message("각성할 카드를 도감에서 먼저 선택해 주세요.")
+		return
+	if option_awakening_button.disabled:
+		show_message(option_awakening_catalog_status.text)
 		return
 	option_awakening_open_requested.emit(catalog_category, CARD_RULES.card_id(selected_catalog_record))
 
 func set_card_draw_fusion_result(category: String, result_text: String) -> void:
 	if category == catalog_category and card_result_label != null:
 		card_result_label.text = result_text
+	if active_section == "card_fusion" and is_instance_valid(card_fusion_view):
+		card_fusion_view.set_result(category, result_text)
 
 func is_card_reveal_busy() -> bool:
 	return is_instance_valid(card_reveal_stage)
@@ -1587,8 +1608,8 @@ func _refresh_card_controls() -> void:
 		total_spares += maxi(0, int(category_spare[identity]))
 	var all_pity: Dictionary = card_collection_state.get("pity", {}) as Dictionary
 	var category_pity: Dictionary = all_pity.get(category, {}) as Dictionary
-	card_owned_label.text = "획득 %d종 · 중복 %d장 · 희귀→영웅 실패 %d/20 · 영웅→전설 실패 %d/20" % [
-		category_owned.size(), total_spares,
+	card_owned_label.text = "보유 총 %d장 (%d종) · 합성 중복 %d장 · 희귀→영웅 실패 %d/20 · 영웅→전설 실패 %d/20" % [
+		category_owned.size() + total_spares, category_owned.size(), total_spares,
 		int(category_pity.get("희귀", 0)), int(category_pity.get("영웅", 0))
 	]
 	var grade_index: int = card_fusion_grade_select.selected
@@ -1897,10 +1918,10 @@ func _on_catalog_item_selected(index: int) -> void:
 		var extras: Dictionary = card_collection_state.get("spare", {}) as Dictionary
 		var category_extras: Dictionary = extras.get(catalog_category, {}) as Dictionary
 		var identity: String = CARD_RULES.card_id(selected_catalog_record)
-		catalog_detail.text += "\n카드 소유: %s · 합성 중복: %d장" % [
-			"획득" if category_unlocks.has(identity) else "미획득",
-			int(category_extras.get(identity, 0))
-		]
+		var duplicates: int = maxi(0, int(category_extras.get(identity, 0)))
+		var copies: int = (1 if category_unlocks.has(identity) else 0) + duplicates
+		catalog_detail.text += "\n카드 보유: %d장 · 합성/각성 재료: 중복 %d장" % [copies, duplicates]
+		if copies > 0: catalog_detail.text += "\n첫 획득 1장은 영구 보유하며 소모되지 않습니다."
 	_refresh_option_awakening_entry()
 
 func _equip_selected_catalog() -> void:
