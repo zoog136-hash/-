@@ -1,0 +1,100 @@
+name: TWILIGHT PR152-155 Combined Integration
+on:
+  push:
+    branches: [integration/pr152-155-ci-20261026]
+    paths:
+      - '.github/workflows/pr152-155-combined-ci.yml'
+      - '.gitattributes'
+      - 'scripts/**'
+      - 'scenes/**'
+      - 'assets/**'
+      - 'data/**'
+      - 'tests/**'
+      - 'tools/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One staging verification; do not cancel manual main/production audits.
+concurrency:
+  group: twilight-pr152-155-combined-staging
+  cancel-in-progress: true
+
+jobs:
+  combined:
+    runs-on: ubuntu-latest
+    timeout-minutes: 135
+    steps:
+      - name: Checkout four-PR candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          lfs: false
+
+      - name: Run early resource and Python preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m compileall -q tools
+          python3 tools/check_resource_integrity.py --root .
+
+      - name: Restore verified engine cache
+        id: engine-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+
+      - name: Install pinned Godot 4.7.2 and software OpenGL
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! { test -x /tmp/Godot_v4.7.2-stable_linux.x86_64 && /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -Fq '4.7.2.stable'; }; then
+            curl -L --fail --retry 3 -o /tmp/twilight-godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+            unzip -q -o /tmp/twilight-godot.zip -d /tmp
+            chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          fi
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+
+      - name: One Godot import and all four PR regression gates
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          python3 tools/test_project.py \
+            --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 \
+            --logs combined-results \
+            --no-ci-synthetic-fixtures \
+            --import-timeout 1800 \
+            --only 'import,bake_navigation,boot,card_draw_fusion_test,option_awakening_service_test,option_awakening_world_test,option_awakening_ui_test,option_awakening_vfx_test,option_awakening_field_render_test,authored_skill_vfx_test,original_skill_system_test,original_skill_catalog_runtime_test,combat_timing_test,flight_lifecycle_test,growth_progression_test,growth_presentation_test,equipment_collection_runtime_test,aden_batch_review_test,aden_faith_png_save_migration_test,map_repair_test,aden_mobile_streaming_test,native_png_route_recovery_test,renewed_map_spawn_test'
+
+      - name: Require complete validated coverage
+        if: success()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('combined-results/summary.json').read_text(encoding='utf-8'))
+          assert not result['failed'], result['failed']
+          assert not result['not_run'], result['not_run']
+          assert not result['skipped'], result['skipped']
+          assert result['passed'] == result['total'] == 23, result
+          assert result['synthetic_fixture_policy'] == 'DISABLED', result
+          print('TWILIGHT_PR152_155_COMBINED_OK', result['passed'])
+          PY
+
+      - name: Upload bounded validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-pr152-155-combined
+          path: combined-results/
+          if-no-files-found: warn
+          retention-days: 7
