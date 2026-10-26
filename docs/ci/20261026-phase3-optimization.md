@@ -8,17 +8,19 @@
 `shop_buyback_test.gd`, `local_crafting_test.gd`, `npc_teleport_test.gd`,
 `warehouse_persistence_test.gd`, `shop_authority_test.gd`를 전부 실행하고
 `BUYBACK_OK`, `CRAFT_OK`, `NPC_TELEPORT_OK`, `WAREHOUSE_OK`, `SHOP_AUTHORITY_OK`
-다섯 증빙을 검증한다. 이 정확한 테스트·마커·실제 Main 부팅·결과 업로드는 변경하지 않았다.
+다섯 증빙을 검증한다. 여기에 다른 원래 전용 잡의 `npc_dialogue_branching_test.gd`와 `NPC_DIALOGUE_OK`를 추가해 6개 실제 서비스 테스트로 확장했다. 기존 테스트·마커·실제 Main 부팅·결과 업로드는 제거하지 않았다.
 
-이 5개 검사를 다시 실행하던 세 잡만 일반 PR에서 건너뛰도록 했다.
+동일한 서비스 검사를 다시 실행하던 다섯 개별 잡만 일반 PR에서 건너뛰도록 했다.
 
 - `TWILIGHT Shop Authority / shop-authority`
 - `TWILIGHT Warehouse Persistence / local-warehouse`
 - `TWILIGHT NPC Teleport / npc-transit`
+- `TWILIGHT Local Crafting / crafting`
+- `TWILIGHT NPC Dialogue Branches / npc-dialogue`
 
-**PR #157/#158 및 workflow_dispatch에서는 세 개별 잡이 이전 그대로 실행된다.**
+**PR #157/#158 및 workflow_dispatch에서는 다섯 개별 잡이 이전 그대로 실행된다.**
 이전 체크명과 수동 재검사 진입점도 남겼다. 따라서 GitHub에 표시되는
-워크플로 실행 레코드 수는 3개 줄지 않지만, 일반 PR의 **중복 Godot 실행 잡/전체 import 최대 3개**를 없앨 수 있다.
+워크플로 실행 레코드 수는 5개 줄지 않지만, 일반 PR의 **중복 Godot 실행 잡/전체 import 최대 5개**를 없앨 수 있다.
 성공 시간을 줄였다고 주장하는 것은 아니다.
 
 원래 서비스 4개 워크플로가 지원하던 `pull_request.branches`의 합집합을
@@ -45,7 +47,7 @@ FIFO 임의 삭제를 LRU로 변경한다. 뒤로 이동할 때 자주 쓰는
 ## 검증·병합 게이트
 
 - 기존 #160/#163 `tools/ci/validate_workflow_refactor.py` 계약 검사에
-  허용된 세 잡의 조건문과 Buyback union-base/cache 단계만 예외로 추가.
+  허용된 다섯 잡의 조건문과 Buyback union-base/cache/대화 회귀 추가 단계만 예외로 추가.
   명령·테스트·마커·증빙·타임아웃을 바꾸면 계약 검사가 실패한다.
 - `tools/ci/test_workflow_refactor.py`에 PR #157/#158 보호,
   누락된 테스트/마커/브랜치, 훼손된 코드 방어 단위 테스트 추가.

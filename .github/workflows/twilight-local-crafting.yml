@@ -14,6 +14,9 @@ concurrency:
 
 jobs:
   crafting:
+    # Covered by the complete Shop Buyback superset on ordinary PRs.
+    # Preserve independent manual and PR #157/#158 audits.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.number == 157 || github.event.pull_request.number == 158 }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

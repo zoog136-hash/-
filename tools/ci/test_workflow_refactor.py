@@ -185,9 +185,14 @@ class PhaseThreeServiceConsolidationContract(unittest.TestCase):
         self.assertIn("github.event_name != 'pull_request'", PHASE3_MANUAL_OR_PROTECTED)
         for path, name in PHASE3_SUBSET_JOBS.items():
             with self.subTest(path=path):
+                original_steps = [
+                    {'uses': 'actions/checkout@v4'},
+                    {'name': SHARED_IMPORT_READER_STEPS.get(path, 'Original test'), 'run': 'mandatory-test'}]
                 before = {'concurrency': {'group': 'isolated', 'cancel-in-progress': False},
-                          'jobs': {name: {'steps': [{'run': 'mandatory-test'}]}}}
+                          'jobs': {name: {'steps': original_steps}}}
                 after = copy.deepcopy(before)
+                if path in SHARED_IMPORT_READER_STEPS:
+                    after['jobs'][name]['steps'].insert(1, copy.deepcopy(SHARED_IMPORT_READER))
                 if path.endswith('/twilight-npc-teleport.yml'):
                     after['concurrency']['cancel-in-progress'] = STALE_POLICY
                 after['jobs'][name]['if'] = PHASE3_MANUAL_OR_PROTECTED
@@ -196,28 +201,40 @@ class PhaseThreeServiceConsolidationContract(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     assert_preserved_workflow(path, before, after, lambda _: None)
                 after['jobs'][name]['if'] = PHASE3_MANUAL_OR_PROTECTED
-                after['jobs'][name]['steps'][0]['run'] = 'true'
+                after['jobs'][name]['steps'][-1]['run'] = 'true'
                 with self.assertRaises(AssertionError):
                     assert_preserved_workflow(path, before, after, lambda _: None)
 
     def test_canonical_covers_all_tests_and_original_base_branches(self):
+        original_run = (
+            'for test in tests/shop_buyback_test.gd tests/local_crafting_test.gd '
+            'tests/npc_teleport_test.gd tests/warehouse_persistence_test.gd '
+            'tests/shop_authority_test.gd; do\\n'
+            'for marker in BUYBACK_OK CRAFT_OK NPC_TELEPORT_OK WAREHOUSE_OK '
+            'SHOP_AUTHORITY_OK; do\\n')
         baseline = {'on': {
             'pull_request': {'branches': ['feature/twilight-local-crafting-v2-20261010', 'main']},
             'workflow_dispatch': None},
             'jobs': {'item-buyback': {'steps': [
-                {'name': 'Buyback and earlier stage regression',
-                 'run': ' '.join(PHASE3_COVERED_TESTS + PHASE3_COVERED_MARKERS)}]}}}
+                {'name': 'Buyback and earlier stage regression', 'run': original_run}]}}}
         after = copy.deepcopy(baseline)
         after['on']['pull_request']['branches'].extend(PHASE3_EXTRA_BASES)
+        after['jobs']['item-buyback']['steps'][0]['run'] = original_run.replace(
+            'for test in tests/shop_buyback_test.gd ',
+            'for test in tests/npc_dialogue_branching_test.gd tests/shop_buyback_test.gd ')
+        after['jobs']['item-buyback']['steps'][0]['run'] = (
+            after['jobs']['item-buyback']['steps'][0]['run'].replace(
+                'for marker in BUYBACK_OK CRAFT_OK ',
+                'for marker in BUYBACK_OK NPC_DIALOGUE_OK CRAFT_OK '))
         self.assertEqual(normalize_phase3_services(PHASE3_BUYBACK, baseline, after), baseline)
         for change in ('drop_base', 'drop_test', 'drop_marker', 'disable_manual'):
             damaged = copy.deepcopy(after)
             if change == 'drop_base':
                 damaged['on']['pull_request']['branches'].remove('main')
             elif change == 'drop_test':
-                damaged['jobs']['item-buyback']['steps'][0]['run'] = ' '.join(PHASE3_COVERED_TESTS[1:] + PHASE3_COVERED_MARKERS)
+                damaged['jobs']['item-buyback']['steps'][0]['run'] = damaged['jobs']['item-buyback']['steps'][0]['run'].replace('tests/npc_dialogue_branching_test.gd ', '')
             elif change == 'drop_marker':
-                damaged['jobs']['item-buyback']['steps'][0]['run'] = ' '.join(PHASE3_COVERED_TESTS + PHASE3_COVERED_MARKERS[:-1])
+                damaged['jobs']['item-buyback']['steps'][0]['run'] = damaged['jobs']['item-buyback']['steps'][0]['run'].replace('NPC_DIALOGUE_OK ', '')
             else:
                 damaged['on']['workflow_dispatch'] = {'disabled': True}
             with self.subTest(change=change), self.assertRaises(AssertionError):

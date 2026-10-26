@@ -71,20 +71,24 @@ PHASE3_SUBSET_JOBS = {
     '.github/workflows/twilight-shop-authority.yml': 'shop-authority',
     '.github/workflows/twilight-warehouse-validate.yml': 'local-warehouse',
     '.github/workflows/twilight-npc-teleport.yml': 'npc-transit',
+    '.github/workflows/twilight-local-crafting.yml': 'crafting',
+    '.github/workflows/twilight-npc-dialogue.yml': 'npc-dialogue',
 }
 PHASE3_MANUAL_OR_PROTECTED = "${{ github.event_name != 'pull_request' || github.event.pull_request.number == 157 || github.event.pull_request.number == 158 }}"
 PHASE3_BUYBACK = '.github/workflows/twilight-shop-buyback.yml'
 PHASE3_EXTRA_BASES = (
     'feature/twilight-shop-authoritative-transactions-20261010',
     'feature/twilight-warehouse-persistent-instances-20261010',
+    'feature/twilight-npc-teleport-20261010',
+    'feature/twilight-shop-buyback-20261010',
 )
 PHASE3_COVERED_TESTS = (
-    'tests/shop_buyback_test.gd', 'tests/local_crafting_test.gd',
+    'tests/npc_dialogue_branching_test.gd', 'tests/shop_buyback_test.gd', 'tests/local_crafting_test.gd',
     'tests/npc_teleport_test.gd', 'tests/warehouse_persistence_test.gd',
     'tests/shop_authority_test.gd',
 )
 PHASE3_COVERED_MARKERS = (
-    'BUYBACK_OK', 'CRAFT_OK', 'NPC_TELEPORT_OK', 'WAREHOUSE_OK',
+    'BUYBACK_OK', 'NPC_DIALOGUE_OK', 'CRAFT_OK', 'NPC_TELEPORT_OK', 'WAREHOUSE_OK',
     'SHOP_AUTHORITY_OK',
 )
 
@@ -113,11 +117,24 @@ def normalize_phase3_services(path, before, expanded):
                 if x.get('name') == 'Buyback and earlier stage regression']
         assert len(step) == 1, path + ': canonical test step missing'
         body = step[0].get('run', '')
+        original_steps = [x for x in before['jobs']['item-buyback']['steps']
+                          if x.get('name') == 'Buyback and earlier stage regression']
+        assert len(original_steps) == 1, path + ': original canonical test missing'
+        original_body = original_steps[0]['run']
+        expected_body = original_body.replace(
+            'for test in tests/shop_buyback_test.gd ',
+            'for test in tests/npc_dialogue_branching_test.gd tests/shop_buyback_test.gd ')
+        expected_body = expected_body.replace(
+            'for marker in BUYBACK_OK CRAFT_OK ',
+            'for marker in BUYBACK_OK NPC_DIALOGUE_OK CRAFT_OK ')
+        assert expected_body != original_body and body == expected_body, (
+            path + ': canonical suite must only add NPC dialogue and marker')
         for required_test in PHASE3_COVERED_TESTS:
             assert required_test in body, path + ': missing ' + required_test
         for required_marker in PHASE3_COVERED_MARKERS:
             assert required_marker in body, path + ': missing ' + required_marker
         result[event_key]['pull_request']['branches'] = copy.deepcopy(original_branches)
+        step[0]['run'] = original_body
     return result
 
 
