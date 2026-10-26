@@ -156,6 +156,28 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
                         audit_authoring_exclusions(root)
                     manifest.unlink()
 
+    def test_delivery_ledger_inventory_is_not_a_runtime_reference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            relative = "data/map_remake/private/aden/effective_layouts_build.json"
+            preset = root / "export_presets.cfg"
+            preset.write_text(preset.read_text().replace(
+                DRAFT_EXPORT_PATTERN, DRAFT_EXPORT_PATTERN + "," + relative))
+            offline = root / relative
+            offline.parent.mkdir(parents=True, exist_ok=True)
+            offline.write_text("{}")
+            runtime = root / "data/maps/aden_mobile_pack.json"
+            runtime.parent.mkdir(parents=True, exist_ok=True)
+            runtime.write_text('{"schema": 1, "map_id": "aden_world", "manifest_sha256": "' + "a"*64 + '"}')
+            ledger = root / "data/resource_delivery_ledger.json"
+            ledger.write_text('{"tracked_source": "' + relative + '"}')
+            self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
+            live = root / "data/another_runtime.json"
+            live.write_text('{"load": "res://' + relative + '"}')
+            with self.assertRaisesRegex(ValueError, "excluded offline JSON"):
+                audit_authoring_exclusions(root)
+
     def test_unknown_archive_contents_fail_closed(self):
         for change in ('extra_png', 'different_source', 'different_type'):
             with self.subTest(change=change), tempfile.TemporaryDirectory() as directory:
