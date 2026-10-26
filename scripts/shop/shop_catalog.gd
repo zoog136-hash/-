@@ -1,7 +1,7 @@
 extends RefCounted
 # Server-authoritative price and quantity policy. Values are TWILIGHT's
 # local shop prices, not claims about official Lineage prices.
-const MAX_QUANTITY: int = 99
+const MAX_QUANTITY: int = 1000
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 const STOCK = preload("res://scripts/shop/consumable_stock.gd")
 const LEGACY_GOODS = [
@@ -44,7 +44,6 @@ static func quote(item_name: String, quantity: int, wallet: int, carried_weight:
 static func quote_reviewed(vendor_id: String, item_name: String, quantity: int, catalog: Array, wallet: int, carried_weight: int, capacity: int, unit_weight: int) -> Dictionary:
 	var offer: Dictionary = REVIEWED.offer_for(vendor_id, item_name, catalog)
 	if offer.is_empty(): return {"ok":false, "reason":"상점에 등록되지 않은 아이템입니다"}
-	if quantity != 1: return {"ok":false, "reason":"이 상품은 한 번에 1개씩 구매할 수 있습니다"}
 	var result: Dictionary = _quote_at_price(item_name, int(offer.price), quantity, wallet, carried_weight, capacity, unit_weight)
 	if bool(result.get("ok", false)): result["offer"] = offer
 	return result
