@@ -2,8 +2,13 @@ name: TWILIGHT Shop Buyback
 
 on:
   pull_request:
+    # Union of all six original service PR base branches, retaining legacy coverage.
     branches:
       - feature/twilight-local-crafting-v2-20261010
+      - feature/twilight-shop-authoritative-transactions-20261010
+      - feature/twilight-warehouse-persistent-instances-20261010
+      - feature/twilight-npc-teleport-20261010
+      - feature/twilight-shop-buyback-20261010
       - main
   workflow_dispatch:
 
@@ -20,6 +25,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install official Godot 4.7.2
         uses: ./.github/actions/setup-godot-linux
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v1
       - name: Godot import and parse project
         run: |
           set -o pipefail
@@ -28,11 +43,11 @@ jobs:
       - name: Buyback and earlier stage regression
         run: |
           set -o pipefail
-          for test in tests/shop_buyback_test.gd tests/local_crafting_test.gd tests/npc_teleport_test.gd tests/warehouse_persistence_test.gd tests/shop_authority_test.gd; do
+          for test in tests/npc_dialogue_branching_test.gd tests/shop_buyback_test.gd tests/local_crafting_test.gd tests/npc_teleport_test.gd tests/warehouse_persistence_test.gd tests/shop_authority_test.gd; do
             /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://$test" 2>&1 | tee -a buyback-tests.log
           done
           ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' buyback-tests.log
-          for marker in BUYBACK_OK CRAFT_OK NPC_TELEPORT_OK WAREHOUSE_OK SHOP_AUTHORITY_OK; do grep -q "$marker" buyback-tests.log; done
+          for marker in BUYBACK_OK NPC_DIALOGUE_OK CRAFT_OK NPC_TELEPORT_OK WAREHOUSE_OK SHOP_AUTHORITY_OK; do grep -q "$marker" buyback-tests.log; done
       - name: Actual headless main scene boot
         run: |
           set -o pipefail
