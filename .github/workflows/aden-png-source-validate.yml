@@ -73,11 +73,11 @@ jobs:
       - name: Import and parse all production scripts
         run: |
           XDG_DATA_HOME="$RUNNER_TEMP/aden-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > aden-png-evidence/import.log 2>&1
-          if rg 'SCRIPT ERROR:|ERROR:' aden-png-evidence/import.log; then exit 1; fi
+          if grep -E 'SCRIPT ERROR:|ERROR:' aden-png-evidence/import.log; then exit 1; fi
       - name: Actual Main actors, every sampled obstacle direction, occlusion and saves
         run: |
           XDG_DATA_HOME="$RUNNER_TEMP/aden-physics" LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/aden_png_source_integration_test.gd -- --capture --output="$GITHUB_WORKSPACE/aden-png-evidence/actual-main" > aden-png-evidence/actual-main.log 2>&1
-          if rg 'SCRIPT ERROR:|ERROR:|ADEN_PNG_SOURCE_FAIL' aden-png-evidence/actual-main.log; then exit 1; fi
+          if grep -E 'SCRIPT ERROR:|ERROR:|ADEN_PNG_SOURCE_FAIL' aden-png-evidence/actual-main.log; then exit 1; fi
       - name: Relevant regression checks with isolated saves
         run: |
           LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs aden-png-evidence/regressions --only boot,actor_motion_test,aden_building_test,aden_courtyard_test,aden_ground_continuity_test,aden_remake_runtime_test,aden_shoreline_test,aden_terrain_polish_test,animation_restore_test,boss_presentation_test,combat_resolution_equivalence_test,combat_timeline_lifecycle_test,consumable_smoke_test,crafting_atomic_test,eight_interactions_test,field_world_test,monster_world_test,npc_dialogue_branching_test,npc_teleport_test,remake_world_lifecycle_test,stage5_save_compatibility_test,warehouse_persistence_test,aden_giran_review_test,aden_world_systems_test,aden_world_visuals_test,aden_source_routes_test,remake_coordinates_and_state_test,remake_map_population_test,remake_source_runtime_test,aden_png_pack_test,road_surface_mesh_test,png_world_runtime_test,png_refinement_runtime_test,domination_111_runtime_test
