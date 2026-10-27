@@ -7271,7 +7271,11 @@ func constrain_original_motion(actor: CharacterBody2D) -> void:
 			if actor is TwilightPlayer:
 				var horizontal:=Vector2(motion.x,0.0)
 				var vertical:=Vector2(0.0,motion.y)
-				var options: Array[Vector2]=[horizontal,vertical] if absf(motion.x)>=absf(motion.y) else [vertical,horizontal]
+				var options: Array[Vector2]=[]
+				if absf(motion.x)>=absf(motion.y):
+					options.append(horizontal);options.append(vertical)
+				else:
+					options.append(vertical);options.append(horizontal)
 				for candidate: Vector2 in options:
 					if candidate.length_squared()<0.000001: continue
 					if not field_map.line_clear(origin,origin+candidate): continue
