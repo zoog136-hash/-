@@ -2261,6 +2261,8 @@ func _run_auto_hunt() -> void:
 			_remember_auto_target_path_failure(auto_target)
 			auto_target = _nearest_reachable_monster(99999.0)
 			if auto_target == null:
+				auto_target_failed_search_actor_count = monsters_root.get_child_count()
+				auto_target_next_search_ms = Time.get_ticks_msec() + AUTO_TARGET_EMPTY_RETRY_MS
 				selected_monster = null
 				player.clear_click_path()
 				return
