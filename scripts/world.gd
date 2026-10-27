@@ -1499,6 +1499,7 @@ func _world_to_cell(position_value: Vector2) -> Vector2i:
 	return Vector2i(int(floor(position_value.x / tile_size)), int(floor(position_value.y / tile_size)))
 
 func _is_walkable_world(position_value: Vector2) -> bool:
+	if not position_value.is_finite(): return false
 	# A native PNG cell may be nominally open while the real 4px foot still
 	# overlaps a hand-reviewed obstacle or an exact floor boundary.
 	if field_map is NativePngField: return field_map.line_clear(position_value,position_value)
