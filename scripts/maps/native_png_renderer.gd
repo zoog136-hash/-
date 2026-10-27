@@ -14,6 +14,7 @@ var texture_pixel_budget: int=MAX_MOBILE_PIXELS if OS.has_feature("mobile") else
 # The displayed textures plus the LRU cache share a 48 MiB mobile / 96 MiB desktop cap.
 const LAYERS=preload("res://scripts/maps/native_png_layers.gd")
 const LAYER_SHADER=preload("res://scripts/maps/png_layer.gdshader")
+const MAP_TEXTURE_QUALITY=preload("res://scripts/maps/mobile_map_texture_quality.gd")
 const PREFETCH_MARGIN: float=512.0
 var budget_limited: bool=false
 var worker: Thread
@@ -93,7 +94,7 @@ func rows_in_view(camera: Camera2D, margin: float) -> Dictionary:
 func visible_rows(camera: Camera2D) -> Dictionary:
 	return rows_in_view(camera,96)
 
-static func decode_chunk(path: String, row: Dictionary, cuts: Array) -> Dictionary:
+static func decode_chunk(path: String, row: Dictionary, cuts: Array, render_scale: float=1.0) -> Dictionary:
 	var started: int=Time.get_ticks_usec()
 	var image:=Image.new()
 	if row.get("generated",false) and FileAccess.get_sha256(path)!=row.sha256:return {"error":"SHA mismatch "+path}
@@ -105,6 +106,12 @@ static func decode_chunk(path: String, row: Dictionary, cuts: Array) -> Dictiona
 	var pieces: Array[Dictionary]=[]
 	if not row.has("foot_image") and not row.get("generated",false):
 		pieces=LAYERS.split(image,Vector2(row.position[0],row.position[1]),cuts)
+	# Perform downsampling after original-resolution alpha/foreground separation.
+	# This CPU work runs in the existing decode worker, never on the render thread.
+	if render_scale < 1.0:
+		MAP_TEXTURE_QUALITY.resize_image(image,render_scale)
+		for piece: Dictionary in pieces:
+			MAP_TEXTURE_QUALITY.resize_image(piece.image as Image,render_scale)
 	return {"row":row,"image":image,"pieces":pieces,"decode_usec":Time.get_ticks_usec()-started}
 
 func _exit_tree() -> void:
@@ -114,8 +121,9 @@ func _exit_tree() -> void:
 
 func forecast_pixels(rows: Dictionary) -> int:
 	var count: int=0
+	var render_scale: float=MAP_TEXTURE_QUALITY.scale_for(str(field.data.map_id))
 	for row: Dictionary in rows.values():
-		count+=int(row.size[0])*int(row.size[1])
+		count+=MAP_TEXTURE_QUALITY.pixel_count(Vector2i(int(row.size[0]),int(row.size[1])),render_scale)
 		if row.has("foot_image") or row.get("generated",false): continue
 		var chunk:=Rect2(Vector2(row.position[0],row.position[1]),Vector2(row.size[0],row.size[1]))
 		for cut: Dictionary in field.data.get("runtime_foreground",[]):
@@ -123,19 +131,24 @@ func forecast_pixels(rows: Dictionary) -> int:
 			var box:=Rect2(Vector2(first[0],first[1]),Vector2.ZERO)
 			for point: Array in cut.polygon_image: box=box.expand(Vector2(point[0],point[1]))
 			box=box.grow(1).intersection(chunk)
-			if box.has_area(): count+=int(ceilf(box.size.x+1))*int(ceilf(box.size.y+1))
+			if box.has_area():
+				count+=MAP_TEXTURE_QUALITY.pixel_count(Vector2i(ceili(box.size.x+1.0),ceili(box.size.y+1.0)),render_scale)
 	return count
 
 func add_image(key: String, source_file: String, row: Dictionary, image: Image) -> void:
 	var sprite:=Sprite2D.new()
 	var scale_value: float=row_scale(row)
+	var pixel_ratio: Vector2=MAP_TEXTURE_QUALITY.pixel_ratio(Vector2i(int(row.size[0]),int(row.size[1])),image.get_size())
 	sprite.centered=false;sprite.position=Vector2(row.position[0],row.position[1])*scale_value;sprite.z_index=int(row.get("z_index",-20))
-	sprite.scale=Vector2.ONE*scale_value
+	# Restore the exact source-world footprint after storing fewer texture pixels.
+	sprite.scale=Vector2.ONE*scale_value/pixel_ratio
+	if MAP_TEXTURE_QUALITY.scale_for(str(field.data.map_id))<1.0:
+		sprite.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	if scale_value>1:
 		var layer_material:=ShaderMaterial.new();layer_material.shader=LAYER_SHADER;sprite.material=layer_material
 	if row.has("foot_image"):
 		sprite.z_index=0;sprite.position=Vector2(row.foot_image[0],row.foot_image[1])*scale_value
-		sprite.offset=Vector2(row.position[0],row.position[1])-Vector2(row.foot_image[0],row.foot_image[1])
+		sprite.offset=(Vector2(row.position[0],row.position[1])-Vector2(row.foot_image[0],row.foot_image[1]))*pixel_ratio
 		sprite.set_meta("native_foreground",row.id)
 	var pixels: int=image.get_width()*image.get_height()
 	sprite.texture=ImageTexture.create_from_image(image)
@@ -209,7 +222,7 @@ func commit_chunk(filename: String, result: Dictionary) -> void:
 	if chunks.has(filename): return
 	max_decode_usec=maxi(max_decode_usec,int(result.get("decode_usec",0)))
 	var row: Dictionary=result.row
-	var count: int=int(row.size[0])*int(row.size[1])
+	var count: int=result.image.get_width()*result.image.get_height()
 	for piece: Dictionary in result.pieces: count+=piece.image.get_width()*piece.image.get_height()
 	if not reserve_pixels(count): return
 	add_image(filename,filename,row,result.image)
@@ -239,7 +252,7 @@ func pump_stream() -> void:
 		if chunks.has(filename): continue
 		if not can_decode_without_thrash(filename,wanted_rows[filename]): continue
 		worker_file=filename;worker=Thread.new();decode_count+=1
-		var job: Callable=decode_chunk.bind(row_path(filename),wanted_rows[filename].duplicate(true),field.data.get("runtime_foreground",[]).duplicate(true))
+		var job: Callable=decode_chunk.bind(row_path(filename),wanted_rows[filename].duplicate(true),field.data.get("runtime_foreground",[]).duplicate(true),MAP_TEXTURE_QUALITY.scale_for(str(field.data.map_id)))
 		var error: Error=worker.start(job,Thread.PRIORITY_LOW)
 		if error!=OK:
 			worker=null;push_error("Native PNG decoder thread could not start: "+str(error))
