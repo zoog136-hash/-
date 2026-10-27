@@ -75,11 +75,13 @@ def main() -> int:
     except (ValueError, OSError, KeyError, TypeError) as exc:
         print("WORLD_REGIONS_FAILED: bad map index:", exc, flush=True)
         return 1
-    # Preserve all ten Oman maps while isolating large physics/route costs.
-    # All other families retain their original single-process checks.
+    # Oman 1-5 did not complete in a shared 900s process, whereas 6-10 did.
+    # Isolate the first five floors individually to reveal the exact slow map
+    # while retaining full native collision, movement, combat, and save checks.
+    # Do not drop any map/requirement or treat timeouts as success.
     shards = []
     for prefix, ids in coverage.items():
-        chunks = [ids[:5], ids[5:]] if prefix == "oman_" else [ids]
+        chunks = [[i] for i in ids[:5]] + [ids[5:]] if prefix == "oman_" else [ids]
         if any(not chunk for chunk in chunks):
             raise ValueError("Empty world region shard")
         for index, chunk in enumerate(chunks):
@@ -120,6 +122,12 @@ def main() -> int:
         ok, reason, checks = validate_output(prefix, ids, code, output)
         if timed_out:
             reason = f"shard timed out after {budget}s"
+            # Emit last in-progress map/phase even if full completion marker
+            # is absent. No partial progress counts as a passing shard.
+            for line in output.splitlines()[-80:]:
+                if ("REGION TIMING" in line or "REGION CHECKED" in line or
+                        "REGION FAIL:" in line or "SCRIPT ERROR:" in line):
+                    print(f"WORLD_SHARD_LAST_PROGRESS {label}: {line[:280]}", flush=True)
         total_checks += checks
         all_ok &= ok
         findings.append({"family": label, "expected_maps": ids, "completed_maps": CHECKED.findall(output),

@@ -52,7 +52,7 @@ class RegionShardingTests(unittest.TestCase):
                 self.assertFalse(validate_output("oman_", ids, 0, invalid)[0])
         self.assertFalse(validate_output("oman_", ids, 1, output)[0])
 
-    def test_controlled_shards_cover_five_families_in_six_processes(self):
+    def test_controlled_shards_cover_all_22_in_ten_processes(self):
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp)
             (home / "data/maps").mkdir(parents=True)
@@ -76,12 +76,16 @@ print('WORLD_REGIONS_OK')
                 "--path", str(home), "--logs", str(home / "logs"), "--timeout", "10"
             ], capture_output=True, text=True, timeout=30)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertIn("WORLD_REGIONS_OK maps=22 families=5 checks=600", result.stdout)
+            self.assertIn("WORLD_REGIONS_OK maps=22 families=5 checks=1000", result.stdout)
             report = json.loads((home / "logs/summary.json").read_text())
             self.assertTrue(report["passed"])
             self.assertEqual(report["completed_regions"], 22)
-            self.assertEqual(len(report["families"]), 6)
-            self.assertEqual(report["shard_count"], 6)
+            self.assertEqual([f["expected_maps"] for f in report["families"][:5]],
+                             [[f"oman_{i:02d}"] for i in range(1, 6)])
+            self.assertEqual(report["families"][5]["expected_maps"],
+                             [f"oman_{i:02d}" for i in range(6, 11)])
+            self.assertEqual(len(report["families"]), 10)
+            self.assertEqual(report["shard_count"], 10)
 
 
 if __name__ == "__main__":
