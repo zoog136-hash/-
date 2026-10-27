@@ -7257,9 +7257,27 @@ func constrain_original_motion(actor: CharacterBody2D) -> void:
 				actor.velocity=candidate/delta
 				break
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
-		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
-		var source_clear: bool = field_map.source_line_clear(actor.global_position,target) if field_map is RemakePlayableField else field_map.line_clear(actor.global_position,target)
-		if not source_clear: actor.velocity = Vector2.ZERO
+		var delta: float=actor.get_physics_process_delta_time()
+		if delta<=0.0: return
+		var origin: Vector2=actor.global_position
+		var motion: Vector2=actor.velocity*delta
+		var target: Vector2=origin+motion
+		var source_clear: bool = field_map.source_line_clear(origin,target) if field_map is RemakePlayableField else field_map.line_clear(origin,target)
+		if not source_clear:
+			actor.velocity=Vector2.ZERO
+			# Source-grid diagonal checks can reject a step that has a clear
+			# cardinal component. Try only physically and navigationally legal
+			# axes; never turn source walls into traversable terrain.
+			if actor is TwilightPlayer:
+				var horizontal:=Vector2(motion.x,0.0)
+				var vertical:=Vector2(0.0,motion.y)
+				var options: Array[Vector2]=[horizontal,vertical] if absf(motion.x)>=absf(motion.y) else [vertical,horizontal]
+				for candidate: Vector2 in options:
+					if candidate.length_squared()<0.000001: continue
+					if not field_map.line_clear(origin,origin+candidate): continue
+					if actor.test_move(actor.global_transform,candidate): continue
+					actor.velocity=candidate/delta
+					break
 		elif field_map is RemakePlayableField and not field_map.point_clear(target):
 			# A streamed wall lets move_and_slide resolve the real circular foot
 			# and keep its tangent motion. Zeroing first deadlocks glancing paths.
