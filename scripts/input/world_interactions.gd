@@ -180,9 +180,11 @@ func _target_at(point: Vector2) -> Dictionary:
 	var closest: Node = null
 	var nearest_fraction: float = 1.0
 	for node: Node in world.monsters_root.get_children():
-		if not node is TwilightMonster or node.dead or not node.is_visible_in_tree() or node.is_queued_for_deletion(): continue
-		var center: Vector2 = COORD.world_to_screen(get_viewport(), node.global_position + Vector2(0, -28))
-		var radius: float = clampf(float(node.visual_height) * 0.45, 44.0, 76.0)
+		if not node is TwilightMonster: continue
+		var monster: TwilightMonster = node
+		if monster.dead or not monster.is_visible_in_tree() or monster.is_queued_for_deletion(): continue
+		var center: Vector2 = COORD.world_to_screen(get_viewport(), monster.global_position + Vector2(0, -28))
+		var radius: float = clampf(float(monster.visual_height) * 0.45, 44.0, 76.0)
 		var fraction: float = center.distance_squared_to(point) / (radius * radius)
 		if fraction < nearest_fraction:
 			nearest_fraction = fraction

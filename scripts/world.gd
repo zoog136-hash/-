@@ -129,6 +129,7 @@ const AUTO_TARGET_FAILED_PATH_RETRY_MS: int = 900
 const AUTO_TARGET_EMPTY_RETRY_MS: int = 250
 var auto_target_failed_paths: Dictionary = {}
 var auto_target_next_search_ms: int = 0
+var auto_target_failed_search_actor_count: int = -1
 var auto_target_path_checks: int = 0
 var region_id: String = ""
 var return_gate: Node2D = null
@@ -1302,6 +1303,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	# Cached failed routes are map- and life-specific; never retain them on travel.
 	auto_target_failed_paths.clear()
 	auto_target_next_search_ms = 0
+	auto_target_failed_search_actor_count = -1
 	active_map_id = map_id
 	active_map = maps_by_id[map_id] as Dictionary
 	if requested_native != null:
@@ -2215,11 +2217,12 @@ func _run_auto_hunt() -> void:
 	if _run_auto_ground_pickup():
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
-		if Time.get_ticks_msec() < auto_target_next_search_ms:
+		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
 			selected_monster = null
 			player.clear_click_path()
 			return
 		auto_target = _nearest_reachable_monster(99999.0)
+		auto_target_failed_search_actor_count = monsters_root.get_child_count()
 		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + AUTO_TARGET_EMPTY_RETRY_MS
 	if auto_target == null:
 		selected_monster = null
