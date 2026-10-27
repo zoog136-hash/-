@@ -87,15 +87,16 @@ func valid(entry: Dictionary) -> bool:
 	return index >= 0 and index < records.size() and records[index] == entry.record
 
 func primary_monster() -> TwilightMonster:
-	prune()
+	if not selections.is_empty() and not valid(selections[0]): prune()
 	if selections.is_empty() or selections[0].kind != "monster": return null
 	return selections[0].actor.get_ref() as TwilightMonster
 
 func primary_is_npc() -> bool:
-	prune()
+	if not selections.is_empty() and not valid(selections[0]): prune()
 	return not selections.is_empty() and selections[0].kind == "npc"
 
 func prune() -> void:
+	if selections.is_empty(): return
 	var changed: bool = false
 	for index: int in range(selections.size()-1,-1,-1):
 		if not valid(selections[index]):
@@ -145,6 +146,7 @@ func _sync_primary() -> void:
 	world.auto_target = target
 	world.auto_repath_timer = 0.0
 	world.auto_stuck_time = 0.0
+	world.auto_target_next_search_ms = 0
 	if not world.player.has_manual_movement() and world.loot_pickup.mode == "idle": world.player.clear_click_path()
 
 func _refresh() -> void:
@@ -173,15 +175,27 @@ func _screen_center(entry: Dictionary) -> Vector2:
 	return COORD.world_to_screen(get_viewport(),point+Vector2(0,-28))
 
 func _target_at(point: Vector2) -> Dictionary:
-	var best: Dictionary = {}
-	var distance: float = 44.0
-	for entry: Dictionary in _all_targets():
-		var center: Vector2 = _screen_center(entry)
-		var current: float = center.distance_to(point)
-		if current < distance:
-			distance = current
-			best = entry
-	return best
+	# Only a tap builds the final weak-ref entry. Large bosses have a wider
+	# on-screen hit region while regular monsters keep their existing 44px radius.
+	var closest: Node = null
+	var nearest_fraction: float = 1.0
+	for node: Node in world.monsters_root.get_children():
+		if not node is TwilightMonster or node.dead or not node.is_visible_in_tree() or node.is_queued_for_deletion(): continue
+		var center: Vector2 = COORD.world_to_screen(get_viewport(), node.global_position + Vector2(0, -28))
+		var radius: float = clampf(float(node.visual_height) * 0.45, 44.0, 76.0)
+		var fraction: float = center.distance_squared_to(point) / (radius * radius)
+		if fraction < nearest_fraction:
+			nearest_fraction = fraction
+			closest = node
+	var npc_match: Dictionary = {}
+	for entry: Dictionary in npc_entries():
+		var npc_distance: float = _screen_center(entry).distance_squared_to(point) / (44.0 * 44.0)
+		if npc_distance < nearest_fraction:
+			nearest_fraction = npc_distance
+			npc_match = entry
+			closest = null
+	if closest != null: return monster_entry(closest)
+	return npc_match
 
 func begin(event: InputEvent) -> void:
 	if pointer != -2 or event.device == InputEvent.DEVICE_ID_EMULATION: return
