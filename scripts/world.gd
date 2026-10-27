@@ -1594,14 +1594,14 @@ func _set_click_destination(target: Vector2) -> void:
 		destination=field_map.nearest_safe_click_destination(target)
 		if not destination.is_finite():
 			player.clear_click_path()
-			hud.show_message("이 지점은 통행 구역이 아닙니다")
+			hud.show_message("통행 불가 %s (%d,%d)" % [active_map_id,roundi(target.x),roundi(target.y)])
 			return
 	var path: PackedVector2Array = find_world_path(player.global_position,destination)
 	if not path.is_empty():
 		player.set_manual_click_path(path,destination)
 	elif field_map is NativePngField:
 		player.clear_click_path()
-		hud.show_message("길찾기 실패: 충돌 경계 확인 필요")
+		hud.show_message("우회 경로 없음 %s (%d,%d)" % [active_map_id,roundi(target.x),roundi(target.y)])
 
 func _spawn_monsters(count: int) -> void:
 	if monster_db.is_empty():
