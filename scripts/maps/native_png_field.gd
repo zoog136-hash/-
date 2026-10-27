@@ -146,6 +146,32 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 			candidates.append(cell)
 		spawn_cells[zone_id]=candidates
 
+## Resolve a tapped position to the nearest connected, full-foot-safe floor.
+## This is UI-only: AI navigation, collision data and portal landings stay exact.
+## A bounded cell search cannot silently open unreviewed terrain.
+func nearest_safe_click_destination(raw: Vector2, max_radius_cells: int = 4) -> Vector2:
+	if not raw.is_finite() or not bounds.has_point(raw): return Vector2.INF
+	var origin: Vector2i=world_to_cell(raw)
+	if not astar.is_in_boundsv(origin): return Vector2.INF
+	var origin_key: int=origin.y*width+origin.x
+	if reachable[origin_key]!=0 and line_clear(raw,raw): return raw
+	for radius: int in range(maxi(0,max_radius_cells)+1):
+		var nearest: Vector2=Vector2.INF
+		var best_distance: float=INF
+		for y: int in range(maxi(0,origin.y-radius),mini(height-1,origin.y+radius)+1):
+			for x: int in range(maxi(0,origin.x-radius),mini(width-1,origin.x+radius)+1):
+				if maxi(absi(x-origin.x),absi(y-origin.y))!=radius: continue
+				var cell:=Vector2i(x,y)
+				if astar.is_point_solid(cell) or reachable[y*width+x]==0: continue
+				var point: Vector2=cell_to_world(cell)
+				if not line_clear(point,point): continue
+				var distance: float=raw.distance_squared_to(point)
+				if distance<best_distance:
+					best_distance=distance
+					nearest=point
+		if nearest.is_finite(): return nearest
+	return Vector2.INF
+
 func _portal_endpoint(raw: Variant) -> Vector2:
 	if not raw is Array or raw.size()!=2: return Vector2.INF
 	if not (raw[0] is float or raw[0] is int) or not (raw[1] is float or raw[1] is int): return Vector2.INF
