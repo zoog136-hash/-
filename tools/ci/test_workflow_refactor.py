@@ -7,7 +7,7 @@ import os
 import subprocess
 import tempfile
 import time
-from validate_workflow_refactor import normalize_runtime_checkout, RUNTIME_CHECKOUT_PATHS, normalize_lookup_paths, LOOKUP_DEPENDENCIES
+from validate_workflow_refactor import normalize_runtime_checkout, RUNTIME_CHECKOUT_PATHS, normalize_lookup_paths, LOOKUP_DEPENDENCIES, TARGETED_IMPORT_DEADLINES, normalize_targeted_import_deadlines, normalize_audited_ci_job_budget
 from validate_workflow_refactor import expand, assert_preserved_workflow, STALE_POLICY, assert_new_cleanup, IMPORT_EXTRA_NAMES, IMPORT_MAIN_ONLY, IMPORT_CACHE_KEY, IMPORT_CACHE_PATHS, cached_script, ENGINE_INSTALL, ENGINE_MAIN_INSTALL, ENGINE_CHECK, validate_cached_setup_action, normalize_cached_direct, ENGINE_CACHE_RESTORE, ENGINE_CACHE_SAVE, SHARED_IMPORT_READER_STEPS, SHARED_IMPORT_READER, normalize_shared_import_cache_reader, PHASE3_SUBSET_JOBS, PHASE3_MANUAL_OR_PROTECTED, PHASE3_BUYBACK, PHASE3_EXTRA_BASES, PHASE3_COVERED_TESTS, PHASE3_COVERED_MARKERS, normalize_phase3_services
 
 
@@ -256,6 +256,53 @@ class PhaseTwoImportReaderContract(unittest.TestCase):
             assert_preserved_workflow('.github/workflows/resource-integrity.yml',
                                       before, after, lambda _: None)
 
+
+
+class TargetedColdImportContract(unittest.TestCase):
+    def test_real_import_deadline_is_the_only_test_command_change(self):
+        for path, (job, name, old, new) in TARGETED_IMPORT_DEADLINES.items():
+            with self.subTest(path=path):
+                original = 'set -euo pipefail\\nrun-all-tests' + old + '\\n'
+                before = {'jobs': {job: {'steps': [
+                    {'uses': 'actions/checkout@v4'},
+                    {'name': name, 'run': original}]}}}
+                if path.endswith('/debug-runner-validate.yml'):
+                    before['jobs']['runner'] = {'steps': [{'uses': 'actions/checkout@v4'}]}
+                after = copy.deepcopy(before)
+                steps = after['jobs'][job]['steps']
+                steps[-1]['run'] = original.replace(old, new)
+                if path.endswith('/debug-runner-validate.yml'):
+                    steps.insert(1, copy.deepcopy(SHARED_IMPORT_READER))
+                self.assertEqual(normalize_targeted_import_deadlines(path, before, after), before)
+                after['jobs'][job]['steps'][-1]['run'] = 'true\\n'
+                with self.assertRaises(AssertionError):
+                    normalize_targeted_import_deadlines(path, before, after)
+
+    def test_audited_job_timeouts_preserve_full_test_contracts(self):
+        cases = (
+            ('.github/workflows/aden-png-source-validate.yml', 'source-main-physics', 45, 75),
+            ('.github/workflows/pr86-selective-port-validate.yml', 'navigation-regression', 30, 45),
+        )
+        for path, job, original, allowed in cases:
+            with self.subTest(path=path):
+                before = {'jobs': {job: {'timeout-minutes': original}}}
+                after = copy.deepcopy(before)
+                after['jobs'][job]['timeout-minutes'] = allowed
+                self.assertEqual(normalize_audited_ci_job_budget(path, before, after), before)
+                after['jobs'][job]['timeout-minutes'] = allowed + 5
+                with self.assertRaises(AssertionError):
+                    normalize_audited_ci_job_budget(path, before, after)
+
+    def test_cold_cache_is_read_only_and_protected_workflows_keep_originals(self):
+        self.assertIn('github.event.pull_request.number != 157', SHARED_IMPORT_READER['if'])
+        self.assertIn('github.event.pull_request.number != 158', SHARED_IMPORT_READER['if'])
+        self.assertEqual(SHARED_IMPORT_READER['uses'], 'actions/cache/restore@v4')
+        self.assertTrue(SHARED_IMPORT_READER['continue-on-error'])
+        self.assertIn('.github/workflows/combat-animation-validate.yml', SHARED_IMPORT_READER_STEPS)
+        self.assertIn('.github/workflows/monster-world-validate.yml', SHARED_IMPORT_READER_STEPS)
+        self.assertIn('.github/workflows/twilight-monster-ai.yml', SHARED_IMPORT_READER_STEPS)
+        self.assertIn('.github/workflows/pr86-selective-port-validate.yml', SHARED_IMPORT_READER_STEPS)
+        self.assertIn('.github/workflows/aden-png-source-validate.yml', SHARED_IMPORT_READER_STEPS)
 
 
 class PhaseThreeServiceConsolidationContract(unittest.TestCase):

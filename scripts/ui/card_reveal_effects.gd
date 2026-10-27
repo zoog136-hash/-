@@ -7,6 +7,7 @@ var grade: String = "희귀"
 var elapsed: float = -1.0
 var clock: float = 0.0
 var surface: bool = false
+var extra_lightning_seconds: float=0.0
 var reduced_motion: bool = false
 var detail_scale: float = 1.0
 var intensity_scale: float = 1.0
@@ -45,15 +46,20 @@ static func _ensure_textures() -> void:
 	smoke_texture = ImageTexture.create_from_image(smoke)
 
 func set_time(value: float, absolute_time: float) -> void:
+	var refresh: bool=not surface or extra_lightning_seconds<=0 or floori(elapsed*30)!=floori(value*30)
 	elapsed = value
 	clock = absolute_time
-	queue_redraw()
+	if refresh:queue_redraw()
 
 func _glow(center: Vector2, radius: Vector2, tint: Color, alpha: float) -> void:
 	if alpha > 0.001:
 		draw_texture_rect(light_texture,Rect2(center-radius,radius*2.0),false,Color(tint,alpha))
 
-func _bolt(points: PackedVector2Array, tint: Color, power: float, width: float) -> void:
+func _bolt(points: PackedVector2Array, tint: Color, power: float, width: float, compact: bool=false) -> void:
+	if compact:
+		draw_polyline(points,Color(tint,minf(power,1.0)),width,true)
+		draw_polyline(points,Color(Color("eefff7"),minf(1.0,power*.84)),maxf(.65,width*.31),true)
+		return
 	draw_polyline(points,Color(tint,power*0.07),width*7.0,true)
 	draw_polyline(points,Color(tint,power*0.24),width*3.0,true)
 	draw_polyline(points,Color(tint,minf(power,1.0)),width,true)
@@ -61,7 +67,7 @@ func _bolt(points: PackedVector2Array, tint: Color, power: float, width: float) 
 
 func _path(a: Vector2, b: Vector2, salt: float, amount: float) -> PackedVector2Array:
 	var points := PackedVector2Array([a,b])
-	var pulse_id: int = int(elapsed*55.0)
+	var pulse_id: int = int(elapsed*(30.0 if extra_lightning_seconds>0 else 55.0))
 	for depth: int in range(4):
 		var next := PackedVector2Array([points[0]])
 		for j: int in range(points.size()-1):
@@ -84,7 +90,7 @@ func _draw() -> void:
 		_draw_aura(p,tint,tier)
 
 func _draw_surface(p: Dictionary, tint: Color, tier: int) -> void:
-	var burst: float = PROFILES.pulse(grade,elapsed)
+	var burst: float = PROFILES.pulse(grade,elapsed,extra_lightning_seconds)
 	if reduced_motion:
 		burst *= 0.20
 	if burst < 0.008:
@@ -93,21 +99,30 @@ func _draw_surface(p: Dictionary, tint: Color, tier: int) -> void:
 	var center: Vector2 = size*Vector2(0.5,0.43)
 	draw_rect(Rect2(Vector2.ZERO,size),Color(tint,minf(0.38,power*0.15)))
 	_glow(center,size*Vector2(0.78,0.76),tint,minf(0.82,power*0.62))
-	var pulse_id: int = int(elapsed*55.0)
+	var pulse_id: int = int(elapsed*(30.0 if extra_lightning_seconds>0 else 55.0))
 	var count: int = int(p.get("bolts",1))
+	var enhanced: bool=extra_lightning_seconds>0
+	var forks: int=int(p.get("branches",0))
+	if enhanced:
+		count=maxi(1,ceili(count*clampf(detail_scale,.25,1.0)))
+		forks=mini(8,forks+2)
+		# At most 56 paths per card, fewer in mobile/multi-card mode.
+		forks=mini(forks,maxi(1,int(56.0*clampf(detail_scale,.25,1.0))/count-1))
+	var thickness: float=1.65 if enhanced else 1.0
 	if reduced_motion:
 		count = 1
+		if enhanced:forks=1
 	for bolt: int in range(count):
 		var top := Vector2(size.x*(0.12+_seed(27+bolt*19+pulse_id)*0.76),size.y*0.02)
 		var foot := Vector2(size.x*(0.16+_seed(92+bolt*7+pulse_id)*0.68),size.y*(0.73+_seed(bolt+8)*0.22))
 		var points: PackedVector2Array = _path(top,foot,bolt*113,size.x*0.62)
 		var alpha: float = power*(0.96 if bolt == 0 else 0.57)
-		_bolt(points,tint,alpha,maxf(1.2,size.x*0.013))
-		for fork: int in range(int(p.get("branches",0))):
+		_bolt(points,tint,alpha,maxf(1.2,size.x*0.013)*thickness)
+		for fork: int in range(forks):
 			var origin: Vector2 = points[3+(bolt*3+fork*5)%11]
 			var direction: float = 1.0 if (bolt+fork)%2 else -1.0
 			var end: Vector2 = origin+Vector2(direction*size.x*(0.20+fork*0.045),size.y*(0.10+fork*0.025))
-			_bolt(_path(origin,end,513+bolt+fork*33,size.x*0.18),tint,alpha*0.65/(1+fork*0.15),maxf(0.8,size.x*0.006))
+			_bolt(_path(origin,end,513+bolt+fork*33,size.x*0.18),tint,alpha*0.65/(1+fork*0.15),maxf(0.8,size.x*0.006)*thickness,enhanced)
 	_glow(center,size*Vector2(0.40,0.34),Color("fffdef"),minf(0.34,burst*0.24))
 	if tier >= 3:
 		for j: int in range(int(p.get("flare",0))):

@@ -26,8 +26,12 @@ func _run() -> void:
 	_check(not bool(poorer.get("ok")), "insufficient funds rejected")
 	_check(not bool(SHOP.quote("HP 물약",3,9999,90,100,5).get("ok")), "overweight rejected")
 	_check(bool(SHOP.quote("HP 물약",2,9999,90,100,5).get("ok")), "capacity boundary accepted")
-	for bad_count: int in [-1,0,100,1000000]:
+	for bad_count: int in [-1,0,1001,1000000]:
 		_check(not bool(SHOP.quote("HP 물약",bad_count,999999999,0,999999,1).get("ok")), "invalid quantity rejected: " + str(bad_count))
+	for allowed: int in [1, 10, 100, 1000]:
+		var bulk: Dictionary = SHOP.quote("HP 물약",allowed,100000000,0,999999,1)
+		_check(bool(bulk.get("ok")), "supported purchase quantity: " + str(allowed))
+		_check(int(bulk.get("total", -1)) == 50 * allowed, "authoritative bulk price: " + str(allowed))
 	_check(not bool(SHOP.quote("드래곤의 용옥",2,3000000,0,9999,1).get("ok")), "orb bulk bypass rejected")
 	_check(bool(SHOP.quote("드래곤의 용옥",1,1000000,0,9999,1).get("ok")), "one orb remains purchasable")
 	_check(not bool(SHOP.quote("HP 물약",1,-1,0,9999,1).get("ok")), "negative wallet rejected")

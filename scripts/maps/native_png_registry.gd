@@ -45,11 +45,30 @@ static func plan() -> Dictionary:
 		if not valid_polygon(cut.get("polygon_image"),extra.sources["Aden.png"].size) or not valid_point(cut.get("foot_image"),extra.sources["Aden.png"].size):return {}
 	extra.maps.aden_world["runtime_foreground"]=display_review.get("foreground",[])
 	for replacement: Dictionary in display_review.get("collision_replace",[]):
-		if replacement.get("shape")!="circle" or not valid_point(replacement.get("center"),extra.sources["Aden.png"].size) or float(replacement.get("radius",0))<=0:return {}
+		if replacement.get("shape")=="circle":
+			if not valid_point(replacement.get("center"),extra.sources["Aden.png"].size) or float(replacement.get("radius",0))<=0:return {}
+		elif replacement.get("shape")=="polygon":
+			if not valid_polygon(replacement.get("points"),extra.sources["Aden.png"].size):return {}
+		else:return {}
 		var found: bool=false
 		for i: int in range(extra.maps.aden_world.collision.size()):
 			if extra.maps.aden_world.collision[i].id==replacement.id:extra.maps.aden_world.collision[i]=replacement;found=true;break
 		if not found:return {}
+	# Append only reviewed, authenticated Aden obstacles; the source PNG and
+	# earlier collision replacements remain unchanged. Reject duplicate IDs.
+	var added_ids: Dictionary={}
+	for addition: Dictionary in display_review.get("collision_add",[]):
+		var id: String=str(addition.get("id",""))
+		if id.is_empty() or added_ids.has(id):return {}
+		if addition.get("shape")=="circle":
+			if not valid_point(addition.get("center"),extra.sources["Aden.png"].size) or float(addition.get("radius",0))<=0:return {}
+		elif addition.get("shape")=="polygon":
+			if not valid_polygon(addition.get("points"),extra.sources["Aden.png"].size):return {}
+		else:return {}
+		for existing: Dictionary in extra.maps.aden_world.collision:
+			if str(existing.get("id",""))==id:return {}
+		added_ids[id]=true
+		extra.maps.aden_world.collision.append(addition.duplicate(true))
 	value.sources.merge(extra.get("sources",{}))
 	value.maps.merge(extra.get("maps",{}))
 	var domination: Dictionary=read_json(DOMINATION_PLAN_PATH)

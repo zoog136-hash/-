@@ -112,6 +112,22 @@ def phase_frames(decoded: list[list[tuple[dict, Image.Image | None]]]) -> list[I
     return output
 
 
+def phase_layout(decoded: list[list[tuple[dict, Image.Image | None]]], pictures: list[Image.Image]) -> dict:
+    """Keep source (0, 0) when a fixed composite canvas is downsampled."""
+    located = [(meta, image) for layer in decoded for meta, image in layer if image is not None]
+    x = min(int(meta["xy_offset"][0]) for meta, _ in located)
+    y = min(int(meta["xy_offset"][1]) for meta, _ in located)
+    width, height = pictures[0].size
+    ratio = min(1.0, MAX_DELIVERY_EDGE / max(width, height))
+    delivered = (max(1, round(width * ratio)), max(1, round(height * ratio)))
+    return {"source_canvas_origin": [x, y], "source_canvas_size": [width, height],
+            "delivered_size": list(delivered),
+            "sprite_offset": [x * delivered[0] / width, y * delivered[1] / height],
+            "absolute_timing": "UNVERIFIED_NO_ACTION_TABLE",
+            "preview_fps": 14.0, "direction_alignment": "UNVERIFIED_FIXED_SOURCE_VIEW",
+            "empty_composite_frames": [i for i, picture in enumerate(pictures) if picture.getchannel('A').getbbox() is None]}
+
+
 def spriteframes_resource(mapping: dict[str, list[str]]) -> str:
     paths = [path for frames in mapping.values() for path in frames]
     ext = [
@@ -154,6 +170,7 @@ def build(source: pathlib.Path, output: pathlib.Path) -> dict:
             with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as pack:
                 for family, spec in config["families"].items():
                     mapping: dict[str, list[str]] = {}
+                    layouts: dict[str, dict] = {}
                     physical: dict[str, dict] = {}
                     for clip, ids in spec["source_by_animation"].items():
                         layers = []
@@ -173,6 +190,7 @@ def build(source: pathlib.Path, output: pathlib.Path) -> dict:
                                 }
                             layers.append(cache[source_id])
                         pictures = phase_frames(layers)
+                        layouts[clip] = phase_layout(layers, pictures)
                         mapping[clip] = []
                         for index, picture in enumerate(pictures):
                             # 1584px source frames waste Android texture memory at ~260px display.
@@ -195,6 +213,7 @@ def build(source: pathlib.Path, output: pathlib.Path) -> dict:
                         "animations": {clip: len(frames) for clip, frames in mapping.items()},
                         "sources": physical,
                         "resource": resource,
+                        "layout": layouts,
                     }
                 pack.writestr(
                     "data/external_spx/skills_manifest.json",

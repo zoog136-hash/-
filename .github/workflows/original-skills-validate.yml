@@ -38,11 +38,15 @@ jobs:
           key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
           restore-keys: |
             twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Delivered authored VFX atlases and roster bindings
+        run: |
+          python3 -m pip install Pillow
+          python3 tools/skills/verify_authored_vfx.py --require-tracked
       - name: Skill behavior and combat regressions
         # Every PR also runs Integration's unfiltered suite; other events keep it here.
         env:
           TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && 'import,bake_navigation,boot,original_skill_audio_test,original_skill_catalog_runtime_test,original_skill_learning_conditions_test,original_skill_provenance_test,original_skill_reduction_test,original_skill_restore_guard_test,original_skill_status_coexistence_test,original_skill_summon_test,original_skill_system_test,original_skill_target_state_test,original_skill_warehouse_migration_test,passive_skill_smoke_test,skill_element_integration_smoke_test,skill_icon_asset_integrity_test,skill_mechanism_smoke_test,skill_private_icon_binding_test,source_spx_skill_effect_test,combat_timing_test,combat_timeline_lifecycle_test' || '' }}
-        run: python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --logs test-results --only "$TWILIGHT_CI_TESTS"
+        run: python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1200 --logs test-results --only "$TWILIGHT_CI_TESTS"
       - name: Real OpenGL render
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

@@ -1,0 +1,26 @@
+{
+  "feature_sha": "5a1457fb500b8d6f8754e6f90b82e4465f4dfd77",
+  "main_base_sha": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "ci_run": 40060695450,
+  "ci_job": 120773332515,
+  "unchanged_timeout_seconds": 150,
+  "ci_hunting_failure_count": 92,
+  "baseline_full_hunting_completed": false,
+  "baseline_full_hunting_reason": "150s timeout after domination_summit",
+  "baseline_domination_failures": [
+    "domination_summit reviewed route remains connected [8270.0, 3660.0]",
+    "domination_summit detour respects native walls"
+  ],
+  "escaros_focused_checks": 4645,
+  "escaros_focused_failure_count": 90,
+  "focused_game_ids": [
+    "escaros_01",
+    "escaros_02",
+    "escaros_03",
+    "escaros_04",
+    "escaros_05"
+  ],
+  "combined_failure_count": 92,
+  "exact_failure_multiset_matches_ci": true,
+  "timing_caveat": "Different CPU/OS/Mesa from CI; this is a failure reproduction, not a relative performance measurement."
+}

@@ -1,0 +1,75 @@
+{
+  "pr": 153,
+  "source_head": "e8eb8bb031596984ded9ce2c2b240228bf110e79",
+  "base_main": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "scope": "CI fixtures/prerequisites only; authored VFX/gameplay/resources unchanged",
+  "fixes": [
+    "Accept valid one-destination native paths and validate raw manual/AUTO arrival points against actual gameplay LOS",
+    "Install ripgrep explicitly before tower log assertions",
+    "Bound exhaustive five-map PNG runtime audit at300 seconds without removing assertions"
+  ],
+  "failed_run_urls": [
+    "https://github.com/zoog136-hash/-/actions/runs/40071145266",
+    "https://github.com/zoog136-hash/-/actions/runs/40071145561",
+    "https://github.com/zoog136-hash/-/actions/runs/40071145602"
+  ],
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "sha256_match": true
+  },
+  "authored_vfx_delivery": {
+    "profiles": 125,
+    "atlases": 70,
+    "cells": 6720,
+    "bytes": 42471360,
+    "tracked": true
+  },
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "import": {
+    "exit": 0,
+    "engine_errors": 0,
+    "seconds": 188.89
+  },
+  "runtime_checks": [
+    {
+      "test": "authored-vfx",
+      "exit": 0,
+      "elapsed_seconds": 2.521,
+      "errors": [],
+      "markers": [
+        "AUTHORED_VFX_RESULT {\"checks\":1565,\"failures\":[]}"
+      ]
+    },
+    {
+      "test": "ground-smoke",
+      "exit": 0,
+      "elapsed_seconds": 8.287,
+      "errors": [],
+      "markers": [
+        "GROUND_DROP_SMOKE_OK: manual/auto/loot/snapshot pickup validated"
+      ]
+    },
+    {
+      "test": "boot",
+      "exit": 0,
+      "elapsed_seconds": 9.539,
+      "errors": [],
+      "markers": []
+    }
+  ],
+  "shared_original_reproduction": {
+    "test_git_blob": "c5eae154e3f455b670678a08f810518a734f94a0",
+    "validated_in_pr156_checkout": true,
+    "original_failures": 7,
+    "fixed_pass": true,
+    "separate_legacy_loot_suite_checks": 175
+  },
+  "checks": [
+    "git diff --check PASS",
+    "changed workflow actionlint1.7.12 PASS"
+  ],
+  "remote_ci_at_commit": "New commit must be checked by GitHub Actions; no full CI or Android-device pass claimed",
+  "created_at_utc": "2026-10-24T08:14:05.501477+00:00"
+}
