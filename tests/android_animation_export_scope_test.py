@@ -191,6 +191,13 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
             offline.write_text("{}")
             ledger = root / "data/resource_delivery_ledger.json"
             ledger.write_text('{"tracked_source": "' + relative + '"}')
+            # Verify the fail-closed guard, then supply the real export's pack
+            # manifest in this otherwise intentionally minimal unit fixture.
+            with self.assertRaisesRegex(ValueError, "runtime pack manifest is missing"):
+                audit_authoring_exclusions(root)
+            runtime_pack = root / "data/maps/aden_mobile_pack.json"
+            runtime_pack.parent.mkdir(parents=True, exist_ok=True)
+            runtime_pack.write_text('{"schema": 1, "map_id": "aden_world", "manifest_sha256": "' + "a"*64 + '"}')
             self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
             runtime = root / "scripts/map_loader.gd"
             runtime.parent.mkdir(parents=True, exist_ok=True)
@@ -220,6 +227,12 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
                 offline = root / relative
                 offline.parent.mkdir(parents=True, exist_ok=True)
                 offline.write_text("{}\n")
+                if relative == "data/map_remake/private/aden/effective_layouts_build.json":
+                    with self.assertRaisesRegex(ValueError, "runtime pack manifest is missing"):
+                        audit_authoring_exclusions(root)
+                    runtime_pack = root / "data/maps/aden_mobile_pack.json"
+                    runtime_pack.parent.mkdir(parents=True, exist_ok=True)
+                    runtime_pack.write_text('{"schema": 1, "map_id": "aden_world", "manifest_sha256": "' + "a"*64 + '"}')
                 self.assertEqual(audit_authoring_exclusions(root)["production_resources_excluded"], 0)
 
                 runtime_manifest = root / "data/runtime_references_offline.json"

@@ -9,7 +9,9 @@ p=argparse.ArgumentParser();p.add_argument('--godot',required=True);p.add_argume
 root=Path(__file__).resolve().parents[1];logs=Path(args.logs).resolve();logs.mkdir(parents=True,exist_ok=True)
 godot=str(Path(args.godot).resolve())
 selected='import,bake_navigation,boot,equipment_collection_runtime_test,equipment_collection_stats_test,equipment_collection_bindings_test,per_instance_enchantments_smoke_test,ui_renewal_integration_test,ui_pointer_transfer_test'
-result=subprocess.run([sys.executable,str(root/'tools/test_project.py'),'--godot',godot,'--logs',str(logs/'regression'),'--only',selected],cwd=root)
+# Preserve all regressions; the full native PNG import outlasts 900s on runners.
+result=subprocess.run([sys.executable,str(root/'tools/test_project.py'),'--godot',godot,
+                       '--import-timeout','1800','--logs',str(logs/'regression'),'--only',selected],cwd=root)
 if result.returncode:sys.exit(result.returncode)
 with tempfile.TemporaryDirectory(prefix='twilight-collections-render-') as data:
  env=os.environ.copy();env.update(XDG_DATA_HOME=data,APPDATA=data,LOCALAPPDATA=data,LIBGL_ALWAYS_SOFTWARE='1',TWILIGHT_COLLECTION_CAPTURE_DIR=str(logs/'captures'))

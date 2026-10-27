@@ -17,7 +17,7 @@ concurrency:
 jobs:
   hit-feedback:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Resource preflight
@@ -36,7 +36,7 @@ jobs:
           mkdir -p test-results
           export XDG_DATA_HOME="${RUNNER_TEMP}/hit-feedback"
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
-          "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/hit-import.log
+          timeout --signal=TERM --kill-after=15s 1800s "$ENGINE" --headless --path . --import 2>&1 | tee test-results/hit-import.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/hit-import.log; then exit 1; fi
           for name in hit_feedback_test combat_vfx_test actor_motion_test combat_timing_test volley_motion_test; do
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.log"

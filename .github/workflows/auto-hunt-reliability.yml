@@ -15,9 +15,22 @@ concurrency:
 jobs:
   deterministic-pursuit:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Build source-independent fixture
         run: python3 tools/l1j_ci_make_fixture.py --root .
       - name: Install Godot 4.7.2
@@ -29,7 +42,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          timeout --signal=TERM --kill-after=15s 900s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee import.log
+          # Previous 900s limit killed an active 90%-complete PNG import.
+          timeout --signal=TERM --kill-after=15s 1800s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee import.log
           if grep -E 'SCRIPT ERROR:|ERROR:' import.log; then exit 1; fi
       - name: Run eight independent live AUTO-hunt simulations
         shell: bash
