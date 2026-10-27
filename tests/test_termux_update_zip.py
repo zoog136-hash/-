@@ -135,11 +135,62 @@ class ZipUpdaterTest(unittest.TestCase):
     def test_runtime_path_scope(self):
         for path in ('project.godot', 'Main.tscn', 'assets/terrain.png',
                      'external_map_packs/native_png_v5/index.json',
-                     'scripts/world.gd', 'tools/android/termux_update_zip.py'):
+                     'external_map_packs/oman_png_v1/index.json',
+                     'external_map_packs/.gdignore',
+                     'data/visuals/runtime_manifest.json',
+                     'data/maps/navigation/oman_01.nav',
+                     'scripts/world.gd',
+                     'assets/actors/eight_direction/native_production/a.tres',
+                     'addons/twilight_l1j/plugin.cfg'):
             self.assertTrue(updater.is_runtime_path(path), path)
         for path in ('docs/archive.png', '.github/workflows/ci.yml',
-                     'tests/world_test.gd', 'samples/example.txt'):
+                     'tests/world_test.gd', 'samples/example.txt',
+                     'tools/android/termux_update_zip.py', 'export_presets.cfg',
+                     'external_map_packs/source_pngs/13474.png',
+                     'external_map_packs/oman_v2/effective_layouts.json',
+                     'external_map_packs/TWILIGHT-map-remake-private-20261015-v2.zip',
+                     'assets/maps/aden_world_draft/placements.json',
+                     'assets/maps/aden_modular_pilot/compiled/tile.png',
+                     'assets/original_sheets/reference_ui.jpg',
+                     'assets/actors/eight_direction/native_locomotion_staging/transform_393/draft001/clip.tres',
+                     'data/resource_delivery_ledger.json',
+                     'data/animation_authoring_sources.json',
+                     'data/pr122_native_locomotion_staging.json',
+                     'data/visuals/pr80_original_asset_hashes.json',
+                     'data/skills/research_inventory.json',
+                     'scripts/world_v19_backup.gd.bak',
+                     'scripts/maps/aden_modular_preview_renderer.gd',
+                     'scenes/SkillVFXLab.tscn'):
             self.assertFalse(updater.is_runtime_path(path), path)
+        self.assertFalse(updater.is_runtime_tree('tools'))
+        self.assertFalse(updater.is_runtime_tree('external_map_packs/source_pngs'))
+        self.assertFalse(updater.is_runtime_tree('assets/maps/aden_world_draft'))
+        self.assertTrue(updater.is_runtime_tree('external_map_packs/native_png_v5'))
+        self.assertTrue(updater.is_runtime_tree('assets/actors/eight_direction/native_production'))
+
+    def test_new_scope_never_deletes_previously_downloaded_sources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'project.godot').write_bytes(b'game')
+            (root / 'Main.tscn').write_bytes(b'scene')
+            kept = ('tools/android/termux_update_zip.py',
+                    'external_map_packs/source_pngs/13474.png',
+                    'data/resource_delivery_ledger.json')
+            for name in kept:
+                target = root / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(b'old but preserved')
+            (root / updater.STATE_FILE).write_text(
+                __import__('json').dumps({'tracked_files': list(kept) +
+                                          ['project.godot', 'Main.tscn']}))
+            inventory = {name: record(blob) for name, blob in
+                         {'project.godot': b'game',
+                          'Main.tscn': b'scene'}.items()}
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=('a'*40, inventory)):
+                updater.update(root, assume_yes=True)
+            for name in kept:
+                self.assertEqual((root / name).read_bytes(), b'old but preserved')
 
 if __name__ == '__main__':
     unittest.main()
