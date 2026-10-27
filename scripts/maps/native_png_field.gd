@@ -75,7 +75,8 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	landing_candidates_ready = false
 	precise_routes=null
 	var spec: Dictionary = plan.maps[mid]
-	artwork_scale=PNG_SCALE.ADEN_SCALE if mid=="aden_world" else 1.0
+	var faith_map: bool=mid in ["faith_01","faith_02","faith_03","faith_04"]
+	artwork_scale=PNG_SCALE.map_scale(mid)
 	var spawn: Array = spec.spawn.duplicate(true)
 	var portals: Array = [{"id":"aden_return","name":"아덴 귀환","position":[spawn[0]-60,spawn[1]],"target_map":"aden_world","radius":18}]
 	if mid.begins_with("albino_"):
@@ -95,17 +96,20 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		monster_spawns=gameplay.get("monster_spawn",[])
 		npcs=gameplay.get("npc_spawn",[])
 		portals=gameplay.get("portal",[])
-	var geometry: Dictionary=PNG_SCALE.geometry(spec,artwork_scale)
-	spawn=PNG_SCALE.geometry(spawn,artwork_scale,"spawn")
-	portals=PNG_SCALE.geometry(portals,artwork_scale)
-	monster_spawns=PNG_SCALE.geometry(monster_spawns,artwork_scale)
-	if mid=="aden_world":
-		for zone: Dictionary in monster_spawns:zone.layout_revision=PNG_SCALE.ADEN_REVISION
+	var geometry: Dictionary=PNG_SCALE.geometry(spec,artwork_scale,"",mid)
+	spawn=PNG_SCALE.geometry(spawn,artwork_scale,"spawn",mid)
+	portals=PNG_SCALE.geometry(portals,artwork_scale,"",mid)
+	monster_spawns=PNG_SCALE.geometry(monster_spawns,artwork_scale,"",mid)
+	if mid=="aden_world" or faith_map:
+		for zone: Dictionary in monster_spawns:
+			zone.layout_revision=PNG_SCALE.ADEN_REVISION if mid=="aden_world" else PNG_SCALE.FAITH_REVISION
 	for portal: Dictionary in portals:
-		if str(portal.get("target_map",""))==mid and portal.has("target_layout_revision") and mid=="aden_world":portal.target_layout_revision=PNG_SCALE.ADEN_REVISION
+		if str(portal.get("target_map",""))==mid and portal.has("target_layout_revision"):
+			if mid=="aden_world":portal.target_layout_revision=PNG_SCALE.ADEN_REVISION
+			elif faith_map:portal.target_layout_revision=PNG_SCALE.FAITH_REVISION
 	var value: Dictionary = {
 		"map_id":mid,"map_name":spec.name,"short_name":spec.name,
-		"layout_revision":PNG_SCALE.ADEN_REVISION if mid=="aden_world" else int(spec.get("layout_revision",plan.revision)),"bounds":PNG_SCALE.geometry(manifest.bounds,artwork_scale,"bounds"),"native_png":true,
+		"layout_revision":PNG_SCALE.ADEN_REVISION if mid=="aden_world" else (PNG_SCALE.FAITH_REVISION if faith_map else int(spec.get("layout_revision",plan.revision))),"bounds":PNG_SCALE.geometry(manifest.bounds,artwork_scale,"bounds"),"native_png":true,
 		"navigation":{"cell_size":48 if mid=="aden_world" else 16,"clearance":4,"use_baked_cache":false},
 		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},

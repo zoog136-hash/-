@@ -27,6 +27,22 @@ jobs:
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
           sudo apt-get update -qq
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      # Read-only main import cache: keep all real imports, tests and render checks.
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Reproducible catalog and monster-world regressions
         # Integration keeps the full suite on these PR bases; other events remain full.
         env:
@@ -34,7 +50,7 @@ jobs:
         run: |
           python3 tools/build_monster_world.py
           git diff --exit-code -- data/monsters/monster_world_catalog.json data/monsters/world_spawn_profiles.json
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --only "$TWILIGHT_CI_TESTS"
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1500 --logs test-results --only "$TWILIGHT_CI_TESTS"
       # Only the two historical render fixtures use legacy Aden/Faith.
       # Do not apply this flag to the full suite or native PNG validation.
       - name: Actual OpenGL regions, AUTO dense hunts, bosses, all species poses

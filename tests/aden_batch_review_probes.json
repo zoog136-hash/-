@@ -1,0 +1,314 @@
+{
+  "replace": [
+    {
+      "id": "desert_rock_a",
+      "shape": "circle",
+      "center": [
+        7500,
+        5310
+      ],
+      "radius": 8,
+      "open": [
+        7517,
+        5296
+      ],
+      "blocked": [
+        7500,
+        5310
+      ]
+    },
+    {
+      "id": "desert_rock_b",
+      "shape": "polygon",
+      "points": [
+        [
+          7654,
+          5346
+        ],
+        [
+          7678,
+          5345
+        ],
+        [
+          7685,
+          5354
+        ],
+        [
+          7679,
+          5360
+        ],
+        [
+          7655,
+          5354
+        ]
+      ],
+      "open": [
+        7560,
+        5350
+      ],
+      "blocked": [
+        7670,
+        5352
+      ]
+    },
+    {
+      "id": "desert_rock_c",
+      "shape": "circle",
+      "center": [
+        7643,
+        5464
+      ],
+      "radius": 7,
+      "open": [
+        7623,
+        5450
+      ],
+      "blocked": [
+        7643,
+        5464
+      ]
+    },
+    {
+      "id": "desert_crystal_a",
+      "shape": "circle",
+      "center": [
+        7613,
+        5300
+      ],
+      "radius": 8,
+      "open": [
+        7600,
+        5282
+      ],
+      "blocked": [
+        7613,
+        5300
+      ]
+    },
+    {
+      "id": "desert_crystal_b",
+      "shape": "circle",
+      "center": [
+        7711,
+        5355
+      ],
+      "radius": 8,
+      "open": [
+        7740,
+        5345
+      ],
+      "blocked": [
+        7711,
+        5355
+      ]
+    },
+    {
+      "id": "snow_tree_2",
+      "shape": "circle",
+      "center": [
+        7819,
+        1151
+      ],
+      "radius": 3,
+      "open": [
+        7805,
+        1150
+      ],
+      "blocked": [
+        7819,
+        1151
+      ]
+    },
+    {
+      "id": "worm_rock",
+      "shape": "circle",
+      "center": [
+        7866,
+        5544
+      ],
+      "radius": 5,
+      "open": [
+        7830,
+        5535
+      ],
+      "blocked": [
+        7866,
+        5544
+      ]
+    }
+  ],
+  "add": [
+    {
+      "id": "desert_crystal_nw",
+      "shape": "circle",
+      "center": [
+        7521,
+        5241
+      ],
+      "radius": 8,
+      "blocked": [
+        7521,
+        5241
+      ]
+    },
+    {
+      "id": "desert_crystal_ne",
+      "shape": "circle",
+      "center": [
+        7738,
+        5234
+      ],
+      "radius": 5,
+      "blocked": [
+        7738,
+        5234
+      ]
+    },
+    {
+      "id": "desert_crystal_center",
+      "shape": "circle",
+      "center": [
+        7734,
+        5288
+      ],
+      "radius": 8,
+      "blocked": [
+        7734,
+        5288
+      ]
+    },
+    {
+      "id": "desert_crystal_west",
+      "shape": "circle",
+      "center": [
+        7587,
+        5357
+      ],
+      "radius": 8,
+      "blocked": [
+        7587,
+        5357
+      ]
+    },
+    {
+      "id": "desert_crystal_se",
+      "shape": "circle",
+      "center": [
+        7801,
+        5440
+      ],
+      "radius": 8,
+      "blocked": [
+        7801,
+        5440
+      ]
+    },
+    {
+      "id": "worm_crystal_north",
+      "shape": "circle",
+      "center": [
+        7881,
+        5521
+      ],
+      "radius": 8,
+      "blocked": [
+        7881,
+        5521
+      ]
+    },
+    {
+      "id": "worm_crystal_east",
+      "shape": "circle",
+      "center": [
+        7997,
+        5581
+      ],
+      "radius": 8,
+      "blocked": [
+        7997,
+        5581
+      ]
+    },
+    {
+      "id": "worm_crystal_center",
+      "shape": "circle",
+      "center": [
+        7932,
+        5608
+      ],
+      "radius": 9,
+      "blocked": [
+        7932,
+        5608
+      ]
+    },
+    {
+      "id": "death_knight_approach_wall",
+      "shape": "polygon",
+      "points": [
+        [
+          8188,
+          3376
+        ],
+        [
+          8201,
+          3379
+        ],
+        [
+          8230,
+          3379
+        ],
+        [
+          8242,
+          3377
+        ],
+        [
+          8243,
+          3383
+        ],
+        [
+          8200,
+          3386
+        ],
+        [
+          8187,
+          3382
+        ]
+      ],
+      "blocked": [
+        8215,
+        3382
+      ]
+    }
+  ],
+  "captures": [
+    {
+      "id": "desert",
+      "center": [
+        7670,
+        5350
+      ]
+    },
+    {
+      "id": "snow",
+      "center": [
+        7810,
+        1155
+      ]
+    },
+    {
+      "id": "sand_worm",
+      "center": [
+        7900,
+        5570
+      ]
+    },
+    {
+      "id": "death_knight",
+      "center": [
+        8210,
+        3390
+      ]
+    }
+  ]
+}

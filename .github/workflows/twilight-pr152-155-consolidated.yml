@@ -1,0 +1,90 @@
+name: TWILIGHT PR152-155 Consolidated Gate
+
+on:
+  push:
+    branches:
+      - integration/twilight-pr152-155-20261026
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: twilight-pr152-155-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrated-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      GODOT: /tmp/Godot_v4.7.2-stable_linux.x86_64
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      TWILIGHT_INTEGRATED_CHECKS: 'import,bake_navigation,boot,aden_batch_review_test,aden_faith_png_save_migration_test,map_repair_test,aden_mobile_streaming_test,aden_png_scale_migration_test,native_png_route_recovery_test,renewed_map_spawn_test,map_visual_toggle_test,option_awakening_service_test,option_awakening_world_test,option_awakening_ui_test,option_awakening_vfx_test,option_awakening_field_render_test,authored_skill_vfx_test,original_skill_catalog_runtime_test,original_skill_audio_test,actor_motion_test,growth_progression_test,growth_presentation_test,equipment_collection_runtime_test,card_draw_fusion_test,card_pack_items_test,world_regions_test'
+    steps:
+      - name: Checkout exact integrated source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Source and resource preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p integrated-results
+          git rev-parse HEAD | tee integrated-results/source-sha.txt
+          python3 -m compileall -q tools
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee integrated-results/preflight.log
+      - name: Restore one shared Godot engine
+        uses: ./.github/actions/setup-godot-linux
+      - name: Prepare software renderer once
+        uses: ./.github/actions/setup-software-gl
+      - name: Restore trusted main imported resource cache (optional)
+        id: imported-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v1
+      - name: One real import, one bake, and cross-feature regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          echo "Imported resource cache hit: ${{ steps.imported-cache.outputs.cache-hit }}"
+          python3 tools/test_project.py \
+            --godot "$GODOT" \
+            --logs integrated-results \
+            --no-ci-synthetic-fixtures \
+            --import-timeout 1800 \
+            --timeout 300 \
+            --only "$TWILIGHT_INTEGRATED_CHECKS" 2>&1 | tee integrated-results/consolidated-run.log
+      - name: Print bounded validation summary
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('integrated-results/summary.json')
+          if not path.is_file():
+              print('INTEGRATED_RESULT missing summary (preflight/setup failed)')
+          else:
+              report = json.loads(path.read_text(encoding='utf-8'))
+              print('INTEGRATED_RESULT', json.dumps({
+                  'total': report.get('total'), 'passed': report.get('passed'),
+                  'failed': report.get('failed', []),
+                  'not_run': report.get('not_run', []),
+                  'skipped': report.get('skipped', []),
+                  'synthetic_fixture_policy': report.get('synthetic_fixture_policy'),
+              }, ensure_ascii=False))
+          PY
+      - name: Preserve exact failing/successful evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-pr152-155-integrated-${{ github.sha }}
+          path: integrated-results
+          if-no-files-found: warn
+          retention-days: 7
+          compression-level: 6

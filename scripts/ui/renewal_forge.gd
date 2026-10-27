@@ -35,10 +35,17 @@ func configure_targets(controller: Node, scroll: String, candidates: Array) -> v
 	values = candidates.duplicate(true)
 	_build()
 
+func configure_blessing(controller: Node, scroll: String, candidates: Array) -> void:
+	hud = controller
+	mode = "blessing"
+	scroll_name = scroll
+	values = candidates.duplicate(true)
+	_build()
+
 func _build() -> void:
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_child(UI.label("강화 주문서 선택" if mode == "scroll" else "강화할 장비 선택",21,UI.GOLD))
+	add_child(UI.label("강화 주문서 선택" if mode == "scroll" else "축복할 장비 선택" if mode == "blessing" else "강화할 장비 선택",21,UI.GOLD))
 	add_child(UI.label("강화 실패 시 장비가 하락하거나 소실될 수 있습니다." if mode == "target" else "보유한 주문서만 표시합니다.",12,UI.MUTED))
 	var body := Browser.new()
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -81,7 +88,7 @@ func _build() -> void:
 	action = UI.button("선택",_execute,Vector2(0,54))
 	action.name = "EnhanceAction"
 	side.add_child(action)
-	if mode == "target":
+	if mode == "target" or mode == "blessing":
 		side.add_child(UI.button("다른 주문서 선택",func() -> void: hud._open_enhance_chooser()))
 	for entry: Dictionary in values:
 		if mode == "scroll":
@@ -111,7 +118,12 @@ func _select(index: int) -> void:
 	var entry: Dictionary = values[index]
 	var reference: String = str(entry.get("target_id",entry.get("name","")))
 	UI.apply_item_visual(preview,hud.lineage_inventory_ui._find_item_record(reference),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
-	if mode == "scroll":
+	if mode == "blessing":
+		detail.text = "[font_size=20][color=#d8b878]%s +%d[/color][/font_size]\n\n축복 성공률: %.1f%% (TWILIGHT 임시값)\n축복 옵션: %s\n\n성공/실패 모두 주문서 1장 소모 · 장비 유지" % [
+			UI.safe(entry.get("name","")), int(entry.get("level",0)), float(entry.get("success_chance",0.0)), UI.safe(entry.get("bonus_text",""))
+		]
+		action.text = "축복 부여 · 주문서 1장"
+	elif mode == "scroll":
 		detail.text = "[font_size=20][color=#d8b878]%s[/color][/font_size]\n\n보유 수량: %d\n\n장비 선택 화면에서 기존 게임 규칙에 따라 확률이 표시됩니다." % [UI.safe(entry.get("name","")),int(entry.get("count",0))]
 		action.text = "장비 선택하기"
 	else:
@@ -131,7 +143,14 @@ func _select(index: int) -> void:
 func _execute() -> void:
 	if selected_index < 0 or selected_index >= values.size(): return
 	var entry: Dictionary = values[selected_index]
-	if mode == "scroll":
+	if mode == "blessing":
+		var target_reference: String = str(entry.get("target_id", ""))
+		if not target_reference.is_empty():
+			var blessing_scroll: String = scroll_name
+			hud.confirm_action("축복 부여 확인", "%s +%d\n%s 1장 사용\n축복 성공률 %.1f%% · 실패해도 장비 유지" % [
+				str(entry.get("name", "")), int(entry.get("level", 0)), blessing_scroll, float(entry.get("success_chance", 0))
+			], "축복 부여", func(_count: int) -> void: hud.blessing_target_requested.emit(blessing_scroll, target_reference))
+	elif mode == "scroll":
 		var item := str(entry.get("name",""))
 		if int(hud.lineage_inventory_ui.inventory.get(item,0)) > 0:
 			hud.inventory_item_activated.emit(item)

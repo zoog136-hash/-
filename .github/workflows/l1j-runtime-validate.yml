@@ -45,19 +45,26 @@ jobs:
   regression:
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            artifact: linux.x86_64
-            executable: Godot_v4.7.2-stable_linux.x86_64
-            job_minutes: 120
+      matrix: >-
+        ${{ fromJSON(
+          github.event_name == 'workflow_dispatch' && inputs.retry_scope == 'linux_remaining'
+          && '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":120}]}'
+          || '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":120},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":120}]}'
+        ) }}
     runs-on: ${{ matrix.os }}
-    # Linux retains the complete regression suite and authenticated manual retry.
+    # Both full suites retain every check and its individual deadline.
+    # Only an explicit manual retry may resume the authenticated unchanged
+    # Linux prefix; ordinary PR/manual validation still runs both platforms.
     timeout-minutes: ${{ matrix.job_minutes }}
     env:
       PYTHONUTF8: '1'
       TWILIGHT_CI_RETRY_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.retry_scope || 'full' }}
     steps:
+      # Preserve all PR122 source evidence; Windows Git needs long paths before checkout.
+      - name: Enable Git long paths for Windows checkout
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -71,6 +78,22 @@ jobs:
           with zipfile.ZipFile('godot.zip') as z: z.extractall('engine')
           exe = pathlib.Path('engine/${{ matrix.executable }}')
           exe.chmod(0o755)
+      # Read only caches produced by trusted main; imported large PNGs stay
+      # uncached. Resource preflight and every assertion still run.
+      - name: Restore trusted compact Godot import cache (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Generate synthetic fixtures (no third-party game art)
         run: |
           python tools/l1j_ci_make_fixture.py --root .
@@ -78,6 +101,39 @@ jobs:
       - name: Verify resource installation safety
         if: runner.os == 'Linux'
         run: python tools/l1j/test_pack_install.py
+      - name: Windows real Main death-clock regression with durable reports
+        if: runner.os == 'Windows'
+        shell: python
+        run: |
+          import json, os, pathlib, subprocess, sys, tempfile
+          sys.path.insert(0, 'tools')
+          from test_project_support import run_isolated, classify_result
+          root = pathlib.Path.cwd()
+          logs = root / 'l1j-test-results'
+          logs.mkdir(exist_ok=True)
+          engine = str(root / 'engine/${{ matrix.executable }}')
+          cases = ['original_based_spear_captain_gameplay_test', 'original_based_spear_guard_red_gameplay_test', 'original_based_reaper_gameplay_test']
+          for name in ['import', *cases]:
+              report_path = logs / ('windows-' + name + '.gameplay.json')
+              with tempfile.TemporaryDirectory(prefix='twilight-death-clock-') as private:
+                  env = os.environ.copy()
+                  env.update(dict.fromkeys(['APPDATA', 'LOCALAPPDATA', 'XDG_DATA_HOME'], private))
+                  env['TWILIGHT_PR100_REPORT'] = str(report_path)
+                  extra = ['--import'] if name == 'import' else ['--script', 'res://tests/' + name + '.gd']
+                  command = [engine, '--headless', '--path', str(root), *extra]
+                  try:
+                      result = run_isolated(command, env=env, cwd=str(root), timeout=1800 if name == 'import' else 450)
+                      output = result.stdout + result.stderr
+                      ok, skipped = classify_result(name, result.returncode, output)
+                  except subprocess.TimeoutExpired as error:
+                      output = 'TIMEOUT ' + str(error)
+                      ok, skipped = False, False
+              (logs / ('windows-' + name + '.log')).write_text(output, encoding='utf-8')
+              print(output, flush=True)
+              assert ok and not skipped, name
+              if name != 'import':
+                  report = json.loads(report_path.read_text(encoding='utf-8'))
+                  assert not report['failures'] and len(report['incoming']) == 8, name
       - name: Install software OpenGL capture dependencies
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri
@@ -119,7 +175,7 @@ jobs:
         shell: python
         run: |
           import json, os, pathlib, subprocess, sys
-          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450']
+          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '1800']
           resumed = os.environ['TWILIGHT_CI_RETRY_SCOPE'] == 'linux_remaining'
           if resumed:
               proof = json.loads(pathlib.Path('l1j-test-results/authenticated-linux-prefix.json').read_text(encoding='utf-8'))

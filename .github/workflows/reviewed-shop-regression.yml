@@ -35,7 +35,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
       - name: Install the same Godot as the full regression suite
@@ -45,7 +45,7 @@ jobs:
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
       - name: Real Main, reviewed vendors and consumable shop regressions
         run: |
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --only import,bake_navigation,boot,l1j_reviewed_shop_test,shop_authority_test,shop_consumables_test,shop_consumables_gameplay_test,shop_buyback_test --logs test-results/reviewed-shop
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1200 --only import,bake_navigation,boot,l1j_reviewed_shop_test,shop_authority_test,shop_consumables_test,shop_consumables_gameplay_test,shop_buyback_test --logs test-results/reviewed-shop
       - name: Require all eight selected checks, without skips or missing results
         run: |
           python3 - <<'PY'

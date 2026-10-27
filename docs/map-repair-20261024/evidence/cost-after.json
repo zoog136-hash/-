@@ -1,0 +1,67 @@
+{
+  "android_device": "NOT_RUN",
+  "decodes": 8,
+  "engine": "4.7.2-stable (official)",
+  "entry_ms": 5089.071,
+  "materialized": 133,
+  "mobile_budget_bytes": 50331648,
+  "renderer": "llvmpipe software OpenGL",
+  "samples": [
+    {
+      "active_ai_mean": 47.0,
+      "collision_pairs_mean": 706.4875,
+      "draw_calls_mean": 326.095833333333,
+      "frame_median_ms": 19.644,
+      "frame_p95_ms": 29.571,
+      "mode": "ordinary",
+      "path_calls": 14,
+      "path_total_ms": 2.26,
+      "paths_per_second": 2.78538397612369,
+      "physics_median_ms": 5.285,
+      "physics_p95_ms": 7.951
+    },
+    {
+      "active_ai_mean": 0.0,
+      "collision_pairs_mean": 708.0,
+      "draw_calls_mean": 313.354166666667,
+      "frame_median_ms": 20.52,
+      "frame_p95_ms": 27.45,
+      "mode": "AI disabled diagnostic",
+      "path_calls": 0,
+      "path_total_ms": 0.0,
+      "paths_per_second": 0.0,
+      "physics_median_ms": 0.419,
+      "physics_p95_ms": 6.288
+    },
+    {
+      "active_ai_mean": 0.0,
+      "collision_pairs_mean": 708.0,
+      "draw_calls_mean": 254.0,
+      "frame_median_ms": 18.566,
+      "frame_p95_ms": 24.435,
+      "mode": "AI disabled actors hidden diagnostic",
+      "path_calls": 0,
+      "path_total_ms": 0.0,
+      "paths_per_second": 0.0,
+      "physics_median_ms": 0.34,
+      "physics_p95_ms": 0.581
+    },
+    {
+      "active_ai_mean": 0.0,
+      "collision_pairs_mean": 708.0,
+      "draw_calls_mean": 247.0,
+      "frame_median_ms": 18.474,
+      "frame_p95_ms": 23.545,
+      "mode": "AI actors terrain disabled diagnostic",
+      "path_calls": 0,
+      "path_total_ms": 0.0,
+      "paths_per_second": 0.0,
+      "physics_median_ms": 0.336,
+      "physics_p95_ms": 0.486
+    }
+  ],
+  "slots": 165,
+  "sync_decodes": 1,
+  "texture_peak_bytes": 37762020,
+  "uploads": 9
+}

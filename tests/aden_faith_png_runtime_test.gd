@@ -88,7 +88,7 @@ func inspect(mid: String, spec: Dictionary) -> void:
 	# A real move into the return portal must trigger ordinary world travel.
 	if mid!="aden_world":
 		world.portal_cooldown=0;world.set_process(true)
-		var dest: Array=spec.portals[0].position
+		var dest: Array=world.field_map.data.portal[0].position
 		world._set_click_destination(Vector2(dest[0],dest[1]));await ticks(90)
 		world.set_process(false)
 		check(world.active_map_id=="aden_world",mid+" walking into portal returns to actual Aden")

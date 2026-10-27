@@ -25,6 +25,12 @@ func _run() -> void:
 		check(SHOP.price_for(item_name) > 0, "each draw ticket and 11-pack available: " + item_name)
 	for item_name: String in ["화살", "총알"]:
 		check(SHOP.price_for(item_name) > 0, "ammunition available")
+	check(SHOP.MAX_QUANTITY == 1000, "shop supports 1000 at once")
+	for quantity: int in [1, 10, 100, 1000]:
+		var sample: Dictionary = SHOP.quote("HP 물약", quantity, SHOP.price_for("HP 물약") * quantity, 0, 100000, 1)
+		check(bool(sample.get("ok", false)) and int(sample.get("quantity", 0)) == quantity, "quantity preset validated: " + str(quantity))
+	check(not bool(SHOP.quote("HP 물약", 1001, 999999999, 0, 100000, 1).get("ok", false)), "quantity above 1000 rejected")
+	check(not bool(SHOP.quote("드래곤의 용옥", 10, 999999999, 0, 100000, 1).get("ok", false)), "monthly orb remains single purchase")
 	var records: Array = STOCK.records()
 	var by_name: Dictionary = {}
 	for record: Dictionary in records:

@@ -37,7 +37,7 @@ static func records() -> Array:
 		by_name[item_name] = record
 	# These are already implemented inventory items, not new use definitions.
 	for item_name: String in PACK_ITEMS.PACKS:
-		by_name[item_name] = {"name":item_name, "slot":"consumable", "type":"뽑기권", "grade":"희귀"}
+		by_name[item_name] = PACK_ITEMS.inventory_record(item_name)
 	for item_name: String in ["화살", "총알"]:
 		by_name[item_name] = {"name":item_name, "slot":"consumable", "type":"탄약", "grade":"일반"}
 	return by_name.values()

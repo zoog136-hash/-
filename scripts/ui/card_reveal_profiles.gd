@@ -18,10 +18,15 @@ static func color(grade: String) -> Color:
 	var rgb: Array = profile(grade).get("color", [144,151,151])
 	return Color(float(rgb[0])/255.0, float(rgb[1])/255.0, float(rgb[2])/255.0)
 
-static func pulse(grade: String, elapsed: float) -> float:
+static func pulse(grade: String, elapsed: float, extra_seconds: float=0.0) -> float:
 	var p: Dictionary = profile(grade)
-	if elapsed < 0.0 or elapsed > float(p.get("burst",0.0)):
+	var burst: float=float(p.get("burst",0.0))
+	if elapsed < 0.0 or elapsed > burst+extra_seconds:
 		return 0.0
+	if extra_seconds>0 and elapsed>=burst:
+		# Bounded sustained discharge; no new nodes, particles or audio voices.
+		var tail: float=1.0-smoothstep(burst+extra_seconds-.25,burst+extra_seconds,elapsed)
+		return (0.24+0.20*absf(sin(elapsed*PI*8.0)))*float(p.get("power",0.0))*tail
 	var result: float = 0.0
 	for n: int in range(int(p.get("pulses",1))):
 		var center: float = 0.028 + float(n)*0.14

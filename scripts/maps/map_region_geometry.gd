@@ -12,6 +12,11 @@ static func contains(record: Dictionary, point: Vector2) -> bool:
 		inside = Geometry2D.is_point_in_polygon(point,record["_prepared_polygon"])
 	elif record.has("polygon"):
 		inside = Geometry2D.is_point_in_polygon(point,polygon(record))
+	elif record.has("_prepared_polygons"):
+		for item: Dictionary in record._prepared_polygons:
+			if (item.bounds as Rect2).has_point(point) and Geometry2D.is_point_in_polygon(point,item.points):
+				inside=true
+				break
 	elif record.has("polygons"):
 		for raw: Array in record.polygons:
 			if Geometry2D.is_point_in_polygon(point,polygon({"polygon":raw})):
@@ -32,6 +37,16 @@ static func contains(record: Dictionary, point: Vector2) -> bool:
 static func prepare(record: Dictionary) -> Dictionary:
 	var prepared: Dictionary = record.duplicate(false)
 	if record.has("polygon"): prepared["_prepared_polygon"] = polygon(record)
+	elif record.has("polygons"):
+		var polygons: Array[Dictionary]=[]
+		for raw: Array in record.polygons:
+			var points: PackedVector2Array=polygon({"polygon":raw})
+			if points.is_empty():continue
+			var bounds:=Rect2(points[0],Vector2.ZERO)
+			for point: Vector2 in points:bounds=bounds.expand(point)
+			# Broad phase only; retain the exact inclusive polygon test at edges.
+			polygons.append({"points":points,"bounds":bounds.grow(1.0)})
+		prepared["_prepared_polygons"]=polygons
 	if record.has("exclusions"):
 		var exclusions: Array = []
 		for excluded: Dictionary in record.exclusions: exclusions.append(prepare(excluded))

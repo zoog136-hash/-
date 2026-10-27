@@ -1,6 +1,7 @@
 extends SceneTree
 
 var failures: Array[String] = []
+const PICKUP_RADIUS: float = preload("res://scripts/loot/loot_pickup_controller.gd").PICKUP_RADIUS
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -52,10 +53,11 @@ func _run() -> void:
 			if not bool(world.call("_is_walkable_world", trial)):
 				continue
 			var path: PackedVector2Array = world.call("find_world_path", player.global_position, trial) as PackedVector2Array
-			# A clear direct path may contain only its destination. A projected
-			# path must not turn an unsafe raw trial into our arrival position.
-			if path.is_empty() or path[-1].distance_to(trial) > 60.0:
+			# A direct route legitimately contains only its destination. Do not
+			# skip the reviewed 200px fixture for an arbitrary wall-corner cell.
+			if path.is_empty() or path[path.size()-1].distance_to(trial)>PICKUP_RADIUS:
 				continue
+			# Both the teleported player foot and adjacent AUTO drop must fit.
 			var auto_point: Vector2 = trial + Vector2(13, 0)
 			if not bool(world.call("_is_walkable_world", auto_point)):
 				continue
@@ -67,6 +69,10 @@ func _run() -> void:
 			break
 	_check(far_point != Vector2.ZERO, "could not find distant reachable item target")
 	if far_point != Vector2.ZERO:
+		_check(player.global_position.distance_to(far_point)>PICKUP_RADIUS,"distant fixture must remain outside pickup radius")
+		var fixture_path: PackedVector2Array=world.call("find_world_path",player.global_position,far_point)
+		_check(not fixture_path.is_empty() and fixture_path[fixture_path.size()-1].distance_to(far_point)<=PICKUP_RADIUS,"fixture route must reach actual pickup range")
+		_check(bool(world.call("_has_line_of_sight_world",far_point,far_point+Vector2(13,0))),"fixture must fit the real foot and adjacent AUTO drop")
 		var distant: Button = world.call("_spawn_ground_drop", "HP 물약", far_point) as Button
 		var before_click: int = int(inventory.get("HP 물약", 0))
 		distant.set("visible_since", Time.get_ticks_msec() - 900)

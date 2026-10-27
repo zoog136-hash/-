@@ -25,11 +25,27 @@ jobs:
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
           sudo apt-get update -qq
           sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      # Read-only main import cache: keep all real imports, tests and render checks.
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Combat animation and timing regressions
         # Integration keeps the full suite on these PR bases; other events remain full.
         env:
           TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'integration/twilight-complete-20261009') && 'import,bake_navigation,boot,actor_motion_test,animation_catalog_test,animation_presentation_test,animation_restore_test,authored_state_motion_test,boss_presentation_test,combat_hud_test,combat_resolution_equivalence_test,combat_timeline_lifecycle_test,combat_timing_test,combat_vfx_test,eight_direction_animation_test,hit_feedback_render_test,hit_feedback_test,monster_motion_test,native_animation_expansion_test' || '' }}
-        run: python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --only "$TWILIGHT_CI_TESTS"
+        run: python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1500 --logs test-results --only "$TWILIGHT_CI_TESTS"
       - name: Actual combat rendering and live AUTO
         shell: bash
         run: |
