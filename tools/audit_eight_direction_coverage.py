@@ -214,6 +214,108 @@ def _audit_mixed_direction_canvases(proof, actual_frames, animations, images, re
             raise ValueError("Directional whole PNG contains unassigned visible pixels")
 
 
+
+def _git_blob_sha1(raw: bytes) -> str:
+    """Git's tracked blob identity, NOT an invented historical source SHA-256."""
+    return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+
+
+def audit_published_boss_snapshot(root, path, tracked, proof, external, frames, animations):
+    """Validate the exact current PNG/AtlasTexture snapshot without claiming
+    original artist/source provenance or a complete eight-direction death set.
+
+    These six published boss scenes have 'run' motion and one death direction.
+    They are not equivalent to the fully sourced, all-direction animation packs.
+    Do not silently promote them to 'native_connected' in the full coverage audit.
+    """
+    result = {"path": path, "tracks": {}, "errors": [], "tracked": True,
+              "verification_scope": "published_boss_runtime_snapshot_v1",
+              "compass_semantics": "not_independently_verified",
+              "actual_gameplay": "not_run",
+              "original_authoring_verified": False,
+              "full_eight_direction_walk_and_death_verified": False}
+    errors = result["errors"]
+    try:
+        if (proof.get("schema") != 1
+                or proof.get("verification_scope") != "published_boss_runtime_snapshot_v1"
+                or proof.get("original_authoring_verified") is not False
+                or proof.get("direction_semantics_verified") is not False
+                or proof.get("full_eight_direction_walk_and_death_verified") is not False):
+            raise ValueError("Published boss proof must disclose its unverified original history and partial motion")
+        resource_file = local_path(root, path)
+        manifest = proof.get("spriteframes", {})
+        if (manifest.get("path") != path
+                or manifest.get("git_blob_sha1") != _git_blob_sha1(resource_file.read_bytes())):
+            raise ValueError("Published boss SpriteFrames changed since pinned Git snapshot")
+        declared = proof.get("images")
+        if not isinstance(declared, list) or not declared:
+            raise ValueError("Published boss images are not individually pinned")
+        by_path = {row.get("path"): row for row in declared if isinstance(row, dict)}
+        if (len(by_path) != len(declared)
+                or set(by_path) != set(external.values())):
+            raise ValueError("Published boss source image set differs from SpriteFrames")
+        needed = {f"{role}_{direction}" for role in ("idle", "run", "attack", "hit")
+                  for direction in range(8)}
+        # The sole published death_2 animation is not eight-direction death.
+        if set(animations) != needed | {"death_2"}:
+            raise ValueError("Published boss runtime role/direction coverage changed")
+        recorded_tracks = proof.get("tracks")
+        actual_tracks = {name: {"frames": len(track["frames"]), "loop": track["loop"]}
+                         for name, track in animations.items()}
+        if recorded_tracks != actual_tracks:
+            raise ValueError("Published boss animation tracks or loop policy differ from receipt")
+        result["source"] = proof.get("source", "")
+        if not isinstance(result["source"], str) or "NOT" not in result["source"]:
+            raise ValueError("Published boss provenance must disclose unknown historical sources")
+        pinned_files = {path, "res://" + str(resource_file.with_name("provenance.json").relative_to(root)),
+                        *external.values()}
+        missing = sorted(p for p in pinned_files if p.removeprefix("res://") not in tracked)
+        if missing:
+            result["tracked"] = False
+            raise ValueError("Untracked boss snapshot source: " + ", ".join(missing))
+        usage = {p: [] for p in by_path}
+        distinct = {name: set() for name in animations}
+        for name, track in animations.items():
+            if not isinstance(track["loop"], bool) or len(track["frames"]) < 2:
+                raise ValueError("Malformed published animation track: " + name)
+            for frame in track["frames"]:
+                atlas_spec = frames.get(frame.get("texture"))
+                if not atlas_spec or atlas_spec["path"] not in usage:
+                    raise ValueError("Missing AtlasTexture frame referenced by " + name)
+                usage[atlas_spec["path"]].append((name, atlas_spec))
+        if any(not frames_for_png for frames_for_png in usage.values()):
+            raise ValueError("Published texture has no live AtlasTexture usage")
+        for image_path in sorted(by_path):
+            entry = by_path[image_path]
+            file_path = local_path(root, image_path)
+            raw = file_path.read_bytes()
+            if (entry.get("git_blob_sha1") != _git_blob_sha1(raw)
+                    or entry.get("bytes") != len(raw)):
+                raise ValueError("Published boss PNG changed since pinned Git snapshot: " + image_path)
+            with Image.open(file_path) as source_image:
+                source_image.load()
+                rgba = source_image.convert("RGBA")
+                for name, spec in usage[image_path]:
+                    x, y, width, height = spec["region"]
+                    if (width <= 0 or height <= 0 or x < 0 or y < 0
+                            or x + width > rgba.width or y + height > rgba.height):
+                        raise ValueError("Invalid published AtlasTexture bounds: " + name)
+                    crop = rgba.crop((x, y, x + width, y + height))
+                    if crop.getchannel("A").getbbox() is None:
+                        raise ValueError("Published animation references empty PNG pixels: " + name)
+                    distinct[name].add(hashlib.sha256(crop.tobytes()).hexdigest())
+                rgba.close()
+        for name, track in animations.items():
+            result["tracks"][name] = {"frames": len(track["frames"]),
+                                      "distinct_rgba": len(distinct[name]),
+                                      "loop": track["loop"]}
+        result["pinned_png_count"] = len(by_path)
+    except (OSError, ValueError, KeyError, IndexError, TypeError, AttributeError) as exc:
+        errors.append(str(exc))
+    result["pixel_integrity"] = "failed" if errors else "tracked_published_partial"
+    return result
+
+
 def audit_resource(root, path, tracked):
     result = {"path": path, "tracks": {}, "errors": [], "tracked": True,
               "compass_semantics": "source_metadata_only", "actual_gameplay": "not_run"}
@@ -222,6 +324,8 @@ def audit_resource(root, path, tracked):
         proof_path = resource_path.with_name("provenance.json")
         proof = load(proof_path)
         external, frames, animations = read_spriteframes(resource_path)
+        if proof.get("verification_scope") == "published_boss_runtime_snapshot_v1":
+            return audit_published_boss_snapshot(root, path, tracked, proof, external, frames, animations)
         result["source"] = proof.get("source", "unknown")
         result["source_direction_indices"] = proof.get("source_direction_indices", [])
         result["source_directions"] = proof.get("source_directions", [])
@@ -317,6 +421,9 @@ def audit(root):
         if verified:
             count[record["group"] + ":native_connected"] += 1
         reason = recipes["unmatched"].get(record["key"], {}).get("reason", "Existing legacy art retained; no native sequential8 profile") if not native else ""
+        if native and resource.get("pixel_integrity") == "tracked_published_partial":
+            reason = ("Current published boss PNG and SpriteFrames pinned to Git; "
+                      "historical source and eight-direction walk/death proof absent")
         record.update({"native_connected": verified, "frames_path": path, "missing_source": reason,
                        "actual_gameplay": "not_run", "compass_semantics": resource.get("compass_semantics", "not_verified")})
         for direction, (x, y) in enumerate(VECTORS):
