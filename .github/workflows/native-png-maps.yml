@@ -43,7 +43,7 @@ concurrency:
 jobs:
   public-code-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,6 +51,21 @@ jobs:
           sparse-checkout: |
             /*
             !/docs/
+      # Restore only compact trusted caches published by main; never save
+      # untrusted PR resources and never skip Godot's native import checks.
+      - name: Restore trusted compact Godot import cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Install official engine and numerical test tools
         run: |
           sudo apt-get update -qq
@@ -73,7 +88,7 @@ jobs:
           TWILIGHT_ADEN_FAITH_TEST_OUTPUT: ${{ github.workspace }}/native-png-ci/aden-faith-main
         run: |
           mkdir -p native-png-ci
-          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs native-png-ci --only import,boot,native_png_catalog_test,native_png_polygon_index_test,native_png_monster_spawns_test,native_png_runtime_test,native_png_normal_travel_test,native_png_teleport_test,native_png_review_runtime_test,native_png_streaming_test,aden_faith_png_runtime_test,aden_faith_png_save_migration_test,aden_faith_png_monster_spawns_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test,field_world_test,world_regions_test,hunting_paths_test,monster_world_test,reference_expansion_test
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1800 --logs native-png-ci --only import,boot,native_png_catalog_test,native_png_polygon_index_test,native_png_monster_spawns_test,native_png_runtime_test,native_png_normal_travel_test,native_png_teleport_test,native_png_review_runtime_test,native_png_streaming_test,aden_faith_png_runtime_test,aden_faith_png_save_migration_test,aden_faith_png_monster_spawns_test,main_debug_failed_load_test,stage5_save_compatibility_test,animation_restore_test,combat_resolution_equivalence_test,field_world_test,world_regions_test,hunting_paths_test,monster_world_test,reference_expansion_test
           python3 - <<'PY'
           import json
           result = json.load(open('native-png-ci/summary.json'))
