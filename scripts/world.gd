@@ -1580,9 +1580,21 @@ func _set_click_destination(target: Vector2) -> void:
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
-	var path: PackedVector2Array = find_world_path(player.global_position, target)
-	if path.size() > 0:
-		player.set_manual_click_path(path, target)
+	var destination: Vector2=target
+	if field_map is NativePngField:
+		# Taps can land in the coarse raster's blocked half-cell even if the
+		# artwork looks like a road. Stay on verified, full-foot-safe floor.
+		destination=field_map.nearest_safe_click_destination(target)
+		if not destination.is_finite():
+			player.clear_click_path()
+			hud.show_message("이 지점은 통행 구역이 아닙니다")
+			return
+	var path: PackedVector2Array = find_world_path(player.global_position,destination)
+	if not path.is_empty():
+		player.set_manual_click_path(path,destination)
+	elif field_map is NativePngField:
+		player.clear_click_path()
+		hud.show_message("길찾기 실패: 충돌 경계 확인 필요")
 
 func _spawn_monsters(count: int) -> void:
 	if monster_db.is_empty():
@@ -7209,15 +7221,30 @@ func _notification(what: int) -> void:
 func constrain_original_motion(actor: CharacterBody2D) -> void:
 	if field_map is NativePngField and actor.velocity!=Vector2.ZERO:
 		var delta: float=actor.get_physics_process_delta_time()
+		if delta<=0.0: return
 		var motion: Vector2=actor.velocity*delta
-		if not field_map.line_clear(actor.global_position,actor.global_position+motion):
-			# Godot's circle/convex vertex solver can settle inside the precise
-			# foot margin at low FPS. Resolve the real physics contact's tangent
-			# before moving, using the same reviewed geometry as navigation.
+		var origin: Vector2=actor.global_position
+		if not field_map.line_clear(origin,origin+motion):
+			# Never push through a genuine obstacle. Preserve a legal tangent or
+			# one safe axis when a diagonal foot sweep grazes coarse PNG cells.
 			var contact:=KinematicCollision2D.new()
-			var tangent: Vector2=Vector2.ZERO
-			if actor.test_move(actor.global_transform,motion,contact):tangent=motion.slide(contact.get_normal())
-			actor.velocity=tangent/delta if field_map.line_clear(actor.global_position,actor.global_position+tangent) else Vector2.ZERO
+			var options: Array[Vector2]=[]
+			if actor.test_move(actor.global_transform,motion,contact):
+				options.append(motion.slide(contact.get_normal()))
+			if actor is TwilightPlayer:
+				var horizontal:=Vector2(motion.x,0.0)
+				var vertical:=Vector2(0.0,motion.y)
+				if absf(motion.x)>=absf(motion.y):
+					options.append(horizontal);options.append(vertical)
+				else:
+					options.append(vertical);options.append(horizontal)
+			actor.velocity=Vector2.ZERO
+			for candidate: Vector2 in options:
+				if candidate.length_squared()<0.000001: continue
+				if not field_map.line_clear(origin,origin+candidate): continue
+				if actor.test_move(actor.global_transform,candidate): continue
+				actor.velocity=candidate/delta
+				break
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
 		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
 		var source_clear: bool = field_map.source_line_clear(actor.global_position,target) if field_map is RemakePlayableField else field_map.line_clear(actor.global_position,target)
