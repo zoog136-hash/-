@@ -52,6 +52,35 @@ Termux ZIP 업데이터는 이제 Godot의 **실행 장면·스크립트·게임
 
 기존 `~/twilight_update.py`가 자동 갱신되는 것은 아니므로 페이지 맨 위 `curl` 명령부터 다시 실행하세요.
 
+## 예전에 받은 보고서·원본 파일 실제 삭제
+
+Godot를 완전히 종료한 뒤, **새 스크립트를 다시 다운로드**합니다.
+
+```bash
+curl -fL --retry 3 -o "$HOME/twilight_update.py" \
+  "https://raw.githubusercontent.com/zoog136-hash/-/main/tools/android/termux_update_zip.py"
+```
+
+**먼저 삭제 대상 파일 수와 용량만 확인** (파일은 전혀 지우지 않음):
+
+```bash
+python "$HOME/twilight_update.py" "$HOME/storage/downloads/TWILIGHT_Play" --cleanup-preview
+```
+
+용량과 파일 목록을 확인하고 삭제를 원할 때만:
+
+```bash
+python "$HOME/twilight_update.py" "$HOME/storage/downloads/TWILIGHT_Play" --cleanup-unused
+```
+
+두 번째 명령은 다시 요약을 보여준 후 **`DELETE UNUSED`**를 입력해야 파일을 실제 삭제합니다. `--yes` 옵션으로 삭제 확인을 건너뛸 수 없습니다.
+
+삭제 대상은 예전 ZIP에 함께 들어온 문서·테스트·제작 도구·지도 원본 보관본(약 500MiB 이상)·아덴 미리보기 초안·PR122 제작 중간 자료입니다. 최신 게임 실행에 사용하는 파일은 대상이 아닙니다. 기존 업데이터 상태 파일이 새 범위로 교체돼도 디스크의 알려진 비실행 폴더를 검색합니다.
+
+**보호:** `.godot`, `.git`, `user://` 세이브, 실제 게임 실행 데이터, 사용자 루트 저장 파일, 심볼릭 링크, `.twilight_update_backup_*` 업데이트 롤백 백업. 백업까지 지우면 되돌리기 어려우므로 별도로 유지합니다.
+
+**주의:** 지정된 비실행 폴더(예: `docs/`, `tools/`) 안에 직접 추가한 개인 문서도 삭제 대상으로 표시될 수 있습니다. 먼저 미리보기를 확인하고 필요한 파일은 별도 폴더로 옮기세요. 실제 삭제는 휴지통 이동이 아니라 영구 삭제이며, 일부 누락 리소스가 있는 오래된 프로젝트는 다시 다운로드가 필요할 수 있습니다. 최초 작업 전 프로젝트 전체 백업을 권장합니다.
+
 ## 실행 실패 시
 
 `UPDATE STOPPED:` 내용을 캡처하세요. 중간에 `git reset --hard`나 `git clean -fd`를 실행하지 마세요. 기존 Godot 사용자 세이브는 게임의 `user://` 영역에 보관됩니다.

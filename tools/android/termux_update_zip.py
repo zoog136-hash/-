@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import json
 import os
+import stat
 from pathlib import Path, PurePosixPath
 import sys
 import tempfile
@@ -357,13 +358,167 @@ def update(root, assume_yes=False):
         print('Close Godot and re-import TWILIGHT_Play/project.godot.')
 
 
+
+# Curated offline-only categories. We scan the EXTRACTED project rather than
+# relying on updater state: users may have installed a full ZIP before updating,
+# and a recent scoped update may have replaced the older tracked-files list.
+# Keep the game, save data, Godot import cache and update rollback backups.
+CLEANUP_DIRECTORIES = (
+    'docs', 'tests', 'tools', 'samples', '.github', 'legacy',
+    'external_map_packs/source_pngs', 'external_map_packs/oman_v2',
+    'assets/original_sheets',
+) + OFFLINE_DIRS
+CLEANUP_FILES = OFFLINE_FILES | frozenset((
+    'external_map_packs/TWILIGHT-map-remake-private-20261015-v2.zip',
+    'external_map_packs/MAP_ASSET_DELIVERY.json',
+    'external_map_packs/README.md',
+    'external_map_packs/.gitattributes',
+    'README.md', 'README_KO.md', 'AGENTS.md',
+    'TWILIGHT_PROJECT_RULES.md', 'TWILIGHT_VERSION_HISTORY.md',
+    'export_presets.cfg',
+))
+PROTECTED_PARTS = frozenset(('.git', '.godot', 'user', 'user_data'))
+
+
+def _cleanup_scopes(root):
+    """Fixed offline-only roots, plus narrowly named authoring manifests."""
+    scopes = set(CLEANUP_DIRECTORIES) | set(CLEANUP_FILES)
+    data = root / 'data'
+    if data.is_dir() and not data.is_symlink():
+        for path in data.glob('pr122_*'):
+            scopes.add(path.relative_to(root).as_posix())
+    drafts = root / 'assets/actors/eight_direction/native_locomotion_staging'
+    if drafts.is_dir() and not drafts.is_symlink():
+        for path in drafts.glob('transform_*/draft001'):
+            scopes.add(path.relative_to(root).as_posix())
+    return sorted(scopes)
+
+
+def _protected_cleanup_path(name):
+    parts = safe_path(name).parts
+    return any(part in PROTECTED_PARTS or
+               part.startswith('.twilight_update') for part in parts)
+
+
+def list_unused_files(root):
+    """Return pinned file snapshots, never following symlinks or runtime paths."""
+    found = {}
+    for name in _cleanup_scopes(root):
+        if _protected_cleanup_path(name) or is_runtime_path(name):
+            continue
+        source = root / safe_path(name)
+        if source.is_symlink():
+            continue
+        if source.is_file():
+            entries = [source]
+        elif source.is_dir():
+            entries = []
+            for base, folders, files in os.walk(source, followlinks=False):
+                # Never traverse links, protected subtrees or updater backups.
+                folders[:] = [folder for folder in folders
+                              if folder not in PROTECTED_PARTS
+                              and not folder.startswith('.twilight_update')
+                              and not (Path(base) / folder).is_symlink()]
+                entries.extend(Path(base) / file for file in files)
+        else:
+            continue
+        for path in entries:
+            relative = path.relative_to(root).as_posix()
+            if relative in found or _protected_cleanup_path(relative):
+                continue
+            if is_runtime_path(relative):
+                continue
+            ensure_not_symlink(root, safe_path(relative))
+            info = path.lstat()
+            if not stat.S_ISREG(info.st_mode):
+                continue
+            found[relative] = (info.st_size, info.st_dev, info.st_ino,
+                               info.st_mtime_ns)
+    return found
+
+
+def cleanup_unused(root, delete=False):
+    """Preview or explicitly delete known offline-only files; never via update()."""
+    root = root.expanduser().resolve()
+    if not (root / 'project.godot').is_file() or not (root / 'Main.tscn').is_file():
+        raise RuntimeError('TWILIGHT Godot project not found. Supply TWILIGHT_Play.')
+    if (root / '.git').exists():
+        raise RuntimeError('Refusing to clean a Git checkout.')
+    snapshots = list_unused_files(root)
+    total = sum(row[0] for row in snapshots.values())
+    print('UNUSED FILE PREVIEW:', len(snapshots), 'files,',
+          '%.2f GiB' % (total / 1024**3), '(%d bytes)' % total, flush=True)
+    sizes = {}
+    for name, row in snapshots.items():
+        bucket = name.split('/')[0]
+        if bucket in ('assets', 'data', 'external_map_packs'):
+            bucket = '/'.join(name.split('/')[:2])
+        count, size = sizes.get(bucket, (0, 0))
+        sizes[bucket] = (count + 1, size + row[0])
+    for name, (count, size) in sorted(sizes.items(),
+                                       key=lambda item: -item[1][1]):
+        print('  %-39s %6d files %8.1f MiB' %
+              (name, count, size / 1024**2), flush=True)
+    print('Largest candidates:', flush=True)
+    for name, row in sorted(snapshots.items(),
+                            key=lambda item: -item[1][0])[:12]:
+        print('  %.1f MiB  %s' % (row[0] / 1024**2, name), flush=True)
+    print('PROTECTED: game resources, .godot, user saves, update backups,'
+          ' symlinks and other folders.', flush=True)
+    if not delete:
+        print('Preview only. No files deleted.', flush=True)
+        return (len(snapshots), total)
+    if not snapshots:
+        print('Nothing to remove.', flush=True)
+        return (0, 0)
+    print('WARNING: This permanently deletes files in the OFFLINE folders'
+          ' above, including any personal files placed there.', flush=True)
+    if input('Type DELETE UNUSED to confirm: ').strip() != 'DELETE UNUSED':
+        print('Cancelled; no files deleted.', flush=True)
+        return (0, 0)
+    # Fail closed if *any* candidate changed after the preview, so no partial
+    # cleanup occurs because files were modified during confirmation.
+    for name, recorded in snapshots.items():
+        ensure_not_symlink(root, safe_path(name))
+        info = (root / name).lstat()
+        if (not stat.S_ISREG(info.st_mode) or
+                (info.st_size, info.st_dev, info.st_ino, info.st_mtime_ns)
+                != recorded):
+            raise RuntimeError('File changed since preview; no cleanup done: ' + name)
+    removed = 0
+    freed = 0
+    for name, recorded in sorted(snapshots.items()):
+        path = root / name
+        ensure_not_symlink(root, safe_path(name))
+        info = path.lstat()
+        if (not stat.S_ISREG(info.st_mode) or
+                (info.st_size, info.st_dev, info.st_ino, info.st_mtime_ns)
+                != recorded):
+            raise RuntimeError('File changed during cleanup: ' + name)
+        path.unlink()
+        removed += 1
+        freed += recorded[0]
+    print('CLEANUP OK:', removed, 'files, %.2f GiB freed' %
+          (freed / 1024**3), flush=True)
+    print('Leave .twilight_update_backup_* in place until the game is verified.')
+    return (removed, freed)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('project', type=Path, help='Existing ZIP-extracted Godot project directory')
     parser.add_argument('--yes', action='store_true', help='Skip the YES confirmation after verifying changes')
+    cleanup = parser.add_mutually_exclusive_group()
+    cleanup.add_argument('--cleanup-preview', action='store_true',
+                         help='List unused report/authoring files and possible space saved; no deletion')
+    cleanup.add_argument('--cleanup-unused', action='store_true',
+                         help='Preview and delete offline-only files only after typing DELETE UNUSED')
     args = parser.parse_args()
     try:
-        update(args.project, args.yes)
+        if args.cleanup_preview or args.cleanup_unused:
+            cleanup_unused(args.project, delete=args.cleanup_unused)
+        else:
+            update(args.project, args.yes)
     except (OSError, ValueError, RuntimeError) as ex:
         print('UPDATE STOPPED:', ex, file=sys.stderr)
         return 1
