@@ -21,9 +21,22 @@ concurrency:
 jobs:
   shop-consumables:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Resource integrity
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned engine
@@ -33,7 +46,7 @@ jobs:
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
       - name: Import, boot, catalog coverage and real shop transactions
         run: |
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results/shop-consumables --only import,bake_navigation,boot,shop_authority_test,shop_consumables_test,shop_consumables_gameplay_test,shop_buyback_test,inventory_db_smoke_test
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1800 --logs test-results/shop-consumables --only import,bake_navigation,boot,shop_authority_test,shop_consumables_test,shop_consumables_gameplay_test,shop_buyback_test,inventory_db_smoke_test
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4

@@ -22,9 +22,22 @@ concurrency:
 jobs:
   card-draw-fusion:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Install Godot 4.7.2
         run: |
           curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
@@ -34,7 +47,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee card-import.log
+          timeout --signal=TERM --kill-after=15s 1800s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee card-import.log
           for script in scripts/card_draw_fusion.gd scripts/ui/renewal_hud.gd scripts/world.gd; do
             ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --check-only --script "res://$script" 2>&1 | tee -a card-parse.log
           done

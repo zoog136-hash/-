@@ -17,6 +17,11 @@ func run() -> void:
 		check(is_equal_approx(stage.duration,11.9),category+" duration adds 2s to 9.9s")
 		check(is_equal_approx(card.reveal_at()-card.lightning_at(),4.0),category+" confirmation follows extended lightning")
 		check(card.surface_fx.extra_lightning_seconds==2 and card.promotion_fx.extra_lightning_seconds==0,category+" only primary draw enhanced")
+		# Draw cards cannot reveal merely because time was advanced.
+		stage.seek(card.reveal_at());check(card.waiting_for_press and not card.name_label.visible,category+" untouched card stays closed")
+		stage.seek(0.0)
+		stage._reveal_card(0)
+		check(not card.waiting_for_press,category+" explicit press starts reveal")
 		stage.seek(card.reveal_at()-.01);check(not card.name_label.visible,category+" no premature face confirmation")
 		stage.seek(card.reveal_at());check(card.name_label.visible,category+" confirmation boundary")
 		stage.skip_to_result();check(not stage.playing and PROFILES.pulse(card.grade,stage.clock-card.lightning_at(),2)==0,category+" skip clears discharge")
