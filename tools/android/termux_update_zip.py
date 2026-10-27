@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Update a ZIP-installed TWILIGHT Godot project without requiring Git metadata.
 
-Downloads only changed tracked files from a pinned GitHub main commit. It never
+Downloads only changed gameplay files from a pinned GitHub main commit. It never
 deletes untracked game files or Godot user:// save files. Replaced old files are
 preserved in a timestamped backup directory. No destructive git operations.
 """
@@ -68,17 +68,79 @@ def sha1_of_blob(path, size):
     return digest.hexdigest()
 
 
-# Only paths needed by Godot and its updater belong in a mobile install.
-# In October the repository gained tens of thousands of documentation and
-# generated test/evidence files. Keep older local copies of those untouched.
-RUNTIME_ROOTS = frozenset(('addons', 'assets', 'data', 'external_map_packs',
-                           'scenes', 'scripts', 'tools'))
-RUNTIME_FILES = frozenset(('project.godot', 'Main.tscn', 'export_presets.cfg'))
+# The phone opens project.godot in Godot, not a development/CI checkout.
+# Download gameplay code/data/art, never original map archives, reports, source
+# material, QA outputs, or authoring scripts. A ZIP already on the device is
+# intentionally NOT cleaned up merely because this allowlist narrows.
+RUNTIME_ROOTS = frozenset((
+    'addons', 'assets', 'data', 'external_map_packs', 'scenes', 'scripts',
+))
+RUNTIME_FILES = frozenset(('project.godot', 'Main.tscn'))
+RUNTIME_SUFFIXES = frozenset((
+    '.gd', '.gdshader', '.gdshaderinc', '.gdextension', '.tscn', '.tres',
+    '.res', '.uid', '.cfg', '.json', '.bin', '.nav', '.l1jpng',
+    '.png', '.jpg', '.jpeg', '.webp', '.svg', '.ttf', '.otf',
+    '.ogg', '.wav', '.mp3', '.flac', '.glb',
+))
+# Map source PNGs alone exceed half a gigabyte and are NOT loaded by gameplay.
+# These four directories hold the actual runtime map packs.
+RUNTIME_MAP_PACKS = frozenset((
+    'native_png_v5', 'aden_faith_png_v1', 'domination_png_v1', 'oman_png_v1',
+))
+# Match the already audited Android export exclusions for offline map drafting.
+OFFLINE_DIRS = (
+    'assets/maps/aden_city_region',
+    'assets/maps/aden_modular_district_01',
+    'assets/maps/aden_modular_pilot',
+    'assets/maps/aden_rebuild_preview',
+    'assets/maps/aden_world_draft',
+    'assets/original_sheets',
+)
+OFFLINE_FILES = frozenset((
+    'scripts/maps/aden_modular_preview_renderer.gd',
+    'data/map_remake/private/aden/effective_layouts_build.json',
+    'data/skills/research_inventory.json',
+    'data/resource_delivery_ledger.json',
+    'data/animation_authoring_sources.json',
+    'data/v19_extraction_manifest.json',
+    'data/visuals/pr80_original_asset_hashes.json',
+    'data/maps/aden_faith_png_archive.json',
+    'data/maps/native_png_archive.json',
+    'scenes/SkillVFXLab.tscn',
+))
+
+
+def is_runtime_tree(path):
+    """Whether a repository directory can contain mobile gameplay files."""
+    relative = safe_path(path)
+    parts = relative.parts
+    if parts[0] not in RUNTIME_ROOTS:
+        return False
+    if any(path == prefix or path.startswith(prefix + '/') for prefix in OFFLINE_DIRS):
+        return False
+    if len(parts) > 1 and parts[0] == 'external_map_packs' and parts[1] not in RUNTIME_MAP_PACKS:
+        return False
+    if len(parts) > 1 and parts[0] == 'data' and parts[1].startswith('pr122_'):
+        return False
+    if (len(parts) >= 6 and parts[:4] == ('assets', 'actors', 'eight_direction',
+                                          'native_locomotion_staging')
+            and parts[4].startswith('transform_') and parts[5] == 'draft001'):
+        return False
+    return True
 
 
 def is_runtime_path(path):
+    """Allow only playable resources; no documentation, backups or test data."""
     relative = safe_path(path)
-    return relative.parts[0] in RUNTIME_ROOTS or str(relative) in RUNTIME_FILES
+    if path in RUNTIME_FILES:
+        return True
+    if path == 'external_map_packs/.gdignore':
+        return True  # Keep Godot from importing the manually streamed map packs.
+    if not is_runtime_tree(path) or path in OFFLINE_FILES:
+        return False
+    if relative.name.endswith(('.bak', '.tmp', '.backup')):
+        return False
+    return relative.suffix.lower() in RUNTIME_SUFFIXES
 
 
 def get_inventory():
@@ -153,7 +215,7 @@ def get_inventory():
             if entry.get('type') == 'blob':
                 add_blob(path, entry)
             elif entry.get('type') == 'tree' and entry.get('mode') == '040000':
-                if not is_runtime_path(path):
+                if not is_runtime_tree(path):
                     continue
                 child_sha = entry.get('sha')
                 if not isinstance(child_sha, str) or len(child_sha) != 40:
@@ -165,7 +227,8 @@ def get_inventory():
     walk(tree_sha)
     if not rows or not {'project.godot', 'Main.tscn'}.issubset(rows):
         raise RuntimeError('Missing required Godot project files')
-    print('GitHub inventory complete (sharded trees):', len(rows), flush=True)
+    print('GitHub gameplay inventory:', len(rows), 'files,',\
+          sum(row['size'] for row in rows.values()), 'bytes', flush=True)
     return sha, rows
 
 def download_verified(commit_sha, relative, row, dest):
