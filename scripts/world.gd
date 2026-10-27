@@ -1473,6 +1473,9 @@ func _build_collision_debug_tiles() -> void:
 				collision_tiles.set_cell(Vector2i(column, row), 0, Vector2i.ZERO, 0)
 
 func _spawn_position() -> Vector2:
+	if field_map is NativePngField:
+		var safe: Vector2=field_map.nearest_safe_click_destination(COORD.array_vector(field_map.data["spawn_position"]),6)
+		if safe.is_finite(): return safe
 	if field_map != null:
 		return field_map.cell_to_world(field_map.nearest_cell(COORD.array_vector(field_map.data["spawn_position"])))
 	var spawn_value: Variant = active_map.get("navigation_spawn", {})
@@ -1496,6 +1499,9 @@ func _world_to_cell(position_value: Vector2) -> Vector2i:
 	return Vector2i(int(floor(position_value.x / tile_size)), int(floor(position_value.y / tile_size)))
 
 func _is_walkable_world(position_value: Vector2) -> bool:
+	# A native PNG cell may be nominally open while the real 4px foot still
+	# overlaps a hand-reviewed obstacle or an exact floor boundary.
+	if field_map is NativePngField: return field_map.line_clear(position_value,position_value)
 	if field_map != null: return field_map.walkable(position_value)
 	if astar == null:
 		return false
@@ -4278,6 +4284,10 @@ func _load_game(quiet: bool) -> void:
 		var position_array: Array = position_value as Array
 		if position_array.size() >= 2:
 			var saved_position: Vector2 = Vector2(float(position_array[0]), float(position_array[1]))
+			if field_map is NativePngField and not field_map.line_clear(saved_position,saved_position):
+				# Old saves can refer to a cell that is open in AStar but blocked
+				# at the actor's true foot. Snap nearby, never into an obstacle.
+				saved_position=field_map.nearest_safe_click_destination(saved_position,4)
 			if _is_walkable_world(saved_position):
 				player.global_position = saved_position
 				player.camera.reset_smoothing()
