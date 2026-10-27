@@ -54,6 +54,84 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def approved_grade_repair(root: Path, path: str, base_bytes: bytes) -> bool:
+    """Allow only the evidenced #183 grade metadata migration, never asset/identity edits.
+
+    Both data files were intentionally changed by the item-grade repair. Comparing
+    their bytes to the PR base would reject all legitimate grade corrections.
+    Rebuild the exact allowed rows from the unchanged baseline and the recorded
+    2,129 source qualities; reject even one unrelated gameplay or visual field.
+    """
+    if path not in ("data/catalog_v19.json", "data/game_db_v17.json"):
+        return False
+    try:
+        before = json.loads(base_bytes)
+        after = json.loads((root / path).read_bytes())
+        evidence = json.loads((root / "data/catalog_item_grade_audit_20261026.json").read_bytes())
+        qualities = evidence["source_quality_by_id"]
+        grade_map = evidence["quality_map"]
+        if set(before) != set(after):
+            return False
+        if any(before[key] != after[key] for key in before if key != "아이템"):
+            return False
+        originals = before["아이템"]
+        updated = after["아이템"]
+        if not isinstance(originals, list) or len(originals) != len(updated):
+            return False
+        if path == "data/catalog_v19.json":
+            if len(originals) != len(qualities):
+                return False
+            for old, row in zip(originals, updated):
+                identity = str(old["sourceId"])
+                if identity not in qualities:
+                    return False
+                source_quality = qualities[identity]
+                grade = grade_map.get(str(source_quality))
+                expected = dict(old)
+                expected["sourceQuality"] = source_quality
+                expected["grade_evidence"] = (
+                    "inven_item_quality" if grade else "inven_item_quality_unmapped"
+                )
+                if grade and grade != old["grade"]:
+                    expected["grade"] = grade
+                    expected.setdefault("grade_original", old["grade"])
+                if row != expected:
+                    return False
+            return True
+
+        # Gameplay records may be annotated only when they resolve to a
+        # same-named catalog source with a confirmed standard quality.
+        catalog_rows = json.loads((root / "data/catalog_v19.json").read_bytes())["아이템"]
+        catalog_by_id = {str(row["sourceId"]): row for row in catalog_rows}
+        for old, row in zip(originals, updated):
+            if row == old:
+                continue
+            identity = str(row.get("grade_source_id", ""))
+            if identity not in qualities or identity not in catalog_by_id:
+                return False
+            original_art = catalog_by_id[identity]
+            source_quality = qualities[identity]
+            grade = grade_map.get(str(source_quality))
+            if not grade or original_art["name"] != old["name"]:
+                return False
+            if original_art.get("sourceQuality") != source_quality:
+                return False
+            expected = dict(old)
+            expected.update({
+                "sourceQuality": source_quality,
+                "grade_source_id": identity,
+                "grade_evidence": "inven_item_quality",
+                "grade": grade,
+            })
+            if grade != old["grade"]:
+                expected.setdefault("grade_original", old["grade"])
+            if row != expected:
+                return False
+        return True
+    except (KeyError, TypeError, ValueError, OSError, json.JSONDecodeError):
+        return False
+
+
 def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, dict]:
     catalog = json.loads((root / "data/catalog_v19.json").read_text())["아이템"]
     extraction = json.loads((root / "data/v19_extraction_manifest.json").read_text())["catalog_images"]
@@ -144,12 +222,16 @@ def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, di
         reference = base if path in pinned_data else "HEAD"
         original = subprocess.check_output(["git", "show", f"{reference}:{path}"], cwd=root)
         unchanged = original == (root / path).read_bytes()
+        grade_only = (not unchanged and path in pinned_data
+                      and approved_grade_repair(root, path, original))
         protected[path] = {"sha256": sha(root / path), "reference": reference,
-                           "unchanged_from_reference": unchanged}
+                           "unchanged_from_reference": unchanged,
+                           "approved_grade_metadata_only": grade_only}
         if path in pinned_data:
             protected[path]["unchanged_from_base"] = unchanged
-        if not unchanged:
-            errors.append("protected source changed relative to " + reference + ": " + path)
+        if not unchanged and not grade_only:
+            errors.append("protected source changed outside verified grade repair relative to "
+                          + reference + ": " + path)
     sets = {}
     for group in ("catalog", "legacy", "runtime"):
         rows = runtime.get(group, [])
