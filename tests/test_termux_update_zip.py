@@ -192,5 +192,107 @@ class ZipUpdaterTest(unittest.TestCase):
             for name in kept:
                 self.assertEqual((root / name).read_bytes(), b'old but preserved')
 
+
+    def test_cleanup_preview_sees_old_zip_material_without_updater_state(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            (root / 'project.godot').write_bytes(b'game')
+            (root / 'Main.tscn').write_bytes(b'scene')
+            sample = {
+                'docs/report/large.png': b'old report',
+                'tools/build_report.py': b'print("test")',
+                'external_map_packs/source_pngs/13474.png': b'original source',
+                'data/pr122_native_locomotion_staging.json': b'work in progress',
+                'assets/maps/aden_world_draft/preview.png': b'draft',
+                'data/maps/navigation/oman_01.nav': b'active runtime',
+                'external_map_packs/native_png_v5/index.json': b'active runtime',
+                '.twilight_update_backup_20261027/scripts/world.gd': b'rollback',
+                '.godot/imported/keep.ctex': b'Godot import',
+                'local_save.json': b'custom user file',
+            }
+            for name, value in sample.items():
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(value)
+            with mock.patch('builtins.input', side_effect=AssertionError('must not prompt')):
+                count, size = updater.cleanup_unused(root, delete=False)
+            self.assertEqual(count, 5)
+            self.assertEqual(size, sum(len(sample[p]) for p in (
+                'docs/report/large.png', 'tools/build_report.py',
+                'external_map_packs/source_pngs/13474.png',
+                'data/pr122_native_locomotion_staging.json',
+                'assets/maps/aden_world_draft/preview.png')))
+            for name, value in sample.items():
+                self.assertEqual((root/name).read_bytes(), value)
+
+    def test_cleanup_requires_explicit_phrase_and_preserves_runtime(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            (root / 'project.godot').write_bytes(b'game')
+            (root / 'Main.tscn').write_bytes(b'scene')
+            old = root / 'external_map_packs/source_pngs/13474.png'
+            old.parent.mkdir(parents=True)
+            old.write_bytes(b'original source')
+            report = root / 'docs/report.md'
+            report.parent.mkdir()
+            report.write_bytes(b'report')
+            active = root / 'external_map_packs/native_png_v5/index.json'
+            active.parent.mkdir()
+            active.write_bytes(b'runtime')
+            backup = root / '.twilight_update_backup_123/scripts/world.gd'
+            backup.parent.mkdir(parents=True)
+            backup.write_bytes(b'rollback')
+            with mock.patch('builtins.input', return_value='YES'):
+                updater.cleanup_unused(root, delete=True)
+            self.assertTrue(old.exists())
+            self.assertTrue(report.exists())
+            with mock.patch('builtins.input', return_value='DELETE UNUSED'):
+                count, size = updater.cleanup_unused(root, delete=True)
+            self.assertEqual(count, 2)
+            self.assertEqual(size, len(b'original source') + len(b'report'))
+            self.assertFalse(old.exists())
+            self.assertFalse(report.exists())
+            self.assertEqual(active.read_bytes(), b'runtime')
+            self.assertEqual(backup.read_bytes(), b'rollback')
+            self.assertEqual((root/'project.godot').read_bytes(), b'game')
+
+    def test_cleanup_aborts_before_deletion_if_file_modified_at_prompt(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            (root/'project.godot').write_bytes(b'game')
+            (root/'Main.tscn').write_bytes(b'scene')
+            old = root / 'docs/report.md'
+            old.parent.mkdir()
+            old.write_bytes(b'original')
+            other = root / 'tools/old.py'
+            other.parent.mkdir()
+            other.write_bytes(b'unused')
+            def mutate():
+                old.write_bytes(b'changed since preview')
+                return 'DELETE UNUSED'
+            with mock.patch('builtins.input', side_effect=lambda *_: mutate()):
+                with self.assertRaisesRegex(RuntimeError, 'changed since preview'):
+                    updater.cleanup_unused(root, delete=True)
+            self.assertEqual(old.read_bytes(), b'changed since preview')
+            self.assertEqual(other.read_bytes(), b'unused')
+
+    def test_cleanup_refuses_git_checkout_and_symlink_destinations(self):
+        with tempfile.TemporaryDirectory() as t, tempfile.TemporaryDirectory() as outside:
+            root = Path(t)
+            (root/'project.godot').write_bytes(b'game')
+            (root/'Main.tscn').write_bytes(b'scene')
+            (root/'.git').mkdir()
+            with self.assertRaisesRegex(RuntimeError, 'Git checkout'):
+                updater.cleanup_unused(root)
+            (root/'.git').rmdir()
+            (root/'docs').symlink_to(outside, target_is_directory=True)
+            external = Path(outside)/'custom.txt'
+            external.write_bytes(b'do not touch')
+            with mock.patch('builtins.input', side_effect=AssertionError('no prompt')):
+                count, _ = updater.cleanup_unused(root, delete=False)
+            self.assertEqual(count, 0)
+            self.assertEqual(external.read_bytes(), b'do not touch')
+
+
 if __name__ == '__main__':
     unittest.main()
