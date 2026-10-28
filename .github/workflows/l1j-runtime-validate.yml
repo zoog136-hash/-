@@ -94,6 +94,9 @@ jobs:
           key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
           restore-keys: |
             twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Restore trusted-main PNG import shards
+        if: runner.os == 'Linux'
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Generate synthetic fixtures (no third-party game art)
         run: |
           python tools/l1j_ci_make_fixture.py --root .

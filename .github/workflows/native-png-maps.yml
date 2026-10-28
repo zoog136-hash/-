@@ -51,6 +51,8 @@ jobs:
           sparse-checkout: |
             /*
             !/docs/
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       # Restore only compact trusted caches published by main; never save
       # untrusted PR resources and never skip Godot's native import checks.
       - name: Restore trusted compact Godot import cache

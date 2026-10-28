@@ -1,0 +1,40 @@
+name: Restore trusted-main Godot PNG import shards
+description: Restore full PNG importer outputs from trusted main; normal Godot --import still runs
+runs:
+  using: composite
+  steps:
+    - name: Restore PNG shard 0
+      uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: .ci-godot-cache/shard-0
+        key: twilight-godot-png-4.7.2-main-s0-${{ github.event.pull_request.base.sha || github.sha }}
+        restore-keys: |
+          twilight-godot-png-4.7.2-main-s0-
+    - name: Restore PNG shard 1
+      uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: .ci-godot-cache/shard-1
+        key: twilight-godot-png-4.7.2-main-s1-${{ github.event.pull_request.base.sha || github.sha }}
+        restore-keys: |
+          twilight-godot-png-4.7.2-main-s1-
+    - name: Restore PNG shard 2
+      uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: .ci-godot-cache/shard-2
+        key: twilight-godot-png-4.7.2-main-s2-${{ github.event.pull_request.base.sha || github.sha }}
+        restore-keys: |
+          twilight-godot-png-4.7.2-main-s2-
+    - name: Restore PNG shard 3
+      uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: .ci-godot-cache/shard-3
+        key: twilight-godot-png-4.7.2-main-s3-${{ github.event.pull_request.base.sha || github.sha }}
+        restore-keys: |
+          twilight-godot-png-4.7.2-main-s3-
+    - name: Populate imported PNG outputs before ordinary Godot validation
+      shell: bash
+      run: python3 tools/ci_godot_png_cache.py restore --root .

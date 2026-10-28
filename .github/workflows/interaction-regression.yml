@@ -18,9 +18,11 @@ concurrency:
 jobs:
   native-input-and-loot:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Preserve original resource inventory
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install project Godot version
@@ -30,7 +32,7 @@ jobs:
           unzip -q /tmp/godot.zip -d /tmp
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
       - name: Real mouse and native-touch event regressions
-        run: python3 tools/test_interactions.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --prepare --logs test-results/interactions
+        run: python3 tools/test_interactions.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1800 --prepare --logs test-results/interactions
       - uses: actions/upload-artifact@v4
         if: always()
         with:

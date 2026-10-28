@@ -49,6 +49,8 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
         uses: actions/cache/restore@v4
         continue-on-error: true

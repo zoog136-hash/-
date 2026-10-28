@@ -52,6 +52,8 @@ jobs:
           persist-credentials: false
       # Restore only main-published compact import artefacts. PR never writes
       # back cached resources; full Godot validation still runs as normal.
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache
         uses: actions/cache/restore@v4
         continue-on-error: true

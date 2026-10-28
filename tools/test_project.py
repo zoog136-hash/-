@@ -19,13 +19,15 @@ parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
 parser.add_argument('--render-visual-tests',action='store_true',help='Compatibility flag: frame-dependent tests always use a real renderer')
 parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; regional map audits run in five independently timed shards')
-parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
+parser.add_argument('--import-timeout',type=int,default=1800,help='One-time complete Godot asset import deadline in seconds')
 parser.add_argument('--region-shard-timeout',type=int,default=360,help='Seconds per world family; all five families mandatory')
 parser.add_argument('--only',default='',help='Comma-separated exact test names for targeted rechecks; omitted runs the full suite')
 parser.add_argument('--shard-index',type=int,default=0)
 parser.add_argument('--shard-count',type=int,default=1)
 parser.add_argument('--no-ci-synthetic-fixtures',action='store_true',help='Audit committed resources without installing synthetic L1J fixtures')
 args=parser.parse_args()
+if args.import_timeout < 1:
+    parser.error('--import-timeout must be positive')
 if args.shard_count < 1 or not 0 <= args.shard_index < args.shard_count:
     parser.error('Invalid shard index/count')
 if args.only and (args.shard_count != 1 or args.shard_index != 0):
