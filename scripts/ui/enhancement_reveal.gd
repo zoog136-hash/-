@@ -13,6 +13,8 @@ const DESIGN = Vector2(1000,640)
 const CENTER = Vector2(500,270)
 const BLUE = Color("69caff")
 const GOLD = Color("ffe3a1")
+const AMBER = Color("f7a641")
+const HOT_GOLD = Color("fff5c9")
 var reduced_motion: bool = false
 var low_detail: bool = false
 var intensity: float = 0.85
@@ -123,7 +125,7 @@ func _reveal() -> void:
 	match result:
 		"success":
 			result_label.text = "강화 성공"
-			result_label.add_theme_color_override("font_color",BLUE)
+			result_label.add_theme_color_override("font_color",HOT_GOLD)
 			level_label.text = "+%d" % to_level
 			note.text = "+%d → +%d  ·  강화 수치가 상승했습니다" % [from_level,to_level]
 		"destroy":
@@ -203,25 +205,25 @@ func _draw() -> void:
 	var charge: float = clampf(clock/REVEAL_AT,0.0,1.0)
 	var age: float = maxf(0.0,clock-REVEAL_AT)
 	var tier: float = clampf(float(maxi(from_level,to_level)-5)/8.0,0.0,1.0)
-	var tint: Color = BLUE
+	# Warm gold builds during charging and breaks into a wide radial flare on success.
+	# Failure hues are kept distinct only after the committed result is revealed.
+	var tint: Color = GOLD
 	if revealed and result != "success":
 		tint = Color("f26943") if result == "destroy" else Color("9a88b7")
-	var pulse: float = 0.6+charge*0.4 if not revealed else exp(-age*2.4)
-	var motion: float = 0.0 if reduced_motion else 1.0
-	_glow(CENTER,190.0+charge*48.0,tint,(0.13+pulse*0.25)*amount)
+		var motion: float = 0.0 if reduced_motion else 1.0
+	# Draw the warm fan BEHIND the item, not as thin rotating circles.
+	if not revealed:
+		_golden_charge(charge,amount)
+	elif result == "success":
+		_golden_burst(age,tier,amount)
+	else:
+		_glow(CENTER,160.0,tint,exp(-age*2.4)*0.21*amount)
 	# A quiet metal border and fine engraving keep the item readable between flashes.
 	draw_rect(Rect2(36,16,928,610),Color("4e4437"),false,1.0)
 	for side: float in [-1.0,1.0]:
 		_stroke(Vector2(500+side*65,104),Vector2(500+side*330,104),GOLD,0.4)
 		_stroke(Vector2(500+side*65,524),Vector2(500+side*330,524),GOLD,0.4)
 	var orbit: float = clock*0.34*motion
-	for ring: int in range(2):
-		var radius: float = 111.0+ring*25.0
-		draw_arc(CENTER,radius,orbit+ring*0.4,orbit+TAU+ring*0.4,80,Color(tint,(0.16+pulse*0.25)*amount),1.0,true)
-	for i: int in range(32):
-		var angle: float = float(i)*TAU/32.0+orbit
-		var direction := Vector2.from_angle(angle)
-		_stroke(CENTER+direction*140.0,CENTER+direction*(149.0 if i%4 else 157.0),GOLD,0.24)
 	var rect := Rect2(CENTER-Vector2(66,66),Vector2(132,132))
 	draw_rect(rect,Color("090f1c"))
 	for i: int in range(3):
@@ -247,7 +249,7 @@ func _draw() -> void:
 			_glow(point,5.0,tint,sin(phase*PI)*0.7*amount)
 			if not reduced_motion: _stroke(point,point+Vector2.from_angle(angle)*12.0,tint,sin(phase*PI)*0.5*amount)
 		var seal: float = lerpf(100.0,68.0,charge) if not reduced_motion else 74.0
-		draw_rect(Rect2(CENTER-Vector2.ONE*seal,Vector2.ONE*seal*2),Color(BLUE,charge*0.6*amount),false,2.0)
+		draw_rect(Rect2(CENTER-Vector2.ONE*seal,Vector2.ONE*seal*2),Color(GOLD,charge*0.5*amount),false,2.0)
 		if not reduced_motion:
 			_stroke(CENTER+Vector2(-66,66-charge*132),CENTER+Vector2(66,66-charge*132),Color.WHITE,charge*0.75*amount,1.5)
 	elif result == "success":
@@ -259,31 +261,92 @@ func _draw() -> void:
 			var start := CENTER+Vector2(float(i-2)*26,-45+age*60*motion)
 			_stroke(start,start+Vector2(0,48),tint,exp(-age*2)*amount,2)
 	else:
-		draw_arc(CENTER,85+age*15*motion,0,TAU,64,Color(tint,exp(-age*2.5)*amount),2,true)
+		# A failed attempt subsides instead of ending with another empty ring.
+		for i: int in range(6 if low_detail else 12):
+			var direction := Vector2.from_angle(float(i)*TAU/12.0+0.22)
+			var p: Vector2 = CENTER+direction*(70.0+age*32.0*motion)
+			_stroke(p,p+direction*9.0,tint,exp(-age*3.0)*0.42*amount,1.5)
 	draw_set_transform(Vector2.ZERO)
 
-func _success(age: float, tier: float, amount: float) -> void:
-	var fade: float = exp(-age*3.4)*(0.35 if reduced_motion else 1.0)
-	var reach: float = 110.0 if reduced_motion else 100.0+age*210.0
-	_glow(CENTER,(120.0+fade*90.0)*(1.0+tier*0.2),BLUE,fade*amount*0.9)
-	_glow(CENTER,60,Color.WHITE,fade*amount*0.8)
-	_stroke(CENTER-Vector2(230,0),CENTER+Vector2(230,0),BLUE,fade*amount,2)
-	_stroke(CENTER-Vector2(0,140),CENTER+Vector2(0,140),Color.WHITE,fade*amount,2)
-	if not reduced_motion:
-		draw_arc(CENTER,reach,0,TAU,96,Color(BLUE,fade*0.75*amount),3,true)
-	var count: int = 18 if low_detail else 42
+# Original TWILIGHT procedural glow: no proprietary XP Hero or Lineage art is embedded.
+# One bright impact, broad translucent amber shafts, hot white core, then distant
+# gold debris. These are CanvasItem polygons, not expanding circular outline rings.
+func _golden_charge(charge: float, amount: float) -> void:
+	var strength: float = (0.10+pow(charge,2.0)*0.34)*amount
+	var count: int = 8 if low_detail else 15
+	var motion: float = 0.0 if reduced_motion else 1.0
 	for i: int in range(count):
-		var angle: float = float(i)*2.399
-		var direction := Vector2.from_angle(angle)
-		var distance: float = 90.0 if reduced_motion else 74.0+age*(85+float(i%7)*27.0)
-		var point: Vector2 = CENTER+direction*distance+Vector2(0,0 if reduced_motion else -age*20)
-		var particle_fade: float = maxf(0.0,1.0-age/1.6)*amount
-		_stroke(point,point+direction*(3.0 if reduced_motion else 10.0+tier*12.0),GOLD if i%3 == 0 else BLUE,particle_fade,1.5)
-	# A restrained diagonal sheen and warm residual frame on higher enhancements.
-	if age < 1.2 and not reduced_motion:
-		var sweep: float = lerpf(-64,64,clampf(age/1.2,0,1))
-		_stroke(CENTER+Vector2(sweep-10,-58),CENTER+Vector2(sweep+10,58),Color.WHITE,sin(age/1.2*PI)*0.7*amount,3)
-	draw_rect(Rect2(CENTER-Vector2.ONE*70,Vector2.ONE*140),Color(GOLD,(0.28+tier*0.3)*amount),false,1.5)
+		var angle: float = float(i)*TAU/float(count)+clock*0.18*motion
+		var direction: Vector2 = Vector2.from_angle(angle)
+		var perpendicular: Vector2 = Vector2(-direction.y,direction.x)
+		var reach: float = 175.0+float(i%5)*21.0
+		var far: Vector2 = CENTER+direction*reach
+		var left: Vector2 = CENTER+direction*59.0-perpendicular*4.0
+		var right: Vector2 = CENTER+direction*59.0+perpendicular*4.0
+		draw_polygon(
+			PackedVector2Array([left,far-perpendicular*13.0,far+perpendicular*13.0,right]),
+			PackedColorArray([Color(AMBER,strength*0.27),Color(AMBER,0.0),Color(AMBER,0.0),Color(AMBER,strength*0.27)])
+		)
+	_glow(CENTER,135.0,HOT_GOLD,strength*0.40)
+
+
+func _golden_burst(age: float, tier: float, amount: float) -> void:
+	# The burst peaks at the EXACT existing reveal boundary: no reward timing
+	# or committed enhancement outcome is changed.
+	var motion: float = 0.0 if reduced_motion else 1.0
+	var burst_fade: float = exp(-age*(3.2 if reduced_motion else 1.65))
+	var reach_growth: float = minf(1.0,age/0.62)
+	var shafts: int = 9 if low_detail else 27
+	for i: int in range(shafts):
+		var angle: float = float(i)*TAU/float(shafts)+0.14
+		var direction: Vector2 = Vector2.from_angle(angle)
+		var side: Vector2 = Vector2(-direction.y,direction.x)
+		var reach: float = (235.0+float(i%7)*53.0)*(1.0+0.40*reach_growth*motion)*(1.0+0.13*tier)
+		var half_width: float = 21.0+reach*(0.064+0.013*float(i%3))
+		var root: Vector2 = CENTER+direction*28.0
+		var tip: Vector2 = CENTER+direction*reach
+		# Wide translucent beam, then a narrower, brighter inner shaft.
+		var outer_alpha: float = clampf((0.28 if i%4 == 0 else 0.20)*burst_fade*amount,0.0,1.0)
+		draw_polygon(
+			PackedVector2Array([root-side*11.0,tip-side*half_width,tip+side*half_width,root+side*11.0]),
+			PackedColorArray([Color(AMBER,outer_alpha),Color(AMBER,0.0),Color(AMBER,0.0),Color(AMBER,outer_alpha)])
+		)
+		if i%2 == 0:
+			var inner_alpha: float = clampf(0.23*burst_fade*amount,0.0,1.0)
+			draw_polygon(
+				PackedVector2Array([root-side*3.0,tip-side*half_width*0.25,tip+side*half_width*0.25,root+side*3.0]),
+				PackedColorArray([Color(HOT_GOLD,inner_alpha),Color(HOT_GOLD,0.0),Color(HOT_GOLD,0.0),Color(HOT_GOLD,inner_alpha)])
+			)
+	# A broad amber wash and concentrated white-hot light read as an explosion,
+	# instead of the former two rotating outlines with tiny ticks.
+	_glow(CENTER,292.0+reach_growth*60.0*motion,AMBER,0.88*burst_fade*amount)
+	_glow(CENTER,178.0+reach_growth*26.0*motion,GOLD,0.90*burst_fade*amount)
+	_glow(CENTER,92.0,HOT_GOLD,0.98*burst_fade*amount)
+	if not reduced_motion:
+		var cross: float = 1.0-minf(1.0,age/0.50)
+		_stroke(CENTER-Vector2(350.0,0),CENTER+Vector2(350.0,0),HOT_GOLD,cross*0.70*amount,4.0)
+		_stroke(CENTER-Vector2(0,205.0),CENTER+Vector2(0,205.0),GOLD,cross*0.48*amount,2.0)
+
+
+func _success(age: float, tier: float, amount: float) -> void:
+	# Small sparks and a brief lens flare appear IN FRONT of the item; the large
+	# beams above are behind it so its original icon remains visible.
+	var fade: float = exp(-age*2.5)*(0.38 if reduced_motion else 1.0)
+	var motion: float = 0.0 if reduced_motion else 1.0
+	var count: int = 13 if low_detail else 36
+	for i: int in range(count):
+		var angle: float = float(i)*2.3999632
+		var direction: Vector2 = Vector2.from_angle(angle)
+		var distance: float = (84.0+float(i%5)*14.0)+age*(135.0+float(i%7)*28.0)*motion
+		var point: Vector2 = CENTER+direction*distance
+		var alpha: float = fade*(0.66+0.05*float(i%4))*amount
+		_stroke(point,point+direction*(3.0 if reduced_motion else 14.0+float(i%5)*4.0+tier*10.0),HOT_GOLD if i%3==0 else GOLD,alpha,2.0)
+	if age < 0.35:
+		_glow(CENTER,53.0,HOT_GOLD,0.28*(1.0-age/0.35)*amount)
+	if age < 1.0 and not reduced_motion:
+		var sweep: float = lerpf(-64.0,64.0,clampf(age/1.0,0.0,1.0))
+		_stroke(CENTER+Vector2(sweep-12.0,-62.0),CENTER+Vector2(sweep+12.0,62.0),HOT_GOLD,sin(age*PI)*0.75*amount,3.0)
+	draw_rect(Rect2(CENTER-Vector2.ONE*70.0,Vector2.ONE*140.0),Color(GOLD,(0.28+tier*0.30)*amount),false,1.5)
 
 func _destroy(age: float, amount: float) -> void:
 	var tint := Color("ff794c")
