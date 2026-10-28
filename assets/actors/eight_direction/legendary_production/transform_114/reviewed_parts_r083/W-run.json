@@ -1,0 +1,80 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_114/draft001/W-run-source-v01.png",
+  "source_sha256": "e2af8b2851115accc49a7801cbe558e754d5a517cb0e170c73fa0169326fb63a",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_114/reviewed_parts_r083/W-run-0.png",
+      "anchor": [
+        146.0,
+        503.0
+      ],
+      "scale": 0.267803,
+      "source_body_label": 2,
+      "sha256": "e37ef92ceaef060bb9142ba5e316f83cfd0506aa9caeac163eedfc2d0f41c40a"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_114/reviewed_parts_r083/W-run-1.png",
+      "anchor": [
+        809.5,
+        503.0
+      ],
+      "scale": 0.267803,
+      "source_body_label": 5,
+      "sha256": "7f7b9fac5a385f759e4aedbaf0addfff4cee65d85710ead8808add4f2e61c41a"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_114/reviewed_parts_r083/W-run-2.png",
+      "anchor": [
+        1300.5,
+        470.5
+      ],
+      "scale": 0.267803,
+      "source_body_label": 4,
+      "sha256": "626935c9789a9f8aafc7110f62720544246ac8976ea6f58854bbddfea4bd68ee"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 722682,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS_CANDIDATE_ONLY: actual Main Player, 6 poses, unchanged foot registration, gameplay and markers; not default catalog binding",
+  "production_connected": false,
+  "selection_basis": "Original first-half source ownership repaired losslessly; phases0/1 previously shared a cell boundary across23opaque texels. Source pose pixels, anchors and scales retained; gait and weapon-hand approval separate.",
+  "quality_status": "HOLD_REPEATED_LEAD_AND_WEAPON_HAND_CANDIDATE",
+  "reviewed_fragment_exceptions": [
+    {
+      "component": 42,
+      "pixels": 1,
+      "bounds": [
+        863,
+        533,
+        864,
+        534
+      ],
+      "owner": 4
+    },
+    {
+      "component": 44,
+      "pixels": 2,
+      "bounds": [
+        853,
+        538,
+        855,
+        540
+      ],
+      "owner": 4
+    }
+  ],
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "native_import": "PASS: isolated Godot 4.7.2 native import, 1 clip /6 CompressedTexture2D AtlasTexture frames",
+  "whole_actor_gate": "HOLD: RUN half-cycle and weapon ownership need visual completion; original catalog preserved"
+}
