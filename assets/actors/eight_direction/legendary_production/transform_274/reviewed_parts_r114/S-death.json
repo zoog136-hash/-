@@ -1,0 +1,142 @@
+{
+  "actor": "transform:274",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/S-death-source-v01.png",
+  "source_sha256": "c4f8142f35d592954f225d0885f3214ca839dd1c2dec26616ef73cd3437e593e",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-0.png",
+      "anchor": [
+        269.0,
+        483.33
+      ],
+      "scale": 0.2884640600005245,
+      "sha256": "1faf2cdb919a568eceae10a14929157a5a01c05633cb7688915b9f4090f7bd48"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-1.png",
+      "anchor": [
+        794.0,
+        479.67
+      ],
+      "scale": 0.2884640600005245,
+      "sha256": "bb4d60a4bd4a43771e966577baad78dcc77fce1803b360e2a083ce847519b582"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-2.png",
+      "anchor": [
+        1347.0,
+        505.0
+      ],
+      "scale": 0.2884640600005245,
+      "sha256": "fafa05336e1df6c688d8db116d2e6dd182c44860fa530cbce2afc73a4bb0e282"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-3.png",
+      "anchor": [
+        371.0,
+        925.0
+      ],
+      "scale": 0.2884640600005245,
+      "sha256": "e4f4e56c08c688456ecfac79e907f1657d615983ea20a3223efcc710a6e9dc96"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-4.png",
+      "anchor": [
+        830.5,
+        914.3299999999999
+      ],
+      "scale": 0.2884640600005245,
+      "sha256": "bcabf6366f082625953e443506f97b1e8487d892702abe8af283d5b8ab0f10f7"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-5.png",
+      "anchor": [
+        1299.0,
+        930.5
+      ],
+      "scale": 0.2884640600005245,
+      "sha256": "6b080f442572204c3655c6254af72730ea73784581be48ec9138f0fba53d1b03"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 559608,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_RUN_LATE_HALF_WEAPON_ARMOR_CONTINUITY",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "40": {
+      "area": 1,
+      "bounds": [
+        1073,
+        887,
+        1074,
+        888
+      ],
+      "owner_source_index": 5
+    }
+  },
+  "fragment_review_basis": "One blue texel immediately beside the lower-right corpse blade aura stays with that same blue particle field.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "remaining_actor_issue": {
+    "animation": "run_6",
+    "phases": [
+      3,
+      4,
+      5
+    ],
+    "status": "HOLD_CONTINUITY_REVIEW",
+    "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-run-source-v01.png",
+    "reason": "Late-half weapon/shoulder-armour presentation reverses relative to early half; preserve the source and require weapon/armour continuity review before selecting this actor. Do not resolve by a blind mirror or repeating the failed half-strip generation approach.",
+    "source_sha256": "1a3a4a7b8af9a891c2c5780333bf004881cbd358c014211d245f6b7a276a0f5e"
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-0.png",
+      "sha256": "1faf2cdb919a568eceae10a14929157a5a01c05633cb7688915b9f4090f7bd48",
+      "bytes": 276963
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-1.png",
+      "sha256": "bb4d60a4bd4a43771e966577baad78dcc77fce1803b360e2a083ce847519b582",
+      "bytes": 245877
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-2.png",
+      "sha256": "fafa05336e1df6c688d8db116d2e6dd182c44860fa530cbce2afc73a4bb0e282",
+      "bytes": 256188
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-3.png",
+      "sha256": "e4f4e56c08c688456ecfac79e907f1657d615983ea20a3223efcc710a6e9dc96",
+      "bytes": 241621
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-4.png",
+      "sha256": "bcabf6366f082625953e443506f97b1e8487d892702abe8af283d5b8ab0f10f7",
+      "bytes": 266806
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/S-death-5.png",
+      "sha256": "6b080f442572204c3655c6254af72730ea73784581be48ec9138f0fba53d1b03",
+      "bytes": 272480
+    }
+  ],
+  "native_import": "PASS: native CompressedTexture2D AtlasTexture decode; whole33 resource imported, then changed N/SW repaired clips separately checked at final source bytes. Import is not final art approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: exact source clips played in real Main Player candidate profile, every phase and marker3 where applicable. Newly repaired N/SW clips also checked in same-Player IDLE/ATTACK/IDLE without rebind. Final default binding remains0.",
+  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection."
+}

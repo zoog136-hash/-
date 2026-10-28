@@ -1,0 +1,133 @@
+{
+  "actor": "transform:274",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_274/reused_source_r114/NE-attack-source.png",
+  "source_sha256": "93857d01b1c882fe48a3aad0addf5a6648775f78d4aaa9bb9ce7eaf2678b0d5e",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-0.png",
+      "anchor": [
+        270,
+        512
+      ],
+      "scale": 0.24,
+      "sha256": "a1fbb5c267918e606c4c3c0e9becdc9b5c70cc05799b9058d35f82bf77110f23"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-1.png",
+      "anchor": [
+        770,
+        506
+      ],
+      "scale": 0.24,
+      "sha256": "162bda4ce675f9bf398f9fa98e480ab9b592af8170d1910ee05ca522dfac3ffa"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-2.png",
+      "anchor": [
+        280,
+        1000
+      ],
+      "scale": 0.24,
+      "sha256": "297c605cf5eb84527f1ff6e57dd7e6195407f5b19edf90fb1f5740eef050c3f0"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-3.png",
+      "anchor": [
+        760,
+        985
+      ],
+      "scale": 0.24,
+      "sha256": "7afa7c1f5244fd5d20793f713b119b8e753a072fd4a85b2157a6e3cb3fe8a865"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-4.png",
+      "anchor": [
+        265,
+        1465
+      ],
+      "scale": 0.24,
+      "sha256": "809528573904fbaf866095a8b079dc84c297098a999e2f6a877ad109b0144b18"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-5.png",
+      "anchor": [
+        790,
+        1498
+      ],
+      "scale": 0.24,
+      "sha256": "65a12c60ecb412799c79d9f276373d12d4765a3d89452061262fec59db8f0e25"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 612591,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_RUN_LATE_HALF_WEAPON_ARMOR_CONTINUITY",
+  "source_commit": "967faa54d99ce455e899e0754bbf6e7d1df3bc84",
+  "reviewed_fragments": {},
+  "fragment_review_basis": "All six existing NE figures and effects are disjoint; no detached-fragment ambiguity.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Existing six-pose NE supplement reused, pelvis projection X reviewed and original boot-plane Y retained; constant scale .24; not a new draft.",
+  "original_source": "res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/transform_274-NE-attack.png",
+  "original_source_sha256": "93857d01b1c882fe48a3aad0addf5a6648775f78d4aaa9bb9ce7eaf2678b0d5e",
+  "final_quality_approved": false,
+  "remaining_actor_issue": {
+    "animation": "run_6",
+    "phases": [
+      3,
+      4,
+      5
+    ],
+    "status": "HOLD_CONTINUITY_REVIEW",
+    "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-run-source-v01.png",
+    "reason": "Late-half weapon/shoulder-armour presentation reverses relative to early half; preserve the source and require weapon/armour continuity review before selecting this actor. Do not resolve by a blind mirror or repeating the failed half-strip generation approach.",
+    "source_sha256": "1a3a4a7b8af9a891c2c5780333bf004881cbd358c014211d245f6b7a276a0f5e"
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-0.png",
+      "sha256": "a1fbb5c267918e606c4c3c0e9becdc9b5c70cc05799b9058d35f82bf77110f23",
+      "bytes": 258797
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-1.png",
+      "sha256": "162bda4ce675f9bf398f9fa98e480ab9b592af8170d1910ee05ca522dfac3ffa",
+      "bytes": 268910
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-2.png",
+      "sha256": "297c605cf5eb84527f1ff6e57dd7e6195407f5b19edf90fb1f5740eef050c3f0",
+      "bytes": 266360
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-3.png",
+      "sha256": "7afa7c1f5244fd5d20793f713b119b8e753a072fd4a85b2157a6e3cb3fe8a865",
+      "bytes": 282925
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-4.png",
+      "sha256": "809528573904fbaf866095a8b079dc84c297098a999e2f6a877ad109b0144b18",
+      "bytes": 287080
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NE-attack-5.png",
+      "sha256": "65a12c60ecb412799c79d9f276373d12d4765a3d89452061262fec59db8f0e25",
+      "bytes": 255163
+    }
+  ],
+  "native_import": "PASS: native CompressedTexture2D AtlasTexture decode; whole33 resource imported, then changed N/SW repaired clips separately checked at final source bytes. Import is not final art approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: exact source clips played in real Main Player candidate profile, every phase and marker3 where applicable. Newly repaired N/SW clips also checked in same-Player IDLE/ATTACK/IDLE without rebind. Final default binding remains0.",
+  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection."
+}
