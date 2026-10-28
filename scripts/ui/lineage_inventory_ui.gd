@@ -34,6 +34,7 @@ var inventory: Dictionary = {}
 var catalog_data: Dictionary = {}
 var item_image_index: Dictionary = {}
 var character_state: Dictionary = {}
+var state_item_fingerprint: int = -1
 var selected_item: String = ""
 var category_filter: String = "전체"
 var max_slots: int = 104
@@ -247,13 +248,19 @@ func set_catalog_data(data: Dictionary, images: Dictionary) -> void:
 	_refresh_inventory_grid()
 
 func set_character_state(state: Dictionary) -> void:
-	character_state = state.duplicate(true)
+	# The world publishes a fresh state on each update. Keep that snapshot
+	# rather than copying every item instance again for a vitals change.
+	character_state = state
 	gold_label.text = "● %s" % _format_number(int(character_state.get("gold", 0)))
+	var fingerprint: int = hash([state.get("equipped_items",{}),state.get("enhancement_levels",{}),state.get("item_instances",{}),state.get("item_locks",{})])
+	if fingerprint == state_item_fingerprint:return
+	state_item_fingerprint = fingerprint
 	_refresh_inventory_grid()
 	if selected_item != "":
 		_refresh_detail(selected_item)
 
 func set_inventory(value: Dictionary) -> void:
+	if inventory == value:return
 	inventory = value.duplicate(true)
 	if selected_item != "" and int(inventory.get(_base_item_name(selected_item), 0)) <= 0:
 		selected_item = ""

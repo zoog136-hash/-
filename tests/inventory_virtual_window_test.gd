@@ -18,7 +18,8 @@ func run() -> void:
 		catalog.append({"name":name,"grade":"일반","type":"무기"})
 		inventory[name]=1
 	bag.set_catalog_data({"아이템":catalog},{})
-	bag.set_character_state({"item_instances":{"17":{"name":"검 050","level":2},"18":{"name":"검 050","level":0}}})
+	var state: Dictionary={"item_instances":{"17":{"name":"검 050","level":2},"18":{"name":"검 050","level":0}}}
+	bag.set_character_state(state)
 	inventory["검 050"]=2
 	bag.set_inventory(inventory)
 	bag.show_inventory()
@@ -32,10 +33,23 @@ func run() -> void:
 	bag._refresh_visible_window()
 	if bag.visible_first_row<=0:failures.append("scroll did not advance window")
 	if bag.slot_nodes_created>created+16:failures.append("scroll recreated full grid")
+	var list_rebuilds: int=bag.inventory_list_rebuilds
+	state=state.duplicate(true)
+	state["gold"]=12345
+	state["hp"]=17
+	state["experience"]=91
+	bag.set_character_state(state)
+	if bag.inventory_list_rebuilds!=list_rebuilds or bag.slot_nodes_created>created+16:failures.append("vitals or gold rebuilt item list")
+	state=state.duplicate(true)
+	state.item_instances["18"].level=3
+	bag.set_character_state(state)
+	if bag.inventory_list_rebuilds<=list_rebuilds:failures.append("instance level change skipped item refresh")
 	var reference: String="검 050@@@18"
 	bag.selected_item=reference
+	var visual_updates: int=bag.slot_visual_updates
 	bag._refresh_inventory_grid()
 	await process_frame
+	if bag.slot_visual_updates>visual_updates+2:failures.append("selection repainted unrelated slots")
 	if bag.selected_item!=reference:failures.append("selection lost after refresh")
 	if bag.sorted_references.size()!=101:failures.append("refresh lost records")
 	print("INVENTORY_VIRTUAL_WINDOW_RESULT ",JSON.stringify({"failures":failures,"created":bag.slot_nodes_created,"total":bag.sorted_references.size()}))

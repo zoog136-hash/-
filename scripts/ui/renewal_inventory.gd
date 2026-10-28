@@ -12,7 +12,8 @@ var search_row: HBoxContainer
 var expand_button: Button
 var lock_button: Button
 var sort_mode: int = 0
-var inventory_fingerprint: String = ""
+var inventory_fingerprint: int = -1
+var inventory_list_rebuilds: int = 0
 var inventory_grid_dirty: bool = true
 var weight_readout: Label
 var weight_gauge: ProgressBar
@@ -28,6 +29,7 @@ var reusable_slots: Array[Button] = []
 var reusable_empty_slots: Array[Panel] = []
 var visible_first_row: int = -1
 var slot_nodes_created: int = 0
+var slot_visual_updates: int = 0
 const SLOT_PITCH: float = 80.0
 const WINDOW_OVERSCAN_ROWS: int = 2
 var gesture_index: int = -1
@@ -299,8 +301,8 @@ func set_inventory(value: Dictionary) -> void:
 	super.set_inventory(value)
 
 func set_character_state(value: Dictionary) -> void:
-	var fingerprint := JSON.stringify([value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
-	character_state = value.duplicate(true)
+	var fingerprint: int = hash([value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
+	character_state = value
 	gold_label.text = "아데나  "+_format_number(int(value.get("gold",0)))
 	_refresh_weight()
 	if fingerprint == inventory_fingerprint:
@@ -317,6 +319,7 @@ func _refresh_inventory_grid() -> void:
 	if item_grid == null or inventory_panel == null or not inventory_panel.is_visible_in_tree():
 		return
 	inventory_grid_dirty = false
+	inventory_list_rebuilds += 1
 	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
 	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
 	sorted_references.clear()
@@ -406,8 +409,9 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	var equipped: bool = _is_item_equipped(reference)
 	var amount: int = 1 if not _ref_instance_id(reference).is_empty() else int(inventory.get(item_name,0))
 	var locked: bool = bool(character_state.get("item_locks",{}).get(reference,false))
-	var signature: int = hash([reference,record,level,equipped,amount,locked,selected_item])
+	var signature: int = hash([reference,record,level,equipped,amount,locked,reference==selected_item])
 	if int(button.get_meta("signature",-1)) == signature:return
+	slot_visual_updates += 1
 	button.set_meta("reference",reference)
 	button.set_meta("signature",signature)
 	button.add_theme_stylebox_override("normal",_slot_style_for_grade(grade,reference==selected_item))
@@ -421,6 +425,12 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 
 func _refresh_visible_window() -> void:
 	if grid_scroll == null or grid_stack == null or not inventory_panel.is_visible_in_tree():return
+	# A legacy panel rebuild can queue old children for deletion while this
+	# inventory still owns its reusable arrays. Never bind a freed control.
+	for index: int in range(reusable_slots.size()-1,-1,-1):
+		if not is_instance_valid(reusable_slots[index]):reusable_slots.remove_at(index)
+	for index: int in range(reusable_empty_slots.size()-1,-1,-1):
+		if not is_instance_valid(reusable_empty_slots[index]):reusable_empty_slots.remove_at(index)
 	var columns: int = maxi(1,item_grid.columns)
 	var total_cells: int = maxi(sorted_references.size(),20)
 	var total_rows: int = ceili(float(total_cells)/float(columns))
