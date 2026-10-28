@@ -211,6 +211,7 @@ var charge_target: TwilightMonster = null
 var charge_skill: Dictionary = {}
 var charge_speed: float = 1150.0
 var save_timer: float = 0.0
+var general_save_pending: bool = false
 var hp_recovery_elapsed: float = 0.0
 var mp_recovery_elapsed: float = 0.0
 var equipment_effects_dirty: bool = true
@@ -431,7 +432,7 @@ func _process(delta: float) -> void:
 	save_timer += delta
 	if save_timer >= 30.0:
 		save_timer = 0.0
-		_save_game(true)
+		_request_general_save()
 	if player.auto_enabled and not player.is_stunned() and charge_skill.is_empty():
 		_run_auto_heal_quickslots()
 		_run_auto_hunt()
@@ -4006,6 +4007,18 @@ func _refresh_combat_hud() -> void:
 func save_path() -> String:
 	if growth.development: return "user://twilight_growth_lab_v1.json"
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
+
+func _request_general_save() -> void:
+	# Autosave requests in one frame share one commit. Transactions and explicit
+	# saves still call _save_game directly and complete before returning.
+	if general_save_pending:return
+	general_save_pending=true
+	call_deferred("_commit_general_save")
+
+func _commit_general_save() -> void:
+	if not general_save_pending:return
+	general_save_pending=false
+	_save_game(true)
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if option_awakening.save_blocked or not option_awakening.problem.is_empty():

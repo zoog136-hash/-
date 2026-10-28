@@ -21,6 +21,9 @@ var _normalized_names: Dictionary = {}
 var _busy: bool = false
 var _disk_hash: String = ""
 var _disk_path: String = ""
+var _last_payload_hash: String = ""
+var skipped_identical_saves: int = 0
+var save_writes: int = 0
 ## Only used by regression tests; an invalid Callable uses the real atomic writer.
 var test_save_writer: Callable
 
@@ -120,6 +123,7 @@ func accept_load(data: Dictionary) -> bool:
 	save_blocked = false
 	_disk_path = path
 	_disk_hash = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
+	_last_payload_hash = ""
 	_rebuild()
 	return true
 
@@ -138,6 +142,13 @@ func write_save(path: String, data: Dictionary) -> Error:
 		world.hud.append_log("외부 저장 변경 감지 · 다시 불러오기 전 저장 차단")
 		return ERR_BUSY
 	if _disk_path != path and not current_hash.is_empty(): return ERR_BUSY
+	# Compare the exact current save payload only after checking disk identity.
+	# A transaction whose bytes are already durable can acknowledge immediately;
+	# any changed content still uses the existing flushed atomic writer.
+	var payload_hash: String=JSON.stringify(data,"",true,true).sha256_text()
+	if _disk_path==path and not current_hash.is_empty() and payload_hash==_last_payload_hash and current_hash==payload_hash:
+		skipped_identical_saves+=1
+		return OK
 	var error: Error = OK
 	if test_save_writer.is_valid():
 		error = test_save_writer.call(path,data.duplicate(true))
@@ -146,6 +157,8 @@ func write_save(path: String, data: Dictionary) -> Error:
 	if error == OK:
 		_disk_path = path
 		_disk_hash = FileAccess.get_sha256(path)
+		_last_payload_hash = payload_hash if _disk_hash==payload_hash else ""
+		save_writes+=1
 	return error
 
 func _source_for(physical: Dictionary) -> String:
