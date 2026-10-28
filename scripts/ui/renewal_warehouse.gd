@@ -1,6 +1,8 @@
 extends VBoxContainer
 # Shop-style local UI. World owns transaction validation and persistence.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
+var transfer_sheet: RefCounted
 var hud: Node
 var world: Node
 var mode: OptionButton
@@ -35,12 +37,13 @@ func configure(controller: Node) -> void:
 	quantity.value = 1
 	quantity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(quantity)
-	action = Button.new()
+	action = UI.button("선택 아이템 이동",Callable())
 	action.name = "WarehouseTransfer"
 	action.text = "선택 아이템 이동"
 	UI.primary_button(action)
 	action.pressed.connect(_transfer)
 	listing = ItemList.new()
+	listing.set_script(preload("res://scripts/ui/native_touch_list.gd"))
 	listing.name = "WarehouseItems"
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -52,6 +55,7 @@ func configure(controller: Node) -> void:
 	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	summary.add_theme_font_size_override("font_size",12)
 	add_child(summary)
+	transfer_sheet=TransferSheet.new();transfer_sheet.bind(self,true)
 	_refresh()
 
 func _is_equipment(item_name: String) -> bool:
@@ -107,6 +111,7 @@ func _refresh() -> void:
 	if not entries.is_empty():
 		listing.select(0)
 		_selected(0)
+	transfer_sheet.refresh({},true)
 
 func _selected(index: int) -> void:
 	if index < 0 or index >= entries.size():
@@ -116,6 +121,7 @@ func _selected(index: int) -> void:
 	var is_physical: bool = str(entry.get("instance_id","")) != ""
 	quantity.max_value = 1 if is_physical else mini(99,int(entry.get("count",1)))
 	quantity.value = 1
+	transfer_sheet.refresh()
 
 func _transfer() -> void:
 	if selected_index < 0 or selected_index >= entries.size():
