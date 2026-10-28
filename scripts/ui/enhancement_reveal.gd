@@ -283,7 +283,10 @@ func _golden_charge(charge: float, amount: float) -> void:
 		var far: Vector2 = CENTER+direction*reach
 		var left: Vector2 = CENTER+direction*59.0-perpendicular*4.0
 		var right: Vector2 = CENTER+direction*59.0+perpendicular*4.0
-		draw_colored_polygon(PackedVector2Array([left,far-perpendicular*13.0,far+perpendicular*13.0,right]),Color(AMBER,strength*0.27))
+		draw_polygon(
+			PackedVector2Array([left,far-perpendicular*13.0,far+perpendicular*13.0,right]),
+			PackedColorArray([Color(AMBER,strength*0.27),Color(AMBER,0.0),Color(AMBER,0.0),Color(AMBER,strength*0.27)])
+		)
 	_glow(CENTER,135.0,HOT_GOLD,strength*0.40)
 
 
@@ -303,13 +306,17 @@ func _golden_burst(age: float, tier: float, amount: float) -> void:
 		var root: Vector2 = CENTER+direction*28.0
 		var tip: Vector2 = CENTER+direction*reach
 		# Wide translucent beam, then a narrower, brighter inner shaft.
-		draw_colored_polygon(PackedVector2Array([
-			root-side*11.0,tip-side*half_width,tip+side*half_width,root+side*11.0
-		]),Color(AMBER,clampf((0.28 if i%4 == 0 else 0.20)*burst_fade*amount,0.0,1.0)))
+		var outer_alpha: float = clampf((0.28 if i%4 == 0 else 0.20)*burst_fade*amount,0.0,1.0)
+		draw_polygon(
+			PackedVector2Array([root-side*11.0,tip-side*half_width,tip+side*half_width,root+side*11.0]),
+			PackedColorArray([Color(AMBER,outer_alpha),Color(AMBER,0.0),Color(AMBER,0.0),Color(AMBER,outer_alpha)])
+		)
 		if i%2 == 0:
-			draw_colored_polygon(PackedVector2Array([
-				root-side*3.0,tip-side*half_width*0.25,tip+side*half_width*0.25,root+side*3.0
-			]),Color(HOT_GOLD,clampf(0.23*burst_fade*amount,0.0,1.0)))
+			var inner_alpha: float = clampf(0.23*burst_fade*amount,0.0,1.0)
+			draw_polygon(
+				PackedVector2Array([root-side*3.0,tip-side*half_width*0.25,tip+side*half_width*0.25,root+side*3.0]),
+				PackedColorArray([Color(HOT_GOLD,inner_alpha),Color(HOT_GOLD,0.0),Color(HOT_GOLD,0.0),Color(HOT_GOLD,inner_alpha)])
+			)
 	# A broad amber wash and concentrated white-hot light read as an explosion,
 	# instead of the former two rotating outlines with tiny ticks.
 	_glow(CENTER,292.0+reach_growth*60.0*motion,AMBER,0.88*burst_fade*amount)
