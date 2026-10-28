@@ -210,7 +210,7 @@ func _draw() -> void:
 	var tint: Color = GOLD
 	if revealed and result != "success":
 		tint = Color("f26943") if result == "destroy" else Color("9a88b7")
-		var motion: float = 0.0 if reduced_motion else 1.0
+	var motion: float = 0.0 if reduced_motion else 1.0
 	# Draw the warm fan BEHIND the item, not as thin rotating circles.
 	if not revealed:
 		_golden_charge(charge,amount)
