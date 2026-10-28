@@ -69753,7 +69753,45 @@
         "visual_approval": "NOT_RUN",
         "completed_added": 0,
         "frames_sha256": "cd39898dda73f7c11a920385ae1c5cad37ae53cb43419dfebdcb9a2206be6ec4",
-        "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/evidence/integration-summary.json"
+        "evidence": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/soft-bridge-repair-v01/evidence/integration-summary.json",
+        "pr158_partial_attack_repairs": {
+          "status": "PARTIAL_PASS_ACTOR_HOLD",
+          "clips": {
+            "E-attack": {
+              "frames": "res://assets/actors/eight_direction/native_production/transform_141/reviewed_parts_r027/E-attack.tres",
+              "geometry": "assets/actors/eight_direction/native_production/transform_141/reviewed_parts_r027/E-attack.json",
+              "poses": 6,
+              "local_Main": "PASS",
+              "native_resource_import": "PASS",
+              "default_connected": false
+            },
+            "S-attack": {
+              "frames": "res://assets/actors/eight_direction/native_production/transform_141/reviewed_parts_r026/S-attack.tres",
+              "geometry": "assets/actors/eight_direction/native_production/transform_141/reviewed_parts_r026/S-attack.json",
+              "poses": 6,
+              "local_Main": "PASS",
+              "native_resource_import": "PASS",
+              "default_connected": false
+            }
+          },
+          "remaining": {
+            "SE-attack": {
+              "status": "BLOCKED_IMAGE_TOOL_MODERATION",
+              "stage": "input",
+              "category": "violence",
+              "request_id": "60b04ded-1145-4a4e-89f2-6aeaea9d782e",
+              "scope": "Six-pose southeast direction correction for existing attack source",
+              "result": "Denied; no returned image; no retry or workaround"
+            },
+            "NE-attack": {
+              "status": "HOLD_RECOVERY_PLUME_CLIPPED",
+              "source_preserved": true
+            }
+          },
+          "default_connection": false,
+          "formal_approval": false,
+          "device_and_export": "NOT_TESTED"
+        }
       },
       "pr158_source_repair_status": "SPECIFIC_DEFECT_FIXED; runtime and final quality gates separate"
     },
