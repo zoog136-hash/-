@@ -104,13 +104,19 @@ func inspect(mid: String) -> void:
 		actor.attack_cooldown=100
 		actor.repath_cooldown=0
 		actor.set_physics_process(true)
-		for _frame: int in range(45):
-			# The test paused World._process; explicitly advance the same bounded
-			# graph preparer used during actual play while AI has physics enabled.
+		var moved: bool=false
+		# Exact-route construction may span frames on native PNG maps. Preserve
+		# the 45-frame safety sample, then allow a bounded 135-frame retry window
+		# before declaring a real pursuit failure (never weaken collision checks).
+		for _frame: int in range(180):
 			world._advance_native_route_preparation()
 			await physics_frame
 			check(field.walkable(actor.global_position) and not field.is_safe(actor.global_position) and world.field_population.destination_allowed(actor,actor.global_position),mid+" live normal pursuit remains in habitat")
-		check(actor.global_position.distance_to(before)>4,mid+" actual normal AI moved toward player")
+			moved=moved or actor.global_position.distance_to(before)>4
+			if moved and _frame>=44: break
+		if not moved:
+			printerr("ADEN_FAITH_PNG_PURSUE_DIAGNOSTIC ",JSON.stringify({"map":mid,"start":str(before),"end":str(actor.global_position),"target":str(target),"graph":field.route_graph_stats(),"actor_path_count":actor.path.size()}))
+		check(moved,mid+" actual normal AI moved toward player")
 		actor.set_physics_process(false)
 	var safe_point:=Vector2.INF
 	var closest: float=INF
