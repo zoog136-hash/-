@@ -217,6 +217,9 @@ var mp_recovery_elapsed: float = 0.0
 var equipment_effects_dirty: bool = true
 var equipment_effects: Dictionary = {}
 var equipment_effect_rebuilds: int = 0
+var equipment_records_dirty: bool = true
+var equipment_records_cache: Array[Dictionary] = []
+var equipment_record_rebuilds: int = 0
 const UNIQUE_RECOVERY_INTERVAL: float = 30.0
 const UNIQUE_RECOVERY_AMOUNT: int = 5
 var collision_debug: bool = false
@@ -774,6 +777,10 @@ func _refresh_equipment_effects() -> void:
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
 	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))
 	equipment_effects=flags
+
+func _invalidate_equipment_static() -> void:
+	equipment_effects_dirty=true
+	equipment_records_dirty=true
 
 func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
@@ -3602,6 +3609,7 @@ func _destroy_enhancement_target(item_name: String, item_id: String = "") -> voi
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary and (str((value as Dictionary).get("instance_id", "")) == item_id or (item_id.is_empty() and str((value as Dictionary).get("name", "")) == item_name)):
 			equipped_items[slot] = {}
+			_invalidate_equipment_static()
 
 func _equipment_enhancement_level(slot: String) -> int:
 	var value: Variant = equipped_items.get(slot, {})
@@ -3958,7 +3966,7 @@ func _update_hud() -> void:
 	stat_hud_refresh_pending = false
 	# Every equipment, enhancement, card, collection, growth, awakening,
 	# passive-learning and load transaction publishes through this entry point.
-	equipment_effects_dirty = true
+	_invalidate_equipment_static()
 	_sync_item_instances()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
@@ -4353,6 +4361,7 @@ func _load_game(quiet: bool) -> void:
 	consumable_service.call("migrate_legacy_elemental")
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
+	_invalidate_equipment_static()
 	_restore_equipped_visuals()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	_refresh_skill_stealth_visual()
@@ -4495,6 +4504,7 @@ func _ensure_job_class_visual() -> void:
 	if record.is_empty():
 		return
 	equipped_catalog["변신"] = record.duplicate(true)
+	_invalidate_equipment_static()
 	_apply_transform_visual(record)
 	_refresh_speed_modifiers()
 
@@ -4510,6 +4520,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	var record: Dictionary = _job_transform_record(job_class)
 	if not record.is_empty():
 		equipped_catalog["변신"] = record.duplicate(true)
+		_invalidate_equipment_static()
 		_apply_transform_visual(record)
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
@@ -4819,6 +4830,7 @@ func _unequip_item_reference(reference: String) -> void:
 	for slot: String in equipped_items.keys():
 		if str(equipped_items[slot].get("instance_id","")) != id: continue
 		equipped_items.erase(slot)
+		_invalidate_equipment_static()
 		hp = mini(hp,_effective_max_hp())
 		mp = mini(mp,_effective_max_mp())
 		_refresh_speed_modifiers()
@@ -5881,6 +5893,7 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		return
 	var old_max_hp: int = _effective_max_hp()
 	equipped_catalog[category] = record.duplicate(true)
+	_invalidate_equipment_static()
 	if category == "마법인형" or category == "성물":
 		hp_recovery_elapsed = 0.0
 		mp_recovery_elapsed = 0.0
@@ -5965,6 +5978,7 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 		equipped_items[equip_slot]["instance_id"] = selected_id
 		if equip_slot == "weapon":
 			_enforce_shield_weapon_compatibility(false)
+		_invalidate_equipment_static()
 		_refresh_speed_modifiers()
 		var new_max_hp: int = _effective_max_hp()
 		if new_max_hp > old_max_hp:
@@ -6100,6 +6114,9 @@ func _restore_equipped_visuals() -> void:
 	_refresh_speed_modifiers()
 
 func _all_equipped_records() -> Array[Dictionary]:
+	if not equipment_records_dirty:return equipment_records_cache
+	equipment_records_dirty=false
+	equipment_record_rebuilds+=1
 	var records: Array[Dictionary] = []
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
@@ -6114,7 +6131,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
-	return records
+	equipment_records_cache=records
+	return equipment_records_cache
 
 func _normalized_weapon_type(raw_type: String) -> String:
 	var value: String = raw_type.strip_edges()
@@ -6355,6 +6373,7 @@ func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
 		return
 	var offhand_name: String = str(offhand.get("name", "방패"))
 	equipped_items["offhand"] = {}
+	_invalidate_equipment_static()
 	if not quiet:
 		hud.show_message("현재 무기와 방패를 함께 착용할 수 없어 방패가 해제되었습니다")
 	hud.append_log("방패 자동 해제 · %s / 무기 %s" % [offhand_name, _current_weapon_type()])
@@ -6380,6 +6399,7 @@ func _enforce_weapon_class_compatibility(quiet: bool = false) -> void:
 		return
 	var item_name: String = str(weapon.get("name", "무기"))
 	equipped_items["weapon"] = {}
+	_invalidate_equipment_static()
 	_refresh_speed_modifiers()
 	if not quiet:
 		hud.show_message("클래스 변경으로 %s 장착 해제" % item_name)
