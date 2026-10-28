@@ -53,6 +53,12 @@ func inspect(mid: String) -> void:
 	if not world.field_map is NativePngField: return
 	var field: NativePngField=world.field_map
 	legacy_boss_identity_migration(mid,field)
+	# Entry preparation is now frame-budgeted. Drain only that queue here so
+	# authored actor counts can be checked without advancing combat or AI.
+	for _batch: int in range(world.field_population.pending_initial_spawns.size()+1):
+		if world.field_population.pending_initial_spawns.is_empty():break
+		world.field_population._drain_initial_spawns()
+	check(world.field_population.pending_initial_spawns.is_empty(),mid+" initial population preparation completes")
 	world.field_population.set_process(false)
 	if world.field_renderer!=null: world.field_renderer.set_process(false)
 	var expected: int=0

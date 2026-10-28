@@ -339,16 +339,7 @@ func import_state(value: Variant) -> void:
 func _process(delta: float) -> void:
 	if field==null: return
 	boss_director.tick(delta)
-	var spawn_start: int=Time.get_ticks_usec()
-	var initial_count: int=0
-	while not pending_initial_spawns.is_empty() and initial_count<INITIAL_SPAWNS_PER_FRAME:
-		if initial_count>0 and Time.get_ticks_usec()-spawn_start>=INITIAL_SPAWN_BUDGET_USEC:break
-		var pending: Dictionary=pending_initial_spawns.pop_front()
-		pending_spawn_ids.erase(int(pending.slot_id))
-		if _zone_active(pending.region):
-			_spawn_slot(pending)
-			if not is_instance_valid(pending.monster):pending.remaining=2.0
-		initial_count+=1
+	_drain_initial_spawns()
 	wake_clock -= delta
 	var refresh: bool = wake_clock<=0.
 	if refresh:
@@ -368,6 +359,18 @@ func _process(delta: float) -> void:
 					slot.remaining = 2.0
 		elif refresh:
 			_update_activity(monster)
+
+func _drain_initial_spawns() -> void:
+	var spawn_start: int=Time.get_ticks_usec()
+	var initial_count: int=0
+	while not pending_initial_spawns.is_empty() and initial_count<INITIAL_SPAWNS_PER_FRAME:
+		if initial_count>0 and Time.get_ticks_usec()-spawn_start>=INITIAL_SPAWN_BUDGET_USEC:break
+		var pending: Dictionary=pending_initial_spawns.pop_front()
+		pending_spawn_ids.erase(int(pending.slot_id))
+		if _zone_active(pending.region):
+			_spawn_slot(pending)
+			if not is_instance_valid(pending.monster):pending.remaining=2.0
+		initial_count+=1
 
 func _update_activity(monster: TwilightMonster) -> void:
 	var distance: float=monster.global_position.distance_to(world.player.global_position)
