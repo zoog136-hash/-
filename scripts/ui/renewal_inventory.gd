@@ -420,7 +420,7 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	(button.get_node("Lock") as TextureRect).visible = locked
 
 func _refresh_visible_window() -> void:
-	if grid_scroll == null or grid_stack == null:return
+	if grid_scroll == null or grid_stack == null or not inventory_panel.is_visible_in_tree():return
 	var columns: int = maxi(1,item_grid.columns)
 	var total_cells: int = maxi(sorted_references.size(),20)
 	var total_rows: int = ceili(float(total_cells)/float(columns))

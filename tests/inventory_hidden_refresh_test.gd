@@ -91,7 +91,7 @@ func _run() -> void:
 	await process_frame
 	_check(bag.slot_buttons.size() == 1 and bag.slot_buttons.has(SWORD_NAME + "@@@1"), "reopen drops removed stacks and physical instances")
 	_check(bag._enhance_level(SWORD_NAME + "@@@1") == 60 % 7, "reopen uses the latest physical enhancement")
-	_check(created.slots - slots_before == bag.item_grid.get_child_count(), "reopen builds pending slots once")
+	_check(bag.slot_nodes_created == 3 and bag.item_grid.get_child_count() <= 20, "reopen reuses bounded slot controls")
 
 	# Workspace.mount can reveal an ancestor after show_inventory was called.
 	host.hide()
@@ -104,7 +104,7 @@ func _run() -> void:
 	host.show()
 	await process_frame
 	_check(bag.slot_buttons.has(POTION_NAME), "revealing the ancestor flushes the latest inventory")
-	_check(created.slots - slots_before == bag.item_grid.get_child_count(), "ancestor visibility signals build slots once")
+	_check(bag.slot_nodes_created == 3 and bag.item_grid.get_child_count() <= 20, "ancestor visibility reuses bounded slot controls")
 	_check(not bag.inventory_grid_dirty, "ancestor reveal clears the pending refresh")
 
 	# Hidden filters are also applied on the next real opening.
