@@ -20,7 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Package project source
+      # Uploading the whole source/art tree before validation can transfer
+      # tens of GB and stall checkout/CI. Keep packaging available explicitly
+      # on manual requests, never make PR validation depend on this upload.
+      - name: Package project source (manual only)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: actions/upload-artifact@v4
         with:
           name: twilight-godot-main-${{ github.sha }}

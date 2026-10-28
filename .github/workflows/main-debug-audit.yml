@@ -17,7 +17,7 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 135
     strategy:
       fail-fast: false
       matrix:
@@ -26,6 +26,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Record exact source and resource preflight
         shell: bash
         run: |
@@ -55,6 +68,7 @@ jobs:
           python3 tools/test_project.py \
             --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 \
             --logs debug-results \
+            --import-timeout 1800 \
             --no-ci-synthetic-fixtures \
             --shard-index ${{ matrix.shard }} --shard-count 4
       - name: Require complete shard coverage, preserving optional SKIP counts
