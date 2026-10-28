@@ -105,6 +105,9 @@ func inspect(mid: String) -> void:
 		actor.repath_cooldown=0
 		actor.set_physics_process(true)
 		for _frame: int in range(45):
+			# The test paused World._process; explicitly advance the same bounded
+			# graph preparer used during actual play while AI has physics enabled.
+			world._advance_native_route_preparation()
 			await physics_frame
 			check(field.walkable(actor.global_position) and not field.is_safe(actor.global_position) and world.field_population.destination_allowed(actor,actor.global_position),mid+" live normal pursuit remains in habitat")
 		check(actor.global_position.distance_to(before)>4,mid+" actual normal AI moved toward player")
@@ -238,6 +241,12 @@ func gate_habitat_walk() -> void:
 	print("ADEN_FAITH_PNG_MONSTER_ROUTE ",JSON.stringify({"gates":edges,"habitats":visited_habitats.keys()}))
 
 func normal_lifecycle(mid: String) -> void:
+	# Portal travel can configure a new native PNG population after the
+	# initial inspect; drain the existing bounded queue before lifecycle QA.
+	while not world.field_population.pending_initial_spawns.is_empty():
+		world.field_population._drain_initial_spawns()
+	for present: Node in world.monsters_root.get_children():
+		present.set_physics_process(false)
 	var slot: Dictionary={}
 	for candidate: Dictionary in world.field_population.slots:
 		if str(candidate.region.get("mode",""))=="normal" and is_instance_valid(candidate.monster): slot=candidate;break
