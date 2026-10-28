@@ -18,10 +18,11 @@ func run() -> void:
 	if world._save_game(true) != OK:failures.append("baseline durable save")
 	var baseline_writes: int = writer.save_writes
 	var baseline_skips: int = writer.skipped_identical_saves
+	var baseline_json_builds: int = writer.payload_json_builds
 	for index: int in range(3):world._request_general_save()
 	if not world.general_save_pending or writer.save_writes != baseline_writes:failures.append("autosave committed before deferred reservation")
 	await process_frame
-	if world.general_save_pending or writer.save_writes != baseline_writes or writer.skipped_identical_saves != baseline_skips + 1:
+	if world.general_save_pending or writer.save_writes != baseline_writes or writer.skipped_identical_saves != baseline_skips + 1 or writer.payload_json_builds != baseline_json_builds:
 		failures.append("same snapshot reservations did not coalesce and skip")
 	world.gold += 71
 	for index: int in range(3):world._request_general_save()
@@ -37,8 +38,9 @@ func run() -> void:
 	if int(disk.get("gold",-1)) != staged_gold or world.gold != saved_gold:failures.append("staged transaction changed live state or waited for debounce")
 	world.gold = staged_gold
 	var committed_writes: int = writer.save_writes
+	var committed_json_builds: int = writer.payload_json_builds
 	await process_frame
-	if writer.save_writes != committed_writes or int((JSON.parse_string(FileAccess.get_file_as_string(world.save_path())) as Dictionary).get("gold",-1)) != staged_gold:
+	if writer.save_writes != committed_writes or writer.payload_json_builds != committed_json_builds or int((JSON.parse_string(FileAccess.get_file_as_string(world.save_path())) as Dictionary).get("gold",-1)) != staged_gold:
 		failures.append("older reserved save overwrote committed transaction")
 	var durable_hash: String = FileAccess.get_sha256(world.save_path())
 	writer.test_save_writer = func(_path: String, _data: Dictionary) -> Error: return ERR_CANT_CREATE
@@ -47,7 +49,7 @@ func run() -> void:
 	writer.test_save_writer = Callable()
 	if world._save_game(true,{"gold":staged_gold+99}) != OK:failures.append("save did not recover after transient writer failure")
 	if FileAccess.file_exists(world.save_path()+".tmp"):failures.append("atomic writer left a temporary save")
-	print("GENERAL_SAVE_RESERVATION_RESULT ",JSON.stringify({"failures":failures,"writes":writer.save_writes,"skips":writer.skipped_identical_saves}))
+	print("GENERAL_SAVE_RESERVATION_RESULT ",JSON.stringify({"failures":failures,"writes":writer.save_writes,"skips":writer.skipped_identical_saves,"revision_skips":writer.skipped_revision_saves,"json_builds":writer.payload_json_builds}))
 	world.queue_free()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)
