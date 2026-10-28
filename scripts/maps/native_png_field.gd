@@ -8,6 +8,52 @@ const DOMINATION_GAMEPLAY=preload("res://scripts/maps/domination_png_gameplay.gd
 const PRECISE_ROUTE_GRAPH=preload("res://scripts/maps/native_png_route_graph.gd")
 var artwork_scale: float=1.0
 var precise_routes: AStar2D
+var route_graph_key: String=""
+var precise_route_required: bool=false
+var cold_route_fallbacks: int=0
+const ROUTE_FOOT_RADIUS: float=4.0
+
+func final_route_key() -> String:
+	# This fingerprint is made only after alpha solids and reachability have
+	# settled. It covers the actual grid, corrected shapes, scale, and the
+	# physical foot rules used by both edges and endpoint projection.
+	var snapshot: Dictionary=navigation_snapshot()
+	var material: String=JSON.stringify([
+		PRECISE_ROUTE_GRAPH.GRAPH_VERSION,geometry_signature(),str(data.get("map_id","")),
+		int(data.get("layout_revision",0)),str(data.get("collision_scope","")),
+		artwork_scale,ROUTE_FOOT_RADIUS,LANDING_BODY_OFFSETS,
+		png_manifest.get("sha256","") if png_manifest!=null else "",
+		png_manifest.get("source_sha256","") if png_manifest!=null else "",
+		png_manifest.get("alpha_guard_cell_size",0) if png_manifest!=null else 0,
+		png_manifest.get("alpha_solid_runs",[]) if png_manifest!=null else []
+	],"",true,true)
+	var context:=HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	context.update(material.to_utf8_buffer())
+	context.update((snapshot.solid_runs as PackedInt32Array).to_byte_array())
+	context.update(reachable)
+	return context.finish().hex_encode()
+
+func prepare_precise_routes_step(max_cells: int=256,max_usec: int=2000) -> bool:
+	if route_graph_key.is_empty():route_graph_key=final_route_key()
+	if precise_routes==null:
+		precise_routes=PRECISE_ROUTE_GRAPH.take_idle(route_graph_key,self)
+		if precise_routes==null:
+			precise_routes=PRECISE_ROUTE_GRAPH.new()
+			precise_routes.begin(self,route_graph_key)
+	return precise_routes.advance(max_cells,max_usec)
+
+func park_precise_routes() -> void:
+	if precise_routes!=null and precise_routes.ready():precise_routes.park_idle()
+	precise_routes=null
+	precise_route_required=false
+
+func route_graph_stats() -> Dictionary:
+	return {"key":route_graph_key,"ready":precise_routes!=null and precise_routes.ready(),
+		"points":precise_routes.get_point_count() if precise_routes!=null else 0,
+		"build_calls":int(precise_routes.build_calls) if precise_routes!=null else 0,
+		"build_usec":int(precise_routes.build_usec) if precise_routes!=null else 0,
+		"cold_fallbacks":cold_route_fallbacks}
 
 func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 	if walkable(from) and walkable(to):
@@ -15,7 +61,7 @@ func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 		var finish: Vector2i=world_to_cell(to)
 		if reachable[start.y*width+start.x]!=0 and reachable[finish.y*width+finish.x]!=0 and line_clear(from,to):
 			return PackedVector2Array([to])
-	if precise_routes!=null:return precise_routes.route(from,to)
+	if precise_route_required and precise_routes!=null and precise_routes.ready():return precise_routes.route(from,to)
 	var route: PackedVector2Array=super.path(from,to)
 	if route.is_empty():return route
 	var previous: Vector2=from
@@ -26,8 +72,13 @@ func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 	if valid:return route
 	# Cell centers alone cannot prove the intervening segment clears a wall
 	# or narrow floor corner. Build exact edge checks only when one is needed.
-	precise_routes=PRECISE_ROUTE_GRAPH.new()
-	precise_routes.configure(self)
+	precise_route_required=true
+	if precise_routes==null:prepare_precise_routes_step(1,1000)
+	# Early blocked requests retain the original synchronous correctness path;
+	# ordinary map frames have already prepared the same graph in small slices.
+	if not precise_routes.ready():
+		cold_route_fallbacks+=1
+		while not precise_routes.advance(4096,1000000):pass
 	return precise_routes.route(from,to)
 
 const FLOOR_BUCKET: int=512
@@ -74,6 +125,9 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	landing_candidates.clear()
 	landing_candidates_ready = false
 	precise_routes=null
+	route_graph_key=""
+	precise_route_required=false
+	cold_route_fallbacks=0
 	var spec: Dictionary = plan.maps[mid]
 	var faith_map: bool=mid in ["faith_01","faith_02","faith_03","faith_04"]
 	artwork_scale=PNG_SCALE.map_scale(mid)
@@ -145,12 +199,13 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 			if not point_clear(cell_to_world(cell),12.0): continue
 			candidates.append(cell)
 		spawn_cells[zone_id]=candidates
+	route_graph_key=final_route_key()
 
 func _portal_endpoint(raw: Variant) -> Vector2:
 	if not raw is Array or raw.size()!=2: return Vector2.INF
 	if not (raw[0] is float or raw[0] is int) or not (raw[1] is float or raw[1] is int): return Vector2.INF
 	var point := Vector2(float(raw[0]),float(raw[1]))
-	if not point.is_finite() or not walkable(point) or not point_clear(point,4.0): return Vector2.INF
+	if not point.is_finite() or not walkable(point) or not point_clear(point,ROUTE_FOOT_RADIUS): return Vector2.INF
 	for offset: Vector2 in LANDING_BODY_OFFSETS:
 		if not walkable(point+offset): return Vector2.INF
 	return point
@@ -167,7 +222,7 @@ func line_clear(from: Vector2,to: Vector2) -> bool:
 	var steps: int=maxi(1,ceili(from.distance_to(to)/2.0))
 	for i: int in range(steps+1):
 		var point: Vector2=from.lerp(to,float(i)/steps)
-		if not point_clear(point,4.0):return false
+		if not point_clear(point,ROUTE_FOOT_RADIUS):return false
 		if not raster_clear:
 			if not walkable(point): return false
 			for offset: Vector2 in LANDING_BODY_OFFSETS:
@@ -175,8 +230,8 @@ func line_clear(from: Vector2,to: Vector2) -> bool:
 	return true
 
 func _foot_raster_box_clear(from: Vector2, to: Vector2) -> bool:
-	var low: Vector2i = world_to_cell(from.min(to) - Vector2.ONE * 4.0)
-	var high: Vector2i = world_to_cell(from.max(to) + Vector2.ONE * 4.0)
+	var low: Vector2i = world_to_cell(from.min(to) - Vector2.ONE * ROUTE_FOOT_RADIUS)
+	var high: Vector2i = world_to_cell(from.max(to) + Vector2.ONE * ROUTE_FOOT_RADIUS)
 	var span: Vector2i = high - low + Vector2i.ONE
 	if span.x * span.y > 16 or not astar.is_in_boundsv(low) or not astar.is_in_boundsv(high): return false
 	for y: int in range(low.y, high.y + 1):

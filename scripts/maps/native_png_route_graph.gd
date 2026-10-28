@@ -7,24 +7,84 @@ var edge_checks: Dictionary = {}
 const ROUTE_CACHE_LIMIT: int=128
 var route_cache: Dictionary={}
 var route_order: Array[Vector4i]=[]
+const GRAPH_VERSION: int=2
+const IDLE_GRAPH_LIMIT: int=2
+static var idle_graphs: Dictionary={}
+static var idle_order: Array[String]=[]
+var geometry_key: String=""
+var point_cursor: int=0
+var edge_cursor: int=0
+var build_phase: int=0
+var build_calls: int=0
+var build_usec: int=0
 
-func configure(field: RefCounted) -> void:
+static func take_idle(key: String, field: RefCounted) -> AStar2D:
+	if not idle_graphs.has(key):return null
+	var graph: AStar2D=idle_graphs[key]
+	idle_graphs.erase(key)
+	idle_order.erase(key)
+	graph.field_ref=weakref(field)
+	return graph
+
+func park_idle() -> void:
+	if build_phase!=2 or geometry_key.is_empty():return
+	field_ref=null
+	if idle_order.has(geometry_key):idle_order.erase(geometry_key)
+	idle_graphs[geometry_key]=self
+	idle_order.append(geometry_key)
+	while idle_order.size()>IDLE_GRAPH_LIMIT:
+		idle_graphs.erase(idle_order.pop_front())
+
+func begin(field: RefCounted, key: String="") -> void:
+	clear()
 	field_ref=weakref(field)
+	geometry_key=key
 	grid_point_limit=field.width*field.height
 	neighbor_filter_enabled=true
-	for y: int in range(field.height):
-		for x: int in range(field.width):
-			var cell:=Vector2i(x,y)
-			var id: int=y*field.width+x
-			if field.reachable[id]==0 or field.astar.is_point_solid(cell):continue
-			add_point(id,field.cell_to_world(cell))
-	for id: int in get_point_ids():
-		var cell:=Vector2i(id%field.width,id/field.width)
-		for offset: Vector2i in [Vector2i.RIGHT,Vector2i.DOWN,Vector2i(1,1),Vector2i(-1,1)]:
-			var neighbor: Vector2i=cell+offset
-			if not field.astar.is_in_boundsv(neighbor):continue
-			var next: int=neighbor.y*field.width+neighbor.x
-			if has_point(next):connect_points(id,next)
+	edge_checks.clear();route_cache.clear();route_order.clear()
+	point_cursor=0;edge_cursor=0;build_phase=0;build_calls=0;build_usec=0
+
+func ready() -> bool:
+	return build_phase==2
+
+func advance(max_cells: int=256, max_usec: int=2000) -> bool:
+	if ready():return true
+	var field: RefCounted=field_ref.get_ref() if field_ref!=null else null
+	if field==null:return false
+	var started: int=Time.get_ticks_usec()
+	var remaining: int=maxi(1,max_cells)
+	build_calls+=1
+	while remaining>0 and not ready():
+		if build_phase==0:
+			if point_cursor>=grid_point_limit:
+				build_phase=1
+				continue
+			var id: int=point_cursor
+			point_cursor+=1
+			var cell:=Vector2i(id%field.width,id/field.width)
+			if field.reachable[id]!=0 and not field.astar.is_point_solid(cell):
+				add_point(id,field.cell_to_world(cell))
+		else:
+			if edge_cursor>=grid_point_limit:
+				build_phase=2
+				continue
+			var id: int=edge_cursor
+			edge_cursor+=1
+			if has_point(id):
+				var cell:=Vector2i(id%field.width,id/field.width)
+				for offset: Vector2i in [Vector2i.RIGHT,Vector2i.DOWN,Vector2i(1,1),Vector2i(-1,1)]:
+					var neighbor: Vector2i=cell+offset
+					if not field.astar.is_in_boundsv(neighbor):continue
+					var next: int=neighbor.y*field.width+neighbor.x
+					if has_point(next):connect_points(id,next)
+		remaining-=1
+		if Time.get_ticks_usec()-started>=max_usec:break
+	build_usec+=Time.get_ticks_usec()-started
+	return ready()
+
+func configure(field: RefCounted) -> void:
+	begin(field)
+	while not advance(4096,1000000):pass
 
 func _filter_neighbor(from_id: int, neighbor_id: int) -> bool:
 	var field: RefCounted=field_ref.get_ref()

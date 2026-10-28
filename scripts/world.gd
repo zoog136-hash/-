@@ -405,6 +405,8 @@ func _process(delta: float) -> void:
 		return
 	if stat_hud_refresh_pending:
 		_update_hud()
+	if field_map is NativePngField:
+		(field_map as NativePngField).prepare_precise_routes_step(512,2000)
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
 	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
@@ -1313,7 +1315,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			old_node.queue_free()
 	field_renderer = null
 	field_physics = null
+	if field_map is NativePngField:(field_map as NativePngField).park_precise_routes()
 	field_map = null
+	if requested_native is NativePngField:(requested_native as NativePngField).prepare_precise_routes_step(256,2000)
 	loot_pickup.map_changed()
 	ground_loot.hide_map()
 	# Cached failed routes are map- and life-specific; never retain them on travel.
