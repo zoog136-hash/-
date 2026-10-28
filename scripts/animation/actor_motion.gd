@@ -136,6 +136,17 @@ func _clear_native_hit_presentation() -> void:
 func _native_hit_presenting() -> bool:
 	return _native_hit_clock > 0.0 and _native_hit_profile == profile and _native_hit_source == _track_source
 
+static func _has_authored_hit_presentation(frames: SpriteFrames, key: String) -> bool:
+	if bool(frames.get_meta("twilight_native_locomotion_staging", false)): return true
+	# Reviewed production sets retain source-timed hit presentation after their
+	# staging tag is removed. Registration does not activate an optional set.
+	var registrations: Variant = frames.get_meta(FRAME_REGISTRATION.META, {})
+	if not registrations is Dictionary: return false
+	var track: Variant = registrations.get(key)
+	if not track is Dictionary or track.get("semantic_review") != "PASS": return false
+	var poses: Variant = track.get("frames")
+	return poses is Array and poses.size() == frames.get_frame_count(key)
+
 func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	if dead: return
 	# Repeated hits replace a bounded envelope, never accumulate displacement.
@@ -147,9 +158,9 @@ func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	visual_hold = 0.028 if critical and not reduced_motion else 0.0
 	_clear_native_hit_presentation()
 	# Form setup resolves this cache before damage can request an authored hit.
-	if _track_source != null and _resolved_profile == profile and bool(_track_source.get_meta("twilight_native_locomotion_staging", false)):
+	if _track_source != null and _resolved_profile == profile:
 		var key: String = "hit_" + str(facing8)
-		if _track_source.has_animation(key) and _track_source.get_frame_count(key) > 0:
+		if _track_source.has_animation(key) and _track_source.get_frame_count(key) > 0 and _has_authored_hit_presentation(_track_source, key):
 			_native_hit_duration = maxf(hit_duration, presentation_seconds(_track_source, key, hit_duration))
 			_native_hit_clock = _native_hit_duration
 			_native_hit_profile = profile
