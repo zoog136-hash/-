@@ -65,6 +65,15 @@ func run() -> void:
 			var cold: bool=field.precise_routes==null
 			var started: int=Time.get_ticks_usec()
 			var route: PackedVector2Array=field.path(spawn,target)
+			# A native exact graph is intentionally frame-budgeted; the route is
+			# pending until the same production preparation reaches a complete graph.
+			if route.is_empty() and field.route_pending:
+				var slices: int=0
+				while field.precise_routes!=null and not field.precise_routes.ready() and slices<20000:
+					field.prepare_precise_routes_step(256,2000)
+					slices+=1
+				check(field.precise_routes!=null and field.precise_routes.ready(),mid+" bounded graph preparation completes")
+				route=field.path(spawn,target)
 			var elapsed: int=Time.get_ticks_usec()-started
 			if cold and field.precise_routes!=null:cold_usec=elapsed;warm_target=target
 			check(field.line_clear(target,target),mid+" exact destination has full foot clearance "+str(target))
