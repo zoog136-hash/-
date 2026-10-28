@@ -1,0 +1,111 @@
+{
+  "actor": "transform:245",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/W-attack-source-v01.png",
+  "source_sha256": "e86acf3ec6b50bcde5ebd4fe0a3b6b1e0d72393d7188caee52e8767cd0eaf71f",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-1.png",
+      "anchor": [
+        393.5,
+        571.0
+      ],
+      "scale": 0.236602,
+      "sha256": "90fbe8c9e2c7306adbe1932f05e4efbb6c16c08122dca226e183f7ed8dbb4548"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-2.png",
+      "anchor": [
+        988.5,
+        569.5
+      ],
+      "scale": 0.236602,
+      "sha256": "d2db5bfc12e91ca20cc0ea9a90ba48d274931efcb8572539730c73c1f4f6730f"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-3.png",
+      "anchor": [
+        454.0,
+        1124.0
+      ],
+      "scale": 0.236602,
+      "sha256": "ec746faf057a547510e017251d5b48ce0791cd90901346e037ed40844d3f316d"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-4.png",
+      "anchor": [
+        916.5,
+        1160.33
+      ],
+      "scale": 0.236602,
+      "sha256": "91f80de1533abbb2c7561ef4e0cbc324fb8a99d1710fcb9d8305a05eb0202e11"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 617583,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOSSLESS_EXTRACTION_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_DIRECTION_WEAPON_RUN_AND_SOURCE_FAILURES",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "15": {
+      "area": 311,
+      "bounds": [
+        737,
+        960,
+        762,
+        977
+      ],
+      "owner_source_index": 3
+    }
+  },
+  "fragment_review_basis": "Small purple shard immediately below the lower-right recovery weapon aura stays with the recovery figure.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "PASS local candidate in real Main Player: all6 phases, matching idle/action transitions, marker3 where applicable, original authored scale/anchor/clock retained; no mirror, gameplay/collision unchanged. Held actor not default-bound. Whole camera/hand/gait approval is separate.",
+  "native_import": "PASS native CompressedTexture2D AtlasTexture6frames; one integrated import batch36frames. NE direction gate rejection also verified against unchanged production helper.",
+  "source_boundary_repair": "1432 +24517 original source-region failures eliminated in combined candidate; this record covers only selected source components, not remaining failures.",
+  "remaining_actor_issue": "245 N ATTACK source effects joined; SE HIT original outer-edge truncation; NW extraction and RUN direction/foot continuity review remain.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_245/corrections/isolation-v13/W-idle-source-v01-isolated.png",
+      "sha256": "a2c6a5aaf54ccde8973b0fec9e468cfdd520fbad0d8c988e9822f13164136514",
+      "bytes": 1774004
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/W-attack-source-v01.png",
+      "sha256": "e86acf3ec6b50bcde5ebd4fe0a3b6b1e0d72393d7188caee52e8767cd0eaf71f",
+      "bytes": 1619987
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-1.png",
+      "sha256": "90fbe8c9e2c7306adbe1932f05e4efbb6c16c08122dca226e183f7ed8dbb4548",
+      "bytes": 395059
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-2.png",
+      "sha256": "d2db5bfc12e91ca20cc0ea9a90ba48d274931efcb8572539730c73c1f4f6730f",
+      "bytes": 374760
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-3.png",
+      "sha256": "ec746faf057a547510e017251d5b48ce0791cd90901346e037ed40844d3f316d",
+      "bytes": 440313
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/W-attack-4.png",
+      "sha256": "91f80de1533abbb2c7561ef4e0cbc324fb8a99d1710fcb9d8305a05eb0202e11",
+      "bytes": 375424
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "actor": "transform:245",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NE-attack-source-v01.png",
+  "source_sha256": "8cca9cc0cc458be5a59146b839ac923a869998f55e8b94c7ab800a6700bdb2d1",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-0.png",
+      "anchor": [
+        275.0,
+        473.5
+      ],
+      "scale": 0.297901,
+      "sha256": "7d910e21e3fe4ba38f7c04d38a3efd1f7c76788424df301f2ba6a00dcb2b2162"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-1.png",
+      "anchor": [
+        765.5,
+        484.5
+      ],
+      "scale": 0.297901,
+      "sha256": "83495bc3ab9a67b52329b4476a9d4dcfe50e0eb90681b7d02b0190a55348f8e1"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-2.png",
+      "anchor": [
+        1306.5,
+        490.5
+      ],
+      "scale": 0.297901,
+      "sha256": "027fca43c8257551973e028ad36aa9933bcb9e31d5a183c9cf93534117896432"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-3.png",
+      "anchor": [
+        267.0,
+        943.5
+      ],
+      "scale": 0.297901,
+      "sha256": "6c1b06f3f0a572b162e71803e71af8cd691b2f4d8a073b65816cddda3f5a288a"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-4.png",
+      "anchor": [
+        811.25,
+        936.0
+      ],
+      "scale": 0.297901,
+      "sha256": "ca9f4bf87c9882984069062b12fc119ce09b57be0ddede1f02b9bbee30747fa0"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-5.png",
+      "anchor": [
+        1307.0,
+        978.0
+      ],
+      "scale": 0.297901,
+      "sha256": "811af50fe755cad31e6aa0eb1c7d563becf7349821e5d148df2391ed8b7d281b"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 729457,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOSSLESS_EXTRACTION_DIRECTION_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_DIRECTION_WEAPON_RUN_AND_SOURCE_FAILURES",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "14": {
+      "area": 357,
+      "bounds": [
+        548,
+        677,
+        567,
+        718
+      ],
+      "owner_source_index": 3
+    }
+  },
+  "fragment_review_basis": "Purple vertical trail shard below the lower-left impact tip belongs to the lower-left cast arc, not the middle recovery figure.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "NOT_PLAY_APPROVED: NE camera shows chest/front instead of required rear NE; semantic gate HOLD retained before testing. Source isolation only.",
+  "native_import": "PASS native CompressedTexture2D AtlasTexture6frames; one integrated import batch36frames. NE direction gate rejection also verified against unchanged production helper.",
+  "source_boundary_repair": "1432 +24517 original source-region failures eliminated in combined candidate; this record covers only selected source components, not remaining failures.",
+  "remaining_actor_issue": "245 N ATTACK source effects joined; SE HIT original outer-edge truncation; NW extraction and RUN direction/foot continuity review remain.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NE-attack-source-v01.png",
+      "sha256": "8cca9cc0cc458be5a59146b839ac923a869998f55e8b94c7ab800a6700bdb2d1",
+      "bytes": 2446967
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-0.png",
+      "sha256": "7d910e21e3fe4ba38f7c04d38a3efd1f7c76788424df301f2ba6a00dcb2b2162",
+      "bytes": 271500
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-1.png",
+      "sha256": "83495bc3ab9a67b52329b4476a9d4dcfe50e0eb90681b7d02b0190a55348f8e1",
+      "bytes": 307616
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-2.png",
+      "sha256": "027fca43c8257551973e028ad36aa9933bcb9e31d5a183c9cf93534117896432",
+      "bytes": 375982
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-3.png",
+      "sha256": "6c1b06f3f0a572b162e71803e71af8cd691b2f4d8a073b65816cddda3f5a288a",
+      "bytes": 386911
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-4.png",
+      "sha256": "ca9f4bf87c9882984069062b12fc119ce09b57be0ddede1f02b9bbee30747fa0",
+      "bytes": 320902
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/NE-attack-5.png",
+      "sha256": "811af50fe755cad31e6aa0eb1c7d563becf7349821e5d148df2391ed8b7d281b",
+      "bytes": 262968
+    }
+  ]
+}

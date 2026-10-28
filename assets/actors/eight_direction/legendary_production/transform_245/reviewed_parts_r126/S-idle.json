@@ -1,0 +1,136 @@
+{
+  "actor": "transform:245",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/S-idle-source-v01.png",
+  "source_sha256": "7f4678abd345c74478b00997930eb9c153ee514643947b3cb05dc7f582a4486b",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-0.png",
+      "anchor": [
+        280.0,
+        452.67
+      ],
+      "scale": 0.255171,
+      "sha256": "bc1f9d814becf252caa364dc0bc3f0ac3c76e20c89b1e9a2be87f2e36a830f8f"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-1.png",
+      "anchor": [
+        803.0,
+        445.5
+      ],
+      "scale": 0.255171,
+      "sha256": "532bf0d3b01d5b958fb25b4d3adeaebfd4a81c6d5d59d6217c018eb251eb3aa8"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-2.png",
+      "anchor": [
+        1265.75,
+        454.0
+      ],
+      "scale": 0.255171,
+      "sha256": "38ce72f516be575e5f4bdd632818341087c19be34f40b363ca38905eaa901f70"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-3.png",
+      "anchor": [
+        280.5,
+        990.0
+      ],
+      "scale": 0.255171,
+      "sha256": "cbe6f88e2636da28c56628da73a248950873bc6a7fc257dd6ffbade098fc1cb8"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-4.png",
+      "anchor": [
+        770.75,
+        990.5
+      ],
+      "scale": 0.255171,
+      "sha256": "1b06db7e62c91c93f1e3fbd8dfaabdb36a07a550391af7225c32242a6c51050f"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-5.png",
+      "anchor": [
+        1263.0,
+        991.5
+      ],
+      "scale": 0.255171,
+      "sha256": "3c6e021c4b82edf32efdc37e11462849b4ebb61d05c31251a6af1c11fe69b669"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 740095,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOSSLESS_EXTRACTION_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_DIRECTION_WEAPON_RUN_AND_SOURCE_FAILURES",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "7": {
+      "area": 99,
+      "bounds": [
+        1334,
+        504,
+        1351,
+        526
+      ],
+      "owner_source_index": 5
+    }
+  },
+  "fragment_review_basis": "Gold fragment above the lower-right helmet continues its high horn; it is not the upper-right boot.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "PASS local candidate in real Main Player: all6 phases, matching idle/action transitions, marker3 where applicable, original authored scale/anchor/clock retained; no mirror, gameplay/collision unchanged. Held actor not default-bound. Whole camera/hand/gait approval is separate.",
+  "native_import": "PASS native CompressedTexture2D AtlasTexture6frames; one integrated import batch36frames. NE direction gate rejection also verified against unchanged production helper.",
+  "source_boundary_repair": "1432 +24517 original source-region failures eliminated in combined candidate; this record covers only selected source components, not remaining failures.",
+  "remaining_actor_issue": "245 N ATTACK source effects joined; SE HIT original outer-edge truncation; NW extraction and RUN direction/foot continuity review remain.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/S-idle-source-v01.png",
+      "sha256": "7f4678abd345c74478b00997930eb9c153ee514643947b3cb05dc7f582a4486b",
+      "bytes": 2555422
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-0.png",
+      "sha256": "bc1f9d814becf252caa364dc0bc3f0ac3c76e20c89b1e9a2be87f2e36a830f8f",
+      "bytes": 327255
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-1.png",
+      "sha256": "532bf0d3b01d5b958fb25b4d3adeaebfd4a81c6d5d59d6217c018eb251eb3aa8",
+      "bytes": 328691
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-2.png",
+      "sha256": "38ce72f516be575e5f4bdd632818341087c19be34f40b363ca38905eaa901f70",
+      "bytes": 335618
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-3.png",
+      "sha256": "cbe6f88e2636da28c56628da73a248950873bc6a7fc257dd6ffbade098fc1cb8",
+      "bytes": 342554
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-4.png",
+      "sha256": "1b06db7e62c91c93f1e3fbd8dfaabdb36a07a550391af7225c32242a6c51050f",
+      "bytes": 363640
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r126/S-idle-5.png",
+      "sha256": "3c6e021c4b82edf32efdc37e11462849b4ebb61d05c31251a6af1c11fe69b669",
+      "bytes": 342748
+    }
+  ]
+}
