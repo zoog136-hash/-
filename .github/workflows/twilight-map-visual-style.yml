@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Install official Godot 4.7.2
         uses: ./.github/actions/setup-godot-linux
       - name: Provision software OpenGL for frame-dependent regressions
@@ -27,7 +29,7 @@ jobs:
           TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && 'import,bake_navigation,boot,native_png_route_recovery_test,map_visual_toggle_test,world_region_portals_test,world_regions_test,world_structure_test,world_terrain_coverage_test,terrain_surface_geometry_test,terrain_surface_render_test,terrain_variation_texture_test,road_surface_mesh_test,road_surface_render_test,remake_map_readability_test,remake_coordinates_and_state_test,remake_door_runtime_test,native_png_layer_ownership_test' || '' }}
         run: |
           set -o pipefail
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --import-timeout 1200 --only "$TWILIGHT_CI_TESTS" 2>&1 | tee map-visuals-test.log
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --import-timeout 1800 --only "$TWILIGHT_CI_TESTS" 2>&1 | tee map-visuals-test.log
           grep -q MAP_VISUAL_OK test-results/map_visual_toggle_test.log
       - name: Save exact engine evidence
         if: always()

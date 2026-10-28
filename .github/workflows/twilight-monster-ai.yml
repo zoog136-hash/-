@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Install official Godot 4.7.2
         uses: ./.github/actions/setup-godot-linux
       - name: Provision software OpenGL for frame-dependent regressions
@@ -42,7 +44,7 @@ jobs:
           TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && 'import,bake_navigation,boot,native_png_route_recovery_test,monster_ai_leash_path_test,monster_attack_profiles_test,monster_world_test,hunting_paths_test,hunting_navigation_cache_test,l1j_source_navigation_test,combat_resolution_equivalence_test,combat_timing_test,combat_timeline_lifecycle_test,aden_faith_png_monster_spawns_test,native_png_monster_spawns_test' || '' }}
         run: |
           set -o pipefail
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1500 --logs test-results --only "$TWILIGHT_CI_TESTS" 2>&1 | tee monster-ai-tests.log
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1800 --logs test-results --only "$TWILIGHT_CI_TESTS" 2>&1 | tee monster-ai-tests.log
           grep -q MONSTER_AI_OK test-results/monster_ai_leash_path_test.log
       - name: Archive exact test evidence
         if: always()

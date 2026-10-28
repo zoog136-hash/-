@@ -35,9 +35,11 @@ concurrency:
 jobs:
   palette-motion-finish:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Install pinned engine
         run: |
           set -euo pipefail
@@ -64,7 +66,7 @@ jobs:
           if-no-files-found: error
   preserved-native-six:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned engine and software OpenGL
@@ -90,7 +92,7 @@ jobs:
           if-no-files-found: error
   source-family-five:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned engine and software OpenGL
@@ -154,7 +156,7 @@ jobs:
           if-no-files-found: error
   actual-main-pair:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned engine and software OpenGL

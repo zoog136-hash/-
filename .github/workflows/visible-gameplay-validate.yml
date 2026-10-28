@@ -20,9 +20,11 @@ concurrency:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Godot 4.7.2
         run: |
           curl -fL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip

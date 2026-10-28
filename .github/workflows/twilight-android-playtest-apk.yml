@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout isolated validated playtest
         uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Prove archived drafts are detached from exported gameplay
         run: |
           set -euo pipefail
