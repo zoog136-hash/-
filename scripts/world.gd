@@ -158,6 +158,7 @@ var skills_db: Array = []
 var skill_record_index: Dictionary = {}
 var indexed_skills_db: Array = []
 var indexed_skills_count: int = -1
+var non_original_skill_rows: Array[Dictionary] = []
 var job_classes: Array = []
 var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
@@ -212,6 +213,9 @@ var charge_speed: float = 1150.0
 var save_timer: float = 0.0
 var hp_recovery_elapsed: float = 0.0
 var mp_recovery_elapsed: float = 0.0
+var equipment_effects_dirty: bool = true
+var equipment_effects: Dictionary = {}
+var equipment_effect_rebuilds: int = 0
 const UNIQUE_RECOVERY_INTERVAL: float = 30.0
 const UNIQUE_RECOVERY_AMOUNT: int = 5
 var collision_debug: bool = false
@@ -747,16 +751,26 @@ func _load_verified_catalog_options() -> void:
 					entries[index] = _verified_catalog_record(category, entries[index] as Dictionary)
 
 func _has_hp_absorption() -> bool:
-	for record: Dictionary in _all_equipped_records():
-		if bool(record.get("hpAbsorption", record.get("hp_absorption", false))) or str(record.get("desc", "")).contains("HP 흡수"):
-			return true
-	return false
+	_refresh_equipment_effects()
+	return bool(equipment_effects.hp_absorption)
 
 func _has_recovery_effect(key: String) -> bool:
+	_refresh_equipment_effects()
+	return bool(equipment_effects.get(key,false))
+
+func _refresh_equipment_effects() -> void:
+	if not equipment_effects_dirty:return
+	equipment_effects_dirty=false
+	equipment_effect_rebuilds+=1
+	var flags: Dictionary={"hpAbsoluteRecovery":false,"hpRecoveryTick":false,"mpRecoveryTick":false,"hp_absorption":false,"damage_amp_pct":0.0}
 	for record: Dictionary in _all_equipped_records():
-		if int(record.get(key, 0)) > 0:
-			return true
-	return false
+		for key: String in ["hpAbsoluteRecovery","hpRecoveryTick","mpRecoveryTick"]:
+			if int(record.get(key,0))>0:flags[key]=true
+		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
+			flags.hp_absorption=true
+		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
+	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))
+	equipment_effects=flags
 
 func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
@@ -771,7 +785,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		var previous_hp: int = hp
 		hp = mini(_effective_max_hp(), hp + stolen)
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
-	var amplification: float = clampf(_equipped_numeric_sum("damage_amp_pct"), 0.0, 300.0)
+	_refresh_equipment_effects()
+	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	target.take_damage(adjusted_damage + stolen, critical)
@@ -780,9 +795,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 
 func _tick_catalog_recovery(delta: float) -> void:
 	var elapsed: float = maxf(0.0, delta)
+	_refresh_equipment_effects()
 	var hp_enabled: bool = _has_recovery_effect("hpAbsoluteRecovery") or _has_recovery_effect("hpRecoveryTick")
-	var existing_mp_recovery: bool = _has_recovery_effect("mpRecoveryTick") or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp_recovery") > 0
-	var mp_tick_amount: int = (UNIQUE_RECOVERY_AMOUNT if existing_mp_recovery else 0)+int(growth.bonus("mp_regeneration:flat"))
+	var mp_tick_amount: int = int(equipment_effects.mp_tick_amount)
 	var mp_enabled: bool = mp_tick_amount>0
 	var changed: bool = false
 	if hp_enabled:
@@ -3936,6 +3951,9 @@ func _on_map_selected(map_id: String) -> void:
 
 func _update_hud() -> void:
 	stat_hud_refresh_pending = false
+	# Every equipment, enhancement, card, collection, growth, awakening,
+	# passive-learning and load transaction publishes through this entry point.
+	equipment_effects_dirty = true
 	_sync_item_instances()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
@@ -4919,13 +4937,16 @@ func _skill_owned_for_current_job(skill: Dictionary) -> bool:
 	var skill_class: String = str(skill.get("class", "공용"))
 	return skill_class == "공용" or skill_class == job_class
 
+func _non_original_skill_rows() -> Array[Dictionary]:
+	# Keep legacy migration data in its own array. The active 125-row catalogue
+	# normally contains only original IDs, so scanning it for extra passive
+	# fields on every stat query does no useful work.
+	_ensure_skill_record_index()
+	return non_original_skill_rows
+
 func _passive_skill_total(key: String) -> int:
 	var total: int = int(original_skills.stat(key)) if original_skills != null else 0
-	for value: Variant in skills_db:
-		if not (value is Dictionary):
-			continue
-		var skill: Dictionary = value as Dictionary
-		if skill.get("origin", "") == "LINEAGEM_20250617": continue
+	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		total += int(skill.get(key, 0))
@@ -5156,11 +5177,7 @@ func _break_invisibility() -> void:
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
 	if original_skills != null: original_skills.trigger(trigger_name, target)
-	for value: Variant in skills_db:
-		if not (value is Dictionary):
-			continue
-		var skill: Dictionary = value as Dictionary
-		if skill.get("origin", "") == "LINEAGEM_20250617": continue
+	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
 		if SKILL_RULES.passive_trigger(skill) != trigger_name:
@@ -5202,18 +5219,23 @@ func _rebuild_skill_record_index() -> void:
 	# Keep first-match name/ID precedence of the former linear scan. Tests and
 	# migration adapters may replace skills_db with another Array at runtime.
 	skill_record_index.clear()
+	non_original_skill_rows.clear()
 	for value: Variant in skills_db:
 		if not value is Dictionary: continue
 		var record: Dictionary = value
+		if record.get("origin","")!="LINEAGEM_20250617":non_original_skill_rows.append(record)
 		for key: String in [str(record.get("name", "")), str(record.get("id", ""))]:
 			if not skill_record_index.has(key):
 				skill_record_index[key] = record
 	indexed_skills_db = skills_db
 	indexed_skills_count = skills_db.size()
 
-func _skill_record(skill_name: String) -> Dictionary:
+func _ensure_skill_record_index() -> void:
 	if not is_same(indexed_skills_db, skills_db) or indexed_skills_count != skills_db.size():
 		_rebuild_skill_record_index()
+
+func _skill_record(skill_name: String) -> Dictionary:
+	_ensure_skill_record_index()
 	return skill_record_index.get(skill_name, {})
 
 func _cast_job_skill(skill_name: String) -> bool:

@@ -14,9 +14,19 @@ var class_slots: Dictionary = {}
 var schools: Dictionary = {"요정":"water"}
 var world: Node
 var revision: int = 0
+var resolved_cache: Dictionary = {}
+var resolved_signature: String = ""
+var stat_signature: String = ""
+var static_stat_totals: Dictionary = {}
+var weighted_stat_entries: Dictionary = {}
+var static_speed: float = 1.0
+var stat_rebuild_count: int = 0
 
 func configure(owner: Node) -> void:
 	world = owner
+	records.clear();by_id.clear();by_name.clear()
+	resolved_cache.clear();resolved_signature="";stat_signature=""
+	revision += 1
 	relations = read_json("relations.json")
 	var master: Dictionary = read_json("master.json")
 	var balances: Dictionary = read_json("balance.json").get("skills", {})
@@ -132,7 +142,27 @@ func learn(key: String) -> bool:
 	world.hud.show_message(str(record.name) + " 습득")
 	return true
 
+func _lineage_signature() -> String:
+	# Tests and migration adapters may edit learned directly; hash catches those
+	# alongside the normal learn/import revision without touching old save data.
+	return "%d|%s|%d|%d" % [revision,str(world.job_class),hash(learned),records.size()]
+
+func _resolved_reference(record: Dictionary) -> Dictionary:
+	var signature: String=_lineage_signature()
+	if signature!=resolved_signature:
+		resolved_signature=signature
+		resolved_cache.clear()
+	var id: String=str(record.get("id",""))
+	if not id.is_empty() and by_id.has(id) and is_same(by_id[id],record):
+		if not resolved_cache.has(id):resolved_cache[id]=_resolve_uncached(record)
+		return resolved_cache[id]
+	return _resolve_uncached(record)
+
 func resolve(record: Dictionary) -> Dictionary:
+	# Callers may alter a resolved action; never hand out the cached source.
+	return _resolved_reference(record).duplicate(true)
+
+func _resolve_uncached(record: Dictionary) -> Dictionary:
 	var result: Dictionary = record.duplicate(true)
 	var family: Dictionary = {str(record.id):true}
 	# Apply each augment once, in ancestry order. A stronger tier's values
@@ -151,22 +181,45 @@ func resolve(record: Dictionary) -> Dictionary:
 		if not changed: break
 	return result
 
-func stat(key: String) -> float:
-	var total := 0.0
+func _current_stat_signature() -> String:
+	var equipped: Variant=world.equipped_items.get("weapon",{})
+	return "%s|%s|%d|%d|%d" % [_lineage_signature(),str(schools.get("요정","water")),
+		hash(equipped),int(world.level),records.size()]
+
+func _ensure_stat_index() -> void:
+	var signature: String=_current_stat_signature()
+	if signature==stat_signature:return
+	stat_signature=signature
+	static_stat_totals.clear();weighted_stat_entries.clear()
+	static_speed=1.0
+	stat_rebuild_count+=1
 	for record: Dictionary in records:
-		if str(record.mode) != "stats" or not enabled(record): continue
-		var resolved := resolve(record)
-		var condition: Dictionary = resolved.get("stat_conditions", {}).get(key, {})
-		if condition.has("weight_min_percent") and float(world._inventory_total_weight()) / float(world._carrying_capacity()) * 100 < float(condition.weight_min_percent): continue
-		total += float(resolved.get("stats", {}).get(key, 0))
+		if str(record.mode)!="stats" or not enabled(record):continue
+		var resolved: Dictionary=_resolved_reference(record)
+		static_speed=maxf(static_speed,float(resolved.get("stats",{}).get("speed",1)))
+		var stats: Dictionary=resolved.get("stats",{})
+		var conditions: Dictionary=resolved.get("stat_conditions",{})
+		for key: String in stats:
+			var condition: Dictionary=conditions.get(key,{})
+			var value: float=float(stats[key])
+			if condition.has("weight_min_percent"):
+				if not weighted_stat_entries.has(key):weighted_stat_entries[key]=[]
+				weighted_stat_entries[key].append({"minimum":float(condition.weight_min_percent),"value":value})
+			else:static_stat_totals[key]=float(static_stat_totals.get(key,0.0))+value
+
+func stat(key: String) -> float:
+	_ensure_stat_index()
+	var total: float=float(static_stat_totals.get(key,0.0))
+	var weighted: Array=weighted_stat_entries.get(key,[])
+	if not weighted.is_empty():
+		var weight_percent: float=float(world._inventory_total_weight())/maxf(1.0,float(world._carrying_capacity()))*100.0
+		for entry: Dictionary in weighted:
+			if weight_percent>=float(entry.minimum):total+=float(entry.value)
 	return total
 
 func speed() -> float:
-	var result := 1.0
-	for record: Dictionary in records:
-		if str(record.mode) == "stats" and enabled(record):
-			result = maxf(result, float(resolve(record).get("stats", {}).get("speed", 1)))
-	return result
+	_ensure_stat_index()
+	return static_speed
 
 func export_state() -> Dictionary:
 	return {"schema_version":1, "learned":learned.duplicate(true), "archived":archived.duplicate(true),"class_slots":class_slots.duplicate(true),"schools":schools.duplicate(true)}
