@@ -2,7 +2,7 @@ extends SceneTree
 ## Actual OpenGL renders; both passes read the same saved camera manifest.
 var phase: String = "after"
 var target_map: String = ""
-var world: TwilightWorld
+var world: Variant = null  # Loaded from Main.tscn at test runtime, not editor class-scan time.
 var captures: Array[Dictionary] = []
 const BASE: String = "res://docs/hunting-paths-20261012/evidence/"
 
@@ -71,7 +71,7 @@ func run() -> void:
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
 		world.field_renderer.refresh_visible()
-		if world.field_renderer is NativePngRenderer:
+		if bool(world.field_renderer.get_meta("native_png", false)):
 			if not await world.field_renderer.settle_visible():
 				push_error("HUNTING_CAPTURE_FAILED: visible original PNGs did not finish loading");quit(1);return
 		for i: int in range(3): await process_frame

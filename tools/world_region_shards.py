@@ -75,28 +75,43 @@ def main() -> int:
     except (ValueError, OSError, KeyError, TypeError) as exc:
         print("WORLD_REGIONS_FAILED: bad map index:", exc, flush=True)
         return 1
+    # Oman 1-5 did not complete in a shared 900s process, whereas 6-10 did.
+    # Isolate the first five floors individually to reveal the exact slow map
+    # while retaining full native collision, movement, combat, and save checks.
+    # Do not drop any map/requirement or treat timeouts as success.
+    shards = []
+    for prefix, ids in coverage.items():
+        chunks = [[i] for i in ids[:5]] + [ids[5:]] if prefix == "oman_" else [ids]
+        if any(not chunk for chunk in chunks):
+            raise ValueError("Empty world region shard")
+        for index, chunk in enumerate(chunks):
+            label = prefix.rstrip("_") + (f"-{index + 1}" if len(chunks) > 1 else "")
+            shards.append((prefix, chunk, label))
+    if sorted(i for _, chunk, _ in shards for i in chunk) != sorted(i for ids in coverage.values() for i in ids):
+        raise ValueError("Region sharding lost or repeated maps")
     findings = []
     total_checks = 0
     all_ok = True
-    for prefix, ids in coverage.items():
-        label = prefix.rstrip("_")
+    for prefix, ids, label in shards:
         env = os.environ.copy()
         with tempfile.TemporaryDirectory(prefix=f"twilight-test-world-{label}-") as user_data:
             for key in ("XDG_DATA_HOME", "APPDATA", "LOCALAPPDATA"):
                 env[key] = user_data
             cmd = [args.godot, "--headless", "--path", str(root), "--script",
-                   "res://tests/world_regions_test.gd", "--", f"--prefix={prefix}"]
+                   "res://tests/world_regions_test.gd", "--", f"--prefix={prefix}",
+                   "--map-ids=" + ",".join(ids)]
             if args.legacy_map_layouts:
                 cmd.append("--legacy-map-layouts")
             try:
-                result = run_isolated(cmd, env=env, timeout=args.timeout, cwd=str(root))
+                budget = max(args.timeout, 900) if prefix == "oman_" else args.timeout
+                result = run_isolated(cmd, env=env, timeout=budget, cwd=str(root))
                 output = result.stdout + result.stderr
                 code = result.returncode
                 timed_out = False
             except subprocess.TimeoutExpired as exc:
                 stdout = exc.stdout.decode(errors="replace") if isinstance(exc.stdout, bytes) else (exc.stdout or "")
                 stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else (exc.stderr or "")
-                output = f"SHARD_TIMEOUT after {args.timeout}s\n" + stdout + stderr
+                output = f"SHARD_TIMEOUT after {budget}s\n" + stdout + stderr
                 code = -1
                 timed_out = True
             except OSError as exc:
@@ -106,7 +121,13 @@ def main() -> int:
         (args.logs / f"{label}.log").write_text(output, encoding="utf-8")
         ok, reason, checks = validate_output(prefix, ids, code, output)
         if timed_out:
-            reason = f"shard timed out after {args.timeout}s"
+            reason = f"shard timed out after {budget}s"
+            # Emit last in-progress map/phase even if full completion marker
+            # is absent. No partial progress counts as a passing shard.
+            for line in output.splitlines()[-80:]:
+                if ("REGION TIMING" in line or "REGION CHECKED" in line or
+                        "REGION FAIL:" in line or "SCRIPT ERROR:" in line):
+                    print(f"WORLD_SHARD_LAST_PROGRESS {label}: {line[:280]}", flush=True)
         total_checks += checks
         all_ok &= ok
         findings.append({"family": label, "expected_maps": ids, "completed_maps": CHECKED.findall(output),
@@ -122,8 +143,12 @@ def main() -> int:
             for line in diagnostics[:30]:
                 print(f"WORLD_SHARD_DIAGNOSTIC {label}: {line[:280]}", flush=True)
         # Continue all shards: a failed family must not conceal regressions in other families.
-    summary = {"expected_regions": 22, "completed_regions": sum(len(x["completed_maps"]) for x in findings),
-               "total_checks": total_checks, "families": findings, "passed": all_ok}
+    completed = [i for shard in findings for i in shard["completed_maps"]]
+    expected = [i for ids in coverage.values() for i in ids]
+    all_ok = all_ok and sorted(completed) == sorted(expected)
+    summary = {"expected_regions": 22, "completed_regions": len(completed),
+               "total_checks": total_checks, "families": findings,
+               "shard_count": len(shards), "passed": all_ok}
     (args.logs / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if all_ok:
         print(f"WORLD_REGIONS_OK maps=22 families=5 checks={total_checks}", flush=True)

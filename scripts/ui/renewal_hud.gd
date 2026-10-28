@@ -605,12 +605,15 @@ func _process(delta: float) -> void:
 func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience_value: int,exp_need: int,gold: int) -> void:
 	super.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
 	# Preserve latest main's HP-only combat refresh (PR #43).
-	var vitals: Dictionary = {"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp}
+	var vitals: Dictionary = {"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp,"level":level,"gold":gold}
 	character_state.merge(vitals, true)
 	if is_instance_valid(lineage_side_ui):
 		lineage_side_ui.update_vitals(hp,max_hp,mp,max_mp)
 	if is_instance_valid(lineage_inventory_ui):
 		lineage_inventory_ui.character_state.merge(vitals,true)
+		# The lightweight kill refresh must also update the bag's wallet, without
+		# invoking set_character_state and rebuilding its item slots.
+		lineage_inventory_ui.gold_label.text = "아데나  "+lineage_inventory_ui._format_number(gold)
 	if exp_readout != null:
 		exp_readout.text = "Lv.%d  ·  EXP %.2f%%" % [level,float(experience_value)*100/maxi(1,exp_need)]
 	if currency_readout != null:
@@ -877,7 +880,7 @@ func open_npc_shop() -> void:
 	shop_view = shop
 
 func refresh_shop() -> void:
-	if active_section in ["shop","npc_shop"] and is_instance_valid(shop_view): shop_view._refresh()
+	if active_section in ["shop","npc_shop"] and is_instance_valid(shop_view): shop_view.refresh_balances()
 
 func refresh_service() -> void:
 	if active_section in ["warehouse","sell"] and is_instance_valid(transaction_view): transaction_view._refresh()
@@ -1120,9 +1123,9 @@ func open_catalog(category: String) -> void:
 	catalog_panel.show()
 	catalog_category = category
 	if equipment_collection_button != null:
-		equipment_collection_button.disabled = category != "아이템"
-		equipment_collection_button.text = "장비 컬렉션" if category == "아이템" else "컬렉션"
-		equipment_collection_button.tooltip_text = "장비 등록 · 각인 구분 없음" if category == "아이템" else "카드 컬렉션은 장비 컬렉션과 별도입니다"
+		equipment_collection_button.disabled = false
+		equipment_collection_button.text = "장비 컬렉션"
+		equipment_collection_button.tooltip_text = "장비 등록 컬렉션 열기 · 각인 구분 없음"
 	catalog_grade_filter = "전체"
 	item_grade_filter = "전체"
 	item_slot_filter = "all"
@@ -1231,14 +1234,12 @@ func _build_catalog_panel() -> void:
 		grade_button.add_theme_color_override("font_color",UI.grade(grade_name))
 		catalog_grade_column.add_child(grade_button)
 		catalog_grade_buttons[grade_name] = grade_button
-	for title: String in ["컬렉션"]:
-		var unavailable := UI.button(title,Callable(),Vector2(124,36))
-		equipment_collection_button = unavailable
-		unavailable.name = "EquipmentCollectionShortcut"
-		unavailable.pressed.connect(open_equipment_collections)
-		unavailable.disabled = true
-		unavailable.tooltip_text = "현재 게임에 카드 보유·중복 재료 및 "+title+" 시스템이 없어 사용할 수 없습니다"
-		catalog_grade_column.add_child(unavailable)
+	# Keep the implemented equipment route visible when the compact layout hides
+	# the grade sidebar. Its label never promises an unimplemented card collection.
+	equipment_collection_button = UI.button("장비 컬렉션",open_equipment_collections,Vector2(124,40))
+	equipment_collection_button.name = "EquipmentCollectionShortcut"
+	equipment_collection_button.tooltip_text = "장비 등록 컬렉션 열기 · 각인 구분 없음"
+	top.add_child(equipment_collection_button)
 	var left := VBoxContainer.new()
 	catalog_body_left = left
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1899,8 +1900,13 @@ func _on_catalog_item_selected(index: int) -> void:
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
 		catalog_detail.text+="\n보유 수량: %d" % owned
-		if selected_catalog_record.has("grade_evidence"):
-			catalog_detail.text+="\n등급 판정: 원본 이미지 파일명 기반 (검증 필요)"
+		match str(selected_catalog_record.get("grade_evidence","")):
+			"inven_item_quality":
+				catalog_detail.text+="\n등급 판정: 원본 아이템 DB 등급 확인"
+			"inven_original_artwork_filename":
+				catalog_detail.text+="\n등급 판정: 원본 이미지 파일명 기반 (검증 필요)"
+			"inven_item_quality_unmapped":
+				catalog_detail.text+="\n등급 판정: 원본 특수 분류 · 표준 등급 미확인"
 		var variants: int = _catalog_variant_count(item_name)
 		var pinned_id: String = _catalog_pinned_instance_id(selected_catalog_record) if variants > 1 else ""
 		if variants > 1:

@@ -31,6 +31,7 @@ var sound_played: Dictionary = {}
 var silent: bool = false
 var closing: bool = false
 var emitted: bool = false
+var manual_reveal: bool = false
 
 func _ready() -> void:
 	name = "CardRevealStage"
@@ -53,7 +54,7 @@ func _ready() -> void:
 	pause_button = UI.button("일시정지",func() -> void: playing = not playing; _refresh_transport(),Vector2(144,46))
 	pause_button.name = "PauseReveal"
 	board.add_child(pause_button)
-	var skip := UI.button("모두 확인",skip_to_result,Vector2(144,46))
+	var skip := UI.button("모두 확인",_reveal_all_or_skip,Vector2(144,46))
 	skip.name = "SkipReveal"
 	board.add_child(skip)
 	var confirm := UI.button("확인",close_reveal,Vector2(144,46))
@@ -72,11 +73,13 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 	category = card_category
 	fusion = is_fusion
 	upgrade = succeeded
+	manual_reveal = not fusion and not showcase
 	clock = 0.0
 	playing = true
 	sound_played.clear()
 	for card: Control in cards:
-		card.hide();card.queue_free()
+		card.hide()
+		card.queue_free()
 	cards.clear()
 	for i: int in range(results.size()):
 		var card: Control = CARD.new()
@@ -85,15 +88,18 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		card.detail_scale = minf(detail_scale,.6) if not fusion and (OS.has_feature("mobile") or results.size()>5) else detail_scale
 		card.intensity_scale = intensity_scale
 		card.show_grade_heading = showcase
+		card.waiting_for_press = manual_reveal
 		var grade: String = str(results[i].get("grade","일반"))
 		var high: bool = int(PROFILES.profile(grade).get("tier",0)) >= 1
 		card.open_at = 0.65 if showcase or fusion or results.size() == 1 else 0.45+i*0.16
 		card.reel_seconds = 3.0 if high else 0.65
 		board.add_child(card)
 		card.configure(results[i],candidate_textures,category)
+		card.reveal_requested.connect(_reveal_card.bind(i))
 		cards.append(card)
 	duration = (6.8 if fusion else 8.0+CARD.DRAW_EXTRA_LIGHTNING_SECONDS)+CARD.CONFIRM_DELAY_SECONDS-CARD.LIGHTNING_EARLY_SECONDS
 	title_label.text = "5개 등급 연출 비교" if showcase else category+(" 합성 결과" if fusion else " 뽑기 결과")
+	(board.get_node("SkipReveal") as Button).text = "모두 뒤집기" if manual_reveal else "모두 확인"
 	_fit()
 	seek(0.0)
 
@@ -169,7 +175,7 @@ func seek(value: float) -> void:
 	clock = clampf(value,0,duration)
 	for card: Control in cards:
 		card.seek(clock,fusion and upgrade)
-	var complete: bool = cards.all(func(card: Control) -> bool: return clock >= card.reveal_at())
+	var complete: bool = _all_revealed()
 	if showcase:
 		result_note.text = "청색 · 적색 · 보라 · 금빛 · 에메랄드\n연출 비교 전용 · 카드 보상 없음"
 	elif complete:
@@ -177,7 +183,9 @@ func seek(value: float) -> void:
 		if results.size() > 1 and bool(results.back().get("pity_reward",false)):
 			result_note.text += " · 별도 카드: 누적 실패 보상"
 	else:
-		result_note.text = "결과를 확인하고 있습니다."
+		var waiting: int = cards.filter(func(card: Control) -> bool: return card.waiting_for_press).size()
+		result_note.text = "카드를 눌러 뒤집어 주세요 · 남은 카드 %d장" % waiting if manual_reveal and waiting > 0 else "결과를 확인하고 있습니다."
+	(board.get_node("ConfirmReveal") as Button).disabled = manual_reveal and not complete
 	if clock >= duration:
 		playing = false
 	_refresh_transport()
@@ -185,10 +193,14 @@ func seek(value: float) -> void:
 
 func _process(delta: float) -> void:
 	if playing and not closing:
+		if not cards.is_empty() and cards.all(func(card: Control) -> bool: return card.waiting_for_press):
+			return
 		var previous: float = clock
 		seek(clock+minf(delta,0.08))
 		if not silent:
 			for i: int in range(cards.size()):
+				if cards[i].waiting_for_press:
+					continue
 				var at: float = cards[i].lightning_at()
 				if previous < at and clock >= at and not sound_played.has(i):
 					sound_played[i] = true
@@ -209,6 +221,8 @@ func _draw() -> void:
 	# Illumination is separate from smoke, card movement and surface discharges.
 	if not reduced_motion:
 		for card: Control in cards:
+			if card.waiting_for_press:
+				continue
 			var elapsed: float = clock-card.lightning_at()
 			var power: float = PROFILES.pulse(card.grade,elapsed,card.extra_lightning_seconds)
 			if fusion and upgrade:
@@ -219,9 +233,33 @@ func _draw() -> void:
 func _refresh_transport() -> void:
 	if pause_button != null:
 		pause_button.text = "일시정지" if playing else "재생"
-		pause_button.disabled = clock >= duration
+		pause_button.disabled = clock >= duration or cards.all(func(card: Control) -> bool: return card.waiting_for_press)
+
+func _all_revealed() -> bool:
+	return not cards.is_empty() and cards.all(func(card: Control) -> bool: return not card.waiting_for_press and clock >= card.reveal_at())
+
+func _reveal_card(index: int) -> void:
+	if closing or index < 0 or index >= cards.size():
+		return
+	var card: Control = cards[index]
+	if not card.start_reveal(clock+0.05):
+		return
+	duration = maxf(duration,card.reveal_at()+2.5)
+	playing = true
+	seek(clock)
+
+func _reveal_all_or_skip() -> void:
+	if not manual_reveal:
+		skip_to_result()
+		return
+	for i: int in range(cards.size()):
+		_reveal_card(i)
 
 func skip_to_result() -> void:
+	# Only an explicit action reveals pending cards; advancing time never does.
+	for card: Control in cards:
+		if card.start_reveal(clock):
+			duration = maxf(duration,card.reveal_at()+2.5)
 	playing = false
 	sound_player.stop()
 	seek(duration)

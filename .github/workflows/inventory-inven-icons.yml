@@ -25,12 +25,27 @@ concurrency:
 jobs:
   inventory-icons:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
           persist-credentials: false
+      # Restore only compact trusted caches published by main; never save
+      # untrusted PR resources and never skip Godot's native import checks.
+      - name: Restore trusted compact Godot import cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Validate every committed image offline; never fetch new art in PRs
         run: |
           python3 -m pip install Pillow==12.3.0
@@ -43,7 +58,7 @@ jobs:
           unzip -qo /tmp/godot.zip -d /tmp/godot
           chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
       - name: Check all runtime pictures, untouched ground art, item interactions and UI captures
-        run: python3 tools/inven_inventory/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/inventory-inven
+        run: python3 tools/inven_inventory/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/inventory-inven --import-timeout 1800
       - name: No gameplay, image or source mutation during verification
         run: git diff --exit-code -- scripts data assets tools tests
       - uses: actions/upload-artifact@v4

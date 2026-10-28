@@ -10,6 +10,12 @@ var field: PlayableField
 var bounds := Rect2(0,0,1,1)
 var clock: float = 0.0
 var area := Rect2(9,27,204,136)
+# Map geometry is immutable while the minimap redraws at ~8 Hz.
+var cached_structure_floor: Array[PackedVector2Array] = []
+var cached_structure_zones: Array[Dictionary] = []
+var cached_structure_pits: Array[PackedVector2Array] = []
+var cached_hunting_polygons: Dictionary = {}
+var cached_static_geometry_ready: bool = false
 
 func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
@@ -17,6 +23,7 @@ func configure(controller: Node, value: PlayableField) -> void:
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
 	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
 	if field is NativePngField: source_overview = field.overview_texture()
+	_prepare_static_geometry()
 	_cache_boss_markers()
 	queue_redraw()
 
@@ -112,20 +119,57 @@ func _map_polygon(record: Dictionary, key: String = "polygon") -> PackedVector2A
 	for p: Vector2 in REGION_GEOMETRY.polygon(record,key): points.append(_point(p))
 	return points
 
+func _prepare_static_geometry() -> void:
+	cached_structure_floor.clear()
+	cached_structure_zones.clear()
+	cached_structure_pits.clear()
+	cached_hunting_polygons.clear()
+	cached_static_geometry_ready = false
+	if field == null: return
+	if field.data.has("world_geometry"):
+		var structure: Dictionary = field.data.world_geometry
+		for raw: Array in field.data.navigable_polygons:
+			cached_structure_floor.append(_map_polygon({"polygon":raw}))
+		for zone: Dictionary in structure.terrain_zones:
+			var zone_shape: PackedVector2Array = REGION_GEOMETRY.polygon(zone)
+			for raw: Array in field.data.navigable_polygons:
+				for clipped: PackedVector2Array in Geometry2D.intersect_polygons(zone_shape,REGION_GEOMETRY.polygon({"polygon":raw})):
+					var mapped := PackedVector2Array()
+					for p: Vector2 in clipped: mapped.append(_point(p))
+					cached_structure_zones.append({"points":mapped, "color":Color(str(zone.tint))})
+		for shape: Dictionary in field.data.collision:
+			if str(shape.kind) == "dungeon_pit":
+				cached_structure_pits.append(_map_polygon(shape,"points"))
+	if field.data.has("hunting_paths"):
+		for region: Dictionary in field.data.regions:
+			if str(region.get("type","")) == "safe" or region.has("polygon"): continue
+			var outlines: Array[PackedVector2Array] = []
+			for spawn: Dictionary in field.data.get("monster_spawn",[]):
+				if str(spawn.id) != str(region.id): continue
+				var geometry: PackedVector2Array
+				if spawn.has("polygon"):
+					geometry = REGION_GEOMETRY.polygon(spawn)
+				else:
+					var a: Array = spawn.rect
+					geometry = PackedVector2Array([Vector2(a[0],a[1]), Vector2(a[0]+a[2],a[1]), Vector2(a[0]+a[2],a[1]+a[3]), Vector2(a[0],a[1]+a[3])])
+				for floor: PackedVector2Array in field.navigable_polygons:
+					for clipped: PackedVector2Array in Geometry2D.intersect_polygons(geometry,floor):
+						var outline := PackedVector2Array()
+						for p: Vector2 in clipped: outline.append(_point(p))
+						outlines.append(outline)
+			cached_hunting_polygons[str(region.id)] = outlines
+	cached_static_geometry_ready = true
+
 func _draw_structure_geography() -> void:
 	if not field.data.has("world_geometry"): return
 	var structure: Dictionary = field.data.world_geometry
 	draw_rect(area,Color(str(structure.void_color)))
-	for raw: Array in field.data.navigable_polygons:
-		draw_colored_polygon(_map_polygon({"polygon":raw}),Color("64715d") if str(field.data.map_id)=="aden_world" else Color("777578"))
-	for zone: Dictionary in structure.terrain_zones:
-		for raw: Array in field.data.navigable_polygons:
-			for polygon: PackedVector2Array in Geometry2D.intersect_polygons(REGION_GEOMETRY.polygon(zone),REGION_GEOMETRY.polygon({"polygon":raw})):
-				var points := PackedVector2Array()
-				for p: Vector2 in polygon: points.append(_point(p))
-				draw_colored_polygon(points,Color(str(zone.tint)))
-	for shape: Dictionary in field.data.collision:
-		if str(shape.kind)=="dungeon_pit": draw_colored_polygon(_map_polygon(shape,"points"),Color("090b10"))
+	for outline: PackedVector2Array in cached_structure_floor:
+		draw_colored_polygon(outline,Color("64715d") if str(field.data.map_id)=="aden_world" else Color("777578"))
+	for entry: Dictionary in cached_structure_zones:
+		draw_colored_polygon(entry.points,entry.color)
+	for outline: PackedVector2Array in cached_structure_pits:
+		draw_colored_polygon(outline,Color("090b10"))
 
 func _cache_boss_markers() -> void:
 	boss_region_mesh=null
@@ -173,19 +217,8 @@ func _draw_boss_regions() -> void:
 
 func _draw_hunting_region(region: Dictionary) -> void:
 	if str(region.type)=="safe": return
-	for spawn: Dictionary in field.data.get("monster_spawn",[]):
-		if str(spawn.id)!=str(region.id): continue
-		var geometry: PackedVector2Array
-		if spawn.has("polygon"):
-			geometry=REGION_GEOMETRY.polygon(spawn)
-		else:
-			var a: Array=spawn.rect
-			geometry=PackedVector2Array([Vector2(a[0],a[1]),Vector2(a[0]+a[2],a[1]),Vector2(a[0]+a[2],a[1]+a[3]),Vector2(a[0],a[1]+a[3])])
-		for floor: PackedVector2Array in field.navigable_polygons:
-			for clipped: PackedVector2Array in Geometry2D.intersect_polygons(geometry,floor):
-				var outline := PackedVector2Array()
-				for p: Vector2 in clipped: outline.append(_point(p))
-				draw_colored_polygon(outline,Color(str(region.color),.16))
+	for outline: PackedVector2Array in cached_hunting_polygons.get(str(region.id),[]):
+		draw_colored_polygon(outline,Color(str(region.color),.16))
 
 func _draw_hunting_obstacles() -> void:
 	if not field.data.has("hunting_paths"): return

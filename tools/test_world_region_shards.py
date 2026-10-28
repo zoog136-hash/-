@@ -52,7 +52,7 @@ class RegionShardingTests(unittest.TestCase):
                 self.assertFalse(validate_output("oman_", ids, 0, invalid)[0])
         self.assertFalse(validate_output("oman_", ids, 1, output)[0])
 
-    def test_controlled_shards_use_five_processes(self):
+    def test_controlled_shards_cover_all_22_in_ten_processes(self):
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp)
             (home / "data/maps").mkdir(parents=True)
@@ -64,9 +64,10 @@ import json,pathlib,sys
 root=pathlib.Path(sys.argv[sys.argv.index('--path')+1])
 index=json.loads((root/'data/maps/field_index.json').read_text())
 prefix=next(a.split('=',1)[1] for a in sys.argv if a.startswith('--prefix='))
-for r in index:
- if r['map_id'].startswith(prefix) and r['map_id'] not in ('albino_03','albino_04'): print('REGION CHECKED', r['map_id'])
-print('REGION maps=%d checks=100 families=1'%sum(r['map_id'].startswith(prefix) and r['map_id'] not in ('albino_03','albino_04') for r in index))
+selected=next(a.split('=',1)[1].split(',') for a in sys.argv if a.startswith('--map-ids='))
+actual=[r['map_id'] for r in index if r['map_id'].startswith(prefix) and r['map_id'] in selected]
+for map_id in actual: print('REGION CHECKED', map_id)
+print('REGION maps=%d checks=100 families=1'%len(actual))
 print('WORLD_REGIONS_OK')
 """)
             fake.chmod(0o755)
@@ -75,11 +76,16 @@ print('WORLD_REGIONS_OK')
                 "--path", str(home), "--logs", str(home / "logs"), "--timeout", "10"
             ], capture_output=True, text=True, timeout=30)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertIn("WORLD_REGIONS_OK maps=22 families=5 checks=500", result.stdout)
+            self.assertIn("WORLD_REGIONS_OK maps=22 families=5 checks=1000", result.stdout)
             report = json.loads((home / "logs/summary.json").read_text())
             self.assertTrue(report["passed"])
             self.assertEqual(report["completed_regions"], 22)
-            self.assertEqual(len(report["families"]), 5)
+            self.assertEqual([f["expected_maps"] for f in report["families"][:5]],
+                             [[f"oman_{i:02d}"] for i in range(1, 6)])
+            self.assertEqual(report["families"][5]["expected_maps"],
+                             [f"oman_{i:02d}" for i in range(6, 11)])
+            self.assertEqual(len(report["families"]), 10)
+            self.assertEqual(report["shard_count"], 10)
 
 
 if __name__ == "__main__":

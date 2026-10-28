@@ -21,7 +21,9 @@ const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
-const NATIVE_PNG_RENDERER = preload("res://scripts/maps/native_png_renderer.gd")
+const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
+# Do not preload this heavy optional renderer while parsing the main game class.
+# Android editor import may otherwise resolve the PNG class graph recursively.
 # PR #137's shipped entry-only PNG plan (594438d). Only this reviewed layout
 # upgrade may cross a plan hash; unknown plans still fail before state changes.
 const NATIVE_PNG_SAVE_MIGRATIONS: Dictionary = {
@@ -122,6 +124,13 @@ var pending_ground_pickup: Button = null
 const GROUND_PICKUP_RADIUS: float = 60.0
 const AUTO_GROUND_PICKUP_SCAN: float = 460.0
 var auto_stuck_time: float = 0.0
+# Bound repeated unreachable-target pathfinding during AUTO, not manual selection.
+const AUTO_TARGET_FAILED_PATH_RETRY_MS: int = 900
+const AUTO_TARGET_EMPTY_RETRY_MS: int = 250
+var auto_target_failed_paths: Dictionary = {}
+var auto_target_next_search_ms: int = 0
+var auto_target_failed_search_actor_count: int = -1
+var auto_target_path_checks: int = 0
 var region_id: String = ""
 var return_gate: Node2D = null
 var return_gate_position: Vector2 = Vector2.INF
@@ -146,6 +155,9 @@ var monster_size_index: Dictionary = {}
 var item_db: Array = []
 var item_weight_index: Dictionary = {}
 var skills_db: Array = []
+var skill_record_index: Dictionary = {}
+var indexed_skills_db: Array = []
+var indexed_skills_count: int = -1
 var job_classes: Array = []
 var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
@@ -501,6 +513,7 @@ func _load_data() -> void:
 		original_skills = ORIGINAL_SKILLS.new()
 		original_skills.configure(self)
 	skills_db = original_skills.catalog.records.duplicate(true)
+	_rebuild_skill_record_index()
 	_ensure_ammo_items()
 	_enrich_weapon_records(item_db)
 	loot_catalog = LOOT_DROP.build_catalog(item_db)
@@ -1287,6 +1300,10 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	field_map = null
 	loot_pickup.map_changed()
 	ground_loot.hide_map()
+	# Cached failed routes are map- and life-specific; never retain them on travel.
+	auto_target_failed_paths.clear()
+	auto_target_next_search_ms = 0
+	auto_target_failed_search_actor_count = -1
 	active_map_id = map_id
 	active_map = maps_by_id[map_id] as Dictionary
 	if requested_native != null:
@@ -1349,7 +1366,13 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if field_map is NativePngField: field_renderer = NATIVE_PNG_RENDERER.new()
+		if field_map is NativePngField:
+			# Instantiate only when an actual native-PNG field is active.
+			var native_renderer_script: Variant = load(NATIVE_PNG_RENDERER_PATH)
+			if native_renderer_script == null:
+				push_error("Native PNG renderer script could not be loaded")
+				return
+			field_renderer = native_renderer_script.new() as FieldRenderer
 		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
@@ -2072,11 +2095,19 @@ func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
 
 func _skill_target(max_distance: float) -> TwilightMonster:
+	# Explicit target selection is authoritative. A spell may fail against a
+	# distant/obstructed target, but may never silently strike a different mob.
+	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
+		if not world_interactions.valid(world_interactions.selections[0]):
+			world_interactions.prune()
 	var target: TwilightMonster = selected_monster
 	if is_instance_valid(target) and not target.dead:
-		if player.global_position.distance_to(target.global_position) <= max_distance:
+		if player.global_position.distance_squared_to(target.global_position) <= max_distance * max_distance:
 			if _has_line_of_sight_world(player.global_position, target.global_position):
 				return target
+		return null
+	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
+		return null
 	return _nearest_visible_monster(max_distance)
 
 func _cast_bleed_from_hud() -> void:
@@ -2186,7 +2217,13 @@ func _run_auto_hunt() -> void:
 	if _run_auto_ground_pickup():
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
+		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
+			selected_monster = null
+			player.clear_click_path()
+			return
 		auto_target = _nearest_reachable_monster(99999.0)
+		auto_target_failed_search_actor_count = monsters_root.get_child_count()
+		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + AUTO_TARGET_EMPTY_RETRY_MS
 	if auto_target == null:
 		selected_monster = null
 		player.clear_click_path()
@@ -2221,8 +2258,11 @@ func _run_auto_hunt() -> void:
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
 		if path.is_empty():
 			if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
+			_remember_auto_target_path_failure(auto_target)
 			auto_target = _nearest_reachable_monster(99999.0)
 			if auto_target == null:
+				auto_target_failed_search_actor_count = monsters_root.get_child_count()
+				auto_target_next_search_ms = Time.get_ticks_msec() + AUTO_TARGET_EMPTY_RETRY_MS
 				selected_monster = null
 				player.clear_click_path()
 				return
@@ -2293,31 +2333,59 @@ func _nearest_visible_monster(max_distance: float) -> TwilightMonster:
 		best = monster
 	return best
 
-func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
-	var best: TwilightMonster = null
-	var best_distance: float = max_distance
+func _auto_target_failure_key(monster: TwilightMonster) -> String:
+	# Recheck when either actor enters a different nav cell or a pooled actor
+	# begins a new life. Never cache a positive route as terrain can change.
+	return "%s|%d|%d|%s|%s" % [
+		active_map_id, monster.get_instance_id(), monster.life_id,
+		str(_world_to_cell(player.global_position)), str(_world_to_cell(monster.global_position))]
+
+func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
+	if not is_instance_valid(monster): return
+	if auto_target_failed_paths.size() >= 512: auto_target_failed_paths.clear()
+	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
+
+func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false) -> TwilightMonster:
+	# Distance-first preserves the previous nearest-reachable rule, while
+	# avoiding an expensive A*/source route for every closer actor seen so far.
+	var candidates: Array[Dictionary] = []
+	var origin: Vector2 = player.global_position
+	var max_distance_squared: float = max_distance * max_distance
+	var order: int = 0
 	for node: Node in monsters_root.get_children():
-		if not (node is TwilightMonster):
-			continue
+		if not node is TwilightMonster: continue
 		var monster: TwilightMonster = node
-		if monster.dead:
-			continue
-		var distance: float = player.global_position.distance_to(monster.global_position)
-		if distance >= best_distance:
-			continue
-		if find_world_path(player.global_position, monster.global_position).is_empty():
-			continue
-		best_distance = distance
-		best = monster
-	return best
+		if monster.dead or monster.is_queued_for_deletion(): continue
+		var distance_squared: float = origin.distance_squared_to(monster.global_position)
+		if distance_squared < max_distance_squared:
+			candidates.append({"actor":monster, "distance_squared":distance_squared, "order":order})
+		order += 1
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if float(a.distance_squared) == float(b.distance_squared):
+			return int(a.order) < int(b.order)
+		return float(a.distance_squared) < float(b.distance_squared))
+	var now: int = Time.get_ticks_msec()
+	for candidate: Dictionary in candidates:
+		var monster: TwilightMonster = candidate.actor
+		var key: String = _auto_target_failure_key(monster)
+		if not force_refresh and int(auto_target_failed_paths.get(key, 0)) > now: continue
+		auto_target_path_checks += 1
+		if not find_world_path(origin, monster.global_position).is_empty():
+			auto_target_failed_paths.erase(key)
+			return monster
+		_remember_auto_target_path_failure(monster)
+	return null
 
 func _select_monster(monster: TwilightMonster) -> void:
 	if is_instance_valid(world_interactions): world_interactions.select_monster(monster)
 	else: selected_monster = monster
 
 func _update_target_hud() -> void:
-	# Combat selection is independent of the removed top-center readout.
-	if is_instance_valid(world_interactions): world_interactions.prune()
+	# The selection controller prunes every 0.2s already; in the frame loop
+	# only perform a full scan when the primary entry has actually gone stale.
+	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
+		if not world_interactions.valid(world_interactions.selections[0]):
+			world_interactions.prune()
 	if not is_instance_valid(selected_monster) or selected_monster.dead: selected_monster = null
 
 func _on_monster_died(monster: TwilightMonster) -> void:
@@ -2348,6 +2416,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
+	var level_before: int = level
 	_check_level_up()
 	if player.auto_enabled:
 		_auto_recharge_ain()
@@ -2357,7 +2426,14 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		auto_target = null
 	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
 		monster.reparent(combat_corpses, true)
-	_update_hud()
+	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
+	# equipment, skill, collection and inventory surface here stalls the very
+	# frame in which loot appears. Level changes still publish all new stats.
+	if level != level_before:
+		_update_hud()
+	else:
+		_refresh_combat_hud()
+		_update_ain_hud()
 	call_deferred("_ensure_monster_count")
 
 func recycle_monster(monster: TwilightMonster) -> bool:
@@ -2408,7 +2484,6 @@ func _collect_ground_drop(drop: Button) -> bool:
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	if pending_ground_pickup == drop: pending_ground_pickup = null
-	hud.refresh_inventory(inventory)
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	_update_hud()
@@ -2773,7 +2848,8 @@ func _check_level_up() -> void:
 		hud.call_deferred("open_character")
 
 func _select_nearest_target() -> void:
-	var target: TwilightMonster = _nearest_reachable_monster(600.0)
+	# An explicit tap must retry even if AUTO recently cached a failed route.
+	var target: TwilightMonster = _nearest_reachable_monster(600.0, true)
 	if target == null:
 		hud.show_message("선택할 수 있는 몬스터가 없습니다")
 		return
@@ -3906,6 +3982,7 @@ func _refresh_combat_hud() -> void:
 	# HP-only changes must not queue an equipment/character/inventory rebuild.
 	var display_max_hp: int = int(hud.character_state.get("max_hp", max_hp))
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
+	hud.character_state["gold"] = gold
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func save_path() -> String:
@@ -4228,6 +4305,8 @@ func _load_game(quiet: bool) -> void:
 		enhancement_levels = enhancement_value as Dictionary
 	var stored_instances: Variant = data.get("item_instances", {})
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
+	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
+		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
 	for raw_id: Variant in item_instances.keys():
 		if str(raw_id).is_valid_int():
@@ -5119,13 +5198,23 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> voi
 			skill_cooldowns[skill_name] = cooldown
 		hud.append_log("%s 패시브 발동" % skill_name)
 
-func _skill_record(skill_name: String) -> Dictionary:
+func _rebuild_skill_record_index() -> void:
+	# Keep first-match name/ID precedence of the former linear scan. Tests and
+	# migration adapters may replace skills_db with another Array at runtime.
+	skill_record_index.clear()
 	for value: Variant in skills_db:
-		if value is Dictionary:
-			var skill: Dictionary = value as Dictionary
-			if str(skill.get("name", "")) == skill_name or str(skill.get("id", "")) == skill_name:
-				return skill
-	return {}
+		if not value is Dictionary: continue
+		var record: Dictionary = value
+		for key: String in [str(record.get("name", "")), str(record.get("id", ""))]:
+			if not skill_record_index.has(key):
+				skill_record_index[key] = record
+	indexed_skills_db = skills_db
+	indexed_skills_count = skills_db.size()
+
+func _skill_record(skill_name: String) -> Dictionary:
+	if not is_same(indexed_skills_db, skills_db) or indexed_skills_count != skills_db.size():
+		_rebuild_skill_record_index()
+	return skill_record_index.get(skill_name, {})
 
 func _cast_job_skill(skill_name: String) -> bool:
 	var skill: Dictionary = _skill_record(skill_name)
@@ -5161,7 +5250,14 @@ func _cast_job_skill(skill_name: String) -> bool:
 		_start_skill_cooldown(skill)
 		if SKILL_RULES.has_target(effect):
 			auto_attack_timer = maxf(auto_attack_timer, SKILL_RULES.global_cooldown_seconds(skill))
-		_update_hud()
+		# Damage/status casts only spend MP/ammo and queue a motion marker.
+		# Buffs, healing and teleport still publish the complete derived sheet.
+		if effect in ["damage", "turnUndead", "charge", "stun", "silence", "poison", "bleed", "hold", "fear"]:
+			_refresh_combat_hud()
+			if int(skill.get("ammo_per_hit", 0)) > 0 and hud.has_method("set_quick_items"):
+				hud.call("set_quick_items", inventory)
+		else:
+			_update_hud()
 	return success
 
 func _spend_skill_mp(skill: Dictionary) -> bool:

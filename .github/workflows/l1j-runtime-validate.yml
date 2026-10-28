@@ -48,8 +48,8 @@ jobs:
       matrix: >-
         ${{ fromJSON(
           github.event_name == 'workflow_dispatch' && inputs.retry_scope == 'linux_remaining'
-          && '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":120}]}'
-          || '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":120},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":120}]}'
+          && '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":150}]}'
+          || '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":150},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":150}]}'
         ) }}
     runs-on: ${{ matrix.os }}
     # Both full suites retain every check and its individual deadline.

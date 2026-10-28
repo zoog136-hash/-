@@ -104,6 +104,60 @@ class CoverageAuditTest(unittest.TestCase):
             self.assertEqual(result["pixel_integrity"], "failed")
             self.assertIn("missing real sequential motion: attack_0", result["errors"])
 
+    def test_reconstructed_published_snapshot_is_pinned_but_not_full_original_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            folder, path, tracked = self.build_pack(root)
+            spriteframes = folder / "SpriteFrames.tres"
+            # Existing fixture has 8 walk loops; rename only those tracks for
+            # the published-boss run role without changing any image bytes.
+            original_tracks = audit.read_spriteframes(spriteframes)[2]
+            renamed_tracks = []
+            for row in original_tracks.values():
+                row = dict(row)
+                row["name"] = row["name"].replace("walk_", "run_", 1)
+                if row["name"].startswith("death_") and row["name"] != "death_2":
+                    continue
+                renamed_tracks.append(row)
+            source_header = spriteframes.read_text().split("animations = ", 1)[0]
+            serialized = json.dumps(renamed_tracks)
+            serialized = serialized.replace('"pose_0"', 'SubResource("pose_0")')
+            serialized = serialized.replace('"pose_1"', 'SubResource("pose_1")')
+            spriteframes.write_text(source_header + "animations = " + serialized + "\n")
+            external, frames, animations = audit.read_spriteframes(spriteframes)
+            images = []
+            for image_path in sorted(set(external.values())):
+                image_file = audit.local_path(root, image_path)
+                raw = image_file.read_bytes()
+                images.append({"path": image_path,
+                               "git_blob_sha1": audit._git_blob_sha1(raw), "bytes": len(raw)})
+            publication = {
+                "schema": 1,
+                "verification_scope": "published_boss_runtime_snapshot_v1",
+                "source": "Current tracked PNG/Godot publication only; historical source NOT verified",
+                "original_authoring_verified": False,
+                "direction_semantics_verified": False,
+                "full_eight_direction_walk_and_death_verified": False,
+                "spriteframes": {"path": path,
+                                 "git_blob_sha1": audit._git_blob_sha1(spriteframes.read_bytes())},
+                "images": images,
+                "tracks": {key: {"frames": len(row["frames"]), "loop": row["loop"]}
+                           for key, row in animations.items()},
+            }
+            (folder / "provenance.json").write_text(json.dumps(publication))
+            result = audit.audit_resource(root, path, tracked)
+            # The snapshot alone must never count as full eight-way original motion.
+            self.assertEqual(result["pixel_integrity"], "tracked_published_partial", result["errors"])
+            self.assertFalse(result["original_authoring_verified"])
+            self.assertEqual(result["errors"], [])
+            with Image.open(folder / "poses.png") as source_image:
+                edited = source_image.convert("RGBA")
+                edited.putpixel((0, 0), (0, 0, 255, 255))
+                edited.save(folder / "poses.png")
+            broken = audit.audit_resource(root, path, tracked)
+            self.assertEqual(broken["pixel_integrity"], "failed")
+            self.assertTrue(any("changed since pinned" in error for error in broken["errors"]))
+
     def test_changed_runtime_png_fails_delivery_integrity(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -35,10 +35,11 @@ func _run() -> void:
 	check(is_zero_approx(VISUALS.core_envelope(.065)), "no sustained white flash")
 	for opacity: float in [0.0, .1, .4, .8, .85, 1.0]:
 		check(is_equal_approx(VISUALS.glow_alpha(opacity, false), opacity), "normal glow unchanged")
-		check(is_equal_approx(VISUALS.glow_alpha(opacity, true), minf(1.0, opacity * 1.25)), "critical glow gain is bounded")
-	check(is_equal_approx(VISUALS.glow_alpha(.4, true), .5), "critical glow boosted by 25 percent")
+		check(is_equal_approx(VISUALS.glow_alpha(opacity, true), minf(1.0, opacity * 2.2)), "critical glow gain is bounded")
+	check(VISUALS.glow_alpha(.4, true) > .8, "critical glow is clearly brighter")
 	check(is_equal_approx(VISUALS.glow_alpha(.85, true), 1.0), "critical glow cannot exceed opaque alpha")
-	check(is_zero_approx(VISUALS.glow_alpha(VISUALS.core_envelope(.065), true)), "boost does not extend core flash")
+	check(VISUALS.core_envelope(.065, true) > .2, "critical core remains legible after normal contact fades")
+	check(is_zero_approx(VISUALS.core_envelope(.11, true)), "critical core still has a short bounded lifetime")
 	check(VISUALS.number_scale(.035, true) > 1.2, "critical number punch")
 	check(is_equal_approx(VISUALS.number_scale(.2, true), 1.0), "critical number settles")
 	check(is_equal_approx(VISUALS.number_scale(.035, false), 1.0), "normal text does not pulse")
@@ -48,7 +49,7 @@ func _run() -> void:
 		var aim := Vector2.RIGHT.rotated(float(direction) * PI / 4.)
 		for step: int in range(100):
 			var progress := float(step) / 100.
-			for base_radius: float in [20., 29., 25., 36.25]:
+			for base_radius: float in [20., 36., 25., 45.]:
 				var polygon := VISUALS.crescent_points(aim, base_radius * (.72 + progress * .7), progress)
 				check(Geometry2D.triangulate_polygon(polygon).size() == (polygon.size() - 2) * 3, "slash triangulates direction=%d progress=%d radius=%.2f" % [direction, step, base_radius])
 	for marker: float in [.1, .44, .7, .85]:

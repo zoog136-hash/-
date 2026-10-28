@@ -10,9 +10,9 @@ from test_project_support import run_isolated, timeout_budget
 
 def sha(data):return hashlib.sha256(data).hexdigest()
 
-def run_engine(command,env,*,script=None,importing=False):
+def run_engine(command,env,*,script=None,importing=False,import_timeout=1800):
     """Keep full asset import bounded separately from individual gameplay tests."""
-    budget=timeout_budget('import' if importing else (script or ''),240,900)
+    budget=timeout_budget('import' if importing else (script or ''),240,import_timeout)
     try:
         child=run_isolated(command,env=env,timeout=budget,cwd=str(ROOT))
         return child.stdout+child.stderr,child.returncode,budget
@@ -24,7 +24,7 @@ def run_engine(command,env,*,script=None,importing=False):
         return 'PROCESS_START_FAILED '+str(exc)+'\n',125,budget
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--godot',required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--install',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--godot',required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--install',action='store_true');parser.add_argument('--import-timeout',type=int,default=1800);args=parser.parse_args()
     os.chdir(ROOT);out=args.output.resolve();out.mkdir(parents=True,exist_ok=True);engine=str(Path(args.godot).resolve());results=[]
     tested_sha=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
     protected=['scripts/world.gd','scripts/player.gd','scripts/ui/item_visual_resolver.gd','scripts/ui/inven_inventory_icons.gd','scripts/ui/item_visual.gd','data/catalog_v19.json','data/game_db_v17.json','data/inven_inventory_icons.json','data/l1j/live_visual_bindings.json','data/visuals/runtime_manifest.json']
@@ -38,7 +38,7 @@ def main():
         if importing:command+=['--headless','--editor','--import']
         elif render:command=['xvfb-run','-a']+command+['--rendering-method','gl_compatibility','--script','res://tests/'+script+'.gd']
         else:command+=['--headless','--script','res://tests/'+script+'.gd']
-        text,code,budget=run_engine(command,env,script=script,importing=importing)
+        text,code,budget=run_engine(command,env,script=script,importing=importing,import_timeout=args.import_timeout)
         (out/(label+'.log')).write_text(text,encoding='utf-8')
         ok=code==0 and not re.search(r'SCRIPT ERROR|Parse Error|Failed to load script|ERROR:',text)
         results.append({'test':label,'ok':ok,'exit_code':code,'timeout_seconds':budget,'tested_commit':tested_sha});(out/'test-summary.json').write_text(json.dumps(results,indent=2)+'\n')

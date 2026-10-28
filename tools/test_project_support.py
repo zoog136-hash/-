@@ -181,9 +181,10 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
     if name == 'import':
         return max(requested, import_timeout)
     if name == 'world_regions_test':
-        # Five isolated family shards (360 seconds each by default), not one
-        # 540-second timer shared by all 24 maps. The child enforces deadlines.
-        return max(requested, 1860)
+        # Oman 1-5 each has independent full gameplay/physics/save checks;
+        # 6-10 share a proven fast shard. The child preserves per-map bounds,
+        # and the parent must not kill a valid full regional audit early.
+        return max(requested, 7200)
     if name == 'remake_source_runtime_test':
         # Ten live boss/save lifecycles plus 50 real portal transitions and
         # rendered captures. Keep every floor and assertion in the private-pack

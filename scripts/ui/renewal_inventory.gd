@@ -13,6 +13,7 @@ var expand_button: Button
 var lock_button: Button
 var sort_mode: int = 0
 var inventory_fingerprint: String = ""
+var inventory_grid_dirty: bool = true
 var weight_readout: Label
 var weight_gauge: ProgressBar
 var compact_tabs: HBoxContainer
@@ -183,6 +184,14 @@ func _inventory_visibility_changed() -> void:
 		_hide_item_name()
 		detail_active = false
 		detail_panel.hide()
+	elif inventory_grid_dirty:
+		# show_inventory also refreshes synchronously. Defer this fallback so
+		# showing an ancestor window flushes pending data without a double build.
+		_flush_pending_inventory_grid.call_deferred()
+
+func _flush_pending_inventory_grid() -> void:
+	if inventory_grid_dirty and inventory_panel.is_visible_in_tree():
+		_refresh_inventory_grid()
 
 func _process(_delta: float) -> void:
 	_update_item_name()
@@ -266,18 +275,24 @@ func set_inventory(value: Dictionary) -> void:
 	super.set_inventory(value)
 
 func set_character_state(value: Dictionary) -> void:
-	var fingerprint := JSON.stringify([value.get("gold",0),value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
+	var fingerprint := JSON.stringify([value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
 	character_state = value.duplicate(true)
+	gold_label.text = "아데나  "+_format_number(int(value.get("gold",0)))
 	_refresh_weight()
 	if fingerprint == inventory_fingerprint:
 		return
 	inventory_fingerprint = fingerprint
-	gold_label.text = "아데나  "+_format_number(int(value.get("gold",0)))
 	_refresh_inventory_grid()
 	if selected_item != "":
 		_refresh_detail(selected_item)
 
 func _refresh_inventory_grid() -> void:
+	inventory_grid_dirty = true
+	# Gameplay and the shop still receive fresh inventory/state while hidden;
+	# only the expensive slot controls and item visuals wait for an open bag.
+	if item_grid == null or inventory_panel == null or not inventory_panel.is_visible_in_tree():
+		return
+	inventory_grid_dirty = false
 	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
 	super._refresh_inventory_grid()
 	var references: Array = slot_buttons.keys()

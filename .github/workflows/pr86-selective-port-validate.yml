@@ -31,14 +31,43 @@ concurrency:
 jobs:
   navigation-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-      - name: Install pinned Godot
+      # Use the same trusted engine and small-texture caches as main validation.
+      # PNG imports are too large to cache wholesale; Godot verifies stale imports.
+      - name: Restore trusted pinned Godot engine
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+      - name: Install or verify pinned Godot
+        shell: bash
         run: |
-          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
-          unzip -q godot.zip
-          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          set -euo pipefail
+          GODOT=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          if ! { test -x "$GODOT" && "$GODOT" --version | grep -q '^4\.7\.2\.stable'; }; then
+            rm -f "$GODOT"
+            curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+            unzip -q /tmp/godot.zip -d /tmp
+            chmod +x "$GODOT"
+          fi
+          "$GODOT" --version | grep -q '^4\.7\.2\.stable'
+          ln -sf "$GODOT" Godot_v4.7.2-stable_linux.x86_64
+      - name: Restore trusted compact Godot import cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
       - name: Resource preflight
         run: python3 tools/check_resource_integrity.py --root .
       - name: Restore trusted Godot imported resources
@@ -62,10 +91,13 @@ jobs:
           set -euo pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-import"
           GODOT=./Godot_v4.7.2-stable_linux.x86_64
+          # The previously fixed 300-second cap stopped an active import at 55%.
+          # Check the complete import; never mark an unfinished texture scan green.
           timeout 1500 "$GODOT" --headless --path . --import 2>&1 | tee import.log
           if grep -E 'SCRIPT ERROR:|ERROR:' import.log; then
             exit 1
           fi
+          echo 'PR86_FULL_IMPORT_OK'
           failed=0
           for test in ui_navigation_preservation_test pr93_landing_bounds_test ui_pointer_transfer_test quickslot_smoke_test ui_renewal_integration_test ui_fidelity_regression_test; do
             export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-${test}"

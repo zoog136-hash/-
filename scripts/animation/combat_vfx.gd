@@ -226,7 +226,7 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	if not bool(entry.get("caption", false)): return
 	var title_point: Vector2 = point + Vector2(0.0, -27.0)
 	var title_width: float = float(entry.critical_width)
-	visuals.halo(self, title_point + Vector2(0.0, -8.0), Vector2(title_width * 1.6, 34.0), Color(1.0, 0.42, 0.10, alpha * 0.30 * impact_intensity))
+	visuals.halo(self, title_point + Vector2(0.0, -8.0), Vector2(title_width * 1.8, 42.0), Color(1.0, 0.72, 0.24, alpha * 0.65 * impact_intensity))
 	# Shear just the heading; normal numbers, MISS and healing keep their color.
 	draw_set_transform_matrix(Transform2D(Vector2(scale_value, 0.0), Vector2(-0.16 * scale_value, scale_value), title_point))
 	var title_base: Vector2 = Vector2(-title_width * 0.5, 0.0)

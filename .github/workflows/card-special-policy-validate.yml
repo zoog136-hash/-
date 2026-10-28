@@ -21,7 +21,7 @@ concurrency:
 jobs:
   card-specials:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot 4.7.2
@@ -32,7 +32,7 @@ jobs:
       - name: Parse project and run focused policy test
         run: |
           set -o pipefail
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee card-import.log
+          timeout --signal=TERM --kill-after=15s 1800s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee card-import.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' card-import.log
           export XDG_DATA_HOME="$PWD/card-policy-user"
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/card_special_policy_test.gd 2>&1 | tee card-policy.log

@@ -1,8 +1,10 @@
-extends FieldRenderer
+extends "res://scripts/maps/field_renderer.gd"
 class_name NativePngRenderer
 ## Bounded native-resolution chunks, following the existing PNG loader's lazy
 ## ImageTexture lifecycle. No synthetic terrain nodes are created here.
-var native_field: NativePngField
+# The world validates NativePngField before configure(); avoid resolving its
+# full spawn/navigation class graph while Android scans renderer classes.
+var native_field: Variant = null
 var decoded_pixels: int = 0
 var peak_decoded_pixels: int = 0
 var clock: float = 0.0
@@ -158,7 +160,7 @@ func add_image(key: String, source_file: String, row: Dictionary, image: Image) 
 	decoded_pixels+=pixels;peak_decoded_pixels=maxi(peak_decoded_pixels,decoded_pixels)
 
 func configure(value: PlayableField, actor: Node2D) -> void:
-	field=value;native_field=value as NativePngField;player=actor
+	field=value;native_field=value;player=actor
 	if not load_generated_world():load_generated_plaza()
 	z_index=0
 	y_sort_enabled=true

@@ -24,6 +24,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot', required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--import-timeout', type=int, default=1800,
+                        help='Bound the one-time full Godot import in seconds')
     args = parser.parse_args()
     engine = str(Path(args.godot).resolve())
     output = args.output.resolve()
@@ -54,7 +56,7 @@ def main() -> int:
         else:
             command += ['--headless', '--script', 'res://tests/'+str(script)+'.gd']
         try:
-            budget = timeout_budget('import' if importing else (script or ''), 240, 900)
+            budget = timeout_budget('import' if importing else (script or ''), 240, args.import_timeout)
             result = run_isolated(command, env=env, timeout=budget, cwd=str(ROOT))
             text, code = result.stdout + result.stderr, result.returncode
         except subprocess.TimeoutExpired as exc:

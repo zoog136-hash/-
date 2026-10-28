@@ -19,12 +19,12 @@ func texture(path: String) -> Texture2D:
 	return value
 
 func build_png(field: OriginalPlayableField, key: Vector2i, pack: RefCounted, region: Dictionary) -> void:
-	texture_scale = MAP_TEXTURE_QUALITY.scale_for(str(field.data.map_id)) if bool(pack.get("ordinary_active")) else 1.0
+	texture_scale = MAP_TEXTURE_QUALITY.scale_for(str(field.data.map_id)) if pack.get("ordinary_active") == true else 1.0
 	y_sort_enabled = true
 	set_meta("aden_png_verified",pack.get("review_active")!=true and pack.get("ordinary_active")!=true)
 	set_meta("ordinary_source_png",pack.get("ordinary_active")==true)
 	set_meta("source_png",true)
-	set_meta("png_review",bool(pack.get("review_active")))
+	set_meta("png_review",pack.get("review_active") == true)
 	set_meta("layer_provenance","composite ground; manually reviewed cuts; source collision/navigation; water not separated")
 	var ground_texture: Texture2D = texture(pack.root_path.path_join(region.file))
 	if ground_texture == null: return

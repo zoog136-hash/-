@@ -3,6 +3,7 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Art = preload("res://scripts/ui/item_icon_art.gd")
 const Core = preload("res://scripts/collections/equipment_collection_service.gd")
+const NativeList = preload("res://scripts/ui/native_touch_list.gd")
 var hud
 var runtime
 var rows: Array = []
@@ -64,7 +65,7 @@ func configure(owner_hud: Node) -> void:
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation",10)
 	add_child(body)
-	list = ItemList.new()
+	list = NativeList.new()
 	list.name = "EquipmentCollectionsList"
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -125,6 +126,7 @@ func _filter() -> void:
 			required += int(req.quantity)
 		var mark: String = "완성" if runtime.completed(str(row.id)) else ("%d/%d" % [done,required] if bool(runtime.availability(str(row.id)).get("ok",false)) else "보류")
 		var index: int = list.add_item("%s %s  [%s]" % ["★" if runtime.progress.favorites.has(str(row.id)) else "",row.name,mark])
+		list.set_item_metadata(index,str(row.id))
 		list.set_item_custom_fg_color(index,UI.grade(str(row.grade)))
 		list.set_item_tooltip(index,str(row.name)+"\n"+str(row.get("raw_effects","")))
 	var selected_index: int = -1
@@ -211,12 +213,13 @@ func _choose(cid: String, sid: String) -> void:
 	if picked_candidates.is_empty():
 		_text("조건에 맞는 미장착·잠금 해제 장비가 없습니다. 강화 수치와 장비 원본 ID도 검사합니다.",13,UI.MUTED)
 		return
-	candidates_list = ItemList.new()
+	candidates_list = NativeList.new()
 	candidates_list.name = "CollectionCandidates"
 	candidates_list.custom_minimum_size.y = 125
 	detail.add_child(candidates_list)
 	for item: Dictionary in picked_candidates:
 		var index: int = candidates_list.add_item("+%d %s  · ID %s" % [int(item.enchant),Core.normalize_name(str(item.name)),item.instance_id])
+		candidates_list.set_item_metadata(index,str(item.instance_id))
 		candidates_list.set_item_tooltip(index,"원본 보관명: "+str(item.name)+"\n원본 ID: "+str(item.source_id))
 	var button := UI.button("선택 장비 등록",func() -> void:
 		if hud.workspace.was_scroll_dragged(detail_scroll): return
