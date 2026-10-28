@@ -1,0 +1,439 @@
+name: Godot Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 125
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      # Uploading the whole source/art tree before validation can transfer
+      # tens of GB and stall checkout/CI. Keep packaging available explicitly
+      # on manual requests, never make PR validation depend on this upload.
+      - name: Package project source (manual only)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-godot-main-${{ github.sha }}
+          path: |
+            .gitignore
+            Main.tscn
+            README.md
+            README_KO.md
+            TWILIGHT_PROJECT_RULES.md
+            TWILIGHT_VERSION_HISTORY.md
+            export_presets.cfg
+            addons
+            V19*.txt
+            V20*.txt
+            project.godot
+            assets
+            data
+            legacy
+            scenes
+            scripts
+            tests
+            tools
+            docs
+          if-no-files-found: error
+          compression-level: 6
+
+      - name: Restore pinned Godot engine cache
+        id: engine-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+      - name: Install Godot 4.7.2
+        run: |
+          set -euo pipefail
+          if ! { test -x /tmp/Godot_v4.7.2-stable_linux.x86_64 && /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'; }; then
+            rm -f /tmp/Godot_v4.7.2-stable_linux.x86_64
+            curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+            unzip -q /tmp/godot.zip -d /tmp
+            chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          fi
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'
+          ln -sf /tmp/Godot_v4.7.2-stable_linux.x86_64 Godot_v4.7.2-stable_linux.x86_64
+          ./Godot_v4.7.2-stable_linux.x86_64 --version
+
+      - name: Save verified Godot engine cache on trusted main
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.engine-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+      - name: Restore trusted Godot imported resources
+        id: imported-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Start Godot import timing
+        shell: bash
+        run: date +%s > "$RUNNER_TEMP/twilight-import-start"
+      - name: Import and parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --import --path . 2>&1 | tee godot-parse.log
+          if grep -E "SCRIPT ERROR:|ERROR:" godot-parse.log; then
+            echo "Godot import/parse reported an error."
+            exit 1
+          fi
+
+      - name: Report Godot import time and enforce cache size limit
+        id: import-metrics
+        shell: bash
+        run: |
+          set -euo pipefail
+          start="$(cat "$RUNNER_TEMP/twilight-import-start")"
+          elapsed=$(( $(date +%s) - start ))
+          total_bytes=0
+          if [[ -d .godot/imported ]]; then
+            total_bytes="$(du -sb .godot/imported | cut -f1)"
+          fi
+          # Keep native PNG imports available for every test without making
+          # their multi-GiB outputs prevent the shared cache from being saved.
+          bytes="$(python3 - <<'PY'
+          from pathlib import Path
+          paths = set(Path('.').rglob('*.import'))
+          for pattern in ('*.webp-*', '*.svg-*', '*.ttf-*', '*.wav-*'):
+              paths.update(Path('.godot/imported').glob(pattern))
+          print(sum(path.stat().st_size for path in paths if path.is_file()))
+          PY
+          )"
+          echo "TWILIGHT_IMPORT_SECONDS=$elapsed"
+          echo "TWILIGHT_IMPORTED_TOTAL_BYTES=$total_bytes"
+          echo "TWILIGHT_IMPORTED_BYTES=$bytes"
+          echo "TWILIGHT_CACHE_RESTORED=${{ steps.imported-cache.outputs.cache-hit }}"
+          if (( bytes > 0 && bytes < 1610612736 )); then
+            echo "cacheable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cacheable=false" >> "$GITHUB_OUTPUT"
+            echo "Import cache skipped: empty or at least 1.5 GiB"
+          fi
+      - name: Validate actual Godot import of all 125 skill icon textures
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_private_icon_binding_test.gd 2>&1 | tee godot-skill-icon-priority.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' godot-skill-icon-priority.log
+          grep -q '^SKILL_ICON_PRIVATE_BINDING_OK$' godot-skill-icon-priority.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_icon_asset_integrity_test.gd 2>&1 | tee godot-skill-icon-textures.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' godot-skill-icon-textures.log
+          grep -q '^SKILL_ICON_125_TEXTURES_OK$' godot-skill-icon-textures.log
+
+      - name: Boot main scene
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 30 2>&1 | tee godot-boot.log
+          if grep -E "SCRIPT ERROR:|ERROR:" godot-boot.log; then
+            echo "Godot boot reported an error."
+            exit 1
+          fi
+
+      - name: Ainhasad and Dragon Orb regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ainhasad_smoke_test.gd 2>&1 | tee godot-ainhasad-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|AIN FAIL:|AINHASAD_SMOKE_FAILED" godot-ainhasad-smoke.log; then
+            echo "Ainhasad smoke test reported an error."
+            exit 1
+          fi
+          grep -q "AINHASAD_SMOKE_OK" godot-ainhasad-smoke.log
+
+      - name: Ainhasad consumption and level XP progression
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-ain-exp"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ain_exp_progression_test.gd 2>&1 | tee godot-ain-exp-progression.log
+          if grep -E "SCRIPT ERROR:|ERROR:|AIN_EXP_PROGRESSION_FAIL:|AIN_EXP_PROGRESSION_FAILED" godot-ain-exp-progression.log; then
+            exit 1
+          fi
+          grep -q "AIN_EXP_PROGRESSION_OK" godot-ain-exp-progression.log
+
+      - name: Mythic job smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/job_smoke_test.gd 2>&1 | tee godot-job-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|SMOKE FAIL:|JOB_SMOKE_FAILED" godot-job-smoke.log; then
+            echo "Mythic job smoke test reported an error."
+            exit 1
+          fi
+          grep -q "JOB_SMOKE_OK" godot-job-smoke.log
+
+      - name: Quickslot SELF smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/quickslot_smoke_test.gd 2>&1 | tee godot-quickslot-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|QUICKSLOT FAIL:|QUICKSLOT_SMOKE_FAILED" godot-quickslot-smoke.log; then
+            echo "Quickslot SELF smoke test reported an error."
+            exit 1
+          fi
+          grep -q "QUICKSLOT_SMOKE_OK" godot-quickslot-smoke.log
+
+      - name: Speed option smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --verbose --path . --script res://tests/speed_option_smoke_test.gd 2>&1 | tee godot-speed-option-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|SPEED FAIL:|SPEED_OPTION_SMOKE_FAILED" godot-speed-option-smoke.log; then
+            echo "Attack/move speed option smoke test reported an error."
+            exit 1
+          fi
+          grep -q "SPEED_OPTION_SMOKE_OK" godot-speed-option-smoke.log
+
+      - name: Weapon rules smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/weapon_rules_smoke_test.gd 2>&1 | tee godot-weapon-rules-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|WEAPON RULE FAIL:|WEAPON_RULE_SMOKE_FAILED" godot-weapon-rules-smoke.log; then
+            echo "Weapon rule smoke test reported an error."
+            exit 1
+          fi
+          grep -q "WEAPON_RULE_SMOKE_OK" godot-weapon-rules-smoke.log
+
+      - name: Shield compatibility smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/shield_rules_smoke_test.gd 2>&1 | tee godot-shield-rules-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|SHIELD RULE FAIL:|SHIELD_RULE_SMOKE_FAILED" godot-shield-rules-smoke.log; then
+            echo "Shield compatibility smoke test reported an error."
+            exit 1
+          fi
+          grep -q "SHIELD_RULE_SMOKE_OK" godot-shield-rules-smoke.log
+
+      - name: Equipment slot smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/equipment_slot_smoke_test.gd 2>&1 | tee godot-equipment-slot-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|EQUIPMENT SLOT FAIL:|EQUIPMENT_SLOT_SMOKE_FAILED" godot-equipment-slot-smoke.log; then
+            echo "Equipment slot smoke test reported an error."
+            exit 1
+          fi
+          grep -q "EQUIPMENT_SLOT_SMOKE_OK" godot-equipment-slot-smoke.log
+
+      - name: Item DB slot smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_db_slot_smoke_test.gd 2>&1 | tee godot-item-db-slot-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|ITEM DB SLOT FAIL:|ITEM_DB_SLOT_SMOKE_FAILED" godot-item-db-slot-smoke.log; then
+            echo "Item DB slot smoke test reported an error."
+            exit 1
+          fi
+          grep -q "ITEM_DB_SLOT_SMOKE_OK" godot-item-db-slot-smoke.log
+
+      - name: Inventory DB integration smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/inventory_db_smoke_test.gd 2>&1 | tee godot-inventory-db-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|INVENTORY DB FAIL:|INVENTORY_DB_SMOKE_FAILED" godot-inventory-db-smoke.log; then
+            echo "Inventory DB integration smoke test reported an error."
+            exit 1
+          fi
+          grep -q "INVENTORY_DB_SMOKE_OK" godot-inventory-db-smoke.log
+
+      - name: Item buff description smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_buff_description_smoke_test.gd 2>&1 | tee godot-item-buff-smoke.log
+          if grep -E "SCRIPT ERROR:|ITEM BUFF FAIL:|ITEM_BUFF_SMOKE_FAILED" godot-item-buff-smoke.log; then
+            echo "Item buff description smoke test reported an error."
+            exit 1
+          fi
+          grep -q "ITEM_BUFF_SMOKE_OK" godot-item-buff-smoke.log
+
+      - name: Passive skill smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/passive_skill_smoke_test.gd 2>&1 | tee godot-passive-skill-smoke.log
+          if grep -E "SCRIPT ERROR:|PASSIVE SKILL FAIL:|PASSIVE_SKILL_SMOKE_FAILED" godot-passive-skill-smoke.log; then
+            echo "Passive skill smoke test reported an error."
+            exit 1
+          fi
+          grep -q "PASSIVE_SKILL_SMOKE_OK" godot-passive-skill-smoke.log
+
+      - name: Mobile scroll smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/mobile_scroll_smoke_test.gd 2>&1 | tee godot-mobile-scroll-smoke.log
+          if grep -E "SCRIPT ERROR:|MOBILE SCROLL FAIL:|MOBILE_SCROLL_SMOKE_FAILED" godot-mobile-scroll-smoke.log; then
+            echo "Mobile scroll smoke test reported an error."
+            exit 1
+          fi
+          grep -q "MOBILE_SCROLL_SMOKE_OK" godot-mobile-scroll-smoke.log
+
+      - name: Loot balance smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/loot_balance_smoke_test.gd 2>&1 | tee godot-loot-balance.log
+          if grep -E "SCRIPT ERROR:|ERROR:|LOOT_BALANCE_FAIL" godot-loot-balance.log; then
+            exit 1
+          fi
+          grep -q "LOOT_BALANCE_OK" godot-loot-balance.log
+
+      - name: Viewport touch and mouse routing
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-input-tests"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/input_routing_test.gd 2>&1 | tee godot-input-routing.log
+          if grep -E "SCRIPT ERROR:|ERROR:|INPUT FAIL:|INPUT_ROUTING_FAILED" godot-input-routing.log; then
+            exit 1
+          fi
+          grep -q "INPUT_ROUTING_OK" godot-input-routing.log
+
+      - name: Playable field world tests
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-field-tests"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/field_world_test.gd -- --legacy-map-layouts 2>&1 | tee godot-field-world.log
+          if grep -E "SCRIPT ERROR:|ERROR:|FIELD FAIL:|FIELD_WORLD_FAILED" godot-field-world.log; then
+            exit 1
+          fi
+          grep -q "FIELD_WORLD_OK" godot-field-world.log
+
+      - name: Verify regional test shard coverage and failure handling
+        run: python3 tools/test_world_region_shards.py
+
+      - name: Existing layout regional contracts
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-region-tests"
+          python3 tools/world_region_shards.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --path . --logs world-region-shards --timeout 360 --legacy-map-layouts 2>&1 | tee godot-world-regions.log
+          if grep -E "SCRIPT ERROR:|ERROR:|REGION FAIL:|WORLD_REGIONS_FAILED" godot-world-regions.log; then
+            exit 1
+          fi
+          grep -q "WORLD_REGIONS_OK" godot-world-regions.log
+
+      - name: Region portal chain and camera limits
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-portal-tests"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd -- --legacy-map-layouts 2>&1 | tee godot-region-portals.log
+          if grep -E "SCRIPT ERROR:|ERROR:|PORTAL FAIL:|WORLD_REGION_PORTALS_FAILED" godot-region-portals.log; then
+            exit 1
+          fi
+          grep -q "WORLD_REGION_PORTALS_OK" godot-region-portals.log
+
+      - name: Install virtual GL display
+        run: |
+          if ! command -v xvfb-run >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          fi
+
+      - name: Render actual region gameplay
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-render"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s "-screen 0 1280x720x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd -- --legacy-map-layouts 2>&1 | tee godot-region-render.log
+          if grep -E "SCRIPT ERROR:|ERROR:" godot-region-render.log; then
+            exit 1
+          fi
+          grep -q "REGION_CAPTURE_DIRECTORY" godot-region-render.log
+
+      - name: Upload gameplay renders and validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-world-review-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/twilight-render/**/world-regions-review/*.png
+            ${{ runner.temp }}/twilight-render/**/world-regions-review/*.json
+            godot-*.log
+            world-region-shards/*.log
+            world-region-shards/summary.json
+          if-no-files-found: error
+
+      # Only trusted main publishes imported PNG artifacts; the real Godot
+      # import/validation still runs on every PR and main revision.
+      - name: Stage PNG imports from validated main
+        id: png-stage
+        if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: python3 tools/ci_godot_png_cache.py stage --root . --github-output "$GITHUB_OUTPUT"
+      - name: Save trusted-main PNG shard 0
+        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: .ci-godot-cache/shard-0
+          key: twilight-godot-png-4.7.2-main-s0-${{ github.sha }}
+      - name: Save trusted-main PNG shard 1
+        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: .ci-godot-cache/shard-1
+          key: twilight-godot-png-4.7.2-main-s1-${{ github.sha }}
+      - name: Save trusted-main PNG shard 2
+        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: .ci-godot-cache/shard-2
+          key: twilight-godot-png-4.7.2-main-s2-${{ github.sha }}
+      - name: Save trusted-main PNG shard 3
+        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: .ci-godot-cache/shard-3
+          key: twilight-godot-png-4.7.2-main-s3-${{ github.sha }}
+      - name: Save fully validated Godot import cache on trusted main
+        if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.imported-cache.outputs.cache-hit != 'true' && steps.import-metrics.outputs.cacheable == 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}

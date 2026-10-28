@@ -5,6 +5,18 @@ on:
     branches:
       - main
       - integration/twilight-complete-20261009
+    paths:
+      - 'Main.tscn'
+      - 'project.godot'
+      - 'export_presets.cfg'
+      - 'scripts/**'
+      - 'scenes/**'
+      - 'addons/**'
+      - 'assets/**'
+      - 'data/**'
+      - 'tests/android*'
+      - 'tools/android_animation_export_scope.py'
+      - '.github/workflows/twilight-android-playtest-apk.yml'
   workflow_dispatch:
 
 permissions:
@@ -22,6 +34,8 @@ jobs:
     steps:
       - name: Checkout isolated validated playtest
         uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Prove archived drafts are detached from exported gameplay
         run: |
           set -euo pipefail

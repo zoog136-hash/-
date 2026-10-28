@@ -23,9 +23,11 @@ concurrency:
 jobs:
   ordinary-game:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Official Godot 4.7.2 and software display
         run: |
           sudo apt-get update -qq

@@ -1,0 +1,98 @@
+name: Main Debug Audit
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/main-debug-audit.yml'
+      - 'tools/test_project*.py'
+      - 'tests/ground_capture*'
+      - 'tests/capture_ground*'
+      - 'tests/l1j_reviewed_shop_test.gd'
+permissions:
+  contents: read
+concurrency:
+  group: main-debug-audit-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.pull_request.number != 157 && github.event.pull_request.number != 158 }}
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 135
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Record exact source and resource preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p debug-results
+          git rev-parse HEAD | tee debug-results/commit.txt
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee debug-results/resource-integrity.log
+          python3 -m compileall -q tools
+          python3 tools/test_ci_godot_png_cache.py
+          python3 tools/test_project_runner_test.py 2>&1 | tee debug-results/runner-unit.log
+          python3 tools/test_project_plan_test.py 2>&1 | tee debug-results/plan-unit.log
+      - name: Install repository-pinned engine and real software renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libglx-mesa0
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | tee debug-results/engine.txt
+      - name: Canonical runtime checks on installed resources, without synthetic installation
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          python3 tools/test_project.py \
+            --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 \
+            --logs debug-results \
+            --import-timeout 1800 \
+            --no-ci-synthetic-fixtures \
+            --shard-index ${{ matrix.shard }} --shard-count 4
+      - name: Require complete shard coverage, preserving optional SKIP counts
+        run: |
+          python3 - <<'PYCODE'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('debug-results/summary.json').read_text())
+          plan=report['plan']
+          assigned=plan['discovered_tests'][plan['shard_index']::plan['shard_count']]
+          assert assigned and plan['selected_tests']==assigned, report
+          assert report['checks']==['import','bake_navigation','boot']+assigned, report
+          assert not report['failed'] and not report['not_run'], report
+          assert report['total']==report['passed']+len(report['skipped']), report
+          assert report['synthetic_fixture_policy']=='DISABLED', report
+          print('MAIN_AUDIT_SHARD_OK',plan['shard_index'],'passed',report['passed'],'optional_skips',len(report['skipped']))
+          PYCODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: main-debug-${{ matrix.shard }}-${{ github.sha }}
+          path: debug-results/
+          if-no-files-found: error
+          retention-days: 7

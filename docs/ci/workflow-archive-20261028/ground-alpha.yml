@@ -1,48 +1,47 @@
-name: Ground Category Icons
+name: Ground Alpha Repair
 on:
   pull_request:
     branches: [main]
     paths:
-      - '.github/workflows/ground-category-icons.yml'
+      - '.github/workflows/ground-alpha.yml'
+      - 'tools/ground_alpha/**'
       - 'tools/ground_icons/**'
       - 'tools/test_project_support.py'
-      - 'scripts/ui/ground_item_icons.gd'
-      - 'scripts/ui/item_visual_resolver.gd'
+      - 'scripts/ui/ground_alpha.gd'
       - 'scripts/loot/**'
-      - 'data/ground_item_icons.json'
-      - 'data/catalog_v19.json'
-      - 'data/game_db_v17.json'
-      - 'data/inven_inventory_icons.json'
-      - 'data/visuals/runtime_manifest.json'
+      - 'assets/ground_alpha/**'
       - 'assets/ground_categories/**'
-      - 'assets/original_items/**'
       - 'assets/l1j/verified/ground/**'
-      - 'tests/ground_category_probe.gd'
-      - 'tests/capture_ground_categories.gd'
-      - 'tests/inven_inventory_icons_test.gd'
+      - 'assets/original_items/ground/**'
+      - 'data/ground_alpha.json'
+      - 'data/ground_item_icons.json'
+      - 'tests/ground_alpha_test.gd'
+      - 'tests/capture_ground_alpha.gd'
+      - 'tests/ground_capture*'
   push:
     branches: [main]
     paths:
-      - '.github/workflows/ground-category-icons.yml'
+      - '.github/workflows/ground-alpha.yml'
+      - 'tools/ground_alpha/**'
       - 'tools/ground_icons/**'
-      - 'scripts/ui/ground_item_icons.gd'
-      - 'scripts/ui/item_visual_resolver.gd'
+      - 'tools/test_project_support.py'
+      - 'scripts/ui/ground_alpha.gd'
       - 'scripts/loot/**'
-      - 'data/ground_item_icons.json'
-      - 'data/catalog_v19.json'
-      - 'data/game_db_v17.json'
-      - 'data/inven_inventory_icons.json'
+      - 'assets/ground_alpha/**'
       - 'assets/ground_categories/**'
-      - 'tests/ground_category_probe.gd'
-      - 'tests/capture_ground_categories.gd'
+      - 'data/ground_alpha.json'
+      - 'data/ground_item_icons.json'
+      - 'tests/ground_alpha_test.gd'
+      - 'tests/capture_ground_alpha.gd'
+      - 'tests/ground_capture*'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: ground-category-${{ github.ref }}
+  group: ground-alpha-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  ground-icons:
+  alpha:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -50,9 +49,9 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      # Restore only main-published compact import artefacts. PR never writes
-      # back cached resources; full Godot validation still runs as normal.
-      - name: Restore trusted compact Godot import cache
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Restore trusted compact Godot import cache (read-only)
         uses: actions/cache/restore@v4
         continue-on-error: true
         with:
@@ -65,10 +64,13 @@ jobs:
           key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
           restore-keys: |
             twilight-godot-import-4.7.2-linux-compat-main-v2-
-      - name: Validate committed source and transparent PNG hashes offline
+      - name: Validate committed alpha-only assets offline
         run: |
           python3 -m pip install Pillow==12.3.0
+          python3 tools/ground_alpha/test_alpha.py
+          python3 tools/ground_alpha/test_verify_runner.py
           python3 tools/ground_icons/build.py
+          python3 tools/ground_alpha/bake.py
       - name: Install repository-pinned renderer
         run: |
           sudo apt-get update -qq
@@ -76,17 +78,18 @@ jobs:
           curl --fail --location --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
           unzip -qo /tmp/godot.zip -d /tmp/godot
           chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
-      - name: Verify Main floor art, inventory, names, grade effects and real pickup
-        run: python3 tools/ground_icons/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/ground-icons --import-timeout 1800
-      - name: Verification does not modify game source or assets
+      - name: Test actual Main alpha, inventory, names, effects and pickup
+        run: python3 tools/ground_alpha/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/ground-alpha --import-timeout 1800
+      - name: Verification is read-only for tracked game files
         run: git diff --exit-code -- scripts data assets tools tests
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ground-category-validation-${{ github.sha }}
+          name: ground-alpha-validation-${{ github.sha }}
           path: |
-            /tmp/ground-icons/*.json
-            /tmp/ground-icons/*.log
-            /tmp/ground-icons/after-captures/
+            /tmp/ground-alpha/*.json
+            /tmp/ground-alpha/*.log
+            /tmp/ground-alpha/*.png
+            /tmp/ground-alpha/after-captures/
           retention-days: 14
           if-no-files-found: error

@@ -26,6 +26,8 @@ jobs:
     timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache
         uses: actions/cache/restore@v4
         continue-on-error: true

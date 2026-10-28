@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Install Godot 4.7.2
         uses: ./.github/actions/setup-godot-linux
       - name: Provision software OpenGL for frame-dependent regressions

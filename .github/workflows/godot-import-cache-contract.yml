@@ -1,0 +1,42 @@
+name: Godot Import Cache Contract
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/ci_godot_png_cache.py'
+      - 'tools/test_ci_godot_png_cache.py'
+      - 'tools/test_interactions.py'
+      - 'tools/test_project.py'
+      - '.github/actions/restore-godot-png-cache/**'
+      - '.github/workflows/godot-import-cache-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/ci_godot_png_cache.py'
+      - 'tools/test_ci_godot_png_cache.py'
+      - 'tools/test_interactions.py'
+      - 'tools/test_project.py'
+      - '.github/actions/restore-godot-png-cache/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: godot-import-contract-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/ci_godot_png_cache.py
+            /tools/test_ci_godot_png_cache.py
+            /tools/test_interactions.py
+            /tools/test_project.py
+            /.github/actions/restore-godot-png-cache/action.yml
+      - name: Audit deterministic shard restore, bounded cache and importer defaults
+        run: python3 tools/test_ci_godot_png_cache.py

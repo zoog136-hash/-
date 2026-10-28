@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Check out integration candidate
         uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore pinned Godot engine cache
         id: engine-cache
         uses: actions/cache/restore@v4

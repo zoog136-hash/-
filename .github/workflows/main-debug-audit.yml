@@ -1,14 +1,8 @@
 name: Main Debug Audit
+# A manual, 4-shard deep diagnostic. The normal PR runtime and real gameplay
+# validation is handled by TWILIGHT Integration Validate.
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/main-debug-audit.yml'
-      - 'tools/test_project*.py'
-      - 'tests/ground_capture*'
-      - 'tests/capture_ground*'
-      - 'tests/l1j_reviewed_shop_test.gd'
 permissions:
   contents: read
 concurrency:
@@ -26,6 +20,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
         uses: actions/cache/restore@v4
         continue-on-error: true
@@ -47,6 +43,7 @@ jobs:
           git rev-parse HEAD | tee debug-results/commit.txt
           python3 tools/check_resource_integrity.py --root . 2>&1 | tee debug-results/resource-integrity.log
           python3 -m compileall -q tools
+          python3 tools/test_ci_godot_png_cache.py
           python3 tools/test_project_runner_test.py 2>&1 | tee debug-results/runner-unit.log
           python3 tools/test_project_plan_test.py 2>&1 | tee debug-results/plan-unit.log
       - name: Install repository-pinned engine and real software renderer

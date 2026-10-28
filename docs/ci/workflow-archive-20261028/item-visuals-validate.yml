@@ -23,9 +23,11 @@ concurrency:
 jobs:
   identity-and-render:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Resource integrity before changes or fixtures
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned engine and software GL

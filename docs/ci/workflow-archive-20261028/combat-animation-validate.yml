@@ -18,6 +18,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Install engine and virtual GL
         run: |
           curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
@@ -45,7 +47,7 @@ jobs:
         # Integration keeps the full suite on these PR bases; other events remain full.
         env:
           TWILIGHT_CI_TESTS: ${{ github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'integration/twilight-complete-20261009') && 'import,bake_navigation,boot,actor_motion_test,animation_catalog_test,animation_presentation_test,animation_restore_test,authored_state_motion_test,boss_presentation_test,combat_hud_test,combat_resolution_equivalence_test,combat_timeline_lifecycle_test,combat_timing_test,combat_vfx_test,eight_direction_animation_test,hit_feedback_render_test,hit_feedback_test,monster_motion_test,native_animation_expansion_test' || '' }}
-        run: python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1500 --logs test-results --only "$TWILIGHT_CI_TESTS"
+        run: python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1800 --logs test-results --only "$TWILIGHT_CI_TESTS"
       - name: Actual combat rendering and live AUTO
         shell: bash
         run: |
