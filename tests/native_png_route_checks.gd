@@ -31,6 +31,17 @@ static func _physical_route(field: NativePngField, from: Vector2, to: Vector2) -
 		previous=point
 	return _foot_segment(field,previous,to)
 
+static func _ready_route(field: NativePngField, from: Vector2, to: Vector2) -> PackedVector2Array:
+	var route: PackedVector2Array=field.path(from,to)
+	if route.is_empty() and field.route_pending:
+		# Mirror bounded runtime frame preparation before asserting connectivity.
+		var slices: int=0
+		while field.precise_routes!=null and not field.precise_routes.ready() and slices<20000:
+			field.prepare_precise_routes_step(256,2000)
+			slices+=1
+		if field.precise_routes!=null and field.precise_routes.ready():route=field.path(from,to)
+	return route
+
 static func portal_service_routes(field: NativePngField, spawn: Vector2, verify: Callable) -> Dictionary:
 	var origins: Array[Vector2]=[]
 	verify.call(_exact_foot(field,spawn),"portal graph starts at the exact body-clear entry")
@@ -91,7 +102,7 @@ static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 	verify.call(world.field_physics.name=="NativePngCollision" and world.field_physics.get_child_count()>4,"actual bounded grid and external canvas physics installed")
 	for raw: Array in field.data.route_checks:
 		var target:=Vector2(raw[0],raw[1])
-		var path: PackedVector2Array=field.path(spawn,target)
+		var path: PackedVector2Array=_ready_route(field,spawn,target)
 		verify.call(field.walkable(target) and not path.is_empty(),"reviewed route remains connected "+str(raw))
 		for i: int in range(1,path.size()):
 			var edge_clear: bool=field.line_clear(path[i-1],path[i])
@@ -104,7 +115,7 @@ static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 	else:
 		for service: Dictionary in field.data.portal+field.data.npc_spawn:
 			var p:=Vector2(service.position[0],service.position[1])
-			verify.call(field.point_clear(p,4) and not field.path(spawn,p).is_empty(),"connected native entrance/NPC "+str(service.id))
+			verify.call(field.point_clear(p,4) and not _ready_route(field,spawn,p).is_empty(),"connected native entrance/NPC "+str(service.id))
 	var rng:=RandomNumberGenerator.new();rng.seed=121084
 	for region: Dictionary in field.data.monster_spawn:
 		verify.call(field.spawn_cells.get(str(region.id),[]).size()>=int(region.max_count),"native encounter capacity "+str(region.id))
@@ -120,7 +131,7 @@ static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 			var a: Vector2=box.get_center()-direction*reach
 			var b: Vector2=box.get_center()+direction*reach
 			if not field.walkable(a) or not field.walkable(b) or not field.point_clear(a,4) or not field.point_clear(b,4) or field.line_clear(a,b): continue
-			var path: PackedVector2Array=field.path(a,b)
+			var path: PackedVector2Array=_ready_route(field,a,b)
 			if path.is_empty(): continue
 			var length: float=0;var previous: Vector2=a
 			for point: Vector2 in path: length+=previous.distance_to(point);previous=point
@@ -146,7 +157,7 @@ static func run(tree: SceneTree,world: TwilightWorld) -> Dictionary:
 						if not field.astar.is_in_boundsv(goal) or field.astar.is_point_solid(goal): continue
 						var b: Vector2=field.cell_to_world(goal)
 						if not field.point_clear(b,4) or field.line_clear(a,b): continue
-						var path: PackedVector2Array=field.path(a,b)
+						var path: PackedVector2Array=_ready_route(field,a,b)
 						if path.is_empty(): continue
 						var length: float=0;var previous: Vector2=a
 						for point: Vector2 in path: length+=previous.distance_to(point);previous=point
