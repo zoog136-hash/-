@@ -5,6 +5,9 @@ const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const DIRECTOR = preload("res://scripts/monsters/boss_director.gd")
 const BOSS_HUD = preload("res://scripts/monsters/boss_hud.gd")
 const MAX_POOL: int = 64
+const IDLE_POOL_TARGET: int = 16
+const MAP_CHANGE_POOL_TARGET: int = 8
+const IDLE_POOL_AGE_MS: int = 30000
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 var world: Node
 var field: PlayableField
@@ -14,6 +17,7 @@ var boss_director: TwilightBossDirector = DIRECTOR.new()
 var wake_clock: float = 0.0
 var generation: int = 0
 var available: Array[TwilightMonster] = []
+var available_since: Dictionary = {}
 var pool_root: Node2D
 var boss_hud: CanvasLayer
 var summons: Array[Dictionary] = []
@@ -30,6 +34,11 @@ func _ready() -> void:
 func configure(controller: Node, value: PlayableField) -> void:
 	_capture_bosses()
 	_clear_summons()
+	var previous_map: String=str(field.data.map_id) if field!=null else ""
+	var next_map: String=str(value.data.map_id) if value!=null else ""
+	if previous_map!=next_map:
+		_trim_pool(MAP_CHANGE_POOL_TARGET,true)
+		preload("res://scripts/animation/animation_catalog.gd").release_region_frames()
 	generation += 1
 	world = controller
 	field = value
@@ -134,6 +143,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	while not available.is_empty():
 		var candidate: Variant = available.pop_back()
 		if not is_instance_valid(candidate) or candidate.is_queued_for_deletion(): continue
+		available_since.erase(candidate.get_instance_id())
 		monster = candidate as TwilightMonster
 		break
 	if monster == null: monster = world.MONSTER_SCENE.instantiate()
@@ -210,10 +220,25 @@ func recycle(monster: TwilightMonster) -> bool:
 	if available.has(monster): return true
 	if available.size()>=MAX_POOL: return false
 	monster.hide()
-	monster.set_physics_process(false)
+	monster.retire_for_pool()
 	monster.reparent(pool_root,false)
 	available.append(monster)
+	available_since[monster.get_instance_id()]=Time.get_ticks_msec()
 	return true
+
+func _trim_pool(target: int, force: bool) -> void:
+	var now: int=Time.get_ticks_msec()
+	for index: int in range(available.size()-1,-1,-1):
+		var monster: TwilightMonster=available[index]
+		if is_instance_valid(monster) and not monster.is_queued_for_deletion():continue
+		if is_instance_valid(monster):available_since.erase(monster.get_instance_id())
+		available.remove_at(index)
+	while available.size()>target:
+		var candidate: TwilightMonster=available[0]
+		if not force and now-int(available_since.get(candidate.get_instance_id(),now))<IDLE_POOL_AGE_MS:break
+		available.pop_front()
+		available_since.erase(candidate.get_instance_id())
+		candidate.queue_free()
 
 func alert_social(source: TwilightMonster) -> void:
 	# Bound pack assistance and reject retired, returning, unsafe or unrelated
@@ -304,7 +329,9 @@ func _process(delta: float) -> void:
 	boss_director.tick(delta)
 	wake_clock -= delta
 	var refresh: bool = wake_clock<=0.
-	if refresh: wake_clock = .4
+	if refresh:
+		wake_clock = .4
+		_trim_pool(IDLE_POOL_TARGET,false)
 	for slot: Dictionary in slots:
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
 		if not is_instance_valid(monster):

@@ -2,12 +2,15 @@ extends Node2D
 ## Same production chunk lifecycle and foot-based Y-sort as RemakeSourceRenderer.
 ## The compiler removes every reviewed foreground cut from the ground exactly.
 var texture_cache: Dictionary
+var texture_usage: Dictionary
 var texture_scale: float = 1.0
 const LAYER_SHADER = preload("res://scripts/maps/png_layer.gdshader")
 const MAP_TEXTURE_QUALITY = preload("res://scripts/maps/mobile_map_texture_quality.gd")
 
 func texture(path: String) -> Texture2D:
-	if texture_cache.has(path): return texture_cache[path]
+	if texture_cache.has(path):
+		texture_usage[path]=Time.get_ticks_usec()
+		return texture_cache[path]
 	var image := Image.new()
 	if image.load(path) != OK: return null
 	var source_size: Vector2i = image.get_size()
@@ -15,7 +18,9 @@ func texture(path: String) -> Texture2D:
 	var value: ImageTexture = ImageTexture.create_from_image(image)
 	# Store the original dimensions for exact UV mapping and foreground offsets.
 	value.set_meta("source_image_size",source_size)
+	value.set_meta("decoded_image_bytes",image.get_data().size())
 	texture_cache[path] = value
+	texture_usage[path]=Time.get_ticks_usec()
 	return value
 
 func build_png(field: OriginalPlayableField, key: Vector2i, pack: RefCounted, region: Dictionary) -> void:
