@@ -1,0 +1,62 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_213/corrections/ownership-delta-v08/NW-attack-source-v01-isolated.png",
+  "source_sha256": "15f729c770222699a4ee4647a8fdcac50cd6dd16ad245b50e72160a7ae6352f6",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-1.png",
+      "anchor": [
+        430.0,
+        751.5
+      ],
+      "scale": 0.237966,
+      "source_body_label": 1,
+      "sha256": "c8fede19312b4adc374b6894d32e2f0289221ed3f259021bf6c9cc7c7bd946fa"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-2.png",
+      "anchor": [
+        1146.0,
+        766.5
+      ],
+      "scale": 0.237966,
+      "source_body_label": 2,
+      "sha256": "085b0f6f93012363e247814d3df9c53eeea22adea09949b2d192212b49faf2f1"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-3.png",
+      "anchor": [
+        629.0,
+        1619.0
+      ],
+      "scale": 0.237966,
+      "source_body_label": 10,
+      "sha256": "079bc7b013aa522de024aafa731eaec82ad48a2a6fb897c90c12633bf261c355"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-4.png",
+      "anchor": [
+        1164.5,
+        1583.0
+      ],
+      "scale": 0.237966,
+      "source_body_label": 8,
+      "sha256": "7726653344b247edd1db4043ba37db2a3a435b44fe61dc423da17126ac8df259"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 671744,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS actual Main candidate: 6/6 poses, authored strike at phase3, no mirrored fallback, foot registration and gameplay state preserved",
+  "production_connected": false,
+  "selection_basis": "Lossless whole connected pose ownership replaces rectangular cells clipping complete axe effects; source unchanged",
+  "native_import": "PASS isolated Godot 4.7.2 import",
+  "quality_status": "PASS_LOCAL_EXTRACTION_AND_BOUNDARY_ONLY",
+  "whole_actor_gate": "HOLD: NW run changes weapon side and orientation across phases; E/NE/SE/SW/W run opposite-leg phases not approved"
+}
