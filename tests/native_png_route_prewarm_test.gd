@@ -4,7 +4,7 @@ const FIELD=preload("res://scripts/maps/native_png_field.gd")
 const GRAPH=preload("res://scripts/maps/native_png_route_graph.gd")
 
 func _field(scale: float=1.0, extra_collision: bool=false, alpha_tag: int=0) -> NativePngField:
-	var collision: Array=[{"shape":"rect","rect":[64,48,16,64]}]
+	var collision: Array=[{"shape":"rect","rect":[31,48,3,64]}]
 	if extra_collision:collision.append({"shape":"circle","center":[112,112],"radius":8})
 	var data: Dictionary={"map_id":"route_fixture","map_name":"Route fixture",
 		"bounds":[0,0,160,160],"spawn_position":[24,24],
@@ -34,8 +34,8 @@ func run() -> void:
 	var cold: AStar2D=GRAPH.new()
 	cold.configure(field)
 	if original.get_point_count()!=cold.get_point_count():failures.append("incremental graph changed physical points")
-	var from:=Vector2(24,24)
-	var to:=Vector2(136,136)
+	var from:=Vector2(24,80)
+	var to:=Vector2(136,80)
 	var route: PackedVector2Array=original.route(from,to)
 	if route.is_empty():failures.append("prepared graph did not find fixture route")
 	var previous: Vector2=from
@@ -45,7 +45,13 @@ func run() -> void:
 	var early: NativePngField=_field()
 	early.prepare_precise_routes_step(1,1000000)
 	var early_route: PackedVector2Array=early.path(from,to)
-	if early_route.is_empty() or not early_route[-1].is_equal_approx(to):failures.append("early route did not reach exact destination")
+	if not early_route.is_empty() or not early.route_pending or early.precise_routes.ready():failures.append("early blocked route did not defer without synchronous completion")
+	var early_slices: int=0
+	while not early.precise_routes.ready() and early_slices<200:
+		early.prepare_precise_routes_step(7,1000000)
+		early_slices+=1
+	early_route=early.path(from,to)
+	if early_route.is_empty() or not early_route[-1].is_equal_approx(to) or early.route_pending:failures.append("deferred route did not reach exact destination")
 	previous=from
 	for point: Vector2 in early_route:
 		if not early.line_clear(previous,point):failures.append("early route crosses a physical wall")
@@ -72,5 +78,5 @@ func run() -> void:
 	returned.park_precise_routes()
 	alpha.prepare_precise_routes_step(1,1000000)
 	if is_same(alpha.precise_routes,original):failures.append("different geometry reused stale graph")
-	print("NATIVE_ROUTE_PREWARM_RESULT ",JSON.stringify({"failures":failures,"batches":batches,"points":original.get_point_count(),"route_points":route.size(),"build_usec":int(original.build_usec),"cold_fallbacks":early.cold_route_fallbacks}))
+	print("NATIVE_ROUTE_PREWARM_RESULT ",JSON.stringify({"failures":failures,"batches":batches,"early_slices":early_slices,"points":original.get_point_count(),"route_points":route.size(),"build_usec":int(original.build_usec),"deferred_requests":early.deferred_route_requests}))
 	quit(0 if failures.is_empty() else 1)

@@ -131,6 +131,7 @@ var auto_target_failed_paths: Dictionary = {}
 var auto_target_next_search_ms: int = 0
 var auto_target_failed_search_actor_count: int = -1
 var auto_target_path_checks: int = 0
+var manual_route_pending_target: Vector2 = Vector2.INF
 var region_id: String = ""
 var return_gate: Node2D = null
 var return_gate_position: Vector2 = Vector2.INF
@@ -408,8 +409,7 @@ func _process(delta: float) -> void:
 		return
 	if stat_hud_refresh_pending:
 		_update_hud()
-	if field_map is NativePngField:
-		(field_map as NativePngField).prepare_precise_routes_step(512,2000)
+	_advance_native_route_preparation()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
 	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
@@ -1305,6 +1305,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		hud.show_message("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
 		return
 	_clear_combat_actions()
+	manual_route_pending_target=Vector2.INF
 	if is_instance_valid(world_interactions):
 		world_interactions.cancel_gesture()
 		world_interactions.clear_selection()
@@ -1569,6 +1570,22 @@ func find_world_path(from_position: Vector2, to_position: Vector2) -> PackedVect
 		result.append(_cell_to_world(cell))
 	return result
 
+func _advance_native_route_preparation() -> void:
+	if not field_map is NativePngField:return
+	var native: NativePngField=field_map as NativePngField
+	var was_ready: bool=native.precise_routes!=null and native.precise_routes.ready()
+	if not native.prepare_precise_routes_step(512,2000):return
+	if not was_ready:auto_target_next_search_ms=0
+	if manual_route_pending_target.is_finite():
+		var deferred_target: Vector2=manual_route_pending_target
+		manual_route_pending_target=Vector2.INF
+		if player.click_path.is_empty() and not player.has_manual_movement():
+			var deferred_path: PackedVector2Array=find_world_path(player.global_position,deferred_target)
+			if not deferred_path.is_empty():player.set_manual_click_path(deferred_path,deferred_target)
+
+func _native_route_pending() -> bool:
+	return field_map is NativePngField and (field_map as NativePngField).route_pending
+
 func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	if field_map is OriginalPlayableField: return field_map.nearest_cell(field_map.cell_to_world(origin))
 	if astar != null and astar.is_in_boundsv(origin) and not astar.is_point_solid(origin):
@@ -1609,6 +1626,7 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
+	manual_route_pending_target=Vector2.INF
 	if field_map != null:
 		for npc: Dictionary in field_map.data["npc_spawn"]:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
@@ -1633,6 +1651,9 @@ func _set_click_destination(target: Vector2) -> void:
 	var path: PackedVector2Array = find_world_path(player.global_position, target)
 	if path.size() > 0:
 		player.set_manual_click_path(path, target)
+	elif _native_route_pending():
+		player.clear_click_path()
+		manual_route_pending_target=target
 
 func _spawn_monsters(count: int) -> void:
 	if monster_db.is_empty():
@@ -2250,7 +2271,8 @@ func _run_auto_hunt() -> void:
 			return
 		auto_target = _nearest_reachable_monster(99999.0)
 		auto_target_failed_search_actor_count = monsters_root.get_child_count()
-		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + AUTO_TARGET_EMPTY_RETRY_MS
+		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
+		if _native_route_pending():auto_stuck_time=0.0
 	if auto_target == null:
 		selected_monster = null
 		player.clear_click_path()
@@ -2284,17 +2306,26 @@ func _run_auto_hunt() -> void:
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
 		if path.is_empty():
+			if _native_route_pending():
+				auto_repath_timer=0.05
+				auto_stuck_time=0.0
+				return
 			if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
 			_remember_auto_target_path_failure(auto_target)
 			auto_target = _nearest_reachable_monster(99999.0)
 			if auto_target == null:
 				auto_target_failed_search_actor_count = monsters_root.get_child_count()
-				auto_target_next_search_ms = Time.get_ticks_msec() + AUTO_TARGET_EMPTY_RETRY_MS
+				auto_target_next_search_ms = Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
+				if _native_route_pending():auto_stuck_time=0.0
 				selected_monster = null
 				player.clear_click_path()
 				return
 			selected_monster = auto_target
 			path = find_world_path(player.global_position, auto_target.global_position)
+			if path.is_empty() and _native_route_pending():
+				auto_repath_timer=0.05
+				auto_stuck_time=0.0
+				return
 		player.set_click_path(path, auto_target.global_position)
 
 func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> PackedVector2Array:
@@ -2400,6 +2431,7 @@ func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false
 		if not find_world_path(origin, monster.global_position).is_empty():
 			auto_target_failed_paths.erase(key)
 			return monster
+		if _native_route_pending():return null
 		_remember_auto_target_path_failure(monster)
 	return null
 
@@ -2878,7 +2910,7 @@ func _select_nearest_target() -> void:
 	# An explicit tap must retry even if AUTO recently cached a failed route.
 	var target: TwilightMonster = _nearest_reachable_monster(600.0, true)
 	if target == null:
-		hud.show_message("선택할 수 있는 몬스터가 없습니다")
+		hud.show_message("경로 준비 중 · 잠시 후 다시 시도하세요" if _native_route_pending() else "선택할 수 있는 몬스터가 없습니다")
 		return
 	_select_monster(target)
 	hud.show_message("대상 선택: %s" % target.monster_name)
@@ -5453,7 +5485,7 @@ func _cast_job_charge_skill(skill: Dictionary) -> bool:
 		return true
 	var path: PackedVector2Array = find_world_path(source, target.global_position)
 	if path.is_empty():
-		hud.show_message("돌진 경로를 찾을 수 없습니다")
+		hud.show_message("돌진 경로 준비 중 · 잠시 후 다시 시도하세요" if _native_route_pending() else "돌진 경로를 찾을 수 없습니다")
 		return false
 	var planned: PackedVector2Array = PackedVector2Array()
 	var previous: Vector2 = source

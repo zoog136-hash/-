@@ -10,7 +10,8 @@ var artwork_scale: float=1.0
 var precise_routes: AStar2D
 var route_graph_key: String=""
 var precise_route_required: bool=false
-var cold_route_fallbacks: int=0
+var route_pending: bool=false
+var deferred_route_requests: int=0
 const ROUTE_FOOT_RADIUS: float=4.0
 
 func final_route_key() -> String:
@@ -30,8 +31,9 @@ func final_route_key() -> String:
 	var context:=HashingContext.new()
 	context.start(HashingContext.HASH_SHA256)
 	context.update(material.to_utf8_buffer())
-	context.update((snapshot.solid_runs as PackedInt32Array).to_byte_array())
-	context.update(reachable)
+	var solid_bytes: PackedByteArray=(snapshot.solid_runs as PackedInt32Array).to_byte_array()
+	if not solid_bytes.is_empty():context.update(solid_bytes)
+	if not reachable.is_empty():context.update(reachable)
 	return context.finish().hex_encode()
 
 func prepare_precise_routes_step(max_cells: int=256,max_usec: int=2000) -> bool:
@@ -41,21 +43,26 @@ func prepare_precise_routes_step(max_cells: int=256,max_usec: int=2000) -> bool:
 		if precise_routes==null:
 			precise_routes=PRECISE_ROUTE_GRAPH.new()
 			precise_routes.begin(self,route_graph_key)
-	return precise_routes.advance(max_cells,max_usec)
+	var complete: bool=precise_routes.advance(max_cells,max_usec)
+	if complete:route_pending=false
+	return complete
 
 func park_precise_routes() -> void:
 	if precise_routes!=null and precise_routes.ready():precise_routes.park_idle()
 	precise_routes=null
 	precise_route_required=false
+	route_pending=false
 
 func route_graph_stats() -> Dictionary:
 	return {"key":route_graph_key,"ready":precise_routes!=null and precise_routes.ready(),
 		"points":precise_routes.get_point_count() if precise_routes!=null else 0,
 		"build_calls":int(precise_routes.build_calls) if precise_routes!=null else 0,
 		"build_usec":int(precise_routes.build_usec) if precise_routes!=null else 0,
-		"cold_fallbacks":cold_route_fallbacks}
+		"pending":route_pending,
+		"deferred_requests":deferred_route_requests}
 
 func path(from: Vector2, to: Vector2) -> PackedVector2Array:
+	route_pending=false
 	if walkable(from) and walkable(to):
 		var start: Vector2i=world_to_cell(from)
 		var finish: Vector2i=world_to_cell(to)
@@ -74,11 +81,12 @@ func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 	# or narrow floor corner. Build exact edge checks only when one is needed.
 	precise_route_required=true
 	if precise_routes==null:prepare_precise_routes_step(1,1000)
-	# Early blocked requests retain the original synchronous correctness path;
-	# ordinary map frames have already prepared the same graph in small slices.
 	if not precise_routes.ready():
-		cold_route_fallbacks+=1
-		while not precise_routes.advance(4096,1000000):pass
+		# The caller must retry after bounded map-frame preparation. An empty
+		# path here is pending, never a proven unreachable destination.
+		route_pending=true
+		deferred_route_requests+=1
+		return PackedVector2Array()
 	return precise_routes.route(from,to)
 
 const FLOOR_BUCKET: int=512
@@ -127,7 +135,8 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	precise_routes=null
 	route_graph_key=""
 	precise_route_required=false
-	cold_route_fallbacks=0
+	route_pending=false
+	deferred_route_requests=0
 	var spec: Dictionary = plan.maps[mid]
 	var faith_map: bool=mid in ["faith_01","faith_02","faith_03","faith_04"]
 	artwork_scale=PNG_SCALE.map_scale(mid)
