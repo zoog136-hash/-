@@ -2,6 +2,8 @@ extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+const SelectionSheet=preload("res://scripts/ui/selection_detail_sheet.gd")
+var selection_sheet: Control
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
 var hud: Node
@@ -142,6 +144,7 @@ func configure(controller: Node) -> void:
 	viewport.add_child(preview_vfx)
 	preview_button = UI.button("이펙트 프리뷰", func() -> void:
 		if selected.is_empty() or not is_visible_in_tree(): return
+		if selection_sheet!=null and hud.workspace.was_scroll_dragged(selection_sheet.scroll):return
 		preview_container.visible = true
 		preview_vfx.clear()
 		preview_vfx.emit_skill(str(selected.id), "cast", Vector2(90,45))
@@ -172,7 +175,9 @@ func configure(controller: Node) -> void:
 		if not world.original_skills.summons.command(orders[index],world.selected_monster): world.hud.show_message("소환수 또는 공격 대상 없음"))
 	summon_controls.add_child(summon_order)
 	summon_controls.add_child(UI.button("소환 해제",func() -> void: hud.get_parent().original_skills.summons.command("dismiss")))
-	body.configure(cards,side_scroll,278)
+	selection_sheet=SelectionSheet.new()
+	var inspector: Control=selection_sheet.bind_skill(self,side_scroll,side)
+	body.configure(cards,inspector,278)
 	body.move_child(body.tabs,body.get_child_count()-1)
 	(body.tabs.get_child(0) as Button).text="스킬 목록"
 	(body.tabs.get_child(1) as Button).text="상세보기"
@@ -249,6 +254,7 @@ func select(index: int) -> void:
 	quick_button.disabled=passive or not owned or not supported
 	use_button.text="패시브 · 자동 적용" if passive else "스킬 사용"
 	clock=0
+	selection_sheet.show_skill()
 
 func _clear_selection() -> void:
 	selected={}
@@ -261,6 +267,7 @@ func _clear_selection() -> void:
 	summon_controls.hide()
 	preview_vfx.clear()
 	preview_container.hide()
+	selection_sheet.show_skill()
 
 func original_field_text(value: String, field: Dictionary) -> String:
 	var display := UI.safe(value)
@@ -302,6 +309,7 @@ func select_original() -> void:
 	quick_button.disabled = passive or not learned
 	quick_button.tooltip_text = use_button.tooltip_text
 	clock = 0
+	selection_sheet.show_skill()
 
 func _process(delta: float) -> void:
 	clock-=delta

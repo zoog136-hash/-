@@ -3,6 +3,8 @@ extends VBoxContainer
 # UI-only shop adapter: all payments go through the original shop signal.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+const SelectionSheet=preload("res://scripts/ui/selection_detail_sheet.gd")
+var selection_sheet: Control
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 static var selected_vendor_id: String = ""
@@ -128,6 +130,8 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	side.add_child(purchase_state)
 	if npc_mode:
 		side.add_child(UI.button("판매 목록",func() -> void: hud.open_item_sell()))
+	selection_sheet=SelectionSheet.new()
+	selection_sheet.bind_shop(self,side)
 	row.configure(listing,side,315)
 	_refresh()
 
@@ -153,6 +157,7 @@ func _refresh() -> void:
 		purchase.disabled = true
 		purchase.text = "상품 선택"
 		purchase_state.text = "검색 조건을 바꾸어 상품을 선택하세요."
+		selection_sheet.clear_shop()
 	else:
 		var index: int = 0
 		for i: int in range(filtered.size()):
@@ -284,6 +289,7 @@ func _refresh_selection() -> void:
 	purchase.tooltip_text = "판매하지 않는 상품입니다" if price <= 0 else ("아데나가 부족합니다" if available < total else ("한 번에 1개만 구매할 수 있습니다" if name == "드래곤의 용옥" and quantity != 1 else "구매 내용을 확인합니다"))
 	purchase_state.text = purchase.tooltip_text if purchase.disabled else "선택한 상품 · 확인 후 구매"
 	purchase_state.add_theme_color_override("font_color",UI.GOLD if purchase.disabled else UI.MUTED)
+	selection_sheet.show_shop(name,info,quantity,price,count,available)
 
 func _buy() -> void:
 	if selected.is_empty() or purchase.disabled: return
