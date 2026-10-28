@@ -23,7 +23,9 @@ func _run() -> void:
 	await process_frame
 
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_catalog", {"변신": {}, "마법인형": {}, "성물": {}})
+	world.call("_invalidate_equipment_static")
 	var original_melee_rate: int = int(world.call("_player_critical_rate", "melee"))
 	var original_ranged_rate: int = int(world.call("_player_critical_rate", "ranged"))
 
@@ -35,11 +37,13 @@ func _run() -> void:
 		"weapon": {"name": "__crit_test_blade__", "atk": 0, "melee_critical_damage": 12, "ranged_critical_damage": 3},
 		"ring1": {"name": "__crit_test_ring__", "atk": 0, "melee_critical_damage": 6}
 	})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_catalog", {
 		"변신": {"name": "__crit_test_transform__", "melee_critical_damage": 4, "ranged_critical_damage": 2},
 		"마법인형": {"name": "__crit_test_doll__", "ranged_critical_damage": 7},
 		"성물": {}
 	})
+	world.call("_invalidate_equipment_static")
 	# 100 * 1.5 + (12 + 6 + 4) = 172. Bonuses are not multiplied by 1.5.
 	_check(int(world.call("_player_critical_damage", 100, "melee")) == 172, "flat melee bonus added after base crit")
 	_check(int(world.call("_player_critical_damage", 100, "ranged")) == 162, "ranged bonus is independent of melee")
@@ -56,12 +60,15 @@ func _run() -> void:
 	_check(int(from_source.get("melee_critical_damage", 0)) == 9, "Inven melee option parsed")
 	_check(int(from_source.get("ranged_critical_damage", 0)) == 5, "Inven ranged option parsed")
 	world.set("equipped_catalog", {"변신": {}, "마법인형": {}, "성물": {}})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_items", {"weapon": from_source})
+	world.call("_invalidate_equipment_static")
 	_check(int(world.call("_player_critical_damage", 100, "melee")) == 159, "source melee option reaches damage")
 	_check(int(world.call("_player_critical_damage", 100, "ranged")) == 155, "source ranged option reaches damage")
 	_check(int(world.call("_player_critical_damage", 101, "melee")) == 161, "round base crit then add flat option")
 
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	_check(int(world.call("_player_critical_damage", 100, "melee")) == 150, "unequip clears critical bonus immediately")
 	world.queue_free()
 	await process_frame
