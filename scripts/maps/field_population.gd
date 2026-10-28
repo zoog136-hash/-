@@ -21,6 +21,10 @@ var available_since: Dictionary = {}
 var pool_root: Node2D
 var boss_hud: CanvasLayer
 var summons: Array[Dictionary] = []
+var pending_initial_spawns: Array[Dictionary] = []
+var pending_spawn_ids: Dictionary = {}
+const INITIAL_SPAWNS_PER_FRAME: int = 3
+const INITIAL_SPAWN_BUDGET_USEC: int = 4000
 
 func _ready() -> void:
 	pool_root = Node2D.new()
@@ -43,6 +47,8 @@ func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
 	field = value
 	slots.clear()
+	pending_initial_spawns.clear()
+	pending_spawn_ids.clear()
 	wake_clock = 0.
 	set_process(field != null)
 	if field == null: return
@@ -52,7 +58,13 @@ func configure(controller: Node, value: PlayableField) -> void:
 		for index: int in range(int(region["max_count"])):
 			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0}
 			slots.append(slot)
-			if _zone_active(region): _spawn_slot(slot)
+			if _zone_active(region):
+				# Boss state is restored immediately. Normal PNG populations fill in
+				# bounded batches while retaining their authored slot and RNG order.
+				if field is NativePngField and str(region.get("mode","normal"))!="boss":
+					pending_initial_spawns.append(slot)
+					pending_spawn_ids[int(slot.slot_id)]=true
+				else:_spawn_slot(slot)
 
 func _zone_active(region: Dictionary) -> bool:
 	# One Escaros PNG includes five former fields (165 slots). Creating every
@@ -327,12 +339,23 @@ func import_state(value: Variant) -> void:
 func _process(delta: float) -> void:
 	if field==null: return
 	boss_director.tick(delta)
+	var spawn_start: int=Time.get_ticks_usec()
+	var initial_count: int=0
+	while not pending_initial_spawns.is_empty() and initial_count<INITIAL_SPAWNS_PER_FRAME:
+		if initial_count>0 and Time.get_ticks_usec()-spawn_start>=INITIAL_SPAWN_BUDGET_USEC:break
+		var pending: Dictionary=pending_initial_spawns.pop_front()
+		pending_spawn_ids.erase(int(pending.slot_id))
+		if _zone_active(pending.region):
+			_spawn_slot(pending)
+			if not is_instance_valid(pending.monster):pending.remaining=2.0
+		initial_count+=1
 	wake_clock -= delta
 	var refresh: bool = wake_clock<=0.
 	if refresh:
 		wake_clock = .4
 		_trim_pool(IDLE_POOL_TARGET,false)
 	for slot: Dictionary in slots:
+		if pending_spawn_ids.has(int(slot.slot_id)):continue
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
 		if not is_instance_valid(monster):
 			slot.remaining = maxf(0.,float(slot.remaining)-delta)

@@ -8,6 +8,8 @@ const FOOTPRINTS = preload("res://scripts/maps/png_manual_footprints.gd")
 var regions: Array[Dictionary] = []
 var root_path: String = ""
 var textures: Dictionary = {}
+var verified_layers: Dictionary = {}
+var validation_decodes: int = 0
 var rejection: String = "NOT_INSTALLED"
 var review_active: bool = false
 var ordinary_active: bool = false
@@ -17,7 +19,7 @@ var ground_sampler: String = "nearest"
 var manual_footprints: RefCounted
 
 func reject(reason: String) -> bool:
-	regions.clear(); textures.clear(); rejection = reason
+	regions.clear(); textures.clear(); verified_layers.clear(); rejection = reason
 	review_active = false; review_spawn = Vector2.INF
 	ordinary_active=false
 	review_layout.clear()
@@ -35,7 +37,7 @@ func configure_ordinary(path: String, field: OriginalPlayableField) -> bool:
 	return _configure(path,field,true)
 
 func _configure(path: String, field: OriginalPlayableField, ordinary: bool) -> bool:
-	regions.clear();textures.clear();review_active = false;review_spawn = Vector2.INF
+	regions.clear();textures.clear();verified_layers.clear();validation_decodes=0;review_active = false;review_spawn = Vector2.INF
 	ordinary_active=false
 	review_layout.clear()
 	manual_footprints = null
@@ -84,9 +86,18 @@ func _configure(path: String, field: OriginalPlayableField, ordinary: bool) -> b
 		for layer: Variant in [row]+row.cuts:
 			if not layer is Dictionary or not OLD_PACK.safe_file(layer.get("file")) or not OLD_PACK.pair(layer.get("image_origin")): return reject("INVALID_LAYER")
 			var file: String = root_path.path_join(layer.file)
-			if not FileAccess.file_exists(file) or FileAccess.get_sha256(file) != layer.get("sha256"): return reject("IMAGE_HASH_MISMATCH")
-			var image := Image.new()
-			if image.load(file) != OK or image.is_empty() or maxi(image.get_width(),image.get_height()) > 2048: return reject("INVALID_IMAGE")
+			var expected_hash: String=str(layer.get("sha256",""))
+			var verified: Dictionary=verified_layers.get(file,{})
+			if verified.is_empty():
+				if not FileAccess.file_exists(file) or FileAccess.get_sha256(file) != expected_hash: return reject("IMAGE_HASH_MISMATCH")
+				var image := Image.new()
+				validation_decodes+=1
+				if image.load(file) != OK or image.is_empty() or maxi(image.get_width(),image.get_height()) > 2048: return reject("INVALID_IMAGE")
+				verified={"sha256":expected_hash,"size":image.get_size()}
+				verified_layers[file]=verified
+			elif str(verified.sha256)!=expected_hash:
+				# A repeated path must not have two conflicting declared identities.
+				return reject("IMAGE_HASH_MISMATCH")
 			if layer != row and not OLD_PACK.pair(layer.get("foot_world")): return reject("INVALID_CUT_FOOT")
 			if layer != row:
 				if not layer.get("id") is String or cut_ids.has(layer.id): return reject("DUPLICATE_CUT")
@@ -97,7 +108,7 @@ func _configure(path: String, field: OriginalPlayableField, ordinary: bool) -> b
 				if layer.has("foot_image"):
 					if not OLD_PACK.pair(layer.foot_image) or (mapping*foot).distance_to(Vector2(layer.foot_image[0],layer.foot_image[1])) > .05: return reject("CUT_FOOT_PROJECTION")
 			if layer == row:
-				var coverage := Rect2(Vector2(layer.image_origin[0],layer.image_origin[1]),image.get_size())
+				var coverage := Rect2(Vector2(layer.image_origin[0],layer.image_origin[1]),verified["size"])
 				for corner: Vector2i in [bounds.position,Vector2i(bounds.end.x,bounds.position.y),bounds.end,Vector2i(bounds.position.x,bounds.end.y)]:
 					if not coverage.grow(.01).has_point(mapping*field.coordinates.grid_to_world(corner.x,corner.y)): return reject("PNG_DOES_NOT_COVER_CHUNK")
 		var record: Dictionary = row.duplicate(true)

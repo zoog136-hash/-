@@ -25,6 +25,15 @@ var stream_build_usec: int = 0
 var built_chunks: int = 0
 var freed_chunks: int = 0
 var rendered_door_states: Dictionary = {}
+var pending_visible_chunks: bool = false
+const MAX_NEW_CHUNKS_PER_FRAME: int = 3
+const CHUNK_BUILD_BUDGET_USEC: int = 4000
+
+func _process(delta: float) -> void:
+	if pending_visible_chunks:
+		refresh_visible()
+	else:
+		super._process(delta)
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field = value
@@ -100,9 +109,16 @@ func refresh_visible() -> void:
 		for x: int in range(lower.x,upper.x+1): keys.append(Vector2i(x,y))
 	keys.sort_custom(func(a: Vector2i,b: Vector2i) -> bool: return (a*CHUNK_SIZE-focus).length_squared()<(b*CHUNK_SIZE-focus).length_squared())
 	var start: int = Time.get_ticks_usec()
+	var built_now: int = 0
+	pending_visible_chunks = false
 	for key: Vector2i in keys.slice(0,MAX_CHUNKS):
 		needed[key] = true
 		if chunks.has(key): continue
+		# Keep map entry responsive. The nearest missing chunks win; remaining
+		# chunks continue on the next frame without changing their final layout.
+		if built_now>=MAX_NEW_CHUNKS_PER_FRAME or (built_now>0 and Time.get_ticks_usec()-start>=CHUNK_BUILD_BUDGET_USEC):
+			pending_visible_chunks=true
+			continue
 		# Source Aden has a separate visual layer. Other maps keep their renderer;
 		# all maps retain the verified collision/navigation stream.
 		var chunk: Node2D
@@ -126,6 +142,7 @@ func refresh_visible() -> void:
 			_append_png_door_boundaries(chunk,key)
 		chunks[key] = chunk
 		built_chunks += 1
+		built_now += 1
 	for key: Vector2i in chunks.keys():
 		if needed.has(key): continue
 		retiring_png_chunks.append(weakref(chunks[key]))
