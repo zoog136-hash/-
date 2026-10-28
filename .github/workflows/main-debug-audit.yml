@@ -1,14 +1,8 @@
 name: Main Debug Audit
+# A manual, 4-shard deep diagnostic. The normal PR runtime and real gameplay
+# validation is handled by TWILIGHT Integration Validate.
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/main-debug-audit.yml'
-      - 'tools/test_project*.py'
-      - 'tests/ground_capture*'
-      - 'tests/capture_ground*'
-      - 'tests/l1j_reviewed_shop_test.gd'
 permissions:
   contents: read
 concurrency:
