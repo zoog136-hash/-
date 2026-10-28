@@ -1,0 +1,68 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/draft001/SE-attack-source-v01.png",
+  "source_sha256": "263f89c6210e69131d1a65f67933fed56967fc7a320be332dc19de223ace0fd6",
+  "proof": {
+    "original_visible_texels": 611450,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r063/SE-attack-1.png",
+      "anchor": [
+        380.5,
+        560.0
+      ],
+      "scale": 0.282776,
+      "sha256": "3065041fc0cd5f7f8ffa0e1b8fc1334f26ed4c454ea9d143929f02d1eccc1605"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r063/SE-attack-2.png",
+      "anchor": [
+        915.0,
+        559.0
+      ],
+      "scale": 0.282776,
+      "sha256": "b96f31ec98ca51ea2bafacbbf2e9adfa2a62d8d365f2f05e0c82e9bd5ec03f3a"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r063/SE-attack-3.png",
+      "anchor": [
+        700,
+        950
+      ],
+      "scale": 0.1375,
+      "standing_equivalent_unit": 800,
+      "sha256": "a7674784667ae6a1e2ca43cdd6ffe68a366f74bb8cbc9a504d55f275aef02597"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r063/SE-attack-4.png",
+      "anchor": [
+        700,
+        950
+      ],
+      "scale": 0.14102564102564102,
+      "standing_equivalent_unit": 780,
+      "sha256": "d47ae6f71fd99375b3a3ddfbec6efaa712c1e14785bcea34e56521937e9e260a"
+    }
+  ],
+  "source_pixels_resampled": false,
+  "normal_original_phases_preserved": [
+    1,
+    2
+  ],
+  "production_connected": false,
+  "quality_status": "PASS_LOCAL_POSE_SEPARATION_AND_BOUNDARY",
+  "selection_basis": "Normal upper source poses retained losslessly. Failed boundary/shared lower effects replaced with separate corrected figures; original source preserved.",
+  "repaired_phases": [
+    3,
+    4
+  ],
+  "whole_actor_gate": "HOLD: E attack correction pending and directional RUN gait approval incomplete",
+  "local_playback": "PASS actual Main candidate 6/6 frames, frame3 strike ownership, registered feet, no mirror and no gameplay changes",
+  "native_import": "PASS isolated Godot 4.7.2 import"
+}
