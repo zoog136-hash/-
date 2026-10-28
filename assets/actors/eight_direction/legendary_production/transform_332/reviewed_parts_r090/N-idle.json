@@ -1,0 +1,120 @@
+{
+  "actor": "transform:332",
+  "direction": "N",
+  "role": "idle",
+  "poses": [
+    {
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        308.5,
+        498
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    },
+    {
+      "phase": 1,
+      "region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        245.25,
+        498
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    },
+    {
+      "phase": 2,
+      "region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        217.0,
+        498
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    },
+    {
+      "phase": 3,
+      "region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        307.5,
+        485
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    },
+    {
+      "phase": 4,
+      "region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        245.25,
+        485
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    },
+    {
+      "phase": 5,
+      "region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        219.0,
+        485
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    }
+  ],
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+  "source_sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed",
+  "proof": {
+    "grid_cells": 6,
+    "disjoint_source_pixels": 1572864,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "production_connected": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "selection_basis": "Separate correction of confirmed inconsistent N hand ownership / duplicate staff. Same canonical right-hand grip as existing N RUN first half and S master. Original files retained; source frame order and timing preserved.",
+  "registration_basis": "Projected ground between the two planted lowest soles; faint glow and low cape pixels excluded from measurement. Constant source scale.",
+  "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
+  "local_visual_review": "PASS canonical right hand, stable N idle; actual same-Player N-IDLE/RUN transition",
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures"
+}

@@ -1,0 +1,63 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_339/corrections/isolation-v18/E-attack-source-v01-isolated.png",
+  "source_sha256": "252e42cff84828747e180c92ddfc0302b27ae8c31a7963a974f5384271dbdf84",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r091/E-attack-1.png",
+      "anchor": [
+        308.0,
+        633.0
+      ],
+      "scale": 0.231092,
+      "source_body_label": 1,
+      "sha256": "f7441b6953c0a9f0ee76c82617bf1d7bb13b632c75307efb1b3013bd5ee23876"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r091/E-attack-2.png",
+      "anchor": [
+        1439.0,
+        635.0
+      ],
+      "scale": 0.231092,
+      "source_body_label": 5,
+      "sha256": "425311b6c5645b0656e1d1b6008b1b1a109182630886623fd3affec2d38cd61c"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r091/E-attack-3.png",
+      "anchor": [
+        218.0,
+        1332.0
+      ],
+      "scale": 0.231092,
+      "source_body_label": 60,
+      "sha256": "25879114247b610bf8121b034ccd717651dba1e06771c013a96e7871b1851451"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r091/E-attack-4.png",
+      "anchor": [
+        1291.5,
+        1356.0
+      ],
+      "scale": 0.231092,
+      "source_body_label": 67,
+      "sha256": "c159f2c7a2f6080d06b1097fbee473ebbd794ba976dcc459bf3ee68412efae5c"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 898817,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "selection_basis": "Complete original connected figures/effects retained without resampling or manual pixel deletion; same frame anchors, scales, order and timing.",
+  "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
+  "local_visual_review": "PASS whole connected original poses/effects, actual E strike marker, no neighboring body/clip contamination",
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures"
+}
