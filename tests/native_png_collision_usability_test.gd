@@ -1,4 +1,5 @@
 extends SceneTree
+## PR #190 integration gate: preserve PR #185 safe-foot navigation alongside bounded async route preparation.
 ## Regression: accessible click targets respect the real foot and do not edit
 ## the authoritative navigation/collision raster on PNG maps.
 const FIELD=preload("res://scripts/maps/native_png_field.gd")
