@@ -1,6 +1,7 @@
 extends ScrollContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const StatusSheet=preload("res://scripts/ui/status_detail_sheet.gd")
 const GROUPS = {
 	"공격": [["melee_damage","근거리 대미지"],["melee_accuracy","근거리 명중"],["ranged_damage","원거리 대미지"],["ranged_accuracy","원거리 명중"],["weapon_small_damage","무기 소형 최대 대미지"],["weapon_large_damage","무기 대형 최대 대미지"],["magic_damage","마법 대미지"],["magic_accuracy","마법 명중"],["melee_critical","근거리 치명타"],["ranged_critical","원거리 치명타"],["magic_critical","마법 치명타"]],
 	"방어": [["ac","물리 방어력 (AC)"],["mr","마법 방어력 (MR)"],["dg","근거리 회피 (DG)"],["er","원거리 회피 (ER)"],["damage_reduction","대미지 리덕션"],["critical_resistance","치명타 저항"]],
@@ -12,9 +13,7 @@ var values: Dictionary = {}
 func configure(state: Dictionary) -> void:
 	name = "DetailedStatus"
 	horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	var columns := HBoxContainer.new()
-	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_child(columns)
+	var columns: HBoxContainer=StatusSheet.build(self,state)
 	# The status sheet lives in its own window, rather than the main workspace.
 	# Reuse that window's native finger capture for this read-only table.
 	var window: Node=get_parent()
@@ -23,34 +22,6 @@ func configure(state: Dictionary) -> void:
 			window.register_scroll_drag(self,columns)
 			break
 		window=window.get_parent()
-	var stacks: Array[VBoxContainer] = []
-	for i: int in range(2):
-		var stack := VBoxContainer.new()
-		stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		columns.add_child(stack)
-		stacks.append(stack)
-	var index: int = 0
-	for group: String in GROUPS:
-		var stack: VBoxContainer = stacks[index%2]
-		index += 1
-		stack.add_child(UI.section(group,15))
-		stack.add_child(HSeparator.new())
-		for spec: Array in GROUPS[group]:
-			# Unknown or intentionally unsupported statistics never become fake zeros.
-			if not state.has(spec[0]): continue
-			var row := HBoxContainer.new()
-			row.custom_minimum_size.y = 24
-			stack.add_child(row)
-			var label := UI.label(str(spec[1]),12)
-			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			row.add_child(label)
-			var value := UI.label("",13,UI.GOLD)
-			value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-			value.custom_minimum_size.x = 38
-			row.add_child(value)
-			values[str(spec[0])] = value
-	resized.connect(func() -> void:
-		columns.add_theme_constant_override("separation",20 if size.x > 900 else 10))
 	refresh(state)
 
 func refresh(state: Dictionary) -> void:
