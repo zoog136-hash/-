@@ -35,6 +35,18 @@ var catalog_data: Dictionary = {}
 var item_image_index: Dictionary = {}
 var character_state: Dictionary = {}
 var state_item_fingerprint: int = -1
+var legacy_scroll: ScrollContainer
+var legacy_stack: VBoxContainer
+var legacy_top_space: Control
+var legacy_bottom_space: Control
+var legacy_rows: Array[Dictionary] = []
+var legacy_slots: Array[Button] = []
+var legacy_empty: Label
+var legacy_slot_nodes_created: int = 0
+var legacy_bind_updates: int = 0
+var legacy_window_refreshing: bool = false
+const LEGACY_SLOT_PITCH: float = 93.0
+const LEGACY_OVERSCAN_ROWS: int = 2
 var selected_item: String = ""
 var category_filter: String = "전체"
 var max_slots: int = 104
@@ -328,55 +340,116 @@ func _inventory_entries() -> Array[Dictionary]:
 	return entries
 
 func _refresh_inventory_grid() -> void:
-	if item_grid == null:
-		return
-	_clear(item_grid)
-	slot_buttons.clear()
-	var visible_count: int = 0
+	if item_grid == null:return
+	_prepare_legacy_window()
+	var old_scroll: int=legacy_scroll.scroll_vertical
+	legacy_rows.clear()
 	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
-	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
 	var entries: Array[Dictionary] = _inventory_entries()
 	for entry: Dictionary in entries:
 		var item_name: String = str(entry["name"])
 		var reference: String = str(entry["reference"])
-		var amount: int = int(entry["amount"])
 		var record: Dictionary = _find_item_record(reference)
 		var shown_name: String = _display_item_name(record, reference)
 		if not _matches_category(record, item_name) or (search != "" and shown_name.to_lower().find(search) < 0):
 			continue
-		visible_count += 1
-		var button: Button = Button.new()
-		button.custom_minimum_size = Vector2(96, 88)
-		var grade: String = str(record.get("grade", "일반"))
-		var equipped: bool = _is_item_equipped(reference)
-		var equip_mark: String = "E " if equipped else ""
-		var level: int = _enhance_level(reference)
-		var level_mark: String = "+%d " % level if level > 0 else ""
-		var badges: String = _status_badges(record, reference)
-		var badge_mark: String = badges + " " if badges != "" else ""
-		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(shown_name), amount]
-		button.tooltip_text = "%s%s%s" % [_enhanced_display_name(record, reference), " · 장착 중" if equipped else "", _status_tooltip(record, reference)]
-		button.add_theme_font_size_override("font_size", 11)
-		button.add_theme_color_override("font_color", TEXT)
-		button.add_theme_color_override("font_hover_color", Color.WHITE)
-		button.add_theme_stylebox_override("normal", _slot_style_for_grade(grade, reference == selected_item))
-		button.add_theme_stylebox_override("hover", _slot_hover_style(grade))
-		button.add_theme_stylebox_override("pressed", _slot_pressed_style(grade))
-		button.icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(record,item_name,images)
-		button.expand_icon = true
-		button.add_theme_constant_override("icon_max_width", 42)
-		button.pressed.connect(_select_item.bind(reference))
-		button.mouse_filter = Control.MOUSE_FILTER_PASS
-		item_grid.add_child(button)
-		slot_buttons[reference] = button
-	var occupied: int = entries.size()
-	capacity_label.text = "%d / %d" % [occupied, max_slots]
-	if visible_count == 0:
-		var empty: Label = _label("표시할 아이템이 없습니다.", 14, TEXT_DIM)
-		empty.custom_minimum_size = Vector2(350, 80)
-		empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		empty.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		item_grid.add_child(empty)
+		legacy_rows.append({"reference":reference,"name":item_name,"record":record,"shown_name":shown_name,"amount":int(entry["amount"])})
+	capacity_label.text = "%d / %d" % [entries.size(), max_slots]
+	_refresh_legacy_visible_window()
+	legacy_scroll.scroll_vertical=old_scroll
+	_refresh_legacy_visible_window()
+
+func _prepare_legacy_window() -> void:
+	if legacy_stack!=null:return
+	legacy_scroll=item_grid.get_parent() as ScrollContainer
+	legacy_stack=VBoxContainer.new()
+	legacy_stack.add_theme_constant_override("separation",0)
+	legacy_scroll.add_child(legacy_stack)
+	item_grid.reparent(legacy_stack)
+	legacy_top_space=Control.new()
+	legacy_top_space.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	legacy_stack.add_child(legacy_top_space)
+	legacy_stack.move_child(legacy_top_space,0)
+	legacy_bottom_space=Control.new()
+	legacy_bottom_space.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	legacy_stack.add_child(legacy_bottom_space)
+	legacy_scroll.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void:_refresh_legacy_visible_window())
+	legacy_scroll.resized.connect(_refresh_legacy_visible_window)
+	legacy_empty=_label("표시할 아이템이 없습니다.",14,TEXT_DIM)
+	legacy_empty.custom_minimum_size=Vector2(350,80)
+	legacy_empty.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	legacy_empty.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+
+func _new_legacy_slot() -> Button:
+	var button:=Button.new()
+	button.custom_minimum_size=Vector2(96,88)
+	button.add_theme_font_size_override("font_size",11)
+	button.add_theme_color_override("font_color",TEXT)
+	button.add_theme_color_override("font_hover_color",Color.WHITE)
+	button.expand_icon=true
+	button.add_theme_constant_override("icon_max_width",42)
+	button.mouse_filter=Control.MOUSE_FILTER_PASS
+	button.pressed.connect(func() -> void:_select_item(str(button.get_meta("reference",""))))
+	legacy_slot_nodes_created+=1
+	return button
+
+func _bind_legacy_slot(button: Button, entry: Dictionary) -> void:
+	var reference: String=str(entry.reference)
+	var record: Dictionary=entry.record
+	var grade: String=str(record.get("grade","일반"))
+	var equipped: bool=_is_item_equipped(reference)
+	var level: int=_enhance_level(reference)
+	var badges: String=_status_badges(record,reference)
+	var locked: bool=bool(character_state.get("item_locks",{}).get(reference,false))
+	var signature: int=hash([reference,record,int(entry.amount),level,equipped,badges,locked,reference==selected_item])
+	if int(button.get_meta("signature",-1))==signature:return
+	button.set_meta("reference",reference)
+	button.set_meta("signature",signature)
+	legacy_bind_updates+=1
+	button.text="%s%s%s%s\nx%d" % ["E " if equipped else "","+%d " % level if level>0 else "",badges+" " if badges!="" else "",_short_name(str(entry.shown_name)),int(entry.amount)]
+	button.tooltip_text="%s%s%s" % [_enhanced_display_name(record,reference)," · 장착 중" if equipped else "",_status_tooltip(record,reference)]
+	button.add_theme_stylebox_override("normal",_slot_style_for_grade(grade,reference==selected_item))
+	button.add_theme_stylebox_override("hover",_slot_hover_style(grade))
+	button.add_theme_stylebox_override("pressed",_slot_pressed_style(grade))
+	button.icon=preload("res://scripts/ui/item_visual_resolver.gd").texture(record,str(entry.name),item_image_index.get("아이템",{}) as Dictionary)
+
+func _refresh_legacy_visible_window() -> void:
+	if legacy_stack==null or legacy_window_refreshing:return
+	legacy_window_refreshing=true
+	for index: int in range(legacy_slots.size()-1,-1,-1):
+		if not is_instance_valid(legacy_slots[index]):legacy_slots.remove_at(index)
+	var columns: int=maxi(1,item_grid.columns)
+	var total_rows: int=ceili(float(legacy_rows.size())/float(columns))
+	var first_row: int=clampi(int(floor(float(legacy_scroll.scroll_vertical)/LEGACY_SLOT_PITCH))-LEGACY_OVERSCAN_ROWS,0,maxi(0,total_rows-1))
+	var window_rows: int=maxi(1,ceili(maxf(1.0,legacy_scroll.size.y)/LEGACY_SLOT_PITCH)+2*LEGACY_OVERSCAN_ROWS)
+	var last_row: int=mini(total_rows,first_row+window_rows)
+	legacy_top_space.custom_minimum_size.y=float(first_row)*LEGACY_SLOT_PITCH
+	legacy_bottom_space.custom_minimum_size.y=float(total_rows-last_row)*LEGACY_SLOT_PITCH
+	var start: int=first_row*columns
+	var end: int=mini(legacy_rows.size(),last_row*columns)
+	while legacy_slots.size()<end-start:legacy_slots.append(_new_legacy_slot())
+	slot_buttons.clear()
+	for index: int in range(start,end):
+		var button: Button=legacy_slots[index-start]
+		var entry: Dictionary=legacy_rows[index]
+		_bind_legacy_slot(button,entry)
+		slot_buttons[str(entry.reference)]=button
+		if button.get_parent()!=item_grid:
+			if button.get_parent()!=null:button.get_parent().remove_child(button)
+			item_grid.add_child(button)
+		item_grid.move_child(button,index-start)
+	for index: int in range(end-start,legacy_slots.size()):
+		var button: Button=legacy_slots[index]
+		if button.get_parent()==item_grid:item_grid.remove_child(button)
+	if legacy_rows.is_empty():
+		if legacy_empty.get_parent()!=item_grid:item_grid.add_child(legacy_empty)
+	elif legacy_empty.get_parent()==item_grid:item_grid.remove_child(legacy_empty)
+	legacy_window_refreshing=false
+
+func _exit_tree() -> void:
+	for button: Button in legacy_slots:
+		if is_instance_valid(button) and button.get_parent()==null:button.free()
+	if is_instance_valid(legacy_empty) and legacy_empty.get_parent()==null:legacy_empty.free()
 
 func _enhancement_copy_labels(item_name: String) -> PackedStringArray:
 	var labels: PackedStringArray = PackedStringArray()
@@ -490,11 +563,16 @@ func _short_name(item_name: String) -> String:
 	return item_name.left(7) + "…"
 
 func _select_item(item_name: String) -> void:
+	var previous: String=selected_item
 	selected_item = item_name
-	for key: Variant in slot_buttons.keys():
-		var button := slot_buttons[key] as Button
-		var record := _find_item_record(str(key))
-		button.add_theme_stylebox_override("normal", _slot_style_for_grade(str(record.get("grade", "일반")), str(key) == selected_item))
+	if previous==item_name:
+		_refresh_detail(item_name)
+		return
+	for reference: String in [previous,item_name]:
+		if not slot_buttons.has(reference):continue
+		var button: Button=slot_buttons[reference] as Button
+		var record: Dictionary=_find_item_record(reference)
+		button.add_theme_stylebox_override("normal",_slot_style_for_grade(str(record.get("grade","일반")),reference==selected_item))
 	_refresh_detail(item_name)
 
 func _find_item_record(item_name: String) -> Dictionary:

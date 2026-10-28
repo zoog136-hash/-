@@ -17,12 +17,13 @@ func run() -> void:
 	bag.show_inventory()
 	var first: Button = bag.slot_buttons.get("검")
 	if first == null:failures.append("initial item missing")
+	var first_bind_count: int=bag.legacy_bind_updates
 	bag.set_character_state({"gold":100,"hp":5,"experience":30,"item_instances":{}})
-	if not is_same(first,bag.slot_buttons.get("검")):failures.append("vitals rebuilt legacy item grid")
+	if not is_same(first,bag.slot_buttons.get("검")) or bag.legacy_bind_updates!=first_bind_count:failures.append("vitals rebuilt legacy item grid")
 	bag.set_inventory({"검":1})
 	if not is_same(first,bag.slot_buttons.get("검")):failures.append("identical inventory rebuilt legacy grid")
 	bag.set_character_state({"gold":100,"item_instances":{},"item_locks":{"검":true}})
-	if is_same(first,bag.slot_buttons.get("검")):failures.append("item lock revision did not refresh grid")
+	if not is_same(first,bag.slot_buttons.get("검")) or bag.legacy_bind_updates<=first_bind_count:failures.append("item lock revision did not rebind pooled slot")
 	print("LINEAGE_INVENTORY_STATE_CACHE_RESULT ",JSON.stringify({"failures":failures}))
 	host.queue_free()
 	await process_frame
