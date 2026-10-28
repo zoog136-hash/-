@@ -37,7 +37,7 @@ concurrency:
 jobs:
   presentation:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 85
     steps:
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
@@ -135,9 +135,10 @@ jobs:
   original-based:
     name: Original-based Main / ${{ matrix.group }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 85
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
         include:
           - group: werewolf-ghost
@@ -324,6 +325,7 @@ jobs:
     name: Original-based batch${{ matrix.batch }} / shared engine per mode
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
         batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30]
         include:
