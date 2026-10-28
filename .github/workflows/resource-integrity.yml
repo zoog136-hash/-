@@ -39,6 +39,15 @@ jobs:
             /tools/check_resource_integrity.py
             /tools/skills/verify_styled_skill_icons.py
             /tests/test_resource_integrity.py
+      - name: Confirm all source families are materialized by sparse checkout
+        run: |
+          test -f data/visuals/runtime_manifest.json
+          test -f data/resource_delivery_ledger.json
+          test -f data/skills/styled_icon_provenance.json
+          test -d assets/catalog_motion
+          test -d assets/catalog
+          test -d assets/directional
+          test -d assets/skills/styled_icons
       - name: Check all 723 real atlases and distinguish unshipped original packs
         run: python3 tools/check_resource_integrity.py --root .
       - name: Verify all licensed skill images and source attribution
