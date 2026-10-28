@@ -1,0 +1,105 @@
+{
+  "actor": "transform:339",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_177/repaired_source_r104/E-attack-source.png",
+  "source_sha256": "c1aeecba5545a3cd85c4c8da12732f9f3d3a72133e06c56a8b54bbabdf9e6925",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/E-attack-source-v01.png",
+  "original_source_sha256": "8f81966cba251cbbfc15f05e4a5360b301726b311430d205b387006f310d74ad",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_177/reviewed_parts_r104/E-attack-3.png",
+      "anchor": [
+        345,
+        1210
+      ],
+      "scale": 0.23,
+      "sha256": "ba8a7669993997aec3ac0397343c491307e6a703f0130ef4d64e0f59dece88be"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_177/reviewed_parts_r104/E-attack-4.png",
+      "anchor": [
+        975,
+        1210
+      ],
+      "scale": 0.23,
+      "sha256": "9b4131e132e0ebf694a45db948a0d7e67fb7b12e964d4e4325f015444443a2f5"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 667109,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_S_RUN_HAND_QUIVER_AND_NW_RUN_CAMERA_RECIPROCAL_PHASES",
+  "registration_basis": "Same body scale per source; projected pelvis X and contact sole ground Y reviewed per source action pose; guards reuse unchanged original IDLE0",
+  "replacement_basis": "Separate repair of confirmed E release plume joined to adjacent recovery pose; one LEFT-hand bow and RIGHT drawing hand retained, complete finite eastward arrow release.; original normal preparation/wind-up phases1/2 restored exactly via original Atlas regions, original registrations and timing; only failed phases3/4 selected from repairs",
+  "unchanged_original_source_phases": [
+    1,
+    2
+  ],
+  "unselected_generated_source_phases": [
+    1,
+    2
+  ],
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/E-attack-source-v01.png",
+      "sha256": "8f81966cba251cbbfc15f05e4a5360b301726b311430d205b387006f310d74ad",
+      "bytes": 1838228
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/E-idle-source-v01.png",
+      "sha256": "ab61bc017d05fa63e66078d107be17c70804e5157be114276ddf055ddee409ba",
+      "bytes": 2232509
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_177/reviewed_parts_r104/E-attack-3.png",
+      "sha256": "ba8a7669993997aec3ac0397343c491307e6a703f0130ef4d64e0f59dece88be",
+      "bytes": 452566
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_177/reviewed_parts_r104/E-attack-4.png",
+      "sha256": "9b4131e132e0ebf694a45db948a0d7e67fb7b12e964d4e4325f015444443a2f5",
+      "bytes": 405825
+    }
+  ],
+  "native_import": "PASS: this clip 6 AtlasTexture frames backed by real imported CompressedTexture2D under Godot4.7.2; default binding remains disabled",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: changed clip all6 poses in actual Main candidate path, projected foot anchor, marker3, directions and gameplay/collision invariant; 177E/244W normal phases1/2 are original source Atlas geometry and registration",
+  "remaining_actor_failures": [
+    {
+      "animation": "run_2",
+      "status": "HOLD",
+      "phases": [
+        3,
+        4,
+        5
+      ],
+      "reason": "Original late-half swaps bow/quiver body sides; two repair variants retained correct equipment but repeated original first-half legs.",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/draft001/S-run-source-v01.png",
+      "source_sha256": "b3f72c0fcc5b021fc724a4a1fe7d431cbf83ca9706ad2001b2b30ac50b82ecd8",
+      "source_bytes": 2213555,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    },
+    {
+      "animation": "run_5",
+      "status": "HOLD",
+      "phases": [
+        3,
+        4,
+        5
+      ],
+      "reason": "Original late-half changes rear-left NW camera into NE. Two camera-repaired variants repeated first-half lead foot; unselected, no same approach repeated.",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_177/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "ffdaa3adf998d94588c5b4acc5e5d568ca29d185bd1297d100b1fb5a57a7a7a0",
+      "source_bytes": 2196171,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    }
+  ]
+}
