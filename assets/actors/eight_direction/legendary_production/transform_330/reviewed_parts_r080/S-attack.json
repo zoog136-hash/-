@@ -1,0 +1,104 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/draft001/S-attack-source-v01.png",
+  "source_sha256": "533d9a9a7ddd9db457e44268b107e15354352119647cdf489bea75581fed1db4",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r080/S-attack-0.png",
+      "anchor": [
+        349.0,
+        486.0
+      ],
+      "scale": 0.351719,
+      "source_body_label": 9,
+      "sha256": "5424739be7abb60bdc37ab862b9cebb7218a795c6fa18ee037217f6bcb116945"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r080/S-attack-1.png",
+      "anchor": [
+        830.5,
+        473.67
+      ],
+      "scale": 0.351719,
+      "source_body_label": 2,
+      "sha256": "89864df9bf66f7aa60fbbe5fd6dd805e88c08c1160bc1826e05c37f242619bf7"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r080/S-attack-2.png",
+      "anchor": [
+        1355.75,
+        487.5
+      ],
+      "scale": 0.351719,
+      "source_body_label": 1,
+      "sha256": "8c662557045f8c796a87253754218e864cd8b14f3e309fd0ab1d42a58924a12e"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r080/S-attack-3.png",
+      "anchor": [
+        290.0,
+        994.0
+      ],
+      "scale": 0.351719,
+      "source_body_label": 35,
+      "sha256": "a4fb932550d0fa7e16e563db99fa323405fe979c1407f70a6602aa849a89f3d5"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r080/S-attack-4.png",
+      "anchor": [
+        862.0,
+        927.0
+      ],
+      "scale": 0.351719,
+      "source_body_label": 40,
+      "sha256": "d0484c67e790c140242879948fe74dc99d123db92da56576ce08acf6d82c1c24"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r080/S-attack-5.png",
+      "anchor": [
+        1365.0,
+        935.5
+      ],
+      "scale": 0.351719,
+      "source_body_label": 44,
+      "sha256": "76f4e5c08880c0779ac056519c3e77ff91bd02f7b6e74bc7ff584bcd8cf4aba8"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 653920,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS: catalog-selected actual Main, no candidate injection; every required direction and pose; authoritative attack markers and death terminal hold preserved",
+  "production_connected": true,
+  "selection_basis": "All 6 original poses retained without resampling; complete connected source ownership replaces rectangle clipping between phases4/5.",
+  "reviewed_fragment_exception": {
+    "component": 11,
+    "foreground_pixels": 2271,
+    "bounds": [
+      538,
+      590,
+      741,
+      664
+    ],
+    "owner": 4,
+    "basis": "Visually follows upper-left red crescent of phase4 recovery, separate from phase3 ground impact; entire component retained, no pixel deletion or splitting."
+  },
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "whole_actor_gate": "PASS_LOCAL_DEFAULT_33_TRACKS_198_POSES",
+  "native_import": "PASS: exact full r008 33 clips /198 frames",
+  "quality_status": "PASS_VISUAL_SOURCE_BOUNDARY_REPAIR_AND_DEFAULT_MAIN"
+}
