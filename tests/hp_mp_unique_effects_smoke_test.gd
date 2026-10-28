@@ -28,7 +28,9 @@ func _run() -> void:
 	victim.setup({"name":"HP 흡수 검증 몬스터", "lv":1, "hp":10000, "atk":1, "is_boss":false}, player, world, null)
 	victim.global_position = player.global_position + Vector2(30, 0)
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{}, "성물":{}})
+	world.call("_invalidate_equipment_static")
 
 	world.set("hp", 300)
 	var previous_monster_hp: int = victim.hp
@@ -38,6 +40,7 @@ func _run() -> void:
 	_check(not bool(world.call("_has_hp_absorption")), "absorption must be inactive without an equipped effect")
 
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{}, "성물":{"name":"타로스의 창"}})
+	world.call("_invalidate_equipment_static")
 	_check(bool(world.call("_has_hp_absorption")), "Taros Spear should enable absorption")
 	var record: Dictionary = world.call("_verified_catalog_record", "성물", {"name":"타로스의 창"})
 	_check(bool(record.get("hpAbsorption", false)), "verified Taros Spear must carry HP absorption metadata")
@@ -57,6 +60,7 @@ func _run() -> void:
 	world.call("_deal_successful_player_hit", victim, 10, false)
 	_check(int(world.get("hp")) == full_hp_before, "HP absorption may not exceed effective maximum")
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{}, "성물":{}})
+	world.call("_invalidate_equipment_static")
 	world.set("hp", 250)
 	previous_monster_hp = victim.hp
 	world.call("_deal_successful_player_hit", victim, 10, false)
@@ -69,6 +73,7 @@ func _run() -> void:
 	_check(float(world.get("hp_recovery_elapsed")) == 0.0 and float(world.get("mp_recovery_elapsed")) == 0.0, "no source must reset timers")
 
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{"name":"서큐버스퀸"}, "성물":{}})
+	world.call("_invalidate_equipment_static")
 	_check(bool(world.call("_has_recovery_effect", "mpRecoveryTick")), "Succubus Queen MP tick should be recognized")
 	world.call("_tick_catalog_recovery", 29.5)
 	_check(int(world.get("mp")) == 100, "MP must not recover before the 30-second boundary")
@@ -78,10 +83,12 @@ func _run() -> void:
 	world.call("_tick_catalog_recovery", 60.0)
 	_check(int(world.get("mp")) == 115, "two additional MP ticks must restore 10")
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{}, "성물":{}})
+	world.call("_invalidate_equipment_static")
 	world.call("_tick_catalog_recovery", 1.0)
 	_check(float(world.get("mp_recovery_elapsed")) == 0.0, "unequipping MP source must clear pending tick")
 
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{}, "성물":{"name":"타로스의 창"}})
+	world.call("_invalidate_equipment_static")
 	world.set("hp", 100)
 	world.set("mp", 100)
 	world.set("hp_recovery_elapsed", 0.0)
@@ -91,6 +98,7 @@ func _run() -> void:
 	_check(not bool(world.call("_has_recovery_effect", "mpRecoveryTick")), "Taros alone must not enable MP tick")
 
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{"name":"서큐버스퀸"}, "성물":{"name":"타로스의 창"}})
+	world.call("_invalidate_equipment_static")
 	world.set("hp", 100)
 	world.set("mp", 100)
 	world.set("hp_recovery_elapsed", 0.0)
