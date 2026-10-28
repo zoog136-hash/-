@@ -210,8 +210,7 @@ func _draw() -> void:
 	var tint: Color = GOLD
 	if revealed and result != "success":
 		tint = Color("f26943") if result == "destroy" else Color("9a88b7")
-	var pulse: float = 0.6+charge*0.4 if not revealed else exp(-age*2.4)
-	var motion: float = 0.0 if reduced_motion else 1.0
+		var motion: float = 0.0 if reduced_motion else 1.0
 	# Draw the warm fan BEHIND the item, not as thin rotating circles.
 	if not revealed:
 		_golden_charge(charge,amount)
@@ -284,7 +283,7 @@ func _golden_charge(charge: float, amount: float) -> void:
 		var far: Vector2 = CENTER+direction*reach
 		var left: Vector2 = CENTER+direction*59.0-perpendicular*4.0
 		var right: Vector2 = CENTER+direction*59.0+perpendicular*4.0
-		draw_colored_polygon(PackedVector2Array([left,far-perpendicular*13.0,right,far+perpendicular*13.0]),Color(AMBER,strength*0.27))
+		draw_colored_polygon(PackedVector2Array([left,far-perpendicular*13.0,far+perpendicular*13.0,right]),Color(AMBER,strength*0.27))
 	_glow(CENTER,135.0,HOT_GOLD,strength*0.40)
 
 
@@ -306,7 +305,7 @@ func _golden_burst(age: float, tier: float, amount: float) -> void:
 		# Wide translucent beam, then a narrower, brighter inner shaft.
 		draw_colored_polygon(PackedVector2Array([
 			root-side*11.0,tip-side*half_width,tip+side*half_width,root+side*11.0
-		]),Color(AMBER,clampf((0.20+0.08*float(i%4==0))*burst_fade*amount,0.0,1.0)))
+		]),Color(AMBER,clampf((0.28 if i%4 == 0 else 0.20)*burst_fade*amount,0.0,1.0)))
 		if i%2 == 0:
 			draw_colored_polygon(PackedVector2Array([
 				root-side*3.0,tip-side*half_width*0.25,tip+side*half_width*0.25,root+side*3.0
@@ -339,7 +338,7 @@ func _success(age: float, tier: float, amount: float) -> void:
 		_glow(CENTER,53.0,HOT_GOLD,0.28*(1.0-age/0.35)*amount)
 	if age < 1.0 and not reduced_motion:
 		var sweep: float = lerpf(-64.0,64.0,clampf(age/1.0,0.0,1.0))
-		_stroke(CENTER+Vector2(sweep-12.0,-62.0),CENTER+Vector2(sweep+12.0,62.0),HOT_GOLD,sinf(age*PI)*0.75*amount,3.0)
+		_stroke(CENTER+Vector2(sweep-12.0,-62.0),CENTER+Vector2(sweep+12.0,62.0),HOT_GOLD,sin(age*PI)*0.75*amount,3.0)
 	draw_rect(Rect2(CENTER-Vector2.ONE*70.0,Vector2.ONE*140.0),Color(GOLD,(0.28+tier*0.30)*amount),false,1.5)
 
 func _destroy(age: float, amount: float) -> void:
