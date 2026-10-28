@@ -1,0 +1,89 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/corrections/quality-isolation-v07-008/SW-run-source-v02-isolated.png",
+  "source_sha256": "ee32f302e0d4a8b9a66aa8ade525db96c4e8d13afc5d72f9b1b7b194a3678cad",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r070/SW-run-0.png",
+      "anchor": [
+        328.0,
+        515.0
+      ],
+      "scale": 0.321661,
+      "source_body_label": 9,
+      "sha256": "dbaf4a0202fa4f5dbc545e1c1e38f2b4a6fe9311ecbeae81e848358a9c753f93"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r070/SW-run-1.png",
+      "anchor": [
+        906.5,
+        483.0
+      ],
+      "scale": 0.321661,
+      "source_body_label": 18,
+      "sha256": "bc35d357cf66adc08385fb0c1612048f4d43d14346131b46cdab886d98c740e2"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r070/SW-run-2.png",
+      "anchor": [
+        1781.0,
+        515.0
+      ],
+      "scale": 0.321661,
+      "source_body_label": 3,
+      "sha256": "24a3bdfc7ec4dffc5060f59a3a9a28dc4bfba6cefb70cccb30cff364246c2e0e"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r070/SW-run-3.png",
+      "anchor": [
+        720,
+        1090
+      ],
+      "scale": 0.1375,
+      "standing_equivalent_unit": 800,
+      "sha256": "47b97f3bc4b640c19beeb59a93d83cad19d191f8fa0b79ab0891051d792a34b5"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r070/SW-run-4.png",
+      "anchor": [
+        720,
+        1110
+      ],
+      "scale": 0.1375,
+      "standing_equivalent_unit": 800,
+      "sha256": "85d2f140e3c55d67a40688cd2e8007c4c4191788f576168d127f31e559794efc"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r070/SW-run-5.png",
+      "anchor": [
+        720,
+        1100
+      ],
+      "scale": 0.12941176470588237,
+      "standing_equivalent_unit": 850,
+      "sha256": "56b1301184d2af2fdcd0f5026cc82f92bfbfc1a141714b9d2ae80f8aadaccb13"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 590211,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS actual Main candidate 6/6 poses, original first-half anchors/scale, no mirror/gameplay/attack-marker changes",
+  "production_connected": false,
+  "selection_basis": "Original first three poses preserved exactly with original registration. Opposite half uses right-leg contact/passing/airborne sequence, unchanged weapon hand and camera.",
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "quality_status": "PASS_LOCAL_OPPOSITE_LEG_HALF_CYCLE",
+  "whole_actor_gate": "HOLD_E_W_RUN_GAIT_NE_HAND_AND_NW_CONTINUITY",
+  "native_import": "PASS isolated Godot 4.7.2 import"
+}
