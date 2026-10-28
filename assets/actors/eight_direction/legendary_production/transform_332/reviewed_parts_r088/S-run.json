@@ -159,9 +159,9 @@
       "proposal_scale": 0.264901
     }
   ],
-  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
-  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
-  "production_connected": false,
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
+  "production_connected": true,
   "selection_basis": "Separate image-tool correction of confirmed late-half hand/view failures; original first-half pixels and registration preserved. Constant scale per new source; no source resampling, mirroring or frame timing changes.",
   "normal_original_registration_phases_preserved": [
     0,
@@ -178,5 +178,6 @@
   },
   "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
   "local_visual_review": "PASS fixed late-half right-hand staff, retained opposite original leg poses; AIR2 projected ground corrected",
-  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures"
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
 }

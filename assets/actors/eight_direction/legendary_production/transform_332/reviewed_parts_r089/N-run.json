@@ -83,10 +83,11 @@
   "unselected_atlas_cells": [
     0
   ],
-  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
-  "production_connected": false,
-  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "production_connected": true,
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
   "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
   "local_visual_review": "PASS fixed late-half staff, opposite feet; projected AIR2 ground corrected without resampling",
-  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures"
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
 }

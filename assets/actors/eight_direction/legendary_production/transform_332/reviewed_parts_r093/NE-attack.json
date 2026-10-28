@@ -1,0 +1,84 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_332/draft001/NE-attack-source-v01.png",
+  "source_sha256": "2f011c33d6de404052651a038be416042d6602bf800961f7f1fb6925d35dad93",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r093/NE-attack-1.png",
+      "anchor": [
+        433.5,
+        606.0
+      ],
+      "scale": 0.247887,
+      "source_body_label": 1,
+      "sha256": "6d099dd0734dd14e591a6e553b0be2c9a3080de247ef5776289aa3d71b53e219"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r093/NE-attack-2.png",
+      "anchor": [
+        1071.0,
+        558.5
+      ],
+      "scale": 0.247887,
+      "source_body_label": 3,
+      "sha256": "a4514380f6e69ec7165eb74116dd1ea99c8f2c6ef947ccb2ba000dc31f826502"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r093/NE-attack-3.png",
+      "anchor": [
+        303.5,
+        1143.5
+      ],
+      "scale": 0.247887,
+      "source_body_label": 49,
+      "sha256": "76c663b6f547cee2521e1453ddb536951c2114fd9c61232003adb0987c63819f"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r093/NE-attack-4.png",
+      "anchor": [
+        1018.0,
+        1207.0
+      ],
+      "scale": 0.247887,
+      "source_body_label": 50,
+      "sha256": "6f4f99caffdd187d565e0d4b3440643a26d4478468d1ea87fd200c84fda6d737"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 700297,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "reviewed_fragment_exceptions": {
+    "18": {
+      "area": 96,
+      "bounds": [
+        790,
+        837,
+        814,
+        851
+      ],
+      "owner": 2
+    },
+    "21": {
+      "area": 87,
+      "bounds": [
+        794,
+        873,
+        806,
+        883
+      ],
+      "owner": 2
+    }
+  },
+  "fragment_review_basis": "Both detached red particles continue the lower-left impact-tip and lower edge of its release plume. The adjacent lower-right recovery wrist is opaque and unlit. Whole components retained, not split or erased.",
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "production_connected": true,
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
+  "selection_basis": "Complete original connected figures/effects retained without resampling or manual pixel deletion; same frame anchors, scales, order and timing.",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
+}

@@ -84,12 +84,13 @@
     "duplicate": 0
   },
   "source_pixels_resampled": false,
-  "production_connected": false,
-  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
-  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "production_connected": true,
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
   "selection_basis": "Separate correction of confirmed inconsistent N hand ownership / duplicate staff. Same canonical right-hand grip as existing N RUN first half and S master. Original files retained; source frame order and timing preserved.",
   "registration_basis": "Ground Y from lowest contact sole; projected pelvis X reviewed on the source for each recoil/action pose. Constant scale per source; same new N-IDLE0 for guards.",
   "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
   "local_visual_review": "PASS canonical right hand and four reaction poses; new N-IDLE0 guards",
-  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures"
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
 }
