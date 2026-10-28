@@ -72,6 +72,7 @@ func run() -> void:
 				while field.precise_routes!=null and not field.precise_routes.ready() and slices<20000:
 					field.prepare_precise_routes_step(256,2000)
 					slices+=1
+				check(slices<20000,mid+" exact graph build stays within bounded preparation slices")
 				check(field.precise_routes!=null and field.precise_routes.ready(),mid+" bounded graph preparation completes")
 				route=field.path(spawn,target)
 			var elapsed: int=Time.get_ticks_usec()-started
