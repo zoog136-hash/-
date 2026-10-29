@@ -1,6 +1,7 @@
 extends RefCounted
 ## Existing 25 IDs only. An absent private pack keeps the existing project;
 ## a present, damaged install is rejected before changing maps or saved state.
+const LEGACY=preload("res://scripts/maps/legacy_layout_policy.gd")
 const ROOT: String = "res://data/map_remake/private/"
 const BUNDLED_ROOT: String = "res://external_map_packs/oman_v2/data/map_remake/private/"
 const FIELD = preload("res://scripts/maps/remake_field.gd")
@@ -19,7 +20,7 @@ static func pack_root() -> String:
 
 static func display_names() -> Dictionary:
 	var names: Dictionary={}
-	if "--legacy-map-layouts" in OS.get_cmdline_user_args(): return names
+	if LEGACY.active("--legacy-map-layouts"): return names
 	var profiles: Dictionary=READ.read_object("res://data/maps/remake_render_profiles.json").get("maps",{})
 	for id: String in profiles:
 		if profiles[id].has("display_name"): names[id]=profiles[id].display_name
@@ -28,14 +29,14 @@ static func display_names() -> Dictionary:
 static func authored_field(definition: Dictionary) -> PlayableField:
 	var profiles: Dictionary=READ.read_object("res://data/maps/remake_render_profiles.json").get("maps",{})
 	var id: String=str(definition.get("map_id",""))
-	if "--legacy-map-layouts" in OS.get_cmdline_user_args() or not profiles.has(id) or not definition.has("world_geometry"):
+	if LEGACY.active("--legacy-map-layouts") or not profiles.has(id) or not definition.has("world_geometry"):
 		var existing:=PlayableField.new();existing.configure(definition);return existing
 	var field: AuthoredRemakeField=AUTHORED.new()
 	field.configure_remake(definition,profiles[id])
 	return field
 
 static func installed(map_id: String) -> bool:
-	if "--legacy-map-layouts" in OS.get_cmdline_user_args(): return false
+	if LEGACY.active("--legacy-map-layouts"): return false
 	if map_id == "aden_world": return ADEN.installed()
 	# 111.png is explicitly selected by the user as our Domination reference.
 	# Candidate source/PNG registration stays in the isolated review session.

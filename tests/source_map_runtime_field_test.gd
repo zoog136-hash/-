@@ -47,6 +47,12 @@ func run() -> void:
 	check(not RUNTIME.validate_save(bad).is_empty(),"mismatched dual coordinate representations fail before live mutation")
 	bad=loaded.duplicate(true);bad.ground_drops="corrupt"
 	check(not RUNTIME.validate_save(bad).is_empty(),"malformed drop container fails closed without script exceptions")
+	bad=loaded.duplicate(true);bad.monster_world={"bosses":{"source_77:existing":{"position":[-10000,-10000],"home":[]}}}
+	check(not RUNTIME.validate_save(bad).is_empty(),"persisted monster positions fail before live state mutation")
+	bad.map_id="faith_01";bad.ground_drops=[]
+	check(not RUNTIME.validate_save(bad).is_empty(),"inactive-map monster positions also require verified layout and landing")
+	bad=loaded.duplicate(true);bad.monster_world=17
+	check(not RUNTIME.validate_save(bad).is_empty(),"malformed monster container fails without script exceptions")
 	check(not RUNTIME.validate_save({"map_id":"source_280","ground_drops":[]}).is_empty(),"future unverified map save cannot fall back and be overwritten")
 	for mid: String in RUNTIME.policy():
 		var other: RemakePlayableField=RUNTIME.load_field(mid)

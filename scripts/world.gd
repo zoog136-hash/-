@@ -22,6 +22,14 @@ const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
 const SOURCE_MAP84 = preload("res://scripts/maps/source_map_runtime.gd")
 const SOURCE_MAP84_RENDERER = preload("res://scripts/maps/source_map_runtime_renderer.gd")
+const LEGACY_LAYOUT=preload("res://scripts/maps/legacy_layout_policy.gd")
+const MAP_SAVE_MIGRATION = preload("res://scripts/maps/source_map_save_migration.gd")
+var migrated_save_path: String=""
+var migration_path_checked: bool=false
+var migration_pointer_error: String=""
+var pending_map_save_record: Dictionary={}
+var map_bootstrap_blocked: bool=false
+var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -1253,13 +1261,17 @@ func _connect_signals() -> void:
 func _set_map(map_id: String, keep_position: bool) -> void:
 	map_id = NATIVE_PNG.canonical(map_id)
 	if not maps_by_id.has(map_id):
+		if SOURCE_MAP84.supports(map_id):_reject_map_pack("원본 지도 팩 누락: 현재 지역과 저장을 보존합니다")
 		return
 	var requested_native: PlayableField = null
 	if NATIVE_PNG.supports(map_id):
 		requested_native = NATIVE_PNG.load_field(map_id)
 		if requested_native == null:
-			hud.show_message("PNG 원본 팩 누락·손상: 현재 지역을 유지합니다")
+			_reject_map_pack("PNG 원본 팩 누락·손상: 현재 지역과 저장을 보존합니다")
 			return
+	if map_id in SOURCE_PNG_GAME.IDS and not SOURCE_MAP84.supports(map_id) and SOURCE_PNG_GAME.requested(map_id) and not REMAKE_REGISTRY.installed(map_id):
+		_reject_map_pack("오만 통행 팩 누락: 구형 배경으로 바꾸지 않고 현재 지역을 유지합니다")
+		return
 	# Validate before releasing the current playable world.
 	var requested_map: Dictionary = maps_by_id[map_id] as Dictionary
 	var requested_field: Dictionary = requested_map.get("field_definition", {})
@@ -1275,7 +1287,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	elif SOURCE_MAP84.supports(map_id):
 		requested_original = SOURCE_MAP84.load_field(map_id)
 		if requested_original == null:
-			hud.show_message("원본 지도 팩을 확인할 수 없어 현재 지역을 유지합니다")
+			_reject_map_pack("원본 지도 팩을 확인할 수 없어 현재 지역을 유지합니다")
 			return
 	elif REMAKE_REGISTRY.installed(map_id):
 		requested_original = REMAKE_REGISTRY.load_field(map_id)
@@ -1287,9 +1299,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
 			return
-	if requested_original is RemakePlayableField and SOURCE_PNG_GAME.requested(map_id) and not SOURCE_PNG_GAME.attach(requested_original):
+	if requested_original is RemakePlayableField and not bool(requested_original.get_meta("source_map84",false)) and SOURCE_PNG_GAME.requested(map_id) and not SOURCE_PNG_GAME.attach(requested_original):
 		requested_original.close()
-		hud.show_message("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
+		_reject_map_pack("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
 		return
 	_clear_combat_actions()
 	if is_instance_valid(world_interactions):
@@ -1407,6 +1419,18 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+	if map_bootstrap_blocked:
+		map_bootstrap_blocked=false
+		process_mode=map_prior_process_mode
+		if not FileAccess.file_exists(save_path()):source_save_blocked=false
+
+func _reject_map_pack(message: String) -> void:
+	hud.show_message(message)
+	if field_map==null and field_renderer==null and map_background.texture==null:
+		if not map_bootstrap_blocked:map_prior_process_mode=process_mode
+		map_bootstrap_blocked=true
+		source_save_blocked=true
+		process_mode=Node.PROCESS_MODE_DISABLED
 
 func _set_visual_mode(mode: String) -> void:
 	if is_instance_valid(field_renderer):
@@ -3998,11 +4022,23 @@ func _refresh_combat_hud() -> void:
 	hud.character_state["gold"] = gold
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
-func save_path() -> String:
+func base_save_path() -> String:
 	if growth.development: return "user://twilight_growth_lab_v1.json"
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
 
+func save_path() -> String:
+	if not migration_path_checked:
+		migration_path_checked=true
+		var resolved: Dictionary=MAP_SAVE_MIGRATION.resolve(base_save_path())
+		if resolved.ok:
+			migrated_save_path=str(resolved.path);migration_pointer_error=""
+		else:migration_pointer_error=str(resolved.error)
+	return migrated_save_path if not migrated_save_path.is_empty() else base_save_path()
+
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if not migration_pointer_error.is_empty():
+		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
+		return ERR_FILE_CORRUPT
 	if option_awakening.save_blocked or not option_awakening.problem.is_empty():
 		if not quiet: hud.show_message("각성 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
@@ -4091,11 +4127,21 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
 		return result
+	if not pending_map_save_record.is_empty():
+		var pointer_result: Error=MAP_SAVE_MIGRATION.activate(base_save_path(),pending_map_save_record)
+		if pointer_result!=OK:
+			hud.append_log("이전 저장 선택 기록 실패 · 원본과 별도 저장 후보를 보존합니다")
+			return pointer_result
+		pending_map_save_record.clear()
 	if not quiet:
 		hud.show_message("저장 완료")
 	return OK
 
 func _load_game(quiet: bool) -> void:
+	if not migration_pointer_error.is_empty():migration_path_checked=false
+	save_path()
+	if not migration_pointer_error.is_empty():
+		source_save_blocked=true;hud.show_message("이전된 저장 파일 누락·손상 · 원본 저장을 보존합니다");return
 	if not FileAccess.file_exists(save_path()):
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
@@ -4104,7 +4150,11 @@ func _load_game(quiet: bool) -> void:
 	# The explicit parser returns an error code, so damaged local saves can be
 	# rejected without corrupting the current session or failing a smoke test.
 	var save_parser: JSON = JSON.new()
-	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(save_path()))
+	var original_save_bytes: PackedByteArray=FileAccess.get_file_as_bytes(save_path())
+	var save_hash_context:=HashingContext.new()
+	save_hash_context.start(HashingContext.HASH_SHA256);save_hash_context.update(original_save_bytes)
+	var loaded_save_sha: String=save_hash_context.finish().hex_encode()
+	var parse_error: Error = save_parser.parse(original_save_bytes.get_string_from_utf8())
 	if parse_error != OK:
 		equipment_collections.save_blocked = true
 		if not quiet:
@@ -4119,6 +4169,10 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
+	if not map_migration.ok:
+		source_save_blocked=true;hud.show_message(str(map_migration.error));return
+	data=map_migration.data
 	# Validate every new-map player/drop coordinate before inventory, bosses or
 	# outgoing actors are changed. Unknown layout revisions require migration.
 	var map84_error: String=SOURCE_MAP84.validate_save(data)
@@ -4159,7 +4213,7 @@ func _load_game(quiet: bool) -> void:
 		saved_map_id="albino_02"
 	var has_native_position: bool=data.has("native_png_plan_sha256")
 	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
-	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args() or (NATIVE_PNG.extra_map(saved_map_id) and "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args())
+	var explicit_legacy: bool=LEGACY_LAYOUT.active("--legacy-map-layouts") or (NATIVE_PNG.extra_map(saved_map_id) and LEGACY_LAYOUT.active("--legacy-aden-faith-layouts"))
 	if has_native_position and explicit_legacy and not requested_native and maps_by_id.has(saved_map_id):
 		# Explicitly returning to an existing layout retains progression while
 		# discarding pixel coordinates that belong to the PNG canvas.
@@ -4223,7 +4277,7 @@ func _load_game(quiet: bool) -> void:
 				return
 	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
 		var saved_field: OriginalPlayableField = SOURCE_MAP84.load_field(saved_map_id) if SOURCE_MAP84.supports(saved_map_id) else (REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{})))
-		if saved_field is RemakePlayableField and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not "--legacy-map-layouts" in OS.get_cmdline_user_args():
+		if saved_field is RemakePlayableField and not bool(saved_field.get_meta("source_map84",false)) and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not LEGACY_LAYOUT.active("--legacy-map-layouts"):
 			if not SOURCE_PNG_GAME.attach(saved_field) or (data.has("oman_png_index_sha256") and data.oman_png_index_sha256!=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")):
 				saved_field.close();source_save_blocked=true
 				hud.show_message("오만 PNG 리소스를 확인할 수 없어 저장 데이터를 보존합니다")
@@ -4243,10 +4297,22 @@ func _load_game(quiet: bool) -> void:
 		equipment_collections.save_blocked = true
 		hud.show_message("각성 저장 이전 실패 · 기존 저장을 보존합니다")
 		return
-	if not equipment_collections.accept_load(data): return
+	var prior_save_path: String=migrated_save_path
+	var staged_map_save: Dictionary={}
+	if bool(map_migration.changed):
+		staged_map_save=MAP_SAVE_MIGRATION.stage(save_path(),data,loaded_save_sha)
+		if not staged_map_save.ok:
+			source_save_blocked=true;hud.show_message(str(staged_map_save.error));return
+		migrated_save_path=str(staged_map_save.target_path)
+	if not equipment_collections.accept_load(data):
+		migrated_save_path=prior_save_path
+		return
 	if not option_awakening.accept_load(data):
 		equipment_collections.save_blocked = true
+		migrated_save_path=prior_save_path
 		return
+	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
+	SOURCE_MAP84.accept_layouts(data)
 	growth.restore(data.get("growth",growth.empty_state()))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.

@@ -301,6 +301,80 @@
       "visual_review": "actual full-resolution source entry and nearby wall/stair/tree boundaries inspected with directional-grid overlay",
       "entry_basis": "unchanged 3.80c route destination, checked 4px foot and return path",
       "replacement_of_existing_id": false
+    },
+    "oman_06": {
+      "name": "오만의 탑 6층",
+      "source_map_id": 106,
+      "layout_revision": 2026102901,
+      "grid_sha256": "4534f5ee2db115fe2a4fb36950d71624c8bd34b27fc16ecdec5441e5bd3c61ad",
+      "art_manifest_sha256": "0281829c174d2123f1053e42f9d2067c6204c7b3eda89dff61e1f0eeae48f04e",
+      "entry_source": [
+        32672,
+        32864
+      ],
+      "return_source": [
+        32670,
+        32862
+      ],
+      "walk_probes": [
+        [
+          32672,
+          32864
+        ],
+        [
+          32671,
+          32865
+        ],
+        [
+          32670,
+          32864
+        ],
+        [
+          32669,
+          32864
+        ]
+      ],
+      "solid_probes": [
+        [
+          32676,
+          32860
+        ],
+        [
+          32675,
+          32861
+        ]
+      ],
+      "replacement_of_existing_id": true,
+      "legacy_frame": {
+        "source_map_id": 106,
+        "grid_sha256": "f56c29e3643fd9090b57f45647bd1611e4ed8d09e401a75eca7c349cc4ad16ee",
+        "layout_revision": 2026101502,
+        "origin": [
+          32576,
+          32768
+        ],
+        "dimensions": [
+          192,
+          192
+        ],
+        "coordinate_mapping": {
+          "basis_x": [
+            24,
+            -12
+          ],
+          "basis_y": [
+            24,
+            12
+          ],
+          "translation": [
+            0,
+            2304
+          ]
+        }
+      },
+      "scope": "replace source grid and original art; retain all existing roster counts, NPC and portal IDs; no imported source spawns or source routes",
+      "visual_review": "actual old-entry spiral staircase, fence/corridor/column footprints over source360 grid; raw source bytes preserved",
+      "coverage_rule": "exclude server padding without retained client chunks; original grid file unchanged"
     }
   }
 }

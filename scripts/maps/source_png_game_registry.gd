@@ -1,6 +1,7 @@
 extends RefCounted
 ## Ordinary Oman rendering over the unchanged A3 field. A PNG is not a claim
 ## that every source obstacle/foreground has been visually reviewed.
+const LEGACY=preload("res://scripts/maps/legacy_layout_policy.gd")
 const RECEIPT="res://data/maps/oman_png_pack.json"
 const BUNDLED="res://external_map_packs/oman_png_v1"
 const LAYERS=preload("res://scripts/maps/source_png_review_pack.gd")
@@ -15,7 +16,7 @@ static func root_path() -> String:
 static func requested(id: String) -> bool:
 	if not id in IDS:return false
 	for flag: String in ["--legacy-map-layouts","--png-review","--no-native-png-auto"]:
-		if flag in OS.get_cmdline_user_args():return false
+		if LEGACY.active(flag):return false
 	var receipt: Variant=JSON.parse_string(FileAccess.get_file_as_string(RECEIPT))
 	if receipt is Dictionary and receipt.get("bundled_required",false)==true:return true
 	return seen or not OS.get_environment("TWILIGHT_OMAN_PNG_PACK").is_empty() or FileAccess.file_exists(root_path()+"/index.json")
