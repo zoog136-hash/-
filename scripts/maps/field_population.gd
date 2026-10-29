@@ -345,6 +345,11 @@ func _process(delta: float) -> void:
 	if refresh:
 		wake_clock = .4
 		_trim_pool(IDLE_POOL_TARGET,false)
+	# Camera geometry is constant during this synchronous wake sweep. Build it
+	# lazily so empty populations and non-Escaros fields do no extra work.
+	var activity_view := Rect2()
+	var activity_radius: float = -1.0
+	var escaros_refresh: bool = refresh and field is NativePngField and str(field.data.map_id)=="escaros_world"
 	for slot: Dictionary in slots:
 		if pending_spawn_ids.has(int(slot.slot_id)):continue
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
@@ -358,7 +363,12 @@ func _process(delta: float) -> void:
 				if not is_instance_valid(slot.monster) and str(slot.region.get("mode","normal"))!="boss":
 					slot.remaining = 2.0
 		elif refresh:
-			_update_activity(monster)
+			if escaros_refresh and activity_radius < 0.0:
+				var camera: Camera2D = world.player.camera
+				var extent: Vector2 = get_viewport().get_visible_rect().size/camera.zoom
+				activity_view = Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(240.0)
+				activity_radius = extent.length()*.5+320.0
+			_update_activity(monster, activity_view, activity_radius)
 
 func _drain_initial_spawns() -> void:
 	var spawn_start: int=Time.get_ticks_usec()
@@ -372,16 +382,20 @@ func _drain_initial_spawns() -> void:
 			if not is_instance_valid(pending.monster):pending.remaining=2.0
 		initial_count+=1
 
-func _update_activity(monster: TwilightMonster) -> void:
+func _update_activity(monster: TwilightMonster, view: Rect2 = Rect2(), view_radius: float = -1.0) -> void:
 	var distance: float=monster.global_position.distance_to(world.player.global_position)
 	var awake: bool=distance<float(field.data.streaming.monster_sleep_distance)
 	if field is NativePngField and str(field.data.map_id)=="escaros_world":
-		var camera: Camera2D=world.player.camera
-		var extent: Vector2=get_viewport().get_visible_rect().size/camera.zoom
-		var view:=Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(240.0)
+		# Standalone spawn updates still take a fresh camera snapshot. Never
+		# retain this context across frames, camera changes or map transitions.
+		if view_radius < 0.0:
+			var camera: Camera2D = world.player.camera
+			var extent: Vector2 = get_viewport().get_visible_rect().size/camera.zoom
+			view = Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(240.0)
+			view_radius = extent.length()*.5+320.0
 		# Preserve combat, death/recycling and status clocks outside the view.
 		var busy: bool=monster.dead or monster.motion.active or monster.aggro_remaining>0 or monster.returning_home or monster.poison_remaining>0 or monster.bleed_remaining>0 or monster.slow_remaining>0 or monster.is_stunned() or monster.is_held() or monster.is_feared() or monster.is_silenced()
-		var radius: float=maxf(extent.length()*.5+320.0,float(monster.ai.get("aggro_radius",420.0))*1.7+320.0)
+		var radius: float=maxf(view_radius,float(monster.ai.get("aggro_radius",420.0))*1.7+320.0)
 		awake=busy or distance<radius
 		monster.visible=view.has_point(monster.global_position) or (monster.is_boss and monster.motion.active)
 	monster.set_physics_process(awake)
