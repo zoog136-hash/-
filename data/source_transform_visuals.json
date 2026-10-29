@@ -1,0 +1,1109 @@
+{
+  "schema": 1,
+  "scope": "Local-only reviewed source visuals; original art not authorized for public push.",
+  "entries": {
+    "transform:7": {
+      "name": "바포메트",
+      "grade": "영웅",
+      "frames_path": "res://assets/local_source_transforms/baphomet_source2/SpriteFrames.tres",
+      "required_layout": "directional8",
+      "pixel_scale": 1.2463768115942029,
+      "sprite_offset": [
+        0.0,
+        -12.46376811594203
+      ],
+      "source_model": "SPR-U-080405561083574322d8",
+      "binding_id": "PB0227",
+      "body_model_prefix": 53,
+      "source": "source2",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Horned goat skull, two hooves and ring staff; explicit morph definition -> body 53.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -96,
+        144,
+        108
+      ],
+      "foot_original_grid": [
+        24,
+        16
+      ],
+      "foot_in_canvas": [
+        120,
+        112
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        96,
+        96
+      ],
+      "reference_client_origin_in_canvas": [
+        120,
+        60
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18,
+        "special": 30
+      },
+      "action_fallbacks": {},
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "127",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            127
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "30a62a342008a6898ca3b83e9a8d1bf0e78e6fd38be8ebe0824c51a3b8087cef",
+        "hit.png": "dfed38264bb34fba0f80619d9789f30e0b52652587dd4601c0d5e16e35923d47",
+        "walk.png": "840f8e1183ad1918dd6777e07387dd7d8929264c0749f1a6803ba7c1fb690908",
+        "death.png": "1fe1b549bee276b208b19173f0e598adfebac5e0a89df9c7269e57b174459fe0",
+        "cast.png": "1b751f3994fee83ea7ee00b19a78a7967ed4ab30e6872f99e0a5b8a069356615",
+        "SpriteFrames.tres": "0bed7773b3d0b309a27c65c898e092ff2bf8d14fa3bf23b8dc76b956f47f1976",
+        "attack.png": "fd9a1808da6cb5f05911e6a4fd7d127386fc445ecfb89c2d58e95a9939dddb3b",
+        "special.png": "c0c314bd810f4bebafab3488224dbcc28ec86537ff37cada38c69e72692cafe9"
+      },
+      "rendered_frames": 296
+    },
+    "transform:10": {
+      "name": "켄라우헬",
+      "grade": "영웅",
+      "frames_path": "res://assets/local_source_transforms/ken_lauhel_source2/SpriteFrames.tres",
+      "required_layout": "directional8",
+      "pixel_scale": 1.2,
+      "sprite_offset": [
+        0.0,
+        -19.2
+      ],
+      "source_model": "SPR-U-663d03f45123ffe90d96",
+      "binding_id": "PB0126",
+      "body_model_prefix": 2419,
+      "source": "source2",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Unique ken lauhel body 2419; gold shoulder plates, black/red cloak and long silver sword; soles visible beside cloak.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72,
+        -72,
+        120,
+        72
+      ],
+      "foot_original_grid": [
+        24,
+        16
+      ],
+      "foot_in_canvas": [
+        96,
+        88
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        72,
+        72
+      ],
+      "reference_client_origin_in_canvas": [
+        96,
+        36
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18,
+        "special": 1
+      },
+      "action_fallbacks": {
+        "special": {
+          "requested_action_code": 30,
+          "replacement_action_code": 1,
+          "reason": "Action absent; same body/source attack sequence only."
+        }
+      },
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "2420",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            2420
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "5497cd1c1c2e69efb8d3411b90d2ed762743df0dca84b40a5b9847908400ecb7",
+        "hit.png": "b48d17627f8bd41805edf563864d36ed03a42a341c5c3ce262e5d136f2a3160c",
+        "walk.png": "00a1028f67100a8616422797d5b1752303297df93ac87f2a563e41d57a36af36",
+        "death.png": "7dec65f9a47886d33a859ce68cdf3f9e6574dd4387cf7bf984b834fb1c7aa73a",
+        "cast.png": "fd7cfe7becb4749de1f3d8f59f54b22cd5660a08092398f4c198bfdde519b100",
+        "SpriteFrames.tres": "ce39da3404e5aa75ccf288a869f54709b4003980b535b15f12ddf598fa0e56b7",
+        "attack.png": "466ad7612221cfe1cf2e9f7b2462f2e01e4ab5c5a0698b25f5d55d055b9c17ee",
+        "special.png": "466ad7612221cfe1cf2e9f7b2462f2e01e4ab5c5a0698b25f5d55d055b9c17ee"
+      },
+      "rendered_frames": 472
+    },
+    "transform:52": {
+      "name": "어쌔신 마스터",
+      "grade": "고급",
+      "frames_path": "res://assets/local_source_transforms/assassin_master_source2/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.3,
+      "sprite_offset": [
+        0.0,
+        -44.2
+      ],
+      "source_model": "SPR-U-3f7447b02d63ad85fde9",
+      "binding_id": "PB0156",
+      "body_model_prefix": 2843,
+      "source": "source2",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Unique assasin master body 2843; white head wrap, red cloak/gold trim, paired curved blades and visible boots.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72,
+        -96,
+        120,
+        60
+      ],
+      "foot_original_grid": [
+        24,
+        16
+      ],
+      "foot_in_canvas": [
+        96,
+        112
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        72,
+        96
+      ],
+      "reference_client_origin_in_canvas": [
+        96,
+        60
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1,
+        "special": 30
+      },
+      "action_fallbacks": {
+        "cast": {
+          "requested_action_code": 18,
+          "replacement_action_code": 1,
+          "reason": "Action absent; same body/source attack sequence only."
+        }
+      },
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "2844",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            2844
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        },
+        {
+          "role": "cloth",
+          "raw": "2 2845 5116",
+          "code": 105,
+          "label": "clothes",
+          "parsed_ids": [
+            2845,
+            5116
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "52b60f36cf22fa4b6d40e4802884b33418d1267af6f6db66e50822c7f03a1f62",
+        "hit.png": "c761fe18e706a04e382e51119939edd2b8dc1a08bea83fb52703c2dc1d4a1d41",
+        "walk.png": "85778a5aa9a9215662ab60a8f742f1b1c33539609b1cca98b301f5225c885f28",
+        "death.png": "b1e20ed6b1185687f9ba27a90ef9cf2d49f2d559bb7c2a2b6f0c9d91ba8c0675",
+        "cast.png": "fbafc0870252a489acde5c5533480a87cc1da92192020c142d5c5e52f5b5c971",
+        "SpriteFrames.tres": "7a18449dceffc2d773b51928aa19d1cac54d797221051a732175f224175371d7",
+        "attack.png": "fbafc0870252a489acde5c5533480a87cc1da92192020c142d5c5e52f5b5c971",
+        "special.png": "9ae37046553cf1334af272b5c0f612e5425f317dafabcd68e8bc372e9855152a"
+      },
+      "rendered_frames": 560
+    },
+    "transform:74": {
+      "name": "다크엘프 위자드",
+      "grade": "일반",
+      "frames_path": "res://assets/local_source_transforms/darkelf_wizard_source2/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.3,
+      "sprite_offset": [
+        -15.600000000000001,
+        -31.200000000000003
+      ],
+      "source_model": "SPR-U-f82bc57ab79a6d8ddf37",
+      "binding_id": "PB0164",
+      "body_model_prefix": 3376,
+      "source": "source2",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Unique darkelf wizard body 3376; white head and shoulder wraps, black robe and forked staff; robe contact/boots inspected.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -84,
+        120,
+        72
+      ],
+      "foot_original_grid": [
+        24,
+        18
+      ],
+      "foot_in_canvas": [
+        120,
+        102
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        96,
+        84
+      ],
+      "reference_client_origin_in_canvas": [
+        120,
+        48
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18,
+        "special": 1
+      },
+      "action_fallbacks": {
+        "special": {
+          "requested_action_code": 30,
+          "replacement_action_code": 1,
+          "reason": "Action absent; same body/source attack sequence only."
+        }
+      },
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "3377",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            3377
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "b603df0263efc0545baeae8831f6726c5fd4ae2bc9d8cd30bf3483ca4eed6917",
+        "hit.png": "b7fe42ca105ab0fbdc7a77d135a68782b4f3f5a3aef9253b6230fafe4aebe4f1",
+        "walk.png": "ae8b2dffb75fe2220567af2f7576ae63b21146ce4c46ead3746ee1349074b1f1",
+        "death.png": "e1743ccd9293e2568af6566f03168b9d34fc7aea0007bc495f42c27521a5947c",
+        "cast.png": "c275c3e1f245f841caf57e6c87c08254be271f764052ea8fa0f38bece4f02f34",
+        "SpriteFrames.tres": "b9d938c3365398bccc999b066684ce1a32f1aec8e37d813549b7e634432a6a6c",
+        "attack.png": "6b247ec3b4256a467cbbb766db10487ee723f55f1ff09bf684194eb6049f45ed",
+        "special.png": "6b247ec3b4256a467cbbb766db10487ee723f55f1ff09bf684194eb6049f45ed"
+      },
+      "rendered_frames": 552
+    },
+    "transform:91": {
+      "name": "소녀 케레니스",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/young_kelenis_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.2,
+      "sprite_offset": [
+        0.0,
+        -43.199999999999996
+      ],
+      "source_model": "SPR-U-91f21653bc060ab782c2",
+      "binding_id": "PB0207",
+      "body_model_prefix": 8774,
+      "source": "source1",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Unique young kelenis body 8774; long blue hair, gold bodice, dark long skirt and tall staff; distinct from adult Kelenis 2468.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48,
+        -96,
+        96,
+        60
+      ],
+      "foot_original_grid": [
+        24,
+        18
+      ],
+      "foot_in_canvas": [
+        72,
+        114
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        48,
+        96
+      ],
+      "reference_client_origin_in_canvas": [
+        72,
+        60
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18,
+        "special": 30
+      },
+      "action_fallbacks": {},
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "8775",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            8775
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        },
+        {
+          "role": "cloth",
+          "raw": "2 8776 8777",
+          "code": 105,
+          "label": "clothes",
+          "parsed_ids": [
+            8776,
+            8777
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "c9fcf40519780ed61ed0524329d7cac5ac85dbbcab3bd57eb44142dbfe6e4349",
+        "hit.png": "89342badfe0a6ac12bdc354046443bd0e8789d83f0afe7902f7303e58d51ff3a",
+        "walk.png": "c32c550cb4ecf4f1b40a0460e9133c232843e2e82823246f73b730a061d61098",
+        "death.png": "184cd09c5b832748036e748a9d39e4b1e858eb4a5ab191c8b325c71701cfdcc3",
+        "cast.png": "6ef09041ab25346a0a70a438184902efdc78b070bfc983afbbf3d9a9a207ac29",
+        "SpriteFrames.tres": "65ae512df3e5cfd0ce5bfe13d7486d482148dc4ea6c6fc15f8e65bf4e11e4970",
+        "attack.png": "fa626a474f679dd1a7e17da5e8093286639b489faaa8831f780376eff533a7e2",
+        "special.png": "bbbcee9a6bd4bfdde41822ea4a743deee521c70364653420f68f26533f30bdd5"
+      },
+      "rendered_frames": 448
+    },
+    "transform:28": {
+      "name": "데몬",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/demon_source2/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.0,
+      "sprite_offset": [
+        12.0,
+        -24.0
+      ],
+      "source_model": "SPR-U-245ba4b8adb3f0f9b488",
+      "binding_id": "PB0103",
+      "body_model_prefix": 1180,
+      "source": "source2",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Unique demon body 1180; red muscular torso, black/red wings, paired white horns and clawed feet; not Balrog.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -96,
+        168,
+        84
+      ],
+      "foot_original_grid": [
+        24,
+        18
+      ],
+      "foot_in_canvas": [
+        120,
+        114
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        96,
+        96
+      ],
+      "reference_client_origin_in_canvas": [
+        120,
+        60
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18,
+        "special": 30
+      },
+      "action_fallbacks": {},
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "1181",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            1181
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        },
+        {
+          "role": "cloth",
+          "raw": "1 1182",
+          "code": 105,
+          "label": "clothes",
+          "parsed_ids": [
+            1182
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "94b8360fd684c203e90dfeeb53c2a179af4754b30ce1f9eaeaab7d0237bb1e36",
+        "hit.png": "d65ec91546c88a5501b49c1612d54736fc81ea984c4f7d67861a90bb9cf4ea68",
+        "walk.png": "1e5a83e02895576afd8bfaf12a331ffc7cd94c65d277157f6364010b38271b76",
+        "death.png": "f9097c022638a65e5b1741aa44846a13ace3844a468ef021d3e43f30230c8ef6",
+        "cast.png": "97d83c2fe502c04e9f3512b39162858126abea954e2b5da8a61ff54ced7ff3bd",
+        "SpriteFrames.tres": "dbfe171de219963314d9467ea0f2e439e9533fde7c2d0a8bddfe130bd1d3c3cb",
+        "attack.png": "97d83c2fe502c04e9f3512b39162858126abea954e2b5da8a61ff54ced7ff3bd",
+        "special.png": "0e08ed84b599def5e88cb968661be31c1cd770e50c1536c56a8ba099f301fe3e"
+      },
+      "rendered_frames": 448
+    },
+    "transform:77": {
+      "name": "키위패롯",
+      "grade": "일반",
+      "frames_path": "res://assets/local_source_transforms/kiwi_parrot_source2/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.5,
+      "sprite_offset": [
+        0.0,
+        -45.0
+      ],
+      "source_model": "SPR-U-73a13041d92e7139c629",
+      "binding_id": "PB0198",
+      "body_model_prefix": 4147,
+      "source": "source2",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Unique kiwi parrot body 4147; orange crest/body, blue wings/tail and two grounded clawed feet.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48,
+        -72,
+        96,
+        48
+      ],
+      "foot_original_grid": [
+        24,
+        18
+      ],
+      "foot_in_canvas": [
+        72,
+        90
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        48,
+        72
+      ],
+      "reference_client_origin_in_canvas": [
+        72,
+        36
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1,
+        "special": 30
+      },
+      "action_fallbacks": {
+        "cast": {
+          "requested_action_code": 18,
+          "replacement_action_code": 1,
+          "reason": "Action absent; same body/source attack sequence only."
+        }
+      },
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "4148",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            4148
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "0f821a9f8bd6880bb2fe19b9a9b408f60dc71d7ea425e7d4a4ece861930eb640",
+        "hit.png": "39665f45217279c43f4453d6553c05a1acd6674cebfcdafa7e41457e917e6faa",
+        "walk.png": "f4d19ee46e3a4f5c49f21a3ffb425a3b9c822c2b0912f0e89ec1ab0bfcf4910b",
+        "death.png": "782f66e2b4f98e63f8b7daa9bce1294b5fc0281dacbbfc0259e3fa5b708035fb",
+        "cast.png": "f336ba4797b9fa61a6903170c1902f3322e9b0cd66044350026575942766742a",
+        "SpriteFrames.tres": "1cb33e4e3dbfc7744da6712096acedf3e723da08c915e34ff8b00102b995ca43",
+        "attack.png": "f336ba4797b9fa61a6903170c1902f3322e9b0cd66044350026575942766742a",
+        "special.png": "8afffce18eacc8dd8383cd391c789c3b0d1a599e237410b02a7cd74cdcbb929f"
+      },
+      "rendered_frames": 912
+    },
+    "transform:81": {
+      "name": "미들오움",
+      "grade": "일반",
+      "frames_path": "res://assets/local_source_transforms/middle_oum_source2/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.8,
+      "sprite_offset": [
+        0.0,
+        -43.2
+      ],
+      "source_model": "SPR-U-cddb60814ec5899baa1a",
+      "binding_id": "PB0182",
+      "body_model_prefix": 3644,
+      "source": "source2",
+      "variant": "all_nonconflicting_packs",
+      "input_sha256": "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c",
+      "identity_basis": "Unique middle oum body 3644; hunched dark ridged body, short legs and visible pale soles; no lookalike alias chosen.",
+      "direction_review": "h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72,
+        -72,
+        120,
+        60
+      ],
+      "foot_original_grid": [
+        24,
+        18
+      ],
+      "foot_in_canvas": [
+        96,
+        90
+      ],
+      "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+      "original_grid_origin_in_canvas": [
+        72,
+        72
+      ],
+      "reference_client_origin_in_canvas": [
+        96,
+        36
+      ],
+      "actions": {
+        "idle": 3,
+        "walk": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1,
+        "special": 30
+      },
+      "action_fallbacks": {
+        "cast": {
+          "requested_action_code": 18,
+          "replacement_action_code": 1,
+          "reason": "Action absent; same body/source attack sequence only."
+        }
+      },
+      "same_model_aliases": {
+        "run": "walk",
+        "turn": "idle",
+        "recovery": "attack",
+        "corpse": "death",
+        "ranged_attack": "attack",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle",
+        "summon": "idle",
+        "despawn": "death"
+      },
+      "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
+      "attachments": [
+        {
+          "role": "shadow",
+          "raw": "3645",
+          "code": 101,
+          "label": "shadow",
+          "parsed_ids": [
+            3645
+          ],
+          "parsed_without_guess": true,
+          "attachment_positions_runtime_verified": false
+        }
+      ],
+      "composition_limits": "Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.",
+      "files_sha256": {
+        "idle.png": "d803702c7d22b834099f6287e1b85d604d67c254740037d14550a7f3727ef23c",
+        "hit.png": "acda027e51c55b4555ab89d2402ce7c55cb8a8f0e83e3d7aca2f8d63508f25e4",
+        "walk.png": "22f26da2c5e457746300dc7c9e56339b7071a465989aba8b01d941a177a84358",
+        "death.png": "9be7dc7d51f2243ac2c37634c13d5a16d26400df09a2019978c3ca9d604df433",
+        "cast.png": "5c510e6843c7d3c4f71b94aabb5ca52988765b76fda7ce345e19903c2c173cab",
+        "SpriteFrames.tres": "6a909bedbd6b726ac55531164eabf338eae934dd55bcb5670a9cd8e7aef796a0",
+        "attack.png": "5c510e6843c7d3c4f71b94aabb5ca52988765b76fda7ce345e19903c2c173cab",
+        "special.png": "8c93c9c3537c51ff5bf82c0271e8e97423f6d12dbeeeb01561399c6170665f04"
+      },
+      "rendered_frames": 480
+    }
+  },
+  "remaining_candidates": 49,
+  "definition_only": [
+    "마수군왕 바란카",
+    "세마",
+    "드래곤 슬레이어"
+  ],
+  "excluded_grades": [
+    "신화",
+    "유일"
+  ],
+  "pending_candidates": [
+    {
+      "id": "transformation:inven:87",
+      "name": "고블린",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:86",
+      "name": "라쿤",
+      "reason": "Quadruped paw/ground center and complete eight-view animation review pending."
+    },
+    {
+      "id": "transformation:inven:85",
+      "name": "페이퍼 맨",
+      "reason": "Translucent/flat paper body composition and grounded contact not established."
+    },
+    {
+      "id": "transformation:inven:84",
+      "name": "눈 사람",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:83",
+      "name": "거대 개미",
+      "reason": "Multiple leg contact points; grounded center and complete direction review pending."
+    },
+    {
+      "id": "transformation:inven:79",
+      "name": "라이칸스로프",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:78",
+      "name": "젤라틴 큐브",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:72",
+      "name": "오크 전사",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:71",
+      "name": "두다-마라 오크",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:70",
+      "name": "해골 창병",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:69",
+      "name": "해골 궁수",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:68",
+      "name": "장로",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:67",
+      "name": "서큐버스",
+      "reason": "Winged/floating pose; ground projection and source shadow composition unverified."
+    },
+    {
+      "id": "transformation:inven:66",
+      "name": "오크 궁수",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:65",
+      "name": "오크",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:64",
+      "name": "해골",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:63",
+      "name": "늑대인간",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:62",
+      "name": "킹 버그베어",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:61",
+      "name": "버그베어",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:223",
+      "name": "스톤 골렘",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:49",
+      "name": "흑장로",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:47",
+      "name": "다크엘프",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:46",
+      "name": "흑기사",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:45",
+      "name": "난쟁이",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:43",
+      "name": "데스나이트",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:42",
+      "name": "블레이즈",
+      "reason": "Source lv blaze label does not establish the exact target transformation form."
+    },
+    {
+      "id": "transformation:inven:239",
+      "name": "펌프킨",
+      "reason": "Draped/hovering pumpkin body; anatomical ground projection unverified."
+    },
+    {
+      "id": "transformation:inven:236",
+      "name": "오크 소드",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:235",
+      "name": "오크 보우",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:233",
+      "name": "오크 워리어",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:157",
+      "name": "다크엘프 시프",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:106",
+      "name": "마수군왕 바란카",
+      "reason": "Definition only; no original body pixels supplied."
+    },
+    {
+      "id": "transformation:inven:37",
+      "name": "발록",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:25",
+      "name": "실버 나이트",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:20",
+      "name": "다크 나이트",
+      "reason": "Dark knight/black knight form distinction requires identity review despite one candidate fingerprint."
+    },
+    {
+      "id": "transformation:inven:19",
+      "name": "블랙 위자드",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:397",
+      "name": "뱀파이어",
+      "reason": "Cloak obscures feet; stable anatomical ground center and all actions remain unverified."
+    },
+    {
+      "id": "transformation:inven:294",
+      "name": "세마",
+      "reason": "Definition only; no original body pixels supplied."
+    },
+    {
+      "id": "transformation:inven:11",
+      "name": "베레스",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:6",
+      "name": "케레니스",
+      "reason": "Multiple source model fingerprints/variants require exact form selection."
+    },
+    {
+      "id": "transformation:inven:226",
+      "name": "가드리아",
+      "reason": "Legend_Gadria pixels inspected; airborne/one-foot poses lack a verified stable ground projection."
+    },
+    {
+      "id": "transformation:inven:1",
+      "name": "드래곤 슬레이어",
+      "reason": "Definition only; no original body pixels supplied."
+    }
+  ]
+}
