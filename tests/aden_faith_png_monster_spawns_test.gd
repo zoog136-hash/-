@@ -136,7 +136,8 @@ func inspect(mid: String) -> void:
 			check(field.walkable(actor.global_position) and not field.is_safe(actor.global_position) and world.field_population.destination_allowed(actor,actor.global_position),mid+" live normal pursuit remains in habitat")
 			moved=moved or actor.global_position.distance_to(before)>4
 		if not moved:
-			printerr("ADEN_FAITH_PNG_PURSUE_DIAGNOSTIC ",JSON.stringify({"map":mid,"start":str(before),"end":str(actor.global_position),"target":str(target),"graph":field.route_graph_stats(),"actor_path_count":actor.path.size()}))
+			var first_step: Vector2=before.direction_to(target)*32.0
+			printerr("ADEN_FAITH_PNG_PURSUE_DIAGNOSTIC ",JSON.stringify({"map":mid,"start":str(before),"end":str(actor.global_position),"target":str(target),"path_count":actor.path.size(),"patrol_next_32_allowed":world.field_population.destination_allowed(actor,before+first_step),"physics_next_32_collides":actor.test_move(Transform2D(actor.global_transform.x,actor.global_transform.y,before),first_step),"graph":field.route_graph_stats()}))
 		check(moved,mid+" actual normal AI moved toward player")
 		actor.set_physics_process(false)
 	var safe_point:=Vector2.INF
