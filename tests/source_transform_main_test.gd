@@ -42,7 +42,7 @@ func _run() -> void:
 				player.motion.apply_frames(player.transform_sprite)
 				check(player.transform_sprite.animation == role+"_"+str(direction), key + " live SpriteFrames " + role + str(direction))
 		count += 1
-	check(count == 8, "eight Main source switches")
+	check(count == manifest.entries.size() and count >= 8, "all Main source switches")
 	print("SOURCE_TRANSFORM_MAIN_RESULT entries="+str(count)+" failures="+str(failures.size()))
 	world.queue_free()
 	await process_frame

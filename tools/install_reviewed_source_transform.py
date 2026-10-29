@@ -22,6 +22,32 @@ def module(name, path):
     spec.loader.exec_module(loaded)
     return loaded
 
+def same_body_reference(pkg, binding, action, step, heading):
+    """Resolve a gap only within the already selected source/body/variant."""
+    try:
+        return pkg.resolve(binding['binding_id'], action, step, heading)
+    except (ValueError, IndexError) as error:
+        original_action = next(a for a in binding['actions'] if a['code'] == action)
+        original = original_action['references'][step]
+        candidates = []
+        ordered_actions = [action] + [a['code'] for a in binding['actions'] if a['code'] != action]
+        for candidate_action in ordered_actions:
+            selected = next(a for a in binding['actions'] if a['code'] == candidate_action)
+            for candidate_heading in [heading] + [h for h in range(8) if h != heading]:
+                for candidate_step in sorted(range(len(selected['references'])), key=lambda i: abs(i-step)):
+                    try:
+                        ref = pkg.resolve(binding['binding_id'],candidate_action,candidate_step,candidate_heading)
+                        candidates.append(ref)
+                        break
+                    except (ValueError, IndexError):
+                        pass
+                if candidates: break
+            if candidates: break
+        if not candidates: raise ValueError('No valid frame in the exact selected source/body/variant') from error
+        ref = dict(candidates[0])
+        ref['explicit_same_body_fallback'] = {'reason':str(error),'original_action_code':action,'original_sequence_step':step,'original_heading':heading,'original_reference':original,'replacement_action_code':ref['action_code'],'replacement_sequence_step':ref['sequence_step'],'replacement_heading':ref['heading_slot']}
+        return ref
+
 REVIEWS = [
     ("7", "바포메트", "PB0227", "baphomet_source2", [24,16], 86.0/69.0, "Horned goat skull, two hooves and ring staff; explicit morph definition -> body 53."),
     ("10", "켄라우헬", "PB0126", "ken_lauhel_source2", [24,16], 1.2, "Unique ken lauhel body 2419; gold shoulder plates, black/red cloak and long silver sword; soles visible beside cloak."),
@@ -31,6 +57,13 @@ REVIEWS = [
     ("28", "데몬", "PB0103", "demon_source2", [24,18], 1.0, "Unique demon body 1180; red muscular torso, black/red wings, paired white horns and clawed feet; not Balrog."),
     ("77", "키위패롯", "PB0198", "kiwi_parrot_source2", [24,18], 1.5, "Unique kiwi parrot body 4147; orange crest/body, blue wings/tail and two grounded clawed feet."),
     ("81", "미들오움", "PB0182", "middle_oum_source2", [24,18], 1.8, "Unique middle oum body 3644; hunched dark ridged body, short legs and visible pale soles; no lookalike alias chosen."),
+    ("86", "라쿤", "PB0191", "raccoon_source2", [24,18], 1.6, "Unique raccoon body 4038; orange-brown fur, dark eye mask, ringed tail. Four-paw footprint center checked in all eight idle/walk views."),
+    ("85", "페이퍼 맨", "PB0109", "paperman_source2", [24,18], 1.3, "Unique paperman body 1538, also explicitly referenced by paperman morph; flat blue back/white front and paper-thin profile are source identity, not a missing body. Both soles checked across eight views."),
+    ("83", "거대 개미", "PB0073", "giant_ant_source2", [24,18], 1.6, "Unique giant ant body 1037; black segmented abdomen, antennae and six legs. Fixed ground center within the leg support polygon reviewed in eight views."),
+    ("67", "서큐버스", "PB0095", "succubus_source2", [24,18], 1.3, "Unique succubus body 1112 and explicit succubus morph; violet body/clothes, pale hair, horns, wings and booted feet. Fixed toe/torso ground projection checked over eight-view idle and walking poses."),
+    ("239", "펌프킨", "PB0117", "pumpkin_source2", [24,18], 1.4, "Unique pumpkin body 2412; orange jack-o-lantern head, ragged draped body and slender arms. Fixed lower-body ground projection reviewed in eight views, preserving the source hovering/ragged hem motion."),
+    ("397", "뱀파이어", "PB0150", "vampire_source2", [24,18], 1.3, "Unique vampire body 2757 and explicit vampire morph alias; black/red-lined high-collar cape, pale face and white shirt. Cloak hem/sole contact center reviewed across eight-view idle and walking poses; source spell 18 explicitly substitutes absent attack 1."),
+    ("226", "가드리아", "PB0344", "gadria_source2", [24,18], 1.4, "Unique Legend_Gadria body 17633; gold helmet/armor, white split skirt, bow and visible gold boots. Eight-view strides and planted/raised soles checked with a fixed torso ground projection; not another archer."),
 ]
 PENDING_REASONS = {
     "라쿤": "Quadruped paw/ground center and complete eight-view animation review pending.",
@@ -63,13 +96,14 @@ def install(archive, package, root, review):
     action_fallbacks = {}
     for role, action in actions.items():
         if action not in available:
-            action_fallbacks[role] = {'requested_action_code':action,'replacement_action_code':1,'reason':'Action absent; same body/source attack sequence only.'}
-            actions[role] = 1
+            replacement = next(code for code in [1,18,30,3,0] if code in available)
+            action_fallbacks[role] = {'requested_action_code':action,'replacement_action_code':replacement,'reason':'Action absent; explicit sequence from the same source/body/variant only.'}
+            actions[role] = replacement
     sprites, resolved = {}, {}
     for role, action in actions.items():
         source_action = next(a for a in binding["actions"] if a["code"] == action)
         for direction, heading in enumerate(HEADINGS):
-            refs = [pkg.resolve(binding_id, action, step, heading) for step in range(len(source_action["references"]))]
+            refs = [same_body_reference(pkg, binding, action, step, heading) for step in range(len(source_action["references"]))]
             for ref in refs:
                 path = Path(ref["blob_path"])
                 if path not in sprites:
@@ -98,7 +132,17 @@ def install(archive, package, root, review):
             for step, ref in enumerate(refs):
                 sprite = sprites[Path(ref["blob_path"])]
                 image, placement = sprite.render(ref["frame_index"], canvas_bounds=tuple(canvas))
-                assert image.getbbox() is not None, (role, direction, step)
+                if image.getbbox() is None:
+                    alternatives = [(i, r) for i, r in enumerate(refs) if i != step]
+                    for _, alternative in sorted(alternatives, key=lambda pair: abs(pair[0]-step)):
+                        replacement_image, replacement_placement = sprites[Path(alternative['blob_path'])].render(alternative['frame_index'],canvas_bounds=tuple(canvas))
+                        if replacement_image.getbbox() is not None:
+                            original = ref
+                            ref = dict(alternative)
+                            ref['explicit_same_body_fallback'] = {'reason':'Empty source body frame; retain nearest real frame of the same action/body/source/variant.','original_action_code':original['action_code'],'original_sequence_step':step,'original_heading':original['heading_slot'],'original_frame_index':original['frame_index'],'replacement_action_code':alternative['action_code'],'replacement_frame_index':alternative['frame_index']}
+                            image, placement = replacement_image, replacement_placement
+                            break
+                    assert image.getbbox() is not None, (role, direction, step)
                 atlas.paste(image, (width * direction, height * step))
                 key = f"frame_{frame_number}"
                 frame_number += 1
@@ -119,7 +163,7 @@ def install(archive, package, root, review):
     files = {p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in output.iterdir() if p.suffix in [".png", ".tres"]}
     original_profiles = json.loads((root / "data/combat_animation_profiles.json").read_text())["profiles"]
     layout = original_profiles.get("transform:" + target_id, {}).get("layout", "still")
-    entry = {"name":name, "grade":candidate["grade"], "frames_path":resource+"SpriteFrames.tres", "required_layout":layout, "pixel_scale":scale, "sprite_offset":[(width/2-foot[0])*scale,(height/2-foot[1])*scale], "source_model":binding["representative_id"], "binding_id":binding_id, "body_model_prefix":binding["body_model_prefix"], "source":binding["source"], "variant":binding["variant"], "input_sha256":ARCHIVE_SHA, "identity_basis":identity_basis, "direction_review":"h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.", "game_to_source_heading":HEADINGS, "canvas_original_grid":canvas, "foot_original_grid":foot_grid, "foot_in_canvas":foot, "foot_review":"Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.", "original_grid_origin_in_canvas":[-canvas[0],-canvas[1]], "reference_client_origin_in_canvas":[-canvas[0]+24,-canvas[1]-36], "actions":actions, "action_fallbacks":action_fallbacks, "same_model_aliases":ALIASES, "timing_policy":"Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.", "attachments":binding["attachments"], "composition_limits":"Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.", "files_sha256":files, "rendered_frames":frame_number}
+    entry = {"name":name, "grade":candidate["grade"], "frames_path":resource+"SpriteFrames.tres", "required_layout":layout, "pixel_scale":scale, "sprite_offset":[(width/2-foot[0])*scale*0.90,(height/2-foot[1])*scale], "source_model":binding["representative_id"], "binding_id":binding_id, "body_model_prefix":binding["body_model_prefix"], "source":binding["source"], "variant":binding["variant"], "input_sha256":ARCHIVE_SHA, "identity_basis":identity_basis, "direction_review":"h1 back = N; h5 chest/front = S; h3 profile right = E; h7 profile left = W; all diagonal views checked.", "game_to_source_heading":HEADINGS, "canvas_original_grid":canvas, "foot_original_grid":foot_grid, "foot_in_canvas":foot, "foot_review":"Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.", "original_grid_origin_in_canvas":[-canvas[0],-canvas[1]], "reference_client_origin_in_canvas":[-canvas[0]+24,-canvas[1]-36], "actions":actions, "action_fallbacks":action_fallbacks, "same_model_aliases":ALIASES, "same_model_alias_action_codes":{alias:{"original_source_action_code":None,"replacement_source_action_code":actions[role],"replacement_role":role,"reason":"Target presentation state has no distinct source action code; explicit same body/source sequence."} for alias,role in ALIASES.items()}, "timing_policy":"Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.", "attachments":binding["attachments"], "composition_limits":"Offline opaque RLE; palette/t/blend/color keys and separate shadow composition not certified. No replacement attachment added.", "files_sha256":files, "rendered_frames":frame_number}
     (output / "provenance.json").write_text(json.dumps({"entry":entry,"tracks":tracks,"spr_headers":{p.name:s.metadata() for p,s in sprites.items()}},ensure_ascii=False,indent=2))
     manifest_path = root / "data/source_transform_visuals.json"
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {"schema":1,"scope":"Local-only reviewed source visuals; original art not authorized for public push.","entries":{},"excluded_grades":["신화","유일"]}

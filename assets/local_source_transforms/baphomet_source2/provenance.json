@@ -74,6 +74,80 @@
       "summon": "idle",
       "despawn": "death"
     },
+    "same_model_alias_action_codes": {
+      "run": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 0,
+        "replacement_role": "walk",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "turn": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 3,
+        "replacement_role": "idle",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "recovery": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 1,
+        "replacement_role": "attack",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "corpse": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 8,
+        "replacement_role": "death",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "ranged_attack": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 1,
+        "replacement_role": "attack",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "float": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 3,
+        "replacement_role": "idle",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "energy": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 3,
+        "replacement_role": "idle",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "equip": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 3,
+        "replacement_role": "idle",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "unequip": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 3,
+        "replacement_role": "idle",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "activate": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 3,
+        "replacement_role": "idle",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "summon": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 3,
+        "replacement_role": "idle",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      },
+      "despawn": {
+        "original_source_action_code": null,
+        "replacement_source_action_code": 8,
+        "replacement_role": "death",
+        "reason": "Target presentation state has no distinct source action code; explicit same body/source sequence."
+      }
+    },
     "timing_policy": "Preserve target duration, markers, movement cadence and hit clocks; source durations recorded raw only.",
     "attachments": [
       {

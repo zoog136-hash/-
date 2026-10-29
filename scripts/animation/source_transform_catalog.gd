@@ -14,7 +14,10 @@ static func configure(profile: Resource, kind: String, record: Dictionary) -> vo
 	if not ResourceLoader.exists(path): return
 	# Retain layout, projectile/hit/collision offsets, timing and hit markers.
 	# Baphomet already uses directional8; changing layout would change projectiles.
-	if str(profile.layout) != str(entry.get("required_layout", "")): return
+	# The generated visual manifest can promote directional4 to authored4.
+	# Both retain the same legacy projectile geometry; preserve the actual
+	# configured layout rather than overriding either presentation adapter.
+	if (str(profile.layout) == "directional8") != (str(entry.get("required_layout", "")) == "directional8"): return
 	profile.frames_path = path
 	profile.animation_names = {}
 	profile.pixel_scale = float(entry.pixel_scale)

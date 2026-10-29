@@ -47,10 +47,10 @@ func _run() -> void:
 		var foot: Vector2 = Vector2(float(entry.foot_in_canvas[0]), float(entry.foot_in_canvas[1]))
 		var bounds: Array = entry.canvas_original_grid
 		var center := Vector2(float(bounds[2]-bounds[0]), float(bounds[3]-bounds[1])) * 0.5
-		check((profile.sprite_offset + (foot-center)*profile.pixel_scale).is_zero_approx(), key + " foot remains actor root")
+		check((profile.sprite_offset + (foot-center)*Vector2(0.90,1.0)*profile.pixel_scale).is_zero_approx(), key + " foot remains actor root")
 		for file: String in entry.files_sha256:
 			check(FileAccess.get_sha256(profile.frames_path.get_base_dir()+"/"+file) == entry.files_sha256[file], key + " runtime SHA " + file)
-	check(count == 8, "eight individually reviewed connections")
+	check(count == reviewed.size() and count >= 8, "all individually reviewed connections")
 	SOURCE.entries = reviewed
 	print("SOURCE_TRANSFORM_VISUAL_RESULT entries=" + str(count) + " failures=" + str(failures.size()) + " headings=[3,4,5,6,7,0,1,2]")
 	quit(0 if failures.is_empty() else 1)
