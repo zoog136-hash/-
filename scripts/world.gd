@@ -20,6 +20,8 @@ const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
 const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
+const SOURCE_MAP84 = preload("res://scripts/maps/source_map_runtime.gd")
+const SOURCE_MAP84_RENDERER = preload("res://scripts/maps/source_map_runtime_renderer.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -496,6 +498,11 @@ func _load_data() -> void:
 	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
 		original_maps.append(record)
 		maps_by_id[str(record.id)] = record
+	for record: Dictionary in SOURCE_MAP84.catalog_entries():
+		# Verified independent source IDs only; never alias a preserved temple.
+		if not maps_by_id.has(str(record.id)):
+			maps.append(record)
+			maps_by_id[str(record.id)] = record
 	var db_text: String = FileAccess.get_file_as_string(DB_PATH)
 	var db_value: Variant = JSON.parse_string(db_text)
 	if db_value is Dictionary:
@@ -1265,6 +1272,11 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	var requested_original: OriginalPlayableField = null
 	if requested_native != null:
 		pass
+	elif SOURCE_MAP84.supports(map_id):
+		requested_original = SOURCE_MAP84.load_field(map_id)
+		if requested_original == null:
+			hud.show_message("원본 지도 팩을 확인할 수 없어 현재 지역을 유지합니다")
+			return
 	elif REMAKE_REGISTRY.installed(map_id):
 		requested_original = REMAKE_REGISTRY.load_field(map_id)
 		if requested_original == null:
@@ -1373,6 +1385,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 				push_error("Native PNG renderer script could not be loaded")
 				return
 			field_renderer = native_renderer_script.new() as FieldRenderer
+		elif bool(field_map.get_meta("source_map84",false)): field_renderer = SOURCE_MAP84_RENDERER.new()
 		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
@@ -4064,8 +4077,13 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if field_map is NativePngField:
 		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
 		data["native_png_review_sha256"] = NATIVE_PNG.review_hash(active_map_id)
-	if field_map is RemakePlayableField and field_map.png_game_pack!=null:
+	if field_map is RemakePlayableField and field_map.png_game_pack!=null and not bool(field_map.get_meta("source_map84",false)):
 		data["oman_png_index_sha256"]=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")
+	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
+	var source_map_error: String=SOURCE_MAP84.validate_save(data)
+	if not source_map_error.is_empty():
+		if not quiet:hud.show_message(source_map_error)
+		return ERR_UNAVAILABLE
 	data.merge(equipment_collections.extra_save_fields, false)
 	data.merge(collection_override, true)
 	var result: Error = equipment_collections.write_save(save_path(), data)
@@ -4101,6 +4119,13 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	# Validate every new-map player/drop coordinate before inventory, bosses or
+	# outgoing actors are changed. Unknown layout revisions require migration.
+	var map84_error: String=SOURCE_MAP84.validate_save(data)
+	if not map84_error.is_empty():
+		source_save_blocked=true
+		hud.show_message(map84_error)
+		return
 	var growth_error: String = growth.validate(data.get("growth",growth.empty_state()))
 	if not growth_error.is_empty():
 		equipment_collections.save_blocked = true
@@ -4197,7 +4222,7 @@ func _load_game(quiet: bool) -> void:
 				hud.show_message("이전 지도 저장 백업 실패: 저장 파일을 보존합니다")
 				return
 	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
-		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
+		var saved_field: OriginalPlayableField = SOURCE_MAP84.load_field(saved_map_id) if SOURCE_MAP84.supports(saved_map_id) else (REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{})))
 		if saved_field is RemakePlayableField and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not "--legacy-map-layouts" in OS.get_cmdline_user_args():
 			if not SOURCE_PNG_GAME.attach(saved_field) or (data.has("oman_png_index_sha256") and data.oman_png_index_sha256!=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")):
 				saved_field.close();source_save_blocked=true

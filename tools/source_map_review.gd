@@ -12,6 +12,11 @@ var capture_path: String = ""
 var frames: int = 0
 var capture_after: int = 0
 var render_failed: bool = false
+var focus_source := Vector2.INF
+var draw_grid: bool = false
+var sampler: String="nearest"
+var overlay: Node2D
+var pixel_material: ShaderMaterial
 const MAX_VISIBLE: int = 12
 
 func _initialize() -> void:
@@ -24,10 +29,19 @@ func start() -> void:
 		if arg.begins_with("--pack="): pack_path = arg.trim_prefix("--pack=")
 		if arg.begins_with("--map="): mid = arg.trim_prefix("--map=")
 		if arg.begins_with("--capture="): capture_path = arg.trim_prefix("--capture=")
+		if arg=="--grid":draw_grid=true
+		if arg.begins_with("--sampler="):sampler=arg.trim_prefix("--sampler=")
+		if arg.begins_with("--source="):
+			var parts: PackedStringArray=arg.trim_prefix("--source=").split(",")
+			if parts.size()==2:focus_source=Vector2(float(parts[0]),float(parts[1]))
 	root.size = Vector2i(1280,720)
 	root.window_input.connect(_input)
 	if not pack.open_pack(pack_path): push_error(pack.problem); quit(1); return
 	root.add_child(canvas)
+	canvas.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR if sampler=="linear" else CanvasItem.TEXTURE_FILTER_NEAREST
+	if sampler=="texel":
+		pixel_material=ShaderMaterial.new()
+		pixel_material.shader=load("res://assets/maps/source_map_texel.gdshader")
 	canvas.add_child(camera)
 	camera.zoom = Vector2.ONE*0.5
 	var layer := CanvasLayer.new()
@@ -57,6 +71,16 @@ func choose(mid: String) -> void:
 	# Inspect a real central source chunk at 50%, not an overview stretched up.
 	var chunk: Dictionary = record.chunks[0]
 	camera.position = Vector2(chunk.position[0],chunk.position[1])+Vector2(chunk.size[0],chunk.size[1])*0.5
+	if focus_source.is_finite():camera.position=PACK.source_to_canvas(record,focus_source)
+	if is_instance_valid(overlay):overlay.free()
+	if draw_grid and record.collision!=null:
+		overlay=GridOverlay.new()
+		overlay.record=record
+		overlay.focus=focus_source if focus_source.is_finite() else PACK.canvas_to_source(record,camera.position)
+		var spec: Dictionary=record.collision
+		overlay.grid.configure(int(record.source_map_id),spec.bounds,Vector2i(spec.width,spec.height),FileAccess.get_file_as_bytes(pack.root_path+"/"+str(spec.file)).decompress_dynamic(16000000,FileAccess.COMPRESSION_GZIP))
+		overlay.z_index=4000
+		canvas.add_child(overlay)
 	status.text = "ART REVIEW ONLY · collision/entry/save migration not approved\nDrag to pan · Wheel to zoom · source pixels unchanged"
 	refresh()
 
@@ -112,8 +136,29 @@ func refresh() -> void:
 		var sprite := Sprite2D.new()
 		sprite.centered = false
 		sprite.texture = texture
+		if pixel_material!=null:sprite.material=pixel_material
 		sprite.position = Vector2(row.position[0],row.position[1])
 		# Preserve source ordering for overlapping expanded chunk margins.
 		sprite.z_index = i
 		canvas.add_child(sprite)
 		sprites[i] = sprite
+
+class GridOverlay extends Node2D:
+	var grid=preload("res://scripts/maps/source_v1_grid.gd").new()
+	var record: Dictionary
+	var focus: Vector2
+	func _draw() -> void:
+		var c: Vector2i=Vector2i(focus)-grid.origin
+		for y: int in range(c.y-30,c.y+31):
+			for x: int in range(c.x-30,c.x+31):
+				var cell:=Vector2i(x,y)
+				if not grid.contains(cell):continue
+				var p: Vector2=PACK.source_to_canvas(record,Vector2(cell+grid.origin))
+				draw_circle(p,1.3,Color(0,1,0,.6) if grid.mask(cell)!=0 else Color(1,0,0,.6))
+				if grid.mask(cell)==0:continue
+				for heading: int in [0,2,4,6]:
+					if grid.can_step(cell,heading):continue
+					var corners: Array[Vector2]=[p+Vector2(-24,0),p+Vector2(0,-12),p+Vector2(24,0),p+Vector2(0,12)]
+					var side: int=heading/2
+					draw_line(corners[side],corners[(side+1)%4],Color(1,.8,0,.9),2)
+		draw_circle(PACK.source_to_canvas(record,focus),6,Color.CYAN)
