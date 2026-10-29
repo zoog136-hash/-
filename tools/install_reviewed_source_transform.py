@@ -12,6 +12,7 @@ from pathlib import Path
 import zipfile
 
 ARCHIVE_SHA = "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c"
+SEMANTIC_SHA = "415755eaaeccafa47b4fe4c9fee22be6540690e33528b3b6b1ea4246e7c37412"
 HEADINGS = [3, 4, 5, 6, 7, 0, 1, 2]  # E SE S SW W NW N NE
 ACTIONS = {"idle": 3, "walk": 0, "attack": 1, "hit": 2, "death": 8, "cast": 18, "special": 30}
 ALIASES = {"run": "walk", "turn": "idle", "recovery": "attack", "corpse": "death", "ranged_attack": "attack", "float": "idle", "energy": "idle", "equip": "idle", "unequip": "idle", "activate": "idle", "summon": "idle", "despawn": "death"}
@@ -65,6 +66,281 @@ REVIEWS = [
     ("397", "뱀파이어", "PB0150", "vampire_source2", [24,18], 1.3, "Unique vampire body 2757 and explicit vampire morph alias; black/red-lined high-collar cape, pale face and white shirt. Cloak hem/sole contact center reviewed across eight-view idle and walking poses; source spell 18 explicitly substitutes absent attack 1."),
     ("226", "가드리아", "PB0344", "gadria_source2", [24,18], 1.4, "Unique Legend_Gadria body 17633; gold helmet/armor, white split skirt, bow and visible gold boots. Eight-view strides and planted/raised soles checked with a fixed torso ground projection; not another archer."),
 ]
+# Individually inspected source2 variants; each remains a separate target record.
+REVIEWS += [('87',
+  '고블린',
+  'PB0296',
+  'reviewed_87_source2',
+  [24, 18],
+  1.6,
+  'Green goblin, small pointed helmet, curved sword and round shield. Actual eight-heading idle and walk pixels inspected. Specific '
+  'source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('84',
+  '눈 사람',
+  'PB0322',
+  'reviewed_84_source2',
+  [24, 18],
+  1.4,
+  'Three snow spheres, carrot nose, buttons, brown cap and stick arms; lower sphere contact center. Actual eight-heading idle and walk '
+  'pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, '
+  'frames, colours or versions.'),
+ ('79',
+  '라이칸스로프',
+  'PB0310',
+  'reviewed_79_source2',
+  [24, 18],
+  1.25,
+  'Dark grey lycanthrope with a long muzzle, swept mane, pale limbs and spiked club; distinct from brown werewolf 1110. Actual '
+  'eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no '
+  'claim of identical files, frames, colours or versions.'),
+ ('78',
+  '젤라틴 큐브',
+  'PB0330',
+  'reviewed_78_source2',
+  [24, 18],
+  1.2,
+  'Green gelatin cube with visible suspended yellow bones; lower-face contact center, not an invented leg. Actual eight-heading idle and '
+  'walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical '
+  'files, frames, colours or versions.'),
+ ('72',
+  '오크 전사',
+  'PB0255',
+  'reviewed_72_source2',
+  [24, 18],
+  1.2,
+  'Green armored sword orc with curved sword, shield and orange crest. Actual eight-heading idle and walk pixels inspected. Specific '
+  'source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('71',
+  '두다-마라 오크',
+  'PB0281',
+  'reviewed_71_source2',
+  [24, 18],
+  1.5,
+  'Dudamara orc carrying a long spear and small shield, as explicitly named by the morph definition. Actual eight-heading idle and walk '
+  'pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, '
+  'frames, colours or versions.'),
+ ('70',
+  '해골 창병',
+  'PB0306',
+  'reviewed_70_source2',
+  [24, 18],
+  1.3,
+  'Bare skeleton with long spear, not the archer or sword skeleton. Actual eight-heading idle and walk pixels inspected. Specific '
+  'source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('69',
+  '해골 궁수',
+  'PB0300',
+  'reviewed_69_source2',
+  [24, 18],
+  1.3,
+  'Skeleton carrying a bow and back quiver; bony feet and front/back bow views checked. Actual eight-heading idle and walk pixels '
+  'inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, '
+  'colours or versions.'),
+ ('68',
+  '장로',
+  'PB0214',
+  'reviewed_68_source2',
+  [24, 18],
+  1.4,
+  'Elder in yellow/white robes with a broad paddle-like staff; robe/sole contact center. Actual eight-heading idle and walk pixels '
+  'inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, '
+  'colours or versions.'),
+ ('66',
+  '오크 궁수',
+  'PB0250',
+  'reviewed_66_source2',
+  [24, 18],
+  1.4,
+  'Green orc archer with curved bow and back quiver. Actual eight-heading idle and walk pixels inspected. Specific source/model/variant '
+  'pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('65',
+  '오크',
+  'PB0242',
+  'reviewed_65_source2',
+  [24, 18],
+  1.3,
+  'Green broad-bodied orc with axe and light shoulder pieces; distinct from sword-orc and orc-bow bodies. Actual eight-heading idle and '
+  'walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical '
+  'files, frames, colours or versions.'),
+ ('64',
+  '해골',
+  'PB0208',
+  'reviewed_64_source2',
+  [24, 18],
+  1.2,
+  'Sword-and-round-shield skeleton; bare bones and feet, no spear or bow. Actual eight-heading idle and walk pixels inspected. Specific '
+  'source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('63',
+  '늑대인간',
+  'PB0317',
+  'reviewed_63_source2',
+  [24, 18],
+  1.25,
+  'Brown werewolf with long muzzle, mane, pale claws and spiked club; distinct from grey lycanthrope 1108. Actual eight-heading idle and '
+  'walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical '
+  'files, frames, colours or versions.'),
+ ('62',
+  '킹 버그베어',
+  'PB0284',
+  'reviewed_62_source2',
+  [24, 18],
+  1.1,
+  'Large grey king bugbear, horned/spiked club and yellow loincloth; distinct from pale bugbear 152. Actual eight-heading idle and walk '
+  'pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, '
+  'frames, colours or versions.'),
+ ('61',
+  '버그베어',
+  'PB0261',
+  'reviewed_61_source2',
+  [24, 18],
+  1.1,
+  'Large pale bugbear with red loincloth and dark studded club; distinct from grey king bugbear 894. Actual eight-heading idle and walk '
+  'pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, '
+  'frames, colours or versions.'),
+ ('223',
+  '스톤 골렘',
+  'PB0220',
+  'reviewed_223_source2',
+  [24, 18],
+  1.2,
+  'Broad segmented stone golem with stone fists, heavy feet and actual embedded dark shadow; foot soles reviewed independently of shadow '
+  'bbox. Actual eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain '
+  'distinct, with no claim of identical files, frames, colours or versions.'),
+ ('49',
+  '흑장로',
+  'PB0267',
+  'reviewed_49_source2',
+  [24, 18],
+  1.4,
+  'Dark elder in black/grey hooded robe with pale staff head; explicit dark elder morph. Actual eight-heading idle and walk pixels '
+  'inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, '
+  'colours or versions.'),
+ ('47',
+  '다크엘프',
+  'PB0320',
+  'reviewed_47_source2',
+  [24, 18],
+  1.3,
+  'Pale-haired dark elf archer with dark/light fitted armor and bow; explicit darkelf definition. Actual eight-heading idle and walk '
+  'pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, '
+  'frames, colours or versions.'),
+ ('46',
+  '흑기사',
+  'PB0035',
+  'reviewed_46_source2',
+  [24, 18],
+  1.2,
+  'Dark armored knight with tall shield and spear; ordinary black-knight morph explicitly uses body 110. Not ancient/neo black knight '
+  '3054. Actual eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain '
+  'distinct, with no claim of identical files, frames, colours or versions. Source3 TW3.80 polymorph ordinary black knight 4923/8800 and '
+  'NPC 45165 gfx4003 explicitly map to body110; ancient/neo3890/6267 and NPC81030 gfx3890 map to3054 and are not selected.'),
+ ('45',
+  '난쟁이',
+  'PB0238',
+  'reviewed_45_source2',
+  [24, 18],
+  1.8,
+  'Short green-clad dwarf with round pack/shield and short weapon; short-legged foot center. Actual eight-heading idle and walk pixels '
+  'inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, '
+  'colours or versions.'),
+ ('43',
+  '데스나이트',
+  'PB0272',
+  'reviewed_43_source2',
+  [24, 18],
+  1.3,
+  'Death Knight in pale skeletal armor, curved helmet/spikes and orange blade details; selected source2 all_nonconflicting_packs body 240, '
+  'not assumed equal to source1 BASE/SHARDS. Actual eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; '
+  'alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('236',
+  '오크 소드',
+  'PB0255',
+  'reviewed_236_source2',
+  [24, 18],
+  1.2,
+  'Green armored sword orc with curved sword, shield and orange crest. Actual eight-heading idle and walk pixels inspected. Specific '
+  'source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('235',
+  '오크 보우',
+  'PB0250',
+  'reviewed_235_source2',
+  [24, 18],
+  1.4,
+  'Green orc archer with curved bow and back quiver. Actual eight-heading idle and walk pixels inspected. Specific source/model/variant '
+  'pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('233',
+  '오크 워리어',
+  'PB0255',
+  'reviewed_233_source2',
+  [24, 18],
+  1.2,
+  'Green armored sword orc with curved sword, shield and orange crest. Actual eight-heading idle and walk pixels inspected. Specific '
+  'source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, frames, colours or versions.'),
+ ('157',
+  '다크엘프 시프',
+  'PB0171',
+  'reviewed_157_source2',
+  [24, 18],
+  1.3,
+  'Darkelf thief with pale hair, burgundy back/shoulder piece and short blades; selected all_nonconflicting_packs, no BASE/SHARDS mixing. '
+  'Actual eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, '
+  'with no claim of identical files, frames, colours or versions.'),
+ ('37',
+  '발록',
+  'PB0143',
+  'reviewed_37_source2',
+  [24, 18],
+  0.9,
+  'Dark massive Balrog with broad bat wings, long tail and horned head; selected source2 all_nonconflicting_packs and not red demon 1180. '
+  'Actual eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, '
+  'with no claim of identical files, frames, colours or versions.'),
+ ('25',
+  '실버 나이트',
+  'PB0336',
+  'reviewed_25_source2',
+  [24, 18],
+  1.3,
+  'Silver knight in bright silver armor, pale cloak and long silver sword; distinct from black knight 3054 and ordinary shield/spear '
+  'knight 110. Actual eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain '
+  'distinct, with no claim of identical files, frames, colours or versions.'),
+ ('19',
+  '블랙 위자드',
+  'PB0338',
+  'reviewed_19_source2',
+  [24, 18],
+  1.3,
+  'Black wizard in dark blue robe and tall headwear, with red orb/ring staff and long back ribbons. Actual eight-heading idle and walk '
+  'pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical files, '
+  'frames, colours or versions.'),
+ ('11',
+  '베레스',
+  'PB0292',
+  'reviewed_11_source2',
+  [24, 18],
+  1.3,
+  'Beleth with horned skull helmet, dark armor and long double-ended staff; distinct from goat-skull ring-staff Baphomet. Actual '
+  'eight-heading idle and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no '
+  'claim of identical files, frames, colours or versions.'),
+ ('6',
+  '케레니스',
+  'PB0326',
+  'reviewed_6_source2',
+  [24, 18],
+  1.3,
+  'Adult Kelenis with short dark hair, dark fitted dress/robe and pale trim; distinct from young Kelenis 8774. Actual eight-heading idle '
+  'and walk pixels inspected. Specific source/model/variant pinned; alternative fingerprints remain distinct, with no claim of identical '
+  'files, frames, colours or versions.')]
+
+REVIEWS += [("42", "블레이즈", "PB0204", "blaze_source1", [24,18], 1.3,
+    "Exact original source1 definition 4618 is named blaze (not only the lv blaze alias); body4618, pale short hair, fitted dark armor with gold trim and short blade. Eight-heading idle, walk and attack pixels inspected; anatomical boot center fixed across files. Other aliases do not authorize other bodies.")]
+
+BASE_VARIANT_OVERRIDES = {
+    "43": ("PB0051", "death_knight_source1_base", "Source1 BASE body240, fingerprint884444e8fe9656885f53: pale skeletal plate armor, crested helmet, orange blade details. Eight-heading idle/walk/attack and fixed boot support reviewed directly. The supplied semantic review recommends this exact BASE; no SHARDS or source2 file is mixed."),
+    "157": ("PB0168", "darkelf_thief_source1_base", "Source1 BASE body3412, fingerprint3ffe07e46a79727d5ebd: pale hair, burgundy shoulder/back piece, dark fitted clothes and short blades. Eight-heading idle/walk/attack and fixed boot support reviewed directly. Explicit BASE pin; no different SHARDS fingerprint is mixed."),
+    "37": ("PB0139", "balrog_source1_base", "Source1 BASE body2538, fingerprintb36236426e30172201a5: massive dark horned demon, bat wings, long tail and clawed feet. Eight-heading idle/walk/attack and fixed claw support reviewed directly. Exact BASE recommended by semantic input; distinct SHARDS/source2 fingerprint excluded from this body."),
+}
+REVIEWS = [(r[0],r[1],BASE_VARIANT_OVERRIDES[r[0]][0],BASE_VARIANT_OVERRIDES[r[0]][1],r[4],r[5],BASE_VARIANT_OVERRIDES[r[0]][2]) if r[0] in BASE_VARIANT_OVERRIDES else r for r in REVIEWS]
+
 PENDING_REASONS = {
     "라쿤": "Quadruped paw/ground center and complete eight-view animation review pending.",
     "페이퍼 맨": "Translucent/flat paper body composition and grounded contact not established.",
@@ -173,11 +449,58 @@ def install(archive, package, root, review):
     manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps({"output":str(output),"canvas":canvas,"frames":frame_number,"sha256":files},ensure_ascii=False))
 
+def apply_semantic_support(root, package, support_path):
+    data = support_path.read_bytes()
+    assert hashlib.sha256(data).hexdigest() == SEMANTIC_SHA, "semantic input SHA mismatch"
+    support = json.loads(data)
+    by_target = {c['twilight_id'].split(':')[-1]:c for c in support['candidates']}
+    models = {m['id']:m for m in json.loads((package/'models.json').read_text())['models']}
+    manifest_path = root/'data/source_transform_visuals.json'
+    manifest = json.loads(manifest_path.read_text())
+    manifest['scope'] = 'Locally committed, individually reviewed source visuals; no public upload authorized.'
+    manifest['semantic_support_input'] = {'library_file_id':'libfile_c1cfa888f34081918ac90e4ad9f393d4','version':0,'filename':'transformation_30_semantic_support.json','bytes':len(data),'sha256':SEMANTIC_SHA,'cross_version_or_same_pixel_equality_claim':False}
+    for key, entry in manifest['entries'].items():
+        model = models[entry['source_model']]
+        entry['model_fingerprint_sha256'] = model['model_fingerprint_sha256']
+        entry['sample_sha256'] = model['sample_sha256']
+        entry['foot_review'] = 'Fixed support/ground projection reviewed from actual idle and walking pixels; model-specific physical features are described in identity_basis. Same anchor across all files; no per-frame bbox recentering. Target actor root and existing 0.90 horizontal display factor preserved.'
+        target = by_target.get(key.split(':')[-1])
+        if target:
+            # The support file spells 눈사람 without the catalog's space.
+            # Require the same pinned ID and exact Korean letters; retain the
+            # original catalog name in every runtime entry.
+            assert ''.join(target['target_name_ko'].split()) == ''.join(entry['name'].split())
+            assert target['recommended_local_model_prefix'] == entry['body_model_prefix']
+            alternatives = target['alternative_model_variants_kept_separate']
+            matched = [a for a in alternatives+[target['chosen_model']] if a['source']==entry['source'] and a['fingerprint_SHA256']==entry['model_fingerprint_sha256'] and a['variant']==entry['variant']]
+            assert matched and all(a['sample_actual_pixels_inspected'] for a in matched), key
+            entry['semantic_support'] = {
+                'input_sha256':SEMANTIC_SHA,
+                'decision':target['decision'],
+                'recommendation_scope':target['recommendation_scope'],
+                'independent_actual_form_review':target['actual_form_review'],
+                'recommended_source_variant':{k:target['chosen_model'][k] for k in ['source','variant','representative_id','fingerprint_SHA256']},
+                'selected_variant_reason':'The selected exact source/variant is independently inspected in the support input and locally in eight headings. Recommended BASE pins are followed for Death Knight, Darkelf Thief and Balrog; other inspected source2 alternatives remain separately pinned.',
+                'SQL_polymorph_local_explicit_base_chain':target['SQL_polymorph_local_explicit_base_chain'],
+                'SQL_npc_local_explicit_base_chain':target['SQL_npc_local_explicit_base_chain'],
+                'alternative_fingerprints_not_merged':sorted({a['fingerprint_SHA256'] for a in alternatives if a['fingerprint_SHA256']!=entry['model_fingerprint_sha256']}),
+                'same_target_pixels_verified':False,
+                'same_source3_version_pixels_verified':False,
+            }
+        provenance_path = root / entry['frames_path'].removeprefix('res://')
+        provenance_path = provenance_path.parent/'provenance.json'
+        provenance = json.loads(provenance_path.read_text())
+        provenance['entry'] = entry
+        provenance_path.write_text(json.dumps(provenance,ensure_ascii=False,indent=2))
+    manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive",type=Path,required=True)
     parser.add_argument("--package",type=Path,required=True)
+    parser.add_argument("--semantic-support",type=Path,required=True)
     parser.add_argument("--root",type=Path,default=Path(__file__).resolve().parents[1])
     args = parser.parse_args()
     for review in REVIEWS:
         install(args.archive,args.package,args.root,review)
+    apply_semantic_support(args.root,args.package,args.semantic_support)

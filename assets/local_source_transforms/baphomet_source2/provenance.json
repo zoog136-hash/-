@@ -41,7 +41,7 @@
       120,
       112
     ],
-    "foot_review": "Anatomical midpoint of two grounded feet/robe hem in breathing poses, compared against walking poses. One fixed anchor across every source file; no per-frame bbox recentering.",
+    "foot_review": "Fixed support/ground projection reviewed from actual idle and walking pixels; model-specific physical features are described in identity_basis. Same anchor across all files; no per-frame bbox recentering. Target actor root and existing 0.90 horizontal display factor preserved.",
     "original_grid_origin_in_canvas": [
       96,
       96
@@ -173,7 +173,9 @@
       "attack.png": "fd9a1808da6cb5f05911e6a4fd7d127386fc445ecfb89c2d58e95a9939dddb3b",
       "special.png": "c0c314bd810f4bebafab3488224dbcc28ec86537ff37cada38c69e72692cafe9"
     },
-    "rendered_frames": 296
+    "rendered_frames": 296,
+    "model_fingerprint_sha256": "080405561083574322d8d65e191a4b977ed49cc71bafc2844a5166431b01c5a9",
+    "sample_sha256": "4fd19786137801cbf67781279c7ea7afe4ec078b8f11f92b8712ea75621a0a72"
   },
   "tracks": [
     {
