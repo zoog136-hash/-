@@ -14,6 +14,7 @@ var capture_after: int = 0
 var render_failed: bool = false
 var focus_source := Vector2.INF
 var draw_grid: bool = false
+var inspect_equal_collision: bool=false
 var sampler: String="nearest"
 var overlay: Node2D
 var pixel_material: ShaderMaterial
@@ -30,6 +31,7 @@ func start() -> void:
 		if arg.begins_with("--map="): mid = arg.trim_prefix("--map=")
 		if arg.begins_with("--capture="): capture_path = arg.trim_prefix("--capture=")
 		if arg=="--grid":draw_grid=true
+		if arg=="--equivalent-collision":inspect_equal_collision=true
 		if arg.begins_with("--sampler="):sampler=arg.trim_prefix("--sampler=")
 		if arg.begins_with("--source="):
 			var parts: PackedStringArray=arg.trim_prefix("--source=").split(",")
@@ -68,6 +70,9 @@ func choose(mid: String) -> void:
 	for node: Sprite2D in sprites.values(): node.free()
 	sprites.clear()
 	record = candidate
+	if inspect_equal_collision and record.collision==null and record.source_map_id!=null:
+		var equal: Dictionary=preload("res://scripts/maps/source_map_equal_collision.gd").spec(pack.root_path,int(record.source_map_id))
+		if not equal.is_empty():record.collision=equal
 	# Inspect a real central source chunk at 50%, not an overview stretched up.
 	var chunk: Dictionary = record.chunks[0]
 	camera.position = Vector2(chunk.position[0],chunk.position[1])+Vector2(chunk.size[0],chunk.size[1])*0.5

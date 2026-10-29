@@ -22,6 +22,10 @@ func run() -> void:
 	await process_frame;await physics_frame
 	check(world.active_map_id==mid and bool(world.field_map.get_meta("source_map84",false)),"ordinary world enters actual source field")
 	check(world.field_renderer.get_script().resource_path=="res://scripts/maps/source_map_runtime_renderer.gd","ordinary world uses source WebP renderer")
+	var ground_below_actor: bool=true
+	for ground: Sprite2D in world.field_renderer.chunks.values():
+		if ground.z_index>=world.player.z_index:ground_below_actor=false
+	check(ground_below_actor,"all terrain stays behind the actual player even on maps with over thirty chunks")
 	check(world.monsters_root.get_child_count()==0,"new source map adds zero monster spawns")
 	var start: Vector2=world.player.global_position
 	check(world.field_map.point_clear(start,4),"real Player starts at verified source point")

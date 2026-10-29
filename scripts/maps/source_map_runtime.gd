@@ -2,6 +2,7 @@ extends RefCounted
 ## Runtime promotion is separate from the immutable historical input contract.
 ## Each map needs reviewed entry, source-grid semantics, art and save identity.
 const ART=preload("res://scripts/maps/source_map_review_pack.gd")
+const EQUAL_COLLISION=preload("res://scripts/maps/source_map_equal_collision.gd")
 const FIELD=preload("res://scripts/maps/source_map_runtime_field.gd")
 const MIGRATION=preload("res://scripts/maps/source_map_save_migration.gd")
 const LEGACY_SOURCE=preload("res://scripts/maps/remake_registry.gd")
@@ -33,11 +34,18 @@ static func load_field(mid: String) -> RemakePlayableField:
 	var art=ART.new()
 	if not art.open_pack(root_path()):return null
 	var record: Dictionary=art.load_map(mid)
-	if record.is_empty() or record.collision==null or record.selected_collision_version!="360":return null
+	if record.is_empty():return null
+	var rule: Dictionary=policy()[mid]
+	var requested: String=str(rule.get("collision_archive_version","360"))
+	if requested=="351":
+		if record.collision!=null or record.selected_collision_version!=null or rule.get("collision_basis")!="identical_archive_representative":return null
+		var equal: Dictionary=EQUAL_COLLISION.spec(root_path(),int(record.source_map_id))
+		if equal.is_empty():return null
+		record.collision=equal
+	elif requested!="360" or record.collision==null or record.selected_collision_version!="360":return null
 	# This cohort has no dynamic source doors. Door-bearing maps require an
 	# explicit state/physics adapter; ignoring a drawn closed door is unsafe.
 	if not record.get("doors",[]).is_empty():return null
-	var rule: Dictionary=policy()[mid]
 	if int(record.source_map_id)!=int(rule.source_map_id) or str(record.collision.raw_sha256)!=str(rule.grid_sha256):return null
 	if str(art.index.maps[mid].sha256)!=str(rule.art_manifest_sha256):return null
 	var field=FIELD.new()

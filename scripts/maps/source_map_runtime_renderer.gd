@@ -32,14 +32,16 @@ func refresh_visible() -> void:
 		if not needed.has(i):remove_child(chunks[i]);chunks[i].queue_free();chunks.erase(i)
 	for i: int in needed:
 		if chunks.has(i):continue
+		if i>=4096:failure="Map exceeds safe ground draw-order range";push_error(failure);return
 		var row: Dictionary=needed[i]
 		var texture: Texture2D=art.load_texture(row)
 		if texture==null:failure=art.problem;push_error(failure);return
 		var sprite:=Sprite2D.new()
 		sprite.centered=false;sprite.texture=texture;sprite.position=Vector2(row.position[0],row.position[1])
 		sprite.material=pixel_material
-		# Ground stays behind actors; no invented foreground masks.
-		sprite.z_index=-30+i
+		# Preserve the original chunk painter order, entirely below actor z=0.
+		# Starting at -30 hid the player on maps with high chunk IDs.
+		sprite.z_index=-4096+i
 		add_child(sprite);chunks[i]=sprite
 	_refresh_markers()
 	if source is RemakePlayableField and is_instance_valid(source.collision_stream):source.collision_stream.refresh()
