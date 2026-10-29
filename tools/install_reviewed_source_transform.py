@@ -13,6 +13,27 @@ import zipfile
 
 ARCHIVE_SHA = "fcc4daa36165d5046275a1cb11f7a6bf9a9e4bac67571a3a861abdfd6f8f8d4c"
 SEMANTIC_SHA = "415755eaaeccafa47b4fe4c9fee22be6540690e33528b3b6b1ea4246e7c37412"
+TARGET20_IMAGE = "assets/catalog/7ee8bedee1bbbe400a7276ab.png"
+TARGET20_IMAGE_SHA = "afbed7ac289f707f4eb4dc8c6d0c7c14a6059a53a8703e257c93502bb4dd3c9b"
+TARGET20_REVIEW = {
+    "target_id":"transformation:inven:20",
+    "target_name":"다크 나이트",
+    "selected_model":"SPR-U-20652d3fc411993f558b",
+    "selected_source":"source2",
+    "selected_body_model":3054,
+    "selected_binding":"PB0334",
+    "original_catalog_image":TARGET20_IMAGE,
+    "original_catalog_image_sha256":TARGET20_IMAGE_SHA,
+    "original_catalog_source_image_url":"https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/20.png?v=261001c",
+    "original_image_library":{"library_file_id":"libfile_2d9437c2ad748191b21dc4f081af8afe","file_id":"file_000000004dcc81f788cf6010f71788fb","filename":"7ee8bedee1bbbe400a7276ab.png","version":0},
+    "actual_target_pixels_reviewed":True,
+    "matching_features":["rounded grey plate helmet and broad shoulder armor","long black cape with central red lining/panel","one long sword and no large shield"],
+    "rejected_body110":"Actual body110 has a large shield and long spear. It matches the separately identified ordinary 흑기사46, not the target20 sword/cape pixels.",
+    "page_evidence":[{"url":"https://lineagem.inven.co.kr/db/polymorph/20","observed":"Separate Dark Knight entry; sword-master collection with Silver Knight, Sword Master and Arc Knight."},{"url":"https://lineagem.inven.co.kr/db/polymorph/46","observed":"Separate ordinary black-knight entry; spear collections with skeleton spear and Dudamara orc."}],
+    "decision":"Same character/form supported by actual distinguishing armor/cape/weapon pixels, explicit local body3054 black-knight definition and separate sword/spear collection context. Collection membership alone was not sufficient.",
+    "same_pixels_or_authenticated_client_version_claim":False,
+    "candidate_override_scope":"Only target20: replace its earlier bilingual-name-only body110 candidate with the actually reviewed body3054. Do not broaden any other candidate or merge variants.",
+}
 HEADINGS = [3, 4, 5, 6, 7, 0, 1, 2]  # E SE S SW W NW N NE
 ACTIONS = {"idle": 3, "walk": 0, "attack": 1, "hit": 2, "death": 8, "cast": 18, "special": 30}
 ALIASES = {"run": "walk", "turn": "idle", "recovery": "attack", "corpse": "death", "ranged_attack": "attack", "float": "idle", "energy": "idle", "equip": "idle", "unequip": "idle", "activate": "idle", "summon": "idle", "despawn": "death"}
@@ -340,6 +361,8 @@ BASE_VARIANT_OVERRIDES = {
     "37": ("PB0139", "balrog_source1_base", "Source1 BASE body2538, fingerprintb36236426e30172201a5: massive dark horned demon, bat wings, long tail and clawed feet. Eight-heading idle/walk/attack and fixed claw support reviewed directly. Exact BASE recommended by semantic input; distinct SHARDS/source2 fingerprint excluded from this body."),
 }
 REVIEWS = [(r[0],r[1],BASE_VARIANT_OVERRIDES[r[0]][0],BASE_VARIANT_OVERRIDES[r[0]][1],r[4],r[5],BASE_VARIANT_OVERRIDES[r[0]][2]) if r[0] in BASE_VARIANT_OVERRIDES else r for r in REVIEWS]
+REVIEWS += [("20","다크 나이트","PB0334","dark_knight_source2",[24,18],1.3,
+    "Actual existing target20 PNG shows rounded plate helmet, broad shoulders, long black cape, red central lining/panel and a long sword without a large shield. These distinguishing features match body3054, not shield/spear body110. Explicit source2 black knight definition and sword-family collection context corroborate the actual pixels. Eight-heading idle/walk/attack and fixed boot/hem support directly reviewed; one exact source2 variant only.")]
 
 PENDING_REASONS = {
     "라쿤": "Quadruped paw/ground center and complete eight-view animation review pending.",
@@ -365,7 +388,12 @@ def install(archive, package, root, review):
     target_id, name, binding_id, folder, foot_grid, scale, identity_basis = review
     binding = pkg.bindings[binding_id]
     candidate = next(c for c in pkg.candidates if c['twilight_id'] == 'transformation:inven:' + target_id)
-    assert candidate['name'] == name and binding['representative_id'] in candidate['source_model_representatives']
+    assert candidate['name'] == name
+    if target_id == '20':
+        assert hashlib.sha256((root/TARGET20_IMAGE).read_bytes()).hexdigest() == TARGET20_IMAGE_SHA
+        assert binding['binding_id'] == TARGET20_REVIEW['selected_binding'] and binding['representative_id'] == TARGET20_REVIEW['selected_model']
+    else:
+        assert binding['representative_id'] in candidate['source_model_representatives']
     assert binding['matched_name_candidate']
     actions = dict(ACTIONS)
     available = {a['code'] for a in binding['actions']}
@@ -464,6 +492,9 @@ def apply_semantic_support(root, package, support_path):
         entry['model_fingerprint_sha256'] = model['model_fingerprint_sha256']
         entry['sample_sha256'] = model['sample_sha256']
         entry['foot_review'] = 'Fixed support/ground projection reviewed from actual idle and walking pixels; model-specific physical features are described in identity_basis. Same anchor across all files; no per-frame bbox recentering. Target actor root and existing 0.90 horizontal display factor preserved.'
+        if key == 'transform:20':
+            assert hashlib.sha256((root/TARGET20_IMAGE).read_bytes()).hexdigest() == TARGET20_IMAGE_SHA
+            entry['target_image_identity_review'] = TARGET20_REVIEW
         target = by_target.get(key.split(':')[-1])
         if target:
             # The support file spells 눈사람 without the catalog's space.
