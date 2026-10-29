@@ -120,5 +120,32 @@
   "deployment_validation": "NOT_RUN",
   "android_device_validation": "NOT_RUN",
   "coordinate_scope": "Original pixels, scale, frame order, speed and loop retained; C-ground proposal follows the proven contact-plane rule. Whole actor remains held. The N RUN runtime semantic gate is HOLD, so its proposal is not enabled.",
-  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection."
+  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection.",
+  "unselected_direct_pose_edits_r144": [
+    {
+      "phase": 3,
+      "source": "res://assets/actors/eight_direction/legendary_production/transform_274/repaired_source_r144/N-run-3-unselected.png",
+      "sha256": "4cc8ea43fe6d07ebd5c29098c44ad7138e3dcb59e6dd6e0c33dadb316174c9f3",
+      "status": "HOLD_QUALITY_FAIL",
+      "reason": "LEFT/viewerLEFT pauldron and large blade remain reversed; not selected.",
+      "selected": false
+    },
+    {
+      "phase": 5,
+      "source": "res://assets/actors/eight_direction/legendary_production/transform_274/repaired_source_r144/N-run-5-unselected.png",
+      "sha256": "7b8e630955eee7a095c318072006fe7c84f18c1f3fdfa4b6699c143a1029064e",
+      "status": "HOLD_QUALITY_FAIL",
+      "reason": "LEFT pauldron persists and both hands now carry large crescent blades instead of one RIGHT large crescent and small LEFT dagger; not selected.",
+      "selected": false
+    }
+  ],
+  "blocked_image_action_r144": {
+    "target": "transform:274 N RUN phase4 upper shoulder/weapon ownership correction",
+    "status": "DENIED",
+    "reason": "ImageGen output moderation_blocked safety_violations=[sexual]",
+    "request_id": "33d0b07d-53f4-4fae-bde4-ddddfbd5f817",
+    "output_returned": false,
+    "retry_or_bypass_permitted": false,
+    "action_taken": "Stopped phase4; no retry, prompt/tool/model substitution or alternate image composition. Independently returned3/5 inspected and held for actual quality failure; original selected runtime untouched."
+  }
 }
