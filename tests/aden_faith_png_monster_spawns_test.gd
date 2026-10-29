@@ -92,13 +92,18 @@ func inspect(mid: String) -> void:
 	# it: authored exclusion polygons and physics bodies still block movement.
 	# Exercise a real populated melee actor with an actual body-clear, allowed
 	# first 32px of pursuit, not an arbitrary edge-locked spawn.
+	var melee_first: Array[TwilightMonster]=[]
 	for candidate: TwilightMonster in normals:
-		if candidate.current_attack_type()!="melee": continue
+		if candidate.current_attack_type()=="melee": melee_first.append(candidate)
+	for candidate: TwilightMonster in normals:
+		if candidate.current_attack_type()!="melee": melee_first.append(candidate)
+	for candidate: TwilightMonster in melee_first:
 		var slot: Dictionary=world.field_population.slots[int(candidate.get_meta("field_slot"))]
 		for cell: Vector2i in field.spawn_cells.get(str(slot.region.id),[]):
 			var point: Vector2=field.cell_to_world(cell)
 			var distance: float=point.distance_to(candidate.global_position)
 			if distance<maxf(120.0,candidate.current_attack_range()+40.0) or distance>400.0: continue
+			if distance>=best: continue
 			if not field.line_clear(candidate.global_position,point): continue
 			if not world.field_population.destination_allowed(candidate,point) or field.is_safe(point): continue
 			var heading: Vector2=candidate.global_position.direction_to(point)
@@ -123,15 +128,13 @@ func inspect(mid: String) -> void:
 		actor.repath_cooldown=0
 		actor.set_physics_process(true)
 		var moved: bool=false
-		# Exact-route construction may span frames on native PNG maps. Preserve
-		# the 45-frame safety sample, then allow a bounded 135-frame retry window
-		# before declaring a real pursuit failure (never weaken collision checks).
-		for _frame: int in range(180):
-			world._advance_native_route_preparation()
+		# This is a verified straight, patrol-safe physical corridor, so normal
+		# pursuit must work without building the entire map-wide route graph.
+		# Keep the original 45-frame assertion and all per-frame safety checks.
+		for _frame: int in range(45):
 			await physics_frame
 			check(field.walkable(actor.global_position) and not field.is_safe(actor.global_position) and world.field_population.destination_allowed(actor,actor.global_position),mid+" live normal pursuit remains in habitat")
 			moved=moved or actor.global_position.distance_to(before)>4
-			if moved and _frame>=44: break
 		if not moved:
 			printerr("ADEN_FAITH_PNG_PURSUE_DIAGNOSTIC ",JSON.stringify({"map":mid,"start":str(before),"end":str(actor.global_position),"target":str(target),"graph":field.route_graph_stats(),"actor_path_count":actor.path.size()}))
 		check(moved,mid+" actual normal AI moved toward player")
