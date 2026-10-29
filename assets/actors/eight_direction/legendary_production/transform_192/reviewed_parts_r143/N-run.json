@@ -180,5 +180,39 @@
       "sha256": "5c160ed32c73b99662c4d4ca7521b8f4b61d07f7182f52f1b22a23a81fadd524",
       "bytes": 742158
     }
-  ]
+  ],
+  "remaining_actor_validation": {
+    "actual_Main_remaining_scope": "22 previously unreviewed clips132frames, normal exit0/errors0,27.10s; engine playback alone is not visual approval.",
+    "confirmed_failures": {
+      "NW_camera": [
+        "idle_5",
+        "hit_5",
+        "attack_5",
+        "run_5"
+      ],
+      "NE_run_camera_identity": [
+        "run_7"
+      ],
+      "missing_reciprocal_lead": [
+        "run_0",
+        "run_1",
+        "run_3",
+        "run_4",
+        "run_5",
+        "run_7"
+      ],
+      "impact_sector": [
+        "attack_1",
+        "attack_7"
+      ]
+    },
+    "unique_failed_clips": 11,
+    "total_required_clips": 33,
+    "source_boundary_flagged_frames": 3,
+    "source_boundary_tracks": [
+      "attack_5"
+    ],
+    "additional_other_review_required": true,
+    "production_connected": false
+  }
 }
