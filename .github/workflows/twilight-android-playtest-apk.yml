@@ -30,7 +30,8 @@ concurrency:
 jobs:
   build-android-apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    # Cold PNG import missed all four trusted-main shards; preserve full import/export/inspection.
+    timeout-minutes: 180
     steps:
       - name: Checkout isolated validated playtest
         uses: actions/checkout@v4
@@ -84,8 +85,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          timeout 1800 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { echo "IMPORT_FAILED"; tail -n 100 /tmp/import-android.txt; exit 1; }
-          echo "ANDROID_IMPORT_DONE"
+          if timeout 5400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1; then
+            echo "ANDROID_IMPORT_DONE"
+          else
+            import_status=$?
+            echo "IMPORT_FAILED exit_code=$import_status"
+            if [[ "$import_status" -eq 124 ]]; then
+              echo "::error::Godot cold-cache Android import exceeded its 90-minute limit"
+            fi
+            tail -n 100 /tmp/import-android.txt
+            exit "$import_status"
+          fi
       - name: Configure Android SDK in Godot editor settings
         shell: bash
         run: |
