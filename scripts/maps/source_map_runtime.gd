@@ -2,6 +2,8 @@ extends RefCounted
 ## Runtime promotion is separate from the immutable historical input contract.
 ## Each map needs reviewed entry, source-grid semantics, art and save identity.
 const ART=preload("res://scripts/maps/source_map_review_pack.gd")
+const LOCAL=preload("res://scripts/maps/source_map_local_policy.gd")
+const NATIVE=preload("res://scripts/maps/native_png_registry.gd")
 const EQUAL_COLLISION=preload("res://scripts/maps/source_map_equal_collision.gd")
 const FIELD=preload("res://scripts/maps/source_map_runtime_field.gd")
 const MIGRATION=preload("res://scripts/maps/source_map_save_migration.gd")
@@ -9,6 +11,7 @@ const LEGACY_SOURCE=preload("res://scripts/maps/remake_registry.gd")
 const LEGACY_LAYOUT=preload("res://scripts/maps/legacy_layout_policy.gd")
 const POLICY_PATH="res://data/maps/source_map_runtime.json"
 static var seen: Dictionary={}
+static var door_states: Dictionary={}
 static var gameplay_cache: Dictionary={}
 
 static func root_path() -> String:
@@ -36,16 +39,21 @@ static func load_field(mid: String) -> RemakePlayableField:
 	var record: Dictionary=art.load_map(mid)
 	if record.is_empty():return null
 	var rule: Dictionary=policy()[mid]
+	if bool(rule.get("local_policy",false)):
+		record=LOCAL.decorate(record,root_path())
+		if record.is_empty():return null
 	var requested: String=str(rule.get("collision_archive_version","360"))
 	if requested=="351":
 		if record.collision!=null or record.selected_collision_version!=null or rule.get("collision_basis")!="identical_archive_representative":return null
 		var equal: Dictionary=EQUAL_COLLISION.spec(root_path(),int(record.source_map_id))
 		if equal.is_empty():return null
 		record.collision=equal
+	elif requested=="local_authored":
+		if not bool(rule.get("local_policy",false)) or record.collision==null or record.selected_collision_version!="local_authored":return null
 	elif requested!="360" or record.collision==null or record.selected_collision_version!="360":return null
-	# This cohort has no dynamic source doors. Door-bearing maps require an
-	# explicit state/physics adapter; ignoring a drawn closed door is unsafe.
-	if not record.get("doors",[]).is_empty():return null
+	# Door-bearing maps require the explicitly authorized local state/physics
+	# adapter. The immutable incoming enabled flags are never blindly imported.
+	if not record.get("doors",[]).is_empty() and not bool(rule.get("local_doors",false)):return null
 	if int(record.source_map_id)!=int(rule.source_map_id) or str(record.collision.raw_sha256)!=str(rule.grid_sha256):return null
 	if str(art.index.maps[mid].sha256)!=str(rule.art_manifest_sha256):return null
 	var field=FIELD.new()
@@ -54,12 +62,13 @@ static func load_field(mid: String) -> RemakePlayableField:
 		var cache_key: String=JSON.stringify(rule,"",true,true).sha256_text()
 		if gameplay_cache.has(cache_key):field.restore_gameplay(gameplay_cache[cache_key])
 		else:
-			var previous: RemakePlayableField=LEGACY_SOURCE.load_field(mid)
+			var previous: PlayableField=NATIVE.load_field(mid) if rule.get("legacy_loader","")=="native" else LEGACY_SOURCE.load_field(mid)
 			if previous==null:field.close();return null
-			var preserved: bool=field.preserve_gameplay(previous,rule.legacy_frame)
-			previous.close()
+			var preserved: bool=field.preserve_gameplay(previous,rule.get("legacy_frame",{}))
+			if previous.has_method("close"):previous.close()
 			if not preserved:field.close();return null
 			gameplay_cache[cache_key]=field.gameplay_snapshot()
+	if not field.apply_local_door_states(door_states.get(mid,{})):field.close();return null
 	seen[mid]=identity(mid)
 	return field
 
@@ -72,7 +81,13 @@ static func identity(mid: String) -> Dictionary:
 static func saved_layouts() -> Dictionary:
 	return seen.duplicate(true)
 
+static func saved_doors(field: PlayableField) -> Dictionary:
+	if field is FIELD:door_states[str(field.data.map_id)]=field.local_door_states.duplicate(true)
+	return door_states.duplicate(true)
+
 static func accept_layouts(data: Dictionary) -> void:
+	for id: String in data.get("source_map84_doors",{}):
+		if supports(id) and data.source_map84_doors[id] is Dictionary:door_states[id]=data.source_map84_doors[id].duplicate(true)
 	for mid: String in data.get("source_map84_layouts",{}):
 		if supports(mid) and same_identity(data.source_map84_layouts[mid],identity(mid)):seen[mid]=identity(mid)
 
@@ -123,6 +138,7 @@ static func prepare_migrations(original: Dictionary, source_sha: String) -> Dict
 
 static func validate_save(data: Dictionary) -> String:
 	var required: Dictionary={}
+	if not data.get("source_map84_doors",{}) is Dictionary:return "문 상태 저장 형식이 손상되었습니다"
 	var mid: String=str(data.get("map_id",""))
 	if mid.begins_with("source_") and not supports(mid):return "저장된 원본 지도가 현재 검증 범위에 없어 기존 저장을 보존합니다"
 	if supports(mid):required[mid]=true
@@ -148,6 +164,8 @@ static func validate_save(data: Dictionary) -> String:
 		if not same_identity(saved,expected):return "원본 지도 좌표·충돌·그림 변경: 명시적 세이브 이전이 필요합니다"
 		var field: RemakePlayableField=load_field(id)
 		if field==null:return "원본 지도 팩 누락·손상: 기존 저장을 보존합니다"
+		var doors: Variant=data.get("source_map84_doors",{}).get(id,{})
+		if not doors is Dictionary or not field.apply_local_door_states(doors):field.close();return "문 상태 저장 형식이 손상되었습니다"
 		# Validate every persisted spatial item before any live state is retired.
 		if mid==id:
 			var p: Variant=data.get("position",[])

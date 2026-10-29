@@ -32,7 +32,7 @@ func run() -> void:
 	var loaded: Dictionary={"map_id":"source_77","position":[start.x,start.y],"source_map84_layouts":RUNTIME.saved_layouts(),
 		"original_position":{"source_map_id":77,"grid_sha256":field.definition.source_sha256,"source":field.coordinates.source_components(start)},
 		"ground_drops":[{"id":"retained-physical-id","map_id":"source_77","position":[gate.x,gate.y],"quantity":3}],
-		"monster_world":{"bosses":{"domination_summit:reaper":{"hp":777,"phase":"alive","position":[1,2],"home":[3,4]}}}}
+		"monster_world":{"bosses":{"faith_01:reaper":{"hp":777,"phase":"alive","position":[1,2],"home":[3,4]}}}}
 	var original: Dictionary=loaded.duplicate(true)
 	check(RUNTIME.validate_save(loaded).is_empty(),"player and ground drop coordinates validate together")
 	check(RUNTIME.validate_save(JSON.parse_string(JSON.stringify(loaded))).is_empty(),"real JSON float-number identities retain integer revision precision")

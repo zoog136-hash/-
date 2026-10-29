@@ -68,6 +68,8 @@ static func plan(original: Dictionary, mid: String, field: PlayableField, rule: 
 		var p: Vector2=choose(row.get("position",[]),field,legacy,occupied,36.0)
 		if not p.is_finite():return {"ok":false,"error":"No distinct verified landing for every original drop"}
 		row.position=[p.x,p.y];occupied.append(p)
+	var monster_occupied: Array=occupied.duplicate()
+	if str(data.get("map_id",""))==mid and pair(data.get("position",[])):monster_occupied.append(Vector2(data.position[0],data.position[1]))
 	for container: String in ["monster_world","original_monster_world"]:
 		var holder: Variant=data.get(container,{})
 		if not holder is Dictionary:return {"ok":false,"error":"Malformed monster-state container"}
@@ -81,8 +83,19 @@ static func plan(original: Dictionary, mid: String, field: PlayableField, rule: 
 			for coordinate: String in ["position","home"]:
 				var previous: Variant=state.get(coordinate,[])
 				if previous is Array and previous.is_empty():continue
-				var p: Vector2=choose(previous,field,legacy,[])
+				var p: Vector2=converted(previous,field,legacy)
+				if not clear(field,p) or not separated(p,monster_occupied,64):
+					p=Vector2.INF
+					for region: Dictionary in field.data.get("monster_spawn",[]):
+						if str(region.get("boss_id",""))!=str(key).trim_prefix(mid+":"):continue
+						var random:=RandomNumberGenerator.new();random.seed=absi((str(key)+original_sha).hash())
+						for attempt: int in range(32):
+							var q: Vector2=field.sample_spawn(str(region.id),random)
+							if clear(field,q) and separated(q,monster_occupied,64):p=q;break
+						if p.is_finite():break
+					if not p.is_finite():p=choose(previous,field,legacy,monster_occupied,64)
 				if not p.is_finite():return {"ok":false,"error":"No verified monster-state landing"}
+				if coordinate=="position":monster_occupied.append(p)
 				state[coordinate]=[p.x,p.y]
 			state.layout_revision=int(field.data.layout_revision)
 	if not data.get("source_map_migrations",[]) is Array:return {"ok":false,"error":"Malformed migration history"}

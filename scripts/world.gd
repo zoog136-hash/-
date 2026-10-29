@@ -29,6 +29,7 @@ var migration_path_checked: bool=false
 var migration_pointer_error: String=""
 var pending_map_save_record: Dictionary={}
 var map_bootstrap_blocked: bool=false
+var loading_source_door_state: bool=false
 var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
@@ -1263,8 +1264,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	if not maps_by_id.has(map_id):
 		if SOURCE_MAP84.supports(map_id):_reject_map_pack("원본 지도 팩 누락: 현재 지역과 저장을 보존합니다")
 		return
+	if field_map!=null and not loading_source_door_state:SOURCE_MAP84.saved_doors(field_map)
 	var requested_native: PlayableField = null
-	if NATIVE_PNG.supports(map_id):
+	if NATIVE_PNG.supports(map_id) and not SOURCE_MAP84.supports(map_id):
 		requested_native = NATIVE_PNG.load_field(map_id)
 		if requested_native == null:
 			_reject_map_pack("PNG 원본 팩 누락·손상: 현재 지역과 저장을 보존합니다")
@@ -4116,6 +4118,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if field_map is RemakePlayableField and field_map.png_game_pack!=null and not bool(field_map.get_meta("source_map84",false)):
 		data["oman_png_index_sha256"]=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
+	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
 	var source_map_error: String=SOURCE_MAP84.validate_save(data)
 	if not source_map_error.is_empty():
 		if not quiet:hud.show_message(source_map_error)
@@ -4212,7 +4215,7 @@ func _load_game(quiet: bool) -> void:
 		data.erase("original_position")
 		saved_map_id="albino_02"
 	var has_native_position: bool=data.has("native_png_plan_sha256")
-	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
+	var requested_native: bool=NATIVE_PNG.supports(saved_map_id) and not SOURCE_MAP84.supports(saved_map_id)
 	var explicit_legacy: bool=LEGACY_LAYOUT.active("--legacy-map-layouts") or (NATIVE_PNG.extra_map(saved_map_id) and LEGACY_LAYOUT.active("--legacy-aden-faith-layouts"))
 	if has_native_position and explicit_legacy and not requested_native and maps_by_id.has(saved_map_id):
 		# Explicitly returning to an existing layout retains progression while
@@ -4422,7 +4425,9 @@ func _load_game(quiet: bool) -> void:
 	field_population.configure(self,null)
 	legacy_population.import_state(data.get("monster_world",{}))
 	original_population.import_state(data.get("original_monster_world",{}))
+	loading_source_door_state=true
 	_set_map(map_id, false)
+	loading_source_door_state=false
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
@@ -7180,7 +7185,11 @@ func use_field_portal(portal_id: String) -> bool:
 				if landing.x >= 0:
 					player.global_position = field_map.cell_to_world(landing)
 		elif portal.has("target_position"):
-			if field_map is NativePngField:
+			if bool(field_map.get_meta("source_map84",false)):
+				var destination: Vector2=COORD.array_vector(portal["target_position"])
+				if int(portal.get("target_layout_revision",-1))!=int(field_map.data.layout_revision) or not field_map.point_clear(destination,4):destination=_spawn_position()
+				player.global_position=destination
+			elif field_map is NativePngField:
 				# Reviewed PNG pockets can share one map through explicit travel
 				# gates. Never project stale coordinates onto a different floor.
 				if int(portal.get("target_layout_revision", -1)) != int(field_map.data.layout_revision): return false

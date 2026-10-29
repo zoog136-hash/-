@@ -15,6 +15,7 @@ var render_failed: bool = false
 var focus_source := Vector2.INF
 var draw_grid: bool = false
 var inspect_equal_collision: bool=false
+var inspect_local_policy: bool=false
 var sampler: String="nearest"
 var overlay: Node2D
 var pixel_material: ShaderMaterial
@@ -32,6 +33,7 @@ func start() -> void:
 		if arg.begins_with("--capture="): capture_path = arg.trim_prefix("--capture=")
 		if arg=="--grid":draw_grid=true
 		if arg=="--equivalent-collision":inspect_equal_collision=true
+		if arg=="--local-policy":inspect_local_policy=true
 		if arg.begins_with("--sampler="):sampler=arg.trim_prefix("--sampler=")
 		if arg.begins_with("--source="):
 			var parts: PackedStringArray=arg.trim_prefix("--source=").split(",")
@@ -70,7 +72,10 @@ func choose(mid: String) -> void:
 	for node: Sprite2D in sprites.values(): node.free()
 	sprites.clear()
 	record = candidate
-	if inspect_equal_collision and record.collision==null and record.source_map_id!=null:
+	if inspect_local_policy:
+		record=preload("res://scripts/maps/source_map_local_policy.gd").decorate(record,pack.root_path)
+		if record.is_empty():status.text="Local policy pack missing";render_failed=true;return
+	if (inspect_equal_collision or inspect_local_policy) and record.collision==null and record.source_map_id!=null:
 		var equal: Dictionary=preload("res://scripts/maps/source_map_equal_collision.gd").spec(pack.root_path,int(record.source_map_id))
 		if not equal.is_empty():record.collision=equal
 	# Inspect a real central source chunk at 50%, not an overview stretched up.
@@ -84,6 +89,9 @@ func choose(mid: String) -> void:
 		overlay.focus=focus_source if focus_source.is_finite() else PACK.canvas_to_source(record,camera.position)
 		var spec: Dictionary=record.collision
 		overlay.grid.configure(int(record.source_map_id),spec.bounds,Vector2i(spec.width,spec.height),FileAccess.get_file_as_bytes(pack.root_path+"/"+str(spec.file)).decompress_dynamic(16000000,FileAccess.COMPRESSION_GZIP))
+		if inspect_local_policy:
+			var f=preload("res://scripts/maps/source_map_runtime_field.gd").new()
+			if f.configure_runtime(record,preload("res://scripts/maps/source_map_runtime.gd").policy()[mid],pack):overlay.grid=f.raw_grid
 		overlay.z_index=4000
 		canvas.add_child(overlay)
 	status.text = "ART REVIEW ONLY · collision/entry/save migration not approved\nDrag to pan · Wheel to zoom · source pixels unchanged"
@@ -136,7 +144,7 @@ func refresh() -> void:
 	for i: int in wanted:
 		if sprites.has(i): continue
 		var row: Dictionary = wanted[i]
-		var texture: Texture2D = pack.load_texture(row)
+		var texture: Texture2D = preload("res://scripts/maps/source_map_local_policy.gd").texture(pack.root_path,row) if bool(row.get("local_patch",false)) else pack.load_texture(row)
 		if texture == null: status.text = pack.problem; render_failed = true; continue
 		var sprite := Sprite2D.new()
 		sprite.centered = false

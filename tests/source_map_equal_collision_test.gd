@@ -22,9 +22,9 @@ func run():
   check(FileAccess.get_sha256(path)==spec.sha256 and hash.finish().hex_encode()==spec.raw_sha256 and bytes.size()==int(spec.width)*int(spec.height),'actual immutable compressed and raw grid bytes: '+sid)
  for mid:String in RUN.policy():
   var p:Dictionary=RUN.policy()[mid]
-  check((int(p.source_map_id) in SELECTED and p.get('collision_archive_version','360')=='360') or (not int(p.source_map_id) in SELECTED and p.get('collision_archive_version')=='351' and p.get('collision_basis')=='identical_archive_representative'),'explicit per-map choice without blanket360: '+mid)
- for mid:String in ['source_0','aden_world','source_64','source_67','source_69','source_303','domination_summit','source_261','source_variant_54_25']:
-  check(not RUN.supports(mid),'unreviewed doors, art, single-source and variants stay unpromoted: '+mid)
+  check((int(p.source_map_id) in SELECTED and p.get('collision_archive_version','360')=='360') or (not int(p.source_map_id) in SELECTED and p.get('collision_archive_version')=='351' and p.get('collision_basis')=='identical_archive_representative') or (p.get('local_policy',false) and p.get('collision_archive_version') in ['360','local_authored']),'explicit per-map choice without blanket360: '+mid)
+ for mid:String in ['source_639','source_1930','source_1931','source_2042','source_2043','source_2044','albino_03','source_variant_54']:
+  check(not RUN.supports(mid),'retired and nonexistent IDs remain unavailable: '+mid)
  var art=ART.new();check(art.open_pack(root_path),'original 84-map review index still matches original SHA')
  check(art.load_map('source_602').collision==null,'immutable historical unselected manifest is not rewritten')
  var field:RemakePlayableField=RUN.load_field('source_602')

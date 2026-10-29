@@ -10,6 +10,9 @@ var bytes: PackedByteArray
 var artwork_chunks: Dictionary={}
 var require_artwork: bool=false
 var masks: Dictionary={}
+var closed_doors: Dictionary={}
+var open_doors: Dictionary={}
+var clipped_cells: Dictionary={}
 
 func configure(id: int, bounds: Array, size: Vector2i, raw: PackedByteArray) -> bool:
 	if bounds.size()!=4 or size.x<1 or size.y<1 or size.x*size.y!=raw.size(): return false
@@ -32,6 +35,7 @@ func restrict_to_artwork(rows: Array) -> bool:
 
 func contains(c: Vector2i) -> bool:
 	if c.x<0 or c.y<0 or c.x>=width or c.y>=height:return false
+	if closed_doors.has(c) or clipped_cells.has(c):return false
 	# Some server rectangles have open padding outside every retained client
 	# chunk. Keep the bytes, but never walk into terrain that was not supplied.
 	if require_artwork and not artwork_chunks.has(Vector2i(c.x>>6,c.y>>6)):return false
@@ -40,13 +44,15 @@ func contains(c: Vector2i) -> bool:
 	return true
 
 func tile(c: Vector2i) -> int:
-	return int(bytes[c.y*width+c.x]) if contains(c) else 0
+	if not contains(c):return 0
+	return (int(bytes[c.y*width+c.x])&124)|3 if open_doors.has(c) else int(bytes[c.y*width+c.x])
 
 func edge(c: Vector2i, heading: int) -> bool:
 	if heading<0 or heading>=8 or not contains(c) or not contains(c+DIRS[heading]):return false
 	var a: int=tile(c)
 	var b: int=tile(c+DIRS[heading])
 	if (b&128)!=0 or (b&3)==0:return false
+	if heading%2==0 and (open_doors.has(c) or open_doors.has(c+DIRS[heading])) and (a&3)!=0:return true
 	match heading:
 		0:return (a&2)!=0
 		1:return (tile(c+Vector2i(0,-1))&1)!=0 or (tile(c+Vector2i(1,0))&2)!=0
