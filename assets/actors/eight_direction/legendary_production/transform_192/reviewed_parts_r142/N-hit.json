@@ -129,11 +129,11 @@
   "production_connected": false,
   "runtime_default_connected": false,
   "final_quality_approved": false,
-  "whole_actor_gate": "HOLD_N_RUN_IDENTITY_RECIPROCAL_GAIT_NW_CAMERA_W_SOURCE_EDGE_AND_REQUIRED_REVIEW",
+  "whole_actor_gate": "HOLD_NW_CAMERA_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
   "local_main_validation": "PASS real Main same Player no rebind N IDLE/HIT/IDLE/ATTACK/IDLE30captures18unique poses, all6 per action, NORTH rear WHITE ponytail and RIGHT sword continuous, original phase3 attack marker; normal process exit0/errors0,20.24s; candidate injection, not default binding.",
   "native_import_validation": "PASS official Godot4.7.2 native2clips12 AtlasTextures with actual CompressedTexture2D and nonempty decoded images;8 newly generated action poses and4 existing guard aliases. Separate from source-byte Main loader.",
   "player_physics_validation": "PASS NORTH HIT30/60fps stationary/moving4cases plus1actual Player North movement-during-hit case; all6HIT poses, correct registered C/no flip, no attack emitted and inventory/equipment/HP/collision unchanged. Stops after6 HIT poses before held N RUN; normal process exit0/errors0,19.68s.",
-  "boundary_result": "Current full198frame candidate has7remaining flags (NW3/W4), versus prior9; replaced N attack removes2 crossed frame regions. Other unresolved original sources and candidates preserved; no whole actor approval.",
+  "boundary_result": "At r142 delivery full198frame candidate has7remaining flags (NW3/W4), versus prior9; replaced N attack removes2 crossed frame regions. Other unresolved original sources and candidates preserved; no whole actor approval.",
   "deployment_validation": "NOT_RUN",
   "android_device_validation": "NOT_RUN",
   "ci_validation": "EXCLUDED_BY_USER",
@@ -168,5 +168,6 @@
       "sha256": "4e182f4c7b01b7c2f6e4942b9275f20f4b2034b3013d432bcfd15a16d691f27c",
       "bytes": 424130
     }
-  ]
+  ],
+  "remaining_actor_issue": "N/S RUN, N HIT/ATTACK and W ATTACK local repairs passed; actor still requires NW camera and remaining directional/weapon/gait review. No default binding or whole actor approval."
 }

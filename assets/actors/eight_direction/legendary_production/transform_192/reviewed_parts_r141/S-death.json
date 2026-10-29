@@ -76,7 +76,7 @@
   "production_connected": false,
   "runtime_default_connected": false,
   "final_quality_approved": false,
-  "whole_actor_gate": "HOLD_N_NW_CAMERA_RUN_RECIPROCAL_GAIT_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
+  "whole_actor_gate": "HOLD_NW_CAMERA_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
   "reviewed_fragments": {
     "30": {
       "area": 1,
@@ -120,8 +120,8 @@
   "native_import_validation": "PASS official Godot4.7.2 isolated native import of four clips24 AtlasTexture frames, each actual CompressedTexture2D/nonempty decoded image. Source-byte Main loading is separate.",
   "local_main_validation": "PASS real Main Player injected candidate IDLE/RUN/IDLE/DEATH/IDLE30captured poses18unique; same actor no rebind,6 dedicated RUN phases, exact source roots, no flip/fallback, stable death terminal position; process normal exit0/errors0,23.38s.",
   "player_physics_validation": "NOT_APPLICABLE_TO_THIS_ACTION; locomotion validation recorded in S-run.",
-  "remaining_actor_issue": "N and NW front/rear camera mismatch and missing canonical white ponytail in RUN; N/NW source region errors; W impact source-edge truncation and required remaining direction/gait review. Whole actor is not default-connected.",
-  "boundary_result": "Current compiled candidate198source frame regions:22->9 flaggedframes.13 flags resolved across S/SW attack and S death using lossless ownership, zero missing/duplicate source texels. Remaining9 source-frame flags belong N2/NW3/W4; whole source art and originals preserved.",
+  "remaining_actor_issue": "N/S RUN, N HIT/ATTACK and W ATTACK local repairs passed; actor still requires NW camera and remaining directional/weapon/gait review. No default binding or whole actor approval.",
+  "boundary_result": "At r141 delivery compiled candidate198source frame regions:22->9 flaggedframes.13 flags resolved across S/SW attack and S death using lossless ownership, zero missing/duplicate source texels. Remaining9 source-frame flags belong N2/NW3/W4; whole source art and originals preserved.",
   "deployment_validation": "NOT_RUN",
   "android_device_validation": "NOT_RUN",
   "ci_validation": "EXCLUDED_BY_USER",
