@@ -46,4 +46,3 @@ def apply_variants(root,out,index):
    a[np.array(mask)!=0]=3;row['geometry_policy']='independent manual floor/island polygon trace from own variant pixels; lava, columns and altars excluded; no original topology claim';row['authored_polygons_screen']=design
    if mid.endswith('614_7786'):row['entry_source']=[32798,32875]
   b=a.tobytes();packed=gzip.compress(b,mtime=0);(out/c['file']).write_bytes(packed);c['sha256']=hashlib.sha256(packed).hexdigest();c['raw_sha256']=hashlib.sha256(b).hexdigest();c['basis']=row['geometry_policy'];row.pop('authored_floor_rectangle',None)
- 
