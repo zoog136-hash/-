@@ -12,7 +12,8 @@ var search_row: HBoxContainer
 var expand_button: Button
 var lock_button: Button
 var sort_mode: int = 0
-var inventory_fingerprint: String = ""
+var inventory_fingerprint: int = -1
+var inventory_list_rebuilds: int = 0
 var inventory_grid_dirty: bool = true
 var weight_readout: Label
 var weight_gauge: ProgressBar
@@ -20,6 +21,17 @@ var compact_tabs: HBoxContainer
 var detail_active: bool = false
 var inventory_left: Control
 var grid_scroll: ScrollContainer
+var grid_stack: VBoxContainer
+var grid_top_space: Control
+var grid_bottom_space: Control
+var sorted_references: Array[String] = []
+var reusable_slots: Array[Button] = []
+var reusable_empty_slots: Array[Panel] = []
+var visible_first_row: int = -1
+var slot_nodes_created: int = 0
+var slot_visual_updates: int = 0
+const SLOT_PITCH: float = 80.0
+const WINDOW_OVERSCAN_ROWS: int = 2
 var gesture_index: int = -1
 var gesture_mouse: bool = false
 var gesture_distance: float = 0
@@ -43,6 +55,19 @@ func _ready() -> void:
 	var body: HBoxContainer = layout.get_child(3)
 	inventory_left = body.get_child(0)
 	grid_scroll = item_grid.get_parent()
+	grid_stack = VBoxContainer.new()
+	grid_stack.add_theme_constant_override("separation",0)
+	grid_scroll.add_child(grid_stack)
+	item_grid.reparent(grid_stack)
+	grid_top_space = Control.new()
+	grid_top_space.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	grid_stack.add_child(grid_top_space)
+	grid_stack.move_child(grid_top_space,0)
+	grid_bottom_space = Control.new()
+	grid_bottom_space.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	grid_stack.add_child(grid_bottom_space)
+	grid_scroll.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void: _refresh_visible_window())
+	grid_scroll.resized.connect(_refresh_visible_window)
 	(inventory_left.get_child(1) as Control).custom_minimum_size.y = 22
 	gold_label.add_theme_font_size_override("font_size",12)
 	capacity_label.add_theme_font_size_override("font_size",11)
@@ -146,6 +171,7 @@ func _reflow() -> void:
 	detail_panel.size = Vector2(width if small else 310,minf(508,maxf(260,inventory_panel.size.y+(0 if small else 54))))
 	detail_panel.visible = detail_active and not selected_item.is_empty()
 	compact_tabs.hide()
+	if grid_stack != null: call_deferred("_refresh_visible_window")
 
 func _input(_event: InputEvent) -> void:
 	# PointerTransfer owns clicks, long presses, scrolling and drops together.
@@ -275,8 +301,8 @@ func set_inventory(value: Dictionary) -> void:
 	super.set_inventory(value)
 
 func set_character_state(value: Dictionary) -> void:
-	var fingerprint := JSON.stringify([value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
-	character_state = value.duplicate(true)
+	var fingerprint: int = hash([value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
+	character_state = value
 	gold_label.text = "아데나  "+_format_number(int(value.get("gold",0)))
 	_refresh_weight()
 	if fingerprint == inventory_fingerprint:
@@ -293,85 +319,166 @@ func _refresh_inventory_grid() -> void:
 	if item_grid == null or inventory_panel == null or not inventory_panel.is_visible_in_tree():
 		return
 	inventory_grid_dirty = false
+	inventory_list_rebuilds += 1
 	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
-	super._refresh_inventory_grid()
-	var references: Array = slot_buttons.keys()
+	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
+	sorted_references.clear()
+	var entries: Array[Dictionary] = _inventory_entries()
+	for entry: Dictionary in entries:
+		var reference: String = str(entry.reference)
+		var name: String = str(entry.name)
+		var record: Dictionary = _find_item_record(reference)
+		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
+			sorted_references.append(reference)
+	capacity_label.text = "%d / %d" % [entries.size(),max_slots]
 	if sort_mode == 1:
-		references.sort_custom(func(a: String, b: String) -> bool:
+		sorted_references.sort_custom(func(a: String, b: String) -> bool:
 			var left_name: String = _base_item_name(a)
 			var right_name: String = _base_item_name(b)
 			var left_grade: int = UI.GRADES.keys().find(str(_find_item_record(a).get("grade", "일반")))
 			var right_grade: int = UI.GRADES.keys().find(str(_find_item_record(b).get("grade", "일반")))
 			return a < b if left_grade == right_grade else left_grade > right_grade)
 	elif sort_mode == 2:
-		references.sort_custom(func(a: String, b: String) -> bool:
+		sorted_references.sort_custom(func(a: String, b: String) -> bool:
 			var left_count: int = 1 if _ref_instance_id(a) != "" else int(inventory.get(_base_item_name(a), 0))
 			var right_count: int = 1 if _ref_instance_id(b) != "" else int(inventory.get(_base_item_name(b), 0))
 			return a < b if left_count == right_count else left_count > right_count)
 	else:
-		references.sort()
+		sorted_references.sort()
 		if controller != null and sort_mode == 0:
 			var order: Array = controller.get_parent().ui_preferences.get("inventory_order",[])
-			references.sort_custom(func(a: String,b: String) -> bool:
+			sorted_references.sort_custom(func(a: String,b: String) -> bool:
 				var ai: int = order.find(a)
 				var bi: int = order.find(b)
 				if ai == bi: return a < b
 				return (ai if ai >= 0 else 100000) < (bi if bi >= 0 else 100000))
-	for index: int in range(references.size()):
-		var reference: String = str(references[index])
-		var item_name: String = _base_item_name(reference)
-		var button: Button = slot_buttons[reference] as Button
-		item_grid.move_child(button, index)
-		var record: Dictionary = _find_item_record(reference)
-		button.icon = null
-		button.text = ""
-		button.custom_minimum_size = Vector2(72,72)
-		button.tooltip_text = "" # Only the timed, grade-colored name is shown.
-		var icon := TextureRect.new()
-		UI.apply_item_visual(icon,record,item_name,item_image_index.get("아이템",{}),"inventory")
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position = Vector2(7,7)
-		icon.size = Vector2(58,58)
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		button.add_child(icon)
-		var level: int = _enhance_level(reference)
-		var badge := UI.label("+%d" % level if level > 0 else "", 12, UI.GOLD)
-		badge.position = Vector2(5, 2)
-		button.add_child(badge)
-		var equipped: bool = _is_item_equipped(reference)
-		var amount: int = 1 if _ref_instance_id(reference) != "" else int(inventory.get(item_name, 0))
-		var count := UI.label("E" if equipped else "×%d" % amount, 12, UI.GOLD if equipped else UI.TEXT)
-		count.position = Vector2(33,49)
-		count.size = Vector2(36,20)
-		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		button.add_child(count)
-		if bool(character_state.get("item_locks",{}).get(reference,false)):
-			var lock_mark := TextureRect.new()
-			lock_mark.texture = UI.icon("lock")
-			lock_mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			lock_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			lock_mark.size = Vector2(18,18)
-			lock_mark.position = Vector2(4,48)
-			button.add_child(lock_mark)
-	# Empty cells are real noninteractive slots, so the 4-column silhouette survives filtering.
-	var count: int = item_grid.get_child_count()
-	for i: int in range(maxi(0,20-count)):
-		var empty := Panel.new()
-		empty.custom_minimum_size = Vector2(72,72)
-		empty.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		empty.add_theme_stylebox_override("panel",UI.slot_frame())
-		item_grid.add_child(empty)
+	visible_first_row = -1
+	_refresh_visible_window()
 	_refresh_weight()
 	_reflow()
 	if grid_scroll != null: grid_scroll.set_deferred("scroll_vertical",old_scroll)
 
+func _new_reusable_slot() -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(72,72)
+	button.text = ""
+	button.tooltip_text = ""
+	button.mouse_filter = Control.MOUSE_FILTER_PASS
+	button.pressed.connect(func() -> void: _select_item(str(button.get_meta("reference",""))))
+	var icon := TextureRect.new()
+	icon.name = "Icon"
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.position = Vector2(7,7)
+	icon.size = Vector2(58,58)
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(icon)
+	var badge := UI.label("",12,UI.GOLD)
+	badge.name = "Level"
+	badge.position = Vector2(5,2)
+	button.add_child(badge)
+	var count := UI.label("",12,UI.TEXT)
+	count.name = "Count"
+	count.position = Vector2(33,49)
+	count.size = Vector2(36,20)
+	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	button.add_child(count)
+	var lock := TextureRect.new()
+	lock.name = "Lock"
+	lock.texture = UI.icon("lock")
+	lock.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	lock.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lock.size = Vector2(18,18)
+	lock.position = Vector2(4,48)
+	button.add_child(lock)
+	slot_nodes_created += 1
+	return button
+
+func _exit_tree() -> void:
+	# Offscreen pooled controls have no parent; release them with the inventory.
+	for button: Button in reusable_slots:
+		if is_instance_valid(button) and button.get_parent()==null:button.free()
+	for empty: Panel in reusable_empty_slots:
+		if is_instance_valid(empty) and empty.get_parent()==null:empty.free()
+
+func _bind_reusable_slot(button: Button,reference: String) -> void:
+	var item_name: String = _base_item_name(reference)
+	var record: Dictionary = _find_item_record(reference)
+	var grade: String = str(record.get("grade","일반"))
+	var level: int = _enhance_level(reference)
+	var equipped: bool = _is_item_equipped(reference)
+	var amount: int = 1 if not _ref_instance_id(reference).is_empty() else int(inventory.get(item_name,0))
+	var locked: bool = bool(character_state.get("item_locks",{}).get(reference,false))
+	var signature: int = hash([reference,record,level,equipped,amount,locked,reference==selected_item])
+	if int(button.get_meta("signature",-1)) == signature:return
+	slot_visual_updates += 1
+	button.set_meta("reference",reference)
+	button.set_meta("signature",signature)
+	button.add_theme_stylebox_override("normal",_slot_style_for_grade(grade,reference==selected_item))
+	(button.get_node("Icon") as TextureRect).texture = null
+	UI.apply_item_visual(button.get_node("Icon") as TextureRect,record,item_name,item_image_index.get("아이템",{}),"inventory")
+	(button.get_node("Level") as Label).text = "+%d" % level if level>0 else ""
+	var count: Label = button.get_node("Count") as Label
+	count.text = "E" if equipped else "×%d" % amount
+	count.add_theme_color_override("font_color",UI.GOLD if equipped else UI.TEXT)
+	(button.get_node("Lock") as TextureRect).visible = locked
+
+func _refresh_visible_window() -> void:
+	if grid_scroll == null or grid_stack == null or not inventory_panel.is_visible_in_tree():return
+	# A legacy panel rebuild can queue old children for deletion while this
+	# inventory still owns its reusable arrays. Never bind a freed control.
+	for index: int in range(reusable_slots.size()-1,-1,-1):
+		if not is_instance_valid(reusable_slots[index]):reusable_slots.remove_at(index)
+	for index: int in range(reusable_empty_slots.size()-1,-1,-1):
+		if not is_instance_valid(reusable_empty_slots[index]):reusable_empty_slots.remove_at(index)
+	var columns: int = maxi(1,item_grid.columns)
+	var total_cells: int = maxi(sorted_references.size(),20)
+	var total_rows: int = ceili(float(total_cells)/float(columns))
+	var first_row: int = clampi(int(floor(float(grid_scroll.scroll_vertical)/SLOT_PITCH))-WINDOW_OVERSCAN_ROWS,0,maxi(0,total_rows-1))
+	var window_rows: int = maxi(1,ceili(maxf(1.0,grid_scroll.size.y)/SLOT_PITCH)+2*WINDOW_OVERSCAN_ROWS)
+	var last_row: int = mini(total_rows,first_row+window_rows)
+	grid_top_space.custom_minimum_size.y = float(first_row)*SLOT_PITCH
+	grid_bottom_space.custom_minimum_size.y = float(total_rows-last_row)*SLOT_PITCH
+	var desired: int = mini(total_cells,last_row*columns)-first_row*columns
+	while reusable_slots.size() < mini(desired,sorted_references.size()):reusable_slots.append(_new_reusable_slot())
+	slot_buttons.clear()
+	var used_buttons: int = 0
+	var used_empty: int = 0
+	for index: int in range(first_row*columns,first_row*columns+desired):
+		var node: Control
+		if index < sorted_references.size():
+			var button: Button = reusable_slots[used_buttons]
+			used_buttons += 1
+			var reference: String = sorted_references[index]
+			_bind_reusable_slot(button,reference)
+			slot_buttons[reference] = button
+			node = button
+		else:
+			if used_empty >= reusable_empty_slots.size():
+				var empty := Panel.new()
+				empty.custom_minimum_size = Vector2(72,72)
+				empty.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				empty.add_theme_stylebox_override("panel",UI.slot_frame())
+				reusable_empty_slots.append(empty)
+			node = reusable_empty_slots[used_empty]
+			used_empty += 1
+		if node.get_parent()!=item_grid:
+			if node.get_parent()!=null:node.get_parent().remove_child(node)
+			item_grid.add_child(node)
+		item_grid.move_child(node,index-first_row*columns)
+	for button: Button in reusable_slots:
+		if used_buttons <= 0:
+			if button.get_parent()==item_grid:item_grid.remove_child(button)
+		else:used_buttons-=1
+	for empty: Panel in reusable_empty_slots:
+		if used_empty <= 0:
+			if empty.get_parent()==item_grid:item_grid.remove_child(empty)
+		else:used_empty-=1
+	visible_first_row=first_row
+
 func reorder(source: String, target: String) -> void:
-	if source == target or not slot_buttons.has(source) or not slot_buttons.has(target): return
-	var order: Array = []
-	for child: Node in item_grid.get_children():
-		for reference: String in slot_buttons:
-			if slot_buttons[reference] == child: order.append(reference)
+	if source == target or not sorted_references.has(source) or not sorted_references.has(target): return
+	var order: Array = sorted_references.duplicate()
 	var a: int = order.find(source)
 	var b: int = order.find(target)
 	order[a] = target

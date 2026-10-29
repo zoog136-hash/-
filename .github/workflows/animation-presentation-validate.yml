@@ -37,9 +37,11 @@ concurrency:
 jobs:
   presentation:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 85
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
         uses: actions/cache/restore@v4
         continue-on-error: true
@@ -133,9 +135,10 @@ jobs:
   original-based:
     name: Original-based Main / ${{ matrix.group }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 85
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
         include:
           - group: werewolf-ghost
@@ -262,6 +265,8 @@ jobs:
               basilisk|original_based_basilisk_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
         uses: actions/cache/restore@v4
         continue-on-error: true
@@ -322,6 +327,7 @@ jobs:
     name: Original-based batch${{ matrix.batch }} / shared engine per mode
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
         batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30]
         include:
@@ -358,6 +364,8 @@ jobs:
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
         uses: actions/cache/restore@v4
         continue-on-error: true
@@ -389,7 +397,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p test-results/batch${{ matrix.batch }} "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 1500 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch${{ matrix.batch }}/import.txt
+          timeout 2400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch${{ matrix.batch }}/import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/batch${{ matrix.batch }}/import.txt; then exit 1; fi
       - name: Configured production Main cases in one headless engine
         shell: bash

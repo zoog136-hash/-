@@ -22,11 +22,15 @@ func _card(category: String, identity: String) -> Dictionary:
 func _grant(category: String, identity: String, duplicates: int = 0) -> void:
 	world.card_draw_fusion.owned[category][identity] = true
 	if duplicates > 0: world.card_draw_fusion.spare[category][identity] = duplicates
+	# Production card transactions publish through _update_hud; this fixture
+	# edits the runtime dictionaries directly.
+	world._invalidate_equipment_static()
 
 func _set_awakened(category: String, identity: String, active: bool) -> void:
 	_grant(category, identity)
 	world.option_awakening.progress.cards[category][identity] = {"experience":0,"awakened":active,"attempts":1 if active else 0,"failures":0}
 	world.option_awakening.progress.revision += 1
+	world._invalidate_equipment_static()
 
 func _disk() -> String:
 	return FileAccess.get_file_as_string(world.save_path())
@@ -209,6 +213,7 @@ func _check_collections() -> void:
 	world.equipped_catalog = {"변신":{},"마법인형":{},"성물":{}}
 	# No owned requirements from a previous fixture may complete a collection early.
 	world.card_draw_fusion.configure(world.catalog_db)
+	world._invalidate_equipment_static()
 	var before_ac: int = world._effective_ac()
 	var before_int: int = world._effective_attribute("INT")
 	var before_sp: int = world._catalog_stat_sum("sp")

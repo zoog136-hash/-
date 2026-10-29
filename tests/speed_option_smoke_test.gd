@@ -26,11 +26,13 @@ func _run() -> void:
 		"마법인형": {"name":"속도 테스트 인형", "speed":1.02, "attackSpeed":15.0},
 		"성물": {"name":"속도 테스트 성물", "speed":1.01, "attackSpeed":2.0}
 	})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_items", {
 		"weapon": {"name":"속도 테스트 무기", "speed":1.01, "attackSpeed":3.0},
 		"armor": {},
 		"accessory": {}
 	})
+	world.call("_invalidate_equipment_static")
 
 	var move_multiplier: float = float(world.call("_effective_move_speed_multiplier"))
 	var expected_move: float = 1.25 * 1.02 * 1.01 * 1.01

@@ -1,110 +1,40 @@
 {
   "schema": 1,
   "verification_scope": "published_boss_runtime_snapshot_v1",
-  "source": "Reconstructed from CURRENT Git-tracked SpriteFrames and PNG assets; original artist/source files and historical generation process have NOT been independently verified.",
+  "source": "Repacked runtime atlases from existing Git-tracked source frames; original artist/source files and historical generation process have NOT been independently verified.",
   "original_authoring_verified": false,
   "direction_semantics_verified": false,
   "full_eight_direction_walk_and_death_verified": false,
-  "snapshot_basis_commit": "82e01d14c6b1db0fb97ba0e7af8c03eeb498efb5",
+  "snapshot_basis_commit": "64882d9645be72a41936007dc60e20b10b6f759d",
   "spriteframes": {
     "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/SpriteFrames.tres",
-    "git_blob_sha1": "eb01dc0a49587b1ec55e0fa502da65debef93eaa"
+    "git_blob_sha1": "73b8a473c3aafbc61e6b41ff21c6cb3b53d852f5"
   },
   "images": [
     {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-core8-v01.png",
-      "git_blob_sha1": "b7ad2a9ad8c6b6329edccf385a5657e9896ebdde",
-      "bytes": 2097344
+      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/runtime-atlas/page-00.png",
+      "git_blob_sha1": "e5dc5631e7caf90bda1ec4dc2404540e54cb6801",
+      "bytes": 6822094
     },
     {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-E-run6-v02.png",
-      "git_blob_sha1": "52a99dd2a5e7d03d167cd400f48063dd16fd9b8b",
-      "bytes": 2354502
+      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/runtime-atlas/page-01.png",
+      "git_blob_sha1": "5ca5c688046d99e66493fccaad5f8fa26c5e517a",
+      "bytes": 7605286
     },
     {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-core8-v01.png",
-      "git_blob_sha1": "cb142742d8ca21207a23653bc865eb4eef116a70",
-      "bytes": 1501216
+      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/runtime-atlas/page-02.png",
+      "git_blob_sha1": "2900d4be14fe67ae3ac4bbb6baba4e9ff9358043",
+      "bytes": 7275386
     },
     {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-N-run6-v02.png",
-      "git_blob_sha1": "00fba6d6c76ace70fdfb2de61461dbfac45ef3b5",
-      "bytes": 2362800
+      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/runtime-atlas/page-03.png",
+      "git_blob_sha1": "fc84e15e0999ca34e92a0a304dcb880671e2feba",
+      "bytes": 6968890
     },
     {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-core8-v01.png",
-      "git_blob_sha1": "06c1c885b0d501fa54e2df4a3d84ca0508d9259d",
-      "bytes": 1531170
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NE-run6-v01.png",
-      "git_blob_sha1": "61091eccb6ba61880e165ae9d0f7128ed613e2c4",
-      "bytes": 1446171
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-core8-v01.png",
-      "git_blob_sha1": "230b535353d5179f22f4f10632bf473fe168b7db",
-      "bytes": 1341402
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-NW-run6-v01.png",
-      "git_blob_sha1": "b5937d39e4128f57cc55a39f41b4b8abaaa3aec1",
-      "bytes": 2120735
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-core8-v01.png",
-      "git_blob_sha1": "88222c7ea9b72bf6052cfa8c15e573d8419c5886",
-      "bytes": 2231638
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-S-death4-v01.png",
-      "git_blob_sha1": "623bf51a4d1fd3acec5dc42781b2a3773b4b2877",
-      "bytes": 2443675
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-core8-v01.png",
-      "git_blob_sha1": "ea0cda1fb5d710edeb2e87716fe0650a18c18602",
-      "bytes": 2732470
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SE-run6-v01.png",
-      "git_blob_sha1": "3298fffa08a09785a1537b2ec4065f6c76c80392",
-      "bytes": 2689067
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-core8-v02.png",
-      "git_blob_sha1": "74ff721b468e2b390f4e91523f1e712ff5dd712a",
-      "bytes": 1679246
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-SW-run6-v02.png",
-      "git_blob_sha1": "4eddbb48fadac6091de3e16e402d9e8b863e99e0",
-      "bytes": 2417093
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-core8-v01.png",
-      "git_blob_sha1": "47dd3d15a7a694e9642213aac3c071334fdfc160",
-      "bytes": 2250290
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r001/zombie-lord-W-run6-v01.png",
-      "git_blob_sha1": "e5386a2bbfce10d17ac304f368c1a28d94d92e6f",
-      "bytes": 1932302
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r002/zombie-lord-S-run6-support-columns-v02.png",
-      "git_blob_sha1": "eff33f8b8366993a7fa3c40843995875d42e0a7d",
-      "bytes": 2697647
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/zombie-lord-E-far-left-support3-guide-v01.png",
-      "git_blob_sha1": "824d06dba674a894577a75efc728e52722241643",
-      "bytes": 1449343
-    },
-    {
-      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/zombie-lord-E-run6-structural-final-v01.png",
-      "git_blob_sha1": "7bb0de7d01e4eedd225ba07d040ae52ff2b1a48b",
-      "bytes": 2389491
+      "path": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/published-v01/runtime-atlas/page-04.png",
+      "git_blob_sha1": "6e914440df0178cdc7b94407d23353fd8a7cb88b",
+      "bytes": 1610682
     }
   ],
   "tracks": {
@@ -240,5 +170,8 @@
       "frames": 6,
       "loop": true
     }
-  }
+  },
+  "pre_repack_snapshot_basis_commit": "82e01d14c6b1db0fb97ba0e7af8c03eeb498efb5",
+  "pre_repack_spriteframes_git_blob_sha1": "eb01dc0a49587b1ec55e0fa502da65debef93eaa",
+  "pre_repack_source_images_count": 19
 }

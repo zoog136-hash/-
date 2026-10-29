@@ -52,6 +52,7 @@ func run() -> void:
 		world._clear_combat_actions()
 		world._on_job_class_selected(str(pair[0]))
 		world.equipped_items.clear()
+		world._invalidate_equipment_static()
 		respawn()
 		var source := catalog.record_for(str(pair[1]))
 		world.inventory[str(source.book_name)] = 1
@@ -78,8 +79,10 @@ func run() -> void:
 		check(normal_hit(200, true) == 203, "critical result consumes the flat modifier after critical scaling")
 		check(spell_hit(magic, 313) == plain_magic + 3, "actual magic skill damage consumes the same modifier once")
 		world.equipped_items["weapon"] = {"name":"증폭 검사 무기","type":"한손검","slot":"weapon","damage_amp_pct":100}
+		world._invalidate_equipment_static()
 		check(normal_hit(100) == 203, "equipment amplification does not multiply the flat debuff")
 		world.equipped_items.clear()
+		world._invalidate_equipment_static()
 		service.status.tick(2.01)
 		check(normal_hit(100) == plain, "expired modifier restores the real hit damage")
 		check(service.status.apply(stun, dummy, world), "reapply to current life")
@@ -92,11 +95,13 @@ func run() -> void:
 		check(service.status.apply(stun, dummy, world), "apply before class change")
 		world._on_job_class_selected("기사")
 		world.equipped_items.clear()
+		world._invalidate_equipment_static()
 		check(normal_hit(100) == plain, "class change removes target modifiers")
 	# Instant death bypasses successful-hit modifiers and still uses one NPC
 	# death call. A flat vulnerability must not change its probability or HP.
 	world._on_job_class_selected("마법사")
 	world.equipped_items.clear()
+	world._invalidate_equipment_static()
 	respawn()
 	dummy.undead = true
 	var turn := catalog.record_for("턴 언데드").duplicate(true)

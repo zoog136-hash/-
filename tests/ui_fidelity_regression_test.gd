@@ -46,7 +46,8 @@ func _run() -> void:
 	for frame: int in range(3): await process_frame
 	var scroll: ScrollContainer=inventory_ui.get("grid_scroll")
 	var slots: Dictionary=inventory_ui.get("slot_buttons")
-	_check(slots.size() >= 70,"catalog-backed inventory scroll fixture")
+	# PR190 keeps the entire item model but virtualizes offscreen slot controls.
+	_check((inventory_ui.get("sorted_references") as Array).size() >= 70 and slots.size() > 0,"catalog-backed inventory scroll fixture")
 	_check(scroll.get_v_scroll_bar().max_value > scroll.get_v_scroll_bar().page,"inventory genuinely overflows")
 	var button: Button=slots.values()[0]
 	var start: Vector2=_point(button)

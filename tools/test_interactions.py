@@ -23,14 +23,18 @@ def main() -> int:
     parser.add_argument("--godot", required=True)
     parser.add_argument("--logs", default="test-results/interactions")
     parser.add_argument("--prepare", action="store_true")
+    parser.add_argument("--import-timeout", type=int, default=1800,
+                        help="Full imported PNG project deadline; not a test bypass")
     parser.add_argument("--test", action="append", choices=DEFAULT_TESTS)
     args = parser.parse_args()
+    if args.import_timeout < 1:
+        parser.error("--import-timeout must be positive")
     root = Path(__file__).resolve().parents[1]
     logs = Path(args.logs).resolve()
     logs.mkdir(parents=True, exist_ok=True)
     cases = []
     if args.prepare:
-        cases += [("import", ["--editor", "--import"], 900),
+        cases += [("import", ["--editor", "--import"], args.import_timeout),
                   ("bake_navigation", ["--script", "res://tools/bake_hunting_navigation.gd"], 300),
                   ("boot", ["--quit-after", "30"], 150)]
     cases += [(name, ["--script", f"res://tests/{name}.gd"], 300) for name in (args.test or DEFAULT_TESTS)]

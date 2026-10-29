@@ -39,10 +39,12 @@ func _run() -> void:
 	await process_frame
 	world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
 	world.equipped_items = {}
+	world._invalidate_equipment_static()
 	var base_attack: int = world._effective_attack()
 	var base_melee: int = world._melee_damage_stat()
 	var base_ranged: int = world._ranged_damage_stat()
 	world.equipped_items = {"weapon": test_weapon}
+	world._invalidate_equipment_static()
 	check(world._effective_attack() == base_attack, "legacy weapon atk cannot enter common attack")
 	check(world._melee_damage_stat() == base_melee + 3, "melee stat keeps only explicit flat +3")
 	check(world._ranged_damage_stat() == base_ranged + 3, "ranged stat keeps only explicit flat +3")
@@ -76,6 +78,7 @@ func _run() -> void:
 	check(saw_large_one and saw_large_twenty, "large roll covers 1 and 20")
 
 	world.equipped_items = {}
+	world._invalidate_equipment_static()
 	check(world._roll_weapon_damage(small) == 0, "unarmed adds no weapon roll")
 	check(world._roll_weapon_damage(large) == 0, "unarmed large adds no weapon roll")
 	var unarmed: Dictionary = world._character_stats_snapshot()

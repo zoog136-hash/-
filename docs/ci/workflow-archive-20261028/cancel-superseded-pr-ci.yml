@@ -1,0 +1,78 @@
+name: Cancel superseded PR CI
+'on':
+  pull_request_target:
+    types: [synchronize]
+permissions:
+  actions: write
+  pull-requests: read
+  contents: read
+concurrency:
+  group: stale-pr-ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  cleanup:
+    if: ${{ github.event.pull_request.number != 157 && github.event.pull_request.number != 158 && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Cancel older checks of this PR only
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Trusted default-branch workflow; never checkout or execute PR content.
+            const { owner, repo } = context.repo;
+            const payload = context.payload.pull_request;
+            const number = payload.number;
+            const head = payload.head.sha;
+            const branch = payload.head.ref;
+            const source = owner + '/' + repo;
+            const active = ['queued', 'in_progress', 'pending', 'waiting', 'requested'];
+            if (number === 157 || number === 158) return;
+            const getPr = async () => (await github.rest.pulls.get(
+              { owner, repo, pull_number: number })).data;
+            const isHead = p => p.state === 'open' && p.head.sha === head &&
+              p.head.ref === branch && p.head.repo.full_name === source;
+            if (!isHead(await getPr())) {
+              core.notice('PR head changed or not local; skip cleanup');
+              return;
+            }
+            const stale = new Map();
+            for (const status of active) {
+              const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo,
+                { owner, repo, branch, status, per_page: 100 });
+              for (const run of runs) {
+                if (run.event !== 'pull_request' || run.head_branch !== branch ||
+                    run.head_sha === head || !run.head_sha ||
+                    (run.head_repository && run.head_repository.full_name !== source) ||
+                    !(run.pull_requests || []).some(p => p.number === number)) continue;
+                stale.set(run.id, run.head_sha);
+              }
+            }
+            if (stale.size > 200) throw new Error('Too many candidates, manual audit required');
+            let requested = 0, skipped = 0;
+            for (const [id, oldSha] of stale) {
+              if (!isHead(await getPr())) {
+                core.warning('Newer PR head appeared; stop cleanup');
+                break;
+              }
+              const run = (await github.rest.actions.getWorkflowRun(
+                { owner, repo, run_id: id })).data;
+              if (!active.includes(run.status) || run.event !== 'pull_request' ||
+                  run.head_branch !== branch || run.head_sha !== oldSha ||
+                  run.head_sha === head ||
+                  (run.head_repository && run.head_repository.full_name !== source) ||
+                  !(run.pull_requests || []).some(p => p.number === number)) {
+                skipped++;
+                continue;
+              }
+              try {
+                await github.rest.actions.cancelWorkflowRun({ owner, repo, run_id: id });
+                requested++;
+              } catch (e) {
+                if (e.status === 409) { skipped++; continue; }
+                throw e;
+              }
+            }
+            core.notice('PR ' + number + ': stale candidates=' + stale.size +
+              ', cancellation requests=' + requested + ', skipped=' + skipped +
+              '; current HEAD=' + head + ' preserved. Manual/main runs untouched.');

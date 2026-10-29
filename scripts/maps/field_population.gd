@@ -5,6 +5,9 @@ const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const DIRECTOR = preload("res://scripts/monsters/boss_director.gd")
 const BOSS_HUD = preload("res://scripts/monsters/boss_hud.gd")
 const MAX_POOL: int = 64
+const IDLE_POOL_TARGET: int = 16
+const MAP_CHANGE_POOL_TARGET: int = 8
+const IDLE_POOL_AGE_MS: int = 30000
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 var world: Node
 var field: PlayableField
@@ -14,9 +17,14 @@ var boss_director: TwilightBossDirector = DIRECTOR.new()
 var wake_clock: float = 0.0
 var generation: int = 0
 var available: Array[TwilightMonster] = []
+var available_since: Dictionary = {}
 var pool_root: Node2D
 var boss_hud: CanvasLayer
 var summons: Array[Dictionary] = []
+var pending_initial_spawns: Array[Dictionary] = []
+var pending_spawn_ids: Dictionary = {}
+const INITIAL_SPAWNS_PER_FRAME: int = 3
+const INITIAL_SPAWN_BUDGET_USEC: int = 4000
 
 func _ready() -> void:
 	pool_root = Node2D.new()
@@ -30,10 +38,17 @@ func _ready() -> void:
 func configure(controller: Node, value: PlayableField) -> void:
 	_capture_bosses()
 	_clear_summons()
+	var previous_map: String=str(field.data.map_id) if field!=null else ""
+	var next_map: String=str(value.data.map_id) if value!=null else ""
+	if previous_map!=next_map:
+		_trim_pool(MAP_CHANGE_POOL_TARGET,true)
+		preload("res://scripts/animation/animation_catalog.gd").release_region_frames()
 	generation += 1
 	world = controller
 	field = value
 	slots.clear()
+	pending_initial_spawns.clear()
+	pending_spawn_ids.clear()
 	wake_clock = 0.
 	set_process(field != null)
 	if field == null: return
@@ -43,7 +58,13 @@ func configure(controller: Node, value: PlayableField) -> void:
 		for index: int in range(int(region["max_count"])):
 			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0}
 			slots.append(slot)
-			if _zone_active(region): _spawn_slot(slot)
+			if _zone_active(region):
+				# Boss state is restored immediately. Normal PNG populations fill in
+				# bounded batches while retaining their authored slot and RNG order.
+				if field is NativePngField and str(region.get("mode","normal"))!="boss":
+					pending_initial_spawns.append(slot)
+					pending_spawn_ids[int(slot.slot_id)]=true
+				else:_spawn_slot(slot)
 
 func _zone_active(region: Dictionary) -> bool:
 	# One Escaros PNG includes five former fields (165 slots). Creating every
@@ -134,6 +155,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	while not available.is_empty():
 		var candidate: Variant = available.pop_back()
 		if not is_instance_valid(candidate) or candidate.is_queued_for_deletion(): continue
+		available_since.erase(candidate.get_instance_id())
 		monster = candidate as TwilightMonster
 		break
 	if monster == null: monster = world.MONSTER_SCENE.instantiate()
@@ -210,10 +232,25 @@ func recycle(monster: TwilightMonster) -> bool:
 	if available.has(monster): return true
 	if available.size()>=MAX_POOL: return false
 	monster.hide()
-	monster.set_physics_process(false)
+	monster.retire_for_pool()
 	monster.reparent(pool_root,false)
 	available.append(monster)
+	available_since[monster.get_instance_id()]=Time.get_ticks_msec()
 	return true
+
+func _trim_pool(target: int, force: bool) -> void:
+	var now: int=Time.get_ticks_msec()
+	for index: int in range(available.size()-1,-1,-1):
+		var monster: TwilightMonster=available[index]
+		if is_instance_valid(monster) and not monster.is_queued_for_deletion():continue
+		if is_instance_valid(monster):available_since.erase(monster.get_instance_id())
+		available.remove_at(index)
+	while available.size()>target:
+		var candidate: TwilightMonster=available[0]
+		if not force and now-int(available_since.get(candidate.get_instance_id(),now))<IDLE_POOL_AGE_MS:break
+		available.pop_front()
+		available_since.erase(candidate.get_instance_id())
+		candidate.queue_free()
 
 func alert_social(source: TwilightMonster) -> void:
 	# Bound pack assistance and reject retired, returning, unsafe or unrelated
@@ -302,10 +339,14 @@ func import_state(value: Variant) -> void:
 func _process(delta: float) -> void:
 	if field==null: return
 	boss_director.tick(delta)
+	_drain_initial_spawns()
 	wake_clock -= delta
 	var refresh: bool = wake_clock<=0.
-	if refresh: wake_clock = .4
+	if refresh:
+		wake_clock = .4
+		_trim_pool(IDLE_POOL_TARGET,false)
 	for slot: Dictionary in slots:
+		if pending_spawn_ids.has(int(slot.slot_id)):continue
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
 		if not is_instance_valid(monster):
 			slot.remaining = maxf(0.,float(slot.remaining)-delta)
@@ -318,6 +359,18 @@ func _process(delta: float) -> void:
 					slot.remaining = 2.0
 		elif refresh:
 			_update_activity(monster)
+
+func _drain_initial_spawns() -> void:
+	var spawn_start: int=Time.get_ticks_usec()
+	var initial_count: int=0
+	while not pending_initial_spawns.is_empty() and initial_count<INITIAL_SPAWNS_PER_FRAME:
+		if initial_count>0 and Time.get_ticks_usec()-spawn_start>=INITIAL_SPAWN_BUDGET_USEC:break
+		var pending: Dictionary=pending_initial_spawns.pop_front()
+		pending_spawn_ids.erase(int(pending.slot_id))
+		if _zone_active(pending.region):
+			_spawn_slot(pending)
+			if not is_instance_valid(pending.monster):pending.remaining=2.0
+		initial_count+=1
 
 func _update_activity(monster: TwilightMonster) -> void:
 	var distance: float=monster.global_position.distance_to(world.player.global_position)

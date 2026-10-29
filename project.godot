@@ -12,6 +12,10 @@ run/max_fps=30
 [debug]
 gdscript/warnings/treat_warnings_as_errors=false
 
+[editor]
+; Limit peak memory on Android Godot 4.7 during first asset import.
+import/use_multiple_threads=false
+
 [display]
 window/size/viewport_width=1280
 window/size/viewport_height=720

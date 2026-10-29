@@ -1,0 +1,120 @@
+name: TWILIGHT Integration Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ['main', 'integration/twilight-complete-20261009']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  godot-integration:
+    runs-on: ubuntu-latest
+    # c19b53a passed all 177 checks, then the final render hit the old 40m cap.
+    # Retain the full suite and allow the additional real boss lifecycle tests.
+    # PR #100: full regressions take ~70m; retain all tests and allow the later render stages.
+    timeout-minutes: 240
+    steps:
+      - name: Check out integration candidate
+        uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Restore pinned Godot engine cache
+        id: engine-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+      - name: Install Godot 4.7.2 and software GL
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! { test -x /tmp/Godot_v4.7.2-stable_linux.x86_64 && /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'; }; then
+            rm -f /tmp/Godot_v4.7.2-stable_linux.x86_64
+            curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+            unzip -q /tmp/godot.zip -d /tmp
+            chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          fi
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version | grep -q '^4\.7\.2\.stable'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version
+      - name: Save verified Godot engine cache on trusted main
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.engine-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: /tmp/Godot_v4.7.2-stable_linux.x86_64
+          key: twilight-godot-4.7.2-stable-linux-x86_64-engine-v1
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Full project regression, import, boot and all smoke tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1500 --logs test-results
+      - name: Floor-loot visual, manual pickup and live AUTO regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-loot"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ground_loot.gd 2>&1 | tee test-results/integration-loot-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-loot-render.log; then exit 1; fi
+          grep -q 'GROUND_LOOT_RENDER_OK' test-results/integration-loot-render.log
+      - name: Combat animation and world rendering regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-combat"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat.gd 2>&1 | tee test-results/integration-combat-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-combat-render.log; then exit 1; fi
+          grep -q 'COMBAT_RENDER' test-results/integration-combat-render.log
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-regions"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd -- --legacy-map-layouts 2>&1 | tee test-results/integration-regions-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-regions-render.log; then exit 1; fi
+      - name: Monster-crowd and authored-state animation regression
+        if: ${{ hashFiles('tests/capture_combat_crowd.gd') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-crowd"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat_crowd.gd -- --legacy-aden-faith-layouts 2>&1 | tee test-results/integration-crowd-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-crowd-render.log; then exit 1; fi
+          grep -q 'COMBAT_CROWD_RENDER_OK' test-results/integration-crowd-render.log
+      - name: Preserve Godot test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-integration-check-${{ github.sha }}
+          path: |
+            test-results/
+            ${{ runner.temp }}/twilight-integration-loot/**/ground-loot-review/
+            ${{ runner.temp }}/twilight-integration-combat/**/combat-review/
+            ${{ runner.temp }}/twilight-integration-regions/**/world-regions-review/
+            ${{ runner.temp }}/twilight-integration-crowd/**/combat-crowd-review/
+          if-no-files-found: warn

@@ -311,6 +311,7 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 	if action == "reroll": rerolls[id] = rolled
 	elif action in ["enhance","reset"]: rerolls.erase(id)
 	_rebuild()
+	world._invalidate_equipment_static()
 	world.hp = mini(world.hp,world._effective_max_hp())
 	world.mp = mini(world.mp,world._effective_max_mp())
 	world._update_hud()

@@ -47,9 +47,9 @@ jobs:
       fail-fast: false
       matrix: >-
         ${{ fromJSON(
-          github.event_name == 'workflow_dispatch' && inputs.retry_scope == 'linux_remaining'
-          && '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":150}]}'
-          || '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":150},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":150}]}'
+          (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.retry_scope == 'linux_remaining'))
+          && '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240}]}'
+          || '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":240}]}'
         ) }}
     runs-on: ${{ matrix.os }}
     # Both full suites retain every check and its individual deadline.
@@ -94,6 +94,9 @@ jobs:
           key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
           restore-keys: |
             twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Restore trusted-main PNG import shards
+        if: runner.os == 'Linux'
+        uses: ./.github/actions/restore-godot-png-cache
       - name: Generate synthetic fixtures (no third-party game art)
         run: |
           python tools/l1j_ci_make_fixture.py --root .
@@ -175,7 +178,7 @@ jobs:
         shell: python
         run: |
           import json, os, pathlib, subprocess, sys
-          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '1800']
+          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '2400']
           resumed = os.environ['TWILIGHT_CI_RETRY_SCOPE'] == 'linux_remaining'
           if resumed:
               proof = json.loads(pathlib.Path('l1j-test-results/authenticated-linux-prefix.json').read_text(encoding='utf-8'))
@@ -211,7 +214,9 @@ jobs:
 
   android-export:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    # Cold full import took ~26 minutes; APK export then hit the old 40-minute job cap.
+    # Keep the complete import, export, APK inspection and signing checks intact.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
