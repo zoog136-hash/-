@@ -1,0 +1,56 @@
+[gd_resource type="SpriteFrames" load_steps=11 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png" id="c20_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-3.png" id="r150_S_run_3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-4.png" id="r150_S_run_4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-5.png" id="r150_S_run_5"]
+
+[sub_resource type="AtlasTexture" id="c20_pose_0"]
+atlas = ExtResource("c20_1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c20_pose_1"]
+atlas = ExtResource("c20_1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c20_pose_2"]
+atlas = ExtResource("c20_1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c20_pose_3"]
+atlas = ExtResource("r150_S_run_3")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c20_pose_4"]
+atlas = ExtResource("r150_S_run_4")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c20_pose_5"]
+atlas = ExtResource("r150_S_run_5")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("c20_pose_0")},
+{"duration": 1.0, "texture": SubResource("c20_pose_1")},
+{"duration": 1.0, "texture": SubResource("c20_pose_2")},
+{"duration": 1.0, "texture": SubResource("c20_pose_3")},
+{"duration": 1.0, "texture": SubResource("c20_pose_4")},
+{"duration": 1.0, "texture": SubResource("c20_pose_5")}], "loop": true, "name": &"run_2", "speed": 12.500000000}
+]
+metadata/twilight_reviewed_frame_registration = {"run_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(259.5,498.0),"scale":Vector2(0.263473,0.263473),"target":Vector2(0,0)},{"anchor":Vector2(259.0,479.0),"scale":Vector2(0.263473,0.263473),"target":Vector2(0,0)},{"anchor":Vector2(264.0,498.0),"scale":Vector2(0.263473,0.263473),"target":Vector2(0,0)},{"anchor":Vector2(617.2386994766542,1170.0),"scale":Vector2(0.10787725559479075,0.10787725559479075),"target":Vector2(0,0)},{"anchor":Vector2(641.0692239913772,1161.0),"scale":Vector2(0.1078175249417376,0.1078175249417376),"target":Vector2(0,0)},{"anchor":Vector2(657.0734181475958,1165.8866436995388),"scale":Vector2(0.108851795200072,0.108851795200072),"target":Vector2(0,0)}]}}
+metadata/twilight_reviewed_run_grounding = {"run_2":[{"contact_point":Vector2(247.4909090909091,498.0),"body_projection":Vector2(259.5,249.0),"airborne":false,"clearance":0.0},{"contact_point":Vector2(266.24074074074076,479.0),"body_projection":Vector2(259.0,249.0),"airborne":false,"clearance":0.0},{"contact_point":Vector2(259.27272727272725,476.0),"body_projection":Vector2(264.0,245.0),"airborne":true,"clearance":5.796406},{"contact_point":Vector2(617.6918918918919,1170.0),"body_projection":Vector2(617.2386994766542,591.8600835442204),"airborne":false,"clearance":0.0},{"contact_point":Vector2(635.7258064516129,1161.0),"body_projection":Vector2(641.0692239913772,587.1508525426198),"airborne":false,"clearance":0.0},{"contact_point":Vector2(650.1176470588235,1132.0),"body_projection":Vector2(657.0734181475958,588.5531146368385),"airborne":true,"clearance":3.688622}]}
+metadata/twilight_clip_quality_holds = {}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_N_CANONICAL_AND_W_SW_ARCHER_MECHANISM"
+metadata/twilight_final_quality_approved = false
