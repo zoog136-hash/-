@@ -1,0 +1,175 @@
+{
+  "actor": "transform:192",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-attack-source-v01.png",
+  "source_sha256": "622981424dcd980923ed090249b74dd68c3f4f41211ffccf7b96b200f30eab9a",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-0.png",
+      "anchor": [
+        263.0,
+        463.5
+      ],
+      "scale": 0.336907,
+      "sha256": "1e67629b55d1d37cc40c01070156119ca75535a3e1a9c664adf81f4ca47c98a5"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-1.png",
+      "anchor": [
+        789.75,
+        473.0
+      ],
+      "scale": 0.336907,
+      "sha256": "33ff7b6baade08f87ddae327bcf524286848191a9e18608a14f2640b3d69affe"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-2.png",
+      "anchor": [
+        1279.0,
+        488.5
+      ],
+      "scale": 0.336907,
+      "sha256": "821e82082f693f038bb22366648d4f6055a46ebc5ccc63df5104b7147ab83106"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-3.png",
+      "anchor": [
+        276.5,
+        943.3299999999999
+      ],
+      "scale": 0.336907,
+      "sha256": "77010e94cda39533aea1424b89fe25228b79babfbae795d7b02af1a46435e92a"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-4.png",
+      "anchor": [
+        857.75,
+        935.5
+      ],
+      "scale": 0.336907,
+      "sha256": "f9927210ceb93e5612b5fcd7e04c8cae86336d671659a22fa154de70ece2b138"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-5.png",
+      "anchor": [
+        1276.0,
+        929.0
+      ],
+      "scale": 0.336907,
+      "sha256": "9db4672d45909799d8b1e3e97a15f579c8236650b58d1ef9485a1d372850021f"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 595810,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_N_NW_CAMERA_RUN_RECIPROCAL_GAIT_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
+  "reviewed_fragments": {
+    "11": {
+      "area": 869,
+      "bounds": [
+        979,
+        680,
+        1017,
+        761
+      ],
+      "owner_source_index": 4
+    },
+    "13": {
+      "area": 954,
+      "bounds": [
+        1017,
+        763,
+        1039,
+        832
+      ],
+      "owner_source_index": 4
+    }
+  },
+  "fragment_review_basis": "Reviewed source context: S recovery4 owns the detached red curved sword sparks to its right; SW recovery4 owns the leftward blade-tip sparks between recovery sword and impact3 cape, not the unrelated impact; death4 owns the ember near its grounded blade. No ambiguous piece discarded or assigned by threshold alone.",
+  "registration_basis": "Attack source-pixel roots/scales, guard phases, animation clock and frame3 marker unchanged. Death retains all exact RGBA at one first-standing-phase scale (110/392); terminal corpse C corrected to matching cell-local ground/chest centres instead of following neighbouring pose intrusion (old final5 X1036).",
+  "prior_proposal_anchors": [
+    [
+      263.0,
+      463.5
+    ],
+    [
+      277.75,
+      473.0
+    ],
+    [
+      255.0,
+      488.5
+    ],
+    [
+      276.5,
+      431.33
+    ],
+    [
+      345.75,
+      423.5
+    ],
+    [
+      252.0,
+      417.0
+    ]
+  ],
+  "native_import_validation": "PASS official Godot4.7.2 isolated native import of four clips24 AtlasTexture frames, each actual CompressedTexture2D/nonempty decoded image. Source-byte Main loading is separate.",
+  "local_main_validation": "PASS real Main Player injected candidate S/SW attack and death18captured poses18unique, frame3 strike markers and unchanged HP/gold/inventory/collision, normal exit0/errors0,20.34s.",
+  "player_physics_validation": "NOT_APPLICABLE_TO_THIS_ACTION; locomotion validation recorded in S-run.",
+  "remaining_actor_issue": "N and NW front/rear camera mismatch and missing canonical white ponytail in RUN; N/NW source region errors; W impact source-edge truncation and required remaining direction/gait review. Whole actor is not default-connected.",
+  "boundary_result": "Current compiled candidate198source frame regions:22->9 flaggedframes.13 flags resolved across S/SW attack and S death using lossless ownership, zero missing/duplicate source texels. Remaining9 source-frame flags belong N2/NW3/W4; whole source art and originals preserved.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-attack-source-v01.png",
+      "sha256": "622981424dcd980923ed090249b74dd68c3f4f41211ffccf7b96b200f30eab9a",
+      "bytes": 2102664
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-0.png",
+      "sha256": "1e67629b55d1d37cc40c01070156119ca75535a3e1a9c664adf81f4ca47c98a5",
+      "bytes": 219637
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-1.png",
+      "sha256": "33ff7b6baade08f87ddae327bcf524286848191a9e18608a14f2640b3d69affe",
+      "bytes": 225987
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-2.png",
+      "sha256": "821e82082f693f038bb22366648d4f6055a46ebc5ccc63df5104b7147ab83106",
+      "bytes": 257979
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-3.png",
+      "sha256": "77010e94cda39533aea1424b89fe25228b79babfbae795d7b02af1a46435e92a",
+      "bytes": 279705
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-4.png",
+      "sha256": "f9927210ceb93e5612b5fcd7e04c8cae86336d671659a22fa154de70ece2b138",
+      "bytes": 262203
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-attack-5.png",
+      "sha256": "9db4672d45909799d8b1e3e97a15f579c8236650b58d1ef9485a1d372850021f",
+      "bytes": 231932
+    }
+  ]
+}
