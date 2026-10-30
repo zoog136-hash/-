@@ -229,7 +229,7 @@ func refresh() -> void:
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
 		var icon: Texture2D = _icon_for_skill(record,learned)
 		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(record.get("mp",0))
-		cards.add_item(("확인중 " if bool(record.get("runtime_blocked", false)) else "" if learned else "미습득 ") + str(record.get("name",""))+"\n"+subtitle,icon)
+		cards.add_item(("미구현 " if bool(record.get("runtime_blocked", false)) else "" if learned else "미습득 ") + str(record.get("name",""))+"\n"+subtitle,icon)
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
 		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)

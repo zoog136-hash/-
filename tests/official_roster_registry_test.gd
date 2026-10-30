@@ -33,6 +33,7 @@ func _initialize():
  for values:Array in [["요정","엘리멘탈 스피드",1.25,25.0,12.5],["암흑기사","다크 러쉬",1.25,25.0,25.0],["사신","고스트 스텝",1.3,30.0,25.0]]:
   owner.job_class=values[0];var row:Dictionary=catalog.record_for(values[1]);catalog.learned[row.id]=1
   check(catalog.enabled(row),"published passive available for matching class")
+  check(CATALOG.CURRENT.runtime_text(row).contains("(TWILIGHT)"),"unknown official grade is clearly labeled shared local policy")
   check(is_equal_approx(catalog.speed(),values[2]) and catalog.stat("attackSpeed")==values[3] and catalog.stat("castSpeed")==values[4],"exact published percentages enter shared runtime stats")
   owner.job_class="기사";check(not catalog.enabled(row) and catalog.stat("attackSpeed")==0,"no cross-class passive leakage")
  owner.queue_free()
