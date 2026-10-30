@@ -16,6 +16,11 @@ func run():
  var world:TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(world)
  check(QA.enter_game(world),"actual Main class confirmation")
  world.set_process(false);world.field_population.set_process(false);world.player.set_physics_process(false);world.player.set_auto_enabled(false);world.save_timer=-100000;world.portal_cooldown=100000
+ if "--check-item-links" in OS.get_cmdline_user_args():
+  var mapped:Dictionary=preload("res://scripts/loot/source3_item_links.gd").resolve("weapon","11",world.loot_catalog)
+  check(mapped.get("name")=="수정 단검","actual Main typed source item resolves existing item")
+  check(world.loot_catalog.get("source3_by_key",{}).get("source3:tw380:Taiwan:weapon:11")=="수정 단검","actual runtime lookup index uses confirmed identity")
+  print("SOURCE3_RUNTIME_ITEM_INDEX entries=",world.loot_catalog.get("source3_by_key",{}).size())
  var id_path:String="user://source3-main-expect.json"
  if phase=="write":
   world._clear_monsters();world.ground_loot.clear_map(world.active_map_id);world.level=90;world.ain_service.blessing=200

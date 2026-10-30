@@ -103,7 +103,8 @@ static func build_catalog(items: Array) -> Dictionary:
 					if not valid_materials.is_empty() or not valid_equipment.is_empty():
 						crafting_sources[str(raw_monster)] = {"materials":valid_materials,"equipment_ingredients":valid_equipment}
 	return {"by_name":by_name, "equipment_by_grade":by_grade, "potions":potions, "l1j_monster_drops":overrides,
-		"twilight_coverage_equipment":coverage_equipment, "twilight_coverage_potions":coverage_potions, "crafting_drops":crafting_sources}
+		"twilight_coverage_equipment":coverage_equipment, "twilight_coverage_potions":coverage_potions, "crafting_drops":crafting_sources,
+		"source3_by_key":preload("res://scripts/loot/source3_item_links.gd").runtime_index(by_name)}
 
 static func _roll_equipment_grade(is_boss: bool, rng: RandomNumberGenerator) -> String:
 	var rates: Dictionary = BOSS_EQUIPMENT_RATES if is_boss else NORMAL_EQUIPMENT_RATES
