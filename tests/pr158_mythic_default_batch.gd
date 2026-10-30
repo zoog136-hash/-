@@ -19,12 +19,17 @@ func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dic
 	if not manifest.actors.has(key):return
 	var spec: Dictionary=manifest.actors[key]
 	check(FileAccess.get_sha256(frames.resource_path)==str(spec.candidate_sha256) and FileAccess.get_sha256(str(spec.original_selected_frames))==str(spec.original_selected_frames_sha256),"Current and preserved baseline SpriteFrames SHA pins match "+key)
-	var restored: Dictionary=frames.get_meta("twilight_refinement_existing_idle_sources")
+	var existing: Dictionary=frames.get_meta("twilight_refinement_existing_idle_sources")
+	var new_sources: Dictionary=frames.get_meta("twilight_refinement_new_idle_sources",{})
+	var restored: Dictionary=existing.duplicate(true)
+	for clip: String in new_sources:
+		check(not restored.has(clip),"New camera never overwrites a safely reused source clip "+key+" "+clip)
+		restored[clip]=new_sources[clip]
 	var guards: Dictionary=frames.get_meta("twilight_declared_static_guard_aliases")
 	var registration: Dictionary=frames.get_meta("twilight_reviewed_frame_registration")
 	var original: SpriteFrames=load(str(spec.original_selected_frames))
 	var old_registration: Dictionary=original.get_meta("twilight_reviewed_frame_registration")
-	check(restored.size()==int(spec.restored_existing_idle_clip_count) and restored.size()+guards.size()==8,"Restored IDLE views and remaining declared guards cover exactly eight directions "+key)
+	check(existing.size()==int(spec.restored_existing_idle_clip_count) and new_sources.size()==int(spec.get("new_idle_clip_count",0)) and restored.size()+guards.size()==8,"Existing/new IDLE views and remaining declared guards cover exactly eight directions "+key)
 	check(frames.get_animation_names()==original.get_animation_names() and frames.get_animation_names().size()==33,"All original required tracks retained "+key)
 	var restored_poses:=0
 	for clip: String in restored:
@@ -33,9 +38,11 @@ func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dic
 		var count:=frames.get_frame_count(clip)
 		restored_poses+=count
 		check(count==int(restored[clip].distinct_source_poses) and count==source.poses.size(),"Exact distinct source/timeline count; no invented repeated poses "+key+" "+clip)
-		check(int(restored[clip].source_camera_column)==int(clip.trim_prefix("idle_")),"Reviewed source camera column matches selected direction "+key+" "+clip)
+		var source_direction: int=int(restored[clip].source_camera_index) if new_sources.has(clip) else int(restored[clip].source_camera_column)
+		check(source_direction==int(clip.trim_prefix("idle_")),"Reviewed source camera matches selected direction "+key+" "+clip)
 		check(FileAccess.get_sha256(str(source.source))==str(source.source_sha256),"Byte-exact original IDLE source selected "+key+" "+clip)
 		var duration:=0.
+		var fixed_scale: Vector2=registration[clip].frames[0].scale
 		for phase in range(count):
 			duration+=frames.get_frame_duration(clip,phase)
 			var texture: AtlasTexture=frames.get_frame_texture(clip,phase) as AtlasTexture
@@ -44,6 +51,7 @@ func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dic
 			check(texture!=null and texture.atlas.resource_path==str(source.source) and texture.region==Rect2(region[0],region[1],region[2],region[3]),"Exact safe source rectangle, no image masking/resampling "+key+" "+clip)
 			check(int(pose.other_figure_core_pixels_inside_region)==0,"Selected rectangle excludes another intact figure core "+key+" "+clip)
 			check(registration[clip].frames[phase].anchor==Vector2(pose.anchor[0],pose.anchor[1]) and registration[clip].frames[phase].scale==Vector2(pose.scale[0],pose.scale[1]) and registration[clip].frames[phase].target==Vector2(pose.target[0],pose.target[1]),"Pinned source C/scale/target preserved "+key+" "+clip)
+			check(registration[clip].frames[phase].scale==fixed_scale and fixed_scale.x>0. and is_equal_approx(fixed_scale.x,fixed_scale.y),"One uniform clip scale; never frame-wise FX/bbox body resizing "+key+" "+clip)
 		check(frames.get_animation_loop(clip) and is_equal_approx(duration/frames.get_animation_speed(clip),float(source.loop_seconds_unchanged)),"Existing IDLE loop duration preserved with variable source pose count "+key+" "+clip)
 	for clip: String in frames.get_animation_names():
 		if restored.has(clip):continue
@@ -60,7 +68,10 @@ func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dic
 	var runtime_refs:=authored_poses+guards.size()*6
 	check(int(frames.get_meta("twilight_authored_track_count"))==25+restored.size() and int(frames.get_meta("twilight_authored_pose_count"))==authored_poses,"Authored source counts exclude remaining static guard repeats "+key)
 	check(played_tracks.size()==33 and played_poses.size()==runtime_refs and runtime_refs==int(spec.runtime_timeline_reference_count),"Every existing source pose and declared guard timeline reference actually played "+key)
-	report.cases.append({"id":key,"default_frames":frames.resource_path,"restored_idle_clips":restored.size(),"existing_idle_source_poses":restored_poses,"remaining_guard_alias_clips":guards.size(),"authored_source_poses":authored_poses,"runtime_timeline_references":runtime_refs})
+	if frames.has_meta("twilight_new_S_death_source"):
+		var south: Dictionary=frames.get_meta("twilight_new_S_death_source")
+		check(int(south.selected_picture_row)==2 and int(south.production_death_directions)==1 and int(south.selected_pose_slots)==6,"Only actual South death row selected; no eight-death completion claim")
+	report.cases.append({"id":key,"default_frames":frames.resource_path,"restored_idle_clips":existing.size(),"new_camera_idle_clips":new_sources.size(),"selected_native_idle_source_poses":restored_poses,"remaining_guard_alias_clips":guards.size(),"authored_source_poses":authored_poses,"runtime_timeline_references":runtime_refs})
 
 func run() -> void:
 	root.size=Vector2i(1280,720)
