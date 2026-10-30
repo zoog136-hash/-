@@ -49,7 +49,7 @@ func run() -> void:
 	var new_count: int=0
 	for region: Dictionary in next.data.monster_spawn:new_count+=int(region.max_count)
 	check(old_count==new_count and previous.data.monster_spawn.size()==next.data.monster_spawn.size(),"existing roster counts and region IDs preserved")
-	check(previous.data.npc_spawn.size()==next.data.npc_spawn.size() and previous.data.portal.size()==next.data.portal.size(),"existing NPC and portal counts preserved")
+	check(previous.data.npc_spawn.size()==next.data.npc_spawn.filter(func(row):return not row.has("source_catalog_id")).size() and previous.data.portal.size()==next.data.portal.size(),"existing NPC and portal counts preserved")
 	var roster_equal: bool=true
 	for i: int in range(previous.data.monster_spawn.size()):
 		for key: String in ["id","monster_types","weights","level","max_count","mode","boss_id","boss_name","respawn_time"]:

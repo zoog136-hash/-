@@ -59,7 +59,7 @@ func run() -> void:
 	if "--verify-local-restart" in OS.get_cmdline_user_args():
 		await verify_restart();return
 	if not QA.enter_game(world):quit(1);return
-	check(world.field_map is NativePngField and world.active_map_id=="aden_world","must use current main Aden PNG, no legacy")
+	check(preload("res://tests/current_main_map_contract.gd").valid(world),"must use verified current main Aden contract, no legacy")
 	world.set_process(false);world.player.set_physics_process(false);world.player.set_auto_enabled(false);world.save_timer=-100000
 	world._clear_monsters();world.level=90;world.gold=100000000;world.max_mp=1000
 	service=world.original_skills;catalog=service.catalog
@@ -196,6 +196,7 @@ func run() -> void:
 		preload("res://tests/combat_test_clock.gd").settle(world)
 		if int(service.local_runtime.proc_events.get(str(shooting.id),0))>proc_before:
 			marker_proc=true;break
+	print("MISSING12_MARKER_DIAGNOSTIC ",JSON.stringify({"proc":marker_proc,"primary_hp":enemies[0].hp,"secondary_hp":enemies[1].hp,"events":service.local_runtime.proc_events,"toggle":service.local_runtime.is_on(shooting),"windows":service.local_runtime.windows,"position":str(world.player.global_position),"target":str(enemies[0].global_position),"pending":world.pending_attack.is_empty(),"flights":world.combat_flights.flights.size(),"active":world.player.motion.active}))
 	check(marker_proc and enemies[1].hp<1000000,"real motion/flight normal hit invokes split proc with visual pool disabled")
 	service.vfx.detail_limit=160
 	reset(["슈팅 스타"],"요정","활")
@@ -207,5 +208,5 @@ func run() -> void:
 	var expected_file:=FileAccess.open("user://local_skill_restart_expect.json",FileAccess.WRITE)
 	expected_file.store_string(JSON.stringify({"ids":expected_ids,"mp":world.mp,"window":service.local_runtime.windows[str(shooting.id)]}));expected_file.close()
 	world.queue_free();await process_frame
-	print("MISSING12_RUNTIME_RESULT checks=%d errors=%d usable=12 map=NativePngField/aden_world" % [checks,failures.size()])
+	print("MISSING12_RUNTIME_RESULT checks=%d errors=%d usable=12 map=verified-current-main/aden_world" % [checks,failures.size()])
 	quit(0 if failures.is_empty() else 1)

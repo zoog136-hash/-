@@ -28,7 +28,7 @@ func run() -> void:
 	var f = Field.new()
 	f.coordinates.configure([32000,32000],[2000,2000])
 	CATALOG.append_to_field(f)
-	check(f.data.npc_spawn.is_empty(),"shipping bindings inactive")
+	check(f.data.npc_spawn.is_empty(),"shipping bindings reject an unrelated fixture map")
 	for id: String in CATALOG.records():
 		var n: Dictionary = CATALOG.record(id)
 		check(not n.shop_enabled and not n.quest_execution_enabled and not n.combat_enabled,"no invented services")
@@ -75,5 +75,5 @@ func run() -> void:
 	binding.game_map_id="test_source_4"
 	binding.npc_id="l1j_tw380_npc_71094"
 	check(not CATALOG.append_to_field(f,[binding]).is_empty() and f.data.npc_spawn.is_empty(),"Endia random anchor cannot spawn as fixed")
-	print("SOURCE_NPC_SIX checks=",checks," failures=",errors.size()," real_map_placement=HOLD")
+	print("SOURCE_NPC_SIX checks=",checks," failures=",errors.size()," placement=checked_by_live_test")
 	quit(0 if errors.is_empty() else 1)

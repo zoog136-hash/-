@@ -4,6 +4,7 @@ const PATH = "res://data/npc/source_six.json"
 const BINDINGS = "res://data/npc/source_six_bindings.json"
 const PROTECTED = ["albino_01","albino_02","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05","faith_01","faith_02","faith_03","faith_04"]
 static var _records: Dictionary = {}
+static var placements: Dictionary = {}
 
 static func records() -> Dictionary:
 	if _records.is_empty():
@@ -50,7 +51,7 @@ static func append_to_field(field: Object, bindings: Array = []) -> Array[Dictio
 		var reason: String = ""
 		if int(definition.get("source_map_id",-1)) != int(spawn.source_map_id) or str(binding.get("source_grid_sha256","")) != str(definition.get("source_sha256","")) or str(binding.get("source_grid_sha256","")).length() != 64:
 			reason = "source map identity/grid binding mismatch"
-		elif str(spawn.get("source_position_mode","")) != "fixed_point":
+		elif str(spawn.get("source_position_mode","")) != "fixed_point" and str(binding.get("random_policy","")) != "reviewed_source_offsets_v1":
 			reason = "random-offset placement requires separate verified policy"
 		elif str(binding.get("visual_sha256","")) != str(npc.visual.sha256) or not bool(binding.get("actor_foot_reviewed",false)) or not binding.get("foot_pixels",null) is Array or binding.foot_pixels.size() != int(npc.visual.heading_slots):
 			reason = "actor foot registration unresolved"
@@ -63,8 +64,26 @@ static func append_to_field(field: Object, bindings: Array = []) -> Array[Dictio
 			for component: Variant in foot:
 				if not (component is int or component is float) or not is_finite(float(component)): feet_valid = false
 		if not feet_valid: holds.append({"id":id,"reason":"invalid foot pixels"}); continue
-		var p: Vector2 = coordinates.to_world(Vector2(float(spawn.source_position[0]),float(spawn.source_position[1])))
-		if not p.is_finite() or not field.walkable(p): holds.append({"id":id,"reason":"source cell is not walkable"}); continue
+		var present:bool=false
+		for old:Dictionary in field.data.get("npc_spawn",[]):
+			if str(old.get("id",""))==id and str(old.get("source_catalog_id",""))==id:present=true
+		if present:continue
+		var selected:Array=spawn.source_position.duplicate()
+		if str(spawn.get("source_position_mode",""))=="random_offsets":
+			if placements.has(id):selected=placements[id].source_position.duplicate()
+			else:
+				var candidates:Array=[]
+				for candidate:Array in binding.get("valid_source_positions",[]):
+					if not _within_source_offsets(candidate,spawn):continue
+					var q:Vector2=coordinates.to_world(Vector2(candidate[0],candidate[1]))
+					if _floor_clear(field,q):candidates.append(candidate)
+				if candidates.is_empty():holds.append({"id":id,"reason":"no reviewed random floor"});continue
+				var rng:=RandomNumberGenerator.new();rng.randomize()
+				selected=candidates[rng.randi_range(0,candidates.size()-1)].duplicate()
+				placements[id]={"source_position":selected.duplicate(),"source_grid_sha256":binding.source_grid_sha256}
+			if not _within_source_offsets(selected,spawn) or not binding.get("valid_source_positions",[]).has(selected):holds.append({"id":id,"reason":"saved random position is not reviewed"});continue
+		var p: Vector2 = coordinates.to_world(Vector2(float(selected[0]),float(selected[1])))
+		if not p.is_finite() or not _floor_clear(field,p): holds.append({"id":id,"reason":"source cell is not walkable"}); continue
 		var duplicate: bool = false
 		for old: Dictionary in field.data.get("npc_spawn",[]):
 			var old_position: Array = old.get("position",[])
@@ -73,7 +92,48 @@ static func append_to_field(field: Object, bindings: Array = []) -> Array[Dictio
 		if duplicate: holds.append({"id":id,"reason":"existing identity/spawn/position overlap"}); continue
 		var installed: Dictionary = {"id":id,"source_catalog_id":id,"name":npc.name,"role":npc.role,
 			"source_spawn_key":spawn.source_spawn_key,"source_map_id":spawn.source_map_id,
-			"source_position":spawn.source_position.duplicate(),"heading_slot":int(spawn.source_heading),
+			"source_position":spawn.source_position.duplicate(),"runtime_source_position":selected.duplicate(),"source_position_mode":spawn.source_position_mode,"heading_slot":int(spawn.source_heading),
 			"position":[p.x,p.y],"foot_pixels":binding.foot_pixels.duplicate(true)}
 		field.data.npc_spawn.append(installed)
 	return holds
+
+static func _floor_clear(field:Object,p:Vector2) -> bool:
+	return field.point_clear(p,6.0) if field.has_method("point_clear") else field.walkable(p)
+
+static func _within_source_offsets(value:Variant,spawn:Dictionary) -> bool:
+	if not value is Array or value.size()!=2:return false
+	for axis:int in range(2):
+		if not (value[axis] is int or value[axis] is float) or not is_finite(float(value[axis])) or float(value[axis])!=floorf(float(value[axis])):return false
+		if absf(float(value[axis])-float(spawn.source_position[axis]))>float(spawn.source_random_offsets[axis]):return false
+	return true
+
+static func export_state() -> Dictionary:
+	return {"schema":1,"placements":placements.duplicate(true)}
+
+static func validate_state(value:Variant) -> String:
+	if not value is Dictionary:return "NPC placement state is malformed"
+	if value.is_empty():return ""
+	if value.get("schema")!=1 or not value.get("placements") is Dictionary:return "NPC placement schema is unknown"
+	var bindings:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(BINDINGS))
+	for id:String in value.placements:
+		var saved:Variant=value.placements[id]
+		var found:bool=false
+		for b:Dictionary in bindings.bindings:
+			if b.npc_id!=id or b.get("random_policy")!="reviewed_source_offsets_v1":continue
+			if not saved is Dictionary or saved.get("source_grid_sha256")!=b.source_grid_sha256:return "NPC placement grid identity changed"
+			if not _within_source_offsets(saved.get("source_position"),record(id).spawns[0]) or not b.valid_source_positions.has(saved.source_position):return "NPC saved position is outside reviewed offsets"
+			found=true
+		if not found:return "NPC saved identity has no reviewed random policy"
+	return ""
+
+static func import_state(value:Dictionary) -> void:
+	placements=value.get("placements",{}).duplicate(true)
+
+static func nearest_click_record(world:Node,target:Vector2) -> Dictionary:
+	if world.field_map==null:return {}
+	var closest:Dictionary={};var distance:float=55.0
+	for row:Dictionary in world.field_map.data.get("npc_spawn",[]):
+		var point:Vector2=Vector2(row.position[0],row.position[1]);var d:float=target.distance_to(point)
+		if d<distance:closest=row;distance=d
+	if not records().has(str(closest.get("source_catalog_id",""))):return {}
+	return closest if nearby(world,str(closest.source_catalog_id)) else {}

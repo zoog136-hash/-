@@ -353,6 +353,11 @@ func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
 		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))
 	var accuracy: int = world._ranged_accuracy_stat() if str(skill.get("attack_type", "")) == "ranged" else world._melee_accuracy_stat()
+	return physical_hit_chance(accuracy, target)
+
+func physical_hit_chance(accuracy: int, target: TwilightMonster) -> float:
+	# Normal attacks and physical skills read the same live, life-scoped defense.
+	# Keep the shared formula's AC normalization and nonnegative DG floor.
 	return world._physical_hit_chance(accuracy, target.armor_class + int(status.modifier(target, "ac")), int(status.modifier(target, "dg")))
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:

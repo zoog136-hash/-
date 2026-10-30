@@ -8,7 +8,13 @@ func check(ok:bool,label:String):
 func _initialize():call_deferred('run')
 func run():
  var original:String=OS.get_environment('TWILIGHT_SOURCE_MAP_PACK')
- OS.set_environment('TWILIGHT_SOURCE_MAP_PACK','/workspace/map-main-tests/local-missing-pack')
+ var base_only:String=ProjectSettings.globalize_path("user://base-only-"+str(Time.get_ticks_usec()))
+ check(DirAccess.make_dir_recursive_absolute(base_only)==OK,"create isolated base-only fixture")
+ var links:DirAccess=DirAccess.open(base_only)
+ for name:String in DirAccess.get_files_at(original)+DirAccess.get_directories_at(original):
+  if name=="local-interpretation-v1":continue
+  check(links.create_link(original.path_join(name),base_only.path_join(name))==OK,"link immutable base entry "+name)
+ OS.set_environment('TWILIGHT_SOURCE_MAP_PACK',base_only)
  check(RUN.load_field('aden_world')==null,'missing local supplement cannot silently load old native Aden')
  var unaffected=RUN.load_field('source_77');check(unaffected!=null,'previous59 art and raw grids stay independently valid');if unaffected!=null:unaffected.close()
  var world:TwilightWorld=load('res://Main.tscn').instantiate();root.add_child(world)

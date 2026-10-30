@@ -53,7 +53,8 @@ func configure(controller: Node, value: PlayableField) -> void:
 	set_process(field != null)
 	if field == null: return
 	records.clear()
-	for record: Dictionary in world.monster_db: records[str(record.name)] = record
+	for record: Dictionary in world.monster_db:
+		if not bool(record.get("catalog_only", false)): records[str(record.name)] = record
 	for region: Dictionary in field.data["monster_spawn"]:
 		for index: int in range(int(region["max_count"])):
 			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0}

@@ -3,6 +3,8 @@ class_name TwilightMonsterCatalog
 
 const CATALOG_PATH = "res://data/monsters/monster_world_catalog.json"
 const SPAWN_PATH = "res://data/monsters/world_spawn_profiles.json"
+const REVIEWED_PATH = "res://data/monsters/reviewed_source_monsters.json"
+const LOCAL_NAMED_V2_IDS = ["45777", "45504", "45588", "45602", "45612", "45574", "45646", "45539", "45615", "45671", "45413", "45625", "45685", "45675", "45585", "45548", "45955", "45956", "45957", "45958", "45959", "45960", "45961", "45962", "45166", "45153", "45681", "45682", "45683", "45684", "46025", "46026", "46037", "81163", "97068", "45941", "45943"]
 const RELAYOUT = preload("res://scripts/monsters/renewed_map_spawns.gd")
 # These dedicated field encounters were added by the renewed placement layer.
 # Reuse supported local boss attacks, without changing base HP, loot or visuals.
@@ -16,6 +18,19 @@ const DEDICATED_BOSS_SPECIALS: Dictionary = {
 static var catalog: Dictionary = {}
 static var spawn_profiles: Dictionary = {}
 static var records_by_name: Dictionary = {}
+
+static func reviewed_record_allowed(record: Dictionary) -> bool:
+	if str(record.get("appearance_status", "")).begins_with("HOLD_"): return false
+	if not bool(record.get("import_enabled", false)): return false
+	var status: String = str(record.get("identity_approval", ""))
+	var approved: bool = status in ["APPROVED_CURRENT318_FIRST_FOUR_REVIEW", "APPROVED_CURRENT318_NEXT_NINE_REVIEW", "APPROVED_CURRENT318_MONSTER_NEXT_THIRTEEN_REVIEW", "APPROVED_CURRENT318_MONSTER_LATE_TEN_REVIEW", "APPROVED_CURRENT318_MONSTER_EARLY_THIRTEEN_REVIEW", "APPROVED_CURRENT318_MONSTER_MIDDLE_TWELVE_REVIEW", "APPROVED_FOR_LATE_SECOND_SOURCE_CATALOG_BATCH_AT_CURRENT_318_SNAPSHOT", "APPROVED_CURRENT318_MONSTER_ELDER_STONEGOLEM_REVIEW", "APPROVED_FOR_MYTHIC_PAIR_SOURCE_CATALOG_BATCH_AT_CURRENT_318_SNAPSHOT"]
+	var local_named: bool = status in ["PROVISIONAL_OFFLINE_NAMED_IDENTITY_REVIEW_ONLY_CURRENT318_NO_EXTERNAL_APPLY_AUTHORITY", "PROVISIONAL_OFFLINE_IDENTITY_REVIEW_ONLY_CURRENT318_NO_EXTERNAL_APPLY_AUTHORITY", "OFFLINE_PROVISIONAL_NEW_NAMED_NPC_IDENTITY_SUPPORTED", "OFFLINE_SEMANTIC_IDENTITY_SUPPORTED_EXPLICIT_BASE_AND_ATTACHMENTS", "OFFLINE_PROVISIONAL_NEW_NAMED_IDENTITY_REVIEWED"] and str(record.get("source_npc_id", "")) in LOCAL_NAMED_V2_IDS and str(record.get("local_application_authorization", "")) == "USER_AUTHORIZED_LOCAL_NAMED_V2_CATALOG_ONLY"
+	return approved or local_named
+
+static func spawnable_records(records: Array) -> Array:
+	# Catalog registration alone never opts a source identity into random maps.
+	return records.filter(func(record: Variant) -> bool:
+		return not (record is Dictionary and bool(record.get("catalog_only", false))))
 
 static func ensure_loaded() -> void:
 	if not catalog.is_empty(): return
@@ -39,6 +54,24 @@ static func expand(original: Array) -> Array:
 		# to reproduce original rewards. Loot rates remain in loot_drop.gd.
 		result.append(record)
 		by_name[str(record.name)] = record
+	# Reviewed source identities are independent records, without inherited stats,
+	# loot or silhouettes. Existing names/source links always retain precedence.
+	var source_ids: Dictionary = {}
+	for record: Dictionary in result:
+		for field: String in ["sourceId", "source_id", "source_npc_id"]:
+			if record.has(field): source_ids[str(record[field])] = true
+	var reviewed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REVIEWED_PATH)) as Dictionary
+	for raw: Dictionary in reviewed.get("records", []):
+		if not reviewed_record_allowed(raw): continue
+		var duplicate: bool = by_name.has(str(raw.name))
+		for field: String in ["sourceId", "source_id", "source_npc_id"]:
+			duplicate = duplicate or source_ids.has(str(raw.get(field, "")))
+		if duplicate: continue
+		var record: Dictionary = raw.duplicate(true)
+		result.append(record)
+		by_name[str(record.name)] = record
+		for field: String in ["sourceId", "source_id", "source_npc_id"]:
+			source_ids[str(record[field])] = true
 	records_by_name = {}
 	for record: Dictionary in result:
 		var name: String = str(record.name)

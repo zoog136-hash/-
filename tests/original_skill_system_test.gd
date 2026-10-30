@@ -29,7 +29,7 @@ func reset_cast() -> void:
 	world.hp = world._effective_max_hp()
 
 func run() -> void:
-	var native_requested: bool="--current-native-map" in OS.get_cmdline_user_args()
+	var native_requested: bool="--current-native-map" in OS.get_cmdline_user_args() or "--current-main-map" in OS.get_cmdline_user_args()
 	if not native_requested and preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/original_skill_system_test.gd"): return
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
@@ -43,7 +43,7 @@ func run() -> void:
 	world._clear_monsters()
 	# The installed A3 source grid has closed directional edges. A target
 	# offset from the old spawn is not necessarily a valid missile lane.
-	check(not native_requested or world.field_map is NativePngField,"explicit current native map fixture")
+	check(not native_requested or preload("res://tests/current_main_map_contract.gd").valid(world),"explicit verified current main map fixture")
 	# Projectile anchors stand above the foot. The PNG fixture must clear the
 	# full existing strike/flight envelope, not only a 10px ground segment.
 	var fixture_offsets: Array=[Vector2(10,0)]

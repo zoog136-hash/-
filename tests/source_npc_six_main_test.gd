@@ -72,7 +72,7 @@ func run() -> void:
 	check(world.gold==initial_gold and world.inventory==initial_inventory,"dialogue never changes economy")
 	check(world._save_game(true)==OK,"real isolated save writes")
 	var save: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
-	check(not JSON.stringify(save).contains("l1j_tw380_npc_"),"NPC runtime definitions not persisted into save")
+	check(not save.has("npc_spawn") and not save.has("source_six") and CATALOG.validate_state(save.get("source_npc_state",{})).is_empty(),"only bounded NPC placement state persisted, not runtime definitions")
 	world.queue_free()
 	await process_frame
 	world = await boot()

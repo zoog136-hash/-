@@ -26,14 +26,9 @@ func run() -> void:
 	var world: TwilightWorld = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	if not QA.enter_game(world): quit(1); return
-	if world.active_map_id != "aden_world" or not world.field_map is NativePngField:
-		fail("representative capture requires current main NativePngField aden_world"); return
-	var native_field: NativePngField = world.field_map as NativePngField
-	if native_field.png_manifest.get("source_sha256") != "c0af339cbc2dbba5fb2e65c3c7f01d9467507545d7b91cbb331f5bbd51128730":
-		fail("unexpected Aden PNG source identity"); return
-	if world.field_renderer.get_meta("native_png", false) != true:
-		fail("native PNG renderer not active"); return
-	print("SIMILAR_RENDER_MAP ", JSON.stringify({"map_id":world.active_map_id,"field_class":"NativePngField","source_sha256":native_field.png_manifest.source_sha256,"pack_root":native_field.png_root,"artwork_scale":native_field.artwork_scale,"layout_revision":native_field.data.get("layout_revision"),"index_sha256":FileAccess.get_sha256(registry.extra_root()+"/index.json"),"args":OS.get_cmdline_user_args()}))
+	var contract=preload("res://tests/current_main_map_contract.gd")
+	if not contract.valid(world):fail("representative capture requires verified current main map identity");return
+	print("SIMILAR_RENDER_MAP ",JSON.stringify(contract.describe(world)))
 	world.save_timer = -100000
 	world.self_mode_enabled = false
 	world.player.set_auto_enabled(false)
@@ -134,5 +129,5 @@ func run() -> void:
 	await capture("05-shooting-real-toggle-on")
 	world.queue_free()
 	await process_frame
-	print("SIMILAR_RENDER_OK: verified current-main Aden PNG, real OpenGL game, UI permission/empty query, buff cast, passive learning without periodic cast")
+	print("SIMILAR_RENDER_OK: verified current-main Aden contract, real OpenGL game, UI permission/empty query, buff cast, passive learning without periodic cast")
 	quit(0)
