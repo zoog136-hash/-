@@ -1,0 +1,94 @@
+{
+  "actor": "transform:227",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r131/NW-run-source.png",
+  "source_sha256": "78a3b9f67ca8008a33725e773a66d60b82059633d591fb6a9ef3a88d23426296",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_227/corrections/isolation-v11/NW-run-source-v01-isolated.png",
+  "original_source_sha256": "4575a9c2136dd29adabf161069a2bd9ab6909135e56101754c1d7bf82a326bde",
+  "original_source_preserved": true,
+  "canonical_reference": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/NW-idle-0.png",
+  "canonical_reference_sha256": "cf378707063021cb586aa81727df15e3309f0a71c882484755036c402e1f3eea",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-0.png",
+      "anchor": [
+        270,
+        500
+      ],
+      "scale": 0.27,
+      "sha256": "84940950d4127bacb4534656603ce4cb0ae5311397b1d57ea9ea7e569cedb41a"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-1.png",
+      "anchor": [
+        782,
+        500
+      ],
+      "scale": 0.27,
+      "sha256": "29ac0575cdc963bcc6c3d93f2c32e7333fa1eba1136c1df338de228d80123128"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-2.png",
+      "anchor": [
+        1294,
+        500
+      ],
+      "scale": 0.27,
+      "sha256": "e20ac9a0ee67f8f14f45514c3932cae4a41bc31741925bf1ce7ed4952f2c4a4c"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-3.png",
+      "anchor": [
+        270,
+        1005
+      ],
+      "scale": 0.27,
+      "sha256": "bfdb47c3411fdb160e93e584e37c85c242ca86ee7e65c8bb736e0f3a06a93885"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-4.png",
+      "anchor": [
+        782,
+        1005
+      ],
+      "scale": 0.27,
+      "sha256": "4981c155f5f388a92892700a2b38502c1d7c78f19196daeaa319d0111d014e5b"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-5.png",
+      "anchor": [
+        1294,
+        1005
+      ],
+      "scale": 0.27,
+      "sha256": "b56e738d2b1246f685b80bd81ce59d014fe5042275719bebb5f6a377faa2ac69"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 692382,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_COMPLETE_ACTOR_DEVICE_PENDING",
+  "production_connected": true,
+  "final_quality_approved": false,
+  "whole_actor_gate": "PASS_LOCAL_DEFAULT_NATIVE_IMPORT_PLAYER_ANDROID_PENDING",
+  "replacement_basis": "All6 original NW RUN poses hold staff/book on sides opposite to the approved NW IDLE. A separate six-pose source uses that approved NW camera and RIGHT staff/LEFT book, with explicit LEFT contact/support/push then RIGHT contact/support/push kinematic guide. Old wrong-handed strip was not supplied to generation; no mirror, rotation, normal-frame repaint or silent resource substitution.",
+  "registration_basis": "Same .27 standing-equivalent scale in all6; C ground anchors fixed500 in row0 and1005 in row1 beneath pelvis, matched to approved NW idle body/leg proportions. C plane is independent of lifted boot tips, rear projected boot depth and green staff aura; preserve source authored limb motion, speed12.5 and looptrue.",
+  "runtime_default_connected": true,
+  "production_connection_path": "res://assets/actors/eight_direction/legendary_production/transform_227/r005/SpriteFrames.tres",
+  "catalog_bound_directly": false,
+  "activation_scope": "This source clip is assembled into the full actor; catalog selects r005 only. Count current full actor33/198, not component/ancestor files.",
+  "local_main": "PASS actual Main + actual catalog selection33clips198poses, candidate_profile_injection0; all8 attack markers own frame3, no mirror, footprint registration and terminal same-form death preserved.",
+  "native_import": "PASS separate native Godot4.7.2 actor import:33clips198 CompressedTexture2D AtlasTexture decoded frames; distinct from QA Main source-byte loader and exported builds.",
+  "player_validation": "PASS32 stationary/moving HIT cases at30/60fps in8directions, plus1 actual Player physics movement/HIT case. No extra attack, movement continues, inventory/equipment/health/collision unchanged.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

@@ -1,0 +1,91 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_191/draft001/SW-attack-source-v01.png",
+  "source_sha256": "04e6de1321f64ed0fa97954af399e984bd2250ed0f608e26c4a4a9ceeea20f3e",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/SW-attack-0.png",
+      "anchor": [
+        159.0,
+        482.0
+      ],
+      "scale": 0.324006,
+      "source_body_label": 16,
+      "sha256": "11d7c436e6bcfa6fd57ef41d763afdd45452a8b4f0119eb8d7616612da480082"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/SW-attack-1.png",
+      "anchor": [
+        727.0,
+        511.0
+      ],
+      "scale": 0.324006,
+      "source_body_label": 1,
+      "sha256": "ab66d8e454a78162e7dcbfb5d1e04b246251725c9e0e17ff8776fcd55c928b9d"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/SW-attack-2.png",
+      "anchor": [
+        1185.5,
+        511.0
+      ],
+      "scale": 0.324006,
+      "source_body_label": 7,
+      "sha256": "39f2e235007f7adb854fa4a620361935f767ebbd57592e1ee4093ac0023dcfda"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/SW-attack-3.png",
+      "anchor": [
+        348.5,
+        933.0
+      ],
+      "scale": 0.324006,
+      "source_body_label": 46,
+      "sha256": "abd8c9196e2bfc52f5d8ff4b1cd06adc1aed3f1576a4b46025ebe94c475ab2de"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/SW-attack-4.png",
+      "anchor": [
+        826.0,
+        967.0
+      ],
+      "scale": 0.324006,
+      "source_body_label": 52,
+      "sha256": "36c1dde5caa8a4600e5a5489e0b0d28c207489df85bf5fb246cc0110e383cb5c"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/SW-attack-5.png",
+      "anchor": [
+        1231.25,
+        949.6700000000001
+      ],
+      "scale": 0.324006,
+      "source_body_label": 48,
+      "sha256": "e05b6e72d496f4e1e3a2c68ee281295b727339a3373cb5efaaba2f9706072764"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 774749,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS: actual Main candidate profile injection; six poses; registered ground anchors; no mirrored fallback; gameplay/collision state preserved",
+  "production_connected": false,
+  "reviewed_fragment_exception": {
+    "components": [
+      31,
+      33
+    ],
+    "owner": 4,
+    "basis": "Visually reviewed floating blue staff-effect fragments left of phase4; exact whole components preserved, separate from phase3 cape"
+  },
+  "native_import": "PASS: isolated native Godot 4.7.2 import; six CompressedTexture2D AtlasTexture frames",
+  "whole_actor_gate": "HOLD: remaining cross-action weapon identity and locomotion quality; local clip pass does not authorize default activation",
+  "android_device_test": "NOT_RUN"
+}

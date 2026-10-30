@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_166/reviewed_parts_r019/N-run.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("1")
+region = Rect2(80,80,519,493)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("1")
+region = Rect2(1736,80,524,479)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("1")
+region = Rect2(80,1736,486,476)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("1")
+region = Rect2(1736,1736,764,665)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("1")
+region = Rect2(80,3392,1489,1005)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("1")
+region = Rect2(1736,3392,714,677)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":true,"name":&"run_6","speed":12.5}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_OTHER_CLIPS"
+metadata/twilight_reviewed_frame_registration = {"run_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(253,475),"scale":Vector2(0.23404255319148937,0.23404255319148937),"target":Vector2(0,0)},{"anchor":Vector2(291,471),"scale":Vector2(0.23404255319148937,0.23404255319148937),"target":Vector2(0,0)},{"anchor":Vector2(255,470),"scale":Vector2(0.23404255319148937,0.23404255319148937),"target":Vector2(0,0)},{"anchor":Vector2(419,644),"scale":Vector2(0.176,0.176),"target":Vector2(0,0)},{"anchor":Vector2(843,983),"scale":Vector2(0.1134020618556701,0.1134020618556701),"target":Vector2(0,0)},{"anchor":Vector2(390,667),"scale":Vector2(0.176,0.176),"target":Vector2(0,0)}]}}

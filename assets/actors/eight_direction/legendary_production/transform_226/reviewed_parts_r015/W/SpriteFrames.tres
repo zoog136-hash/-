@@ -1,0 +1,44 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_226/draft001/W-idle-source-v01.png" id="0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_226/reviewed_parts_r015/W/attack-pose-1.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_226/reviewed_parts_r015/W/attack-pose-2.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_226/reviewed_parts_r015/W/attack-pose-3.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_226/reviewed_parts_r015/W/attack-pose-4.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_226/draft001/W-idle-source-v01.png" id="5"]
+
+[sub_resource type="AtlasTexture" id="pose_0"]
+atlas = ExtResource("0")
+region = Rect2(0.0,0.0,512.0,512.0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1"]
+atlas = ExtResource("1")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_2"]
+atlas = ExtResource("2")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_3"]
+atlas = ExtResource("3")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_4"]
+atlas = ExtResource("4")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_5"]
+atlas = ExtResource("5")
+region = Rect2(1024.0,512.0,512.0,512.0)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("pose_0")},{"duration":1.0,"texture":SubResource("pose_1")},{"duration":1.0,"texture":SubResource("pose_2")},{"duration":1.0,"texture":SubResource("pose_3")},{"duration":1.0,"texture":SubResource("pose_4")},{"duration":1.0,"texture":SubResource("pose_5")}],"loop":false,"name":&"attack_4","speed":14.285714286}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_OTHER_CLIPS"
+metadata/twilight_reviewed_frame_registration = {"attack_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(258,484),"scale":Vector2(0.24553571428571427,0.24553571428571427),"target":Vector2(0,0)},{"anchor":Vector2(690,1179),"scale":Vector2(0.11840688912809473,0.11840688912809473),"target":Vector2(0,0)},{"anchor":Vector2(750,1151),"scale":Vector2(0.12925969447708577,0.12925969447708577),"target":Vector2(0,0)},{"anchor":Vector2(810,1119),"scale":Vector2(0.1343101343101343,0.1343101343101343),"target":Vector2(0,0)},{"anchor":Vector2(700,1188),"scale":Vector2(0.1142263759086189,0.1142263759086189),"target":Vector2(0,0)},{"anchor":Vector2(258,484),"scale":Vector2(0.24553571428571427,0.24553571428571427),"target":Vector2(0,0)}]}}

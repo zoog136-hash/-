@@ -1,0 +1,150 @@
+{
+  "actor": "transform:338",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/W-attack-source-v01.png",
+  "source_sha256": "48ef001496e62bdcbd09646c3f1519ee51a30a99a46b1c3cad745600f26ecb1c",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-1.png",
+      "anchor": [
+        469.0,
+        545.0
+      ],
+      "scale": 0.245536,
+      "sha256": "c5e6900db2b2b6619627a4d055c011b9a4d24133eed949d8faf05e30b43cb229"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-2.png",
+      "anchor": [
+        902.5,
+        566.0
+      ],
+      "scale": 0.245536,
+      "sha256": "804ec04fe5a836b15843da5f5e9fd20d11b85bd9e59943328e23346ad25c6d96"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-3.png",
+      "anchor": [
+        469.5,
+        1137.33
+      ],
+      "scale": 0.245536,
+      "sha256": "7192ec1238e3c9bf8d3579c6b1641ee9a8e354506abff87162331082dac85ac4"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-4.png",
+      "anchor": [
+        1043.0,
+        1162.67
+      ],
+      "scale": 0.245536,
+      "sha256": "90a87cf9c0f892179a02de295f76b6634ff2b4edf0b924334b5b77bf9ae46be3"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 632863,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_EXTRACTION_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_REQUIRED_ACTOR_REVIEW",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "35": {
+      "area": 378,
+      "bounds": [
+        724,
+        801,
+        753,
+        837
+      ],
+      "owner_source_index": 3
+    },
+    "36": {
+      "area": 222,
+      "bounds": [
+        731,
+        841,
+        744,
+        871
+      ],
+      "owner_source_index": 3
+    },
+    "37": {
+      "area": 12,
+      "bounds": [
+        740,
+        877,
+        744,
+        882
+      ],
+      "owner_source_index": 3
+    },
+    "38": {
+      "area": 470,
+      "bounds": [
+        760,
+        889,
+        798,
+        926
+      ],
+      "owner_source_index": 3
+    },
+    "40": {
+      "area": 2,
+      "bounds": [
+        753,
+        900,
+        754,
+        902
+      ],
+      "owner_source_index": 3
+    }
+  },
+  "fragment_review_basis": "All five detached orange shards continue the lower-right recovery hand trail, distinct from the lower-left cast plume.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "PASS same real Main Player IDLE/ATTACK/IDLE per direction; all6 frames, strike marker3, authored feet, no mirror, gameplay and collision unchanged; candidate only.",
+  "native_import": "PASS2clips12frames using actual CompressedTexture2D AtlasTexture images; isolated writable user data.",
+  "remaining_actor_issue": "SE/SW attack source effects join neighboring figures; no automatic cut permitted. Other direction, hand and RUN continuity review remains before whole actor activation.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/W-attack-source-v01.png",
+      "sha256": "48ef001496e62bdcbd09646c3f1519ee51a30a99a46b1c3cad745600f26ecb1c",
+      "bytes": 1724365
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/W-idle-source-v01.png",
+      "sha256": "32f987f7a01e008d554a26290e946ae59dd63ed3c94cc6527aedc8fdee463d9e",
+      "bytes": 2394610
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-1.png",
+      "sha256": "c5e6900db2b2b6619627a4d055c011b9a4d24133eed949d8faf05e30b43cb229",
+      "bytes": 395932
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-2.png",
+      "sha256": "804ec04fe5a836b15843da5f5e9fd20d11b85bd9e59943328e23346ad25c6d96",
+      "bytes": 405168
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-3.png",
+      "sha256": "7192ec1238e3c9bf8d3579c6b1641ee9a8e354506abff87162331082dac85ac4",
+      "bytes": 499195
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/W-attack-4.png",
+      "sha256": "90a87cf9c0f892179a02de295f76b6634ff2b4edf0b924334b5b77bf9ae46be3",
+      "bytes": 380795
+    }
+  ]
+}

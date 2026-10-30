@@ -1,0 +1,152 @@
+{
+  "actor": "transform:243",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/S-hit-source-v01.png",
+  "source_sha256": "2a436c146d4c0402ba356e525beab5bbbdfdf516c8bfb4c02e89e4b0a7537e2a",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "source_pixels_resampled": false,
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-0.png",
+      "anchor": [
+        273.75,
+        447.5
+      ],
+      "scale": 0.293764,
+      "sha256": "524a198735d37994cf27127709944cdd11e7b978e8010bdeef0e5869ffddc46d"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-1.png",
+      "anchor": [
+        781.75,
+        433.4
+      ],
+      "scale": 0.293764,
+      "sha256": "a84c34824aaa2faf7a17156152ffa4ccde805640c9cafc66ce15a4f992062aa1"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-2.png",
+      "anchor": [
+        1232.5,
+        441.5
+      ],
+      "scale": 0.293764,
+      "sha256": "299adcab85c06814d8d8624ebf8d354530334e84b287052a60308656e49a68de"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-3.png",
+      "anchor": [
+        238.0,
+        940.0
+      ],
+      "scale": 0.293764,
+      "sha256": "af8f8722152ec9f345f22128ccb938cef0e6e52a0069f32f5fa68a690a3181a6"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-4.png",
+      "anchor": [
+        755.75,
+        961.6700000000001
+      ],
+      "scale": 0.293764,
+      "sha256": "94e41ac6ae219b23dc41eaa8c75a52fc60bf74497dbb299d0bb6ad244cc09627"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-5.png",
+      "anchor": [
+        1291.0,
+        954.5
+      ],
+      "scale": 0.293764,
+      "sha256": "57e71225e99117d2b590064b10ac754c185e625bef1212617953c737f1c6f13c"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 851072,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "reviewed_fragments": {
+    "19": {
+      "area": 314,
+      "bounds": [
+        1343,
+        528,
+        1359,
+        558
+      ],
+      "owner_source_index": 5
+    }
+  },
+  "fragment_review_basis": "Reviewed native source context:122 purple particles follow NW impact/recovery spell arcs;243 death ember continues middle corpse blade, S HIT ember continues final guard flame, S RUN ember continues lower-middle crown, SW ember continues lower-right recovery sword, W RUN ember continues lower-left trailing sword/cape. No fragment discarded or automatic ownership at ambiguous margins.",
+  "registration_basis": "Original source-pixel C roots, source-body scales and original exact animation clock preserved; death common scale derives from standing first phase rather than collapsed height.",
+  "remaining_actor_issue": "122 directional camera/weapon ownership remains held;243 NE idle sword tips and SE recovery outer edge require actual artwork completion, S RUN phase3 switches weapon hand and W RUN reciprocal gait is held.",
+  "native_import_validation": "PASS official Godot4.7.2 isolated6 clips/36 native CompressedTexture2D AtlasTexture decoded frames. Existing runtime registration helper rejects the3 semantic HOLD tracks without transform changes. Final death C metadata separately checked after correction.",
+  "local_main_validation": "PASS real Main Player S IDLE/HIT/IDLE/DEATH/IDLE and SW IDLE/ATTACK/IDLE,48captured phases30unique poses across5tracks, original frame3 attack marker and unchanged inventory/health/movement/collision. Candidate injected locally only; no default actor activation.",
+  "player_validation": "PASS affected SOUTH HIT at30/60fps stationary/moving4cases plus1actual Player physics movement during all6HIT poses; no attack emitted; inventory/equipment/health/collision unchanged. Test stops after all6HIT poses, before unapproved RUN, and never bypasses HOLD.",
+  "runtime_default_connected": false,
+  "boundary_batch_result": "2whole candidates396actual source regions before/after:122 flaggedframes7->3;243 flaggedframes32->11;25/39 flaggedframes resolved losslessly across6clips;14 source-edge/cross-cell frame flags remain elsewhere. Only3changed action clips have local visual/playback PASS;6native import passes are not6visual approvals.",
+  "clock_preservation": {
+    "loop": false,
+    "speed": 27.272727273,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "matches_original_selected_source": true
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/S-hit-source-v01.png",
+      "sha256": "2a436c146d4c0402ba356e525beab5bbbdfdf516c8bfb4c02e89e4b0a7537e2a",
+      "bytes": 2446783
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-0.png",
+      "sha256": "524a198735d37994cf27127709944cdd11e7b978e8010bdeef0e5869ffddc46d",
+      "bytes": 369420
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-1.png",
+      "sha256": "a84c34824aaa2faf7a17156152ffa4ccde805640c9cafc66ce15a4f992062aa1",
+      "bytes": 374547
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-2.png",
+      "sha256": "299adcab85c06814d8d8624ebf8d354530334e84b287052a60308656e49a68de",
+      "bytes": 305756
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-3.png",
+      "sha256": "af8f8722152ec9f345f22128ccb938cef0e6e52a0069f32f5fa68a690a3181a6",
+      "bytes": 381485
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-4.png",
+      "sha256": "94e41ac6ae219b23dc41eaa8c75a52fc60bf74497dbb299d0bb6ad244cc09627",
+      "bytes": 353607
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-5.png",
+      "sha256": "57e71225e99117d2b590064b10ac754c185e625bef1212617953c737f1c6f13c",
+      "bytes": 378441
+    }
+  ],
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

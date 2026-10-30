@@ -1,0 +1,98 @@
+{
+  "actor": "transform:243",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/NE-idle-source.png",
+  "source_sha256": "f776b8248ad3062626b1630fbdb88c78c897e9eed7d5059c536badea1a1ac840",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_selected_resource": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-SpriteFrames.tres",
+  "original_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NE-idle-source-v01.png",
+      "sha256": "9069aa7ab5daa86f2548522235d0767a10c010a455cf61edda1c2c2e4fbb676c"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-source-v01-isolated.png",
+      "sha256": "02ab668c5dcecb6afc9d766c6d46be86961cd2ddb5d18de410bfce4948c41f05"
+    }
+  ],
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-0.png",
+      "anchor": [
+        350.0,
+        440.0
+      ],
+      "scale": 0.285714,
+      "sha256": "bf8245d2b5f25135823e3a1824b446cebb141f32a36513490c1a2a3bb45ca9cb"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-5.png",
+      "anchor": [
+        1560,
+        805
+      ],
+      "scale": 0.155,
+      "sha256": "4f573e104460a423d458021f48a38a5ac7c09cd8dc289948a20febe3fdafe819"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 717530,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "production_connected": false,
+  "final_quality_approved": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "whole_actor_gate": "HOLD_REQUIRED_W_RUN_RECIPROCAL_GAIT_AND_WHOLE_ACTOR_DIRECTIONAL_REVIEW",
+  "replacement_basis": "Only shared NE guard phases0/5 now reuse corresponding corrected/isolated NE IDLE. Original action phases1..4 source images/registrations, speed, durations and attack marker3 retained.",
+  "fragment_review_basis": "SE generated detached ember24 belongs to upper flank of left impact cone near its tip; distinct from right recovery sword point. Other parts have independent bodies and unambiguous fragments.",
+  "runtime_default_connected": false,
+  "native_import_validation": "PASS separate official Godot4.7.2 real CompressedTexture2D AtlasTexture decode;6 changed clips36frames in bounded4+1+1 batches, original loop/speed/durations checked. Does not claim native imported whole Main/export or device.",
+  "local_main_validation": "PASS actual Main candidate NE IDLE/HIT/IDLE/ATTACK/IDLE and SE IDLE/ATTACK/IDLE;5tracks30unique source poses, original markers3, no mirror, registered feet and gameplay/collision preserved.",
+  "candidate_profile_injection": true,
+  "actual_default_binding": false,
+  "clock_preservation": {
+    "loop": false,
+    "speed": 14.285714286,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "matches_original_selected_clock": true,
+    "attack_marker_frame": 3
+  },
+  "source_boundary_audit": "PASS current complete local243 candidate198actual source regions:0opaque cross-pose/source-edge flags, originally32. This is extraction/boundary success, not whole-actor direction/gait/default approval.",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-source-v01-isolated.png",
+      "sha256": "02ab668c5dcecb6afc9d766c6d46be86961cd2ddb5d18de410bfce4948c41f05",
+      "bytes": 1606474
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-0.png",
+      "sha256": "bf8245d2b5f25135823e3a1824b446cebb141f32a36513490c1a2a3bb45ca9cb",
+      "bytes": 330801
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-5.png",
+      "sha256": "4f573e104460a423d458021f48a38a5ac7c09cd8dc289948a20febe3fdafe819",
+      "bytes": 787509
+    }
+  ],
+  "preserved_original_selected_resource": {
+    "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-SpriteFrames.tres",
+    "commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+    "sha256": "4e9ed35ed2b6dd496e395983d3eb9fe2a8aa9e47031e30c3155f78576afa5dcb"
+  },
+  "remaining_actor_issue": "Confirmed W RUN selected original repeats leading/support leg half-cycle. New r136 raw candidate did not provide required RIGHT far-foot forward contact and was not selected; keep whole actor inactive. Other directions require final whole-actor play approval after W is repaired.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

@@ -110,6 +110,35 @@ class ApprovalFixture:
 
 
 class CompletionGateTest(unittest.TestCase):
+    def regression_fixture(self):
+        fixture = ApprovalFixture(self.root)
+        fixture.manifest['mythic_detail_complete'] = 0
+        fixture.register['detailed_complete'] = 0
+        fixture.actor.update(detailed_completed=False, completed_added=0,
+                             status='PRODUCTION_QUALITY_REGRESSION', visual_review='FAIL')
+        fixture.write_json(gate.APPROVALS, dict(
+            schema='pr122-native-production-approvals-v1', approved_history_preserved=405,
+            approved_actors={}, quality_regressions={fixture.key: dict(
+                prior_certificate=fixture.pin('evidence/certificate.json'),
+                reason='Observed runtime gait regression')}))
+        return fixture
+
+    def test_retained_connection_is_not_quality_approval(self):
+        fixture = self.regression_fixture()
+        state = fixture.load()
+        self.assertEqual(state.completed_count, 0)
+        self.assertFalse(state.approved_keys)
+        self.assertTrue(fixture.actor['production_connected'])
+        state.require_mutable(fixture.key, 'repair confirmed regression')
+        fixture.actor['detailed_completed'] = True
+        with self.assertRaises(gate.ApprovalError): fixture.load()
+
+    def test_regression_does_not_waive_live_source_integrity(self):
+        fixture = self.regression_fixture()
+        texture = fixture.actor['tracks'][0]['texture']
+        fixture.write(texture.removeprefix('res://'), b'changed pixels')
+        with self.assertRaises(gate.ApprovalError): fixture.load()
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='twilight-approval-guard-')
         self.root = Path(self.temp.name)

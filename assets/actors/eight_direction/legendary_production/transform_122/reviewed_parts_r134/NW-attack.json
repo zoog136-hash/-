@@ -1,0 +1,182 @@
+{
+  "actor": "transform:122",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-attack-source-v01.png",
+  "source_sha256": "54ff3b533dbb7e97d0bb951e44b835f6a88276aa80e516a5464c2d84c5f1f8b0",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "source_pixels_resampled": false,
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-0.png",
+      "anchor": [
+        321.25,
+        455.0
+      ],
+      "scale": 0.319303,
+      "sha256": "fe5cc438ee538a4f40b8284ac5f4947214b60fc50e9d38ce60ae12c877f27e56"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-1.png",
+      "anchor": [
+        814.0,
+        454.5
+      ],
+      "scale": 0.319303,
+      "sha256": "1c9218edd1357ac8249e93621b8ef904c089a76bd63ea4778be6bee98dd987e0"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-2.png",
+      "anchor": [
+        1306.5,
+        461.5
+      ],
+      "scale": 0.319303,
+      "sha256": "7bd1272bb499e80818408236465e568545dfc477eac895746f0789f35cee3084"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-3.png",
+      "anchor": [
+        363.0,
+        950.0
+      ],
+      "scale": 0.319303,
+      "sha256": "74d44fb765c646d683c2f93bd6a2a36bd20a5fe5c163e31d7d70060ea1707f99"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-4.png",
+      "anchor": [
+        881.25,
+        952.0
+      ],
+      "scale": 0.319303,
+      "sha256": "7d837cd6303b8b05cf67358377a52a45a378adb6d72064b99ff41f42617a39ca"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-5.png",
+      "anchor": [
+        1312.5,
+        939.0
+      ],
+      "scale": 0.319303,
+      "sha256": "1cb54a4ca05a33e659114c70496e57a53698a9706e06693a0a5f62912620b5cb"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 561237,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "HOLD_DIRECTION_HAND_OR_RECIPROCAL_GAIT",
+  "production_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "reviewed_fragments": {
+    "10": {
+      "area": 324,
+      "bounds": [
+        213,
+        519,
+        247,
+        535
+      ],
+      "owner_source_index": 3
+    },
+    "12": {
+      "area": 249,
+      "bounds": [
+        713,
+        527,
+        740,
+        542
+      ],
+      "owner_source_index": 4
+    },
+    "13": {
+      "area": 287,
+      "bounds": [
+        600,
+        530,
+        622,
+        552
+      ],
+      "owner_source_index": 4
+    },
+    "15": {
+      "area": 1166,
+      "bounds": [
+        683,
+        545,
+        790,
+        585
+      ],
+      "owner_source_index": 4
+    }
+  },
+  "fragment_review_basis": "Reviewed native source context:122 purple particles follow NW impact/recovery spell arcs;243 death ember continues middle corpse blade, S HIT ember continues final guard flame, S RUN ember continues lower-middle crown, SW ember continues lower-right recovery sword, W RUN ember continues lower-left trailing sword/cape. No fragment discarded or automatic ownership at ambiguous margins.",
+  "registration_basis": "Original source-pixel C roots, source-body scales and original exact animation clock preserved; death common scale derives from standing first phase rather than collapsed height.",
+  "remaining_actor_issue": "122 directional camera/weapon ownership remains held;243 NE idle sword tips and SE recovery outer edge require actual artwork completion, S RUN phase3 switches weapon hand and W RUN reciprocal gait is held.",
+  "native_import_validation": "PASS official Godot4.7.2 isolated6 clips/36 native CompressedTexture2D AtlasTexture decoded frames. Existing runtime registration helper rejects the3 semantic HOLD tracks without transform changes. Final death C metadata separately checked after correction.",
+  "local_main_validation": "NOT_APPROVED: explicit semantic HOLD preserved; not force-played through a registration override.",
+  "player_validation": "NOT_APPLICABLE_TO_THIS_CLIP;affected South HIT Player validation recorded with S-hit.",
+  "runtime_default_connected": false,
+  "boundary_batch_result": "2whole candidates396actual source regions before/after:122 flaggedframes7->3;243 flaggedframes32->11;25/39 flaggedframes resolved losslessly across6clips;14 source-edge/cross-cell frame flags remain elsewhere. Only3changed action clips have local visual/playback PASS;6native import passes are not6visual approvals.",
+  "clock_preservation": {
+    "loop": false,
+    "speed": 14.285714286,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "matches_original_selected_source": true
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_122/draft001/NW-attack-source-v01.png",
+      "sha256": "54ff3b533dbb7e97d0bb951e44b835f6a88276aa80e516a5464c2d84c5f1f8b0",
+      "bytes": 2180318
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-0.png",
+      "sha256": "fe5cc438ee538a4f40b8284ac5f4947214b60fc50e9d38ce60ae12c877f27e56",
+      "bytes": 192729
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-1.png",
+      "sha256": "1c9218edd1357ac8249e93621b8ef904c089a76bd63ea4778be6bee98dd987e0",
+      "bytes": 247593
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-2.png",
+      "sha256": "7bd1272bb499e80818408236465e568545dfc477eac895746f0789f35cee3084",
+      "bytes": 253019
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-3.png",
+      "sha256": "74d44fb765c646d683c2f93bd6a2a36bd20a5fe5c163e31d7d70060ea1707f99",
+      "bytes": 327165
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-4.png",
+      "sha256": "7d837cd6303b8b05cf67358377a52a45a378adb6d72064b99ff41f42617a39ca",
+      "bytes": 272891
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r134/NW-attack-5.png",
+      "sha256": "1cb54a4ca05a33e659114c70496e57a53698a9706e06693a0a5f62912620b5cb",
+      "bytes": 200211
+    }
+  ],
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

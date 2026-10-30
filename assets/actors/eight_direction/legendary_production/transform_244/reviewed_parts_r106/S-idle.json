@@ -1,0 +1,142 @@
+{
+  "actor": "transform:244",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r106/S-idle-source.png",
+  "source_sha256": "035a692bdc9099eb72584e1121f4358144fefc0032e0a09f927aaac6f3014b7a",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/draft001/S-idle-source-v01.png",
+  "original_source_sha256": "778b746942188c29396b9289c45786c5486843c33b926e0374188f0a77db2b59",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-0.png",
+      "anchor": [
+        310,
+        487
+      ],
+      "scale": 0.245,
+      "sha256": "d16ca38389d251f25f65581109266ad4913ab1b5a1cb5c7d3d2901058020c5d1"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-1.png",
+      "anchor": [
+        800,
+        487
+      ],
+      "scale": 0.245,
+      "sha256": "5527a3b5eafc7b8905df886563f0f72860bea50c30cfb8f9d0b8d684b90ab7ae"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-2.png",
+      "anchor": [
+        1300,
+        487
+      ],
+      "scale": 0.245,
+      "sha256": "f1376bb5a1d0ad8138d41e95ac68cfdaa2bc09667f89df4344b40a96827248cb"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-3.png",
+      "anchor": [
+        310,
+        986
+      ],
+      "scale": 0.245,
+      "sha256": "216d5bdb1080d4ba1dd536a0a7d2065772f4058bf6cc02430d7053e2e0d13048"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-4.png",
+      "anchor": [
+        800,
+        984
+      ],
+      "scale": 0.245,
+      "sha256": "b05369d04fa0529775ca1ea39737e0b0a2c2e7eea6d4f202795f19cc841d7829"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-5.png",
+      "anchor": [
+        1300,
+        984
+      ],
+      "scale": 0.245,
+      "sha256": "ff628b9dd843c1b6190e297570297224d8a9925440350fcec8ea41b4957c6cdc"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 758957,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_IDLE_LEFT_HAND_N_ATTACK_IMPACT_HAND_AND_REMAINING_ACTOR_REVIEW",
+  "registration_basis": "One scale per source; root X at projected pelvis, Y at source boot contact plane; no source pixels painted or resampled during separation",
+  "replacement_basis": "Separate correction of confirmed S idle source-pose connections. Same standing stance, right-hand sword, original 5fps breathing cycle and constant source body scale; no original files replaced.",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-0.png",
+      "sha256": "d16ca38389d251f25f65581109266ad4913ab1b5a1cb5c7d3d2901058020c5d1",
+      "bytes": 293067
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-1.png",
+      "sha256": "5527a3b5eafc7b8905df886563f0f72860bea50c30cfb8f9d0b8d684b90ab7ae",
+      "bytes": 289711
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-2.png",
+      "sha256": "f1376bb5a1d0ad8138d41e95ac68cfdaa2bc09667f89df4344b40a96827248cb",
+      "bytes": 305445
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-3.png",
+      "sha256": "216d5bdb1080d4ba1dd536a0a7d2065772f4058bf6cc02430d7053e2e0d13048",
+      "bytes": 331128
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-4.png",
+      "sha256": "b05369d04fa0529775ca1ea39737e0b0a2c2e7eea6d4f202795f19cc841d7829",
+      "bytes": 302211
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/S-idle-5.png",
+      "sha256": "ff628b9dd843c1b6190e297570297224d8a9925440350fcec8ea41b4957c6cdc",
+      "bytes": 304667
+    }
+  ],
+  "native_import": "PASS: this clip 6 AtlasTexture frames backed by real imported CompressedTexture2D under Godot4.7.2; default binding remains disabled",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: changed clip all6 poses in actual Main candidate path, projected foot anchor, marker3, directions and gameplay/collision invariant; 177E/244W normal phases1/2 are original source Atlas geometry and registration",
+  "local_player": "PASS: actual Player E joystick movement and all8 HIT tracks at30/60fps stationary/moving; candidate profile injection, default binding unchanged",
+  "remaining_actor_failures": [
+    {
+      "animation": "idle_6",
+      "status": "HOLD",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "reason": "Rear NORTH idle holds sword on anatomical LEFT; canonical N RUN and N HIT hold on RIGHT.",
+      "source_sha256": "b09db0b1ec3ea26f700930c54a8be863851fcfc2605a64ad998dc8ff124b6aae",
+      "source_bytes": 1451078,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    },
+    {
+      "animation": "attack_6",
+      "status": "HOLD",
+      "phases": [
+        0,
+        3
+      ],
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-attack-source-v01-isolated.png",
+      "reason": "Start and impact switch to anatomical LEFT sword; wind-up/recovery and N HIT are RIGHT. Do not activate actor based on C-ground/data passes.",
+      "source_sha256": "bfa84a0d2775e8846a3fe77549b06b46b52fffe07cbd7e180ecc7a13304bc07c",
+      "source_bytes": 1347086,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "actor": "transform:192",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/NW-attack-source-v01.png",
+  "source_sha256": "11afb07cd4a935ffee12666d2193013582a9e61ace375dc794ecf9c592af5178",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-0.png",
+      "anchor": [
+        299.5,
+        469.33
+      ],
+      "scale": 0.306834,
+      "sha256": "002fcfa8b0a4e4a30e63d1010a6951bc11b7451b465ce20277414ad067ed4b37"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-1.png",
+      "anchor": [
+        813.5,
+        472.0
+      ],
+      "scale": 0.306834,
+      "sha256": "f378a6fb858620998dc81291b73e0d621b7580d5896e21694d75c9c8410fc9bb"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-2.png",
+      "anchor": [
+        1338.0,
+        491.0
+      ],
+      "scale": 0.306834,
+      "sha256": "58e2fe1d3df059383c18bb3dcdc90e23cbc7b035abbf1de7e46669c9c279a147"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-3.png",
+      "anchor": [
+        406.0,
+        946.6700000000001
+      ],
+      "scale": 0.306834,
+      "sha256": "f873dec59f83f05d391ce018720e0bafec89075368e7412c5022349e9bd541df"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-4.png",
+      "anchor": [
+        745.0,
+        980.0
+      ],
+      "scale": 0.306834,
+      "sha256": "d8467a35c6babec25cdf130ef13b6645030445b518bac5a09b0a16ef2c021256"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-5.png",
+      "anchor": [
+        1348.0,
+        949.6700000000001
+      ],
+      "scale": 0.306834,
+      "sha256": "3f6602ed0e596679268a7f07df5567db4d13c59b1f63d634fe2decd6a5b4b501"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 596341,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "HOLD_NW_CAMERA_AFTER_LOSSLESS_EXTRACTION",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_11_REQUIRED_VISUAL_CLIPS_AND_OTHER_REVIEW",
+  "reviewed_fragments": {
+    "27": {
+      "area": 125,
+      "bounds": [
+        513,
+        580,
+        528,
+        593
+      ],
+      "owner_source_index": 3
+    },
+    "29": {
+      "area": 135,
+      "bounds": [
+        504,
+        589,
+        519,
+        607
+      ],
+      "owner_source_index": 3
+    },
+    "68": {
+      "area": 111,
+      "bounds": [
+        614,
+        791,
+        628,
+        803
+      ],
+      "owner_source_index": 4
+    }
+  },
+  "fragment_review_basis": "Reviewed native context: detached27/29 continue upper-right end of lower-left impact3 red arc; detached68 continues the lower trail of recovery4 blade. Area/bounds/owner explicitly pinned, not automatic nearest-owner classification at ambiguous margins.",
+  "registration_basis": "Original source-pixel roots/scales, six phase order, exact attack clock and marker3 preserved. No image edits; all original visible RGBA retained once. Extraction does not fix wrong NW camera/identity.",
+  "prior_proposal_anchors": [
+    [
+      299.5,
+      469.33
+    ],
+    [
+      301.5,
+      472.0
+    ],
+    [
+      314.0,
+      491.0
+    ],
+    [
+      406.0,
+      434.67
+    ],
+    [
+      233.0,
+      468.0
+    ],
+    [
+      324.0,
+      437.67
+    ]
+  ],
+  "local_main_validation": "NOT_APPROVED: NW camera error confirmed in r144 actual Main remaining22 batch; semantic HOLD retained. No forced playback or registration override.",
+  "native_import_validation": "PASS native6frames actual CompressedTexture2D AtlasTexture decode. Explicit runtime semantic HOLD remains; decode success is not source camera or whole actor approval.",
+  "boundary_result": "Current full198source frame candidate has0source-edge/cross-pose flagged frames (original22). This extraction removes last3 NW frame flags with zero missing/duplicate source texels.11known visual failures remain held.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/NW-attack-source-v01.png",
+      "sha256": "11afb07cd4a935ffee12666d2193013582a9e61ace375dc794ecf9c592af5178",
+      "bytes": 2223416
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-0.png",
+      "sha256": "002fcfa8b0a4e4a30e63d1010a6951bc11b7451b465ce20277414ad067ed4b37",
+      "bytes": 214558
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-1.png",
+      "sha256": "f378a6fb858620998dc81291b73e0d621b7580d5896e21694d75c9c8410fc9bb",
+      "bytes": 226774
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-2.png",
+      "sha256": "58e2fe1d3df059383c18bb3dcdc90e23cbc7b035abbf1de7e46669c9c279a147",
+      "bytes": 272449
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-3.png",
+      "sha256": "f873dec59f83f05d391ce018720e0bafec89075368e7412c5022349e9bd541df",
+      "bytes": 392591
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-4.png",
+      "sha256": "d8467a35c6babec25cdf130ef13b6645030445b518bac5a09b0a16ef2c021256",
+      "bytes": 250239
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r145/NW-attack-5.png",
+      "sha256": "3f6602ed0e596679268a7f07df5567db4d13c59b1f63d634fe2decd6a5b4b501",
+      "bytes": 221407
+    }
+  ]
+}

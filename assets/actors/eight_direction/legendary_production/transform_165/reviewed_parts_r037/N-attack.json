@@ -1,0 +1,70 @@
+{
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r034/N-attack-1.png",
+      "anchor": [
+        616.0,
+        618.0
+      ],
+      "scale": 0.262009,
+      "source_body_label": 1,
+      "sha256": "cd4def991dc69a7e11c806a7a8bedb2f1f350a7b515064d0242fbddfe370d4cf"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r034/N-attack-2.png",
+      "anchor": [
+        1302.0,
+        623.5
+      ],
+      "scale": 0.262009,
+      "source_body_label": 2,
+      "sha256": "b693f29b071c6b851df3825dfd02944527dd65d05376cf01b6c755f604dc0596"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/repaired_source_r037/N-attack-3.png",
+      "anchor": [
+        475,
+        1070
+      ],
+      "scale": 0.16058394160583941,
+      "head_to_ground_unit": 685,
+      "sha256": "199c8d254e6cbda76603024a4074286b01651373f4ff62acd63877d30328ea35",
+      "source_pixels_resampled": false
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r034/N-attack-4.png",
+      "anchor": [
+        1201.5,
+        1253.67
+      ],
+      "scale": 0.262009,
+      "source_body_label": 61,
+      "sha256": "d436dffcd591288bff7c31601ce66cd17e0f4c92b4438c2367166455993b543c"
+    }
+  ],
+  "source_parts": [
+    "assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r034/N-attack-1.png",
+    "assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r034/N-attack-2.png",
+    "assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r034/N-attack-4.png",
+    "assets/actors/eight_direction/legendary_production/transform_165/repaired_source_r037/N-attack-3.png"
+  ],
+  "production_connected": false,
+  "status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "replacement_scope": "Confirmed overlap and clipped effect only; intact source phases and original guard poses retained",
+  "local_playback": "PASS actual Main Player candidate, six poses, root registration, direction, attack marker and gameplay invariants",
+  "native_import": "PASS isolated CompressedTexture2D all six frames",
+  "runtime_default_connected": false,
+  "preserved_phase_source": {
+    "source": "assets/actors/eight_direction/legendary_parallel/transform_165/corrections/isolation-v04/N-attack-source-v01-isolated.png",
+    "source_sha256": "0ab23b83817528c15036ef7828e730878d2e61d8a00f3c6ac56326dd72b4ba8f",
+    "phases": [
+      1,
+      2,
+      4
+    ]
+  }
+}

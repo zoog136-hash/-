@@ -1,0 +1,97 @@
+{
+  "actor": "transform:332",
+  "direction": "N",
+  "role": "attack",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r090/N-attack-1.png",
+      "anchor": [
+        345,
+        610
+      ],
+      "scale": 0.22,
+      "sha256": "b7ee8482a5bad07896e01dcf6f958d6b17e3049e675ca78cc64823dbbad20aaa"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r090/N-attack-2.png",
+      "anchor": [
+        985,
+        618
+      ],
+      "scale": 0.22,
+      "sha256": "745d687a71fd33febe5761091c80ee182e8027a7b66ad2eebee70c0dc929a060"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r096/N-attack-3.png",
+      "anchor": [
+        520,
+        1462
+      ],
+      "scale": 0.16,
+      "sha256": "560302580837bd8e57899926e0de99710c29900bf228125679936cc90e1f76a1"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r090/N-attack-4.png",
+      "anchor": [
+        960,
+        1202
+      ],
+      "scale": 0.22,
+      "sha256": "c1ef5dc968ce0e8a286cccefdb1b36b9b1b4356ce0ad1e350f94e83944ace422"
+    },
+    {
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        308.5,
+        498
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    },
+    {
+      "phase": 5,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        308.5,
+        498
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    }
+  ],
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-attack-source.png",
+  "source_sha256": "5078b098117542ad5660f78515380d798d105636155a048ff2632ddce9c4a189",
+  "proof": {
+    "original_visible_texels": 679383,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "production_connected": true,
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
+  "selection_basis": "Separate correction of confirmed inconsistent N hand ownership / duplicate staff. Same canonical right-hand grip as existing N RUN first half and S master. Original files retained; source frame order and timing preserved.",
+  "registration_basis": "Ground Y from lowest contact sole; projected pelvis X reviewed on the source for each recoil/action pose. Constant scale per source; same new N-IDLE0 for guards.",
+  "unselected_original_source_phases": [
+    3
+  ],
+  "replacement_basis": "N impact release corrected to vertical UP, same rear camera and right-hand staff; finite complete effect and opaque outer-edge maxima0, original source and prior candidates preserved.",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
+}

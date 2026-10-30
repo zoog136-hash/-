@@ -1,0 +1,46 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_213/corrections/ownership-delta-v08/NW-idle-source-v01-isolated.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-1.png" id="t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-2.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-3.png" id="t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r056/NW-attack-4.png" id="t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_213/corrections/ownership-delta-v08/NW-idle-source-v01-isolated.png" id="t5"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("t0")
+region = Rect2(0.0,0.0,593.0,639.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("t1")
+region = Rect2(0,0,1544,1762)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("t2")
+region = Rect2(0,0,1544,1762)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("t3")
+region = Rect2(0,0,1544,1762)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("t4")
+region = Rect2(0,0,1544,1762)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("t5")
+region = Rect2(1186.0,639.0,593.0,639.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":false,"name":&"attack_5","speed":14.285714286}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_OTHER_CLIPS"
+metadata/twilight_reviewed_frame_registration = {"attack_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(288.25,523.5),"scale":Vector2(0.250142,0.250142),"target":Vector2(0,0)},{"anchor":Vector2(430.0,751.5),"scale":Vector2(0.237966,0.237966),"target":Vector2(0,0)},{"anchor":Vector2(1146.0,766.5),"scale":Vector2(0.237966,0.237966),"target":Vector2(0,0)},{"anchor":Vector2(629.0,1619.0),"scale":Vector2(0.237966,0.237966),"target":Vector2(0,0)},{"anchor":Vector2(1164.5,1583.0),"scale":Vector2(0.237966,0.237966),"target":Vector2(0,0)},{"anchor":Vector2(297.0,524.0),"scale":Vector2(0.250142,0.250142),"target":Vector2(0,0)}]}}

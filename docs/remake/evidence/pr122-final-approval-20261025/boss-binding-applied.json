@@ -1,0 +1,50 @@
+{
+  "schema": "pr122-connection-reconciliation-v1",
+  "verified_connections": 6,
+  "changed_actors": [
+    "monster:알비노 유니콘",
+    "monster:커츠",
+    "monster:테베 아누비스"
+  ],
+  "changes": [
+    {
+      "id": "monster:알비노 유니콘",
+      "field": "production_connected",
+      "before": false,
+      "after": true
+    },
+    {
+      "id": "monster:알비노 유니콘",
+      "field": "connected_frames",
+      "before": null,
+      "after": "res://assets/actors/eight_direction/monster_boss_repair/albino_unicorn/published-v02/SpriteFrames.tres"
+    },
+    {
+      "id": "monster:테베 아누비스",
+      "field": "production_connected",
+      "before": false,
+      "after": true
+    },
+    {
+      "id": "monster:테베 아누비스",
+      "field": "connected_frames",
+      "before": null,
+      "after": "res://assets/actors/eight_direction/monster_boss_repair/thebes_anubis/published-v02/SpriteFrames.tres"
+    },
+    {
+      "id": "monster:커츠",
+      "field": "production_connected",
+      "before": false,
+      "after": true
+    },
+    {
+      "id": "monster:커츠",
+      "field": "connected_frames",
+      "before": null,
+      "after": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/published-v02/SpriteFrames.tres"
+    }
+  ],
+  "new_art_approvals": 0,
+  "source_pixel_changes": 0,
+  "runtime_profile_changes": 0
+}

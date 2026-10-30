@@ -1,0 +1,16 @@
+{
+  "actor": "transform:243",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r136/W-run-late-unselected.png",
+  "source_sha256": "2c33c83b6e324c57eee92bf2027a30bb0ad1f5d6aa3cea7750b25342f2dd8e76",
+  "generated_poses": 3,
+  "selected_poses": 0,
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "quality_status": "HOLD_MISSING_REQUIRED_FAR_RIGHT_CONTACT",
+  "failure": "Requested3=RIGHT far-foot forward CONTACT,4=RIGHT SUPPORT,5=RIGHT PUSH then existing LEFT contact0. Output3/4 retain a trailing/right-side far-foot support/push rather than forward contact, and output5 returns to near LEFT contact early. Missing contralateral far-leg forward contact; no blind reorder/loop duplication or source mirror adopted.",
+  "canonical_original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-run-source-v01.png",
+  "canonical_original_sha256": "9f944109b6c5b416a748ff8be6f74741278dcfe4e60be644efc575d78667df58",
+  "original_normal_early_phases_preserved": true,
+  "selection_rule": "Raw failed candidate preserved only; no SpriteFrames references or runtime activation. Do not repeat this failed generation approach without materially new pose evidence."
+}

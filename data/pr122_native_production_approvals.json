@@ -5,10 +5,16 @@
     "transform:393": {
       "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-production-r001-approval-certificate.json",
       "sha256": "813214d334791252f00a886f97e9b93e2861ee58b5c18e185a15b55a0701081a"
-    },
+    }
+  },
+  "quality_regressions": {
     "transform:267": {
-      "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-approval-certificate.json",
-      "sha256": "8b94576d2e0ac32b80a43cfb874b2d45e5cfd0322baa04c6e6e3d612cce806b0"
+      "prior_certificate": {
+        "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-production-r001-approval-certificate.json",
+        "sha256": "8b94576d2e0ac32b80a43cfb874b2d45e5cfd0322baa04c6e6e3d612cce806b0"
+      },
+      "reason": "User-reported severe vertical bouncing after PR122 merge; prior quality evidence explicitly accepted a 23.41 world-pixel NE RUN 5-to-0 drop. Runtime connection is retained, but final quality approval is revoked pending directional source/registration repair.",
+      "reported_at": "2026-10-25T22:59:39Z"
     }
   }
 }

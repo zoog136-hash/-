@@ -1,0 +1,108 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_193/draft001/N-run-source-v01.png",
+  "source_sha256": "a48e88930add1a859bf836f882fefdab3ae6573a464ddb56306f2dd485ae5f6d",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_193/reviewed_parts_r052/N-run-0.png",
+      "anchor": [
+        256,
+        476
+      ],
+      "scale": 0.268075,
+      "source_body_label": 1,
+      "sha256": "9b76c09d1d0323bcfde02f1179e829ba70762ad4f12ff18480c5f1138b717c03",
+      "unapproved_proposal_anchor": [
+        351.75,
+        450.67
+      ]
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_193/reviewed_parts_r052/N-run-1.png",
+      "anchor": [
+        780,
+        476
+      ],
+      "scale": 0.268075,
+      "source_body_label": 2,
+      "sha256": "422a3523d255eb6c2344fb21395d4c57d3ccbd7651510890cad02c367d8ab126",
+      "unapproved_proposal_anchor": [
+        877.0,
+        459.67
+      ]
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_193/reviewed_parts_r052/N-run-2.png",
+      "anchor": [
+        1300,
+        476
+      ],
+      "scale": 0.268075,
+      "source_body_label": 3,
+      "sha256": "72d044e43433293a195d92d8719c29e4590bf5742c1655131f19d5d996aa71df",
+      "unapproved_proposal_anchor": [
+        1411.0,
+        443.33
+      ]
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_193/repaired_source_r053/N-run-3.png",
+      "anchor": [
+        600,
+        1183
+      ],
+      "scale": 0.11224489795918367,
+      "standing_equivalent_unit": 980,
+      "sha256": "91c2a89530fa27fa35f0db8f84bfecd8cd86fb369a1c6dca61d9ff7c60df3025"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_193/repaired_source_r053/N-run-4.png",
+      "anchor": [
+        635,
+        1077
+      ],
+      "scale": 0.11956521739130435,
+      "standing_equivalent_unit": 920,
+      "sha256": "38a13ba64453d6929f1012ba86c4bf45bc6743bbb57e290c41ad5c8e5789d481"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_193/repaired_source_r053/N-run-5.png",
+      "anchor": [
+        575,
+        1125
+      ],
+      "scale": 0.11827956989247312,
+      "standing_equivalent_unit": 930,
+      "sha256": "791a3d4a314d183e3a83e7bd639666ebd20b719750ee5407f3ef7874fe17936e"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 796773,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS: actual Main candidate profile injection; all six poses; no mirror; anatomical ground anchors; unchanged gameplay/collision state; no spurious attack marker",
+  "production_connected": false,
+  "selection_basis": "Only original first three normal right-hand poses selected; last three original left-hand poses preserved but excluded",
+  "registration_basis": "Manual visual anatomical ground reference; previous unapproved bbox proposal was biased laterally by long weapon; original first-half pixels unchanged",
+  "quality_status": "LOCAL_HAND_IDENTITY_AND_BOUNDARY_PASS_ACTOR_HOLD",
+  "whole_actor_gate": "HOLD: remaining E/W RUN cycle quality and whole-actor visual review not complete",
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "native_import": "PASS: isolated Godot 4.7.2 import; six CompressedTexture2D AtlasTexture frames",
+  "android_device_test": "NOT_RUN",
+  "fixed_defects": [
+    "Weapon stays in anatomical right hand through second half",
+    "No missing weapon or clipped selected weapon tip",
+    "Unapproved weapon-biased registration anchors corrected to visually reviewed anatomical ground references"
+  ]
+}

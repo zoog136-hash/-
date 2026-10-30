@@ -1,0 +1,103 @@
+{
+  "actor": "transform:243",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/SE-attack-source.png",
+  "source_sha256": "9db4670bedc281b99bc3bf7b96bb1c717ca1a4fa34e6efbfd5e87355480632b7",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_selected_resource": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-attack-SpriteFrames.tres",
+  "original_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-idle-source-v01-isolated.png",
+      "sha256": "bfc95b08a3af1b8a65a3e6597727675153fbb56567143aa5e2bebe67cd645650"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-attack-source-v01.png",
+      "sha256": "c04d5dea97ac84020d11655c74ed47a16f85f758942b6a0c20940c9fffa44e50"
+    }
+  ],
+  "poses": [
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/SE-attack-3.png",
+      "anchor": [
+        465,
+        735
+      ],
+      "scale": 0.17,
+      "sha256": "79e19df5966b9c70df584f99ca3ade8e499bb8e505ecc68e99fff0ea46c7bead"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/SE-attack-4.png",
+      "anchor": [
+        1630,
+        735
+      ],
+      "scale": 0.17,
+      "sha256": "d51115450a1a25929a80ec3ee717cb3c0808d3b49616288f320e97fa1cf58a32"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 706965,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "production_connected": false,
+  "final_quality_approved": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "whole_actor_gate": "HOLD_REQUIRED_W_RUN_RECIPROCAL_GAIT_AND_WHOLE_ACTOR_DIRECTIONAL_REVIEW",
+  "replacement_basis": "Failed impact3 now strikes DOWN-RIGHT in actual SE sector with primary RIGHT grip and support LEFT hand; failed cut/incorrect-hand recovery4 completes its one sword/cape and returns to grounded ready stance with RIGHT sword. Four original normal phases0/1/2/5 source/registration and exact attack clock/marker3 preserved.",
+  "fragment_review_basis": "SE generated detached ember24 belongs to upper flank of left impact cone near its tip; distinct from right recovery sword point. Other parts have independent bodies and unambiguous fragments.",
+  "runtime_default_connected": false,
+  "native_import_validation": "PASS separate official Godot4.7.2 real CompressedTexture2D AtlasTexture decode;6 changed clips36frames in bounded4+1+1 batches, original loop/speed/durations checked. Does not claim native imported whole Main/export or device.",
+  "local_main_validation": "PASS actual Main candidate NE IDLE/HIT/IDLE/ATTACK/IDLE and SE IDLE/ATTACK/IDLE;5tracks30unique source poses, original markers3, no mirror, registered feet and gameplay/collision preserved.",
+  "candidate_profile_injection": true,
+  "actual_default_binding": false,
+  "clock_preservation": {
+    "loop": false,
+    "speed": 14.285714286,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "matches_original_selected_clock": true,
+    "attack_marker_frame": 3
+  },
+  "source_boundary_audit": "PASS current complete local243 candidate198actual source regions:0opaque cross-pose/source-edge flags, originally32. This is extraction/boundary success, not whole-actor direction/gait/default approval.",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-idle-source-v01-isolated.png",
+      "sha256": "bfc95b08a3af1b8a65a3e6597727675153fbb56567143aa5e2bebe67cd645650",
+      "bytes": 2045430
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-attack-source-v01.png",
+      "sha256": "c04d5dea97ac84020d11655c74ed47a16f85f758942b6a0c20940c9fffa44e50",
+      "bytes": 1736599
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/SE-attack-3.png",
+      "sha256": "79e19df5966b9c70df584f99ca3ade8e499bb8e505ecc68e99fff0ea46c7bead",
+      "bytes": 866226
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/SE-attack-4.png",
+      "sha256": "d51115450a1a25929a80ec3ee717cb3c0808d3b49616288f320e97fa1cf58a32",
+      "bytes": 728879
+    }
+  ],
+  "preserved_original_selected_resource": {
+    "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-attack-SpriteFrames.tres",
+    "commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+    "sha256": "1af8ec91093d626dc4945f422c3a8b5e0cab26091416731c8d724d02b06e0a12"
+  },
+  "remaining_actor_issue": "Confirmed W RUN selected original repeats leading/support leg half-cycle. New r136 raw candidate did not provide required RIGHT far-foot forward contact and was not selected; keep whole actor inactive. Other directions require final whole-actor play approval after W is repaired.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

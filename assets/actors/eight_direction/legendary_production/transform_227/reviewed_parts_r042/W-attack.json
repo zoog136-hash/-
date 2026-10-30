@@ -1,0 +1,65 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_227/draft001/W-attack-source-v01.png",
+  "source_sha256": "c6c3a6800264c20c985a628f33482a1450f66c7f8251dad4831e904dfa3838c4",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/W-attack-1.png",
+      "anchor": [
+        452.0,
+        626.0
+      ],
+      "scale": 0.205033,
+      "source_body_label": 1,
+      "sha256": "174ba14058b13e53e6c9c79e392f3afb5887247deb600f3b447b8648a5857aac"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/W-attack-2.png",
+      "anchor": [
+        1046.0,
+        626.0
+      ],
+      "scale": 0.205033,
+      "source_body_label": 4,
+      "sha256": "8bef33633c9fc404edb931f9b789de69b905c94c1d64170ffef61ed404117ea2"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r042/W-attack-3.png",
+      "anchor": [
+        1215,
+        936
+      ],
+      "scale": 0.13647642679900746,
+      "head_to_ground_unit": 806,
+      "sha256": "56a6e6e4c1577be3da2eda96254add8bfd92099662e0e55aa56ac4f599b4e151",
+      "source_pixels_resampled": false
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/W-attack-4.png",
+      "anchor": [
+        826.5,
+        1174.5
+      ],
+      "scale": 0.205033,
+      "source_body_label": 22,
+      "sha256": "c8a7a8db9a87d287e8bd5b65b19d2235c072bc390b622dbd6c90d54090711971"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 587968,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "excluded_source_phase": 3,
+  "replacement_source": "assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r042/W-attack-3.png",
+  "replacement_reason": "Original phase3 effect clipped at source edge; preserve phases1,2,4 and original guard",
+  "native_import": "PASS_4_CLIPS_24_FRAMES",
+  "runtime_default_connected": false,
+  "actor_hold": "NW RUN replacement repeats leading leg; other mandatory clips remain subject to whole-actor review"
+}

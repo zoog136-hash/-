@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_122/reviewed_parts_r021/N-run.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("1")
+region = Rect2(80,80,533,495)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("1")
+region = Rect2(1760,80,509,555)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("1")
+region = Rect2(80,1760,1000,1517)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("1")
+region = Rect2(1760,1760,568,561)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("1")
+region = Rect2(80,3440,459,472)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("1")
+region = Rect2(1760,3440,515,500)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":true,"name":&"run_6","speed":12.5}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_OTHER_CLIPS"
+metadata/twilight_reviewed_frame_registration = {"run_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(301,477),"scale":Vector2(0.25287356321839083,0.25287356321839083),"target":Vector2(0,0)},{"anchor":Vector2(235,503),"scale":Vector2(0.25287356321839083,0.25287356321839083),"target":Vector2(0,0)},{"anchor":Vector2(539,1423),"scale":Vector2(0.08333333333333333,0.08333333333333333),"target":Vector2(0,0)},{"anchor":Vector2(326,505),"scale":Vector2(0.25287356321839083,0.25287356321839083),"target":Vector2(0,0)},{"anchor":Vector2(233,465),"scale":Vector2(0.25287356321839083,0.25287356321839083),"target":Vector2(0,0)},{"anchor":Vector2(251,461),"scale":Vector2(0.25287356321839083,0.25287356321839083),"target":Vector2(0,0)}]}}

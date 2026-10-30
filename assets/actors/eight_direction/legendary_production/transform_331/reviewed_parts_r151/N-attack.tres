@@ -1,0 +1,57 @@
+[gd_resource type="SpriteFrames" load_steps=10 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_331/corrections/isolation-v16/N-attack-source-v01-isolated.png" id="c4_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-0.png" id="r151_N_idle_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-5.png" id="r151_N_idle_5"]
+
+[sub_resource type="AtlasTexture" id="c4_pose_0"]
+atlas = ExtResource("r151_N_idle_0")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c4_pose_1"]
+atlas = ExtResource("c4_texture_1")
+region = Rect2(0, 0, 811, 735)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c4_pose_2"]
+atlas = ExtResource("c4_texture_1")
+region = Rect2(811, 0, 811, 735)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c4_pose_3"]
+atlas = ExtResource("c4_texture_1")
+region = Rect2(0, 735, 811, 735)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c4_pose_4"]
+atlas = ExtResource("c4_texture_1")
+region = Rect2(811, 735, 811, 735)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c4_pose_5"]
+atlas = ExtResource("r151_N_idle_5")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[resource]
+animations = [
+{
+"frames": [{"duration": 1.0, "texture": SubResource("c4_pose_0")}, {"duration": 1.0, "texture": SubResource("c4_pose_1")}, {"duration": 1.0, "texture": SubResource("c4_pose_2")}, {"duration": 1.0, "texture": SubResource("c4_pose_3")}, {"duration": 1.0, "texture": SubResource("c4_pose_4")}, {"duration": 1.0, "texture": SubResource("c4_pose_5")}],
+"loop": false,
+"name": &"attack_6",
+"speed": 14.285714286
+}
+]
+metadata/twilight_reviewed_frame_registration = {"attack_6":{"semantic_review":"HOLD","frames":[{"anchor":Vector2(627.41,1159.0),"scale":Vector2(0.09970306564513616,0.09970306564513616),"target":Vector2(0,0)},{"anchor":Vector2(387.5,615.5),"scale":Vector2(0.236052,0.236052),"target":Vector2(0,0)},{"anchor":Vector2(401,620),"scale":Vector2(0.236052,0.236052),"target":Vector2(0,0)},{"anchor":Vector2(323,537),"scale":Vector2(0.236052,0.236052),"target":Vector2(0,0)},{"anchor":Vector2(368.25,578.5),"scale":Vector2(0.236052,0.236052),"target":Vector2(0,0)},{"anchor":Vector2(598.6161682833038,1189.0),"scale":Vector2(0.10295801352235068,0.10295801352235068),"target":Vector2(0,0)}]}}
+metadata/twilight_reviewed_run_grounding = {}
+metadata/twilight_reviewed_N_planted_support = {}
+metadata/twilight_clip_quality_holds = {"attack_6":"HOLD_ARCHER_MECHANISM_AND_RELEASE_SECTOR_MODERATION_BLOCKED_BATCH"}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_N_ATTACK_MODERATION_AND_W_SW_ARCHER_MECHANISM"
+metadata/twilight_final_quality_approved = false

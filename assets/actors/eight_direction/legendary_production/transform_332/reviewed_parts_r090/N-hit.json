@@ -1,0 +1,96 @@
+{
+  "actor": "transform:332",
+  "direction": "N",
+  "role": "hit",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r090/N-hit-1.png",
+      "anchor": [
+        330,
+        562
+      ],
+      "scale": 0.24,
+      "sha256": "2c42f2173ba4c95d13f3d41cabea6e02198b86939b2ebe3b53c2b88b2fd4824c"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r090/N-hit-2.png",
+      "anchor": [
+        975,
+        564
+      ],
+      "scale": 0.24,
+      "sha256": "3f22f5d6a014fe4f56c8a43ca909ab8654a8dd888ec0a4b537edc6a426c99b4d"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r090/N-hit-3.png",
+      "anchor": [
+        330,
+        1156
+      ],
+      "scale": 0.24,
+      "sha256": "9ea3292f8403115c2fb93c06ba7476b83f6641e8e2ac60d69a20d965e6877f41"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/reviewed_parts_r090/N-hit-4.png",
+      "anchor": [
+        980,
+        1158
+      ],
+      "scale": 0.24,
+      "sha256": "4623551e42afe35fd0c280042bc1fb7413b35f11583cf3ba9b2cc3dba6b1e867"
+    },
+    {
+      "phase": 0,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        308.5,
+        498
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    },
+    {
+      "phase": 5,
+      "region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        308.5,
+        498
+      ],
+      "scale": 0.26,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-idle-source.png",
+      "sha256": "4e86681571b52d511926742442748261c23b36459a90cad18f9e198335bde5ed"
+    }
+  ],
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r090/N-hit-source.png",
+  "source_sha256": "902a225c98ee34e8a85628d38cd65cb6290ae7567919e70b56cba3f81484ce1f",
+  "proof": {
+    "original_visible_texels": 577629,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "production_connected": true,
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
+  "selection_basis": "Separate correction of confirmed inconsistent N hand ownership / duplicate staff. Same canonical right-hand grip as existing N RUN first half and S master. Original files retained; source frame order and timing preserved.",
+  "registration_basis": "Ground Y from lowest contact sole; projected pelvis X reviewed on the source for each recoil/action pose. Constant scale per source; same new N-IDLE0 for guards.",
+  "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
+  "local_visual_review": "PASS canonical right hand and four reaction poses; new N-IDLE0 guards",
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
+}

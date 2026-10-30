@@ -1,0 +1,50 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/S-run-source-v01-isolated.png" id="texture_0"]
+
+[sub_resource type="AtlasTexture" id="pose_0"]
+atlas = ExtResource("texture_0")
+region = Rect2(0, 0, 651, 592)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1"]
+atlas = ExtResource("texture_0")
+region = Rect2(651, 0, 651, 592)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_2"]
+atlas = ExtResource("texture_0")
+region = Rect2(1302, 0, 651, 592)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_3"]
+atlas = ExtResource("texture_0")
+region = Rect2(0, 592, 651, 592)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_4"]
+atlas = ExtResource("texture_0")
+region = Rect2(651, 592, 651, 592)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_5"]
+atlas = ExtResource("texture_0")
+region = Rect2(1302, 592, 651, 592)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("pose_0")}, {"duration": 1.0, "texture": SubResource("pose_1")}, {"duration": 1.0, "texture": SubResource("pose_2")}, {"duration": 1.0, "texture": SubResource("pose_3")}, {"duration": 1.0, "texture": SubResource("pose_4")}, {"duration": 1.0, "texture": SubResource("pose_5")}],
+"loop": true,
+"name": &"run_2",
+"speed": 12.5
+}]
+metadata/twilight_reviewed_frame_registration = {"run_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(329.5,518.5),"scale":Vector2(0.283871,0.283871),"target":Vector2(0,0)},{"anchor":Vector2(306,518.5),"scale":Vector2(0.283871,0.283871),"target":Vector2(0,0)},{"anchor":Vector2(300,518.5),"scale":Vector2(0.283871,0.283871),"target":Vector2(0,0)},{"anchor":Vector2(336,505),"scale":Vector2(0.283871,0.283871),"target":Vector2(0,0)},{"anchor":Vector2(306,505),"scale":Vector2(0.283871,0.283871),"target":Vector2(0,0)},{"anchor":Vector2(379.25,505),"scale":Vector2(0.283871,0.283871),"target":Vector2(0,0)}]}}
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "PASS_LOCAL_ROOT_REGISTRATION_ACTOR_HOLD"

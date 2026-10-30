@@ -1,0 +1,625 @@
+{
+  "actor": "transform:165",
+  "prior_candidate": "res://assets/actors/eight_direction/legendary_production/transform_165/r001/SpriteFrames.tres",
+  "prior_candidate_sha256": "13f0968c5d8abe4b92ae1d6593d92c554874810a0c598a7a1bbc35f4a0219e44",
+  "source_pixels_resampled": false,
+  "new_art_created": false,
+  "existing_component_merges": [
+    {
+      "clip": "attack_2",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r034/S-attack.tres",
+      "sha256": "7d2d3f74e244ee70a9d6c5e06c5e8e1c487a00b09ae52688c73a5f7ef27f3f8a",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "run_2",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r035/S-run.tres",
+      "sha256": "09ea98f5a11eacfdb8e17d5d295932c5d2348d8ce97b16aaa0c848c213f7d2a2",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "attack_0",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r036/E-attack.tres",
+      "sha256": "b07b75dc62d6eee04bb02e97a3047981df405c7d92446f06c6bf68bba3452b5e",
+      "changed_phases": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "attack_6",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r037/N-attack.tres",
+      "sha256": "8d5cf8b87f4c7147bf0535ae21d9f4cd1adcea7b5506bdd3a14da24b9f34e4d4",
+      "changed_phases": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "attack_7",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r037/NE-attack.tres",
+      "sha256": "3694e97352ad083e1851ba7881ba8059a87d0589377a7886af7a17c388dbc09a",
+      "changed_phases": [
+        3,
+        4
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "death_2",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r039/S-death.tres",
+      "sha256": "df1083455b86bfe70e012b49a47164ab7395b356510afdabdd07f586af90e6ee",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    }
+  ],
+  "lossless_source_parts": [
+    {
+      "clip": "attack_4",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_165/draft001/W-attack-source-v01.png",
+      "source_sha256": "6affc1c4cea7b68bfeee3a6eba7668a601440a54e163977880c33411919ea48a",
+      "source_bytes": 1439751,
+      "proof": {
+        "original_visible_texels": 558035,
+        "missing": 0,
+        "duplicate": 0
+      },
+      "explicit_whole_fragment_pins": {},
+      "poses": [
+        {
+          "phase": 1,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/W-attack-1.png",
+          "sha256": "30da2239ab0676b50f4ab49379529b5af0765f4ecdc2cb889b507770c12a3477",
+          "bytes": 388565,
+          "prior_region": [
+            0.0,
+            0.0,
+            627.0,
+            627.0
+          ],
+          "references": [
+            {
+              "clip": "attack_4",
+              "phase": 1,
+              "prior_registration": {
+                "anchor": [
+                  319.75,
+                  576.5
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  319.75,
+                  576.5
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 2,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/W-attack-2.png",
+          "sha256": "5ab2e7b5ab521fa40e2facbdb9bd88202f917c26e89cc368d2d100c257ae7549",
+          "bytes": 339684,
+          "prior_region": [
+            627.0,
+            0.0,
+            627.0,
+            627.0
+          ],
+          "references": [
+            {
+              "clip": "attack_4",
+              "phase": 2,
+              "prior_registration": {
+                "anchor": [
+                  390,
+                  578.5
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  1017.0,
+                  578.5
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 3,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/W-attack-3.png",
+          "sha256": "e2bb79f96f71fcdb108698932f905cfe88454a3b48229ea1b0bf42a055266ad2",
+          "bytes": 390154,
+          "prior_region": [
+            0.0,
+            627.0,
+            627.0,
+            627.0
+          ],
+          "references": [
+            {
+              "clip": "attack_4",
+              "phase": 3,
+              "prior_registration": {
+                "anchor": [
+                  465,
+                  510.5
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  465.0,
+                  1137.5
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {
+            "left": 27
+          }
+        },
+        {
+          "phase": 4,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/W-attack-4.png",
+          "sha256": "00a2a80a279ade32823b2bff110447ac9d6c3113b16a207acb5cb979eeed7c5a",
+          "bytes": 305653,
+          "prior_region": [
+            627.0,
+            627.0,
+            627.0,
+            627.0
+          ],
+          "references": [
+            {
+              "clip": "attack_4",
+              "phase": 4,
+              "prior_registration": {
+                "anchor": [
+                  276.25,
+                  521.33
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  903.25,
+                  1148.33
+                ],
+                "scale": [
+                  0.262582,
+                  0.262582
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        }
+      ],
+      "registration_basis": "Only original source-region origin added to C because part retains full native source coordinates. Original scales/targets/clocks/phase pixels remain exact.",
+      "quality_status": "PASS_LOSSLESS_OWNERSHIP_ONLY_SEMANTIC_HOLD"
+    },
+    {
+      "clip": "idle_2",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_165/draft001/S-idle-source-v01.png",
+      "source_sha256": "cc636f486312192872bc60ea085b377c45a1c27c4513ac69be40237c470939e3",
+      "source_bytes": 2561877,
+      "proof": {
+        "original_visible_texels": 874921,
+        "missing": 0,
+        "duplicate": 0
+      },
+      "explicit_whole_fragment_pins": {
+        "17": {
+          "area": 259,
+          "bbox": [
+            134,
+            543,
+            164,
+            578
+          ],
+          "owner_phase": 3,
+          "review_basis": "Parent inspected native context and actual component color: Orange flame wisp belongs lower phase3 dragon blade, distinct from upper black boot."
+        }
+      },
+      "poses": [
+        {
+          "phase": 0,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/S-idle-0.png",
+          "sha256": "32ef0bc6641ec3731700134f34c7333a5db371d5e301a16f475ba25116009b5e",
+          "bytes": 350302,
+          "prior_region": [
+            0.0,
+            0.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_2",
+              "phase": 0,
+              "prior_registration": {
+                "anchor": [
+                  277,
+                  495.5
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  277.0,
+                  495.5
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 1,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/S-idle-1.png",
+          "sha256": "30a0884d8eea57186be29d0e029131ebdd6426f99d7d7b72772dfa10321bb479",
+          "bytes": 365567,
+          "prior_region": [
+            512.0,
+            0.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_2",
+              "phase": 1,
+              "prior_registration": {
+                "anchor": [
+                  270.5,
+                  495.5
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  782.5,
+                  495.5
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 2,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/S-idle-2.png",
+          "sha256": "fa160a5b2e5a46cda9b0e517ea875709dc0e6cfe9d8d960c229a5cf38a6a5ad7",
+          "bytes": 378226,
+          "prior_region": [
+            1024.0,
+            0.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_2",
+              "phase": 2,
+              "prior_registration": {
+                "anchor": [
+                  254.5,
+                  495
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  1278.5,
+                  495.0
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 3,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/S-idle-3.png",
+          "sha256": "763248a8b25092b0c3f0557a9c6dedf269f521eb071793d6aceba904860836f2",
+          "bytes": 374126,
+          "prior_region": [
+            0.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_2",
+              "phase": 3,
+              "prior_registration": {
+                "anchor": [
+                  286.5,
+                  490.5
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  286.5,
+                  1002.5
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 4,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/S-idle-4.png",
+          "sha256": "da9044a519e5a821187e8e9181f3e72413acb6cecc10cc94353b8da4286fd7ac",
+          "bytes": 365436,
+          "prior_region": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_2",
+              "phase": 4,
+              "prior_registration": {
+                "anchor": [
+                  268,
+                  492
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  780.0,
+                  1004.0
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 5,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_165/reviewed_parts_r153/S-idle-5.png",
+          "sha256": "f79775592a19f787deeaeeb3f128fd61ddbe17985830cbd6253378253a7d2b9e",
+          "bytes": 349937,
+          "prior_region": [
+            1024.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_2",
+              "phase": 5,
+              "prior_registration": {
+                "anchor": [
+                  265.25,
+                  490
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  1289.25,
+                  1002.0
+                ],
+                "scale": [
+                  0.246637,
+                  0.246637
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        }
+      ],
+      "registration_basis": "Only original source-region origin added to C because part retains full native source coordinates. Original scales/targets/clocks/phase pixels remain exact.",
+      "quality_status": "PASS_LOSSLESS_OWNERSHIP_ONLY_SEMANTIC_HOLD"
+    }
+  ],
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "candidate": "res://assets/actors/eight_direction/legendary_production/transform_165/r002/SpriteFrames.tres",
+  "candidate_sha256": "bb3c517d9e7799b68ae16f5fb12914d85b2ce6a3adb8486a10ed0b7255581eab",
+  "all33_animation_clock_duration_loop_blocks_unchanged": true,
+  "changed_frame_references": 38,
+  "unchanged_frame_references": 160,
+  "semantic_holds": {
+    "attack_4": "HOLD_SOURCE_ISOLATION_ONLY_ART_ORIGINAL_EDGE_REVIEW_REQUIRED",
+    "idle_2": "HOLD_SOURCE_ISOLATION_ONLY_ART_ORIGINAL_EDGE_REVIEW_REQUIRED"
+  },
+  "validation": {
+    "status": "PASS_ASSEMBLED_RESOURCE_AND_HOLD_ENFORCEMENT_WHOLE_ACTOR_HOLD",
+    "new_isolated_art_play_approval": false,
+    "no_default_activation": true
+  },
+  "validation_ref": {
+    "path": "res://assets/actors/eight_direction/legendary_production/transform_114/reviewed_parts_r153/source-provenance.json",
+    "sha256": "0efa75d26c5f3eca5615e80d5134dc93c5feb0083b7d63a9472f5bf77dcbce46",
+    "pointer": "/validation"
+  }
+}
