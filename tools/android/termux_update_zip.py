@@ -460,7 +460,12 @@ def update(root, assume_yes=False, install_fresh=False, workers=6):
         raise
     # The stage was only our pinned verified downloads; after successful
     # atomic application all gameplay files have moved to the destination.
-    shutil.rmtree(stage)
+    try:
+        shutil.rmtree(stage)
+    except OSError as ex:
+        # The installation is already committed; only a stale cache remains.
+        print('WARNING: Finished game install, but cache removal failed:', ex,
+              flush=True)
     print('INSTALL OK:' if install_fresh else 'UPDATE OK:', commit_sha[:12])
     if not install_fresh:
         print('Original changed files saved in:', backup)
