@@ -2,7 +2,7 @@ extends RefCounted
 ## Additional SQL memberships inside the existing successful empty rarity pool.
 ## No extra rarity rolls, source probability conversion, stack or enchantment.
 const PATH="res://data/monsters/source3_drop_extensions.json"
-const SHA="e63592bc1301b7c9f71047b5bb5adeff4cad2f6b31baa60552433321a88bb6c7"
+const SHA="1e43f5390086f931fa1a10f29afbac538f34bb5bd8106d8f85429bfe2a2a2722"
 const LINKS=preload("res://scripts/loot/source3_item_links.gd")
 static var loaded:bool=false
 static var entries:Dictionary={}

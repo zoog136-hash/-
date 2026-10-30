@@ -35,7 +35,7 @@ func _run() -> void:
 		if arg.begins_with("--preserve-script="):
 			var prior: Array = load(arg.trim_prefix("--preserve-script=")).expand(base)
 			check(prior.size() == 409 and all.slice(0, 409) == prior, "all original 318 and prior 91 records preserved")
-	check(all.size() == 443, "318 existing plus 113 retained source and twelve reviewed gaps; one appearance HOLD")
+	check(all.size() == 456, "318 existing plus 113 retained source and twenty-five reviewed gaps; one appearance HOLD")
 	check(CATALOG.spawnable_records(all) == all.slice(0, 318), "random spawn pool exactly preserves old 318 and order")
 	if not before.is_empty():
 		check(before.size() == 318, "baseline contains 318")
@@ -77,10 +77,10 @@ func _run() -> void:
 	# Name/source links already present in an input catalog must take precedence.
 	var with_existing: Array = base.duplicate(true)
 	with_existing.append(payload.records[0].duplicate(true))
-	check(CATALOG.expand(with_existing).size() == 443, "repeated identity not duplicated")
+	check(CATALOG.expand(with_existing).size() == 456, "repeated identity not duplicated")
 	with_existing = base.duplicate(true)
 	with_existing.append({"name":"existing linked identity", "source_id":payload.records[0].source_id})
-	check(CATALOG.expand(with_existing).size() == 443, "full source identity prevents alias duplicate")
+	check(CATALOG.expand(with_existing).size() == 456, "full source identity prevents alias duplicate")
 	var arena := Arena.new()
 	root.add_child(arena)
 	arena.monster_db = all
