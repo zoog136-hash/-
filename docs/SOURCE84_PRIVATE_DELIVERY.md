@@ -17,9 +17,72 @@ The complete pack contains 1,920 original WebPs, 31 base collision files,
 | `equal-collision-v1/index.json` | `0b79b95687d484a53d13b371e909425b96314e4d5fbfe70dd6246a20f6498fd9` |
 | `local-interpretation-v1/index.json` | `c89ce64fe14a2961013747786847763a2693c7c14c7b9fe7496b188938779c43` |
 
-## Recipient: clean checkout and separately received archive
+## Existing Space inputs: primary installation path
 
-Obtain `TWILIGHT-source84-v3-private.zip` from the authorized private handoff.
+A newly uploaded 2 GB ZIP is **not required**. Reuse the eight existing
+`map84_fullres_assets_01_of_08.zip` … `_08_of_08.zip` inputs, or the existing
+14 files `.zip.001`/`.zip.002` for 01–07 plus the unchanged ZIP08. Keep the
+original filenames together in one folder. Do not unzip or concatenate the
+split files. Their original and part sizes/SHA, versions and existing Library
+references are recorded in `data/maps/source84_input_archives.json`.
+
+The eight artwork ZIPs alone do not contain map definitions/collision grids.
+Also reuse the already delivered `maps_source3_linkage_90maps_20261029.zip`
+**version 3**, SHA `33e0b552f1cbd75aef1d299886603107185df1e89cd76432268f94c5bd3b5c77`.
+Its existing reference is in the same input specification. No new external
+equality audit download is needed: the reviewed equality index is tracked in
+Git, the original compressed grids come from the pinned linkage ZIP, and all
+final bytes must match the full 2,140-file manifest.
+
+With Python 3.11+ and Pillow installed, from the matching checkout:
+
+```bash
+python3 tools/source84_inputs.py rebuild --inputs /path/to/Space-downloads --linkage /path/to/maps_source3_linkage_90maps_20261029.zip --project /path/to/checkout
+```
+
+This accepts full original ZIPs or split parts directly, verifies original
+archive SHA/CRC, stages all 1,920 image bytes, regenerates map definitions and
+the collision layers using existing code, installs tracked local corrections,
+checks all 2,140 final size/SHA entries and only then publishes the new pack.
+It does not make another delivery ZIP, download anything or delete input files.
+Allow about 2.1 GB additional working space besides the existing downloads.
+Temporary image/build paths use hardlinks internally to avoid two full copies.
+An existing install is preserved and must already match the pinned manifest.
+
+### Phone: Godot Android editor and the ZIP updater
+
+The old updater reads **main**. Until PR191 is merged, running that unchanged
+updater will not receive this PR. Obtain the updated
+`tools/android/termux_update_zip.py` from PR191, then explicitly select its ref.
+The default remains main; this change does not merge or retarget main.
+
+On the phone, save the existing Space attachments to a directory Termux can
+already read. The updater obtains code, the four scoped installer scripts,
+metadata and the tracked correction layer from the selected Git commit. It
+does **not** obtain the private original artwork from GitHub or Library.
+Run with the actual paths to the extracted Godot project and downloaded files:
+
+```bash
+python termux_update_zip.py /path/to/TWILIGHT_Play --ref integration/source-recovery-20261030 --source84-inputs /path/to/Space-downloads --source84-linkage /path/to/maps_source3_linkage_90maps_20261029.zip
+```
+
+Pillow must be available in that Python environment (install it through the
+device's normal package setup if absent). The command updates pinned Git files
+using the existing backup mechanism and then performs the same offline rebuild
+into `TWILIGHT_Play/external_map_packs/source84_v3`. Reopen that project's
+`project.godot` in Godot Android afterward. Missing local inputs cause an
+explicit stop; private assets are never guessed or fetched with Library IDs.
+
+An already installed standalone APK is a different application. This updater
+edits a Godot project; it cannot inject files into another APK's private data
+directory or patch that APK. Use the bundled private APK build path below for
+that target. Actual phone download, Godot Android startup and APK device tests
+remain unverified; successful cloud reconstruction does not mark them delivered.
+
+## Optional recipient path: separately received combined archive
+
+Only if a combined archive was separately received, use
+`TWILIGHT-source84-v3-private.zip` from that authorized private handoff.
 The archive is **2,016,074,522 bytes**, SHA-256
 `fe5a04ba5459ad20f470e267ae483ffae05662ee6392cba3cc48ad25eedb86d4`.
 There is currently no automatic remote retrieval. Keep its access restrictions;
@@ -111,8 +174,16 @@ historic original resources have been distributed.
   separate cold project with no installed directory mounted that PCK, checked
   SHA for all 2,140 files and decoded a real 3120×1680 WebP.
 - Bundled-path runtime field regression: 108 checks, no engine errors.
-- Mobile updater scope: 12 tests; Android authoring/export scope: 12 tests.
+- Mobile updater scope: 13 tests; Android authoring/export scope: 12 tests.
 - Complete private ZIP: exact inventory, all file SHA/size and ZIP CRC verified.
 
 The supplemental PCK proof is not an APK. The local Android SDK build-tools
 are absent; no APK export, device install or FPS measurement was performed.
+
+- Existing-input integration: all eight original ZIP size/SHA/CRC checks and
+  all 1,920 image SHA checks passed using the existing 14 Space split files
+  plus ZIP08. Together with the existing linkage v3 and tracked correction
+  files, the installer produced the exact 2,140-file, 2,015,563,672-byte manifest
+  in a new consumer directory. No new combined archive or upload was used.
+- Joined-file unit tests cover full-ZIP/split-ZIP equivalence, seeking across
+  split boundaries and rejection of a tampered part.

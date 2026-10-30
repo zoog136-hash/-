@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Update a ZIP-installed TWILIGHT Godot project without requiring Git metadata.
 
-Downloads only changed gameplay files from a pinned GitHub main commit. It never
+Downloads changed gameplay files from a pinned GitHub commit (main by default). It never
 deletes untracked game files or Godot user:// save files. Replaced old files are
 preserved in a timestamped backup directory. No destructive git operations.
 """
@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import stat
+import subprocess
 from pathlib import Path, PurePosixPath
 import sys
 import tempfile
@@ -77,6 +78,8 @@ RUNTIME_ROOTS = frozenset((
     'addons', 'assets', 'data', 'external_map_packs', 'scenes', 'scripts',
 ))
 RUNTIME_FILES = frozenset(('project.godot', 'Main.tscn'))
+MAP_INSTALL_TOOLS = frozenset(('tools/source84_inputs.py', 'tools/source84_delivery.py',
+                             'tools/source_map_pack.py', 'tools/install_source_map_local_pack.py'))
 RUNTIME_SUFFIXES = frozenset((
     '.gd', '.gdshader', '.gdshaderinc', '.gdextension', '.tscn', '.tres',
     '.res', '.uid', '.cfg', '.json', '.bin', '.nav', '.l1jpng',
@@ -88,6 +91,7 @@ RUNTIME_SUFFIXES = frozenset((
 RUNTIME_MAP_PACKS = frozenset((
     'native_png_v5', 'aden_faith_png_v1', 'domination_png_v1', 'oman_png_v1',
     'source84_v3',
+    'source84_local_v1',
 ))
 # Match the already audited Android export exclusions for offline map drafting.
 OFFLINE_DIRS = (
@@ -116,6 +120,7 @@ def is_runtime_tree(path):
     """Whether a repository directory can contain mobile gameplay files."""
     relative = safe_path(path)
     parts = relative.parts
+    if path == 'tools': return True  # Only the four pinned installer files below are retained.
     if parts[0] not in RUNTIME_ROOTS:
         return False
     if any(path == prefix or path.startswith(prefix + '/') for prefix in OFFLINE_DIRS):
@@ -136,6 +141,8 @@ def is_runtime_path(path):
     relative = safe_path(path)
     if path in RUNTIME_FILES:
         return True
+    if path in MAP_INSTALL_TOOLS:
+        return True
     if path == 'external_map_packs/.gdignore':
         return True  # Keep Godot from importing the manually streamed map packs.
     if path.startswith('external_map_packs/source84_v3/') and path.endswith('.u8.gz'):
@@ -147,7 +154,7 @@ def is_runtime_path(path):
     return relative.suffix.lower() in RUNTIME_SUFFIXES
 
 
-def get_inventory():
+def get_inventory(ref='main'):
     """Read a complete Git tree even after GitHub's recursive response limit.
 
     A recursive request for the entire repository can return HTTP 200 with
@@ -156,7 +163,7 @@ def get_inventory():
     Read the root's direct children and shard by their *immutable tree SHAs*.
     If a subtree is itself truncated, subdivide it again.
     """
-    commit = fetch_json(API + '/commits/main')
+    commit = fetch_json(API + '/commits/' + urllib.parse.quote(ref, safe=''))
     sha = commit['sha']
     tree_sha = commit['commit']['tree']['sha']
     if not isinstance(sha, str) or len(sha) != 40 or not isinstance(tree_sha, str) or len(tree_sha) != 40:
@@ -281,16 +288,16 @@ def load_old_state(root):
         raise RuntimeError('Invalid updater state; refusing to delete previous files') from ex
 
 
-def update(root, assume_yes=False):
+def update(root, assume_yes=False, ref='main'):
     root = root.expanduser().resolve()
     if not (root / 'project.godot').is_file() or not (root / 'Main.tscn').is_file():
         raise RuntimeError('TWILIGHT Godot project not found. Provide TWILIGHT_Play directory.')
     if (root / '.git').exists():
         raise RuntimeError('This folder has Git metadata. ZIP updater refuses Git checkouts.')
-    commit_sha, inventory = get_inventory()
+    commit_sha, inventory = get_inventory() if ref == 'main' else get_inventory(ref)
     old_state = load_old_state(root)
     changed = []
-    print('GitHub main:', commit_sha[:12], 'tracked files:', len(inventory), flush=True)
+    print('GitHub ref:', ref, commit_sha[:12], 'tracked files:', len(inventory), flush=True)
     for idx, (name, row) in enumerate(inventory.items(), 1):
         relative = safe_path(name)
         ensure_not_symlink(root, relative)
@@ -511,18 +518,30 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('project', type=Path, help='Existing ZIP-extracted Godot project directory')
     parser.add_argument('--yes', action='store_true', help='Skip the YES confirmation after verifying changes')
+    parser.add_argument('--ref', default='main', help='Explicit branch/SHA; default remains main')
+    parser.add_argument('--source84-inputs', type=Path, help='Existing eight ZIPs or 14 split files plus ZIP08, downloaded from Space')
+    parser.add_argument('--source84-linkage', type=Path, help='Existing maps_source3_linkage_90maps_20261029.zip v3')
     cleanup = parser.add_mutually_exclusive_group()
     cleanup.add_argument('--cleanup-preview', action='store_true',
                          help='List unused report/authoring files and possible space saved; no deletion')
     cleanup.add_argument('--cleanup-unused', action='store_true',
                          help='Preview and delete offline-only files only after typing DELETE UNUSED')
     args = parser.parse_args()
+    if bool(args.source84_inputs) != bool(args.source84_linkage):
+        parser.error('--source84-inputs and --source84-linkage must be supplied together')
     try:
         if args.cleanup_preview or args.cleanup_unused:
             cleanup_unused(args.project, delete=args.cleanup_unused)
         else:
-            update(args.project, args.yes)
-    except (OSError, ValueError, RuntimeError) as ex:
+            update(args.project, args.yes, args.ref)
+            if args.source84_inputs:
+                subprocess.run([sys.executable, str(args.project / 'tools/source84_inputs.py'),
+                                'rebuild', '--inputs', str(args.source84_inputs.resolve()),
+                                '--linkage', str(args.source84_linkage.resolve()),
+                                '--project', str(args.project.resolve())], check=True)
+            elif not (args.project / 'external_map_packs/source84_v3/index.json').is_file():
+                print('SOURCE84 NOT INSTALLED: Git updater cannot fetch private Space art. Supply --source84-inputs and --source84-linkage.')
+    except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as ex:
         print('UPDATE STOPPED:', ex, file=sys.stderr)
         return 1
     return 0

@@ -90,7 +90,7 @@ def placement(chunk, asset, origin):
     return [24*(dx+dy)+ox, 12*(dy-dx)+oy]
 
 
-def build(linkage, assets_root, output, receipt=None):
+def build(linkage, assets_root, output, receipt=None, link_assets=False):
     require(digest(linkage) == LINKAGE_SHA, "linkage v3 SHA mismatch")
     require(not output.exists(), "output already exists; use a new versioned destination")
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -128,7 +128,10 @@ def build(linkage, assets_root, output, receipt=None):
                     im.verify()
                 dest = stage / rel
                 dest.parent.mkdir(exist_ok=True)
-                shutil.copyfile(source, dest)
+                if link_assets:
+                    os.link(source, dest)
+                else:
+                    shutil.copyfile(source, dest)
             index = {"schema": 1, "kind": "source-map-review-only", "linkage_sha256": LINKAGE_SHA, "playable": False,
                      "protected_ids": PROTECTED, "maps": {}, "asset_count": len(assets), "asset_bytes": sum(a["bytes"] for a in assets)}
             for row in sorted(h["maps"], key=lambda r: r["target_map_id"]):

@@ -166,11 +166,23 @@ class ZipUpdaterTest(unittest.TestCase):
                      'scripts/maps/aden_modular_preview_renderer.gd',
                      'scenes/SkillVFXLab.tscn'):
             self.assertFalse(updater.is_runtime_path(path), path)
-        self.assertFalse(updater.is_runtime_tree('tools'))
+        self.assertTrue(updater.is_runtime_tree('tools'))
+        for name in updater.MAP_INSTALL_TOOLS:
+            self.assertTrue(updater.is_runtime_path(name))
+        self.assertFalse(updater.is_runtime_path('tools/unrelated_authoring.py'))
         self.assertFalse(updater.is_runtime_tree('external_map_packs/source_pngs'))
         self.assertFalse(updater.is_runtime_tree('assets/maps/aden_world_draft'))
         self.assertTrue(updater.is_runtime_tree('external_map_packs/native_png_v5'))
         self.assertTrue(updater.is_runtime_tree('assets/actors/eight_direction/native_production'))
+
+    def test_explicit_pr_ref_is_pinned_without_changing_main_default(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'project.godot').write_bytes(b'game')
+            (root / 'Main.tscn').write_bytes(b'scene')
+            with mock.patch.object(updater, 'get_inventory', return_value=('a'*40, {})) as inventory:
+                updater.update(root, assume_yes=True, ref='integration/source-recovery-20261030')
+            inventory.assert_called_once_with('integration/source-recovery-20261030')
 
     def test_new_scope_never_deletes_previously_downloaded_sources(self):
         with tempfile.TemporaryDirectory() as directory:
