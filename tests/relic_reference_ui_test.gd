@@ -127,7 +127,10 @@ func run() -> void:
 		var saved_scroll: float=hud.catalog_list.get_v_scroll_bar().value
 		hud.open_catalog("변신");await frames()
 		check(not view.active and not view.card_frames.visible,"relic-only frames hidden after navigation")
-		check(hud.catalog_list.get_item_text(0)==str(hud.catalog_results[0].name) and hud.catalog_list.get_theme_constant("h_separation")==8,"shared catalog labels and spacing restored")
+		var label: String=hud.catalog_list.get_item_text(0)
+		check(label==str(hud.catalog_results[0].name)+"\n미보유" and hud.catalog_list.get_theme_constant("h_separation")==8,"shared catalog restores actual card name, ownership marker and spacing")
+		tap_item(hud.catalog_list,0);await frames()
+		check(Cards.card_id(hud.selected_catalog_record)==Cards.card_id(hud.catalog_results[0]) and hud.companion_detail_view.name_label.text==str(hud.catalog_results[0].name),"shared card label still selects the exact card ID and detail")
 		hud.open_catalog("성물");await frames()
 		check(hud.catalog_page==saved_page and is_equal_approx(hud.catalog_list.get_v_scroll_bar().value,saved_scroll),"reopening preserves intentional saved page and scroll")
 		tap(hud.relic_reference_view.header.find_child("RelicShopShortcut",true,false));await frames()
@@ -139,6 +142,7 @@ func run() -> void:
 	var index: int=0
 	for control: Control in [hud.v20_self_button,hud.v20_auto_button,hud.v20_layer.get_node("SelectTarget"),hud.get_node("Root/RightControls/AttackButton"),hud.v20_layer.get_node("MainShortcuts")]:
 		check([control.position,control.size]==hud_positions[index],"approved HUD geometry remains fixed "+str(control.name));index+=1
+	await RenderingServer.frame_post_draw
 	world.queue_free();await frames()
 	print("RELIC_UI_RESULT ",JSON.stringify({"assertions":assertions,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

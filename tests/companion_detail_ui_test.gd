@@ -48,6 +48,7 @@ func run() -> void:
 				break
 	hud.set_card_collection_state(world.card_draw_fusion.export_state())
 	var cards: Dictionary=world.card_draw_fusion.export_state().duplicate(true)
+	var rng_state: int=world.card_draw_fusion.rng.state
 	var inventory: Dictionary=world.inventory.duplicate(true)
 	var instances: Dictionary=world.item_instances.duplicate(true)
 	var gold: int=world.gold
@@ -75,15 +76,17 @@ func run() -> void:
 				check(modal()!=null,"original apply/summon confirmation connected")
 				if modal()!=null:tap(modal().cancel_button);await frames()
 				check(world.equipped_catalog[category]==equipped[category],"cancel leaves equipped card untouched")
+				var selected_id: String=Cards.card_id(hud.selected_catalog_record)
 				tap(view.tabs[1]);await frames()
-				check(view.active_tab==1 and hud.card_controls.is_visible_in_tree() and not view.main_body.visible,"same window exposes original fusion controls")
-				hud.card_fusion_grade_select.select(0);hud._refresh_card_controls();await frames()
-				check(not hud.card_fusion_button.disabled,"actual duplicate fixture uses original eligibility")
-				tap(hud.card_fusion_button);await frames()
+				var fusion: Control=hud.card_fusion_view
+				check(hud.active_section=="card_fusion" and fusion.is_visible_in_tree() and not view.main_body.is_visible_in_tree() and not hud.card_controls.is_visible_in_tree(),"companion tab opens the current dedicated fusion screen")
+				fusion._grade_select.select(0);fusion._grade_select.item_selected.emit(0);await frames()
+				check(not fusion._fuse.disabled and fusion._cards.item_count>0,"actual duplicate fixture uses original eligibility")
+				tap(fusion._fuse);await frames()
 				check(modal()!=null,"original fusion confirmation connected")
 				if modal()!=null:tap(modal().cancel_button);await frames()
 				tap(hud.workspace.back_button);await frames()
-				check(view.active_tab==0 and hud.active_section==category,"native Back returns from management to same selection")
+				check(view.active and view.active_tab==0 and hud.active_section==category and Cards.card_id(hud.selected_catalog_record)==selected_id,"native Back returns from management to same selection")
 				hud.catalog_search.text="not-a-card-642";hud.catalog_search.text_changed.emit(hud.catalog_search.text);await frames()
 				check(hud.catalog_results.is_empty() and hud.catalog_equip_button.disabled and view.name_label.text=="카드를 선택하세요","empty filter clears stale detail/actions")
 				hud.catalog_search.text="";hud.catalog_search.text_changed.emit("");await frames()
@@ -96,6 +99,8 @@ func run() -> void:
 				check(hud.active_section=="shop" and not view.active,"shop shortcut uses existing shop route")
 				hud._close_workspace()
 	check(world.inventory==inventory and world.item_instances==instances and world.gold==gold and world.card_draw_fusion.export_state()==cards,"view/actions canceled preserve item IDs, money, ownership and fusion state")
+	check(world.card_draw_fusion.rng.state==rng_state,"canceled fusion never advances the authoritative RNG")
+	await RenderingServer.frame_post_draw
 	world.queue_free();await frames()
 	print("COMPANION_UI_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
