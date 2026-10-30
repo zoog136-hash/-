@@ -5720,13 +5720,40 @@ func _directional_image_path(kind: String, record: Dictionary) -> String:
 	var fallback: String = str(record.get("image_path", ""))
 	return fallback
 
+func _current_transform_visual_record(saved: Dictionary) -> Dictionary:
+	# Equipment saves retain their gameplay snapshot. Only presentation follows
+	# the current catalog, including when an old save has no animation_profile.
+	var source_id: String = str(saved.get("sourceId", ""))
+	var saved_name: String = str(saved.get("name", ""))
+	var current: Dictionary = {}
+	var matches: int = 0
+	for value: Variant in catalog_db.get("변신", []):
+		if not value is Dictionary: continue
+		var candidate: Dictionary = value as Dictionary
+		var matched: bool = str(candidate.get("sourceId", "")) == source_id if not source_id.is_empty() else (not saved_name.is_empty() and str(candidate.get("name", "")) == saved_name)
+		if matched:
+			current = candidate
+			matches += 1
+	if matches != 1: return saved
+	var visual: Dictionary = saved.duplicate(true)
+	var presentation: Dictionary = current.duplicate(true)
+	# A legacy name-only save still needs the canonical presentation identity
+	# for direction donors and the transform's RUN/WALK policy. Never migrate
+	# the persisted equipment record or its gameplay identity here.
+	if source_id.is_empty(): visual["sourceId"] = presentation.get("sourceId", "")
+	for property: String in ["animation_profile", "image_path"]:
+		if presentation.has(property): visual[property] = presentation[property]
+		else: visual.erase(property)
+	return visual
+
 func _apply_transform_visual(record: Dictionary) -> void:
 	if record.is_empty():
 		player.clear_transform_visual()
 		return
-	var path: String = _directional_image_path("transform", record)
+	var visual_record: Dictionary = _current_transform_visual_record(record)
+	var path: String = _directional_image_path("transform", visual_record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
-	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", record, path))
+	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", visual_record, path))
 
 func _apply_doll_visual(record: Dictionary) -> void:
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)

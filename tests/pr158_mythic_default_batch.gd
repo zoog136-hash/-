@@ -114,6 +114,17 @@ func run() -> void:
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All legendary required tracks and poses actually played")
 				if report.errors.is_empty():
 					print("PR158_LEGENDARY_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
+			elif frames.has_meta("twilight_declared_presentation_aliases"):
+				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"Every declared reaction-fallback presentation reference played")
+				check(int(frames.get_meta("twilight_authored_track_count"))==32 and int(frames.get_meta("twilight_authored_pose_count"))==192,"Authored count excludes six reaction alias references")
+				var aliases: Dictionary=frames.get_meta("twilight_declared_presentation_aliases")
+				for alias: String in aliases:
+					var original: String=str(aliases[alias].source)
+					check(alias.begins_with("hit_") and original==alias.replace("hit_","idle_") and int(aliases[alias].new_authored_poses)==0,"Explicit same-facing idle reaction fallback only")
+					for phase in range(6):
+						check(frames.get_frame_texture(alias,phase)==frames.get_frame_texture(original,phase),"Reaction alias reuses exact existing idle texture")
+				if report.errors.is_empty():
+					print("PR158_MYTHIC_REACTION_FALLBACK_PASS id=",key," authored_tracks=32 authored_poses=192 alias_refs=6 candidate_injection=0")
 			elif frames.resource_path.contains("native_production/mythic_"):
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All required native mythic tracks and poses actually played")
 				if report.errors.is_empty():
