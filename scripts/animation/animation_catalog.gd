@@ -62,6 +62,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 		else:
 			result.color_tint = Color.from_string(str(tint), Color.WHITE)
 	SOURCE_TRANSFORMS.configure(result, kind, record)
+	preload("res://scripts/monsters/reviewed_existing_visuals.gd").configure(result, kind, record)
 	return result
 
 static func frames(path: String, layout: String) -> SpriteFrames:

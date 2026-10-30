@@ -882,6 +882,7 @@ func _setup_animation(record: Dictionary) -> void:
 	for property: String in ["sprite_offset", "hit_position", "projectile_origin", "shadow_size"]:
 		var value: Variant = overrides.get(property)
 		if value is Array and value.size() == 2: motion.profile.set(property, Vector2(value[0], value[1]))
+	preload("res://scripts/monsters/reviewed_existing_visuals.gd").apply_anchor(motion.profile, record)
 	attack_interval = maxf(0.12, float(record.get("attack_interval", 1.25)))
 	configured_attack_range = maxf(0.0, float(record.get("attack_range", 0.0)))
 	var shape: CircleShape2D = $CollisionShape2D.shape.duplicate() as CircleShape2D
