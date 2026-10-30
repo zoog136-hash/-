@@ -245,11 +245,18 @@
     "lm_f4de23ba3ed83d50": {
       "phases": {
         "cast": "SPR-U-ed24b35595b54cd9074d",
-        "impact": "SPR-U-ed24b35595b54cd9074d",
+        "impact": "SPR-U-a03b6d307a3a03ab4316",
         "learn": "SPR-U-ed24b35595b54cd9074d"
       },
       "event_policy": "on_cast",
-      "motif": "heal"
+      "motif": "heal",
+      "source_review": {
+        "group_id": "SPR-U-a03b6d307a3a03ab4316",
+        "record_key": "source1:Sprite14.pak:1088",
+        "raw_sha256": "1534c34569664d816c2578cc692be3fd66ebb1a3489b9f7b8b11870a39a34cfa",
+        "basis": "Visually reviewed blue-white healing light, no glyphs or creature silhouette. Similar substitute for existing heal impact; original blend semantics unverified.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lm_024a0e845c280295": {
       "phases": {
@@ -325,11 +332,18 @@
     "lm_81c8985fec94cf55": {
       "phases": {
         "cast": "SPR-U-3c850206e4ece25f720b",
-        "impact": "SPR-U-3c850206e4ece25f720b",
+        "impact": "SPR-U-65995a45fd43c03b3aeb",
         "learn": "SPR-U-3c850206e4ece25f720b"
       },
       "event_policy": "on_cast",
-      "motif": "heal"
+      "motif": "heal",
+      "source_review": {
+        "group_id": "SPR-U-65995a45fd43c03b3aeb",
+        "record_key": "source1:Sprite00.pak:1222",
+        "raw_sha256": "72656534c480225926b4b721ec13c088a5ac8816a0e0fa164bac7994691816d4",
+        "basis": "Visually reviewed blue-white healing light, no glyphs or creature silhouette. Similar substitute for existing heal impact; original blend semantics unverified.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lm_4e78c9f1a828730a": {
       "phases": {

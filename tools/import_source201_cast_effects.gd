@@ -61,8 +61,8 @@ func _initialize():
   bindings.bindings[spec.skill_id]=binding
   for visual:Dictionary in visuals.records:
    if visual.current_name==spec.name:visual["reviewed_cast"]=binding.source_review.duplicate(true)
- manifest.scope["additional_reviewed_cast_groups"]=5
+ manifest.scope["additional_reviewed_cast_groups"]=plan.cases.size()
  manifest.scope["reviewed_cast_resource_count"]=manifest.effects.size()
  for entry:Array in [[ROOT+"manifest.json",manifest],["res://data/skills/similar_effects.json",bindings],["res://data/skills/current_official_visuals.json",visuals]]:
   var file=FileAccess.open(entry[0],FileAccess.WRITE);file.store_string(JSON.stringify(canonical(entry[1]),"  ",false,false)+"\n");file.close()
- print("REVIEWED_CAST_ATLASES groups=5 resources=",manifest.effects.size());quit()
+ print("REVIEWED_CAST_ATLASES groups=",plan.cases.size()," resources=",manifest.effects.size());quit()

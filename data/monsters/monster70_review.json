@@ -31,14 +31,13 @@
   "counts": {
     "existing_species_or_exact_display_variant": 41,
     "source_deprecated_identity": 14,
-    "activated_exact_identity": 33,
-    "source_context_unresolved": 23,
+    "activated_exact_identity": 37,
+    "source_context_unresolved": 20,
     "attachment_or_graphic_variant_review": 11,
     "trial_context_unresolved": 18,
     "source_transform_context_unresolved": 7,
     "excluded_explicit_quest": 14,
     "existing_named_actor_title_alias": 2,
-    "verified_identity_habitat_capacity_hold": 1,
     "existing_named_actor_note_alias": 1,
     "excluded_explicit_siege": 1,
     "phase_or_clone_context_unresolved": 1,
@@ -4071,8 +4070,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "raw_spawn_or_script_role",
-        "source_map_and_spawn_condition"
+        "verified_clothes2540_blend_and_sequence_composition",
+        "existing_supported_group_encounter_adapter"
       ],
       "source_context": {
         "coverage": {
@@ -4545,7 +4544,23 @@
         ],
         "original_scope_limit": "Only retained same-version sources scanned. Deleted quest/pet/clan/siege tables were not restored. No-reference is not deletion or a new-species verdict."
       },
-      "context_resolution": "positive_world_spawn_known_visual_or_source_mechanism_review_pending"
+      "context_resolution": "positive_source_spawn_is_conditional_group70_leader_with_clothes2540_unverified",
+      "attachment_validation": {
+        "source_namespace": "source1",
+        "raw_bytes_available": true,
+        "conditional_group_spawn": true,
+        "composition_status": "unverified_not_connected",
+        "missing_evidence": [
+          "source attr8 blend semantics",
+          "per-action attachment frame selection and layer order"
+        ],
+        "available_models": [
+          2540
+        ],
+        "policy": "Raw bytes exist. No missing-source claim, guessed blend, source2 substitution, or new group/clone mechanism.",
+        "decoded_source1_custody_checks": 136,
+        "visual_observation": "Separate native components inspected without compositing. The source1 2540 sample retains a dark opaque halo behind fire; choosing source-over or additive without renderer evidence would alter the appearance."
+      }
     },
     {
       "npc_id": "45357",
@@ -5192,7 +5207,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "supported_existing_group_spawn_adapter_or_independent_positive_spawn"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -7041,7 +7057,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "authorized_existing_enemy_transform_support"
+        "runtime_enemy_transform_support_unimplemented",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -7586,7 +7603,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "authorized_existing_enemy_transform_support"
+        "runtime_enemy_transform_support_unimplemented",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -7669,9 +7687,9 @@
           ]
         }
       ],
-      "status": "source_context_unresolved",
-      "reason": "SQL/DESC identity resolved; independent encounter, variant or non-world actor requires raw source context",
-      "existing_game_name_candidate": null,
+      "status": "activated_exact_identity",
+      "reason": "Active exact SQL identity; duplicate-name/model guessing not used",
+      "existing_game_name_candidate": "어둠의 라이칸스로프",
       "desc": {
         "c": {
           "display": "暗黑萊肯",
@@ -7733,10 +7751,7 @@
       ],
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
-      "missing_fields": [
-        "raw_spawn_or_script_role",
-        "source_map_and_spawn_condition"
-      ],
+      "missing_fields": [],
       "source_context": {
         "coverage": {
           "direct_sql_rows": 6,
@@ -8005,7 +8020,7 @@
         ],
         "original_scope_limit": "Only retained same-version sources scanned. Deleted quest/pet/clan/siege tables were not restored. No-reference is not deletion or a new-species verdict."
       },
-      "context_resolution": "positive_world_spawn_known_visual_or_source_mechanism_review_pending"
+      "context_resolution": "positive_ordinary_source_spawn_exact_body_visually_verified_local_habitat"
     },
     {
       "npc_id": "45487",
@@ -8518,7 +8533,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "supported_existing_group_spawn_adapter_or_independent_positive_spawn"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -9356,7 +9372,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "supported_existing_group_spawn_adapter_or_independent_positive_spawn"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -9925,7 +9942,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "active_spawn_condition_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -10120,7 +10138,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "active_spawn_condition_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -11120,7 +11139,24 @@
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
         "owner_definition_attachment_composition_verified"
-      ]
+      ],
+      "attachment_validation": {
+        "source_namespace": "source1",
+        "raw_bytes_available": true,
+        "conditional_group_spawn": false,
+        "composition_status": "unverified_not_connected",
+        "missing_evidence": [
+          "source attr8 blend semantics",
+          "per-action attachment frame selection and layer order"
+        ],
+        "available_models": [
+          856,
+          5558
+        ],
+        "policy": "Raw bytes exist. No missing-source claim, guessed blend, source2 substitution, or new group/clone mechanism.",
+        "decoded_source1_custody_checks": 136,
+        "visual_observation": "Separate native components inspected without compositing. The source1 2540 sample retains a dark opaque halo behind fire; choosing source-over or additive without renderer evidence would alter the appearance."
+      }
     },
     {
       "npc_id": "45807",
@@ -13912,9 +13948,9 @@
           ]
         }
       ],
-      "status": "verified_identity_habitat_capacity_hold",
-      "reason": "SQL/DESC identity resolved; independent encounter, variant or non-world actor requires raw source context",
-      "existing_game_name_candidate": null,
+      "status": "activated_exact_identity",
+      "reason": "Active exact SQL identity; duplicate-name/model guessing not used",
+      "existing_game_name_candidate": "에바 크러스트 시안",
       "desc": {
         "c": {
           "display": "伊娃 奎斯坦修",
@@ -13991,9 +14027,7 @@
       ],
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
-      "missing_fields": [
-        "safe_existing_aquatic_habitat_capacity"
-      ],
+      "missing_fields": [],
       "source_context": {
         "coverage": {
           "direct_sql_rows": 1,
@@ -14047,7 +14081,7 @@
         ],
         "original_scope_limit": "Only retained same-version sources scanned. Deleted quest/pet/clan/siege tables were not restored. No-reference is not deletion or a new-species verdict."
       },
-      "context_resolution": "Positive source map63 spawn and body verified; no safe space remains in the current supported aquatic map without changing prior habitats"
+      "context_resolution": "positive_ordinary_source_spawn_exact_body_visually_verified_local_habitat"
     },
     {
       "npc_id": "45945",
@@ -14073,9 +14107,9 @@
           ]
         }
       ],
-      "status": "source_context_unresolved",
-      "reason": "SQL/DESC identity resolved; independent encounter, variant or non-world actor requires raw source context",
-      "existing_game_name_candidate": null,
+      "status": "activated_exact_identity",
+      "reason": "Active exact SQL identity; duplicate-name/model guessing not used",
+      "existing_game_name_candidate": "청소 개미",
       "desc": {
         "c": {
           "display": "掃除蟻",
@@ -14133,10 +14167,7 @@
       ],
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
-      "missing_fields": [
-        "raw_spawn_or_script_role",
-        "source_map_and_spawn_condition"
-      ],
+      "missing_fields": [],
       "source_context": {
         "coverage": {
           "direct_sql_rows": 6,
@@ -14405,7 +14436,7 @@
         ],
         "original_scope_limit": "Only retained same-version sources scanned. Deleted quest/pet/clan/siege tables were not restored. No-reference is not deletion or a new-species verdict."
       },
-      "context_resolution": "positive_world_spawn_known_visual_or_source_mechanism_review_pending"
+      "context_resolution": "positive_ordinary_source_spawn_exact_body_visually_verified_local_habitat"
     },
     {
       "npc_id": "45948",
@@ -14431,9 +14462,9 @@
           ]
         }
       ],
-      "status": "source_context_unresolved",
-      "reason": "SQL/DESC identity resolved; independent encounter, variant or non-world actor requires raw source context",
-      "existing_game_name_candidate": null,
+      "status": "activated_exact_identity",
+      "reason": "Active exact SQL identity; duplicate-name/model guessing not used",
+      "existing_game_name_candidate": "거대 강화 개미",
       "desc": {
         "c": {
           "display": "強化巨蟻",
@@ -14495,10 +14526,7 @@
       ],
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
-      "missing_fields": [
-        "raw_spawn_or_script_role",
-        "source_map_and_spawn_condition"
-      ],
+      "missing_fields": [],
       "source_context": {
         "coverage": {
           "direct_sql_rows": 3,
@@ -14638,7 +14666,7 @@
         ],
         "original_scope_limit": "Only retained same-version sources scanned. Deleted quest/pet/clan/siege tables were not restored. No-reference is not deletion or a new-species verdict."
       },
-      "context_resolution": "positive_world_spawn_known_visual_or_source_mechanism_review_pending"
+      "context_resolution": "positive_ordinary_source_spawn_exact_body_visually_verified_local_habitat"
     },
     {
       "npc_id": "45963",
@@ -14944,7 +14972,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "authorized_existing_enemy_transform_support"
+        "runtime_enemy_transform_support_unimplemented",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -15260,7 +15289,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "authorized_existing_enemy_transform_support"
+        "runtime_enemy_transform_support_unimplemented",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -15674,7 +15704,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "authorized_existing_enemy_transform_support"
+        "runtime_enemy_transform_support_unimplemented",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -16601,7 +16632,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "authorized_existing_enemy_transform_support"
+        "runtime_enemy_transform_support_unimplemented",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -17855,7 +17887,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "supported_existing_group_spawn_adapter_or_independent_positive_spawn"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -18261,7 +18294,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -18363,7 +18397,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -20225,7 +20260,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -20507,7 +20543,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -20699,7 +20736,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_condition",
+        "transform_or_encounter_parent_identity"
       ],
       "source_context": {
         "coverage": {
@@ -21088,7 +21126,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21182,7 +21220,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21276,7 +21314,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21370,7 +21408,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21459,7 +21497,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21553,7 +21591,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21647,7 +21685,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21741,7 +21779,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -21835,7 +21874,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22102,7 +22142,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22284,7 +22325,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22378,7 +22420,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22473,7 +22516,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22562,7 +22606,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22660,7 +22705,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22758,7 +22804,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22852,7 +22899,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -22946,7 +22994,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -23035,7 +23084,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_quest_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -23146,7 +23196,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -23257,7 +23307,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -23363,7 +23413,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -23474,7 +23524,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -23585,7 +23635,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -23691,7 +23741,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -23797,7 +23847,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -23903,7 +23953,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -24009,7 +24059,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -24120,7 +24170,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -24231,7 +24281,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -24342,7 +24392,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_source_spawn_rows"
       ],
       "source_context": {
         "coverage": {
@@ -24439,7 +24489,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -24541,7 +24591,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -24638,7 +24688,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -24740,7 +24790,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -24842,7 +24892,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -24944,7 +24994,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25046,7 +25096,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25148,7 +25198,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25250,7 +25300,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25352,7 +25402,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25454,7 +25504,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25556,7 +25606,7 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25755,7 +25805,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25857,7 +25908,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -25959,7 +26011,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -26057,7 +26110,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -26163,7 +26217,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "independent_encounter_or_variant_role_not_established_by_retained_sources"
+        "raw_spawn_or_script_role",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -26952,7 +27007,8 @@
       "provided_source_spawn_rows": [],
       "source_spawn_coverage": "not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original",
       "missing_fields": [
-        "authorized_existing_enemy_transform_support"
+        "runtime_enemy_transform_support_unimplemented",
+        "source_map_and_spawn_condition"
       ],
       "source_context": {
         "coverage": {
@@ -27217,7 +27273,33 @@
       "45925",
       "45933",
       "45934",
-      "45938"
+      "45938",
+      "45939",
+      "45485",
+      "45945",
+      "45948"
     ]
+  },
+  "remaining_visual_selection": {
+    "45939": {
+      "visual_from_npc": "45285",
+      "map_id": "source_65",
+      "local_named": false
+    },
+    "45485": {
+      "visual_from_npc": "__native1108",
+      "map_id": "oman_01",
+      "local_named": false
+    },
+    "45945": {
+      "visual_from_npc": "__native1037",
+      "map_id": "source_491",
+      "local_named": false
+    },
+    "45948": {
+      "visual_from_npc": "__native1037",
+      "map_id": "source_491",
+      "local_named": false
+    }
   }
 }

@@ -15,10 +15,10 @@ func run():
  for arg:String in OS.get_cmdline_user_args():
   if arg.begins_with("--baseline-script="):
    var prior:Array=load(arg.trim_prefix("--baseline-script=")).expand(original)
-   check(prior.size()==456 and all.slice(0,456)==prior,"all prior 456 identities, stats, AI, drops and animation definitions preserved")
- check(all.size()==471 and CATALOG.spawnable_records(all).size()==318,"forty additions, original random pool retained")
+   check(prior.size()==471 and all.slice(0,471)==prior,"all prior 471 identities, stats, AI, drops and animation definitions preserved")
+ check(all.size()==475 and CATALOG.spawnable_records(all).size()==318,"forty-four additions, original random pool retained")
  var new:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(CATALOG.ADDITIONS_PATH))
- check(new.records.size()==40,"exact reviewed forty, no bulk numeric-ID imports")
+ check(new.records.size()==44,"exact reviewed forty-four, no bulk numeric-ID imports")
  var ids:Dictionary={}
  for record:Dictionary in all:
   var id:String=str(record.get("sourceId",record.name));check(not ids.has(id),"unique game identity");ids[id]=true
@@ -33,7 +33,7 @@ func run():
   check(entity.status=="active_source_identity" and entity.game_source_id==record.sourceId,"typed registry source identity")
   check(int(entity.gfx_id)==int(record.source_raw_fields.gfxid) and entity.nameid==record.source_raw_fields.nameid,"SQL ID/gfx/nameid tuple")
   check(not SOURCE.body_records(str(entity.key)).is_empty(),"original pack row locators preserved")
-  var duplicate:Array=original.duplicate(true);duplicate.append(record.duplicate(true));check(CATALOG.expand(duplicate).size()==471,"repeated source identity cannot duplicate record")
+  var duplicate:Array=original.duplicate(true);duplicate.append(record.duplicate(true));check(CATALOG.expand(duplicate).size()==475,"repeated source identity cannot duplicate record")
   var frames:SpriteFrames=load(str(record.animation_profile.frames_path))
   check(frames!=null,"actual source SpriteFrames")
   if frames==null:quit(1);return

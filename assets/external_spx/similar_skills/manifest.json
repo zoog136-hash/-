@@ -12,8 +12,8 @@
     "source_inventory_catalog": "res://data/skills/source_effects/catalog.json",
     "permitted_full_effect_groups": 2764,
     "explicitly_excluded_groups": 10,
-    "additional_reviewed_cast_groups": 5,
-    "reviewed_cast_resource_count": 96
+    "additional_reviewed_cast_groups": 7,
+    "reviewed_cast_resource_count": 98
   },
   "effects": {
     "SPR-RAW-010bb4bcdc15cedc5465c64f2576c2dfad37a45cbc9898f18ae8b00bbd47fd66": {
@@ -4496,6 +4496,368 @@
         ]
       ],
       "source_group_id": "SPR-U-0a304d2c700b9bd56d54",
+      "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+    },
+    "SPR-U-a03b6d307a3a03ab4316": {
+      "atlas": "reviewed201_cast_11723_source1.png",
+      "width": 96,
+      "height": 168,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        -24,
+        -120
+      ],
+      "sha256": "674421171d8d26ca23a19fd5ed851bb3ef90bd8e1d688367749768478288e4a3",
+      "raw_sha256": "1534c34569664d816c2578cc692be3fd66ebb1a3489b9f7b8b11870a39a34cfa",
+      "model_id": 11723,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite14.pak:1088",
+          "name": "11723-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite14.pak:1088",
+      "source_name": "11723-0.spr",
+      "source_names": [
+        "힐"
+      ],
+      "resource_scope": "reviewed_existing_active_cast",
+      "skill_binding_required": true,
+      "frame_rgba_sha256": [
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a",
+        "9d9b0113437dad21852f7ab31b6d324be6e1a68d923d4c9ec40a68ce6d47cf3b",
+        "589808e07e57c05a6261faa82af347057c4385d78dc1070b24faa186abd8758e",
+        "e2f18233ec4cbd59707ac4f5c1d9b85ebf9c57e89a11987e431b65d006c49a4b",
+        "05d7fbc7a13a88d47d7931c15b15389f59dfdc3afd117d73bccda39dc6e2e512",
+        "f80f579278ab4d4214d90dc5cb4c2cbf4ab6b1481324908bd1f6a1aa8fb5fed5",
+        "dad95834f453415d3cb51df9da9c6c37c060922e837f65ab15bf610d79dc2191",
+        "93a351ad986feb30666e7bcf85a981365223597445cb4a0edc6dda1a2c7599aa",
+        "fd867aa474fce6afc75bbc4900af77107d544f4eb19a4eb6bc1c1016adf58cda",
+        "d036cba7beb1c6db15d788bd59c6919cb8efef984fa2979939c58a995d9affbc",
+        "c052fa519ff15040f5cb6be727d10e944b408c57ae32a39cfe924676376555e0",
+        "61ffc896087d0d88b7c4cff85ca6744c6c7222136298113d1de34a118196feea",
+        "7ba2c4ac4d4530332ecdbc081c0321409efeaf40b6e74658fd520539c693b09a",
+        "c78800fa30d5b656684abe706ef7d2756e3f7099d6dcb7fd74722407ab7d7519",
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a",
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a",
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a",
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a",
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a",
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a",
+        "ca8a4b28e8b434e231027bf5d9952a7d32014111151ed7e3e2efc0b6fe934a0a"
+      ],
+      "native_frame_bounds": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          -96,
+          48,
+          144
+        ],
+        [
+          0,
+          -120,
+          48,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          0,
+          -120,
+          72,
+          168
+        ],
+        [
+          0,
+          -120,
+          72,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          -24,
+          -108,
+          96,
+          156
+        ],
+        [
+          -24,
+          -108,
+          96,
+          156
+        ],
+        [
+          0,
+          -108,
+          72,
+          156
+        ],
+        [
+          0,
+          -108,
+          72,
+          156
+        ],
+        [
+          0,
+          -108,
+          48,
+          156
+        ],
+        [
+          0,
+          -108,
+          48,
+          156
+        ],
+        [
+          0,
+          -108,
+          48,
+          156
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "source_group_id": "SPR-U-a03b6d307a3a03ab4316",
+      "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+    },
+    "SPR-U-65995a45fd43c03b3aeb": {
+      "atlas": "reviewed201_cast_11725_source1.png",
+      "width": 96,
+      "height": 192,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        -24,
+        -132
+      ],
+      "sha256": "791311bb738581bf7df63f8b643ddde816e26a9409278b66294d469a3105d3e1",
+      "raw_sha256": "72656534c480225926b4b721ec13c088a5ac8816a0e0fa164bac7994691816d4",
+      "model_id": 11725,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite00.pak:1222",
+          "name": "11725-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite00.pak:1222",
+      "source_name": "11725-0.spr",
+      "source_names": [
+        "풀 힐"
+      ],
+      "resource_scope": "reviewed_existing_active_cast",
+      "skill_binding_required": true,
+      "frame_rgba_sha256": [
+        "484eaa327eae22dd9073858b0599e43fb5e06cabfbc8de88c83763edcb8d2446",
+        "7a6ec2748276d6b4dc73249d0dc8fff56835c66d1f1069f4789d8ae75ef522e2",
+        "6a1c066570492fda2e44dac86ddf2cd8935022abab9e9d5eb11d52f03dac3ef1",
+        "07961243f69b66cd2f446c713c23c789e93853a43a55904cc6b4fbe937d931d2",
+        "a693157646a46b216098a6c3c557e61d6223a438fc1b34373e00c107b5964864",
+        "a75cc5ccb8685d3acd4a19fc5c0cfc20f548fe09e1c185d11aebb0831309fcc7",
+        "be730930402b5988b05dfe3787d91c049370a048ffe2dfe33e89e684dcbe536a",
+        "4b98b97ad7f1df0a2c5f5d0614afb9131ed8a806c71b25407525f6d38fc9f4cb",
+        "1430fe0589a21c66d473c365f0fcd04ee50e7f66a5a55edb01067596e53a2b9c",
+        "068ccc4919acd5d4d9726eb2503a7b5a83e39b412eab8a274fff54a7ee4dec22",
+        "1aa1d38ff62af2e52e646b332a4d59dff12cf82f6fa1ddaf896a9d6649341a36",
+        "e45dea431d3321163d476f33665ce70acbded1bd1720a6d378baf1066cdf5b6b",
+        "6cbd2724bc8908d99945903cdc33fb663760cf1c809021e5f6b316d75b00ffcf",
+        "5a76dc44631a8e529a62219513e59e2b24051f6ab206ea45c341e31ba53cd784",
+        "ccfc99b81ef5a1aad28e3e12950c6f2acefca2a0c4093694f68e2efc551d72b1",
+        "b8a07bc7947121adc1f45bf92205848195923b953a9b19f04dcb6cc3f030b929",
+        "6d71bb3c59ba6bcd406fb1861df221ba1b496c49c75f03eebcba451e81712cb0",
+        "33df4a2a29902b66240d7de988c5f8313187c89c242261ecea4137fb7cba5396",
+        "484eaa327eae22dd9073858b0599e43fb5e06cabfbc8de88c83763edcb8d2446",
+        "484eaa327eae22dd9073858b0599e43fb5e06cabfbc8de88c83763edcb8d2446",
+        "484eaa327eae22dd9073858b0599e43fb5e06cabfbc8de88c83763edcb8d2446"
+      ],
+      "native_frame_bounds": [
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          -120,
+          48,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          180
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          -24,
+          -120,
+          96,
+          168
+        ],
+        [
+          0,
+          -120,
+          72,
+          168
+        ],
+        [
+          0,
+          -132,
+          72,
+          180
+        ],
+        [
+          0,
+          -132,
+          72,
+          180
+        ],
+        [
+          0,
+          -120,
+          72,
+          168
+        ],
+        [
+          0,
+          -132,
+          72,
+          180
+        ],
+        [
+          0,
+          -132,
+          48,
+          180
+        ],
+        [
+          0,
+          -120,
+          48,
+          168
+        ],
+        [
+          0,
+          -120,
+          48,
+          168
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "source_group_id": "SPR-U-65995a45fd43c03b3aeb",
       "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
     }
   }

@@ -24,12 +24,12 @@ func run():
   var point:=Vector2.INF
   for attempt:int in range(5000):
    var c:=origin+Vector2i(rng.randi_range(-80,80),rng.randi_range(-80,80));var p:Vector2=field.cell_to_world(c)
-   if p.distance_to(entry)<700 or p.distance_to(entry)>2200 or not SAFE.floor_allowed(field,p):continue
+   if p.distance_to(entry)<700 or p.distance_to(entry)>float(selected[ident].get("search_max_distance",2200)) or not SAFE.floor_allowed(field,p):continue
    var free:=true
    for old:Dictionary in payload.rows+new_rows:
     if str(old.get("source_npc_id","")) in selected and not old in new_rows:continue
     if old.map_id!=mid:continue
-    var a:Array=old.rect;var rect:=Rect2(a[0],a[1],a[2],a[3]).grow(160)
+    var a:Array=old.rect;var rect:=Rect2(a[0],a[1],a[2],a[3]).grow(float(selected[ident].get("habitat_clearance",160)))
     if rect.has_point(p):free=false;break
    if free and not field.path(entry,p).is_empty():point=p;break
   if not point.is_finite():printerr("MONSTER70_NO_FLOOR ",ident);quit(1);return
@@ -42,6 +42,6 @@ func run():
   if cells.size()<12:printerr("MONSTER70_SMALL_FLOOR ",ident);quit(1);return
 
   var size:=maximum-minimum
-  var row:Dictionary={"id":"twilight_habitat:"+ident,"map_id":mid,"grid_sha256":field.definition.source_sha256,"layout_revision":field.data.layout_revision,"local_habitat":true,"placement_provenance":"TWILIGHT_USER_AUTHORIZED_GAME_HABITAT_NOT_ORIGINAL_SOURCE_COORDINATE","placement_reason":"Exact SQL/DESC identity; retained level and body; local reachable habitat selected by current map theme. Not original source spawn coordinates.","source_center":[center.x+field.coordinates.origin.x,center.y+field.coordinates.origin.y],"monster_types":[record.name],"mode":"boss" if named else "normal","max_count":1 if named else 2,"respawn_time":900.0 if named else 60.0,"rect":[minimum.x-1,minimum.y-1,size.x+2,size.y+2],"min_spacing":64.0,"roaming_radius":100.0,"cells":cells,"expected_level":record.lv,"source_game_id":record.sourceId,"source_npc_id":ident}
+  var row:Dictionary={"id":"twilight_habitat:"+ident,"map_id":mid,"grid_sha256":field.definition.source_sha256,"layout_revision":field.data.layout_revision,"local_habitat":true,"placement_provenance":"TWILIGHT_USER_AUTHORIZED_GAME_HABITAT_NOT_ORIGINAL_SOURCE_COORDINATE","placement_reason":"Exact SQL/DESC identity; retained level and body; local reachable habitat selected by current map theme. Not original source spawn coordinates.","source_center":[center.x+field.coordinates.origin.x,center.y+field.coordinates.origin.y],"monster_types":[record.name],"mode":"boss" if named else "normal","max_count":1 if named else int(selected[ident].get("max_count",2)),"respawn_time":900.0 if named else 60.0,"rect":[minimum.x-1,minimum.y-1,size.x+2,size.y+2],"min_spacing":64.0,"roaming_radius":float(selected[ident].get("roaming_radius",100)),"cells":cells,"expected_level":record.lv,"source_game_id":record.sourceId,"source_npc_id":ident}
   new_rows.append(row);print("IDENTITY_HABITAT ",ident," ",mid," source_center=",row.source_center," cells=",cells.size());field.close()
  var file:=FileAccess.open(OS.get_cmdline_user_args()[1],FileAccess.WRITE);file.store_string(JSON.stringify(new_rows,"  ")+"\n");file.close();quit()

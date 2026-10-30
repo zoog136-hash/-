@@ -35,7 +35,7 @@ def resolve(raw,t):
   result[lang]={'display':surface if not missing else None,'missing_token_ids':missing,'entries':entries,'table_sha256':TABLE_SHA[lang]}
  return result
 
-def main(a, selected=None, review_selection_key='additional_identity_selection'):
+def main(a, selected=None, review_selection_key='additional_identity_selection', base_overrides=None, display_names=None, habitat_search_limits=None):
  global SELECTED
  if selected is not None:SELECTED=selected
  root=a.root.resolve();src=a.source_input.resolve();inp=a.monster_input.resolve();desc=a.desc_input.resolve();work=a.work.resolve();work.mkdir(parents=True,exist_ok=True)
@@ -44,6 +44,8 @@ def main(a, selected=None, review_selection_key='additional_identity_selection')
  t=tables(desc);request=read(inp/'metadata/pr201-monster70-exact-extraction-request-20261030.json');provenance=[json.loads(l)for l in (inp/'metadata/provenance_manifest.jsonl').read_text().splitlines()]
  sql={r['fields']['npcid']:r for r in map(json.loads,(src/'source_npcs.jsonl').read_text().splitlines())}
  catalog=read(root/'data/monsters/source_identity_catalog.json');entities={e['npc_id']:e for e in catalog['entities']};extra=read(root/'data/monsters/reviewed_source_additions.json');original=read(root/'data/monsters/reviewed_source_monsters.json');records={r['source_npc_id']:r for r in original['records']+extra['records']}
+ records.update(base_overrides or {})
+ display_names=display_names or {}
  # Basic black knight is a different nameid from the existing dark black
  # knight. Its exact definition4003 explicitly resolves to literal body110.
  native_entity=entities['45165'];candidate=native_entity['model_candidates'][0]
@@ -94,12 +96,13 @@ def main(a, selected=None, review_selection_key='additional_identity_selection')
   e=entities[ident];raw=sql[ident]['fields'];assert raw['impl']=='L1Monster'and raw['hascastle']=='0';assert(raw['gfxid'],raw['nameid'])==(str(e['gfx_id']),e['nameid']);assert sql[ident]['provenance']==e['source_sql']
   model='source1:'+str(records[base_id]['source_animation']['body_gfx']);candidate=next(c for c in e['model_candidates']if c['model_key']==model)
   assert definitions[candidate['definition_record_key']]['raw_definition_sha256']==candidate['definition_sha256']
-  d=resolve(raw,t);assert d['c']['display']and norm(d['c']['display'])==norm(raw['name'])and d['k']['display']
-  name=e['korean_name']or d['k']['display']
+  d=resolve(raw,t);assert d['c']['display']and norm(d['c']['display'])==norm(raw['name'])and (d['k']['display'] or ident in display_names)
+  name=display_names.get(ident) or e['korean_name']or d['k']['display']
   if ident in ['45898','45899']:name+='(도적)' if ident=='45898' else '(마법사)'
   base=records[base_id];proof=verified[base_id];animation=copy.deepcopy(base['source_animation']);animation['tracks']=proof['tracks'];animation['source']='source1';animation['source_gfxid']=int(raw['gfxid']);animation['reused_visual_source_npc_id']=base_id if base_id!='__native45165' else None;animation['same_namespace_raw_sha_reuse']=proof_locators[base_id]
   # Keep the exact existing visual and grounding, not its stats, AI or rewards.
   rec=dict(name=name,sourceId='l1j_tw380_npc_'+ident,source_id='source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:'+ident,source_npc_id=ident,source_name_original=raw['name'],source_version='3.80c',source_locale='Taiwan',source_raw_fields=raw,import_enabled=True,catalog_only=True,identity_approval='USER_REVIEWED_SQL_AND_EXISTING_BYTES_20261030',source_portrait=base['source_portrait'],lv=int(raw['lvl']),hp=int(raw['hp']),mp=int(raw['mp']),ac=int(raw['ac']),mr=int(raw['mr']),xp=int(raw['exp']),undead=raw['undead']!='0',grade='일반',drop=[],animation_profile=copy.deepcopy(base['animation_profile']),source_animation=animation,identity_review_evidence=dict(SQL=sql[ident]['provenance'],desc=d,source_namespace='Exact source1 model records and decoded pixel equality, not numeric-model name transfer',distinct_identity='Independent NPC id + display nameid + original C/DESC K name; shared visual does not merge the identities',existing_visual_identity=base_id if base_id!='__native45165' else None),runtime_limits='Source stat records retained; existing actor defaults/minimumHP30 clamp, presentation and optional local named cooldown remain. No imported source AI, special spells, costs, drop chances or prices.')
+  if ident in display_names:rec['local_display_translation']={'original_name':raw['name'],'display':name,'policy':'Local Korean translation of exact source SQL/C DESC identity; not an original Korean DESC entry'}
   if ident in ['45898','45899']:rec['local_display_role_qualification']={'official_desc_name':d['k']['display'],'source_role_note':raw['note'],'policy':'Local role suffix distinguishes two exact SQL/gfx identities sharing the same original display token'}
   if 'visual_grounding'in base:rec['visual_grounding']=copy.deepcopy(base['visual_grounding'])
   if named:rec['local_named_encounter']=True
@@ -116,7 +119,7 @@ def main(a, selected=None, review_selection_key='additional_identity_selection')
   if r['source_npc_id']in SELECTED:catalog['game_records'].append(dict(game_key='twilight:monster:'+hashlib.sha256(r['name'].encode()).hexdigest()[:16],name=r['name'],game_source_id=r['sourceId'],status='exact_source_identity',source_candidates=['source3:tw380:Taiwan:npc:'+r['source_npc_id']]))
  catalog['game_records'].sort(key=lambda g:g['name']);catalog['counts']=dict(collections.Counter(e['status']for e in catalog['entities']));catalog['reverse_counts']=dict(collections.Counter(g['status']for g in catalog['game_records']));catalog['active_game_species']=len(catalog['game_records']);write(root/'data/monsters/source_identity_catalog.json',catalog,True)
  resolve_all(root,request,sql,t,catalog,definitions,provenance,review_selection_key)
- selection=work/'habitat-selection.json';write(selection,{i:{'map_id':v[1],'named':v[2]}for i,v in SELECTED.items()})
+ selection=work/'habitat-selection.json';write(selection,{i:{'map_id':v[1],'named':v[2],**(habitat_search_limits[i]if habitat_search_limits and i in habitat_search_limits else {})}for i,v in SELECTED.items()})
  habitat_output=work/'habitats.json'
  subprocess.run([str(a.godot),'--headless','--path',str(root),'--script','res://tools/maps/build_monster70_identity_habitats.gd','--',str(selection),str(habitat_output)],check=True)
  habitat_path=root/'data/monsters/local_source_habitats.json';habitats=read(habitat_path)

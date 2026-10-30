@@ -95,10 +95,10 @@ func run():
  var service=SERVICE.new();service.configure(world);service.catalog.learned.clear()
  var frame_checks:int=0;var casts:int=0;var attacks:int=0
  root.content_scale_size=Vector2i.ZERO;root.content_scale_mode=Window.CONTENT_SCALE_MODE_DISABLED
- root.size=Vector2i(800,1450)
+ root.size=Vector2i(800,2010)
  for row_index:int in range(plan.cases.size()):
   var spec:Dictionary=plan.cases[row_index];var row:Dictionary=service.catalog.record_for(str(spec.skill_id));world.job_class=str(row["class"]);service.catalog.learned={str(row.id):1}
-  check(not row.runtime_blocked and row.activation=="active","only an existing active skill")
+  check(not bool(row.get("runtime_blocked",false)) and str(row.get("activation","active"))=="active","only an existing active skill")
   var resource:Dictionary=bridge.effects[spec.group_id];var frames:SpriteFrames=bridge.frames_for_resource(str(spec.group_id))
   check(frames!=null,"on-demand committed native atlas")
   for index:int in range(int(resource.count)):
@@ -143,11 +143,11 @@ func run():
  for name:String in ["엘리멘탈 스피드","다크 러쉬","고스트 스텝"]:
   var row:Dictionary=service.catalog.record_for(name);var phases:Dictionary=bridge.binding_for(str(row.id)).phases
   check(phases.keys()==["learn"],"speed passive stays learn-only")
- check(casts==5 and attacks==3 and frame_checks==94,"five real service casts, three controlled hit markers, 94 native frames")
+ check(casts==7 and attacks==3 and frame_checks==136,"seven real service casts, three controlled hit markers, 136 native frames")
  if DisplayServer.get_name()!="headless":
   service.vfx.set_process(false);await process_frame;await process_frame;await RenderingServer.frame_post_draw
   var image:Image=root.get_texture().get_image();check(image!=null and image.get_used_rect().size!=Vector2i.ZERO,"actual OpenGL viewport readback")
-  check(image.get_size()==Vector2i(800,1450),"all five comparison rows fit the rendered viewport")
+  check(image.get_size()==Vector2i(800,2010),"all seven comparison rows fit the rendered viewport")
   var path:String=OS.get_environment("TWILIGHT_CAST_COMPARISON")
   if not path.is_empty():check(image.save_png(path)==OK,"single before/after evidence saved")
  service.clear();world.queue_free();await process_frame
