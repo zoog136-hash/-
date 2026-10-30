@@ -1,0 +1,2210 @@
+{
+  "schema": "pr122-approval-audit-summary-v1",
+  "source_head": "d76a098b96f33efcccf2721ca3b8102bac8dcc75",
+  "counts": {
+    "보스:staging": {
+      "entries": 21,
+      "required_requests": 693,
+      "resolved_requests": 598,
+      "missing_requests": 95,
+      "walk_reuse_requests": 0,
+      "playback_invalid_frames": 0
+    },
+    "일반 몬스터:runtime": {
+      "entries": 258,
+      "required_requests": 8514,
+      "resolved_requests": 8514,
+      "missing_requests": 0,
+      "walk_reuse_requests": 2064,
+      "playback_invalid_frames": 0
+    },
+    "보스:runtime": {
+      "entries": 60,
+      "required_requests": 1980,
+      "resolved_requests": 1980,
+      "missing_requests": 0,
+      "walk_reuse_requests": 432,
+      "playback_invalid_frames": 0
+    },
+    "신화:runtime": {
+      "entries": 17,
+      "required_requests": 561,
+      "resolved_requests": 561,
+      "missing_requests": 0,
+      "walk_reuse_requests": 136,
+      "playback_invalid_frames": 0
+    },
+    "전설:runtime": {
+      "entries": 40,
+      "required_requests": 1320,
+      "resolved_requests": 1320,
+      "missing_requests": 0,
+      "walk_reuse_requests": 320,
+      "playback_invalid_frames": 0
+    },
+    "영웅:runtime": {
+      "entries": 109,
+      "required_requests": 3597,
+      "resolved_requests": 3597,
+      "missing_requests": 0,
+      "walk_reuse_requests": 872,
+      "playback_invalid_frames": 0
+    },
+    "일반 몬스터:staging": {
+      "entries": 12,
+      "required_requests": 396,
+      "resolved_requests": 333,
+      "missing_requests": 63,
+      "walk_reuse_requests": 0,
+      "playback_invalid_frames": 0
+    },
+    "신화:staging": {
+      "entries": 16,
+      "required_requests": 528,
+      "resolved_requests": 300,
+      "missing_requests": 228,
+      "walk_reuse_requests": 0,
+      "playback_invalid_frames": 0
+    }
+  },
+  "unique_resources": 179,
+  "unique_clips": 6868,
+  "unique_texture_files": 1641,
+  "technical_failures": [],
+  "entry_failures": [
+    {
+      "id": "monster:아크모",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:아크모",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/arcmo/reviewed-final-v01/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:탐욕의 여왕 벨리엘",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:탐욕의 여왕 벨리엘",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:탐욕의 여왕 벨리엘",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:탐욕의 여왕 벨리엘",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:탐욕의 여왕 벨리엘",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/belial/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:공포의 뱀파이어",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:그림 리퍼",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:그림 리퍼",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "run:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "run:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/iris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:질투의 공주 이자벨",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:질투의 공주 이자벨",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:질투의 공주 이자벨",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/SpriteFrames.tres",
+      "error": "run:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:질투의 공주 이자벨",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/isabelle/reviewed-final-v01/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:욥니르",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:욥니르",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/jopnir/reviewed-final-v01/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:교만의 왕자 데우스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:테베 호루스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:테베 호루스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:테베 호루스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:테베 호루스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:테베 호루스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/reviewed-final-v01/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:테베 오시리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:테베 오시리스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:오만한 우그누스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/ugnus/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:왜곡의 제니스 퀸",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:왜곡의 제니스 퀸",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:왜곡의 제니스 퀸",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:왜곡의 제니스 퀸",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/zenith_queen/reviewed-final-v01/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:제로스",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/boss_draft_first/zeros/reviewed-final-v01/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "run:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "run:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "run:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:놀",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/gnoll/r002/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "run:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "run:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "run:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "run:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "run:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "run:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "run:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "run:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:130",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_130/native007/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:133",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:135",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native007/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:135",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native007/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:135",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:135",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:135",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_135/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:137",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_137/native007/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:139",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_139/native007/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:141",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_141/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:141",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_141/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:141",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_141/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:141",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_141/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "run:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "hit:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:174",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/native007/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:189",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/native007/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "idle:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "run:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "run:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "run:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:212",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_212/native007/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:242",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_242/native007/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:346",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_346/native007/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "idle:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "idle:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "idle:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "run:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "run:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "hit:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:367",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_367/native006/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:399",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_399/native001/SpriteFrames.tres",
+      "error": "PROFILE_LOAD_FAILED"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "idle:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "idle:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "idle:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "idle:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "run:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "run:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "run:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "run:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "run:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "attack:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "hit:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "hit:SE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "hit:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "hit:SW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "hit:NW:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "hit:N:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "hit:NE:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:411",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_411/native004/SpriteFrames.tres",
+      "error": "death:S:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:412",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_412/native010/SpriteFrames.tres",
+      "error": "run:W:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:412",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_412/native010/SpriteFrames.tres",
+      "error": "attack:E:MISSING_ROLE_CLIP"
+    },
+    {
+      "id": "transform:412",
+      "scope": "staging",
+      "resource": "res://assets/actors/eight_direction/native_locomotion_staging/transform_412/native010/SpriteFrames.tres",
+      "error": "attack:NW:MISSING_ROLE_CLIP"
+    }
+  ],
+  "staging_pin_mismatches": [],
+  "visual_review_flagged_clips": 624,
+  "new_quality_approvals": 0,
+  "limitations": [
+    "Region edge is a review flag, not automatically clipping",
+    "No semantic heading/pose/foot-contact approval from alpha bounds",
+    "Deterministic ActorMotion replay is not final Main combat/contact approval",
+    "Excluded unique assets retain their previous approvals; no reauthoring",
+    "Parallel hero/legendary branch candidates remain unmerged dependencies"
+  ]
+}

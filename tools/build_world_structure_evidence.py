@@ -38,7 +38,7 @@ def pair(id):
  im.save(OUT/(id+'-before-after.jpg'),quality=93)
 
 def catalog():
- entries=[{'map_id':'aden_world','path':'res://data/maps/aden_field.json'}]
+ entries=[]
  entries+=json.loads((ROOT/'data/maps/field_index.json').read_text())
  profiles=json.loads((ROOT/'data/monsters/world_spawn_profiles.json').read_text())
  monster_catalog=json.loads((ROOT/'data/monsters/monster_world_catalog.json').read_text())

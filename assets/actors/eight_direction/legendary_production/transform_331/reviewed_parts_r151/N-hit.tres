@@ -1,0 +1,56 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-0.png" id="r151_N_idle_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-5.png" id="r151_N_idle_5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-hit-1.png" id="r151_N_hit_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-hit-2.png" id="r151_N_hit_2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-hit-3.png" id="r151_N_hit_3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-hit-4.png" id="r151_N_hit_4"]
+
+[sub_resource type="AtlasTexture" id="c5_pose_0"]
+atlas = ExtResource("r151_N_idle_0")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c5_pose_1"]
+atlas = ExtResource("r151_N_hit_1")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c5_pose_2"]
+atlas = ExtResource("r151_N_hit_2")
+region = Rect2(0,0,1264,1244)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c5_pose_3"]
+atlas = ExtResource("r151_N_hit_3")
+region = Rect2(0,0,1320,1191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c5_pose_4"]
+atlas = ExtResource("r151_N_hit_4")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c5_pose_5"]
+atlas = ExtResource("r151_N_idle_5")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[resource]
+animations = [
+{
+"frames": [{"duration": 1.0, "texture": SubResource("c5_pose_0")}, {"duration": 1.0, "texture": SubResource("c5_pose_1")}, {"duration": 1.0, "texture": SubResource("c5_pose_2")}, {"duration": 1.0, "texture": SubResource("c5_pose_3")}, {"duration": 1.0, "texture": SubResource("c5_pose_4")}, {"duration": 1.0, "texture": SubResource("c5_pose_5")}],
+"loop": false,
+"name": &"hit_6",
+"speed": 27.272727273
+}
+]
+metadata/twilight_reviewed_frame_registration = {"hit_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(627.41,1159.0),"scale":Vector2(0.09970306564513616,0.09970306564513616),"target":Vector2(0,0)},{"anchor":Vector2(620.594775906366,1141.0),"scale":Vector2(0.120498063246115,0.120498063246115),"target":Vector2(0,0)},{"anchor":Vector2(663.2637168141594,1076.0),"scale":Vector2(0.1231414450955854,0.1231414450955854),"target":Vector2(0,0)},{"anchor":Vector2(640.0132352941176,1115.5),"scale":Vector2(0.11957461311643425,0.11957461311643425),"target":Vector2(0,0)},{"anchor":Vector2(636.6535378662245,1157.5),"scale":Vector2(0.12220409665203381,0.12220409665203381),"target":Vector2(0,0)},{"anchor":Vector2(598.6161682833038,1189.0),"scale":Vector2(0.10295801352235068,0.10295801352235068),"target":Vector2(0,0)}]}}
+metadata/twilight_reviewed_run_grounding = {}
+metadata/twilight_reviewed_N_planted_support = {"hit_6":[{"contact_points":[[428.5,1160.0],[826.3199999999999,1158.0]],"registered_pair_C":Vector2(627.41,1159.0),"planted":true,"max_vertical_depth_world":0.09970306564513616},{"contact_points":[[348.3185840707965,1134.0],[892.8709677419355,1148.0]],"registered_pair_C":Vector2(620.594775906366,1141.0),"planted":true,"max_vertical_depth_world":0.843486442722805},{"contact_points":[[410.3274336283186,1062.0],[916.2,1090.0]],"registered_pair_C":Vector2(663.2637168141594,1076.0),"planted":true,"max_vertical_depth_world":1.7239802313381956},{"contact_points":[[331.4264705882353,1127.0],[948.6,1104.0]],"registered_pair_C":Vector2(640.0132352941176,1115.5),"planted":true,"max_vertical_depth_world":1.375108050838994},{"contact_points":[[434.45522388059703,1158.0],[838.8518518518518,1157.0]],"registered_pair_C":Vector2(636.6535378662245,1157.5),"planted":true,"max_vertical_depth_world":0.06110204832601691},{"contact_points":[[409.78195488721803,1189.0],[787.4503816793894,1189.0]],"registered_pair_C":Vector2(598.6161682833038,1189.0),"planted":true,"max_vertical_depth_world":0.0}]}
+metadata/twilight_clip_quality_holds = {}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_N_ATTACK_MODERATION_AND_W_SW_ARCHER_MECHANISM"
+metadata/twilight_final_quality_approved = false

@@ -10,7 +10,6 @@ const CATALOG_PATH: String = "res://data/catalog_v19.json"
 const CATALOG_IMAGE_INDEX_PATH: String = "res://data/catalog_image_index_v19.json"
 const DIRECTIONAL_PATH: String = "res://data/directional_art_v19.json"
 const MONSTER_SCENE: PackedScene = preload("res://scenes/Monster.tscn")
-const FIELD_PATH: String = "res://data/maps/aden_field.json"
 const FIELD_INDEX_PATH: String = "res://data/maps/field_index.json"
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
@@ -20,6 +19,17 @@ const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
 const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
+const SOURCE_MAP84 = preload("res://scripts/maps/source_map_runtime.gd")
+const SOURCE_MAP84_RENDERER = preload("res://scripts/maps/source_map_runtime_renderer.gd")
+const LEGACY_LAYOUT=preload("res://scripts/maps/legacy_layout_policy.gd")
+const MAP_SAVE_MIGRATION = preload("res://scripts/maps/source_map_save_migration.gd")
+var migrated_save_path: String=""
+var migration_path_checked: bool=false
+var migration_pointer_error: String=""
+var pending_map_save_record: Dictionary={}
+var map_bootstrap_blocked: bool=false
+var loading_source_door_state: bool=false
+var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -101,6 +111,7 @@ const EXP_PROGRESSION = preload("res://scripts/experience_progression.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
+const SOURCE_NPCS = preload("res://scripts/npc/source_npc_catalog.gd")
 const NPC_DIALOGUE_SERVICE = preload("res://scripts/npc/dialogue_service.gd")
 var dialogue_service = NPC_DIALOGUE_SERVICE.new()
 const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
@@ -487,14 +498,6 @@ func _load_data() -> void:
 		maps = maps_value as Array
 	maps=maps.filter(func(record: Dictionary) -> bool:
 		return str(record.get("id","")) not in ["albino_03","albino_04"])
-	# Replace only the Aden entry; preserve every existing map ID and data path.
-	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIELD_PATH))
-	if field_value is Dictionary:
-		var definition: Dictionary = field_value as Dictionary
-		for index: int in range(maps.size()):
-			if str(maps[index].get("id", "")) == str(definition["map_id"]):
-				maps[index] = {"id":definition["map_id"],"name":definition["map_name"],"field_definition":definition,
-					"width":int(definition["bounds"][2])/32,"height":int(definition["bounds"][3])/32,"tile_size_world":32}
 	# Only lightweight metadata is resident for other regions. Load their geometry
 	# when entering; do not retain 24 full worlds or their textures in the map menu.
 	if FileAccess.file_exists(FIELD_INDEX_PATH):
@@ -517,6 +520,11 @@ func _load_data() -> void:
 	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
 		original_maps.append(record)
 		maps_by_id[str(record.id)] = record
+	for record: Dictionary in SOURCE_MAP84.catalog_entries():
+		# Verified independent source IDs only; never alias a preserved temple.
+		if not maps_by_id.has(str(record.id)):
+			maps.append(record)
+			maps_by_id[str(record.id)] = record
 	var db_text: String = FileAccess.get_file_as_string(DB_PATH)
 	var db_value: Variant = JSON.parse_string(db_text)
 	if db_value is Dictionary:
@@ -1285,13 +1293,18 @@ func _connect_signals() -> void:
 func _set_map(map_id: String, keep_position: bool) -> void:
 	map_id = NATIVE_PNG.canonical(map_id)
 	if not maps_by_id.has(map_id):
+		if SOURCE_MAP84.supports(map_id):_reject_map_pack("원본 지도 팩 누락: 현재 지역과 저장을 보존합니다")
 		return
+	if field_map!=null and not loading_source_door_state:SOURCE_MAP84.saved_doors(field_map)
 	var requested_native: PlayableField = null
-	if NATIVE_PNG.supports(map_id):
+	if NATIVE_PNG.supports(map_id) and not SOURCE_MAP84.supports(map_id):
 		requested_native = NATIVE_PNG.load_field(map_id)
 		if requested_native == null:
-			hud.show_message("PNG 원본 팩 누락·손상: 현재 지역을 유지합니다")
+			_reject_map_pack("PNG 원본 팩 누락·손상: 현재 지역과 저장을 보존합니다")
 			return
+	if map_id in SOURCE_PNG_GAME.IDS and not SOURCE_MAP84.supports(map_id) and SOURCE_PNG_GAME.requested(map_id) and not REMAKE_REGISTRY.installed(map_id):
+		_reject_map_pack("오만 통행 팩 누락: 구형 배경으로 바꾸지 않고 현재 지역을 유지합니다")
+		return
 	# Validate before releasing the current playable world.
 	var requested_map: Dictionary = maps_by_id[map_id] as Dictionary
 	var requested_field: Dictionary = requested_map.get("field_definition", {})
@@ -1304,6 +1317,11 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	var requested_original: OriginalPlayableField = null
 	if requested_native != null:
 		pass
+	elif SOURCE_MAP84.supports(map_id):
+		requested_original = SOURCE_MAP84.load_field(map_id)
+		if requested_original == null:
+			_reject_map_pack("원본 지도 팩을 확인할 수 없어 현재 지역을 유지합니다")
+			return
 	elif REMAKE_REGISTRY.installed(map_id):
 		requested_original = REMAKE_REGISTRY.load_field(map_id)
 		if requested_original == null:
@@ -1314,9 +1332,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
 			return
-	if requested_original is RemakePlayableField and SOURCE_PNG_GAME.requested(map_id) and not SOURCE_PNG_GAME.attach(requested_original):
+	if requested_original is RemakePlayableField and not bool(requested_original.get_meta("source_map84",false)) and SOURCE_PNG_GAME.requested(map_id) and not SOURCE_PNG_GAME.attach(requested_original):
 		requested_original.close()
-		hud.show_message("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
+		_reject_map_pack("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
 		return
 	_clear_combat_actions()
 	manual_route_pending_target=Vector2.INF
@@ -1415,6 +1433,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 				push_error("Native PNG renderer script could not be loaded")
 				return
 			field_renderer = native_renderer_script.new() as FieldRenderer
+		elif bool(field_map.get_meta("source_map84",false)): field_renderer = SOURCE_MAP84_RENDERER.new()
 		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
@@ -1436,6 +1455,18 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+	if map_bootstrap_blocked:
+		map_bootstrap_blocked=false
+		process_mode=map_prior_process_mode
+		if not FileAccess.file_exists(save_path()):source_save_blocked=false
+
+func _reject_map_pack(message: String) -> void:
+	hud.show_message(message)
+	if field_map==null and field_renderer==null and map_background.texture==null:
+		if not map_bootstrap_blocked:map_prior_process_mode=process_mode
+		map_bootstrap_blocked=true
+		source_save_blocked=true
+		process_mode=Node.PROCESS_MODE_DISABLED
 
 func _set_visual_mode(mode: String) -> void:
 	if is_instance_valid(field_renderer):
@@ -1620,7 +1651,7 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	return origin
 
 func _npc_dialogue_state() -> Dictionary:
-	return {"level":level,"job_class":job_class,"inventory":inventory.duplicate(true)}
+	return {"level":level,"job_class":job_class,"inventory":inventory.duplicate(true),"source_npc_nearby":SOURCE_NPCS.nearby_ids(self)}
 
 func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void:
 	# The UI cannot authorize an NPC service. Revalidate player proximity and
@@ -1648,10 +1679,22 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
 	manual_route_pending_target=Vector2.INF
+	var source_click:Dictionary=SOURCE_NPCS.nearest_click_record(self,target)
+	if not source_click.is_empty():
+		var source_id:String=str(source_click.source_catalog_id)
+		if dialogue_service.source_registry.has(source_id):hud.call("open_npc_dialogue",source_id)
+		else:hud.show_message(str(source_click.name)+" · 대화가 등록되지 않았습니다")
+		return
 	if field_map != null:
 		for npc: Dictionary in field_map.data["npc_spawn"]:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
+				if SOURCE_NPCS.records().has(str(npc.get("source_catalog_id",""))):
+					var source_id: String = str(npc.source_catalog_id)
+					if SOURCE_NPCS.nearby(self,source_id):
+						if dialogue_service.source_registry.has(source_id): hud.call("open_npc_dialogue",source_id)
+						else: hud.show_message(str(npc.name)+" · 대화가 등록되지 않았습니다")
+					return
 				if str(npc["role"]) == "shop":
 					hud.open_npc_shop()
 				elif str(npc["role"]) == "warehouse":
@@ -1688,10 +1731,11 @@ func _set_click_destination(target: Vector2) -> void:
 		hud.show_message("우회 경로 없음 %s (%d,%d)" % [active_map_id,roundi(target.x),roundi(target.y)])
 
 func _spawn_monsters(count: int) -> void:
-	if monster_db.is_empty():
+	var spawnable: Array = MONSTER_CATALOG.spawnable_records(monster_db)
+	if spawnable.is_empty():
 		return
 	for index: int in range(count):
-		var record_value: Variant = monster_db[rng.randi_range(0, monster_db.size() - 1)]
+		var record_value: Variant = spawnable[rng.randi_range(0, spawnable.size() - 1)]
 		if not (record_value is Dictionary):
 			continue
 		var record: Dictionary = record_value as Dictionary
@@ -2604,7 +2648,7 @@ func _restore_ground_drops(saved: Variant) -> void:
 func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name)
+	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity)
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()
@@ -4091,9 +4135,18 @@ func _refresh_combat_hud() -> void:
 	hud.character_state["gold"] = gold
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
-func save_path() -> String:
+func base_save_path() -> String:
 	if growth.development: return "user://twilight_growth_lab_v1.json"
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
+
+func save_path() -> String:
+	if not migration_path_checked:
+		migration_path_checked=true
+		var resolved: Dictionary=MAP_SAVE_MIGRATION.resolve(base_save_path())
+		if resolved.ok:
+			migrated_save_path=str(resolved.path);migration_pointer_error=""
+		else:migration_pointer_error=str(resolved.error)
+	return migrated_save_path if not migrated_save_path.is_empty() else base_save_path()
 
 func _request_general_save() -> void:
 	# Autosave requests in one frame share one commit. Transactions and explicit
@@ -4108,6 +4161,9 @@ func _commit_general_save() -> void:
 	_save_game(true)
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if not migration_pointer_error.is_empty():
+		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
+		return ERR_FILE_CORRUPT
 	if option_awakening.save_blocked or not option_awakening.problem.is_empty():
 		if not quiet: hud.show_message("각성 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
@@ -4182,8 +4238,16 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if field_map is NativePngField:
 		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
 		data["native_png_review_sha256"] = NATIVE_PNG.review_hash(active_map_id)
-	if field_map is RemakePlayableField and field_map.png_game_pack!=null:
+	if field_map is RemakePlayableField and field_map.png_game_pack!=null and not bool(field_map.get_meta("source_map84",false)):
 		data["oman_png_index_sha256"]=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")
+	data["source_npc_state"]=SOURCE_NPCS.export_state()
+	if not SOURCE_NPCS.validate_state(data.source_npc_state).is_empty():return ERR_UNAVAILABLE
+	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
+	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
+	var source_map_error: String=SOURCE_MAP84.validate_save(data,field_map)
+	if not source_map_error.is_empty():
+		if not quiet:hud.show_message(source_map_error)
+		return ERR_UNAVAILABLE
 	data.merge(equipment_collections.extra_save_fields, false)
 	data.merge(collection_override, true)
 	var result: Error = equipment_collections.write_save(save_path(), data)
@@ -4191,11 +4255,21 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
 		return result
+	if not pending_map_save_record.is_empty():
+		var pointer_result: Error=MAP_SAVE_MIGRATION.activate(base_save_path(),pending_map_save_record)
+		if pointer_result!=OK:
+			hud.append_log("이전 저장 선택 기록 실패 · 원본과 별도 저장 후보를 보존합니다")
+			return pointer_result
+		pending_map_save_record.clear()
 	if not quiet:
 		hud.show_message("저장 완료")
 	return OK
 
 func _load_game(quiet: bool) -> void:
+	if not migration_pointer_error.is_empty():migration_path_checked=false
+	save_path()
+	if not migration_pointer_error.is_empty():
+		source_save_blocked=true;hud.show_message("이전된 저장 파일 누락·손상 · 원본 저장을 보존합니다");return
 	if not FileAccess.file_exists(save_path()):
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
@@ -4204,7 +4278,11 @@ func _load_game(quiet: bool) -> void:
 	# The explicit parser returns an error code, so damaged local saves can be
 	# rejected without corrupting the current session or failing a smoke test.
 	var save_parser: JSON = JSON.new()
-	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(save_path()))
+	var original_save_bytes: PackedByteArray=FileAccess.get_file_as_bytes(save_path())
+	var save_hash_context:=HashingContext.new()
+	save_hash_context.start(HashingContext.HASH_SHA256);save_hash_context.update(original_save_bytes)
+	var loaded_save_sha: String=save_hash_context.finish().hex_encode()
+	var parse_error: Error = save_parser.parse(original_save_bytes.get_string_from_utf8())
 	if parse_error != OK:
 		equipment_collections.save_blocked = true
 		if not quiet:
@@ -4219,6 +4297,19 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
+	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
+	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
+	if not map_migration.ok:
+		source_save_blocked=true;hud.show_message(str(map_migration.error));return
+	data=map_migration.data
+	# Validate every new-map player/drop coordinate before inventory, bosses or
+	# outgoing actors are changed. Unknown layout revisions require migration.
+	var map84_error: String=SOURCE_MAP84.validate_save(data)
+	if not map84_error.is_empty():
+		source_save_blocked=true
+		hud.show_message(map84_error)
+		return
 	var growth_error: String = growth.validate(data.get("growth",growth.empty_state()))
 	if not growth_error.is_empty():
 		equipment_collections.save_blocked = true
@@ -4251,8 +4342,8 @@ func _load_game(quiet: bool) -> void:
 		data.erase("original_position")
 		saved_map_id="albino_02"
 	var has_native_position: bool=data.has("native_png_plan_sha256")
-	var requested_native: bool=NATIVE_PNG.supports(saved_map_id)
-	var explicit_legacy: bool="--legacy-map-layouts" in OS.get_cmdline_user_args() or (NATIVE_PNG.extra_map(saved_map_id) and "--legacy-aden-faith-layouts" in OS.get_cmdline_user_args())
+	var requested_native: bool=NATIVE_PNG.supports(saved_map_id) and not SOURCE_MAP84.supports(saved_map_id)
+	var explicit_legacy: bool=LEGACY_LAYOUT.active("--legacy-map-layouts") or (NATIVE_PNG.extra_map(saved_map_id) and LEGACY_LAYOUT.active("--legacy-aden-faith-layouts"))
 	if has_native_position and explicit_legacy and not requested_native and maps_by_id.has(saved_map_id):
 		# Explicitly returning to an existing layout retains progression while
 		# discarding pixel coordinates that belong to the PNG canvas.
@@ -4315,8 +4406,8 @@ func _load_game(quiet: bool) -> void:
 				hud.show_message("이전 지도 저장 백업 실패: 저장 파일을 보존합니다")
 				return
 	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
-		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
-		if saved_field is RemakePlayableField and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not "--legacy-map-layouts" in OS.get_cmdline_user_args():
+		var saved_field: OriginalPlayableField = SOURCE_MAP84.load_field(saved_map_id) if SOURCE_MAP84.supports(saved_map_id) else (REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{})))
+		if saved_field is RemakePlayableField and not bool(saved_field.get_meta("source_map84",false)) and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not LEGACY_LAYOUT.active("--legacy-map-layouts"):
 			if not SOURCE_PNG_GAME.attach(saved_field) or (data.has("oman_png_index_sha256") and data.oman_png_index_sha256!=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")):
 				saved_field.close();source_save_blocked=true
 				hud.show_message("오만 PNG 리소스를 확인할 수 없어 저장 데이터를 보존합니다")
@@ -4336,10 +4427,23 @@ func _load_game(quiet: bool) -> void:
 		equipment_collections.save_blocked = true
 		hud.show_message("각성 저장 이전 실패 · 기존 저장을 보존합니다")
 		return
-	if not equipment_collections.accept_load(data): return
+	var prior_save_path: String=migrated_save_path
+	var staged_map_save: Dictionary={}
+	if bool(map_migration.changed):
+		staged_map_save=MAP_SAVE_MIGRATION.stage(save_path(),data,loaded_save_sha)
+		if not staged_map_save.ok:
+			source_save_blocked=true;hud.show_message(str(staged_map_save.error));return
+		migrated_save_path=str(staged_map_save.target_path)
+	if not equipment_collections.accept_load(data):
+		migrated_save_path=prior_save_path
+		return
 	if not option_awakening.accept_load(data):
 		equipment_collections.save_blocked = true
+		migrated_save_path=prior_save_path
 		return
+	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
+	SOURCE_MAP84.accept_layouts(data)
+	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -4453,7 +4557,9 @@ func _load_game(quiet: bool) -> void:
 	field_population.configure(self,null)
 	legacy_population.import_state(data.get("monster_world",{}))
 	original_population.import_state(data.get("original_monster_world",{}))
+	loading_source_door_state=true
 	_set_map(map_id, false)
+	loading_source_door_state=false
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
@@ -4642,7 +4748,7 @@ func _quickbar_job_skills() -> Array:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
-		if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill): continue
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill): continue
 		if _is_passive_skill(skill):
 			continue
 		var effect: String = str(skill.get("effect", ""))
@@ -4699,7 +4805,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 			continue
 		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or _is_passive_skill(skill) or (skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill)):
+		if skill.is_empty() or _is_passive_skill(skill) or (skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill)):
 			quickslots[index] = {}
 			changed = true
 			continue
@@ -4707,7 +4813,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		if skill_class != "공용" and skill_class != job_class:
 			quickslots[index] = {}
 			changed = true
-		elif skill.get("origin", "") == "LINEAGEM_20250617" and str(entry.get("id", "")) != str(skill.name):
+		elif skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and str(entry.get("id", "")) != str(skill.name):
 			entry["id"] = str(skill.name)
 			changed = true
 	return changed
@@ -4815,7 +4921,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 		if skill.is_empty():
 			hud.show_message("등록할 스킬을 찾을 수 없습니다")
 			return
-		if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill):
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill):
 			hud.show_message("미습득 스킬은 등록할 수 없습니다")
 			return
 		if _is_passive_skill(skill):
@@ -4838,7 +4944,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
 	if str(quickslots[slot_index].kind) == "skill":
 		var slotted := _skill_record(entry_id)
-		if slotted.get("origin", "") == "LINEAGEM_20250617":
+		if slotted.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:
 			quickslots[slot_index]["skill_id"] = str(slotted.id)
 			quickslots[slot_index]["id"] = str(slotted.name)
 	_update_hud()
@@ -4888,7 +4994,7 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if _is_passive_skill(skill): return "패시브는 직접 사용할 수 없습니다"
 	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
-	if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
 	return ""
 
 func _set_item_locked(reference: String, locked: bool) -> void:
@@ -5044,7 +5150,7 @@ func _is_passive_skill(skill: Dictionary) -> bool:
 	return SKILL_RULES.is_passive(skill)
 
 func _skill_owned_for_current_job(skill: Dictionary) -> bool:
-	if skill.get("origin", "") == "LINEAGEM_20250617": return original_skills.catalog.enabled(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return original_skills.catalog.enabled(skill)
 	var skill_class: String = str(skill.get("class", "공용"))
 	return skill_class == "공용" or skill_class == job_class
 
@@ -5084,7 +5190,7 @@ func _passive_skill_names() -> PackedStringArray:
 	return names
 
 func _is_buff_skill(skill: Dictionary) -> bool:
-	if skill.get("origin", "") == "LINEAGEM_20250617": return skill.get("mode", "") in ["buff", "counter", "stealth", "summon"]
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return skill.get("mode", "") in ["buff", "counter", "stealth", "summon", "local_buff"]
 	return not _is_passive_skill(skill) and SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
 
 func _run_auto_buff_quickslots(delta: float) -> void:
@@ -5110,7 +5216,7 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 			continue
 		skill_name = str(skill.name)
 		if active_skill_buffs.has(skill_name): continue
-		if skill.get("origin", "") == "LINEAGEM_20250617" and not bool(entry.get("auto", false)):
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not bool(entry.get("auto", false)):
 			continue
 		if not _skill_ready(skill):
 			continue
@@ -5132,7 +5238,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
-	if skill.get("origin", "") == "LINEAGEM_20250617": return original_skills.ready(skill, announce)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
 	if _is_passive_skill(skill):
@@ -5189,7 +5295,7 @@ func _run_auto_heal_quickslots() -> void:
 		var skill: Dictionary = _skill_record(str(entry.get("skill_id", entry.get("id", ""))))
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
 			continue
-		if skill.get("origin", "") == "LINEAGEM_20250617":
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:
 			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name))
 			continue
 		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
@@ -5211,7 +5317,7 @@ func _run_auto_combat_quickslots() -> bool:
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal":
 			continue
-		if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.auto_wants(skill, selected_monster): continue
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.auto_wants(skill, selected_monster): continue
 		if not _skill_ready(skill):
 			continue
 		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
@@ -5334,7 +5440,7 @@ func _rebuild_skill_record_index() -> void:
 	for value: Variant in skills_db:
 		if not value is Dictionary: continue
 		var record: Dictionary = value
-		if record.get("origin","")!="LINEAGEM_20250617":non_original_skill_rows.append(record)
+		if not record.get("origin","") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:non_original_skill_rows.append(record)
 		for key: String in [str(record.get("name", "")), str(record.get("id", ""))]:
 			if not skill_record_index.has(key):
 				skill_record_index[key] = record
@@ -5351,7 +5457,7 @@ func _skill_record(skill_name: String) -> Dictionary:
 
 func _cast_job_skill(skill_name: String) -> bool:
 	var skill: Dictionary = _skill_record(skill_name)
-	if skill.get("origin", "") == "LINEAGEM_20250617": return original_skills.cast(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return original_skills.cast(skill)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false
@@ -6106,14 +6212,41 @@ func _directional_image_path(kind: String, record: Dictionary) -> String:
 	var fallback: String = str(record.get("image_path", ""))
 	return fallback
 
+func _current_transform_visual_record(saved: Dictionary) -> Dictionary:
+	# Equipment saves retain their gameplay snapshot. Only presentation follows
+	# the current catalog, including when an old save has no animation_profile.
+	var source_id: String = str(saved.get("sourceId", ""))
+	var saved_name: String = str(saved.get("name", ""))
+	var current: Dictionary = {}
+	var matches: int = 0
+	for value: Variant in catalog_db.get("변신", []):
+		if not value is Dictionary: continue
+		var candidate: Dictionary = value as Dictionary
+		var matched: bool = str(candidate.get("sourceId", "")) == source_id if not source_id.is_empty() else (not saved_name.is_empty() and str(candidate.get("name", "")) == saved_name)
+		if matched:
+			current = candidate
+			matches += 1
+	if matches != 1: return saved
+	var visual: Dictionary = saved.duplicate(true)
+	var presentation: Dictionary = current.duplicate(true)
+	# A legacy name-only save still needs the canonical presentation identity
+	# for direction donors and the transform's RUN/WALK policy. Never migrate
+	# the persisted equipment record or its gameplay identity here.
+	if source_id.is_empty(): visual["sourceId"] = presentation.get("sourceId", "")
+	for property: String in ["animation_profile", "image_path"]:
+		if presentation.has(property): visual[property] = presentation[property]
+		else: visual.erase(property)
+	return visual
+
 func _apply_transform_visual(record: Dictionary) -> void:
 	if record.is_empty():
 		player.clear_transform_visual()
 		_sync_option_awakening_aura("변신")
 		return
-	var path: String = _directional_image_path("transform", record)
+	var visual_record: Dictionary = _current_transform_visual_record(record)
+	var path: String = _directional_image_path("transform", visual_record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
-	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", record, path))
+	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", visual_record, path))
 	_sync_option_awakening_aura("변신")
 
 func _apply_doll_visual(record: Dictionary) -> void:
@@ -6503,8 +6636,8 @@ func _current_attack_kind() -> String:
 func _current_attack_range_cells() -> int:
 	var weapon: Dictionary = _equipped_weapon_record()
 	if weapon.has("attackRangeCells"):
-		return maxi(1, int(weapon.get("attackRangeCells", 1)))
-	return _weapon_range_cells_from_type(_current_weapon_type())
+		return maxi(1, int(weapon.get("attackRangeCells", 1))) + int(original_skills.local_runtime.attack_range_bonus() if original_skills != null else 0)
+	return _weapon_range_cells_from_type(_current_weapon_type()) + int(original_skills.local_runtime.attack_range_bonus() if original_skills != null else 0)
 
 func _weapon_cell_distance(target: TwilightMonster) -> int:
 	if target == null:
@@ -6573,6 +6706,8 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	if target == null:
 		return 0.05
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
+	if original_skills != null:
+		return original_skills.physical_hit_chance(accuracy, target)
 	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.armor_class,0)
 
 func _catalog_damage_bonus(kind: String) -> int:
@@ -7234,7 +7369,11 @@ func use_field_portal(portal_id: String) -> bool:
 				if landing.x >= 0:
 					player.global_position = field_map.cell_to_world(landing)
 		elif portal.has("target_position"):
-			if field_map is NativePngField:
+			if bool(field_map.get_meta("source_map84",false)):
+				var destination: Vector2=COORD.array_vector(portal["target_position"])
+				if int(portal.get("target_layout_revision",-1))!=int(field_map.data.layout_revision) or not field_map.point_clear(destination,4):destination=_spawn_position()
+				player.global_position=destination
+			elif field_map is NativePngField:
 				# Reviewed PNG pockets can share one map through explicit travel
 				# gates. Never project stale coordinates onto a different floor.
 				if int(portal.get("target_layout_revision", -1)) != int(field_map.data.layout_revision): return false

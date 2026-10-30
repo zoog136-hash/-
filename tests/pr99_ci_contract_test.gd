@@ -52,7 +52,7 @@ func run() -> void:
 		check(CATALOG.records_by_name[name].ai.special == special, "explicit real boss skill restored after isolated fallback probe " + name)
 	check(JSON.stringify(original) == before, "fallback probes retain source DB bytes")
 	var profiles_before: String = JSON.stringify(CATALOG.spawn_profiles)
-	var paths: Array[String] = ["res://data/maps/aden_field.json"]
+	var paths: Array[String] = []
 	for entry: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")):
 		paths.append(str(entry.path))
 	var bosses: int = 0

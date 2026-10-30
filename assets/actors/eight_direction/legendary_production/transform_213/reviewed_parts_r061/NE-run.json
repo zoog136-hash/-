@@ -1,0 +1,97 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_213/corrections/isolation-v10/NE-run-source-v01-isolated.png",
+  "source_sha256": "93b1520954e0694496dc1b32d761ffc13746c869559a273924a8de2b8900b537",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r061/NE-run-0.png",
+      "anchor": [
+        381.0,
+        543.0
+      ],
+      "scale": 0.274828,
+      "source_body_label": 1,
+      "sha256": "4c9cdba65b9407799d74f3f88574e076e7f9d86a7c604ecc69fe9b2368375477"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r061/NE-run-1.png",
+      "anchor": [
+        1040.0,
+        539.5
+      ],
+      "scale": 0.274828,
+      "source_body_label": 2,
+      "sha256": "2d1420037204cf74e431eedb9e2b651c76e71dfd35be073d0893135cd9f92c9d"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r061/NE-run-2.png",
+      "anchor": [
+        1701.75,
+        540.0
+      ],
+      "scale": 0.274828,
+      "source_body_label": 3,
+      "sha256": "1a4c9d4ec0d9c87fed52b2709a6659737f0312acba81c615f4981d9dbf2f0555"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/repaired_source_r061/NE-run-3.png",
+      "anchor": [
+        830,
+        1090
+      ],
+      "scale": 0.11827956989247312,
+      "standing_equivalent_unit": 930,
+      "sha256": "a5d5ac767c31c379ae287db99a94b0c881c47190bdf67753f30ce91efe6a14b7"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/repaired_source_r061/NE-run-4.png",
+      "anchor": [
+        830,
+        1100
+      ],
+      "scale": 0.11578947368421053,
+      "standing_equivalent_unit": 950,
+      "sha256": "355348461d374d2cc615d43dae9f57cb55c1486ccfd6330f0c99abaa00880f19"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_213/reviewed_parts_r061/NE-run-5.png",
+      "anchor": [
+        1870,
+        665
+      ],
+      "scale": 0.1981981981981982,
+      "standing_equivalent_unit": 555,
+      "sha256": "67c8da3be7d4b027e9831267c5b88e2832b483bee3e2d1a7ee12b3082ab06f99"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 813474,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS actual Main candidate 6/6 poses; foot registration invariant, no mirroring, no gameplay/attack-marker changes",
+  "production_connected": false,
+  "selection_basis": "First half retained exact pixels and registration. Opposite half right-leg contact, toe-off, airborne phases independently checked; axe remains right hand and NE camera unchanged.",
+  "opposite_half_source": "assets/actors/eight_direction/legendary_production/transform_213/repaired_source_r061/NE-opposite-half-source.png",
+  "opposite_half_source_sha256": "98599d182525773fbda878cde2867456c0d83cab5f86385cf3c778d26ad0865b",
+  "opposite_half_ownership_proof": {
+    "original_visible_texels": 682766,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "whole_actor_gate": "HOLD remaining E/SE/SW/W RUN",
+  "quality_status": "PASS_LOCAL_NE_OPPOSITE_LEG_HALF_CYCLE",
+  "native_import": "PASS isolated Godot 4.7.2 import 1 clip / 6 frames",
+  "phase_timing": "Preserved six equal-duration frames, 12.5 fps loop"
+}

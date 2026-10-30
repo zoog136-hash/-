@@ -3,9 +3,14 @@ extends RefCounted
 # by World again when executing an action, not trusted from the HUD.
 const DATA_PATH = "res://data/npc/twilight_dialogues.json"
 var registry: Dictionary = {}
+var source_registry: Dictionary = {}
 
 func load_dialogues() -> void:
 	registry.clear()
+	source_registry.clear()
+	var additions: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/npc/source_six_dialogues.json"))
+	if additions is Dictionary and int(additions.get("schema_version",0)) == 1:
+		source_registry = additions.get("dialogues",{}).duplicate(true)
 	if not FileAccess.file_exists(DATA_PATH):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))
@@ -32,6 +37,14 @@ static func matches(requires: Variant, state: Dictionary) -> bool:
 	return true
 
 func resolve(npc_id: String,node_id: String,state: Dictionary) -> Dictionary:
+	if source_registry.has(npc_id):
+		if not bool(state.get("source_npc_nearby",{}).get(npc_id,false)):
+			return {"ok":false,"reason":"NPC와의 거리가 멉니다"}
+		var source_npc: Dictionary = source_registry[npc_id]
+		var entry: String = str(source_npc.get("entry","welcome"))
+		if not node_id.is_empty() and node_id != entry: return {"ok":false,"reason":"등록되지 않은 대화 단계입니다"}
+		return {"ok":true,"npc_id":npc_id,"npc_name":source_npc.name,"node_id":entry,
+			"text":str(source_npc.nodes[entry].text),"choices":[]}
 	var npc_value: Variant = registry.get(npc_id,{})
 	if not (npc_value is Dictionary):
 		return {"ok":false,"reason":"등록되지 않은 NPC입니다"}

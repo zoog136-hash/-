@@ -5,6 +5,7 @@ const PROFILE = preload("res://scripts/animation/animation_profile.gd")
 const PROFILE_PATH = "res://data/combat_animation_profiles.json"
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const PRESENTATION = preload("res://scripts/animation/presentation_catalog.gd")
+const SOURCE_TRANSFORMS = preload("res://scripts/animation/source_transform_catalog.gd")
 const MAX_FRAME_CACHE = 96
 const MAX_FRAME_CACHE_BYTES = 96 * 1024 * 1024
 static var records: Dictionary = {}
@@ -60,6 +61,8 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 			result.color_tint = Color(float(tint[0]),float(tint[1]),float(tint[2]),float(tint[3]))
 		else:
 			result.color_tint = Color.from_string(str(tint), Color.WHITE)
+	SOURCE_TRANSFORMS.configure(result, kind, record)
+	preload("res://scripts/monsters/reviewed_existing_visuals.gd").configure(result, kind, record)
 	return result
 
 static func frames(path: String, layout: String) -> SpriteFrames:

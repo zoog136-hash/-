@@ -39,9 +39,7 @@ var resident_textures: Dictionary={}
 var chunk_texture_keys: Dictionary={}
 var shutting_down: bool=false
 # Generated plaza is optional art only. It shares the original stream/cache budget.
-const LIVE_PLAZA="res://assets/maps/aden_live_plaza/"
 var generated_rows: Array=[]
-const MOBILE=preload("res://scripts/maps/aden_mobile_pack.gd")
 var generated_full_world: bool=false
 var generated_grid: Dictionary={}
 var max_decode_usec: int=0
@@ -54,21 +52,7 @@ func index_generated(row: Dictionary) -> void:
 			if not generated_grid.has(key):generated_grid[key]=[]
 			generated_grid[key].append(row)
 func load_generated_world() -> bool:
-	if str(field.data.map_id)!="aden_world":return false
-	var value: Dictionary=MOBILE.pack()
-	if value.is_empty():return false
-	for source: Dictionary in value.ground:
-		var row: Dictionary=source.duplicate(true);row.file=MOBILE.ROOT+source.file;row.generated=true;row.codec="webp"
-		row.texture_source_key=texture_source_key(str(row.file),row)
-		generated_rows.append(row);index_generated(row)
-	var asset_keys: Dictionary={}
-	for placement: Dictionary in value.placements:
-		var row: Dictionary=value.assets[placement.asset].duplicate(true)
-		row.file=MOBILE.ROOT+row.file+"#"+str(placement.id);row.position=placement.position;row.foot_image=placement.foot;row.id=placement.id;row.generated=true;row.codec="webp";generated_rows.append(row);index_generated(row)
-		var asset: String=str(placement.asset)
-		if not asset_keys.has(asset):asset_keys[asset]=texture_source_key(str(row.file),row)
-		row.texture_source_key=asset_keys[asset]
-	generated_full_world=true;return true
+	return false # No pre-replacement Aden art fallback.
 
 func row_scale(row: Dictionary) -> float:
 	return 1.0 if row.get("generated",false) else native_field.artwork_scale
@@ -112,21 +96,7 @@ func evict_idle_texture() -> bool:
 	resident_textures.erase(oldest)
 	return true
 func load_generated_plaza() -> void:
-	if str(field.data.map_id)!="aden_world":return
-	var file:=FileAccess.open(LIVE_PLAZA+"manifest.json",FileAccess.READ)
-	if file==null:return
-	var value: Variant=JSON.parse_string(file.get_as_text())
-	if not value is Dictionary or value.get("map_id")!="aden_world":return
-	var checked: Array=[]
-	for source: Dictionary in value.get("rows",[]):
-		if str(source.file).get_file()!=source.file:return
-		var path: String=LIVE_PLAZA+source.file
-		if FileAccess.get_sha256(path)!=source.sha256:return
-		if source.size[0]>512 or source.size[1]>512:return
-		var row: Dictionary=source.duplicate(true);row.file=path;row.generated=true
-		row.texture_source_key=texture_source_key(str(row.file),row)
-		checked.append(row)
-	generated_rows=checked
+	pass # Retired Aden composition has no runtime fallback.
 
 # Cache only the visibility request, not stream progress. Explicit refresh calls
 # remain forced; movement, zoom, viewport, field and memory policy invalidate.
@@ -137,6 +107,7 @@ func visibility_request() -> Array:
 	if field==null or player==null: return []
 	var camera: Camera2D=player.get_node("Camera2D")
 	return [field.get_instance_id(),camera.get_instance_id(),camera.get_screen_center_position(),camera.zoom,get_viewport_rect().size,texture_pixel_budget]
+
 
 
 func rows_in_view(camera: Camera2D, margin: float) -> Dictionary:

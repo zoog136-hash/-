@@ -1,0 +1,68 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_225/draft001/E-attack-source-v01.png",
+  "source_sha256": "157a321df96301857119a9d8309fdcb7d77b2f7ab76d632ffa3ad0b7e7b40057",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_225/reviewed_parts_r044/E-attack-1.png",
+      "anchor": [
+        371.5,
+        600.5
+      ],
+      "scale": 0.231945,
+      "source_body_label": 1,
+      "sha256": "431ee681ebb9741f2f6eb320cdcc77b24da1bcff7aa5cb4840d5a6aad17dd634"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_225/reviewed_parts_r044/E-attack-2.png",
+      "anchor": [
+        929.5,
+        588.0
+      ],
+      "scale": 0.231945,
+      "source_body_label": 8,
+      "sha256": "50e3d93575056f2fbef47e50f6b758f525bb0eed21c9d282018f42f26f45c3f1"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_225/repaired_source_r044/E-attack-3.png",
+      "anchor": [
+        475,
+        990
+      ],
+      "scale": 0.12359550561797752,
+      "head_to_ground_unit": 890,
+      "sha256": "f0ce4223b02d0c1ccdb316193da226afb5dbc2ddcf9779d3bce86fe9d480c367",
+      "source_pixels_resampled": false
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_225/repaired_source_r044/E-attack-4.png",
+      "anchor": [
+        610,
+        1150
+      ],
+      "scale": 0.11,
+      "head_to_ground_unit": 1000,
+      "sha256": "2aee9d87e2303173bfb7ab4500c05eaeb3d5c4257899e2b17c005b2e7523f53a",
+      "source_pixels_resampled": false
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 699480,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "excluded_source_phases": [
+    3,
+    4
+  ],
+  "ownership_proof_scope": "Whole source including unselected overlapping lower group; only independent upper poses selected",
+  "replacement_scope": "Only overlapping lower poses replaced; upper two poses and original guard preserved",
+  "native_import": "PASS_2_CLIPS_12_FRAMES",
+  "runtime_default_connected": false
+}

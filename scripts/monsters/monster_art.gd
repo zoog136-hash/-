@@ -9,6 +9,14 @@ static var plates: Dictionary = {}
 const SHADER = preload("res://scripts/monsters/monster_body.gdshader")
 
 static func texture_for(record: Dictionary) -> Texture2D:
+	# Explicit reviewed source portrait; animation setup replaces it with the
+	# matching frame resource. No family/template/name heuristic is involved.
+	var portrait: String = str(record.get("source_portrait", ""))
+	var source_id: String = str(record.get("sourceId", ""))
+	if not source_id.is_empty() and portrait == "res://assets/monsters/reviewed_source/" + source_id + "/portrait.png":
+		return load(portrait) as Texture2D
+	var reviewed: Texture2D = preload("res://scripts/monsters/reviewed_existing_visuals.gd").portrait(record)
+	if reviewed != null: return reviewed
 	var family: Texture2D = preload("res://scripts/animation/visual_manifest.gd").monster_texture(record)
 	if family != null: return family
 	var external: Texture2D = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd").monster_texture(record)

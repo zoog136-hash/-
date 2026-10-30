@@ -11,7 +11,7 @@ func check(ok: bool, label: String) -> void:
 func _initialize() -> void: call_deferred("run")
 
 func run() -> void:
-	var paths: Array[String] = ["res://data/maps/aden_field.json"]
+	var paths: Array[String] = []
 	for entry: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")): paths.append(str(entry.path))
 	for path: String in paths:
 		var data: Dictionary = CATALOG.apply_map(JSON.parse_string(FileAccess.get_file_as_string(path)))

@@ -2,9 +2,10 @@ extends RefCounted
 ## New independent temples can be entered in the ordinary game with a verified
 ## private pack. Replacing existing Albino/Escaros geometry remains explicit
 ## until their legacy gameplay coordinates have a supported correspondence.
+const LEGACY=preload("res://scripts/maps/legacy_layout_policy.gd")
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
 const EXTRA_PLAN_PATH := "res://data/maps/aden_faith_png_plan.json"
-const ADEN_DISPLAY_REVIEW := "res://data/maps/aden_png_display_review.json"
+const RETIRED_ADEN_REVIEW_SHA := "c5674d3f4b3d269a0fcd69af7dc90d55f897c937757dfadb1ade4e0b6a1a305f" # Historical save identity only; no old art loader.
 const BUNDLED_EXTRA_ROOT := "res://external_map_packs/aden_faith_png_v1"
 const EXTRA_RECEIPT_PATH := "res://data/maps/aden_faith_png_pack.json"
 const DOMINATION_PLAN_PATH := "res://data/maps/domination_png_plan.json"
@@ -20,7 +21,7 @@ static var extra_pack_seen: bool=false
 static var domination_pack_seen: bool=false
 
 static func enabled() -> bool:
-	return "--native-png-maps" in OS.get_cmdline_user_args() and not "--legacy-map-layouts" in OS.get_cmdline_user_args()
+	return "--native-png-maps" in OS.get_cmdline_user_args() and not LEGACY.active("--legacy-map-layouts")
 
 static func read_json(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path): return {}
@@ -39,36 +40,7 @@ static func plan() -> Dictionary:
 	value=merge_review(value,review,FileAccess.get_sha256(PLAN_PATH))
 	if value.is_empty(): return {}
 	var extra: Dictionary=read_json(EXTRA_PLAN_PATH)
-	var display_review: Dictionary=read_json(ADEN_DISPLAY_REVIEW)
-	if display_review.get("base_plan_sha256")!=FileAccess.get_sha256(EXTRA_PLAN_PATH) or display_review.get("source_sha256")!=extra.sources["Aden.png"].sha256:return {}
-	for cut: Dictionary in display_review.get("foreground",[]):
-		if not valid_polygon(cut.get("polygon_image"),extra.sources["Aden.png"].size) or not valid_point(cut.get("foot_image"),extra.sources["Aden.png"].size):return {}
-	extra.maps.aden_world["runtime_foreground"]=display_review.get("foreground",[])
-	for replacement: Dictionary in display_review.get("collision_replace",[]):
-		if replacement.get("shape")=="circle":
-			if not valid_point(replacement.get("center"),extra.sources["Aden.png"].size) or float(replacement.get("radius",0))<=0:return {}
-		elif replacement.get("shape")=="polygon":
-			if not valid_polygon(replacement.get("points"),extra.sources["Aden.png"].size):return {}
-		else:return {}
-		var found: bool=false
-		for i: int in range(extra.maps.aden_world.collision.size()):
-			if extra.maps.aden_world.collision[i].id==replacement.id:extra.maps.aden_world.collision[i]=replacement;found=true;break
-		if not found:return {}
-	# Append only reviewed, authenticated Aden obstacles; the source PNG and
-	# earlier collision replacements remain unchanged. Reject duplicate IDs.
-	var added_ids: Dictionary={}
-	for addition: Dictionary in display_review.get("collision_add",[]):
-		var id: String=str(addition.get("id",""))
-		if id.is_empty() or added_ids.has(id):return {}
-		if addition.get("shape")=="circle":
-			if not valid_point(addition.get("center"),extra.sources["Aden.png"].size) or float(addition.get("radius",0))<=0:return {}
-		elif addition.get("shape")=="polygon":
-			if not valid_polygon(addition.get("points"),extra.sources["Aden.png"].size):return {}
-		else:return {}
-		for existing: Dictionary in extra.maps.aden_world.collision:
-			if str(existing.get("id",""))==id:return {}
-		added_ids[id]=true
-		extra.maps.aden_world.collision.append(addition.duplicate(true))
+	if FileAccess.get_sha256(EXTRA_PLAN_PATH)!=read_json(EXTRA_RECEIPT_PATH).get("plan_document_sha256"):return {}
 	value.sources.merge(extra.get("sources",{}))
 	value.maps.merge(extra.get("maps",{}))
 	var domination: Dictionary=read_json(DOMINATION_PLAN_PATH)
@@ -158,11 +130,11 @@ static func extra_map(mid: String) -> bool:
 
 static func plan_hash(mid: String) -> String:
 	if mid=="domination_summit":return FileAccess.get_sha256(DOMINATION_PLAN_PATH)
-	return FileAccess.get_sha256(EXTRA_PLAN_PATH if extra_map(mid) else PLAN_PATH)
+	return str(read_json(EXTRA_RECEIPT_PATH).plan_sha256) if extra_map(mid) else FileAccess.get_sha256(PLAN_PATH)
 
 static func review_hash(mid: String="") -> String:
 	if mid=="domination_summit":return plan_hash(mid)
-	if mid=="aden_world":return FileAccess.get_sha256(ADEN_DISPLAY_REVIEW)
+	if mid=="aden_world":return RETIRED_ADEN_REVIEW_SHA
 	return plan_hash(mid) if extra_map(mid) else FileAccess.get_sha256(REVIEW_PATH)
 
 static func domination_root() -> String:
@@ -203,7 +175,7 @@ static func bundled_enabled() -> bool:
 	# ordinary save namespace and 25 historical map IDs. Explicit diagnostics
 	# and legacy switches continue to opt out of runtime map replacement.
 	var args: PackedStringArray = OS.get_cmdline_user_args()
-	return installed() and not "--legacy-map-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
+	return not LEGACY.active("--legacy-map-layouts") and not "--png-review" in args and not LEGACY.active("--no-native-png-auto")
 
 static func map_for_art(mid: String) -> String:
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
@@ -222,28 +194,29 @@ static func canonical(mid: String) -> String:
 	return mid
 
 static func supports(mid: String) -> bool:
+	if mid=="aden_world":return false # source84 is the sole admitted Aden loader.
 	if mid in ["albino_03","albino_04"]: return false
 	# Keep old map IDs in ordinary saves; Escaros 01–05 share source artwork
 	# but not the saved alias. Review mode keeps its original canonical names.
 	var art_id: String = map_for_art(canonical(mid))
 	if art_id=="domination_summit":
 		for flag: String in ["--legacy-map-layouts","--png-review","--no-native-png-auto"]:
-			if flag in OS.get_cmdline_user_args():return false
+			if LEGACY.active(flag):return false
 		if bool(read_json(DOMINATION_RECEIPT_PATH).get("bundled_required",false)):return true
 		return domination_installed() or domination_pack_seen or FileAccess.file_exists(domination_root()+"/index.json") or not OS.get_environment("TWILIGHT_DOMINATION_PNG_PACK").is_empty()
 	if extra_map(art_id):
 		var configured: bool=not OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK").is_empty()
 		var args: PackedStringArray=OS.get_cmdline_user_args()
-		var ordinary: bool=not "--legacy-map-layouts" in args and not "--legacy-aden-faith-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
+		var ordinary: bool=not LEGACY.active("--legacy-map-layouts") and not LEGACY.active("--legacy-aden-faith-layouts") and not "--png-review" in args and not LEGACY.active("--no-native-png-auto")
 		# Explicit missing/corrupt paths must fail before releasing live gameplay.
 		var verified: bool=extra_installed()
 		var present: bool=FileAccess.file_exists(extra_root()+"/index.json")
-		return (verified or present or extra_pack_seen or configured) and (enabled() or ordinary) and not "--legacy-aden-faith-layouts" in args
+		return (verified or present or extra_pack_seen or configured or bool(read_json(EXTRA_RECEIPT_PATH).get("private_art_in_public_git",false))) and (enabled() or ordinary) and not LEGACY.active("--legacy-aden-faith-layouts")
 	return base_plan().get("maps",{}).has(art_id) and (enabled() or bundled_enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
-	if not enabled() and not installed(): return entries
+	if not enabled() and not installed() and not bundled_enabled(): return entries
 	var specs: Dictionary = base_plan().get("maps",{})
 	for mid: String in ["escaros_world","yahee_temple","balrog_temple"]:
 		if mid=="escaros_world" and not enabled(): continue
@@ -265,6 +238,7 @@ static func menu_entries(records: Array) -> Array:
 	return menu
 
 static func load_field(mid: String) -> PlayableField:
+	if mid=="aden_world":return null
 	mid = map_for_art(mid)
 	var spec_plan: Dictionary = plan()
 	var specs: Dictionary = spec_plan.get("maps",{})

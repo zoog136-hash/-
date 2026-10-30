@@ -1,0 +1,88 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/NE-run-source-v01-isolated.png",
+  "source_sha256": "dbf71983334b3bd0543f76fb0d9457efb6c304823996f76c024048baf14c4cfc",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r072/NE-run-0.png",
+      "anchor": [
+        700,
+        1100
+      ],
+      "scale": 0.12941176470588237,
+      "standing_equivalent_unit": 850,
+      "sha256": "e6404d33aad768f9608dbe63361b17249747f3f0789c88e221df2f9153df2f89"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r072/NE-run-1.png",
+      "anchor": [
+        800,
+        1090
+      ],
+      "scale": 0.12222222222222222,
+      "standing_equivalent_unit": 900,
+      "sha256": "8fe0fa2daafaf54b72009d946648c8a6ba53683b9da9172ec57852ece0c3b19e"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r072/NE-run-2.png",
+      "anchor": [
+        700,
+        1120
+      ],
+      "scale": 0.11,
+      "standing_equivalent_unit": 1000,
+      "sha256": "20f75126a1a14854c3268c4dc35c94a1852420748581ee62d9e6cdc7e5ff2e0b"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r072/NE-run-3.png",
+      "anchor": [
+        720,
+        1130
+      ],
+      "scale": 0.11578947368421053,
+      "standing_equivalent_unit": 950,
+      "sha256": "b240cd52ba7a739c9d9835bce18ca13b7570cfde3e16e49313da1d8a9d4c5fca"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r072/NE-run-4.png",
+      "anchor": [
+        710,
+        1130
+      ],
+      "scale": 0.11578947368421053,
+      "standing_equivalent_unit": 950,
+      "sha256": "c5a121b3914c06008707492ce562370f132d7bbd6daa78acc5dc8064b011c99a"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r072/NE-run-5.png",
+      "anchor": [
+        720,
+        1130
+      ],
+      "scale": 0.11578947368421053,
+      "standing_equivalent_unit": 950,
+      "sha256": "e4bcc9eaf985bac94dd54e04f88f07fa6d51ac807ff6a5ac040d5701848292b1"
+    }
+  ],
+  "repaired_phases": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "original_source_preserved": true,
+  "normal_original_phases_preserved": [],
+  "quality_status": "PASS_LOCAL_RIGHT_HAND_CONTINUITY_AND_OPPOSITE_LEG_HALF_CYCLE",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_E_W_RUN_GAIT_AND_NW_CONTINUITY",
+  "selection_basis": "Original NE RUN changes sword hand relative to NE IDLE. All six failed hand poses corrected to anatomical RIGHT hand, one sword only; original figures and generated intermediates preserved unselected. Opposite-leg half-cycle corrected in phases3-5. Six equal-duration frames at unchanged 12.5fps.",
+  "local_playback": "PASS actual Main candidate 6/6 poses; no mirroring, registered anchor, original 12.5fps/equal durations, no gameplay or strike changes",
+  "native_import": "PASS isolated Godot 4.7.2 import"
+}

@@ -171,9 +171,10 @@ func show_skill() -> void:
 	title.add_theme_color_override("font_color",UI.grade(str(selected.get("grade","일반"))))
 	category.text=str(selected.get("class",""))+" · "+str(selected.get("grade","일반"))+" · "+("패시브" if owner_view.RULES.is_passive(selected) else "액티브")
 	info_text=raw_skill_text
-	var original: bool=selected.get("origin","")=="LINEAGEM_20250617"
+	var original: bool=selected.get("origin","") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]
+	var blocked: bool=bool(selected.get("runtime_blocked",false))
 	var learned: bool=false
-	if original:
+	if original and not blocked:
 		var world: Node=owner_view.hud.get_parent()
 		var skill: Dictionary=world.original_skills.catalog.resolve(selected)
 		learned=world.original_skills.catalog.owned(selected)
@@ -183,11 +184,13 @@ func show_skill() -> void:
 			rows=[["소모 MP / HP","%d / %d" % [int(skill.get("mp",0)),int(skill.get("hp",0))]],["재사용","%.1f초" % (float(skill.get("cooldown",0))*world._skill_cooldown_factor())],["지속시간","%.1f초" % float(skill.get("duration",0))]]
 		rows.append(["사용 무기","제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)])
 		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(selected.get("desc",""))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
-	owner_view.use_button.text="패시브" if owner_view.RULES.is_passive(selected) else "스킬 사용"
-	owner_view.learn_button.visible=original and not learned
-	owner_view.book_button.visible=original and not learned
-	owner_view.use_button.visible=not original or learned
-	owner_view.quick_button.visible=not original or learned
+		if bool(selected.get("local_design",false)):info_text=raw_skill_text
+	if blocked:category.text+=" · 실행 보류"
+	elif not bool(selected.get("local_design",false)):owner_view.use_button.text="패시브" if owner_view.RULES.is_passive(selected) else "스킬 사용"
+	owner_view.learn_button.visible=original and not learned and not blocked
+	owner_view.book_button.visible=original and not learned and not blocked
+	owner_view.use_button.visible=blocked or not original or learned
+	owner_view.quick_button.visible=blocked or not original or learned
 	_show_skill_tab()
 
 func _switch_skill_tab(show_source: bool) -> void:

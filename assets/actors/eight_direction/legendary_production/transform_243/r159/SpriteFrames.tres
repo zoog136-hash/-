@@ -1,0 +1,1387 @@
+[gd_resource type="SpriteFrames" load_steps=290 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/E-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c0_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/E-attack-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c0_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/E-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c1_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/E-hit-source-v01.png" id="batch0_batch0_batch0_batch0_c1_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/E-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c2_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/E-run-source-v01.png" id="batch0_batch0_batch0_batch0_c3_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c5_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-hit-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c5_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c6_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/N-run-source-v01.png" id="batch0_batch0_batch0_batch0_c7_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-run-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c11_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NW-idle-source-v01.png" id="batch0_batch0_batch0_batch0_c13_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NW-hit-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c13_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NW-idle-source-v01.png" id="batch0_batch0_batch0_batch0_c14_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NW-run-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c15_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/S-attack-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c16_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/S-idle-source-v01.png" id="batch0_batch0_batch0_batch0_c19_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c22_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-hit-source-v01.png" id="batch0_batch0_batch0_batch0_c22_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c23_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-run-source-v01.png" id="batch0_batch0_batch0_batch0_c24_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SW-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c26_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SW-hit-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c26_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SW-idle-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c27_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SW-run-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c28_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-idle-source-v01.png" id="batch0_batch0_batch0_batch0_c29_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/W-attack-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c29_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-idle-source-v01.png" id="batch0_batch0_batch0_batch0_c30_texture_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/W-hit-source-v01-isolated.png" id="batch0_batch0_batch0_batch0_c30_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-idle-source-v01.png" id="batch0_batch0_batch0_batch0_c31_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r024/NW-attack.png" id="batch0_batch0_batch0_batch1_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-death-0.png" id="batch0_batch0_batch1_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-death-1.png" id="batch0_batch0_batch1_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-death-2.png" id="batch0_batch0_batch1_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-death-3.png" id="batch0_batch0_batch1_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-death-4.png" id="batch0_batch0_batch1_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-death-5.png" id="batch0_batch0_batch1_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-0.png" id="batch0_batch0_batch2_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-1.png" id="batch0_batch0_batch2_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-2.png" id="batch0_batch0_batch2_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-3.png" id="batch0_batch0_batch2_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-4.png" id="batch0_batch0_batch2_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-5.png" id="batch0_batch0_batch2_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SW-idle-source-v01-isolated.png" id="batch0_batch0_batch4_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/SW-attack-1.png" id="batch0_batch0_batch4_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/SW-attack-2.png" id="batch0_batch0_batch4_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/SW-attack-3.png" id="batch0_batch0_batch4_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/SW-attack-4.png" id="batch0_batch0_batch4_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SW-idle-source-v01-isolated.png" id="batch0_batch0_batch4_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-0.png" id="batch0_batch0_batch5_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-1.png" id="batch0_batch0_batch5_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-2.png" id="batch0_batch0_batch5_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-3.png" id="batch0_batch0_batch5_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-4.png" id="batch0_batch0_batch5_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-5.png" id="batch0_batch0_batch5_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-0.png" id="batch0_batch1_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-1.png" id="batch0_batch1_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-2.png" id="batch0_batch1_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/S-run-3-source.png" id="batch0_batch1_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/S-run-4.png" id="batch0_batch1_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/S-run-5.png" id="batch0_batch1_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-0.png" id="batch0_batch2_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-1.png" id="batch0_batch2_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-2.png" id="batch0_batch2_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-3.png" id="batch0_batch2_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-4.png" id="batch0_batch2_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-5.png" id="batch0_batch2_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-0.png" id="batch0_batch3_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-hit-source-v01-isolated.png" id="batch0_batch3_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-hit-source-v01-isolated.png" id="batch0_batch3_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-hit-source-v01-isolated.png" id="batch0_batch3_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-hit-source-v01-isolated.png" id="batch0_batch3_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-5.png" id="batch0_batch3_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-0.png" id="batch0_batch4_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-source-v01-isolated.png" id="batch0_batch4_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-source-v01-isolated.png" id="batch0_batch4_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-source-v01-isolated.png" id="batch0_batch4_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/NE-attack-source-v01-isolated.png" id="batch0_batch4_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-5.png" id="batch0_batch4_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-idle-source-v01-isolated.png" id="batch0_batch5_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-attack-source-v01.png" id="batch0_batch5_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/SE-attack-source-v01.png" id="batch0_batch5_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/SE-attack-3.png" id="batch0_batch5_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/SE-attack-4.png" id="batch0_batch5_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/SE-idle-source-v01-isolated.png" id="batch0_batch5_t5"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png" id="batch1_t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-attack-source-v01-isolated.png" id="batch1_t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-attack-source-v01-isolated.png" id="batch1_t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r136/N-attack-3-source.png" id="batch1_t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-attack-source-v01-isolated.png" id="batch1_t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_243/corrections/isolation-v12/N-idle-source-v01-isolated.png" id="batch1_t5"]
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c0_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c0_texture_0")
+region = Rect2(0, 0, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c0_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c0_texture_1")
+region = Rect2(0, 0, 845, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c0_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c0_texture_1")
+region = Rect2(845, 0, 845, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c0_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c0_texture_1")
+region = Rect2(0, 742, 845, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c0_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c0_texture_1")
+region = Rect2(845, 742, 845, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c0_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c0_texture_0")
+region = Rect2(1200, 663, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c1_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c1_texture_0")
+region = Rect2(0, 0, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c1_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c1_texture_1")
+region = Rect2(0, 0, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c1_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c1_texture_1")
+region = Rect2(627, 0, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c1_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c1_texture_1")
+region = Rect2(0, 627, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c1_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c1_texture_1")
+region = Rect2(627, 627, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c1_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c1_texture_0")
+region = Rect2(1200, 663, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c2_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c2_texture_0")
+region = Rect2(0, 0, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c2_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c2_texture_0")
+region = Rect2(600, 0, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c2_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c2_texture_0")
+region = Rect2(1200, 0, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c2_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c2_texture_0")
+region = Rect2(0, 663, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c2_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c2_texture_0")
+region = Rect2(600, 663, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c2_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c2_texture_0")
+region = Rect2(1200, 663, 600, 663)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c3_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c3_1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c3_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c3_1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c3_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c3_1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c3_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c3_1")
+region = Rect2(0, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c3_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c3_1")
+region = Rect2(512, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c3_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c3_1")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c5_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c5_texture_0")
+region = Rect2(0, 0, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c5_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c5_texture_1")
+region = Rect2(0, 0, 773, 778)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c5_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c5_texture_1")
+region = Rect2(773, 0, 773, 778)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c5_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c5_texture_1")
+region = Rect2(0, 778, 773, 778)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c5_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c5_texture_1")
+region = Rect2(773, 778, 773, 778)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c5_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c5_texture_0")
+region = Rect2(1242, 627, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c6_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c6_texture_0")
+region = Rect2(0, 0, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c6_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c6_texture_0")
+region = Rect2(621, 0, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c6_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c6_texture_0")
+region = Rect2(1242, 0, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c6_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c6_texture_0")
+region = Rect2(0, 627, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c6_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c6_texture_0")
+region = Rect2(621, 627, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c6_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c6_texture_0")
+region = Rect2(1242, 627, 621, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c7_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c7_1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c7_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c7_1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c7_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c7_1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c7_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c7_1")
+region = Rect2(0, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c7_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c7_1")
+region = Rect2(512, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c7_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c7_1")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c11_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c11_texture_0")
+region = Rect2(0, 0, 678, 684)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c11_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c11_texture_0")
+region = Rect2(678, 0, 678, 684)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c11_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c11_texture_0")
+region = Rect2(1356, 0, 678, 684)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c11_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c11_texture_0")
+region = Rect2(0, 684, 678, 684)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c11_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c11_texture_0")
+region = Rect2(678, 684, 678, 684)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c11_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c11_texture_0")
+region = Rect2(1356, 684, 678, 684)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c13_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c13_texture_0")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c13_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c13_texture_1")
+region = Rect2(0, 0, 697, 756)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c13_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c13_texture_1")
+region = Rect2(697, 0, 697, 756)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c13_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c13_texture_1")
+region = Rect2(0, 756, 697, 756)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c13_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c13_texture_1")
+region = Rect2(697, 756, 697, 756)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c13_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c13_texture_0")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c14_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c14_1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c14_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c14_1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c14_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c14_1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c14_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c14_1")
+region = Rect2(0, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c14_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c14_1")
+region = Rect2(512, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c14_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c14_1")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c15_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c15_texture_0")
+region = Rect2(0, 0, 691, 677)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c15_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c15_texture_0")
+region = Rect2(691, 0, 691, 677)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c15_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c15_texture_0")
+region = Rect2(1382, 0, 691, 677)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c15_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c15_texture_0")
+region = Rect2(0, 677, 691, 677)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c15_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c15_texture_0")
+region = Rect2(691, 677, 691, 677)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c15_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c15_texture_0")
+region = Rect2(1382, 677, 691, 677)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c16_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c16_texture_0")
+region = Rect2(0, 0, 705, 631)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c16_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c16_texture_0")
+region = Rect2(705, 0, 705, 631)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c16_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c16_texture_0")
+region = Rect2(1410, 0, 705, 631)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c16_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c16_texture_0")
+region = Rect2(0, 631, 705, 631)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c16_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c16_texture_0")
+region = Rect2(705, 631, 705, 631)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c16_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c16_texture_0")
+region = Rect2(1410, 631, 705, 631)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c19_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c19_1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c19_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c19_1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c19_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c19_1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c19_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c19_1")
+region = Rect2(0, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c19_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c19_1")
+region = Rect2(512, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c19_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c19_1")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c22_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c22_texture_0")
+region = Rect2(0, 0, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c22_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c22_texture_1")
+region = Rect2(0, 0, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c22_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c22_texture_1")
+region = Rect2(627, 0, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c22_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c22_texture_1")
+region = Rect2(0, 627, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c22_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c22_texture_1")
+region = Rect2(627, 627, 627, 627)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c22_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c22_texture_0")
+region = Rect2(1190, 609, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c23_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c23_texture_0")
+region = Rect2(0, 0, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c23_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c23_texture_0")
+region = Rect2(595, 0, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c23_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c23_texture_0")
+region = Rect2(1190, 0, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c23_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c23_texture_0")
+region = Rect2(0, 609, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c23_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c23_texture_0")
+region = Rect2(595, 609, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c23_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c23_texture_0")
+region = Rect2(1190, 609, 595, 609)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c24_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c24_1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c24_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c24_1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c24_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c24_1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c24_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c24_1")
+region = Rect2(0, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c24_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c24_1")
+region = Rect2(512, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c24_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c24_1")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c26_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c26_texture_0")
+region = Rect2(0, 0, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c26_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c26_texture_1")
+region = Rect2(0, 0, 721, 766)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c26_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c26_texture_1")
+region = Rect2(721, 0, 721, 766)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c26_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c26_texture_1")
+region = Rect2(0, 766, 721, 766)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c26_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c26_texture_1")
+region = Rect2(721, 766, 721, 766)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c26_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c26_texture_0")
+region = Rect2(1174, 617, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c27_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c27_texture_0")
+region = Rect2(0, 0, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c27_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c27_texture_0")
+region = Rect2(587, 0, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c27_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c27_texture_0")
+region = Rect2(1174, 0, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c27_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c27_texture_0")
+region = Rect2(0, 617, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c27_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c27_texture_0")
+region = Rect2(587, 617, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c27_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c27_texture_0")
+region = Rect2(1174, 617, 587, 617)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c28_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c28_texture_0")
+region = Rect2(0, 0, 678, 679)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c28_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c28_texture_0")
+region = Rect2(678, 0, 678, 679)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c28_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c28_texture_0")
+region = Rect2(1356, 0, 678, 679)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c28_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c28_texture_0")
+region = Rect2(0, 679, 678, 679)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c28_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c28_texture_0")
+region = Rect2(678, 679, 678, 679)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c28_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c28_texture_0")
+region = Rect2(1356, 679, 678, 679)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c29_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c29_texture_0")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c29_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c29_texture_1")
+region = Rect2(0, 0, 844, 708)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c29_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c29_texture_1")
+region = Rect2(844, 0, 844, 708)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c29_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c29_texture_1")
+region = Rect2(0, 708, 844, 708)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c29_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c29_texture_1")
+region = Rect2(844, 708, 844, 708)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c29_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c29_texture_0")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c30_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c30_texture_0")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c30_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c30_texture_1")
+region = Rect2(0, 0, 759, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c30_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c30_texture_1")
+region = Rect2(759, 0, 759, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c30_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c30_texture_1")
+region = Rect2(0, 742, 759, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c30_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c30_texture_1")
+region = Rect2(759, 742, 759, 742)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c30_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c30_texture_0")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c31_pose_0"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c31_1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c31_pose_1"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c31_1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c31_pose_2"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c31_1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c31_pose_3"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c31_1")
+region = Rect2(0, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c31_pose_4"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c31_1")
+region = Rect2(512, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch0_c31_pose_5"]
+atlas = ExtResource("batch0_batch0_batch0_batch0_c31_1")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch1_p0"]
+atlas = ExtResource("batch0_batch0_batch0_batch1_1")
+region = Rect2(80,80,530,554)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch1_p1"]
+atlas = ExtResource("batch0_batch0_batch0_batch1_1")
+region = Rect2(1016,80,724,715)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch1_p2"]
+atlas = ExtResource("batch0_batch0_batch0_batch1_1")
+region = Rect2(80,1016,612,684)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch1_p3"]
+atlas = ExtResource("batch0_batch0_batch0_batch1_1")
+region = Rect2(1016,1016,770,668)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch1_p4"]
+atlas = ExtResource("batch0_batch0_batch0_batch1_1")
+region = Rect2(80,1952,564,586)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch0_batch1_p5"]
+atlas = ExtResource("batch0_batch0_batch0_batch1_1")
+region = Rect2(1016,1952,508,536)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch1_p0"]
+atlas = ExtResource("batch0_batch0_batch1_t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch1_p1"]
+atlas = ExtResource("batch0_batch0_batch1_t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch1_p2"]
+atlas = ExtResource("batch0_batch0_batch1_t2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch1_p3"]
+atlas = ExtResource("batch0_batch0_batch1_t3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch1_p4"]
+atlas = ExtResource("batch0_batch0_batch1_t4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch1_p5"]
+atlas = ExtResource("batch0_batch0_batch1_t5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch2_p0"]
+atlas = ExtResource("batch0_batch0_batch2_t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch2_p1"]
+atlas = ExtResource("batch0_batch0_batch2_t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch2_p2"]
+atlas = ExtResource("batch0_batch0_batch2_t2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch2_p3"]
+atlas = ExtResource("batch0_batch0_batch2_t3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch2_p4"]
+atlas = ExtResource("batch0_batch0_batch2_t4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch2_p5"]
+atlas = ExtResource("batch0_batch0_batch2_t5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch4_p0"]
+atlas = ExtResource("batch0_batch0_batch4_t0")
+region = Rect2(0.0,0.0,587.0,617.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch4_p1"]
+atlas = ExtResource("batch0_batch0_batch4_t1")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch4_p2"]
+atlas = ExtResource("batch0_batch0_batch4_t2")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch4_p3"]
+atlas = ExtResource("batch0_batch0_batch4_t3")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch4_p4"]
+atlas = ExtResource("batch0_batch0_batch4_t4")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch4_p5"]
+atlas = ExtResource("batch0_batch0_batch4_t5")
+region = Rect2(1174.0,617.0,587.0,617.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch5_p0"]
+atlas = ExtResource("batch0_batch0_batch5_t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch5_p1"]
+atlas = ExtResource("batch0_batch0_batch5_t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch5_p2"]
+atlas = ExtResource("batch0_batch0_batch5_t2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch5_p3"]
+atlas = ExtResource("batch0_batch0_batch5_t3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch5_p4"]
+atlas = ExtResource("batch0_batch0_batch5_t4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_batch5_p5"]
+atlas = ExtResource("batch0_batch0_batch5_t5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch1_p0"]
+atlas = ExtResource("batch0_batch1_t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch1_p1"]
+atlas = ExtResource("batch0_batch1_t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch1_p2"]
+atlas = ExtResource("batch0_batch1_t2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch1_p3"]
+atlas = ExtResource("batch0_batch1_t3")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch1_p4"]
+atlas = ExtResource("batch0_batch1_t4")
+region = Rect2(0,0,1942,809)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch1_p5"]
+atlas = ExtResource("batch0_batch1_t5")
+region = Rect2(0,0,1942,809)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch2_p0"]
+atlas = ExtResource("batch0_batch2_t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch2_p1"]
+atlas = ExtResource("batch0_batch2_t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch2_p2"]
+atlas = ExtResource("batch0_batch2_t2")
+region = Rect2(0,0,1879,837)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch2_p3"]
+atlas = ExtResource("batch0_batch2_t3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch2_p4"]
+atlas = ExtResource("batch0_batch2_t4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch2_p5"]
+atlas = ExtResource("batch0_batch2_t5")
+region = Rect2(0,0,1879,837)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch3_p0"]
+atlas = ExtResource("batch0_batch3_t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch3_p1"]
+atlas = ExtResource("batch0_batch3_t1")
+region = Rect2(0.0,0.0,776.0,718.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch3_p2"]
+atlas = ExtResource("batch0_batch3_t2")
+region = Rect2(776.0,0.0,776.0,718.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch3_p3"]
+atlas = ExtResource("batch0_batch3_t3")
+region = Rect2(0.0,718.0,776.0,718.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch3_p4"]
+atlas = ExtResource("batch0_batch3_t4")
+region = Rect2(776.0,718.0,776.0,718.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch3_p5"]
+atlas = ExtResource("batch0_batch3_t5")
+region = Rect2(0,0,1879,837)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch4_p0"]
+atlas = ExtResource("batch0_batch4_t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch4_p1"]
+atlas = ExtResource("batch0_batch4_t1")
+region = Rect2(0.0,0.0,806.0,671.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch4_p2"]
+atlas = ExtResource("batch0_batch4_t2")
+region = Rect2(806.0,0.0,806.0,671.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch4_p3"]
+atlas = ExtResource("batch0_batch4_t3")
+region = Rect2(0.0,671.0,806.0,671.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch4_p4"]
+atlas = ExtResource("batch0_batch4_t4")
+region = Rect2(806.0,671.0,806.0,671.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch4_p5"]
+atlas = ExtResource("batch0_batch4_t5")
+region = Rect2(0,0,1879,837)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch5_p0"]
+atlas = ExtResource("batch0_batch5_t0")
+region = Rect2(0.0,0.0,595.0,609.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch5_p1"]
+atlas = ExtResource("batch0_batch5_t1")
+region = Rect2(0.0,0.0,627.0,627.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch5_p2"]
+atlas = ExtResource("batch0_batch5_t2")
+region = Rect2(627.0,0.0,627.0,627.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch0_batch5_p3"]
+atlas = ExtResource("batch0_batch5_t3")
+region = Rect2(0,0,1968,799)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch5_p4"]
+atlas = ExtResource("batch0_batch5_t4")
+region = Rect2(0,0,1968,799)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch5_p5"]
+atlas = ExtResource("batch0_batch5_t5")
+region = Rect2(1190.0,609.0,595.0,609.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch1_p0"]
+atlas = ExtResource("batch1_t0")
+region = Rect2(0.0,0.0,621.0,627.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch1_p1"]
+atlas = ExtResource("batch1_t1")
+region = Rect2(0.0,0.0,852.0,757.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch1_p2"]
+atlas = ExtResource("batch1_t2")
+region = Rect2(852.0,0.0,852.0,757.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch1_p3"]
+atlas = ExtResource("batch1_t3")
+region = Rect2(0,0,1331,1181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch1_p4"]
+atlas = ExtResource("batch1_t4")
+region = Rect2(852.0,757.0,852.0,757.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="batch1_p5"]
+atlas = ExtResource("batch1_t5")
+region = Rect2(1242.0,627.0,621.0,627.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[resource]
+animations = [
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c0_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c0_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c0_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c0_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c0_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c0_pose_5")}],
+"loop": false,
+"name": &"attack_0",
+"speed": 14.285714286
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c1_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c1_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c1_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c1_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c1_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c1_pose_5")}],
+"loop": false,
+"name": &"hit_0",
+"speed": 27.272727273
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c2_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c2_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c2_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c2_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c2_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c2_pose_5")}],
+"loop": true,
+"name": &"idle_0",
+"speed": 5.0
+},
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c3_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c3_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c3_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c3_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c3_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c3_pose_5")}], "loop": true, "name": &"run_0", "speed": 12.500000000},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c5_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c5_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c5_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c5_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c5_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c5_pose_5")}],
+"loop": false,
+"name": &"hit_6",
+"speed": 27.272727273
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c6_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c6_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c6_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c6_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c6_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c6_pose_5")}],
+"loop": true,
+"name": &"idle_6",
+"speed": 5.0
+},
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c7_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c7_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c7_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c7_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c7_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c7_pose_5")}], "loop": true, "name": &"run_6", "speed": 12.500000000},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c11_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c11_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c11_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c11_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c11_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c11_pose_5")}],
+"loop": true,
+"name": &"run_7",
+"speed": 12.5
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c13_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c13_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c13_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c13_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c13_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c13_pose_5")}],
+"loop": false,
+"name": &"hit_5",
+"speed": 27.272727273
+},
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c14_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c14_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c14_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c14_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c14_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c14_pose_5")}], "loop": true, "name": &"idle_5", "speed": 5.000000000},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c15_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c15_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c15_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c15_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c15_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c15_pose_5")}],
+"loop": true,
+"name": &"run_5",
+"speed": 12.5
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c16_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c16_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c16_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c16_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c16_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c16_pose_5")}],
+"loop": false,
+"name": &"attack_2",
+"speed": 14.285714286
+},
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c19_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c19_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c19_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c19_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c19_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c19_pose_5")}], "loop": true, "name": &"idle_2", "speed": 5.000000000},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c22_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c22_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c22_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c22_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c22_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c22_pose_5")}],
+"loop": false,
+"name": &"hit_1",
+"speed": 27.272727273
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c23_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c23_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c23_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c23_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c23_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c23_pose_5")}],
+"loop": true,
+"name": &"idle_1",
+"speed": 5.0
+},
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c24_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c24_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c24_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c24_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c24_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c24_pose_5")}], "loop": true, "name": &"run_1", "speed": 12.500000000},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c26_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c26_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c26_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c26_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c26_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c26_pose_5")}],
+"loop": false,
+"name": &"hit_3",
+"speed": 27.272727273
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c27_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c27_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c27_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c27_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c27_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c27_pose_5")}],
+"loop": true,
+"name": &"idle_3",
+"speed": 5.0
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c28_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c28_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c28_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c28_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c28_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c28_pose_5")}],
+"loop": true,
+"name": &"run_3",
+"speed": 12.5
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c29_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c29_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c29_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c29_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c29_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c29_pose_5")}],
+"loop": false,
+"name": &"attack_4",
+"speed": 14.285714286
+},
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c30_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c30_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c30_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c30_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c30_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c30_pose_5")}],
+"loop": false,
+"name": &"hit_4",
+"speed": 27.272727273
+},
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c31_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c31_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c31_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c31_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c31_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_batch0_batch0_c31_pose_5")}], "loop": true, "name": &"idle_4", "speed": 5.000000000},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch0_batch0_batch1_p0")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch0_batch1_p1")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch0_batch1_p2")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch0_batch1_p3")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch0_batch1_p4")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch0_batch1_p5")}],"loop":false,"name":&"attack_5","speed":14.285714286},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch0_batch1_p0")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch1_p1")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch1_p2")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch1_p3")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch1_p4")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch1_p5")}],"loop":false,"name":&"death_2","speed":9.230769231},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch0_batch2_p0")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch2_p1")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch2_p2")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch2_p3")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch2_p4")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch2_p5")}],"loop":false,"name":&"hit_2","speed":27.272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch0_batch4_p0")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch4_p1")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch4_p2")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch4_p3")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch4_p4")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch4_p5")}],"loop":false,"name":&"attack_3","speed":14.285714286},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch0_batch5_p0")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch5_p1")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch5_p2")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch5_p3")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch5_p4")},{"duration":1.0,"texture":SubResource("batch0_batch0_batch5_p5")}],"loop":true,"name":&"run_4","speed":12.500000000},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch1_p0")},{"duration":1.0,"texture":SubResource("batch0_batch1_p1")},{"duration":1.0,"texture":SubResource("batch0_batch1_p2")},{"duration":1.0,"texture":SubResource("batch0_batch1_p3")},{"duration":1.0,"texture":SubResource("batch0_batch1_p4")},{"duration":1.0,"texture":SubResource("batch0_batch1_p5")}],"loop":true,"name":&"run_2","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch2_p0")},{"duration":1.0,"texture":SubResource("batch0_batch2_p1")},{"duration":1.0,"texture":SubResource("batch0_batch2_p2")},{"duration":1.0,"texture":SubResource("batch0_batch2_p3")},{"duration":1.0,"texture":SubResource("batch0_batch2_p4")},{"duration":1.0,"texture":SubResource("batch0_batch2_p5")}],"loop":true,"name":&"idle_7","speed":5.000000000},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch3_p0")},{"duration":1.0,"texture":SubResource("batch0_batch3_p1")},{"duration":1.0,"texture":SubResource("batch0_batch3_p2")},{"duration":1.0,"texture":SubResource("batch0_batch3_p3")},{"duration":1.0,"texture":SubResource("batch0_batch3_p4")},{"duration":1.0,"texture":SubResource("batch0_batch3_p5")}],"loop":false,"name":&"hit_7","speed":27.272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch4_p0")},{"duration":1.0,"texture":SubResource("batch0_batch4_p1")},{"duration":1.0,"texture":SubResource("batch0_batch4_p2")},{"duration":1.0,"texture":SubResource("batch0_batch4_p3")},{"duration":1.0,"texture":SubResource("batch0_batch4_p4")},{"duration":1.0,"texture":SubResource("batch0_batch4_p5")}],"loop":false,"name":&"attack_7","speed":14.285714286},
+{"frames":[{"duration":1.0,"texture":SubResource("batch0_batch5_p0")},{"duration":1.0,"texture":SubResource("batch0_batch5_p1")},{"duration":1.0,"texture":SubResource("batch0_batch5_p2")},{"duration":1.0,"texture":SubResource("batch0_batch5_p3")},{"duration":1.0,"texture":SubResource("batch0_batch5_p4")},{"duration":1.0,"texture":SubResource("batch0_batch5_p5")}],"loop":false,"name":&"attack_1","speed":14.285714286},
+{"frames":[{"duration":1.0,"texture":SubResource("batch1_p0")},{"duration":1.0,"texture":SubResource("batch1_p1")},{"duration":1.0,"texture":SubResource("batch1_p2")},{"duration":1.0,"texture":SubResource("batch1_p3")},{"duration":1.0,"texture":SubResource("batch1_p4")},{"duration":1.0,"texture":SubResource("batch1_p5")}],"loop":false,"name":&"attack_6","speed":14.285714286}
+]
+metadata/twilight_reviewed_frame_registration = {"attack_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(286.25,531),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)},{"anchor":Vector2(211,621),"scale":Vector2(0.255888,0.255888),"target":Vector2(0,0)},{"anchor":Vector2(432.25,597.5),"scale":Vector2(0.255888,0.255888),"target":Vector2(0,0)},{"anchor":Vector2(405.5,542),"scale":Vector2(0.255888,0.255888),"target":Vector2(0,0)},{"anchor":Vector2(465,540.75),"scale":Vector2(0.255888,0.255888),"target":Vector2(0,0)},{"anchor":Vector2(305.5,529.5),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)}]},"hit_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(286.25,531),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)},{"anchor":Vector2(347.75,545),"scale":Vector2(0.24136,0.24136),"target":Vector2(0,0)},{"anchor":Vector2(368.75,543),"scale":Vector2(0.24136,0.24136),"target":Vector2(0,0)},{"anchor":Vector2(338,534.5),"scale":Vector2(0.24136,0.24136),"target":Vector2(0,0)},{"anchor":Vector2(295,541.5),"scale":Vector2(0.24136,0.24136),"target":Vector2(0,0)},{"anchor":Vector2(305.5,529.5),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)}]},"idle_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(286.25,531),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)},{"anchor":Vector2(300,530.5),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)},{"anchor":Vector2(324.5,532),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)},{"anchor":Vector2(313.75,529.5),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)},{"anchor":Vector2(308.25,527),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)},{"anchor":Vector2(305.5,529.5),"scale":Vector2(0.304709,0.304709),"target":Vector2(0,0)}]},"run_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(259,448.67),"scale":Vector2(0.311321,0.311321),"target":Vector2(0,0)},{"anchor":Vector2(167,423.33),"scale":Vector2(0.311321,0.311321),"target":Vector2(0,0)},{"anchor":Vector2(171,420.33),"scale":Vector2(0.311321,0.311321),"target":Vector2(0,0)},{"anchor":Vector2(259.75,431.33),"scale":Vector2(0.311321,0.311321),"target":Vector2(0,0)},{"anchor":Vector2(220.5,411.33),"scale":Vector2(0.311321,0.311321),"target":Vector2(0,0)},{"anchor":Vector2(181,403.67),"scale":Vector2(0.311321,0.311321),"target":Vector2(0,0)}]},"hit_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(358.5,498.5),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)},{"anchor":Vector2(518.75,568.25),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(347.25,609),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(491.25,562.5),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(473,582.75),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(358,495.75),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)}]},"idle_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(358.5,498.5),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)},{"anchor":Vector2(373,499.25),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)},{"anchor":Vector2(358,499.25),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)},{"anchor":Vector2(365,502),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)},{"anchor":Vector2(375,497.75),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)},{"anchor":Vector2(358,495.75),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)}]},"run_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(360,464),"scale":Vector2(0.278864,0.278864),"target":Vector2(0,0)},{"anchor":Vector2(373,459.5),"scale":Vector2(0.278864,0.278864),"target":Vector2(0,0)},{"anchor":Vector2(330.5,416.4),"scale":Vector2(0.278864,0.278864),"target":Vector2(0,0)},{"anchor":Vector2(355,456.5),"scale":Vector2(0.278864,0.278864),"target":Vector2(0,0)},{"anchor":Vector2(364.25,460.5),"scale":Vector2(0.278864,0.278864),"target":Vector2(0,0)},{"anchor":Vector2(382.5,462),"scale":Vector2(0.278864,0.278864),"target":Vector2(0,0)}]},"run_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(428.5,567.5),"scale":Vector2(0.26764,0.26764),"target":Vector2(0,0)},{"anchor":Vector2(417.25,571),"scale":Vector2(0.26764,0.26764),"target":Vector2(0,0)},{"anchor":Vector2(383,570.5),"scale":Vector2(0.26764,0.26764),"target":Vector2(0,0)},{"anchor":Vector2(469,550.5),"scale":Vector2(0.26764,0.26764),"target":Vector2(0,0)},{"anchor":Vector2(409.5,549),"scale":Vector2(0.26764,0.26764),"target":Vector2(0,0)},{"anchor":Vector2(377,560.5),"scale":Vector2(0.26764,0.26764),"target":Vector2(0,0)}]},"hit_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(238.25,431),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)},{"anchor":Vector2(332,583),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(244.5,565.75),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(430.5,527),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(393.5,551),"scale":Vector2(0.260664,0.260664),"target":Vector2(0,0)},{"anchor":Vector2(237,432.25),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)}]},"idle_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(238.25,431),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)},{"anchor":Vector2(226.5,431.25),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)},{"anchor":Vector2(250,432.5),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)},{"anchor":Vector2(187.75,434),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)},{"anchor":Vector2(187.5,437.67),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)},{"anchor":Vector2(237,432.25),"scale":Vector2(0.298103,0.298103),"target":Vector2(0,0)}]},"run_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(390,582),"scale":Vector2(0.273292,0.273292),"target":Vector2(0,0)},{"anchor":Vector2(402.5,531.5),"scale":Vector2(0.273292,0.273292),"target":Vector2(0,0)},{"anchor":Vector2(407.5,586),"scale":Vector2(0.273292,0.273292),"target":Vector2(0,0)},{"anchor":Vector2(401,558),"scale":Vector2(0.273292,0.273292),"target":Vector2(0,0)},{"anchor":Vector2(344,546),"scale":Vector2(0.273292,0.273292),"target":Vector2(0,0)},{"anchor":Vector2(390,561),"scale":Vector2(0.273292,0.273292),"target":Vector2(0,0)}]},"attack_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(347,509.25),"scale":Vector2(0.32263,0.32263),"target":Vector2(0,0)},{"anchor":Vector2(422.5,497.5),"scale":Vector2(0.32263,0.32263),"target":Vector2(0,0)},{"anchor":Vector2(405,520),"scale":Vector2(0.32263,0.32263),"target":Vector2(0,0)},{"anchor":Vector2(395,462.67),"scale":Vector2(0.32263,0.32263),"target":Vector2(0,0)},{"anchor":Vector2(417,443.33),"scale":Vector2(0.32263,0.32263),"target":Vector2(0,0)},{"anchor":Vector2(362.75,455.25),"scale":Vector2(0.32263,0.32263),"target":Vector2(0,0)}]},"idle_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(251,453.67),"scale":Vector2(0.288967,0.288967),"target":Vector2(0,0)},{"anchor":Vector2(245.5,450.33),"scale":Vector2(0.288967,0.288967),"target":Vector2(0,0)},{"anchor":Vector2(231.5,452.33),"scale":Vector2(0.288967,0.288967),"target":Vector2(0,0)},{"anchor":Vector2(285.75,474),"scale":Vector2(0.288967,0.288967),"target":Vector2(0,0)},{"anchor":Vector2(242.75,459),"scale":Vector2(0.288967,0.288967),"target":Vector2(0,0)},{"anchor":Vector2(229,461.33),"scale":Vector2(0.288967,0.288967),"target":Vector2(0,0)}]},"hit_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(276.5,509.67),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)},{"anchor":Vector2(314,555.33),"scale":Vector2(0.232149,0.232149),"target":Vector2(0,0)},{"anchor":Vector2(274.25,536.5),"scale":Vector2(0.232149,0.232149),"target":Vector2(0,0)},{"anchor":Vector2(296.5,553.67),"scale":Vector2(0.232149,0.232149),"target":Vector2(0,0)},{"anchor":Vector2(291,543),"scale":Vector2(0.232149,0.232149),"target":Vector2(0,0)},{"anchor":Vector2(271.5,490),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)}]},"idle_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(276.5,509.67),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)},{"anchor":Vector2(267,508.67),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)},{"anchor":Vector2(260.5,511.33),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)},{"anchor":Vector2(270.5,491),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)},{"anchor":Vector2(272.75,489),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)},{"anchor":Vector2(271.5,490),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)}]},"run_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(207,452),"scale":Vector2(0.278657,0.278657),"target":Vector2(0,0)},{"anchor":Vector2(151.75,428),"scale":Vector2(0.278657,0.278657),"target":Vector2(0,0)},{"anchor":Vector2(226,458.5),"scale":Vector2(0.278657,0.278657),"target":Vector2(0,0)},{"anchor":Vector2(239,430),"scale":Vector2(0.278657,0.278657),"target":Vector2(0,0)},{"anchor":Vector2(166,442.5),"scale":Vector2(0.278657,0.278657),"target":Vector2(0,0)},{"anchor":Vector2(142,405.5),"scale":Vector2(0.278657,0.278657),"target":Vector2(0,0)}]},"hit_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(308.75,517.5),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)},{"anchor":Vector2(357.5,598),"scale":Vector2(0.227155,0.227155),"target":Vector2(0,0)},{"anchor":Vector2(328,617),"scale":Vector2(0.227155,0.227155),"target":Vector2(0,0)},{"anchor":Vector2(370.5,576.5),"scale":Vector2(0.227155,0.227155),"target":Vector2(0,0)},{"anchor":Vector2(346.25,581),"scale":Vector2(0.227155,0.227155),"target":Vector2(0,0)},{"anchor":Vector2(253.5,502.5),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)}]},"idle_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(308.75,517.5),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)},{"anchor":Vector2(279.5,516),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)},{"anchor":Vector2(255.5,517.5),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)},{"anchor":Vector2(308.5,500),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)},{"anchor":Vector2(309,495.33),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)},{"anchor":Vector2(253.5,502.5),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)}]},"run_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(237.5,554),"scale":Vector2(0.294118,0.294118),"target":Vector2(0,0)},{"anchor":Vector2(334,563),"scale":Vector2(0.294118,0.294118),"target":Vector2(0,0)},{"anchor":Vector2(232,518),"scale":Vector2(0.294118,0.294118),"target":Vector2(0,0)},{"anchor":Vector2(244.5,525),"scale":Vector2(0.294118,0.294118),"target":Vector2(0,0)},{"anchor":Vector2(444,530),"scale":Vector2(0.294118,0.294118),"target":Vector2(0,0)},{"anchor":Vector2(203.75,516.5),"scale":Vector2(0.294118,0.294118),"target":Vector2(0,0)}]},"attack_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(169.5,429.67),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)},{"anchor":Vector2(358.5,601.5),"scale":Vector2(0.253408,0.253408),"target":Vector2(0,0)},{"anchor":Vector2(374.5,589.67),"scale":Vector2(0.253408,0.253408),"target":Vector2(0,0)},{"anchor":Vector2(523.5,560),"scale":Vector2(0.253408,0.253408),"target":Vector2(0,0)},{"anchor":Vector2(389,595.5),"scale":Vector2(0.253408,0.253408),"target":Vector2(0,0)},{"anchor":Vector2(247.5,451.5),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)}]},"hit_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(169.5,429.67),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)},{"anchor":Vector2(326.5,581.5),"scale":Vector2(0.252005,0.252005),"target":Vector2(0,0)},{"anchor":Vector2(326.5,598.5),"scale":Vector2(0.252005,0.252005),"target":Vector2(0,0)},{"anchor":Vector2(278.5,578.5),"scale":Vector2(0.252005,0.252005),"target":Vector2(0,0)},{"anchor":Vector2(358,589.5),"scale":Vector2(0.252005,0.252005),"target":Vector2(0,0)},{"anchor":Vector2(247.5,451.5),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)}]},"idle_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(169.5,429.67),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)},{"anchor":Vector2(152.5,431.67),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)},{"anchor":Vector2(155.75,432.67),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)},{"anchor":Vector2(173.5,438.33),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)},{"anchor":Vector2(159.5,438),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)},{"anchor":Vector2(247.5,451.5),"scale":Vector2(0.288714,0.288714),"target":Vector2(0,0)}]},"attack_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(240,465),"scale":Vector2(0.275,0.275),"target":Vector2(0,0)},{"anchor":Vector2(355,598),"scale":Vector2(0.275,0.275),"target":Vector2(0,0)},{"anchor":Vector2(336,561),"scale":Vector2(0.275,0.275),"target":Vector2(0,0)},{"anchor":Vector2(420,609),"scale":Vector2(0.275,0.275),"target":Vector2(0,0)},{"anchor":Vector2(310,527),"scale":Vector2(0.275,0.275),"target":Vector2(0,0)},{"anchor":Vector2(264,492),"scale":Vector2(0.275,0.275),"target":Vector2(0,0)}]},"death_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(275,510),"scale":Vector2(0.28680189810710743,0.28680189810710743),"target":Vector2(0,0)},{"anchor":Vector2(805,510),"scale":Vector2(0.28680189810710743,0.28680189810710743),"target":Vector2(0,0)},{"anchor":Vector2(1335,530),"scale":Vector2(0.28680189810710743,0.28680189810710743),"target":Vector2(0,0)},{"anchor":Vector2(315,930),"scale":Vector2(0.28680189810710743,0.28680189810710743),"target":Vector2(0,0)},{"anchor":Vector2(820,930),"scale":Vector2(0.28680189810710743,0.28680189810710743),"target":Vector2(0,0)},{"anchor":Vector2(1332,930),"scale":Vector2(0.28680189810710743,0.28680189810710743),"target":Vector2(0,0)}]},"hit_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(273.75,447.5),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(781.75,433.4),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(1232.5,441.5),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(238.0,940.0),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(755.75,961.6700000000001),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(1291.0,954.5),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)}]},"attack_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(308.75,517.5),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)},{"anchor":Vector2(418.0,558.75),"scale":Vector2(0.243228,0.243228),"target":Vector2(0,0)},{"anchor":Vector2(982.5,580.0),"scale":Vector2(0.243228,0.243228),"target":Vector2(0,0)},{"anchor":Vector2(411.5,1141.5),"scale":Vector2(0.243228,0.243228),"target":Vector2(0,0)},{"anchor":Vector2(1157.0,1166.5),"scale":Vector2(0.243228,0.243228),"target":Vector2(0,0)},{"anchor":Vector2(253.5,502.5),"scale":Vector2(0.28151,0.28151),"target":Vector2(0,0)}]},"run_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(121.0,468.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(789.0,472.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(1313.25,423.5),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(104.0,967.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(790.0,961.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(1363.5,887.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)}]},"run_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(265,500),"scale":Vector2(0.264106,0.264106),"target":Vector2(0,0)},{"anchor":Vector2(780,500),"scale":Vector2(0.264106,0.264106),"target":Vector2(0,0)},{"anchor":Vector2(1295,500),"scale":Vector2(0.264106,0.264106),"target":Vector2(0,0)},{"anchor":Vector2(630,1205),"scale":Vector2(0.1075,0.1075),"target":Vector2(0,0)},{"anchor":Vector2(520,790),"scale":Vector2(0.17,0.17),"target":Vector2(0,0)},{"anchor":Vector2(1510,790),"scale":Vector2(0.17,0.17),"target":Vector2(0,0)}]},"idle_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(350.0,440.0),"scale":Vector2(0.285714,0.285714),"target":Vector2(0,0)},{"anchor":Vector2(862.5,442.67),"scale":Vector2(0.285714,0.285714),"target":Vector2(0,0)},{"anchor":Vector2(620,805),"scale":Vector2(0.155,0.155),"target":Vector2(0,0)},{"anchor":Vector2(370.0,942.6700000000001),"scale":Vector2(0.285714,0.285714),"target":Vector2(0,0)},{"anchor":Vector2(879.0,947.6700000000001),"scale":Vector2(0.285714,0.285714),"target":Vector2(0,0)},{"anchor":Vector2(1560,805),"scale":Vector2(0.155,0.155),"target":Vector2(0,0)}]},"hit_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(350.0,440.0),"scale":Vector2(0.285714,0.285714),"target":Vector2(0,0)},{"anchor":Vector2(369.5,560.67),"scale":Vector2(0.253262,0.253262),"target":Vector2(0,0)},{"anchor":Vector2(329.5,556.25),"scale":Vector2(0.253262,0.253262),"target":Vector2(0,0)},{"anchor":Vector2(503.5,544.0),"scale":Vector2(0.253262,0.253262),"target":Vector2(0,0)},{"anchor":Vector2(435.25,532.0),"scale":Vector2(0.253262,0.253262),"target":Vector2(0,0)},{"anchor":Vector2(1560,805),"scale":Vector2(0.155,0.155),"target":Vector2(0,0)}]},"attack_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(350.0,440.0),"scale":Vector2(0.285714,0.285714),"target":Vector2(0,0)},{"anchor":Vector2(368.0,565.0),"scale":Vector2(0.27088,0.27088),"target":Vector2(0,0)},{"anchor":Vector2(310.0,563.5),"scale":Vector2(0.27088,0.27088),"target":Vector2(0,0)},{"anchor":Vector2(321.25,519.5),"scale":Vector2(0.27088,0.27088),"target":Vector2(0,0)},{"anchor":Vector2(347.5,515.67),"scale":Vector2(0.27088,0.27088),"target":Vector2(0,0)},{"anchor":Vector2(1560,805),"scale":Vector2(0.155,0.155),"target":Vector2(0,0)}]},"attack_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(276.5,509.67),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)},{"anchor":Vector2(367.0,585.0),"scale":Vector2(0.222522,0.222522),"target":Vector2(0,0)},{"anchor":Vector2(321.0,593.67),"scale":Vector2(0.222522,0.222522),"target":Vector2(0,0)},{"anchor":Vector2(465,735),"scale":Vector2(0.17,0.17),"target":Vector2(0,0)},{"anchor":Vector2(1630,735),"scale":Vector2(0.17,0.17),"target":Vector2(0,0)},{"anchor":Vector2(271.5,490.0),"scale":Vector2(0.29837,0.29837),"target":Vector2(0,0)}]},"attack_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(358.5,498.5),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)},{"anchor":Vector2(405.0,583.33),"scale":Vector2(0.244716,0.244716),"target":Vector2(0,0)},{"anchor":Vector2(381.75,587.33),"scale":Vector2(0.244716,0.244716),"target":Vector2(0,0)},{"anchor":Vector2(690,1140),"scale":Vector2(0.165,0.165),"target":Vector2(0,0)},{"anchor":Vector2(352.5,560.0),"scale":Vector2(0.244716,0.244716),"target":Vector2(0,0)},{"anchor":Vector2(358.0,495.75),"scale":Vector2(0.301783,0.301783),"target":Vector2(0,0)}]}}
+metadata/twilight_clip_quality_holds = {}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = true
+metadata/twilight_quality_status = "DEFAULT_RUNTIME_BIG_ERROR_REVIEW_PENDING_MINOR_RESIDUE_ALLOWED"
+metadata/twilight_final_quality_approved = false

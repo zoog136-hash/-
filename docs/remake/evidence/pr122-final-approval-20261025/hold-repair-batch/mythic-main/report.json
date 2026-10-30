@@ -1,0 +1,156 @@
+{
+	"actors": [
+		{
+			"clips": [
+				{
+					"clip": "idle_1",
+					"final_quality_approval": false,
+					"markers": 0,
+					"phases": [
+						1,
+						2,
+						3,
+						4,
+						5,
+						0
+					]
+				},
+				{
+					"clip": "idle_3",
+					"final_quality_approval": false,
+					"markers": 0,
+					"phases": [
+						1,
+						2,
+						3,
+						4,
+						5,
+						0
+					]
+				}
+			],
+			"frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_133/pr158-hold-repair-v01/SpriteFrames.tres",
+			"id": "transform:133",
+			"phase_sheet": "/workspace/scratch/pr122-followup-audit/mythic-hold-repair-main-v01/transform_133-Main-phases.png",
+			"sheet_rows_follow_clip_order": true
+		},
+		{
+			"clips": [
+				{
+					"clip": "hit_3",
+					"final_quality_approval": false,
+					"markers": 0,
+					"phases": [
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				},
+				{
+					"clip": "idle_3",
+					"final_quality_approval": false,
+					"markers": 0,
+					"phases": [
+						1,
+						2,
+						3,
+						4,
+						5,
+						0
+					]
+				}
+			],
+			"frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_141/pr158-hold-repair-v01/SpriteFrames.tres",
+			"id": "transform:141",
+			"phase_sheet": "/workspace/scratch/pr122-followup-audit/mythic-hold-repair-main-v01/transform_141-Main-phases.png",
+			"sheet_rows_follow_clip_order": true
+		},
+		{
+			"clips": [
+				{
+					"clip": "idle_7",
+					"final_quality_approval": false,
+					"markers": 0,
+					"phases": [
+						1,
+						2,
+						3,
+						4,
+						5,
+						0
+					]
+				},
+				{
+					"clip": "idle_1",
+					"final_quality_approval": false,
+					"markers": 0,
+					"phases": [
+						1,
+						2,
+						3,
+						4,
+						5,
+						0
+					]
+				},
+				{
+					"clip": "idle_3",
+					"final_quality_approval": false,
+					"markers": 0,
+					"phases": [
+						1,
+						2,
+						3,
+						4,
+						5,
+						0
+					]
+				}
+			],
+			"frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_174/pr158-hold-repair-v01/SpriteFrames.tres",
+			"id": "transform:174",
+			"phase_sheet": "/workspace/scratch/pr122-followup-audit/mythic-hold-repair-main-v01/transform_174-Main-phases.png",
+			"sheet_rows_follow_clip_order": true
+		},
+		{
+			"clips": [
+				{
+					"clip": "attack_3",
+					"final_quality_approval": false,
+					"markers": 1,
+					"phases": [
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"frames": "res://assets/actors/eight_direction/native_locomotion_staging/transform_189/pr158-hold-repair-v01/SpriteFrames.tres",
+			"id": "transform:189",
+			"phase_sheet": "/workspace/scratch/pr122-followup-audit/mythic-hold-repair-main-v01/transform_189-Main-phases.png",
+			"sheet_rows_follow_clip_order": true
+		}
+	],
+	"actual_Main": true,
+	"blocked": [
+		{
+			"id": "transform:399",
+			"reason": "No authored locomotion sizing reference; no profile invented"
+		}
+	],
+	"candidate_injections": 8,
+	"cases": [],
+	"completed_clips": 8,
+	"errors": [],
+	"expected_clips": 8,
+	"new_quality_approvals": 0,
+	"repair_plan": "/workspace/pr122-approval/docs/remake/evidence/pr122-final-approval-20261025/hold-repair-batch/mythic-repair-plan.json",
+	"scope": "Explicit repaired mythic batch in actual Main/Player; original all-300 default unchanged",
+	"walk_resolution_checks": 0
+}

@@ -344,7 +344,7 @@ class Authoring:
 
 def main():
     index=json.loads((ROOT/'data/maps/field_index.json').read_text())
-    paths=[ROOT/'data/maps/aden_field.json']+[ROOT/e['path'].removeprefix('res://') for e in index]
+    paths=[ROOT/e['path'].removeprefix('res://') for e in index]
     profiles=json.loads((ROOT/'data/monsters/world_spawn_profiles.json').read_text())['maps']
     reports=[]; results=[]
     for serial,path in enumerate(paths):

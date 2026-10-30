@@ -1,0 +1,130 @@
+{
+  "actor": "transform:244",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r106/SW-attack-source.png",
+  "source_sha256": "1175cfe1c26aa65b7cf99f3d4928fa4142416b7d5d43c68cb22ac456f2007790",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SW-attack-source-v01.png",
+  "original_source_sha256": "a8de1f597ec246fa29778770351f577bf6898716638e3631c84fc0dcf2982ebd",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-1.png",
+      "anchor": [
+        380,
+        625
+      ],
+      "scale": 0.245,
+      "sha256": "4efacf3babbff3217544e8cc977b9c49d11972eb138c89f1fb018b236498d92e"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-2.png",
+      "anchor": [
+        990,
+        650
+      ],
+      "scale": 0.245,
+      "sha256": "a4b70df4e4cec7511a49c1a6f14cf07fb5edfd5a31e05ef1d461d26fdac310d1"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-3.png",
+      "anchor": [
+        390,
+        1160
+      ],
+      "scale": 0.245,
+      "sha256": "13b6cda407875325213c16caa93cc383932aaa4ce96540c28368ddd68c250ae9"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-4.png",
+      "anchor": [
+        1010,
+        1200
+      ],
+      "scale": 0.245,
+      "sha256": "4b8ccf8b4e39303b307f921898477b94217f0091cdae52094f558a92135c4f86"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 765607,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_IDLE_LEFT_HAND_N_ATTACK_IMPACT_HAND_AND_REMAINING_ACTOR_REVIEW",
+  "registration_basis": "One scale per source; root X at projected pelvis, Y at source boot contact plane; no source pixels painted or resampled during separation",
+  "replacement_basis": "Separate repair of confirmed cross-pose opacity connections; complete original costume, right-hand sword and body proportions retained; SW release corrected to southwest",
+  "reviewed_fragments": {
+    "14": {
+      "area": 293,
+      "bounds": [
+        771,
+        932,
+        788,
+        958
+      ],
+      "owner_phase": 4,
+      "basis": "Detached red glow immediately beside the lower-right recovering sword; wholly part of that sword aura, not the neighboring cape"
+    }
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_244/draft001/SW-idle-source-v01.png",
+      "sha256": "2c61e986f19a87cf55880709c4f164ef8f5d46e5541792fa9bf9630bd4d0ce13",
+      "bytes": 2289203
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-1.png",
+      "sha256": "4efacf3babbff3217544e8cc977b9c49d11972eb138c89f1fb018b236498d92e",
+      "bytes": 379765
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-2.png",
+      "sha256": "a4b70df4e4cec7511a49c1a6f14cf07fb5edfd5a31e05ef1d461d26fdac310d1",
+      "bytes": 442422
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-3.png",
+      "sha256": "13b6cda407875325213c16caa93cc383932aaa4ce96540c28368ddd68c250ae9",
+      "bytes": 591355
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r106/SW-attack-4.png",
+      "sha256": "4b8ccf8b4e39303b307f921898477b94217f0091cdae52094f558a92135c4f86",
+      "bytes": 395229
+    }
+  ],
+  "native_import": "PASS: this clip 6 AtlasTexture frames backed by real imported CompressedTexture2D under Godot4.7.2; default binding remains disabled",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: changed clip all6 poses in actual Main candidate path, projected foot anchor, marker3, directions and gameplay/collision invariant; 177E/244W normal phases1/2 are original source Atlas geometry and registration",
+  "local_player": "PASS: actual Player E joystick movement and all8 HIT tracks at30/60fps stationary/moving; candidate profile injection, default binding unchanged",
+  "remaining_actor_failures": [
+    {
+      "animation": "idle_6",
+      "status": "HOLD",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "reason": "Rear NORTH idle holds sword on anatomical LEFT; canonical N RUN and N HIT hold on RIGHT.",
+      "source_sha256": "b09db0b1ec3ea26f700930c54a8be863851fcfc2605a64ad998dc8ff124b6aae",
+      "source_bytes": 1451078,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    },
+    {
+      "animation": "attack_6",
+      "status": "HOLD",
+      "phases": [
+        0,
+        3
+      ],
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-attack-source-v01-isolated.png",
+      "reason": "Start and impact switch to anatomical LEFT sword; wind-up/recovery and N HIT are RIGHT. Do not activate actor based on C-ground/data passes.",
+      "source_sha256": "bfa84a0d2775e8846a3fe77549b06b46b52fffe07cbd7e180ecc7a13304bc07c",
+      "source_bytes": 1347086,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    }
+  ]
+}

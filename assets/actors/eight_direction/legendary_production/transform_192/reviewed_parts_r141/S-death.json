@@ -1,0 +1,165 @@
+{
+  "actor": "transform:192",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-death-source-v01.png",
+  "source_sha256": "3299ca129acf43768fc0ef54b84431151aadbda179a6064f7d687c704df4c0c6",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-0.png",
+      "anchor": [
+        273.5,
+        507
+      ],
+      "scale": 0.325926,
+      "sha256": "3e9b17313d057029ed128d0a5edbd8eaaa988d7032e4829061fd6863b38b7afe"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-1.png",
+      "anchor": [
+        783.25,
+        510
+      ],
+      "scale": 0.325926,
+      "sha256": "2b98c317b2c5ffe614c56fdf0905e51cc7ff470328d1fa8b3bf9abdc0dac6cf0"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-2.png",
+      "anchor": [
+        1297,
+        530
+      ],
+      "scale": 0.325926,
+      "sha256": "aa951e37bcc623eed354056ab84f8edcfe41a16d2f37f2a39cba5969f594fe85"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-3.png",
+      "anchor": [
+        300,
+        935
+      ],
+      "scale": 0.325926,
+      "sha256": "98dc60446dd9ff271e442355a888855de8b3428b0f39ad400b051d421f0f04e1"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-4.png",
+      "anchor": [
+        810,
+        930
+      ],
+      "scale": 0.325926,
+      "sha256": "44e58b4fee88608471c7ad040fd49b4488886ad9349517820d6098c987c0ebc7"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-5.png",
+      "anchor": [
+        1322,
+        930
+      ],
+      "scale": 0.325926,
+      "sha256": "0ddc85aeb6d39a0c689215328de21ebaf8ed7156c492551fd421ac9179b00ca0"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 499591,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_NW_CAMERA_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
+  "reviewed_fragments": {
+    "30": {
+      "area": 1,
+      "bounds": [
+        558,
+        873,
+        559,
+        874
+      ],
+      "owner_source_index": 4
+    }
+  },
+  "fragment_review_basis": "Reviewed source context: S recovery4 owns the detached red curved sword sparks to its right; SW recovery4 owns the leftward blade-tip sparks between recovery sword and impact3 cape, not the unrelated impact; death4 owns the ember near its grounded blade. No ambiguous piece discarded or assigned by threshold alone.",
+  "registration_basis": "Original RGBA and exact clock retained; all death phases use constant neutral SOUTH IDLE scale .325926. Source0 body/cape-height estimate392 was not equivalent to helmet-to-sole body height and made first death pose shrink; that estimate is not used. Terminal4/5 ground/chest C centres [810,930]/[1322,930] keep matching cell-local root; old final5 X1036 followed the neighbouring corpse.",
+  "prior_proposal_anchors": [
+    [
+      273.5,
+      507.0
+    ],
+    [
+      271.25,
+      506.5
+    ],
+    [
+      273.0,
+      511.0
+    ],
+    [
+      307.0,
+      421.0
+    ],
+    [
+      459.0,
+      393.0
+    ],
+    [
+      12.0,
+      406.0
+    ]
+  ],
+  "native_import_validation": "PASS official Godot4.7.2 isolated native import of four clips24 AtlasTexture frames, each actual CompressedTexture2D/nonempty decoded image. Source-byte Main loading is separate.",
+  "local_main_validation": "PASS real Main Player injected candidate IDLE/RUN/IDLE/DEATH/IDLE30captured poses18unique; same actor no rebind,6 dedicated RUN phases, exact source roots, no flip/fallback, stable death terminal position; process normal exit0/errors0,23.38s.",
+  "player_physics_validation": "NOT_APPLICABLE_TO_THIS_ACTION; locomotion validation recorded in S-run.",
+  "remaining_actor_issue": "N/S RUN, N HIT/ATTACK and W ATTACK local repairs passed; actor still requires NW camera and remaining directional/weapon/gait review. No default binding or whole actor approval.",
+  "boundary_result": "At r141 delivery compiled candidate198source frame regions:22->9 flaggedframes.13 flags resolved across S/SW attack and S death using lossless ownership, zero missing/duplicate source texels. Remaining9 source-frame flags belong N2/NW3/W4; whole source art and originals preserved.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/S-death-source-v01.png",
+      "sha256": "3299ca129acf43768fc0ef54b84431151aadbda179a6064f7d687c704df4c0c6",
+      "bytes": 1972144
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-0.png",
+      "sha256": "3e9b17313d057029ed128d0a5edbd8eaaa988d7032e4829061fd6863b38b7afe",
+      "bytes": 286259
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-1.png",
+      "sha256": "2b98c317b2c5ffe614c56fdf0905e51cc7ff470328d1fa8b3bf9abdc0dac6cf0",
+      "bytes": 269287
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-2.png",
+      "sha256": "aa951e37bcc623eed354056ab84f8edcfe41a16d2f37f2a39cba5969f594fe85",
+      "bytes": 226688
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-3.png",
+      "sha256": "98dc60446dd9ff271e442355a888855de8b3428b0f39ad400b051d421f0f04e1",
+      "bytes": 197780
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-4.png",
+      "sha256": "44e58b4fee88608471c7ad040fd49b4488886ad9349517820d6098c987c0ebc7",
+      "bytes": 174192
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-death-5.png",
+      "sha256": "0ddc85aeb6d39a0c689215328de21ebaf8ed7156c492551fd421ac9179b00ca0",
+      "bytes": 157266
+    }
+  ]
+}

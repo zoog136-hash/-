@@ -1,0 +1,169 @@
+{
+  "actor": "transform:143",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/draft001/SW-attack-source-v01.png",
+  "source_sha256": "579a1b72eeb8ea17249b8bcb5b30afa695bd87d249f55cbce4457c796c8d4137",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-0.png",
+      "anchor": [
+        271.0,
+        449.0
+      ],
+      "scale": 0.327869,
+      "sha256": "3122b7e0d93b26b07bcd3801a0033d7d28d46fc35f7b9fa2b4e687192219f9ac"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-1.png",
+      "anchor": [
+        823.25,
+        447.0
+      ],
+      "scale": 0.327869,
+      "sha256": "7975c001535ff8a1f0bd9e7f34fe0cf763811c05c9bee70b7f102b56162b1697"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-2.png",
+      "anchor": [
+        1269.0,
+        470.0
+      ],
+      "scale": 0.327869,
+      "sha256": "979293af9aa1dbb3c3633b99d039850386375247bc998b2b4ed69e9691223fba"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-3.png",
+      "anchor": [
+        276.0,
+        922.0
+      ],
+      "scale": 0.327869,
+      "sha256": "64325a0cd56b2ca5875dcead34456a16f80bdee4cd9cc589138b617294bc8dd8"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-4.png",
+      "anchor": [
+        783.25,
+        954.0
+      ],
+      "scale": 0.327869,
+      "sha256": "9a16a2607fa5a71123b3db2026f49d0157a93ce96ac4e832f955aeca35a11c63"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-5.png",
+      "anchor": [
+        1235.5,
+        919.0
+      ],
+      "scale": 0.327869,
+      "sha256": "2b3e7e7a3a3ea14ab5684c2ae5c172e010841e98f526d5dd56bee5ce58405923"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 735679,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_EXTRACTION_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_REQUIRED_ACTOR_REVIEW",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "37": {
+      "area": 124,
+      "bounds": [
+        647,
+        754,
+        660,
+        768
+      ],
+      "owner_source_index": 4
+    },
+    "39": {
+      "area": 171,
+      "bounds": [
+        1014,
+        789,
+        1031,
+        805
+      ],
+      "owner_source_index": 4
+    },
+    "41": {
+      "area": 117,
+      "bounds": [
+        584,
+        817,
+        595,
+        830
+      ],
+      "owner_source_index": 4
+    }
+  },
+  "fragment_review_basis": "All three orange embers follow the lower-middle recovery sword swirl:37/41 continue the ring beside its bent left-image knee/boot;39 continues its rightward upper swirl above the separate lower-right idle sword aura.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "PASS real Main Player SW IDLE/ATTACK/IDLE18captures12unique poses, marker3 on original impact phase, no mirror, original foot roots/scales/clock, unchanged inventory/health/collision. Whole actor not default-connected.",
+  "native_import": "PASS actual native CompressedTexture2D AtlasTexture6frames per clip;18frame batch. Both held NW registrations rejected by unchanged production helper without changing sprite transform.",
+  "clock_preservation": {
+    "loop": false,
+    "speed": 14.285714286,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "source_contract": "Verified exact match against selected c23 source;RUN looping retained."
+  },
+  "source_boundary_repair": "Combined candidates14325->20 and24512->5 original frame-region flags; this batch removes12 flags across3 clips without changing source pixels.",
+  "remaining_actor_issue": "Other required source/direction/weapon/RUN review remains; no whole actor activation or final approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_143/draft001/SW-attack-source-v01.png",
+      "sha256": "579a1b72eeb8ea17249b8bcb5b30afa695bd87d249f55cbce4457c796c8d4137",
+      "bytes": 2406473
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-0.png",
+      "sha256": "3122b7e0d93b26b07bcd3801a0033d7d28d46fc35f7b9fa2b4e687192219f9ac",
+      "bytes": 236190
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-1.png",
+      "sha256": "7975c001535ff8a1f0bd9e7f34fe0cf763811c05c9bee70b7f102b56162b1697",
+      "bytes": 254878
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-2.png",
+      "sha256": "979293af9aa1dbb3c3633b99d039850386375247bc998b2b4ed69e9691223fba",
+      "bytes": 455537
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-3.png",
+      "sha256": "64325a0cd56b2ca5875dcead34456a16f80bdee4cd9cc589138b617294bc8dd8",
+      "bytes": 404403
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-4.png",
+      "sha256": "9a16a2607fa5a71123b3db2026f49d0157a93ce96ac4e832f955aeca35a11c63",
+      "bytes": 300649
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r128/SW-attack-5.png",
+      "sha256": "2b3e7e7a3a3ea14ab5684c2ae5c172e010841e98f526d5dd56bee5ce58405923",
+      "bytes": 268579
+    }
+  ]
+}

@@ -56,7 +56,8 @@ static func range_pixels(skill: Dictionary) -> float:
 static func can_auto_cast(skill: Dictionary) -> bool:
 	if is_passive(skill):
 		return false
-	if skill.get("origin", "") == "LINEAGEM_20250617": return skill.get("mode", "") in ["attack", "status", "turn_undead", "heal", "buff", "counter", "cleanse", "convert", "summon"]
+	if bool(skill.get("local_design",false)): return skill.get("mode", "") in ["local_heal","local_buff","summon"]
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return skill.get("mode", "") in ["attack", "status", "turn_undead", "heal", "buff", "counter", "cleanse", "convert", "summon"]
 	return effect_kind(skill) in ["damage", "turnUndead", "charge", "heal", "stun", "silence", "poison", "bleed", "hold", "fear"]
 
 static func heal_threshold(skill: Dictionary) -> float:

@@ -1,0 +1,78 @@
+{
+  "as_of": "2026-10-29",
+  "policy": "issues only, no mutation of existing IDs/combat/balance; current guide and patch dates retained",
+  "issues": [
+    {
+      "name": "타운트",
+      "current_ours": "active / taunt",
+      "official": "패시브; lv60; 10칸 내 NPC 10인",
+      "source_type": "official guide rendered browser by collaborator",
+      "source_updated": "2024-09-27",
+      "status": "mode_mismatch_confirmed_review_required"
+    },
+    {
+      "name": "라이트",
+      "current_ours": "active / buff",
+      "official": "패시브; 밝기 효과",
+      "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+      "source_updated": "2026-06-29",
+      "status": "mode_mismatch_confirmed_review_required"
+    },
+    {
+      "name": "리덕션 아머",
+      "current_ours": "passive / stats",
+      "official": "패시브",
+      "source_updated": "2024-09-27",
+      "status": "consistent_do_not_force_cast"
+    },
+    {
+      "name": "엘리멘탈 애로우",
+      "current_ours": "absent",
+      "official": "2026-06-24 renamed 엘리멘탈 웨폰",
+      "source_url": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+      "status": "register_current_name_with_historical_alias_not_two_duplicate_skills"
+    },
+    {
+      "name": "슈팅 스타",
+      "current_ours": "absent",
+      "official": "2026-06-24 ON/OFF passive; shared general attack magic cooldown",
+      "source_url": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+      "status": "do_not_implement_as_old_2023_direct_cast"
+    }
+  ],
+  "official_other_issues": [
+    {
+      "name": "타운트",
+      "our_id": "lm_310e7f51a839530f",
+      "our_activation": "active",
+      "our_mode": "taunt",
+      "official_activation": "passive",
+      "official_minimum_level": 60,
+      "official_target": "NPC 10 targets within 10 cells",
+      "source_id": "current_official_knight",
+      "severity": "confirmed_activation_mismatch",
+      "action": "Audit only; do not auto-mutate game."
+    },
+    {
+      "name": "라이트",
+      "our_id": "lm_d44e85981c877135",
+      "our_activation": "active",
+      "our_mode": "buff",
+      "official_activation": "passive",
+      "source_id": "current_official_knight",
+      "severity": "confirmed_activation_mismatch",
+      "action": "Audit only; do not auto-mutate game."
+    },
+    {
+      "name": "브레이브 멘탈",
+      "our_id": "lm_9f340db69e8b2702",
+      "our_activation": "active",
+      "our_mode": "buff",
+      "official_activation": "passive",
+      "official_effect_role": "on_attack_probabilistic_physical_damage_amplification",
+      "source_id": "current_official_monarch",
+      "severity": "confirmed_activation_mismatch",
+      "action": "Audit only; do not auto-mutate game."
+    }
+  ]
+}

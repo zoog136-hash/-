@@ -1,0 +1,149 @@
+{
+  "actor": "transform:245",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NW-run-source-v01.png",
+  "source_sha256": "7eae543f9406910edbeb4fb645591f075004ab16f9c0082e49669b4b33cc9bb1",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-0.png",
+      "anchor": [
+        342.5,
+        424.67
+      ],
+      "scale": 0.253582,
+      "sha256": "bcce58676a2fb1c62417cce74d38bbdec55dd2dcaec3b9a626d581ee5f133850"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-1.png",
+      "anchor": [
+        820.0,
+        482.0
+      ],
+      "scale": 0.253582,
+      "sha256": "63d0159caef8c519a4077d2d1fbb539c0f5eb78cdad4d44b81b22de47974e127"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-2.png",
+      "anchor": [
+        1379.0,
+        492.0
+      ],
+      "scale": 0.253582,
+      "sha256": "e5411da384bae25d6576db1db73b0864629ef2e3450035d397a04d39d5014cec"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-3.png",
+      "anchor": [
+        259.0,
+        957.0
+      ],
+      "scale": 0.253582,
+      "sha256": "53b0a3a6811b77da7702970ef175aef525afae2f510db36200e59c0f394ee5e1"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-4.png",
+      "anchor": [
+        846.0,
+        981.0
+      ],
+      "scale": 0.253582,
+      "sha256": "3d6b7e49dc2727bcde69d796cc4156745c53b7b3bef74ba94eba51deb4926719"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-5.png",
+      "anchor": [
+        1400.5,
+        989.0
+      ],
+      "scale": 0.253582,
+      "sha256": "8cda3fbbc9a61c4653c22b35a9cd39f2c8fd3bb453a3873c97a5d87b8a7b574e"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 669796,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "HOLD_CAMERA_GAIT_AFTER_LOSSLESS_EXTRACTION",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_REQUIRED_ACTOR_REVIEW",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "7": {
+      "area": 210,
+      "bounds": [
+        483,
+        231,
+        506,
+        247
+      ],
+      "owner_source_index": 0
+    }
+  },
+  "fragment_review_basis": "Gold/purple fragment continues the upper-left running cape tip to its right; the upper-middle figure cape trails on its other side and does not extend into this gap.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "NOT_PLAY_APPROVED: NW camera/chest presentation and RUN foot alternation remain held; both semantic gates HOLD before test, no diagnostic bypass.",
+  "native_import": "PASS actual native CompressedTexture2D AtlasTexture6frames per clip;18frame batch. Both held NW registrations rejected by unchanged production helper without changing sprite transform.",
+  "clock_preservation": {
+    "loop": true,
+    "speed": 12.5,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "source_contract": "Verified exact match against selected c23 source;RUN looping retained."
+  },
+  "source_boundary_repair": "Combined candidates14325->20 and24512->5 original frame-region flags; this batch removes12 flags across3 clips without changing source pixels.",
+  "remaining_actor_issue": "Other required source/direction/weapon/RUN review remains; no whole actor activation or final approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NW-run-source-v01.png",
+      "sha256": "7eae543f9406910edbeb4fb645591f075004ab16f9c0082e49669b4b33cc9bb1",
+      "bytes": 2363201
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-0.png",
+      "sha256": "bcce58676a2fb1c62417cce74d38bbdec55dd2dcaec3b9a626d581ee5f133850",
+      "bytes": 333248
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-1.png",
+      "sha256": "63d0159caef8c519a4077d2d1fbb539c0f5eb78cdad4d44b81b22de47974e127",
+      "bytes": 310720
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-2.png",
+      "sha256": "e5411da384bae25d6576db1db73b0864629ef2e3450035d397a04d39d5014cec",
+      "bytes": 294804
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-3.png",
+      "sha256": "53b0a3a6811b77da7702970ef175aef525afae2f510db36200e59c0f394ee5e1",
+      "bytes": 318276
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-4.png",
+      "sha256": "3d6b7e49dc2727bcde69d796cc4156745c53b7b3bef74ba94eba51deb4926719",
+      "bytes": 318505
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-run-5.png",
+      "sha256": "8cda3fbbc9a61c4653c22b35a9cd39f2c8fd3bb453a3873c97a5d87b8a7b574e",
+      "bytes": 282965
+    }
+  ]
+}

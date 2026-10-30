@@ -27,7 +27,7 @@ func configure(service: RefCounted) -> void:
 func active(id: String = "") -> bool:
 	return is_instance_valid(actor) and remaining > 0 and (id.is_empty() or str(skill.get("id","")) == id)
 
-func spawn(record: Dictionary) -> bool:
+func spawn(record: Dictionary, prepared_landing: Vector2 = Vector2.INF) -> bool:
 	if active() or world.hp <= 0: return false
 	skill = record.duplicate(true)
 	remaining = float(skill.duration)
@@ -38,7 +38,7 @@ func spawn(record: Dictionary) -> bool:
 	actor.tint = owner_service.vfx.color_for(str(skill.id))
 	actor.z_index = 10
 	world.add_child(actor)
-	var landing: Vector2 = safe_landing(world.player.global_position,30,72)
+	var landing: Vector2 = prepared_landing if prepared_landing.is_finite() else safe_landing(world.player.global_position,30,72)
 	if not landing.is_finite(): clear(); return false
 	actor.global_position = landing
 	owner_service.apply_buff(skill)
@@ -144,7 +144,7 @@ func tick(delta: float) -> void:
 		pending_hit.remaining -= delta
 		if float(pending_hit.remaining) <= 0: release_hit()
 	if not active(): return
-	if float(world.hp)/maxf(1,world._effective_max_hp()) <= float(skill.guardian_hp_threshold):
+	if not bool(skill.get("elemental_guardian",false)) and float(world.hp)/maxf(1,world._effective_max_hp()) <= float(skill.guardian_hp_threshold):
 		convert_to_shield();return
 	var enemy := choose_target()
 	var destination: Vector2 = world.player.global_position+Vector2(-48,32)
@@ -187,6 +187,10 @@ func release_hit() -> void:
 	var chance: float = world._physical_hit_chance(accuracy,enemy.armor_class,0)
 	if world.rng.randf() >= chance:
 		enemy.show_miss();return
+	if bool(skill.get("elemental_guardian",false)):
+		owner_service.local_runtime.guardian_impact(skill,enemy,actor.global_position)
+		hit_events += 1
+		return
 	var damage := maxi(1,int(skill.summon_power)+int(world._spell_power_stat()*float(skill.summon_sp_scale))-enemy.defense_value)
 	damage = world._elemental_damage_to_monster(damage,str(skill.get("element","physical")),enemy)
 	# NPC deaths award ordinary owner XP/drop. Guardian attacks never recurse
@@ -196,7 +200,7 @@ func release_hit() -> void:
 	hit_events += 1
 
 func intercept(amount: int) -> void:
-	if not active() or amount <= 0: return
+	if not active() or amount <= 0 or bool(skill.get("elemental_guardian",false)): return
 	var after: int = world.hp-amount
 	if float(after)/maxf(1,world._effective_max_hp()) <= float(skill.guardian_hp_threshold): convert_to_shield()
 

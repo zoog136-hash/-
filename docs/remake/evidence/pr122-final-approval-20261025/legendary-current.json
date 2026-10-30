@@ -1,0 +1,100 @@
+{
+  "schema": "legendary-completed-report-presentation-clarification-v06",
+  "completed_report": {
+    "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-v05.json",
+    "sha256": "9fdf227783c9ac2d3d9fe67010011daf645aeb7c1cd93363366cf6bc448d9ba7"
+  },
+  "original_MD_preserved": {
+    "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-v05-KO.md",
+    "sha256": "4bd4d51ba4cace6f06f00540fe35c6befea29d1ab6056369c721917b35747d39"
+  },
+  "clarification_scope": "Display nested effective_results from the original receipt; export existing deduplicated clip rows. No finding or severity change.",
+  "effective_runtime": {
+    "receipt": {
+      "path": "res://docs/remake/pr122-legendary-parallel/final-runtime-integration-through-corrections-v02.json",
+      "sha256": "fbb0bcf777624e2e257dc93744b46deb3ed5a6b6a830aa5b9ff4a850e97d30fa"
+    },
+    "json_pointer": "/effective_results",
+    "results": {
+      "PASS": 1318,
+      "EXPECTED_BLOCKED": 1,
+      "FAIL": 1
+    },
+    "unchanged_healthy_clips_not_replayed": 1221
+  },
+  "changed_delta_runtime": {
+    "receipt": {
+      "path": "res://docs/remake/pr122-legendary-parallel/final-correction-render-integration-v01.json",
+      "sha256": "e79c44ec3192f1189cbf3140252a16a1c46c242e091c8b9e751e3c7319050948"
+    },
+    "PASS": 97,
+    "FAIL": 1,
+    "required": 98,
+    "fail_reclassified_as_pass": 0
+  },
+  "CI2": {
+    "receipt": {
+      "path": "res://docs/remake/pr122-legendary-parallel/final-github-ci-receipt-v02-completed-v01.json",
+      "sha256": "0625e7737202d9f7225f002b8415c57305517eba2514f856c03599c61d85cd9c"
+    },
+    "status": "completed",
+    "conclusion": "failure",
+    "summary": {
+      "total": 233,
+      "passed": 216,
+      "failed": 12,
+      "skipped": 5,
+      "not_run": 0,
+      "import": "PASS",
+      "boot": "PASS"
+    }
+  },
+  "exports": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-active-clips-final-v05.tsv",
+      "sha256": "6131d49da23a019af055e14c0f27de7aea27dd0ad34470cfe13d2b9217bc8c2e",
+      "rows": 972,
+      "data_unit": "one unique active/missing art-or-uncertainty clip; highest severity and causes already computed"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-QA-environment-clips-final-v05.tsv",
+      "sha256": "c712de5e5007ebb44536dc11283a9d3004efb0bb797e5ced036d7b11629f8b92",
+      "rows": 2,
+      "data_unit": "QA environment HOLD clips; both already overlap the972 art/uncertainty clip keys"
+    }
+  ],
+  "precondition_attempts_preserved": [
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-precondition-attempt1-v01.json",
+      "sha256": "aaf234b32ea3caf9ed74beb628d52699f3b276c97462f4b3c930acb0b570a050"
+    },
+    {
+      "path": "res://docs/remake/pr122-legendary-parallel/remaining-findings-final-precondition-attempt2-v01.json",
+      "sha256": "2764fbb0d120dd063df74243a0d192a569f677aba14fdc1cca3f1ef745c46013"
+    }
+  ],
+  "completed_final_corpus_reports": 1,
+  "new_corpus_reconciliation_runs": 0,
+  "source_PNG_reads": 0,
+  "new_visual_reviews": 0,
+  "new_runtime_replays": 0,
+  "finding_classification_mutations": 0,
+  "new_approvals": 0,
+  "active_projection_highest_severity": {
+    "HOLD": 591,
+    "ERROR": 380,
+    "BLOCKED": 1
+  },
+  "QA_environment_clips_overlap_active_projection": 2,
+  "interpretation": "972 combines frozen issue projections and current uncertainty; not972 newly confirmed defective clips",
+  "body_foreign_ERROR338_provenance": {
+    "unique_clips": 338,
+    "source_activity": {
+      "ACTIVE_LOSSLESS_DERIVATIVE": 225,
+      "ACTIVE_EXACT_SOURCE": 113
+    },
+    "new_postfix_visual_observations": 0,
+    "projection_status": "ACTIVE_VISUAL_FINDING",
+    "meaning": "Frozen ERROR_VISUAL finding projected through current exact-source/lossless-derivative selection. Ownership proof alone does not close the combined visual clipping/shape cause; no classification change."
+  }
+}

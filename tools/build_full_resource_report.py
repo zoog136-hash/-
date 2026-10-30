@@ -59,7 +59,7 @@ def main():
         write(private/f'{name}.json',rows)
     maps=read(root/'data/maps_v18.json');npc_instances=[];map_rows=[]
     for r in maps:
-        field=root/('data/maps/aden_field.json' if r['id']=='aden_world' else 'data/maps/'+r['id']+'.json')
+        field=root/('data/maps/'+r['id']+'.json')
         data=read(field)
         npc_instances.extend(dict(npc,map_id=r['id']) for npc in data.get('npc_spawn',[]))
         map_rows.append({'map_id':r['id'],'name':r['name'],'current_kind':r['kind'],

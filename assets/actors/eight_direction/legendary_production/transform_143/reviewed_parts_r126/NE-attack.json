@@ -1,0 +1,121 @@
+{
+  "actor": "transform:143",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_143/draft001/NE-attack-source-v01.png",
+  "source_sha256": "7f7cda7f69d2025b8f5aa5eb5dcc3612803bb70e32b188c9fa0ef24a7cc989a5",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-1.png",
+      "anchor": [
+        305.5,
+        588.0
+      ],
+      "scale": 0.258773,
+      "sha256": "5bb92c04abd9d05c7d0727fc1ce8febff92be0641ef6c92adba3f32b08362762"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-2.png",
+      "anchor": [
+        914.0,
+        553.0
+      ],
+      "scale": 0.258773,
+      "sha256": "a1da047c01b2d9d0b790545dea60b9aff604a9dc0750968118b10f9880720c67"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-3.png",
+      "anchor": [
+        295.5,
+        1145.5
+      ],
+      "scale": 0.258773,
+      "sha256": "67f009b73faa953e1870ea6e1d170f614c5d181feaa3235d9f2d708844d21c44"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-4.png",
+      "anchor": [
+        923.0,
+        1124.67
+      ],
+      "scale": 0.258773,
+      "sha256": "4759b53c9cf74160084830ea8f2e276bab1237e497a85eb55e85634d9039b206"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 678988,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOSSLESS_EXTRACTION_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_DIRECTION_WEAPON_RUN_AND_SOURCE_FAILURES",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "31": {
+      "area": 49,
+      "bounds": [
+        651,
+        923,
+        659,
+        931
+      ],
+      "owner_source_index": 2
+    },
+    "32": {
+      "area": 228,
+      "bounds": [
+        631,
+        933,
+        644,
+        960
+      ],
+      "owner_source_index": 2
+    }
+  },
+  "fragment_review_basis": "Both orange fragments trail below the lower-left impact projectile tip; separate from the lower-right recovery blade.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "PASS local candidate in real Main Player: all6 phases, matching idle/action transitions, marker3 where applicable, original authored scale/anchor/clock retained; no mirror, gameplay/collision unchanged. Held actor not default-bound. Whole camera/hand/gait approval is separate.",
+  "native_import": "PASS native CompressedTexture2D AtlasTexture6frames; one integrated import batch36frames. NE direction gate rejection also verified against unchanged production helper.",
+  "source_boundary_repair": "1432 +24517 original source-region failures eliminated in combined candidate; this record covers only selected source components, not remaining failures.",
+  "remaining_actor_issue": "143 E ATTACK/S DEATH original outer truncation; SE ATTACK effects joined; other attack component ownership and required RUN/direction/weapon review remain.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_143/corrections/isolation-v03/NE-idle-source-v01-isolated.png",
+      "sha256": "8f1ddb56812d5d8b00cac3c2c5779d3709a7382947e6504b9ea6d81a72abb3f3",
+      "bytes": 1608067
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_143/draft001/NE-attack-source-v01.png",
+      "sha256": "7f7cda7f69d2025b8f5aa5eb5dcc3612803bb70e32b188c9fa0ef24a7cc989a5",
+      "bytes": 1796280
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-1.png",
+      "sha256": "5bb92c04abd9d05c7d0727fc1ce8febff92be0641ef6c92adba3f32b08362762",
+      "bytes": 408233
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-2.png",
+      "sha256": "a1da047c01b2d9d0b790545dea60b9aff604a9dc0750968118b10f9880720c67",
+      "bytes": 415292
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-3.png",
+      "sha256": "67f009b73faa953e1870ea6e1d170f614c5d181feaa3235d9f2d708844d21c44",
+      "bytes": 519331
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r126/NE-attack-4.png",
+      "sha256": "4759b53c9cf74160084830ea8f2e276bab1237e497a85eb55e85634d9039b206",
+      "bytes": 385180
+    }
+  ]
+}

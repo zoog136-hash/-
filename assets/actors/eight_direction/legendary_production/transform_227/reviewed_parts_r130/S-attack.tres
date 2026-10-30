@@ -1,0 +1,50 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/S-attack-source-v01.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/S-attack-source-v01.png" id="t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/S-attack-source-v01.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r130/S-attack-3-source.png" id="t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/S-attack-source-v01.png" id="t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/S-attack-source-v01.png" id="t5"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("t0")
+region = Rect2(0.0,0.0,512.0,512.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("t1")
+region = Rect2(512.0,0.0,512.0,512.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("t2")
+region = Rect2(1024.0,0.0,512.0,512.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("t3")
+region = Rect2(0,0,1199,1312)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("t4")
+region = Rect2(512.0,512.0,512.0,512.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("t5")
+region = Rect2(1024.0,512.0,512.0,512.0)
+filter_clip = true
+margin = Rect2(0.0,0.0,0.0,0.0)
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":false,"name":&"attack_2","speed":14.285714286}]
+metadata/twilight_production_connected = true
+metadata/twilight_quality_status = "PASS_LOCAL_COMPONENT_IN_CONNECTED_ACTOR"
+metadata/twilight_reviewed_frame_registration = {"attack_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(208.0,456.0),"scale":Vector2(0.300546,0.300546),"target":Vector2(0,0)},{"anchor":Vector2(193.0,457.0),"scale":Vector2(0.300546,0.300546),"target":Vector2(0,0)},{"anchor":Vector2(200.0,486.0),"scale":Vector2(0.300546,0.300546),"target":Vector2(0,0)},{"anchor":Vector2(530,850),"scale":Vector2(0.13,0.13),"target":Vector2(0,0)},{"anchor":Vector2(282,335),"scale":Vector2(0.300546,0.300546),"target":Vector2(0,0)},{"anchor":Vector2(205.0,416.0),"scale":Vector2(0.300546,0.300546),"target":Vector2(0,0)}]}}
+metadata/twilight_final_quality_approved = false

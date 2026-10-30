@@ -1,0 +1,380 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/ugnus/raw/NE-idle-v02.png",
+  "source_sha256": "b418ba05ecb8650d5a9cc5d3be1e5cafc9c8e7f2b58d240d6bc626e2246df6d8",
+  "texture": "assets/actors/eight_direction/boss_draft_first/ugnus/reviewed_parts_r001/NE-idle.png",
+  "texture_sha256": "e4e76f20f2561bf59bd3b930b643a8be477c71b9586d7ed353bdeeb0786c170c",
+  "geometry": {
+    "image_size": [
+      1904,
+      2856
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NE",
+        "region": [
+          80,
+          80,
+          757,
+          414
+        ],
+        "margin": [
+          183,
+          350,
+          331,
+          674
+        ],
+        "source_anchor": [
+          441,
+          410
+        ],
+        "rgba_sha256": "19e1e5a3c2713ee3bd6165dfc74e3041248ffa3de381fea38053a44644706e8a",
+        "original_source_region": [
+          23,
+          0,
+          757,
+          414
+        ],
+        "original_source_anchor": [
+          384,
+          330
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "NE",
+        "region": [
+          1032,
+          80,
+          715,
+          372
+        ],
+        "margin": [
+          165,
+          350,
+          373,
+          716
+        ],
+        "source_anchor": [
+          1411,
+          410
+        ],
+        "rgba_sha256": "573d76ae52477a1773bb05b20f963597dfa3809633820ef7bd87e434c69ddd89",
+        "original_source_region": [
+          773,
+          0,
+          715,
+          372
+        ],
+        "original_source_anchor": [
+          1152,
+          330
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "NE",
+        "region": [
+          80,
+          1032,
+          789,
+          444
+        ],
+        "margin": [
+          197,
+          335,
+          299,
+          644
+        ],
+        "source_anchor": [
+          427,
+          1377
+        ],
+        "rgba_sha256": "514ba1bc6d42f0ee662d644a0d8a7acdffee095a3f617066655fafefe552d3be",
+        "original_source_region": [
+          37,
+          332,
+          789,
+          444
+        ],
+        "original_source_anchor": [
+          384,
+          677
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "NE",
+        "region": [
+          1032,
+          1032,
+          787,
+          399
+        ],
+        "margin": [
+          93,
+          328,
+          301,
+          689
+        ],
+        "source_anchor": [
+          1483,
+          1384
+        ],
+        "rgba_sha256": "0724deb31141fcbee697516d8103591f5af042e9ddbfa21a630c6606088b7cfc",
+        "original_source_region": [
+          701,
+          325,
+          787,
+          399
+        ],
+        "original_source_anchor": [
+          1152,
+          677
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "NE",
+        "region": [
+          80,
+          1984,
+          743,
+          329
+        ],
+        "margin": [
+          185,
+          355,
+          345,
+          759
+        ],
+        "source_anchor": [
+          439,
+          2309
+        ],
+        "rgba_sha256": "2135df74ad8c45a12899d3860792ad1ba5dbcd8ba5b5e2f5be319eece02e59a0",
+        "original_source_region": [
+          25,
+          681,
+          743,
+          329
+        ],
+        "original_source_anchor": [
+          384,
+          1006
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "NE",
+        "region": [
+          1032,
+          1984,
+          676,
+          330
+        ],
+        "margin": [
+          233,
+          354,
+          412,
+          758
+        ],
+        "source_anchor": [
+          1343,
+          2310
+        ],
+        "rgba_sha256": "c0da6dbbeb7e00f1ac59606ca99673654d7d1d549114800112bd0ee5fba01ca0",
+        "original_source_region": [
+          841,
+          680,
+          676,
+          330
+        ],
+        "original_source_anchor": [
+          1152,
+          1006
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 406.5,
+    "canvas_size": [
+      1088,
+      1088
+    ],
+    "foot": [
+      544,
+      680
+    ]
+  },
+  "layout_used": "phase_grid2",
+  "proof": {
+    "original_visible_texels": 616954,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "source-pinned manually reviewed detached fragments; unchanged strict margin for all other fragments",
+    "manual_fragments": [
+      {
+        "component": 10,
+        "bbox": [
+          1197,
+          363,
+          1198,
+          364
+        ],
+        "pixels": 1,
+        "nearest_rows": [
+          3
+        ],
+        "minimum_margin": 30.136083051561783
+      }
+    ],
+    "minimum_automatic_owner_margin": 32,
+    "source_sha256": "b418ba05ecb8650d5a9cc5d3be1e5cafc9c8e7f2b58d240d6bc626e2246df6d8",
+    "subthreshold_fringe_texels": 127989,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0,
+    "repacked_strict_ownership": {
+      "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+      "nearest_owner_sha256": "88ffd714c89a799722a8102e5579ee2c419c193a730541eb92fff290d0155908",
+      "foreground_owner_sha256": "b45ff2579acc23e30439fdaf14c3ffce49c1148be0669a2d257dc90288fae84c",
+      "detached_pixels": 10,
+      "detached_fragments": [
+        {
+          "row": 1,
+          "pixels": 1,
+          "bbox": [
+            1214,
+            146,
+            1215,
+            147
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 506.7435248722967,
+          "owner_margin_min": 503.9150977475505
+        },
+        {
+          "row": 1,
+          "pixels": 1,
+          "bbox": [
+            1322,
+            225,
+            1323,
+            226
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 578.8609504881116,
+          "owner_margin_min": 576.0325233633654
+        },
+        {
+          "row": 0,
+          "pixels": 1,
+          "bbox": [
+            369,
+            291,
+            370,
+            292
+          ],
+          "nearest_max": 2.0,
+          "second_nearest_min": 743.5274036644514,
+          "owner_margin_min": 741.5274036644514
+        },
+        {
+          "row": 0,
+          "pixels": 1,
+          "bbox": [
+            680,
+            349,
+            681,
+            350
+          ],
+          "nearest_max": 3.0,
+          "second_nearest_min": 440.477014156244,
+          "owner_margin_min": 437.477014156244
+        },
+        {
+          "row": 0,
+          "pixels": 1,
+          "bbox": [
+            489,
+            363,
+            490,
+            364
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 630.9746429136436,
+          "owner_margin_min": 628.1462157888974
+        },
+        {
+          "row": 3,
+          "pixels": 1,
+          "bbox": [
+            1528,
+            1070,
+            1529,
+            1071
+          ],
+          "nearest_max": 3.0,
+          "second_nearest_min": 660.0189391222043,
+          "owner_margin_min": 657.0189391222043
+        },
+        {
+          "row": 2,
+          "pixels": 1,
+          "bbox": [
+            401,
+            1183,
+            402,
+            1184
+          ],
+          "nearest_max": 3.1622776601683795,
+          "second_nearest_min": 728.4538420517803,
+          "owner_margin_min": 725.2915643916119
+        },
+        {
+          "row": 2,
+          "pixels": 1,
+          "bbox": [
+            465,
+            1331,
+            466,
+            1332
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 661.272258604578,
+          "owner_margin_min": 658.4438314798318
+        },
+        {
+          "row": 4,
+          "pixels": 1,
+          "bbox": [
+            576,
+            2035,
+            577,
+            2036
+          ],
+          "nearest_max": 2.0,
+          "second_nearest_min": 505.6421659632432,
+          "owner_margin_min": 503.6421659632432
+        },
+        {
+          "row": 5,
+          "pixels": 1,
+          "bbox": [
+            1432,
+            2075,
+            1433,
+            2076
+          ],
+          "nearest_max": 2.8284271247461903,
+          "second_nearest_min": 683.117852204142,
+          "owner_margin_min": 680.2894250793958
+        }
+      ],
+      "minimum_required_owner_margin": 32.0
+    }
+  }
+}

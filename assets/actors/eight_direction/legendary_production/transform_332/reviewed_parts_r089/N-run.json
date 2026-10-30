@@ -1,0 +1,93 @@
+{
+  "actor": "transform:332",
+  "role": "run",
+  "direction": "N",
+  "poses": [
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_332/corrections/isolation-v17/N-run-source-v01-isolated.png",
+      "region": [
+        1236.0,
+        0.0,
+        618.0,
+        629.0
+      ],
+      "anchor": [
+        401.5,
+        552.5
+      ],
+      "scale": 0.28522,
+      "sha256": "1ee80cdde209d4a9a74e487142c33c925a8e5b65be3539e92e56a9a14d5cf3ad"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r089/N-run-3.png",
+      "anchor": [
+        650,
+        1235
+      ],
+      "scale": 0.12,
+      "sha256": "2809495ce10f040a9ce593879d191c827e30c4fab536f3482acdf50759ae61c0"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r088/N-run-half.png",
+      "region": [
+        724,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        380,
+        710
+      ],
+      "scale": 0.19,
+      "sha256": "c507815ff24c2be9eb8a7398671d4af6b7ddc2a552f7df3404695b4afccfe4b2"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r088/N-run-half.png",
+      "region": [
+        1448,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        410,
+        710
+      ],
+      "scale": 0.19,
+      "sha256": "c507815ff24c2be9eb8a7398671d4af6b7ddc2a552f7df3404695b4afccfe4b2"
+    }
+  ],
+  "normal_original_source_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "normal_original_registration_phases_preserved": [
+    0,
+    1
+  ],
+  "registration_repair": {
+    "phase": 2,
+    "previous_anchor": [
+      401.5,
+      501.67
+    ],
+    "new_ground_y": 552.5,
+    "basis": "AIR foot was mistaken for ground: contact phases0/1 give ground554/551 while source upper-body placement stays stable. Projected ground replaces lifted-foot anchor; original pixels unchanged."
+  },
+  "unselected_atlas_cells": [
+    0
+  ],
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "production_connected": true,
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
+  "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
+  "local_visual_review": "PASS fixed late-half staff, opposite feet; projected AIR2 ground corrected without resampling",
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
+}

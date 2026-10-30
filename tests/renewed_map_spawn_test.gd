@@ -106,7 +106,7 @@ func _run() -> void:
 	CATALOG.expand(base["몬스터"])
 	var records_before: String = JSON.stringify(CATALOG.records_by_name)
 	var profiles_before: String = JSON.stringify(CATALOG.spawn_profiles)
-	var paths: Array = ["res://data/maps/aden_field.json"]
+	var paths: Array = []
 	var index: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json"))
 	for entry: Dictionary in index: paths.append(str(entry.path))
 	var report: Dictionary = {"revision": RELAYOUT.revision(), "maps": {}, "checks": 0, "failures": []}
@@ -200,9 +200,8 @@ func _run() -> void:
 		total_dense += _count(definition, "dense")
 		report.maps[id] = {"normal": _count(definition, "normal"), "dense": _count(definition, "dense"), "boss": _count(definition, "boss"), "spawns": definition.monster_spawn}
 		print("RENEWED MAP CHECKED: " + id)
-	check(paths.size() == 25, "all 25 current authored maps covered")
-	check(total_normal == 1294 and total_dense == 96 and total_bosses == 28, "global population budgets 1294/96/28")
-	check(boss_names.get("흑장로", "") == "aden_world" and boss_names.get("데스나이트", "") == "aden_world", "dedicated field bosses present")
+	check(paths.size() == 24, "all retained 24 authored maps covered; source84 Aden has a separate contract")
+	check(total_normal == 940 and total_dense == 72 and total_bosses == 23, "retained authored population budgets 940/72/23")
 	check(JSON.stringify(CATALOG.records_by_name) == records_before, "monster stats/AI/drop records not mutated")
 	check(JSON.stringify(CATALOG.spawn_profiles) == profiles_before, "historical base profiles not mutated")
 	var outside: Dictionary = {"map_id": "l1_4", "monster_spawn": []}

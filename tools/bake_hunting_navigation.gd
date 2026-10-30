@@ -19,7 +19,7 @@ func run() -> void:
 	if not index is Array or index.size() != 24:
 		fail("expected 24 regional maps plus Aden")
 		return
-	var paths: Array[String] = ["res://data/maps/aden_field.json"]
+	var paths: Array[String] = []
 	var catalog: Dictionary = {}
 	for entry: Dictionary in index:
 		paths.append(str(entry.path))

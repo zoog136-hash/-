@@ -29,7 +29,8 @@ func reset_cast() -> void:
 	world.hp = world._effective_max_hp()
 
 func run() -> void:
-	if preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/original_skill_system_test.gd"): return
+	var native_requested: bool="--current-native-map" in OS.get_cmdline_user_args() or "--current-main-map" in OS.get_cmdline_user_args()
+	if not native_requested and preload("res://tests/legacy_aden_faith_fixture.gd").delegate(self,"res://tests/original_skill_system_test.gd"): return
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	await process_frame
@@ -42,7 +43,12 @@ func run() -> void:
 	world._clear_monsters()
 	# The installed A3 source grid has closed directional edges. A target
 	# offset from the old spawn is not necessarily a valid missile lane.
-	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(10,0)])
+	check(not native_requested or preload("res://tests/current_main_map_contract.gd").valid(world),"explicit verified current main map fixture")
+	# Projectile anchors stand above the foot. The PNG fixture must clear the
+	# full existing strike/flight envelope, not only a 10px ground segment.
+	var fixture_offsets: Array=[Vector2(10,0)]
+	if native_requested:fixture_offsets.append_array([Vector2(-80,-80),Vector2(80,-80),Vector2(-80,80),Vector2(80,80)])
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,fixture_offsets)
 	check(arena.is_finite(),"original skill test has real walkable and clear A3 combat lane")
 	if not arena.is_finite(): world.queue_free(); quit(1); return
 	world.player.global_position = arena

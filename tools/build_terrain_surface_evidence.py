@@ -55,7 +55,7 @@ def main():
         sheet.save(args.root/(phase+'-contact-sheet.jpg'), quality=94)
     scope = []
     for map_id in maps:
-        path = Path('data/maps')/('aden_field.json' if map_id == 'aden_world' else map_id+'.json')
+        path = Path('data/maps')/(map_id+'.json')
         data = json.loads(path.read_text())
         x, y, w, h = data['bounds']
         rectangles = []

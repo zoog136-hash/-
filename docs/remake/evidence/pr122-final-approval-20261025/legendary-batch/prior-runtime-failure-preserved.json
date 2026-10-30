@@ -1,0 +1,88 @@
+{
+  "source_branch_sha": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "receipt_path": "docs/remake/pr122-legendary-parallel/final-correction-render-integration-v01.json",
+  "receipt_sha256": "e79c44ec3192f1189cbf3140252a16a1c46c242e091c8b9e751e3c7319050948",
+  "historical_only": true,
+  "rows": [
+    {
+      "duration_seconds": 0.22,
+      "errors": [
+        "Rendered fewer than six distinct animation phases"
+      ],
+      "first_complete_seconds": 0.138378,
+      "frame_transforms": {
+        "3": {
+          "anchor": [
+            0.0,
+            0.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ],
+          "position": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.408293455839157,
+            0.408293455839157
+          ]
+        },
+        "4": {
+          "anchor": [
+            0.0,
+            0.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ],
+          "position": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.408293455839157,
+            0.408293455839157
+          ]
+        },
+        "5": {
+          "anchor": [
+            0.0,
+            0.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ],
+          "position": [
+            0.0,
+            0.0
+          ],
+          "scale": [
+            0.5,
+            0.5
+          ]
+        }
+      },
+      "loop_observed": false,
+      "origin_policy": "BASELINE_SPRITE_CENTER",
+      "rendered_contact_sheet": "/workspace/legendary_runtime/final-correction-delta-v01/rendered/transform_177-NW-hit.png",
+      "rendered_contact_sheet_sha256": "43f49eba442c1dec98aff5c407e7df76be8766c560e71d9adbda2edad9dc828c",
+      "seen_phases": [
+        3,
+        4,
+        5
+      ],
+      "slot": [
+        "transform:177",
+        "NW",
+        "hit"
+      ],
+      "status": "FAIL",
+      "terminal_held": true
+    }
+  ],
+  "resolution": "Not replayed or reclassified. Missing phases 0\u20132 in a fast non-looping hit are compatible with a capture-timing problem, but do not establish the root cause."
+}

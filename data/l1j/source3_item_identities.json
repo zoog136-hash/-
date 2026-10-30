@@ -1,0 +1,262 @@
+{
+  "schema": 2,
+  "scope": "Reviewed identity only. No runtime registration, source stats, prices, drops, recipes or NPC actions.",
+  "gameplay_enabled": false,
+  "source_library_file_id": "libfile_84c813fce0a08191a2b6839257f9c43e",
+  "source_library_version": 0,
+  "input_zip_sha256": "2489a9ed7ff7db797bd06184b0292f75d8d8e80bee94a6d23fac678134dc1b70",
+  "reviewed_main_sha": "83cf145ad4565124c8734003b3f7d7d266d2245f",
+  "game_file_guards": {
+    "data/catalog_v19.json": "d486540cf435fa37033b4b48b5f8292ad18f454081fe0475264694810f934381",
+    "data/game_db_v17.json": "13f0fb68cea9e7222b78a9b6f3bf3cccd2ee634971a328d23c5be02ba71a4ecb",
+    "data/l1j/live_visual_bindings.json": "6706c4b9fc1336057cc5ee7e48dfb6b2ebc780ce9828db2281da83a83bb6678e"
+  },
+  "input_file_guards": {
+    "source_items.jsonl": "f8fdfe3e935d5bc1033c689473c2a4e930bb297002a3963887e8378b2375a949",
+    "source_snapshots/source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/weapon.sql": "4cdf6c44a66599e1ea8469fa33a4f9ea818061ff32fd1a966d5d0e70ee3d540d"
+  },
+  "bindings": [
+    {
+      "source_item_key": "source3:tw380:Taiwan:weapon:11",
+      "source_table": "weapon",
+      "source_item_id": "11",
+      "source_name": "水晶短劍",
+      "source_type": "dagger",
+      "source_variant": {
+        "bless_raw": "1",
+        "trade_raw": "0",
+        "seal_raw": null,
+        "enchant_not_implied_by_template": true,
+        "bound_engraved_status_not_assumed": true
+      },
+      "game_source": "inven",
+      "game_source_id": "423",
+      "game_name": "수정 단검",
+      "game_type": "단검",
+      "game_slot": "weapon",
+      "game_record_sha256": "d646b0b5ac75e5dbda7aab063cbc4ded12f5507c75b1984c692c904bd991c550",
+      "prior_reviewed_source_candidate_id": "ext:a3:weapon:11",
+      "source_identity_fields": {
+        "item_id": "11",
+        "name": "水晶短劍",
+        "type": "dagger",
+        "identified_name_id": "$3867",
+        "unidentified_name_id": "$3867",
+        "invgfx": "1921",
+        "grdgfx": "4982",
+        "bless": "1",
+        "trade": "0"
+      },
+      "source_provenance": {
+        "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/weapon.sql",
+        "file_sha256": "4cdf6c44a66599e1ea8469fa33a4f9ea818061ff32fd1a966d5d0e70ee3d540d",
+        "tuple_sha256": "5a98cbb8c554e89378465f3577720052a6b75d5b03402e7b45ed024f51de52b0",
+        "line": 82,
+        "byte_offset": 5844,
+        "byte_length": 266
+      },
+      "translation_token": "3867",
+      "translation_evidence_note": "Exact DESC encrypted range and decoded original bytes verified; compose bless prefix per pinned S_IdentifyDesc excerpt. Plain template only; no blessed/cursed/engraved/sealed/enchant adoption."
+    },
+    {
+      "source_item_key": "source3:tw380:Taiwan:weapon:1",
+      "source_table": "weapon",
+      "source_item_id": "1",
+      "source_name": "歐西斯匕首",
+      "source_type": "dagger",
+      "source_variant": {
+        "bless_raw": "1",
+        "trade_raw": "0",
+        "seal_raw": null,
+        "enchant_not_implied_by_template": true,
+        "bound_engraved_status_not_assumed": true
+      },
+      "game_source": "inven",
+      "game_source_id": "326",
+      "game_name": "오크족 단검",
+      "game_type": "단검",
+      "game_slot": "weapon",
+      "game_record_sha256": "be9eeaac577ecbd4c6a665260c806437b5bbd7888ea71667dda7a21923cbc950",
+      "prior_reviewed_source_candidate_id": "ext:a3:weapon:1",
+      "source_identity_fields": {
+        "item_id": "1",
+        "name": "歐西斯匕首",
+        "type": "dagger",
+        "identified_name_id": "$13",
+        "unidentified_name_id": "$13",
+        "invgfx": "34",
+        "grdgfx": "68",
+        "bless": "1",
+        "trade": "0"
+      },
+      "source_provenance": {
+        "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/weapon.sql",
+        "file_sha256": "4cdf6c44a66599e1ea8469fa33a4f9ea818061ff32fd1a966d5d0e70ee3d540d",
+        "tuple_sha256": "168aa5606a6fe33dde5fbdd6f0adcb45288964095b9266b59d31580c7a0505f7",
+        "line": 72,
+        "byte_offset": 2894,
+        "byte_length": 257
+      },
+      "translation_token": "13",
+      "translation_evidence_note": "Exact DESC encrypted range and decoded original bytes verified; compose bless prefix per pinned S_IdentifyDesc excerpt. Plain template only; no blessed/cursed/engraved/sealed/enchant adoption."
+    },
+    {
+      "source_item_key": "source3:tw380:Taiwan:weapon:8",
+      "source_table": "weapon",
+      "source_item_id": "8",
+      "source_name": "米索莉短劍",
+      "source_type": "dagger",
+      "source_variant": {
+        "bless_raw": "1",
+        "trade_raw": "0",
+        "seal_raw": null,
+        "enchant_not_implied_by_template": true,
+        "bound_engraved_status_not_assumed": true
+      },
+      "game_source": "inven",
+      "game_source_id": "422",
+      "game_name": "미스릴 단검",
+      "game_type": "단검",
+      "game_slot": "weapon",
+      "game_record_sha256": "0fb29c16b55ce95fa7136bbe9941af045ddc5dab071a1c59279c83847ec83e94",
+      "prior_reviewed_source_candidate_id": "ext:a3:weapon:8",
+      "source_identity_fields": {
+        "item_id": "8",
+        "name": "米索莉短劍",
+        "type": "dagger",
+        "identified_name_id": "$3248",
+        "unidentified_name_id": "$3248",
+        "invgfx": "1629",
+        "grdgfx": "4112",
+        "bless": "1",
+        "trade": "0"
+      },
+      "source_provenance": {
+        "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/weapon.sql",
+        "file_sha256": "4cdf6c44a66599e1ea8469fa33a4f9ea818061ff32fd1a966d5d0e70ee3d540d",
+        "tuple_sha256": "a8faf3e71ada924646a4b150fa532df7aac1b55bb7d36fa7b88d7aedff9c5562",
+        "line": 79,
+        "byte_offset": 4934,
+        "byte_length": 271
+      },
+      "translation_token": "3248",
+      "translation_evidence_note": "Exact DESC encrypted range and decoded original bytes verified; compose bless prefix per pinned S_IdentifyDesc excerpt. Plain template only; no blessed/cursed/engraved/sealed/enchant adoption."
+    },
+    {
+      "source_item_key": "source3:tw380:Taiwan:weapon:29",
+      "source_table": "weapon",
+      "source_item_id": "29",
+      "source_name": "銀長劍",
+      "source_type": "sword",
+      "source_variant": {
+        "bless_raw": "1",
+        "trade_raw": "0",
+        "seal_raw": null,
+        "enchant_not_implied_by_template": true,
+        "bound_engraved_status_not_assumed": true
+      },
+      "game_source": "inven",
+      "game_source_id": "6391",
+      "game_name": "은장검",
+      "game_type": "한손검",
+      "game_slot": "weapon",
+      "game_record_sha256": "26862499ef1d08e682ac578b576da6f13bf044961ece397d000384d4409a3b2d",
+      "prior_reviewed_source_candidate_id": "ext:a3:weapon:29",
+      "source_identity_fields": {
+        "item_id": "29",
+        "name": "銀長劍",
+        "type": "sword",
+        "identified_name_id": "$1147",
+        "unidentified_name_id": "$1147",
+        "invgfx": "163",
+        "grdgfx": "356",
+        "bless": "1",
+        "trade": "0"
+      },
+      "source_provenance": {
+        "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/weapon.sql",
+        "file_sha256": "4cdf6c44a66599e1ea8469fa33a4f9ea818061ff32fd1a966d5d0e70ee3d540d",
+        "tuple_sha256": "fc823591567f7b8dc83d48cbd5548bc4b62792dbfb980d9c9c1691feae61cf58",
+        "line": 100,
+        "byte_offset": 11199,
+        "byte_length": 260
+      },
+      "translation_token": "1147",
+      "translation_evidence_note": "Exact DESC encrypted range and decoded original bytes verified; compose bless prefix per pinned S_IdentifyDesc excerpt. Plain template only; no blessed/cursed/engraved/sealed/enchant adoption."
+    },
+    {
+      "source_item_key": "source3:tw380:Taiwan:weapon:181",
+      "source_table": "weapon",
+      "source_item_id": "181",
+      "source_name": "尤米弓",
+      "source_type": "bow",
+      "source_variant": {
+        "bless_raw": "1",
+        "trade_raw": "0",
+        "seal_raw": null,
+        "enchant_not_implied_by_template": true,
+        "bound_engraved_status_not_assumed": true
+      },
+      "game_source": "inven",
+      "game_source_id": "339",
+      "game_name": "장궁",
+      "game_type": "활",
+      "game_slot": "weapon",
+      "game_record_sha256": "199f7737e52f58a570c2b6b76680f4f8a28a4374eedd3f3c431c3524d7c1e1c9",
+      "prior_reviewed_source_candidate_id": "ext:a3:weapon:181",
+      "source_identity_fields": {
+        "item_id": "181",
+        "name": "尤米弓",
+        "type": "bow",
+        "identified_name_id": "$105",
+        "unidentified_name_id": "$105",
+        "invgfx": "123",
+        "grdgfx": "12",
+        "bless": "1",
+        "trade": "0"
+      },
+      "source_provenance": {
+        "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/weapon.sql",
+        "file_sha256": "4cdf6c44a66599e1ea8469fa33a4f9ea818061ff32fd1a966d5d0e70ee3d540d",
+        "tuple_sha256": "b860074984493a35367ecd9ac96d17620f07007c88edcd2246060876e0b61ac8",
+        "line": 252,
+        "byte_offset": 56642,
+        "byte_length": 254
+      },
+      "translation_token": "105",
+      "translation_evidence_note": "Exact DESC encrypted range and decoded original bytes verified; compose bless prefix per pinned S_IdentifyDesc excerpt. Plain template only; no blessed/cursed/engraved/sealed/enchant adoption."
+    }
+  ],
+  "holds": {
+    "other_source3_item_candidates": "Only five independently reviewed plain templates accepted; all other identities and all variant templates require separate review.",
+    "drops": "Wait for exact integrated113 sourceNPC to game binding; source chance and enchant require separate policy.",
+    "crafting": "Every material/output, currency wallet mapping, NPC ownership and excluded dependencies must be resolved.",
+    "npc": "No new executable source action or reward accepted.",
+    "invalid_drop_45938_40196": "min1/max0 unchanged; not imported."
+  },
+  "desc_evidence": {
+    "library_file_id": "libfile_14da8902eebc81919c1110e8adddbc94",
+    "library_version": 0,
+    "zip_bytes": 557960,
+    "zip_sha256": "4bf2ead4a691bdda17c5c8ee6421e6a844e462715277db09cfc4a5ead2afecc5",
+    "file_guards": {
+      "variant_identity_evidence.json": "9c1d8f0459ed5301fd6707250cbcf6bd2f4aceefd436ac517a476c23dd937ce7",
+      "desc-c.tbl.decoded-original.bin": "b1c16764bba45979642d0876782c6909fe5c4ea0913e424a5166e09db39cabab",
+      "desc-k.tbl.decoded-original.bin": "3c51978fba43640184dc6c492e65e86cbd7914a3f658ee8cd1e97d7becf6eabc",
+      "desc-k.tbl.encrypted-range.bin": "23367d6e06f10ef091312f7869ffc1e2cf621a954becf2a0d805218051f0c93f",
+      "file_manifest.json": "697a112bf2027a0c56c31130b7ebcd48748a259cd6cc4825db1dc33f4ed09f72",
+      "desc-e.tbl.decoded-original.bin": "137bf6fdb746d319eb18d71f146ed9fb53c57cf7decdfe4a1ca53613b2533321",
+      "desc-c.tbl.encrypted-range.bin": "465ca9141dc169526f02d765fbcbf3e1313f7b8f17458ffcae0ea5116e9efea0",
+      "desc-e.tbl.encrypted-range.bin": "1738773bebdab6df2262858b7387b0f98ec649edccddf317801ab7270bf57f24",
+      "code_provenance.json": "a9c81b09ee7e397850c31d4fa0e7f8b7e6a9311298543fdfb2e7c06485a6f990",
+      "verify_desc_evidence.py": "ee8c15856c715d0348662b99a7a34500e1e4f41361f511f038efa9d900b48e83",
+      "S_IdentifyDesc_lines29_47.java.txt": "a909b8e94a5db5f44d911a760e30819af2ca0d5538c26951e8706a56020e31ad"
+    },
+    "prefix_tokens_by_bless": {
+      "0": 227,
+      "1": null,
+      "2": 228
+    },
+    "raw_PAK_limit": "Whole PAK hash/offset are supplied provenance. Full Text.pak is not in this bundle; exact ciphertext slices and decoded original bytes are verified locally."
+  }
+}

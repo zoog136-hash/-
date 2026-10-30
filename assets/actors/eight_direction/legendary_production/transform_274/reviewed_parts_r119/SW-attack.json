@@ -1,0 +1,152 @@
+{
+  "actor": "transform:274",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_274/repaired_source_r119/SW-attack-source.png",
+  "source_sha256": "d471b54c81b73749bceca6d7b0166c55a83cc51c871c30de302746809af1ff86",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/SW-attack-source-v01.png",
+  "original_source_sha256": "518f775425c352b33d03ce2ead462d6c2595b5e5404790b484a9e44630315a2e",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-1.png",
+      "anchor": [
+        370,
+        600
+      ],
+      "scale": 0.245,
+      "sha256": "bc93d9fffcf7fae4804c7e042915c9e9311e45084d495330348cc060b75192d9"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-2.png",
+      "anchor": [
+        1040,
+        605
+      ],
+      "scale": 0.245,
+      "sha256": "bf4fcdcf235f3853bd490643a4d48c47f10e31b7ae8ae2f259392852aa06442b"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-3.png",
+      "anchor": [
+        370,
+        1155
+      ],
+      "scale": 0.245,
+      "sha256": "575d89f10375cbfe0020218f2d2488fc0c91d05b5cd9849cd9f44b423b9550a8"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-4.png",
+      "anchor": [
+        1040,
+        1155
+      ],
+      "scale": 0.245,
+      "sha256": "4e8eb93ad817242b16c9436eb836866a9e7826baaa2cc182923870e76c720dd1"
+    },
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-idle-source-v02.png",
+      "region": [
+        0.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "anchor": [
+        257.0,
+        490.0
+      ],
+      "scale": 0.263001,
+      "sha256": "b0d62a782f6eb0569cc1253e38eb490d9f0b1f14b10d724cd9ed6e19747ae833",
+      "basis": "Unmodified normal SW IDLE0 guard; old attack guards were in the defective bow sheet."
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-idle-source-v02.png",
+      "region": [
+        0.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "anchor": [
+        257.0,
+        490.0
+      ],
+      "scale": 0.263001,
+      "sha256": "b0d62a782f6eb0569cc1253e38eb490d9f0b1f14b10d724cd9ed6e19747ae833",
+      "basis": "Unmodified normal SW IDLE0 guard; old attack guards were in the defective bow sheet."
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 684755,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_RUN_LATE_HALF_WEAPON_ARMOR_CONTINUITY",
+  "registration_basis": "Same body scale per source; projected pelvis X and contact sole ground Y reviewed per source action pose; guards reuse unchanged original IDLE0",
+  "replacement_basis": "Confirmed SW source turned the melee crescent blade into a strung bow and archery poses. Separate repair restores RIGHT main crescent / LEFT small dagger and southwest melee strike; normal SW IDLE0 reused at both guards.",
+  "final_quality_approved": false,
+  "remaining_actor_issue": {
+    "animation": "run_6",
+    "phases": [
+      3,
+      4,
+      5
+    ],
+    "status": "HOLD_CONTINUITY_REVIEW",
+    "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-run-source-v01.png",
+    "reason": "Late-half weapon/shoulder-armour presentation reverses relative to early half; preserve the source and require weapon/armour continuity review before selecting this actor. Do not resolve by a blind mirror or repeating the failed half-strip generation approach.",
+    "source_sha256": "1a3a4a7b8af9a891c2c5780333bf004881cbd358c014211d245f6b7a276a0f5e"
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_274/quality-v02/SW-idle-source-v02.png",
+      "sha256": "b0d62a782f6eb0569cc1253e38eb490d9f0b1f14b10d724cd9ed6e19747ae833",
+      "bytes": 2334862
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-1.png",
+      "sha256": "bc93d9fffcf7fae4804c7e042915c9e9311e45084d495330348cc060b75192d9",
+      "bytes": 409035
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-2.png",
+      "sha256": "bf4fcdcf235f3853bd490643a4d48c47f10e31b7ae8ae2f259392852aa06442b",
+      "bytes": 420515
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-3.png",
+      "sha256": "575d89f10375cbfe0020218f2d2488fc0c91d05b5cd9849cd9f44b423b9550a8",
+      "bytes": 483307
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r119/SW-attack-4.png",
+      "sha256": "4e8eb93ad817242b16c9436eb836866a9e7826baaa2cc182923870e76c720dd1",
+      "bytes": 374220
+    }
+  ],
+  "native_import": "PASS: native CompressedTexture2D AtlasTexture decode; whole33 resource imported, then changed N/SW repaired clips separately checked at final source bytes. Import is not final art approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: exact source clips played in real Main Player candidate profile, every phase and marker3 where applicable. Newly repaired N/SW clips also checked in same-Player IDLE/ATTACK/IDLE without rebind. Final default binding remains0.",
+  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection."
+}

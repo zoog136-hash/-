@@ -1,0 +1,54 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-0.png" id="r153_SW_idle_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-1.png" id="r153_SW_idle_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-2.png" id="r153_SW_idle_2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-3.png" id="r153_SW_idle_3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-4.png" id="r153_SW_idle_4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-5.png" id="r153_SW_idle_5"]
+
+[sub_resource type="AtlasTexture" id="batch0_c27_pose_0"]
+atlas = ExtResource("r153_SW_idle_0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c27_pose_1"]
+atlas = ExtResource("r153_SW_idle_1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c27_pose_2"]
+atlas = ExtResource("r153_SW_idle_2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c27_pose_3"]
+atlas = ExtResource("r153_SW_idle_3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c27_pose_4"]
+atlas = ExtResource("r153_SW_idle_4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c27_pose_5"]
+atlas = ExtResource("r153_SW_idle_5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[resource]
+animations = [
+{
+"frames": [{"duration": 1.0, "texture": SubResource("batch0_c27_pose_0")}, {"duration": 1.0, "texture": SubResource("batch0_c27_pose_1")}, {"duration": 1.0, "texture": SubResource("batch0_c27_pose_2")}, {"duration": 1.0, "texture": SubResource("batch0_c27_pose_3")}, {"duration": 1.0, "texture": SubResource("batch0_c27_pose_4")}, {"duration": 1.0, "texture": SubResource("batch0_c27_pose_5")}],
+"loop": true,
+"name": &"idle_3",
+"speed": 5.0
+}
+]
+metadata/twilight_reviewed_frame_registration = {"idle_3":{"semantic_review":"HOLD","frames":[{"anchor":Vector2(234.0,501.0),"scale":Vector2(0.266667,0.266667),"target":Vector2(0,0)},{"anchor":Vector2(819.5,470.5),"scale":Vector2(0.266667,0.266667),"target":Vector2(0,0)},{"anchor":Vector2(1291.25,470.5),"scale":Vector2(0.266667,0.266667),"target":Vector2(0,0)},{"anchor":Vector2(170.0,965.3299999999999),"scale":Vector2(0.266667,0.266667),"target":Vector2(0,0)},{"anchor":Vector2(717.0,998.0),"scale":Vector2(0.266667,0.266667),"target":Vector2(0,0)},{"anchor":Vector2(1189.0,977.5),"scale":Vector2(0.266667,0.266667),"target":Vector2(0,0)}]}}
+metadata/twilight_clip_quality_holds = {"idle_3":"HOLD_SOURCE_ISOLATION_ONLY_ART_ORIGINAL_EDGE_REVIEW_REQUIRED"}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_ART_REVIEW_OR_ORIGINAL_SOURCE_EDGE"
+metadata/twilight_final_quality_approved = false

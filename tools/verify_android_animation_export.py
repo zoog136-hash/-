@@ -73,6 +73,12 @@ def inspect_resources(apk: Path, root: Path, output: Path, report: dict) -> list
     scope = audit_authoring_exclusions(root)
     report["animation_export_scope"] = scope
     archived = {row["path"] for row in scope["excluded_authoring_resources"]}
+    # Old revision folders no game code can reach; excluded on purpose and
+    # checked fail-closed by audit_authoring_exclusions.
+    dead = tuple(folder + "/" for folder in scope.get("excluded_unreachable_folders", []))
+
+    def shipped(path: Path) -> bool:
+        return not path.relative_to(root).as_posix().startswith(dead)
     with zipfile.ZipFile(apk) as archive:
         report["zip_crc_failure"] = archive.testzip()
         if report["zip_crc_failure"]:
@@ -87,8 +93,14 @@ def inspect_resources(apk: Path, root: Path, output: Path, report: dict) -> list
         if report["architectures"] != ["arm64-v8a"]:
             report["failures"].append("Expected the existing Android ARM64 export preset")
         art_root = root / "assets/actors/eight_direction"
+        unreachable_exported = sorted(
+            source.relative_to(root).as_posix() for source in art_root.rglob("SpriteFrames.tres")
+            if not shipped(source) and "assets/" + source.relative_to(root).as_posix() + ".remap" in names)
+        for relative in unreachable_exported:
+            report["failures"].append("Unreachable revision unexpectedly exported: " + relative)
+        report["excluded_unreachable_folder_count"] = len(dead)
         sources = sorted(source for source in art_root.rglob("SpriteFrames.tres")
-                         if source.relative_to(root).as_posix() not in archived)
+                         if source.relative_to(root).as_posix() not in archived and shipped(source))
         if not sources:
             report["failures"].append("No native SpriteFrames sources found")
         for source in sources:
@@ -115,7 +127,7 @@ def inspect_resources(apk: Path, root: Path, output: Path, report: dict) -> list
             index.append(row)
         report["sprite_frames"] = index
         textures = []
-        for source in sorted(art_root.rglob("*.png")):
+        for source in sorted(path for path in art_root.rglob("*.png") if shipped(path)):
             relative = source.relative_to(root).as_posix()
             import_entry = "assets/" + relative + ".import"
             if import_entry not in names:
@@ -146,7 +158,7 @@ def inspect_resources(apk: Path, root: Path, output: Path, report: dict) -> list
         json_sources = [root / relative for relative in ["data/combat_animation_profiles.json",
                                                         "data/animation_presentation.json",
                                                         "data/resource_delivery_ledger.json"]]
-        json_sources.extend(sorted(art_root.rglob("provenance.json")))
+        json_sources.extend(sorted(path for path in art_root.rglob("provenance.json") if shipped(path)))
         report["raw_json_matches"] = []
         for source in json_sources:
             relative = source.relative_to(root).as_posix()

@@ -3,6 +3,7 @@ class_name TwilightOriginalSkillVFX
 
 ## Presentation observes motion/contact events. It never schedules damage.
 signal phase_started(id: String, phase: String, point: Vector2)
+const SIMILAR_BRIDGE = preload("res://scripts/skills/skill_similar_bridge.gd")
 const SPX_BRIDGE = preload("res://scripts/skills/skill_spx_bridge.gd")
 const SPX_SHADER = preload("res://assets/effects/source_spx_additive.gdshader")
 const ENERGY_SHADER = preload("res://assets/effects/skill_energy.gdshader")
@@ -24,6 +25,7 @@ var detail_limit: int = MAX_EFFECTS
 var low_detail: bool = false
 var use_private_sources: bool = true
 var audio_pool: TwilightOriginalSkillAudio
+var similar_bridge = SIMILAR_BRIDGE.new()
 var spx_bridge: TwilightSkillSPXBridge = SPX_BRIDGE.new()
 var library: TwilightSkillVFXLibrary = LIBRARY.new()
 var spx_pool: Array[AnimatedSprite2D] = []
@@ -48,8 +50,12 @@ func color_for(id: String) -> Color:
 func _source_sprite(id: String, phase: String, point: Vector2) -> Dictionary:
 	if not use_private_sources: return {}
 	var frames: SpriteFrames = spx_bridge.frames_for(id, phase)
+	var similar := false
+	if frames == null:
+		frames = similar_bridge.frames_for(id, phase)
+		similar = frames != null
 	if frames == null: return {}
-	var clip := spx_bridge.clip_for(id, phase)
+	var clip := "source" if similar else spx_bridge.clip_for(id, phase)
 	var sprite: AnimatedSprite2D = spx_pool.pop_back() if not spx_pool.is_empty() else AnimatedSprite2D.new()
 	if sprite.get_parent() == null: add_child(sprite)
 	sprite.stop()
@@ -57,12 +63,12 @@ func _source_sprite(id: String, phase: String, point: Vector2) -> Dictionary:
 	sprite.animation = clip
 	sprite.centered = true
 	sprite.offset = Vector2.ZERO
-	var layout := spx_bridge.layout_for(id, phase)
-	var source_offset: Array = layout.get("sprite_offset", [])
+	var layout: Dictionary = similar_bridge.layout_for(id, phase) if similar else spx_bridge.layout_for(id, phase)
+	var source_offset: Array = layout.get("offset", []) if similar else layout.get("sprite_offset", [])
 	if source_offset.size() == 2:
 		sprite.centered = false
 		sprite.offset = Vector2(float(source_offset[0]), float(source_offset[1]))
-	sprite.material = spx_material
+	sprite.material = null if similar else spx_material
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	var texture: Texture2D = frames.get_frame_texture(clip, 0)
 	var edge := maxf(float(texture.get_width()), float(texture.get_height()))
@@ -74,7 +80,7 @@ func _source_sprite(id: String, phase: String, point: Vector2) -> Dictionary:
 	sprite.play(clip)
 	var ticks := 0.0
 	for index: int in range(frames.get_frame_count(clip)): ticks += frames.get_frame_duration(clip, index)
-	return {"sprite":sprite, "duration":ticks / maxf(.001, frames.get_animation_speed(clip))}
+	return {"sprite":sprite, "duration":ticks / maxf(.001, frames.get_animation_speed(clip)), "similar_key":str(similar_bridge.binding_for(id).get("phases", {}).get(phase, "")) if similar else ""}
 
 func _new_layers() -> Node2D:
 	var container := Node2D.new()
@@ -209,7 +215,7 @@ func _emit(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF
 	var item: Dictionary = available.pop_back() if not available.is_empty() else {}
 	item.merge({"id":id, "phase":phase, "point":point, "end":end, "age":0.0,
 		"ttl":float(source.get("duration", art.get("duration", .4))),
-		"spx_sprite":source.get("sprite", null), "layers":art.get("layers", null),
+		"similar_key":source.get("similar_key", ""), "spx_sprite":source.get("sprite", null), "layers":art.get("layers", null),
 		"cache_key":art.get("cache_key", ""), "layer_durations":art.get("layer_durations", []), "context":context.duplicate(false)}, true)
 	live.append(item)
 	var container: Node2D = item.get("layers")
@@ -297,6 +303,8 @@ func maintain_status(id: String, target: Node2D, kind: String) -> void:
 		if existing.get("status_target", null) is WeakRef and existing.status_target.get_ref() == target and str(existing.id) == id: return
 	var item := _emit(id, "status", target.combat_hit_position())
 	if item.is_empty(): return
+	# Source clips are one-shot onset cues, never frozen/looped status art.
+	if not str(item.get("similar_key", "")).is_empty(): return
 	item.merge({"ttl":INF, "status_target":weakref(target), "status_property":property, "life_id":target.life_id}, true)
 	var layers: Node2D = item.get("layers")
 	if is_instance_valid(layers):
@@ -314,6 +322,7 @@ func remove_persistent(id: String) -> void:
 	if is_instance_valid(target): emit_skill(id, "end", target.global_position)
 
 func _recycle_source_sprite(item: Dictionary) -> void:
+	similar_bridge.release(str(item.get("similar_key", "")))
 	var sprite: AnimatedSprite2D = item.get("spx_sprite") as AnimatedSprite2D
 	if not is_instance_valid(sprite): return
 	sprite.stop()
@@ -349,6 +358,7 @@ func clear() -> void:
 	for index: int in range(live.size() - 1, -1, -1): _retire(index)
 	library.trim()
 	spx_bridge.cache.clear()
+	similar_bridge.trim()
 	set_process(false)
 
 func _process(delta: float) -> void:
@@ -424,6 +434,7 @@ func _process(delta: float) -> void:
 	if live.is_empty() and persistent.is_empty():
 		library.trim()
 		spx_bridge.cache.clear()
+		similar_bridge.trim()
 		set_process(false)
 
 func _electric_frame_changed(container: Node2D) -> void:

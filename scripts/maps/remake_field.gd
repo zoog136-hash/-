@@ -74,28 +74,7 @@ func navigation_search_limit() -> int:
 	return mini(width*height,65536)
 
 func path(from: Vector2, to: Vector2) -> PackedVector2Array:
-	# Mainland journeys can exceed the shared 65,536-node budget. A separate
-	# derived source-edge index splits only these long Aden journeys into exact
-	# 32-cell components. Oman and all other map paths retain the common code.
-	if str(data.map_id)!="aden_world" or not from.is_finite() or not to.is_finite() or from.distance_to(to)<1024.0:
-		return super.path(from,to)
-	if not aden_routes_attempted:
-		aden_routes_attempted=true
-		var candidate: RefCounted = preload("res://scripts/maps/aden_world_visuals/routes.gd").new()
-		if candidate.configure(self):aden_routes=candidate
-	if aden_routes==null:return super.path(from,to)
-	var cells: Array[Vector2i] = aden_routes.cells(self,nearest_cell(from),nearest_cell(to))
-	if cells.is_empty():return super.path(from,to)
-	var result := PackedVector2Array()
-	for cell: Vector2i in cells:result.append(cell_to_world(cell))
-	if result.size()>1 and line_clear(from,result[1]):result.remove_at(0)
-	if not result.is_empty() and walkable(to) and line_clear(result[-1],to):result.append(to)
-	if png_review_footprints != null:
-		var last: Vector2 = from
-		for next: Vector2 in result:
-			if not png_review_footprints.line_clear(last,next,BODY_PROFILE.FOOT_RADIUS): return super.path(from,to)
-			last = next
-	return result
+	return super.path(from,to)
 
 func walkable(p: Vector2) -> bool:
 	return super.walkable(p) and (png_review_footprints == null or png_review_footprints.point_clear(p,0.0))

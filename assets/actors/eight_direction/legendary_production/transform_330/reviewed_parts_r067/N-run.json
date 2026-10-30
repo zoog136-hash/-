@@ -1,0 +1,89 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/N-run-source-v01-isolated.png",
+  "source_sha256": "0811930061ab2b5869024a98454027e16c042596c7d2146d2f2f6ed2b15ca7e9",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r067/N-run-0.png",
+      "anchor": [
+        295.0,
+        534.0
+      ],
+      "scale": 0.258216,
+      "source_body_label": 4,
+      "sha256": "55ff9a9824d9aec4ecec3e57a89d58aa52adb3f6cc34f384a61cf02b9915b908"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r067/N-run-1.png",
+      "anchor": [
+        895.0,
+        546.0
+      ],
+      "scale": 0.258216,
+      "source_body_label": 2,
+      "sha256": "55ef268887e6fbddcf04c64f3f5bd9d49653cb7f89a0f4913e6a0df08fcd9795"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r067/N-run-2.png",
+      "anchor": [
+        1471.0,
+        536.0
+      ],
+      "scale": 0.258216,
+      "source_body_label": 3,
+      "sha256": "0e456ec9ccfd834f0cfa81bf68f3719f59896e71efb0fb74292a505fcdfa2614"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r067/N-run-3.png",
+      "anchor": [
+        680,
+        1100
+      ],
+      "scale": 0.11578947368421053,
+      "standing_equivalent_unit": 950,
+      "sha256": "399825f02d34675be3903bfb31a8aeabe00aad2cc71c0d6f3431b2a0b4d1b769"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r067/N-run-4.png",
+      "anchor": [
+        700,
+        1110
+      ],
+      "scale": 0.1134020618556701,
+      "standing_equivalent_unit": 970,
+      "sha256": "a33cd4c2ea6f06cc39bfd93a50328036c6bae4d974aeff46957548ea2c980ef1"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r067/N-run-5.png",
+      "anchor": [
+        700,
+        1120
+      ],
+      "scale": 0.10891089108910891,
+      "standing_equivalent_unit": 1010,
+      "sha256": "a8a9d02362cc24c483e654d812bb5641271795ab62d15359c38a5a424a9886c6"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 704356,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS actual Main candidate 6/6 poses; registered anchor, no mirrored fallback/gameplay or strike changes; six equal-duration run frames at unchanged 12.5fps",
+  "production_connected": false,
+  "selection_basis": "Original normal first-half source poses and registration preserved. Right-leg-support opposite half created without mirroring; right-hand weapon and rear camera preserved.",
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "quality_status": "PASS_LOCAL_OPPOSITE_LEG_HALF_CYCLE",
+  "whole_actor_gate": "HOLD_OTHER_DIRECTIONAL_RUN_GAIT",
+  "native_import": "PASS isolated Godot 4.7.2 import"
+}

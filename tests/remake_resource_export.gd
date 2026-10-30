@@ -117,7 +117,7 @@ func _run() -> void:
 		output.monsters.append({"name":record.name,"is_boss":world.LOOT_DROP.is_boss_record(record),"sourceId":record.get("sourceId", ""),"visual":record.get("visual", {}),"texture":_texture_info(texture),"manifest_binding":VISUALS.monster_binding(record),"profile":_profile("monster", record, ""),"special":record.get("special", {})})
 	for record: Dictionary in world.maps:
 		var definition: Dictionary = record.get("field_definition", {})
-		var path: String = str(record.get("field_path", "res://data/maps/aden_field.json"))
+		var path: String = str(record.get("field_path", ""))
 		if definition.is_empty() and FileAccess.file_exists(path):
 			definition = JSON.parse_string(FileAccess.get_file_as_string(path)) as Dictionary
 		if not definition.is_empty(): definition = world.MONSTER_CATALOG.apply_map(definition)

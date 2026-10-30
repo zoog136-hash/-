@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_166/reviewed_parts_r020/NW-idle.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("1")
+region = Rect2(80,80,536,542)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("1")
+region = Rect2(784,80,513,512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("1")
+region = Rect2(80,784,518,475)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("1")
+region = Rect2(784,784,534,495)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("1")
+region = Rect2(80,1488,479,476)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("1")
+region = Rect2(784,1488,477,479)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":true,"name":&"idle_5","speed":5.0}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_OTHER_CLIPS"
+metadata/twilight_reviewed_frame_registration = {"idle_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(296,469),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(282,470),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(287,470),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(294,468),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(225,473),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(249,472),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)}]}}

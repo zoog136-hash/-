@@ -136,6 +136,11 @@ class ZipUpdaterTest(unittest.TestCase):
         for path in ('project.godot', 'Main.tscn', 'assets/terrain.png',
                      'external_map_packs/native_png_v5/index.json',
                      'external_map_packs/oman_png_v1/index.json',
+                     'external_map_packs/source84_v3/index.json',
+                     'external_map_packs/source84_v3/chunks/example.webp',
+                     'external_map_packs/source84_v3/collision/77.u8.gz',
+                     'external_map_packs/oman_v2/effective_layouts.json',
+                     'external_map_packs/oman_v2/data/map_remake/private/navigation-00.bin',
                      'external_map_packs/.gdignore',
                      'data/visuals/runtime_manifest.json',
                      'data/maps/navigation/oman_01.nav',
@@ -147,7 +152,7 @@ class ZipUpdaterTest(unittest.TestCase):
                      'tests/world_test.gd', 'samples/example.txt',
                      'tools/android/termux_update_zip.py', 'export_presets.cfg',
                      'external_map_packs/source_pngs/13474.png',
-                     'external_map_packs/oman_v2/effective_layouts.json',
+                     'external_map_packs/source84_v3/private.zip',
                      'external_map_packs/TWILIGHT-map-remake-private-20261015-v2.zip',
                      'assets/maps/aden_world_draft/placements.json',
                      'assets/maps/aden_modular_pilot/compiled/tile.png',
@@ -162,11 +167,30 @@ class ZipUpdaterTest(unittest.TestCase):
                      'scripts/maps/aden_modular_preview_renderer.gd',
                      'scenes/SkillVFXLab.tscn'):
             self.assertFalse(updater.is_runtime_path(path), path)
-        self.assertFalse(updater.is_runtime_tree('tools'))
+        self.assertTrue(updater.is_runtime_tree('tools'))
+        for name in updater.MAP_INSTALL_TOOLS:
+            self.assertTrue(updater.is_runtime_path(name))
+        self.assertFalse(updater.is_runtime_path('tools/unrelated_authoring.py'))
         self.assertFalse(updater.is_runtime_tree('external_map_packs/source_pngs'))
         self.assertFalse(updater.is_runtime_tree('assets/maps/aden_world_draft'))
         self.assertTrue(updater.is_runtime_tree('external_map_packs/native_png_v5'))
         self.assertTrue(updater.is_runtime_tree('assets/actors/eight_direction/native_production'))
+
+    def test_explicit_pr_ref_is_pinned_without_changing_main_default(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'project.godot').write_bytes(b'game')
+            (root / 'Main.tscn').write_bytes(b'scene')
+            with mock.patch.object(updater, 'get_inventory', return_value=('a'*40, {})) as inventory:
+                updater.update(root, assume_yes=True, ref='integration/source-recovery-20261030')
+            inventory.assert_called_once_with('integration/source-recovery-20261030')
+
+    def test_cleanup_preserves_required_oman_gameplay_input(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            name = 'external_map_packs/oman_v2/data/map_remake/private/navigation-00.bin'
+            path = root / name; path.parent.mkdir(parents=True); path.write_bytes(b'topology')
+            self.assertNotIn(name, updater.list_unused_files(root))
 
     def test_new_scope_never_deletes_previously_downloaded_sources(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -347,6 +371,103 @@ class ZipUpdaterTest(unittest.TestCase):
             self.assertFalse((root/'project.godot').exists())
             self.assertFalse((root/'Main.tscn').exists())
             self.assertFalse(list(root.glob('.twilight_update_backup_*')))
+
+
+    def test_verified_download_cache_resumes_after_network_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            data = {
+                'project.godot': b'project',
+                'Main.tscn': b'scene',
+                'scripts/world.gd': b'code',
+            }
+            inventory = {name: record(blob) for name, blob in data.items()}
+            commit = 'a'*40
+            first_calls = []
+            def failing_download(sha, name, row, destination):
+                first_calls.append(name)
+                if name == 'Main.tscn':
+                    raise RuntimeError('network disconnected')
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=(commit, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=failing_download):
+                with self.assertRaisesRegex(RuntimeError, 'network disconnected'):
+                    updater.update(root, assume_yes=True, install_fresh=True,
+                                   workers=1)
+            stage = root / ('.twilight_update_stage_' + commit)
+            self.assertTrue(stage.is_dir())
+            self.assertTrue((stage / 'project.godot').is_file())
+            self.assertFalse((root / 'project.godot').exists())
+            second_calls = []
+            def resumed_download(sha, name, row, destination):
+                second_calls.append(name)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=(commit, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=resumed_download):
+                updater.update(root, assume_yes=True, install_fresh=True,
+                               workers=1)
+            self.assertNotIn('project.godot', second_calls)
+            self.assertEqual(set(second_calls),
+                             {'Main.tscn', 'scripts/world.gd'})
+            self.assertFalse(stage.exists())
+            for name, value in data.items():
+                self.assertEqual((root / name).read_bytes(), value)
+
+    def test_changed_cached_content_must_be_redownloaded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            root.mkdir()
+            commit = 'a'*40
+            stage = root / ('.twilight_update_stage_' + commit)
+            stage.mkdir()
+            (stage / 'project.godot').write_bytes(b'corrupted')
+            data = {'project.godot': b'expected', 'Main.tscn': b'scene'}
+            inventory = {name: record(blob) for name, blob in data.items()}
+            requested = []
+            def download(sha, name, row, destination):
+                requested.append(name)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=(commit, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=download):
+                updater.update(root, assume_yes=True, install_fresh=True,
+                               workers=2)
+            self.assertIn('project.godot', requested)
+            self.assertEqual((root / 'project.godot').read_bytes(), b'expected')
+
+    def test_download_worker_count_and_parallel_dispatch(self):
+        import threading
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            data = {'project.godot': b'game', 'Main.tscn': b'scene',
+                    'scripts/world.gd': b'code'}
+            inventory = {name: record(blob) for name, blob in data.items()}
+            barrier = threading.Barrier(3, timeout=5)
+            seen = []
+            lock = threading.Lock()
+            def concurrent_download(sha, name, row, destination):
+                with lock:
+                    seen.append(name)
+                barrier.wait()
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=('a'*40, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=concurrent_download):
+                updater.update(root, assume_yes=True, install_fresh=True,
+                               workers=3)
+            self.assertEqual(len(seen), 3)
+            for name, value in data.items():
+                self.assertEqual((root / name).read_bytes(), value)
 
 
 if __name__ == '__main__':
