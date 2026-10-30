@@ -13187,11 +13187,690 @@
         "same_pixels_or_authenticated_client_version_claim": false,
         "candidate_override_scope": "Only target20: replace its earlier bilingual-name-only body110 candidate with the actually reviewed body3054. Do not broaden any other candidate or merge variants."
       }
+    },
+    "transform:121": {
+      "name": "대법관 비아타스",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45956/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.757894736842105,
+      "sprite_offset": [
+        2.0463157894736836,
+        -30.315789473684198
+      ],
+      "source": "source1",
+      "source_npc_id": "45956",
+      "binding_id": "M45956",
+      "body_model_prefix": 5365.0,
+      "source_model": "reviewed-monster:45956",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48.0,
+        -96.0,
+        120.0,
+        60.0
+      ],
+      "foot_in_canvas": [
+        81.0,
+        118.0
+      ],
+      "foot_original_grid": [
+        33.0,
+        22.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "3efebb423f3ff08dcd27e93ac8bc4bafd07086d62f0b099762f60a902bd90a79"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45956/atlas.png": "a461f3c68fdce4a322f02b6c9e379d58584f87d3e275538c32fbe4342fe72656",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45956/portrait.png": "cbafee5a72886a7c716c8d0db69432db11cf4934d15794f2faaba4c130016d3f"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:120": {
+      "name": "대법관 엔디아스",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45958/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.782608695652174,
+      "sprite_offset": [
+        2.11304347826087,
+        -31.304347826086957
+      ],
+      "source": "source1",
+      "source_npc_id": "45958",
+      "binding_id": "M45958",
+      "body_model_prefix": 5293.0,
+      "source_model": "reviewed-monster:45958",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48.0,
+        -96.0,
+        120.0,
+        60.0
+      ],
+      "foot_in_canvas": [
+        81.0,
+        118.0
+      ],
+      "foot_original_grid": [
+        33.0,
+        22.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "6a686dd9584a97489dbbacb05d754e2ed589ec95ccd935a2f9fd9328d156a846"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45958/atlas.png": "31fd10ef5ffdeca6708566ad9393fb609ce357be9811fd669f3162c4b205262e",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45958/portrait.png": "b0ff38e8bcd55b02f9417165ff65a92ee1aaf748e4e66ba77acf2b1c9c52eb1f"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:119": {
+      "name": "대법관 바로메스",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45957/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.8,
+      "sprite_offset": [
+        -4.32,
+        -31.200000000000003
+      ],
+      "source": "source1",
+      "source_npc_id": "45957",
+      "binding_id": "M45957",
+      "body_model_prefix": 5478.0,
+      "source_model": "reviewed-monster:45957",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48.0,
+        -108.0,
+        120.0,
+        84.0
+      ],
+      "foot_in_canvas": [
+        90.0,
+        135.0
+      ],
+      "foot_original_grid": [
+        42.0,
+        27.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "d911c0b99a1fcda31f2d7c5cb8580963af582deda9ee06278a1a98573f74ef71"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45957/atlas.png": "a1face9d5353c5db7109138e576350af0b2e0c1cafdc84aa0a6260fbee44f37f",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45957/portrait.png": "24686c67ffab99400017309f067fb3b841ad37c9d880b42b87514ef31cc36b27"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:118": {
+      "name": "대법관 티아메스",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45960/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.73469387755102,
+      "sprite_offset": [
+        -5.951020408163262,
+        -42.61224489795916
+      ],
+      "source": "source1",
+      "source_npc_id": "45960",
+      "binding_id": "M45960",
+      "body_model_prefix": 5274.0,
+      "source_model": "reviewed-monster:45960",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72.0,
+        -132.0,
+        120.0,
+        60.0
+      ],
+      "foot_in_canvas": [
+        105.0,
+        154.0
+      ],
+      "foot_original_grid": [
+        33.0,
+        22.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "bfca713d8f3aafa93eda6da59be14729bc97e19a19124d17442ea20e2490108e"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45960/atlas.png": "96fdd961eb5c27828b0533aec616d6eaa278d7ca022fe8ed83c82df7e1412ef6",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45960/portrait.png": "bd55f87c98c8ebc088b124c2fe43e886928e53919d72e1c88adcbc926f03ec8c"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:117": {
+      "name": "대법관 이데아",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45959/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.923076923076923,
+      "sprite_offset": [
+        -6.646153846153846,
+        -42.46153846153846
+      ],
+      "source": "source1",
+      "source_npc_id": "45959",
+      "binding_id": "M45959",
+      "body_model_prefix": 5297.0,
+      "source_model": "reviewed-monster:45959",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72.0,
+        -108.0,
+        120.0,
+        60.0
+      ],
+      "foot_in_canvas": [
+        104,
+        130
+      ],
+      "foot_original_grid": [
+        32.0,
+        22.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "0f64003cd4a5d997c215cefa6d3d99609f4dd51a2fde4f15b5fba6e6c958bf0a"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45959/atlas.png": "b0195b24de22c7f122e3683b1c8cf021766939ae2889285cb3a3a2656c37598d",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45959/portrait.png": "472890f81a4fdf647c59a47236293c5a8a315d1723ef42b12f135ad2a474a844"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:116": {
+      "name": "대법관 라미아스",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45961/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.827586206896552,
+      "sprite_offset": [
+        0.7448275862068968,
+        -20.6896551724138
+      ],
+      "source": "source1",
+      "source_npc_id": "45961",
+      "binding_id": "M45961",
+      "body_model_prefix": 5284.0,
+      "source_model": "reviewed-monster:45961",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96.0,
+        -96.0,
+        144.0,
+        84.0
+      ],
+      "foot_in_canvas": [
+        119,
+        115
+      ],
+      "foot_original_grid": [
+        23.0,
+        19.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "03281606334920e172606702c5e999b5b53b505b2101769a89f69d055373e625"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45961/atlas.png": "f628b47fdc8744f3ff7ee93717a1a8cc310a7d301853e9dd517a178509f8c05a",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45961/portrait.png": "58143a64038ba70d046fe4fcd6d2589366112ba0448b64e7bc2d195551ffac49"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:115": {
+      "name": "대법관 케이나",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45955/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.96,
+      "sprite_offset": [
+        -0.864,
+        -40.32
+      ],
+      "source": "source1",
+      "source_npc_id": "45955",
+      "binding_id": "M45955",
+      "body_model_prefix": 5373.0,
+      "source_model": "reviewed-monster:45955",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -216.0,
+        -144.0,
+        264.0,
+        96.0
+      ],
+      "foot_in_canvas": [
+        241.0,
+        162.0
+      ],
+      "foot_original_grid": [
+        25.0,
+        18.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "e6955b5c4d1c22161a25f29d1d2d90e9c28b554374fe3ba70736327539cbf05e"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45955/atlas.png": "d6213251d484c2d56d463d0483447dd1a9d663a7422aaa2b75e306441817d9b6",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45955/portrait.png": "f47ede50b78c9c0898199abb10463d74d9d48fd3cef38f472dbd9785f5e02e95"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:107": {
+      "name": "명법군왕 헬바인",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45676/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.774193548387097,
+      "sprite_offset": [
+        -6.270967741935485,
+        -30.96774193548388
+      ],
+      "source": "source1",
+      "source_npc_id": "45676",
+      "binding_id": "M45676",
+      "body_model_prefix": 4533.0,
+      "source_model": "reviewed-monster:45676",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48.0,
+        -96.0,
+        96.0,
+        60.0
+      ],
+      "foot_in_canvas": [
+        81.0,
+        118.0
+      ],
+      "foot_original_grid": [
+        33.0,
+        22.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "fcb1e2e0193f5db30ba3e19ebc37530227a29ec31deaec1044cdd8369e248a6a"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45676/atlas.png": "6179eb84d2e7466f657d0b1938aefdd6170928a97964d95aa1af79c74454960b",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45676/portrait.png": "198598d9a96f4bb3d7185771ed085df2893ca9ed8da1614588ab5062b050e786"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:106": {
+      "name": "마수군왕 바란카",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45651/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.705882352941177,
+      "sprite_offset": [
+        0.0,
+        -14.823529411764715
+      ],
+      "source": "source1",
+      "source_npc_id": "45651",
+      "binding_id": "M45651",
+      "body_model_prefix": 3664.0,
+      "source_model": "reviewed-monster:45651",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -120.0,
+        -120.0,
+        192.0,
+        120.0
+      ],
+      "foot_in_canvas": [
+        156,
+        141
+      ],
+      "foot_original_grid": [
+        36.0,
+        21.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "8ec1af8f8adbb66e1d11ee1565be3d18d88bd00cb8f9187c2861ac3d0263ec26"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45651/atlas.png": "c1e1f56a9d782bb194ebd8357a8cfbc1eff94a0d1e6434c94e8a6dce4420ad6c",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45651/portrait.png": "526514641c9dc308f6d899684cd431cfc9559fbf313186359d6d0c96f2d47b90"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:105": {
+      "name": "암살군왕 슬레이브",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45648/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.24137931034483,
+      "sprite_offset": [
+        -3.351724137931041,
+        -32.27586206896558
+      ],
+      "source": "source1",
+      "source_npc_id": "45648",
+      "binding_id": "M45648",
+      "body_model_prefix": 4527.0,
+      "source_model": "reviewed-monster:45648",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72.0,
+        -84.0,
+        120.0,
+        72.0
+      ],
+      "foot_in_canvas": [
+        99,
+        104
+      ],
+      "foot_original_grid": [
+        27.0,
+        20.0
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed against native boot/robe pixels; cape tips and weapon ends excluded. Visual ground projection, not recovered anatomical/client anchor. Original gameplay offsets unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "cast": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions.",
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "4ad5ecb93dc116aea88829f2606ccb73ca9733cedae2e67392b036d8b3ca232c"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45648/atlas.png": "96657ecbd882b6093ea164779892c7598e5a10a1fb2127141a8e1d21ec8224cf",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45648/portrait.png": "68d6a05f72dd3c6794db4388edac9c3b8a2bac1e5bdcc5069fb231b6d20e1ed2"
+      },
+      "reuse_without_png_copy": true,
+      "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
     }
   },
-  "remaining_candidates": 49,
+  "remaining_candidates": 325,
   "definition_only": [
-    "마수군왕 바란카",
     "세마",
     "드래곤 슬레이어"
   ],
@@ -13200,11 +13879,6 @@
     "유일"
   ],
   "pending_candidates": [
-    {
-      "id": "transformation:inven:106",
-      "name": "마수군왕 바란카",
-      "reason": "Definition only; no original body pixels supplied."
-    },
     {
       "id": "transformation:inven:294",
       "name": "세마",
@@ -13223,5 +13897,16 @@
     "bytes": 556119,
     "sha256": "415755eaaeccafa47b4fe4c9fee22be6540690e33528b3b6b1ea4246e7c37412",
     "cross_version_or_same_pixel_equality_claim": false
+  },
+  "prior_bounded_candidate_count": 49,
+  "remaining_scope": "Unlinked current normal-through-legend game cards. This does not assert corresponding source art exists.",
+  "comparison_scope": {
+    "current_game_eligible_cards": 382,
+    "linked_cards": 57,
+    "source_sql_polymorph_definitions": 297,
+    "source_name_and_selected_model_links": 19,
+    "source_structural_candidates_not_confirmed": 74,
+    "source_not_linked": 204,
+    "warning": "Source polymorph IDs and Inven game-card IDs belong to different namespaces. Structural or numeric links do not authorize a new identity."
   }
 }

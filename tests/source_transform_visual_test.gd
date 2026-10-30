@@ -50,6 +50,20 @@ func _run() -> void:
 		check((profile.sprite_offset + (foot-center)*Vector2(0.90,1.0)*profile.pixel_scale).is_zero_approx(), key + " foot remains actor root")
 		for file: String in entry.files_sha256:
 			check(FileAccess.get_sha256(profile.frames_path.get_base_dir()+"/"+file) == entry.files_sha256[file], key + " runtime SHA " + file)
+		for path: String in entry.get("shared_files_sha256", {}):
+			check(FileAccess.get_sha256(path) == entry.shared_files_sha256[path], key + " shared original SHA " + path)
+		if entry.get("reuse_without_png_copy", false):
+			var originals: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/monsters/reviewed_source_monsters.json"))
+			for source_record: Dictionary in originals.records:
+				if str(source_record.source_npc_id) != str(entry.source_npc_id): continue
+				var source_frames: SpriteFrames = load(source_record.animation_profile.frames_path)
+				for role: String in ["idle", "walk", "run", "attack", "hit", "death"]:
+					for facing: int in range(8):
+						var track: String = role + "_" + str(facing)
+						check(frames.get_frame_count(track) == source_frames.get_frame_count(track), key + " reused sequence " + track)
+						for index: int in range(frames.get_frame_count(track)):
+							check(frames.get_frame_texture(track,index).get_image().get_data() == source_frames.get_frame_texture(track,index).get_image().get_data(), key + " reused frame pixels " + track)
+							check(frames.get_frame_duration(track,index) == source_frames.get_frame_duration(track,index), key + " reused frame timing " + track)
 	check(count == reviewed.size() and count >= 8, "all individually reviewed connections")
 	SOURCE.entries = reviewed
 	print("SOURCE_TRANSFORM_VISUAL_RESULT entries=" + str(count) + " failures=" + str(failures.size()) + " headings=[3,4,5,6,7,0,1,2]")
