@@ -1,0 +1,454 @@
+{
+  "actor": "transform:191",
+  "prior_candidate": "res://assets/actors/eight_direction/legendary_production/transform_191/r002/SpriteFrames.tres",
+  "prior_candidate_sha256": "91ebd344bf86cae98e4efc1f758a64ba887e9c7d2af89647e43e7ef263c3f249",
+  "source_pixels_resampled": false,
+  "new_art_created": false,
+  "existing_component_merges": [
+    {
+      "clip": "attack_5",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r047/NW-attack.tres",
+      "sha256": "4ca1c2aa40881bbc782bcace308943950a4b5195f322ee6cb32768e9855680ef",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "idle_0",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle.tres",
+      "sha256": "da0887c23d5a32a09b1be11f70473ba7c90ae3c579e0bab9ff1b231993c10d0c",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "attack_0",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-attack.tres",
+      "sha256": "c85acf0fa8bc62a427b4d71a56c4451210a8643e873ecd2c2b7260ffe55a7021",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "attack_3",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/SW-attack.tres",
+      "sha256": "2f5fa15fd715e3a8f9738560f0efae0ca76029cc73bbff3c6112a3d1fdf2d8cf",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "death_2",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r049/S-death.tres",
+      "sha256": "26a7aadcee9e94f9b4103880e25632ab0b8c286d5b3be7b9fce0391d69024f7e",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "hit_0",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r050/E-hit.tres",
+      "sha256": "7e1ca88dcf610332dbce13514101be52a34872459f697c88a4bb50f8fbc0d2fb",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "idle_7",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/NE-idle.tres",
+      "sha256": "4411f8adbfaa37380da2aa73168fd0c79f99e7a5c08fae2ecc1fe323a80a8fb1",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    },
+    {
+      "clip": "idle_1",
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/SE-idle.tres",
+      "sha256": "84a3e0dc1023e50c956b9bcc262d9c993a0cce61d1ca253776c06d3422669680",
+      "changed_phases": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_RGBA_regions_C_scales_preserved": true
+    }
+  ],
+  "lossless_source_parts": [
+    {
+      "clip": "idle_3",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_191/quality-v02/SW-idle-source-v02.png",
+      "source_sha256": "8a585c41e226ba180c01aee0238a194f63f5eba4da5eaf5df8c20791d511a307",
+      "source_bytes": 2530398,
+      "proof": {
+        "original_visible_texels": 771248,
+        "missing": 0,
+        "duplicate": 0
+      },
+      "explicit_whole_fragment_pins": {
+        "17": {
+          "area": 1,
+          "bbox": [
+            1231,
+            551,
+            1232,
+            552
+          ],
+          "owner_phase": 5,
+          "review_basis": "Parent inspected native context and actual component color: Blue electric particle belongs lower phase5 figure, distinct from upper gold boot."
+        }
+      },
+      "poses": [
+        {
+          "phase": 0,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-0.png",
+          "sha256": "7c9ba01e57b0d1b4f148751ca085f27917c22a390496b9f103fd3a087ef05053",
+          "bytes": 322382,
+          "prior_region": [
+            0.0,
+            0.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_3",
+              "phase": 0,
+              "prior_registration": {
+                "anchor": [
+                  234,
+                  501
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  234.0,
+                  501.0
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 1,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-1.png",
+          "sha256": "62cca14f72d1215f6976214756ea9891c1c49ad8a4d7c94afed3dba4ff5bba94",
+          "bytes": 351686,
+          "prior_region": [
+            512.0,
+            0.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_3",
+              "phase": 1,
+              "prior_registration": {
+                "anchor": [
+                  307.5,
+                  470.5
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  819.5,
+                  470.5
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 2,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-2.png",
+          "sha256": "735ff7c39bffcbfb3307dbd23342ef2fce806f59d38d127a1250f00c25e384a3",
+          "bytes": 348604,
+          "prior_region": [
+            1024.0,
+            0.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_3",
+              "phase": 2,
+              "prior_registration": {
+                "anchor": [
+                  267.25,
+                  470.5
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  1291.25,
+                  470.5
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 3,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-3.png",
+          "sha256": "9b581dd98637af1ead829057ebc06b8efef7cc78fa8a404a0f326a753f20dd72",
+          "bytes": 361905,
+          "prior_region": [
+            0.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_3",
+              "phase": 3,
+              "prior_registration": {
+                "anchor": [
+                  170,
+                  453.33
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  170.0,
+                  965.3299999999999
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 4,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-4.png",
+          "sha256": "6691f341b93c14553e9fc3d2b7e82886c29d71b6945fc5202bfc6a56346054d4",
+          "bytes": 351884,
+          "prior_region": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_3",
+              "phase": 4,
+              "prior_registration": {
+                "anchor": [
+                  205,
+                  486
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  717.0,
+                  998.0
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        },
+        {
+          "phase": 5,
+          "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r153/SW-idle-5.png",
+          "sha256": "1568a3fd963037aa0bb82188c6d7b24348447656ed867252f4602ae53e60b0e4",
+          "bytes": 346764,
+          "prior_region": [
+            1024.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "references": [
+            {
+              "clip": "idle_3",
+              "phase": 5,
+              "prior_registration": {
+                "anchor": [
+                  165,
+                  465.5
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              },
+              "registration": {
+                "anchor": [
+                  1189.0,
+                  977.5
+                ],
+                "scale": [
+                  0.266667,
+                  0.266667
+                ],
+                "target": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "original_outer_edge_pixels": {}
+        }
+      ],
+      "registration_basis": "Only original source-region origin added to C because part retains full native source coordinates. Original scales/targets/clocks/phase pixels remain exact.",
+      "quality_status": "PASS_LOSSLESS_OWNERSHIP_ONLY_SEMANTIC_HOLD"
+    }
+  ],
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "candidate": "res://assets/actors/eight_direction/legendary_production/transform_191/r003/SpriteFrames.tres",
+  "candidate_sha256": "20fa9f8b88c59155d89157b4f41de0d1693ef665419d2c0cc61ea79dadfb552a",
+  "all33_animation_clock_duration_loop_blocks_unchanged": true,
+  "changed_frame_references": 54,
+  "unchanged_frame_references": 144,
+  "semantic_holds": {
+    "idle_3": "HOLD_SOURCE_ISOLATION_ONLY_ART_ORIGINAL_EDGE_REVIEW_REQUIRED"
+  },
+  "validation": {
+    "status": "PASS_ASSEMBLED_RESOURCE_AND_HOLD_ENFORCEMENT_WHOLE_ACTOR_HOLD",
+    "new_isolated_art_play_approval": false,
+    "no_default_activation": true
+  },
+  "validation_ref": {
+    "path": "res://assets/actors/eight_direction/legendary_production/transform_114/reviewed_parts_r153/source-provenance.json",
+    "sha256": "0efa75d26c5f3eca5615e80d5134dc93c5feb0083b7d63a9472f5bf77dcbce46",
+    "pointer": "/validation"
+  }
+}
