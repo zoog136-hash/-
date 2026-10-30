@@ -20,7 +20,8 @@ func run():
   actor.set_transform_visual(str(card.image_path),1.0,CATALOG.for_record("transform",card))
   check(actor.transform_active and actor.transform_profile.frames_path==manifest.entries[key].frames_path,"actual Player selects reviewed wrapper "+key)
   actors.append(actor)
- check(actors.size()==10,"exact ten newly linked identities")
+ check(actors.size()==11,"all eleven linked shared-body identities")
+ root.size.y=maxi(600,ceili(float(actors.size())/5.0)*280+100)
  for facing:int in range(8):
   for role:String in ["idle","walk","attack","cast","hit","death"]:
    for actor:TwilightPlayer in actors:
@@ -49,5 +50,5 @@ func run():
     if not target.is_empty():check(image.save_png(target)==OK,"diagnostic viewport")
  for actor:TwilightPlayer in actors:actor.queue_free()
  await process_frame
- print("TRANSFORM_REUSE_RENDER_RESULT actors=",actors.size()," views=480 checks=",checks," errors=",errors)
+ print("TRANSFORM_REUSE_RENDER_RESULT actors=",actors.size()," views="+str(actors.size()*48)+" checks=",checks," errors=",errors)
  quit(0 if errors==0 else 1)

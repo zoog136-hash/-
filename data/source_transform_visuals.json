@@ -13867,11 +13867,81 @@
       },
       "reuse_without_png_copy": true,
       "reviewed_monster_manifest_sha256": "fbdcb49875cedda1581f2d1f61758ed31ccb37759df697e15ebd0d59fe2cca1d"
+    },
+    "transform:294": {
+      "binding_id": "PB0048",
+      "body_model_prefix": 183.0,
+      "canvas_original_grid": [
+        -48.0,
+        -84.0,
+        96.0,
+        48.0
+      ],
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "c166ae955d5c84f3ec96d9e2694f7932d5626be0e001106042b310bf97b52cb1"
+      },
+      "foot_in_canvas": [
+        72.0,
+        102.0
+      ],
+      "foot_original_grid": [
+        24.0,
+        18.0
+      ],
+      "foot_review": "Local cosmetic boot/robe ground projection visually reviewed. Fixed median lower supporting pixels of south idle sequence; not a recovered anatomical/client anchor. All gameplay offsets remain unchanged.",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45464/SpriteFrames.tres",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "grade": "영웅",
+      "identity_basis": "Exact named reviewed source NPC and game transformation; source-style appearance replacement, not pixel identity with current catalog illustration.",
+      "name": "세마",
+      "pixel_scale": 1.18032786885246,
+      "required_layout": "directional8",
+      "reuse_without_png_copy": true,
+      "same_model_aliases": {
+        "activate": "idle",
+        "cast": "attack",
+        "corpse": "death",
+        "despawn": "death",
+        "energy": "idle",
+        "equip": "idle",
+        "float": "idle",
+        "ranged_attack": "attack",
+        "recovery": "attack",
+        "special": "attack",
+        "summon": "idle",
+        "turn": "idle",
+        "unequip": "idle"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45464/attack.png": "25612591325c18a5c86689ddb1460676f7d8501fd66f88806f40903328047a65",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45464/death.png": "5b81063f7b4bbf39e0bf001dd2001c4d0159ba8bfa4ee8c77fdd44ef045c2753",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45464/idle.png": "fb0050d861f18bc97512b16e589f9bd3146ae465fad8b6dbb98626de18f7489c",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45464/portrait.png": "f1af3c63cb162f1eade2fb33d76d7bcadd91679c209aa8bb54c31bde1a522f66",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45464/walk.png": "6ee3176cc0f5e4b835cae65939e60f4b8f7a35de537d1700c04b529f9f389610"
+      },
+      "source": "source1",
+      "source_direction_limit": "Source death provides slot0 only; all facing deaths explicitly reuse that same sequence, not reconstructed original directional art",
+      "source_model": "reviewed-monster:45464",
+      "source_npc_id": "45464",
+      "sprite_offset": [
+        0.0,
+        -42.4918060302734
+      ],
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions."
     }
   },
-  "remaining_candidates": 325,
+  "remaining_candidates": 324,
   "definition_only": [
-    "세마",
     "드래곤 슬레이어"
   ],
   "excluded_grades": [
@@ -13879,11 +13949,6 @@
     "유일"
   ],
   "pending_candidates": [
-    {
-      "id": "transformation:inven:294",
-      "name": "세마",
-      "reason": "Definition only; no original body pixels supplied."
-    },
     {
       "id": "transformation:inven:1",
       "name": "드래곤 슬레이어",
@@ -13902,11 +13967,13 @@
   "remaining_scope": "Unlinked current normal-through-legend game cards. This does not assert corresponding source art exists.",
   "comparison_scope": {
     "current_game_eligible_cards": 382,
-    "linked_cards": 57,
+    "linked_cards": 58,
     "source_sql_polymorph_definitions": 297,
     "source_name_and_selected_model_links": 19,
     "source_structural_candidates_not_confirmed": 74,
     "source_not_linked": 204,
-    "warning": "Source polymorph IDs and Inven game-card IDs belong to different namespaces. Structural or numeric links do not authorize a new identity."
+    "warning": "Source polymorph IDs and Inven game-card IDs belong to different namespaces. Structural or numeric links do not authorize a new identity.",
+    "source_comparison_snapshot_linked_cards": 57,
+    "source_comparison_note": "The 297-definition source comparison counts retain the reviewed 57-card snapshot; the subsequently linked Sema card is not counted as a new SQL identity without a separate definition review."
   }
 }
