@@ -237,9 +237,9 @@ const EXPECTED: Dictionary = {
 	"176": {
 		"name": "경비병(창) 대장",
 		"grade": "전설",
-		"catalog_path": "res://assets/actors/eight_direction/legendary_production/transform_176/r163/SpriteFrames.tres",
-		"actual_expected_path": "res://assets/actors/eight_direction/legendary_production/transform_176/r163/SpriteFrames.tres",
-		"sha256": "50163b70c88cbf7338023a3d27c1f7de4be13aed2fb1e70e6be270f86cea035f",
+		"catalog_path": "res://assets/actors/eight_direction/refined_production_20261030/production_death_registration_r001/legendary_176/SpriteFrames.tres",
+		"actual_expected_path": "res://assets/actors/eight_direction/refined_production_20261030/production_death_registration_r001/legendary_176/SpriteFrames.tres",
+		"sha256": "b90b70145e0e42bae8e0f1eccf221046247e9ce6f6d3bde5aa7372bae01720d1",
 		"explicit_source_override": false
 	},
 	"175": {
