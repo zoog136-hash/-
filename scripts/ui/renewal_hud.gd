@@ -75,6 +75,8 @@ const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var workspace: PanelContainer
+var menu_page: VBoxContainer
+var menu_scroll_view: ScrollContainer
 var active_section: String = ""
 var buff_row: HBoxContainer
 var exp_readout: Label
@@ -751,7 +753,9 @@ func _hide_aux_panels() -> void:
 	_close_workspace()
 
 func _park_shared_panels() -> void:
-	for panel: Control in [lineage_inventory_ui,lineage_side_ui.character_panel,utility_panel,map_panel,catalog_panel]:
+	var shared: Array[Control] = [lineage_inventory_ui,lineage_side_ui.character_panel,utility_panel,map_panel,catalog_panel]
+	if is_instance_valid(menu_page): shared.append(menu_page)
+	for panel: Control in shared:
 		if panel.get_parent() != $Root:
 			panel.reparent($Root)
 		panel.hide()
@@ -1046,8 +1050,19 @@ func toggle_menu() -> void:
 		_close_workspace()
 		return
 	_open_window("menu","메뉴","")
-	var col: VBoxContainer = workspace.column()
+	# Build the 20 menu tiles once and re-mount them; _park_shared_panels moves the
+	# page out of the workspace before it is cleared, so it is never freed.
+	if not is_instance_valid(menu_page): _build_menu_page()
+	workspace.mount(menu_page)
+	menu_page.show()
+	menu_scroll_view.scroll_vertical = 0
+
+func _build_menu_page() -> void:
+	var col := VBoxContainer.new()
+	col.name = "MenuPage"
+	menu_page = col
 	var menu_scroll := ScrollContainer.new()
+	menu_scroll_view = menu_scroll
 	menu_scroll.name = "MenuContentScroll"
 	menu_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED

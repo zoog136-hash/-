@@ -2579,10 +2579,42 @@ func _collect_ground_drop(drop: Button) -> bool:
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	var pickup_hud_started_usec: int = Time.get_ticks_usec()
-	_update_hud()
+	_refresh_inventory_hud()
 	_perf_log("습득 HUD 갱신", pickup_hud_started_usec)
 	if bool(record.get("player_dropped",false)): _request_deferred_save()
 	return true
+
+## A pickup only changes item counts, physical IDs and carried weight. Rebuilding
+## the whole character sheet (all derived stats, card/awakening state, portrait,
+## a deep copy for the side panel) on every pickup stalled the frame; publish just
+## what changed. Equipment, stats and buffs still go through _update_hud.
+func _refresh_inventory_hud() -> void:
+	_sync_item_instances()
+	# Carried weight feeds the encumbrance movement multiplier.
+	_refresh_speed_modifiers()
+	var state: Variant = hud.get("character_state")
+	if state is Dictionary:
+		var weight: int = _inventory_total_weight()
+		var capacity: int = _carrying_capacity()
+		(state as Dictionary).merge({"inventory_weight":weight, "current_weight":weight, "carrying_capacity":capacity,
+			"max_weight":capacity, "encumbrance_multiplier":ITEM_OPTIONS.encumbrance_multiplier(weight, capacity),
+			"item_instances":item_instances}, true)
+	if hud.has_method("set_quick_items"):
+		hud.call("set_quick_items", inventory)
+	if hud.has_method("set_quickslot_state"):
+		# Re-renders quickslot counts and hands the bag its new inventory (the bag
+		# rebuilds its slots only while open).
+		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
+	elif hud.has_method("set_quickslot_entries"):
+		hud.call("set_quickslot_entries", quickslots)
+	if hud.inventory_panel.visible:
+		hud.refresh_inventory(inventory)
+	var bag: Variant = hud.get("lineage_inventory_ui")
+	if bag is Object and is_instance_valid(bag) and (bag as Object).has_method("_refresh_weight"):
+		(bag as Object).call("_refresh_weight")
+	# An open character sheet shows weight-derived values; refresh it fully once.
+	if str(hud.get("active_section")) == "character":
+		stat_hud_refresh_pending = true
 
 func _on_ground_drop_clicked(drop: Button) -> void:
 	loot_pickup.select(drop)

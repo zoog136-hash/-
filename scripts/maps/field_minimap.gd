@@ -16,6 +16,17 @@ var cached_structure_zones: Array[Dictionary] = []
 var cached_structure_pits: Array[PackedVector2Array] = []
 var cached_hunting_polygons: Dictionary = {}
 var cached_static_geometry_ready: bool = false
+# Static terrain is drawn by this control only when the field or size changes.
+# Moving markers live on a child overlay that alone redraws at ~8 Hz, so the
+# hundreds of polygons/roads/portals are no longer re-submitted every tick.
+var overlay: MinimapOverlay
+var static_redraws: int = 0
+var overlay_redraws: int = 0
+
+class MinimapOverlay extends Control:
+	var minimap: FieldMinimap
+	func _draw() -> void:
+		minimap._draw_dynamic(self)
 
 func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
@@ -26,17 +37,25 @@ func configure(controller: Node, value: PlayableField) -> void:
 	_prepare_static_geometry()
 	_cache_boss_markers()
 	queue_redraw()
+	if is_instance_valid(overlay): overlay.queue_redraw()
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = true
+	overlay = MinimapOverlay.new()
+	overlay.name = "MinimapOverlay"
+	overlay.minimap = self
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(overlay)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	tooltip_text = "클릭: 이동 경로 · 청록: 이동석 · 금색: 마을 · 빨강: 보스"
 
 func _process(delta: float) -> void:
 	clock -= delta
 	if clock <= 0.0:
 		clock = .12
-		queue_redraw()
+		if is_instance_valid(overlay): overlay.queue_redraw()
+		else: queue_redraw()
 
 func _point(p: Vector2) -> Vector2:
 	return COORD.world_to_minimap(p,bounds,area)
@@ -44,6 +63,7 @@ func _point(p: Vector2) -> Vector2:
 func _draw() -> void:
 	if world == null:
 		return
+	static_redraws += 1
 	draw_style_box(_panel(),Rect2(Vector2.ZERO,size))
 	draw_rect(area,Color("202e27"))
 	if source_overview != null: draw_texture_rect(source_overview,area,false)
@@ -94,25 +114,34 @@ func _draw() -> void:
 				draw_circle(_point(COORD.array_vector(region["center"])),3.0,Color("e6c16f") if str(region["type"])=="safe" else Color("dd7762"))
 		_draw_boss_regions()
 		_draw_hunting_obstacles()
-	for monster: TwilightMonster in world.monsters_root.get_children():
-		if monster.global_position.distance_squared_to(world.player.global_position) < 1600000:
-			draw_circle(_point(monster.global_position),1.3,Color("d68b73"))
+	if not is_instance_valid(overlay): _draw_dynamic(self)
+
+## Moving markers and the region title, drawn on `canvas` (the overlay).
+func _draw_dynamic(canvas: CanvasItem) -> void:
+	if world == null:
+		return
+	overlay_redraws += 1
+	var font: Font = get_theme_default_font()
+	for child: Node in world.monsters_root.get_children():
+		var monster: TwilightMonster = child as TwilightMonster
+		if monster != null and monster.global_position.distance_squared_to(world.player.global_position) < 1600000:
+			canvas.draw_circle(_point(monster.global_position),1.3,Color("d68b73"))
 	var camera: Camera2D = world.player.camera
 	var extent: Vector2 = get_viewport_rect().size / camera.zoom
 	var top: Vector2 = _point(camera.get_screen_center_position()-extent*.5)
 	var bottom: Vector2 = _point(camera.get_screen_center_position()+extent*.5)
-	draw_rect(Rect2(top,bottom-top).intersection(area),Color(1,1,1,.18),false,1)
+	canvas.draw_rect(Rect2(top,bottom-top).intersection(area),Color(1,1,1,.18),false,1)
 	var p: Vector2 = _point(world.player.global_position)
 	var direction: Vector2 = [Vector2.DOWN,Vector2.UP,Vector2.LEFT,Vector2.RIGHT][world.player.facing]
 	var side := Vector2(-direction.y,direction.x)
-	draw_circle(p,5,Color("101a18"))
-	draw_colored_polygon(PackedVector2Array([p+direction*6,p-direction*3+side*3,p-direction*3-side*3]),Color("faf0bb"))
+	canvas.draw_circle(p,5,Color("101a18"))
+	canvas.draw_colored_polygon(PackedVector2Array([p+direction*6,p-direction*3+side*3,p-direction*3-side*3]),Color("faf0bb"))
 	var title: String = "지역 지도"
 	if field != null:
 		var region: Dictionary = field.region_at(world.player.global_position)
 		title = str(region["name"]) + (" · 안전" if str(region["type"])=="safe" else " · 사냥터")
 		if field is OriginalPlayableField: title = str(field.data.short_name)
-	draw_string(font,Vector2(9,181),title,HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("d7ceba"))
+	canvas.draw_string(font,Vector2(9,181),title,HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("d7ceba"))
 
 func _map_polygon(record: Dictionary, key: String = "polygon") -> PackedVector2Array:
 	var points := PackedVector2Array()

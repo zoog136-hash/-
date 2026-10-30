@@ -323,15 +323,20 @@ func _inventory_entries() -> Array[Dictionary]:
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
 	var names: Array = inventory.keys()
 	names.sort()
+	# Group physical IDs by name in one pass instead of rescanning every
+	# instance for every bag entry.
+	var ids_by_name: Dictionary = {}
+	for instance_key: Variant in instances.keys():
+		var physical: Variant = instances[instance_key]
+		if physical is Dictionary:
+			var owner_name: String = str((physical as Dictionary).get("name", ""))
+			if not ids_by_name.has(owner_name): ids_by_name[owner_name] = [] as Array[String]
+			(ids_by_name[owner_name] as Array[String]).append(str(instance_key))
 	for raw_name: Variant in names:
 		var item_name: String = str(raw_name)
 		if int(inventory.get(item_name, 0)) <= 0:
 			continue
-		var instance_ids: Array[String] = []
-		for instance_key: Variant in instances.keys():
-			var physical: Variant = instances[instance_key]
-			if physical is Dictionary and str((physical as Dictionary).get("name", "")) == item_name:
-				instance_ids.append(str(instance_key))
+		var instance_ids: Array[String] = ids_by_name.get(item_name, [] as Array[String])
 		instance_ids.sort_custom(func(a: String, b: String) -> bool: return int(a) < int(b))
 		if instance_ids.is_empty():
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
