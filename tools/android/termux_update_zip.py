@@ -424,47 +424,47 @@ def update(root, assume_yes=False, install_fresh=False, workers=6):
                 raise
     # No project file is modified until ALL staged downloads are verified.
 
-        stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-        backup = root / ('.twilight_update_backup_' + stamp)
-        if backup.exists():
-            raise RuntimeError('Backup folder already exists')
-        if not install_fresh:
-            backup.mkdir()
-        applied = []
-        try:
-            for name in changed + removed:
-                target = root / name
-                prior = backup / name
-                had_old = target.exists()
-                if had_old:
-                    prior.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(target, prior)
-                applied.append((name, had_old))
-                if name in inventory:
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(stage / name, target)
-                    if inventory[name].get('mode') == '100755':
-                        target.chmod(target.stat().st_mode | 0o111)
-            state_tmp = root / (STATE_FILE + '.tmp')
-            state_tmp.write_text(json.dumps({'sha': commit_sha, 'tracked_files': sorted(inventory)}, ensure_ascii=False) + '\n', encoding='utf-8')
-            os.replace(state_tmp, root / STATE_FILE)
-        except BaseException:
-            for name, had_old in reversed(applied):
-                target = root / name
-                if target.exists():
-                    target.unlink()
-                prior = backup / name
-                if had_old and prior.exists():
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(prior, target)
-            raise
-        # The stage was only our pinned verified downloads; after successful
-        # atomic application all gameplay files have moved to the destination.
-        shutil.rmtree(stage)
-        print('INSTALL OK:' if install_fresh else 'UPDATE OK:', commit_sha[:12])
-        if not install_fresh:
-            print('Original changed files saved in:', backup)
-        print('Close Godot and re-import TWILIGHT_Play/project.godot.')
+    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+    backup = root / ('.twilight_update_backup_' + stamp)
+    if backup.exists():
+        raise RuntimeError('Backup folder already exists')
+    if not install_fresh:
+        backup.mkdir()
+    applied = []
+    try:
+        for name in changed + removed:
+            target = root / name
+            prior = backup / name
+            had_old = target.exists()
+            if had_old:
+                prior.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(target, prior)
+            applied.append((name, had_old))
+            if name in inventory:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(stage / name, target)
+                if inventory[name].get('mode') == '100755':
+                    target.chmod(target.stat().st_mode | 0o111)
+        state_tmp = root / (STATE_FILE + '.tmp')
+        state_tmp.write_text(json.dumps({'sha': commit_sha, 'tracked_files': sorted(inventory)}, ensure_ascii=False) + '\n', encoding='utf-8')
+        os.replace(state_tmp, root / STATE_FILE)
+    except BaseException:
+        for name, had_old in reversed(applied):
+            target = root / name
+            if target.exists():
+                target.unlink()
+            prior = backup / name
+            if had_old and prior.exists():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(prior, target)
+        raise
+    # The stage was only our pinned verified downloads; after successful
+    # atomic application all gameplay files have moved to the destination.
+    shutil.rmtree(stage)
+    print('INSTALL OK:' if install_fresh else 'UPDATE OK:', commit_sha[:12])
+    if not install_fresh:
+        print('Original changed files saved in:', backup)
+    print('Close Godot and re-import TWILIGHT_Play/project.godot.')
 
 
 
