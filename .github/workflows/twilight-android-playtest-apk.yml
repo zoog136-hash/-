@@ -29,7 +29,7 @@ concurrency:
 
 jobs:
   build-android-apk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Cold PNG import missed all four trusted-main shards; preserve full import/export/inspection.
     timeout-minutes: 180
     steps:

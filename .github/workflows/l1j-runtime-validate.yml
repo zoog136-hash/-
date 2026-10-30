@@ -48,8 +48,8 @@ jobs:
       matrix: >-
         ${{ fromJSON(
           (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.retry_scope == 'linux_remaining'))
-          && '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240}]}'
-          || '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":240}]}'
+          && '{"include":[{"os":"ubuntu-24.04","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240}]}'
+          || '{"include":[{"os":"ubuntu-24.04","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":240}]}'
         ) }}
     runs-on: ${{ matrix.os }}
     # Both full suites retain every check and its individual deadline.
@@ -145,7 +145,7 @@ jobs:
         shell: python
         run: |
           import gzip, hashlib, json, pathlib, re, subprocess
-          assert '${{ matrix.os }}' == 'ubuntu-latest'
+          assert '${{ matrix.os }}' == 'ubuntu-24.04'
           source = 'f1247a0d3bdfe66fa011ab7d540e34ae782f2fe5'
           evidence = pathlib.Path('docs/remake/evidence/pr122-remaining106/batch15/ci-followup')
           proof = json.loads((evidence / 'linux-resume.json').read_text(encoding='utf-8'))
@@ -213,7 +213,7 @@ jobs:
           if-no-files-found: warn
 
   android-export:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Cold full import took ~26 minutes; APK export then hit the old 40-minute job cap.
     # Keep the complete import, export, APK inspection and signing checks intact.
     timeout-minutes: 120

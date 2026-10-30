@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 125
     steps:
       - name: Checkout
@@ -288,6 +288,17 @@ jobs:
           grep -q 'CATALOG_ITEM_LOOKUP_RESULT {"failures":\[\]' godot-catalog-lookup.log
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_item_lookup_index_test.gd 2>&1 | tee godot-catalog-lookup-index.log
           grep -q 'CATALOG_LOOKUP_INDEX_RESULT {"failures":\[\]' godot-catalog-lookup-index.log
+
+      - name: Bag acquisition order and minimap static layer
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/inventory_order_sort_button_test.gd 2>&1 | tee godot-inventory-order.log
+          grep -q 'INVENTORY_ORDER_RESULT {"failures":\[\]' godot-inventory-order.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/inventory_virtual_window_test.gd 2>&1 | tee godot-inventory-window.log
+          grep -q 'INVENTORY_VIRTUAL_WINDOW_RESULT {"created":[0-9]*,"failures":\[\]' godot-inventory-window.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/minimap_static_layer_test.gd 2>&1 | tee godot-minimap-layer.log
+          grep -q 'MINIMAP_STATIC_LAYER_RESULT {"failures":\[\]' godot-minimap-layer.log
 
       - name: Item buff description smoke test
         shell: bash
