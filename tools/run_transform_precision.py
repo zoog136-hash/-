@@ -44,9 +44,26 @@ def run(root,out,godot,script,xvfb):
     display=subprocess.Popen([str(xvfb),'-displayfd',str(write_fd),'-screen','0','1280x720x24','-nolisten','tcp','-ac'],pass_fds=(write_fd,),stdout=xlog,stderr=subprocess.STDOUT)
     os.close(write_fd)
     import select
-    assert select.select([read_fd],[],[],15)[0],'Xvfb did not allocate a display'
-    number=os.read(read_fd,64).decode().strip();os.close(read_fd)
+    # Xvfb may write the display digits and trailing newline separately.
+    # Keep the pipe open through the whole line so its final write cannot EPIPE.
+    display_line=bytearray();deadline=time.monotonic()+15
+    try:
+        while b'\n' not in display_line:
+            remaining=deadline-time.monotonic()
+            assert remaining>0 and select.select([read_fd],[],[],remaining)[0],'Xvfb did not finish allocating a display'
+            part=os.read(read_fd,64)
+            assert part,'Xvfb closed its display-number pipe before newline'
+            display_line.extend(part)
+            assert len(display_line)<=64,'Invalid Xvfb display-number line'
+        number=display_line.decode().strip()
+    finally:
+        os.close(read_fd)
     assert number.isdigit(),'Invalid Xvfb display'
+    socket_path=Path('/tmp/.X11-unix')/('X'+number)
+    socket_deadline=time.monotonic()+3
+    while not socket_path.exists() and display.poll() is None and time.monotonic()<socket_deadline:
+        time.sleep(.02)
+    assert display.poll() is None and socket_path.exists(),'Xvfb exited or its allocated display socket is unavailable'
     env['DISPLAY']=':'+number
     cmd+=['--display-driver','x11','--rendering-method','gl_compatibility','--rendering-driver','opengl3']
     (out/'command.json').write_text(json.dumps(cmd,indent=2)+'\n')
