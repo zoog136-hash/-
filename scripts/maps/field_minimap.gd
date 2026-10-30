@@ -3,6 +3,7 @@ class_name FieldMinimap
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
+const RASTER_CACHE = preload("res://scripts/maps/minimap_raster_cache.gd")
 var source_overview: Texture2D
 var boss_region_mesh: MultiMesh
 var world: Node
@@ -22,6 +23,15 @@ var cached_static_geometry_ready: bool = false
 var overlay: MinimapOverlay
 var static_redraws: int = 0
 var overlay_redraws: int = 0
+# With a real renderer the static layer is rasterized once into a SubViewport
+# texture, so each frame submits one textured quad instead of the ~2,000
+# separate polygon/dot draw calls the retained canvas commands still cost.
+# Headless runs (no renderer) and the brief build window draw directly.
+var raster_cache = RASTER_CACHE.new()
+var static_cache_enabled: bool = true
+var static_only: bool = false
+var static_generation: int = 0
+var panel_style: StyleBoxFlat
 
 class MinimapOverlay extends Control:
 	var minimap: FieldMinimap
@@ -36,10 +46,42 @@ func configure(controller: Node, value: PlayableField) -> void:
 	if field is NativePngField: source_overview = field.overview_texture()
 	_prepare_static_geometry()
 	_cache_boss_markers()
+	static_generation += 1
+	raster_cache.invalidate()
 	queue_redraw()
 	if is_instance_valid(overlay): overlay.queue_redraw()
+	call_deferred("_prepare_raster")
+
+func set_static_cache_enabled(enabled: bool) -> void:
+	static_cache_enabled = enabled
+	if enabled: _prepare_raster()
+	queue_redraw()
+
+func _prepare_raster() -> void:
+	if static_only or not static_cache_enabled or world == null or not is_inside_tree(): return
+	raster_cache.prepare(self)
+
+## Painter side: reuse the owner's prepared geometry for one raster build.
+func adopt_static(owner: FieldMinimap) -> void:
+	cached_structure_floor = owner.cached_structure_floor
+	cached_structure_zones = owner.cached_structure_zones
+	cached_structure_pits = owner.cached_structure_pits
+	cached_hunting_polygons = owner.cached_hunting_polygons
+	cached_static_geometry_ready = owner.cached_static_geometry_ready
+	boss_region_mesh = owner.boss_region_mesh
+
+func release_static() -> void:
+	cached_structure_floor = []
+	cached_structure_zones = []
+	cached_structure_pits = []
+	cached_hunting_polygons = {}
+	boss_region_mesh = null
 
 func _ready() -> void:
+	if static_only:
+		set_process(false)
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = true
 	overlay = MinimapOverlay.new()
@@ -49,6 +91,8 @@ func _ready() -> void:
 	add_child(overlay)
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	tooltip_text = "클릭: 이동 경로 · 청록: 이동석 · 금색: 마을 · 빨강: 보스"
+	resized.connect(_prepare_raster)
+	get_viewport().size_changed.connect(_prepare_raster)
 
 func _process(delta: float) -> void:
 	clock -= delta
@@ -63,14 +107,28 @@ func _point(p: Vector2) -> Vector2:
 func _draw() -> void:
 	if world == null:
 		return
-	static_redraws += 1
+	if static_only:
+		_draw_static_layer()
+		return
 	draw_style_box(_panel(),Rect2(Vector2.ZERO,size))
-	draw_rect(area,Color("202e27"))
-	if source_overview != null: draw_texture_rect(source_overview,area,false)
+	if static_cache_enabled and raster_cache.ready and raster_cache.texture() != null:
+		draw_texture_rect(raster_cache.texture(),Rect2(raster_cache.logical_origin,raster_cache.logical_extent),false)
+	else:
+		static_redraws += 1
+		_draw_static_layer()
+		# Never add the SubViewport while drawing; build after this frame.
+		if static_cache_enabled and DisplayServer.get_name() != "headless": call_deferred("_prepare_raster")
 	var font: Font = get_theme_default_font()
 	var heading: String = str(field.data.get("minimap",{}).get("title","ADEN  /  WORLD")) if field != null else "REGION  /  MAP"
 	if field is OriginalPlayableField: heading = str(field.data.map_name)
 	draw_string(font,Vector2(10,18),heading.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("decfae"))
+	if not is_instance_valid(overlay): _draw_dynamic(self)
+
+## Terrain, roads, markers and boss areas: everything that only changes with
+## the field, its bounds or the control size. The heading stays direct text.
+func _draw_static_layer() -> void:
+	draw_rect(area,Color("202e27"))
+	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	if field != null:
 		_draw_structure_geography()
 		for surface: Dictionary in field.data.get("surfaces",[]):
@@ -114,7 +172,6 @@ func _draw() -> void:
 				draw_circle(_point(COORD.array_vector(region["center"])),3.0,Color("e6c16f") if str(region["type"])=="safe" else Color("dd7762"))
 		_draw_boss_regions()
 		_draw_hunting_obstacles()
-	if not is_instance_valid(overlay): _draw_dynamic(self)
 
 ## Moving markers and the region title, drawn on `canvas` (the overlay).
 func _draw_dynamic(canvas: CanvasItem) -> void:
@@ -261,7 +318,9 @@ func _draw_hunting_obstacles() -> void:
 			draw_circle(_point(COORD.array_vector(obstacle.center)),radius,Color("30323b"))
 
 func _panel() -> StyleBoxFlat:
+	if panel_style != null: return panel_style
 	var style := StyleBoxFlat.new()
+	panel_style = style
 	style.bg_color = Color(.035,.045,.036,.93)
 	style.border_color = Color("726448")
 	style.set_border_width_all(1)

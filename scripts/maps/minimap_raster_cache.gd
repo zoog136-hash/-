@@ -12,6 +12,9 @@ var logical_origin := Vector2.ZERO
 var ready: bool = false
 var generation: int = 0
 var builds: int = 0
+# One post-draw callback serves every request made before that frame renders;
+# re-connecting the same bound method per request is rejected by Godot.
+var completion_pending: bool = false
 
 func invalidate() -> void:
 	signature.clear()
@@ -21,7 +24,7 @@ func invalidate() -> void:
 	if is_instance_valid(painter):
 		painter.field = null
 		painter.source_overview = null
-		painter.geography_cache = null
+		if painter.has_method("release_static"): painter.release_static()
 
 func texture() -> Texture2D:
 	return viewport.get_texture() if is_instance_valid(viewport) else null
@@ -36,7 +39,7 @@ func prepare(owner: Control) -> void:
 	# the same edge twice and blur/shift the boss dots and thin outlines.
 	var phase: Vector2 = display.origin - display.origin.floor()
 	var pixels := Vector2i(ceili(owner.size.x * scale_value.x + phase.x), ceili(owner.size.y * scale_value.y + phase.y))
-	var request: Array = [owner.size, scale_value, phase, owner.field, owner.bounds, owner.area, owner.source_overview]
+	var request: Array = [owner.size, scale_value, phase, owner.field, owner.bounds, owner.area, owner.source_overview, owner.get("static_generation")]
 	if signature == request: return
 	owner_control = owner
 	if not is_instance_valid(viewport):
@@ -61,16 +64,21 @@ func prepare(owner: Control) -> void:
 	painter.bounds = owner.bounds
 	painter.area = owner.area
 	painter.source_overview = owner.source_overview
-	painter.geography_cache = owner.geography_cache
+	# Share the owner's prepared (immutable) geometry instead of recomputing it.
+	if painter.has_method("adopt_static"): painter.adopt_static(owner)
 	painter.queue_redraw()
 	signature = request
 	ready = false
 	generation += 1
 	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
-	RenderingServer.frame_post_draw.connect(_completed.bind(generation), CONNECT_ONE_SHOT)
+	if not completion_pending:
+		completion_pending = true
+		RenderingServer.frame_post_draw.connect(_completed, CONNECT_ONE_SHOT)
 
-func _completed(request_generation: int) -> void:
-	if request_generation != generation or not is_instance_valid(owner_control): return
+func _completed() -> void:
+	completion_pending = false
+	# invalidate() since the request, or no live owner: nothing was rendered.
+	if signature.is_empty() or not is_instance_valid(owner_control): return
 	ready = true
 	builds += 1
 	owner_control.queue_redraw()
