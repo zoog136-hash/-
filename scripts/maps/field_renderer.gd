@@ -500,6 +500,13 @@ func _build_markers() -> void:
 		_label(str(portal["name"]),p+Vector2(-90,-148),Color("9ae4d3"))
 	for npc: Dictionary in field.data["npc_spawn"]:
 		var p: Vector2 = COORD.array_vector(npc["position"])
+		if npc.has("source_catalog_id"):
+			var source_actor = preload("res://scripts/npc/source_npc_actor.gd").new()
+			source_actor.position = p
+			add_child(source_actor)
+			if not source_actor.configure(npc): source_actor.queue_free()
+			_label(str(npc["name"]),p+Vector2(-90,-107),Color("dfc58a"))
+			continue
 		var sprite := Sprite2D.new()
 		var npc_role: String = str(npc.get("role","guide"))
 		var tex: Texture2D = load(VISUAL_STYLE.npc_class_art(npc_role)) as Texture2D
