@@ -1,0 +1,81 @@
+{
+  "actor": "transform:227",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r130/S-attack-3-source.png",
+  "source_sha256": "38f11ee2d444bfb10d60685f05eea9d43eeebf2ad0938893a62be11ba14211e1",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/S-attack-source-v01.png",
+  "original_source_sha256": "a6d0e77a5d8175a9c0dd65cc24b2078b1c4c146e58e795cab55f1737216c6f78",
+  "poses": [
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r130/S-attack-3-source.png",
+      "anchor": [
+        530,
+        850
+      ],
+      "scale": 0.13,
+      "sha256": "38f11ee2d444bfb10d60685f05eea9d43eeebf2ad0938893a62be11ba14211e1"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_227/draft001/S-attack-source-v01.png",
+      "region": [
+        512.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "anchor": [
+        282,
+        335
+      ],
+      "scale": 0.300546,
+      "sha256": "a6d0e77a5d8175a9c0dd65cc24b2078b1c4c146e58e795cab55f1737216c6f78"
+    }
+  ],
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_COMPLETE_ACTOR_DEVICE_PENDING",
+  "production_connected": true,
+  "final_quality_approved": false,
+  "whole_actor_gate": "PASS_LOCAL_DEFAULT_NATIVE_IMPORT_PLAYER_ANDROID_PENDING",
+  "repaired_source_phases": [
+    3
+  ],
+  "normal_source_regions_preserved": [
+    0,
+    1,
+    2,
+    4,
+    5
+  ],
+  "registration_only_correction": {
+    "phase": 4,
+    "old_anchor": [
+      282,
+      451
+    ],
+    "new_anchor": [
+      282,
+      335
+    ],
+    "world_y_difference": 34.863336,
+    "reason": "The original anchor followed the detached green spiral below the boots; new plane uses the actual dark boot ground. Original X, scale, pixels, source region, duration and marker remain unchanged."
+  },
+  "replacement_basis": "Confirmed S impact phase3 green ray cut at actual source bottom edge. Separate ImageGen revision preserves SOUTH face, RIGHT green staff, LEFT open purple book, crouch and finite down-going impact; all effects fit source bounds. New phase3 root follows actual boot plane rather than flare bottom. Other original source poses and clock are retained.",
+  "runtime_default_connected": true,
+  "production_connection_path": "res://assets/actors/eight_direction/legendary_production/transform_227/r005/SpriteFrames.tres",
+  "catalog_bound_directly": false,
+  "activation_scope": "This source clip is assembled into the full actor; catalog selects r005 only. Count current full actor33/198, not component/ancestor files.",
+  "local_main": "PASS actual Main + actual catalog selection33clips198poses, candidate_profile_injection0; all8 attack markers own frame3, no mirror, footprint registration and terminal same-form death preserved.",
+  "native_import": "PASS separate native Godot4.7.2 actor import:33clips198 CompressedTexture2D AtlasTexture decoded frames; distinct from QA Main source-byte loader and exported builds.",
+  "player_validation": "PASS32 stationary/moving HIT cases at30/60fps in8directions, plus1 actual Player physics movement/HIT case. No extra attack, movement continues, inventory/equipment/health/collision unchanged.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

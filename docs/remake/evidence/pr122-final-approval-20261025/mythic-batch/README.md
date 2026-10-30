@@ -1,0 +1,14 @@
+# Mythic whole-batch verification — PR158
+
+Tested baseline cf4aba29a93aaf7edb7e15a34705d1e57db7cc43 plus the two pinned test/audit files. No production art, profiles, catalog connections or approval criteria changed.
+
+- Scope: all 16 new mythic staging actors, 528 required role/direction clips. The completed unique actors are excluded.
+- Draft source count remains a separate axis: 525/528. Current selected source regions: 301/301 passed byte pins, bounds, nonempty alpha and six distinct visible poses. This is not quality approval.
+- Actual Main/Player batch: 15 bindable actors, 300/300 clips and 1800/1800 captured phases passed exact frame selection, no mirror/warp, virtual-foot, attack-marker and death-final-frame assertions. NativePngField and installed registry were checked. QA injection is not default catalog integration. Actor transform:399 has one existing idle clip but lacks an authored locomotion sizing reference; it was not invented.
+- Source-region visual review: 38/38 pages, 301/301 clips inspected. The review JSON records each clip; 15 distinct clips have explicit FAIL/HOLD findings. Other rows only mean no additional obvious defect at diagnostic resolution, not final approval. New final quality approvals: 0/528. Fine runtime visual review is not complete merely because all captured frames pass assertions.
+- Missing from selected requests: 224 source-geometry HOLD, three absent generated images (transform:367 SE hit, transform:399 S death, transform:411 NW hit), and one unbound existing idle. These dependencies are separate from the 15 visual exceptions in existing selected clips; do not add overlapping counts as a single missing total.
+- The direction reversals, weapon-hand swaps and role ambiguity are visible in authored pixels. No safe pointer-only correction has been established. Mirroring asymmetric art, dropping offending poses, or lowering assertions would mask the problem. Originals and all existing results are preserved. Art correction requires the restricted source-art step to be explicitly cleared; no image generation was attempted.
+
+`source-pages/index.json` maps the diagnostic sheets to exact clips. `mythic-selected-source-audit.json` pins the selected textures and profiles. `main/report.json` contains actual Player results; thumbnails use the actual Main viewport. Source-region sheets preserve the selected visible pixels at inspection scale and do not prove runtime anchoring. Detailed runtime log is compressed. Full CI was not restarted for this batch.
+
+Current merge recheck: PR122 merged at 2026-10-25 11:46 UTC, main `f24c0a8372adc33dda4dcf76735b90ec7e537aba`. Its entire tree equals the tested PR122 HEAD d76a098b. This preserves the baseline comparison; PR158 changes remain unmerged and its base was not retargeted. The existing full Godot Validate run 40187062534 completed SUCCESS at earlier SHA 9ac7b16b; it is not a final-SHA result.

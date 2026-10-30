@@ -1,0 +1,183 @@
+{
+  "actor": "transform:332",
+  "direction": "S",
+  "role": "run",
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "repaired_phases": [
+    3,
+    4,
+    5
+  ],
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r088/S-run-half.png",
+      "region": [
+        0,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        375,
+        710
+      ],
+      "scale": 0.19,
+      "sha256": "7431b7173c2b5ed0208e0594be03747f5ba1d6bde9d3512b0762919388193035"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r088/S-run-half.png",
+      "region": [
+        724,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        410,
+        710
+      ],
+      "scale": 0.19,
+      "sha256": "7431b7173c2b5ed0208e0594be03747f5ba1d6bde9d3512b0762919388193035"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_332/repaired_source_r088/S-run-half.png",
+      "region": [
+        1448,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        410,
+        710
+      ],
+      "scale": 0.19,
+      "sha256": "7431b7173c2b5ed0208e0594be03747f5ba1d6bde9d3512b0762919388193035"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_332/draft001/S-run-source-v01.png",
+      "region": [
+        1024.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "anchor": [
+        265.75,
+        494
+      ],
+      "scale": 0.264901,
+      "sha256": "0aa531b3834e701ce5372eaa9634bf85df75f004f2a93f172aeb7c98ebb31484"
+    }
+  ],
+  "original_frames": [
+    {
+      "index": 0,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/draft001/S-run-source-v01.png",
+      "source_sha256": "0aa531b3834e701ce5372eaa9634bf85df75f004f2a93f172aeb7c98ebb31484",
+      "region": [
+        0.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "proposal_anchor_in_region": [
+        260.0,
+        494.0
+      ],
+      "proposal_body_height": 450.0,
+      "semantic_review": "PENDING",
+      "role": "run",
+      "direction": "S",
+      "proposal_scale": 0.264901
+    },
+    {
+      "index": 1,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/draft001/S-run-source-v01.png",
+      "source_sha256": "0aa531b3834e701ce5372eaa9634bf85df75f004f2a93f172aeb7c98ebb31484",
+      "region": [
+        512.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "proposal_anchor_in_region": [
+        265.0,
+        494.0
+      ],
+      "proposal_body_height": 432.0,
+      "semantic_review": "PENDING",
+      "role": "run",
+      "direction": "S",
+      "proposal_scale": 0.264901
+    },
+    {
+      "index": 2,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_332/draft001/S-run-source-v01.png",
+      "source_sha256": "0aa531b3834e701ce5372eaa9634bf85df75f004f2a93f172aeb7c98ebb31484",
+      "region": [
+        1024.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "proposal_anchor_in_region": [
+        265.75,
+        429.0
+      ],
+      "proposal_body_height": 390.51,
+      "semantic_review": "PENDING",
+      "role": "run",
+      "direction": "S",
+      "proposal_scale": 0.264901
+    }
+  ],
+  "quality_status": "PASS_LOCAL_VISUAL_AND_DEFAULT_MAIN",
+  "whole_actor_gate": "PASS_33_TRACKS_198_POSES",
+  "production_connected": true,
+  "selection_basis": "Separate image-tool correction of confirmed late-half hand/view failures; original first-half pixels and registration preserved. Constant scale per new source; no source resampling, mirroring or frame timing changes.",
+  "normal_original_registration_phases_preserved": [
+    0,
+    1
+  ],
+  "registration_repair": {
+    "phase": 2,
+    "previous_anchor": [
+      265.75,
+      429.0
+    ],
+    "new_ground_y": 494,
+    "basis": "Both source contact phases0/1 establish ground494; AIR2 lifts feet while raw upper body remains in the same source plane. Original pixels unchanged."
+  },
+  "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
+  "local_visual_review": "PASS fixed late-half right-hand staff, retained opposite original leg poses; AIR2 projected ground corrected",
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures",
+  "production_frames": "res://assets/actors/eight_direction/legendary_production/transform_332/r006/SpriteFrames.tres"
+}

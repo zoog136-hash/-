@@ -1,0 +1,127 @@
+{
+  "actor": "transform:274",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NW-attack-source-v01.png",
+  "source_sha256": "a81d089f441242a4a51e86a00a114ae095294196a113f7c1cf6a84defbbbed48",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-1.png",
+      "anchor": [
+        397.0,
+        602.0
+      ],
+      "scale": 0.24136,
+      "sha256": "6744020e0ff0f18710e38615efcd6538e7df677f7e1f530d0c627a563b337cdc"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-2.png",
+      "anchor": [
+        991.5,
+        586.5
+      ],
+      "scale": 0.24136,
+      "sha256": "43d8b7666d0337e2f0d99668096cebf7edc91c5aa4058399d63ed9a5078d97b7"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-3.png",
+      "anchor": [
+        475.0,
+        1181.5
+      ],
+      "scale": 0.24136,
+      "sha256": "847cb40add447eef172d9f4f08019139523a9773b00515e21ea61e9e94dcb44e"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-4.png",
+      "anchor": [
+        874.75,
+        1197.0
+      ],
+      "scale": 0.24136,
+      "sha256": "3e3297c837e615bde3ae06808fbe62f4aa57760470b667c6dfe3f9210a79b551"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 676552,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_RUN_LATE_HALF_WEAPON_ARMOR_CONTINUITY",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "9": {
+      "area": 1478,
+      "bounds": [
+        129,
+        659,
+        300,
+        723
+      ],
+      "owner_source_index": 2
+    },
+    "17": {
+      "area": 92,
+      "bounds": [
+        291,
+        721,
+        305,
+        730
+      ],
+      "owner_source_index": 2
+    }
+  },
+  "fragment_review_basis": "Both detached blue crescent fragments continue the lower-left impact arc; the upper-left boot above is a separate figure.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "remaining_actor_issue": {
+    "animation": "run_6",
+    "phases": [
+      3,
+      4,
+      5
+    ],
+    "status": "HOLD_CONTINUITY_REVIEW",
+    "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-run-source-v01.png",
+    "reason": "Late-half weapon/shoulder-armour presentation reverses relative to early half; preserve the source and require weapon/armour continuity review before selecting this actor. Do not resolve by a blind mirror or repeating the failed half-strip generation approach.",
+    "source_sha256": "1a3a4a7b8af9a891c2c5780333bf004881cbd358c014211d245f6b7a276a0f5e"
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/NW-idle-source-v01.png",
+      "sha256": "f587cd25bc449c8c919fa92ce270b67a0e594367ea289ca58621a01c11477934",
+      "bytes": 2297142
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-1.png",
+      "sha256": "6744020e0ff0f18710e38615efcd6538e7df677f7e1f530d0c627a563b337cdc",
+      "bytes": 383417
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-2.png",
+      "sha256": "43d8b7666d0337e2f0d99668096cebf7edc91c5aa4058399d63ed9a5078d97b7",
+      "bytes": 374894
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-3.png",
+      "sha256": "847cb40add447eef172d9f4f08019139523a9773b00515e21ea61e9e94dcb44e",
+      "bytes": 491480
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r114/NW-attack-4.png",
+      "sha256": "3e3297c837e615bde3ae06808fbe62f4aa57760470b667c6dfe3f9210a79b551",
+      "bytes": 379854
+    }
+  ],
+  "native_import": "PASS: native CompressedTexture2D AtlasTexture decode; whole33 resource imported, then changed N/SW repaired clips separately checked at final source bytes. Import is not final art approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: exact source clips played in real Main Player candidate profile, every phase and marker3 where applicable. Newly repaired N/SW clips also checked in same-Player IDLE/ATTACK/IDLE without rebind. Final default binding remains0.",
+  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection."
+}

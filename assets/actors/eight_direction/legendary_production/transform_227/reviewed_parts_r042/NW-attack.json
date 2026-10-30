@@ -1,0 +1,86 @@
+{
+  "source": "assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r042/NW-attack.png",
+  "source_sha256": "7ecb4701f04247e20a0a437dedda3d23a7ed588e4501d94915c05ef28e27610b",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/NW-attack-0.png",
+      "anchor": [
+        260,
+        477
+      ],
+      "scale": 0.28205128205128205,
+      "source_body_label": 3,
+      "sha256": "65dc8d9a41478f166555db8452b813ae27fe9a91f7aa49e8b4185769aaa58611"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r042/NW-attack-1.png",
+      "anchor": [
+        750,
+        982
+      ],
+      "scale": 0.14473684210526316,
+      "head_to_ground_unit": 760,
+      "sha256": "694bcc0e17cf63b188da55557adf9665c857cdf211cf47d65b7cb851322959c8",
+      "source_pixels_resampled": false
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/NW-attack-2.png",
+      "anchor": [
+        1284,
+        477
+      ],
+      "scale": 0.28205128205128205,
+      "source_body_label": 2,
+      "sha256": "3693bfc9ef580710ef181032663c59ec689b61ef191ad7593bcec13cadb9538b"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/NW-attack-3.png",
+      "anchor": [
+        260,
+        989
+      ],
+      "scale": 0.28205128205128205,
+      "source_body_label": 19,
+      "sha256": "501c66d608323e8918b6b5b87d74a0fdb3ee9cc2b6d7fa958ecce41c615a1ba9"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/NW-attack-4.png",
+      "anchor": [
+        772,
+        989
+      ],
+      "scale": 0.28205128205128205,
+      "source_body_label": 21,
+      "sha256": "38db69f308ccf6c1d0fafa204b3dadac4e0a13b217cc618bc426df59f848dc07"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r042/NW-attack-5.png",
+      "anchor": [
+        1284,
+        989
+      ],
+      "scale": 0.28205128205128205,
+      "source_body_label": 22,
+      "sha256": "bea2bbc252c24b880813eb9cb9a90132e30b3e892f2f6e2797aab3010272733f"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 753751,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "replacement_source": "assets/actors/eight_direction/legendary_production/transform_227/repaired_source_r042/NW-attack-1.png",
+  "replacement_reason": "NW handedness corrected without mirroring; phase1 standalone preserves complete glow at source boundary",
+  "native_import": "PASS_4_CLIPS_24_FRAMES",
+  "runtime_default_connected": false,
+  "actor_hold": "NW RUN replacement repeats leading leg; other mandatory clips remain subject to whole-actor review"
+}

@@ -1,0 +1,179 @@
+{
+  "actor": "transform:245",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NW-attack-source-v01.png",
+  "source_sha256": "3c52f6a43ed218e95436607c532846fe251db37dab8adfe18dd4db2ed72b43fb",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-0.png",
+      "anchor": [
+        296.0,
+        453.0
+      ],
+      "scale": 0.342768,
+      "sha256": "1a8aa14471f1b80f8038d1b01a92a720d1d8a877a1dadbe73a2614abb4cc29c5"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-1.png",
+      "anchor": [
+        830.75,
+        454.33
+      ],
+      "scale": 0.342768,
+      "sha256": "e65fe92ca93a2e98bf38d65094cc5d76646ab255923767f84419db597ab58a4b"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-2.png",
+      "anchor": [
+        1443.0,
+        483.0
+      ],
+      "scale": 0.342768,
+      "sha256": "01e5ab7676b5ebd562923ddf2e5f6f2b4be334b0e0b61f86e2eb814191317dcb"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-3.png",
+      "anchor": [
+        486.25,
+        942.5
+      ],
+      "scale": 0.342768,
+      "sha256": "3149f25aaf9a24b95a5e3036ce2235d2b246710b38d4f389ec8a75224252aa1c"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-4.png",
+      "anchor": [
+        746.0,
+        945.5
+      ],
+      "scale": 0.342768,
+      "sha256": "5bb41d7ca045fb834eccd8f07559cbf8f96f5498a47ffc73eb0c656a59259049"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-5.png",
+      "anchor": [
+        1338.75,
+        936.3299999999999
+      ],
+      "scale": 0.342768,
+      "sha256": "44b9ef1956b0df9574df4b1fab46de72b60af06770b30d727b633c687121017d"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 590101,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "HOLD_CAMERA_GAIT_AFTER_LOSSLESS_EXTRACTION",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_REQUIRED_ACTOR_REVIEW",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "5": {
+      "area": 221,
+      "bounds": [
+        971,
+        212,
+        986,
+        234
+      ],
+      "owner_source_index": 2
+    },
+    "6": {
+      "area": 135,
+      "bounds": [
+        1007,
+        236,
+        1020,
+        251
+      ],
+      "owner_source_index": 2
+    },
+    "8": {
+      "area": 205,
+      "bounds": [
+        1020,
+        253,
+        1036,
+        273
+      ],
+      "owner_source_index": 2
+    },
+    "12": {
+      "area": 695,
+      "bounds": [
+        1040,
+        276,
+        1076,
+        324
+      ],
+      "owner_source_index": 2
+    }
+  },
+  "fragment_review_basis": "All four detached gold/purple shards descend from the upper-right sweeping blade arc, separate from the upper-middle winding figure.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "NOT_PLAY_APPROVED: NW camera/chest presentation and RUN foot alternation remain held; both semantic gates HOLD before test, no diagnostic bypass.",
+  "native_import": "PASS actual native CompressedTexture2D AtlasTexture6frames per clip;18frame batch. Both held NW registrations rejected by unchanged production helper without changing sprite transform.",
+  "clock_preservation": {
+    "loop": false,
+    "speed": 14.285714286,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "source_contract": "Verified exact match against selected c23 source;RUN looping retained."
+  },
+  "source_boundary_repair": "Combined candidates14325->20 and24512->5 original frame-region flags; this batch removes12 flags across3 clips without changing source pixels.",
+  "remaining_actor_issue": "Other required source/direction/weapon/RUN review remains; no whole actor activation or final approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_245/draft001/NW-attack-source-v01.png",
+      "sha256": "3c52f6a43ed218e95436607c532846fe251db37dab8adfe18dd4db2ed72b43fb",
+      "bytes": 2265016
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-0.png",
+      "sha256": "1a8aa14471f1b80f8038d1b01a92a720d1d8a877a1dadbe73a2614abb4cc29c5",
+      "bytes": 237706
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-1.png",
+      "sha256": "e65fe92ca93a2e98bf38d65094cc5d76646ab255923767f84419db597ab58a4b",
+      "bytes": 253106
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-2.png",
+      "sha256": "01e5ab7676b5ebd562923ddf2e5f6f2b4be334b0e0b61f86e2eb814191317dcb",
+      "bytes": 370565
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-3.png",
+      "sha256": "3149f25aaf9a24b95a5e3036ce2235d2b246710b38d4f389ec8a75224252aa1c",
+      "bytes": 288748
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-4.png",
+      "sha256": "5bb41d7ca045fb834eccd8f07559cbf8f96f5498a47ffc73eb0c656a59259049",
+      "bytes": 253208
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_245/reviewed_parts_r128/NW-attack-5.png",
+      "sha256": "44b9ef1956b0df9574df4b1fab46de72b60af06770b30d727b633c687121017d",
+      "bytes": 229291
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "actor": "transform:244",
+  "direction": "W",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/W-run-SpriteFrames.tres",
+  "selected_frames_sha256": "c91bee5263eada2e8e8d2b55a7cdf5b155fd4d340abab1ae9e7ba15cc299474d",
+  "source_files": [
+    [
+      "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/W-run-source-v01-isolated.png",
+      "534a811c115f097a54885edf6c216106b8965100301b382412af21e404732dc4"
+    ]
+  ],
+  "quality_status": "PASS_LOCAL_ROOT_REGISTRATION_ACTOR_HOLD",
+  "production_connected": false,
+  "source_pixels_changed": false,
+  "frame_order_timing_loop_unchanged": true,
+  "contact_plane_basis": "Per source row, C-ground is the average floor projection of contact/passing poses0-1 or3-4. All three phases in that row retain one projected C plane instead of following lifted soles; original source head/torso motion is preserved.",
+  "row_ground_y": [
+    491.66499999999996,
+    447.0
+  ],
+  "registration": [
+    {
+      "phase": 0,
+      "old_anchor": [
+        333.0,
+        476.33
+      ],
+      "new_anchor": [
+        333.0,
+        491.66499999999996
+      ],
+      "delta_world_y": -6.290309654999991
+    },
+    {
+      "phase": 1,
+      "old_anchor": [
+        348.0,
+        507.0
+      ],
+      "new_anchor": [
+        348.0,
+        491.66499999999996
+      ],
+      "delta_world_y": 6.290309655000015
+    },
+    {
+      "phase": 2,
+      "old_anchor": [
+        319.25,
+        467.0
+      ],
+      "new_anchor": [
+        319.25,
+        491.66499999999996
+      ],
+      "delta_world_y": -10.117410344999984
+    },
+    {
+      "phase": 3,
+      "old_anchor": [
+        227.0,
+        460.0
+      ],
+      "new_anchor": [
+        227.0,
+        447.0
+      ],
+      "delta_world_y": 5.332509
+    },
+    {
+      "phase": 4,
+      "old_anchor": [
+        301.75,
+        434.0
+      ],
+      "new_anchor": [
+        301.75,
+        447.0
+      ],
+      "delta_world_y": -5.332509
+    },
+    {
+      "phase": 5,
+      "old_anchor": [
+        288.0,
+        415.0
+      ],
+      "new_anchor": [
+        288.0,
+        447.0
+      ],
+      "delta_world_y": -13.126176
+    }
+  ],
+  "whole_actor_gate": "HOLD_N_IDLE_LEFT_HAND_N_ATTACK_IMPACT_HAND_AND_REMAINING_ACTOR_REVIEW",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/W-run-source-v01-isolated.png",
+      "sha256": "534a811c115f097a54885edf6c216106b8965100301b382412af21e404732dc4",
+      "bytes": 1366177
+    }
+  ],
+  "native_import": "PASS: this clip 6 AtlasTexture frames backed by real imported CompressedTexture2D under Godot4.7.2; default binding remains disabled",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: all8 RUN directions, 48 poses and same-Player IDLE/RUN/IDLE transitions; zero rebind between states; source pixels, scale, frame order, source speed and loop unchanged; this is C-ground registration validation, not whole-actor art approval",
+  "local_player": "PASS: actual Player E joystick path plus32 moving/stationary HIT cases at30/60fps; candidate profile injection; other RUN directions were advanced through the real Main Player motion controller, not device input",
+  "remaining_actor_failures": [
+    {
+      "animation": "idle_6",
+      "status": "HOLD",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "reason": "Rear NORTH idle holds sword on anatomical LEFT; canonical N RUN and N HIT hold on RIGHT.",
+      "source_sha256": "b09db0b1ec3ea26f700930c54a8be863851fcfc2605a64ad998dc8ff124b6aae",
+      "source_bytes": 1451078,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    },
+    {
+      "animation": "attack_6",
+      "status": "HOLD",
+      "phases": [
+        0,
+        3
+      ],
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-attack-source-v01-isolated.png",
+      "reason": "Start and impact switch to anatomical LEFT sword; wind-up/recovery and N HIT are RIGHT. Do not activate actor based on C-ground/data passes.",
+      "source_sha256": "bfa84a0d2775e8846a3fe77549b06b46b52fffe07cbd7e180ecc7a13304bc07c",
+      "source_bytes": 1347086,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    }
+  ]
+}

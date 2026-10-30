@@ -1,0 +1,63 @@
+{
+  "actor": "transform:339",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_339/repaired_source_r101/W-attack-source.png",
+  "source_sha256": "57a6864531c34de9f9b10c5dba77aa4bb2d06594da44ef5a0d4c6520bab17b61",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_339/draft001/W-attack-source-v01.png",
+  "original_source_sha256": "7d9e3622e3ac70954aa40686119497e477829d3d5a0b1e1392cfa79cf9445903",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r101/W-attack-1.png",
+      "anchor": [
+        350,
+        670
+      ],
+      "scale": 0.21,
+      "sha256": "14c0807a00e00075e248664cb7589965965822767031b853d99d813d508eac79"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r101/W-attack-2.png",
+      "anchor": [
+        1000,
+        671
+      ],
+      "scale": 0.21,
+      "sha256": "79e1b3b3ca42062d0e3fa3e8822b4e7d6d30d59aac1321d8ea90366dba1bf6e1"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r101/W-attack-3.png",
+      "anchor": [
+        470,
+        1218
+      ],
+      "scale": 0.21,
+      "sha256": "ec52421ce51923795e4b97ef52e021a35d9361811842d791a8e8314b3cce98c0"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r101/W-attack-4.png",
+      "anchor": [
+        990,
+        1218
+      ],
+      "scale": 0.21,
+      "sha256": "4f055acc29deb014bba86f910468024e01e7281d73199f46053fb44038aff75f"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 852227,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_ATTACK_REPAIR",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_W_RUN_RECIPROCAL_STEP",
+  "registration_basis": "Same body scale per source; projected pelvis X and contact sole ground Y reviewed per source action pose; guards reuse unchanged original IDLE0",
+  "replacement_basis": "Separate repair of confirmed W source-edge truncated release and cross-pose clipping; same west camera and original action progression with complete finite left release.",
+  "local_main": "PASS: full actor candidate 33 clips /198 poses; corrected clip six phases, exact single attack marker3, source regions zero opacity crossings; visual whole-actor review found W RUN repeating lead leg",
+  "native_import": "PASS: isolated Godot4.7.2 import of candidate full 33 clips /198 CompressedTexture2D AtlasTexture frames; not default binding"
+}

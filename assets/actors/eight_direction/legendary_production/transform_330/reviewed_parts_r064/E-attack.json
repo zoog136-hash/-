@@ -1,0 +1,84 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/draft001/E-attack-source-v01.png",
+  "source_sha256": "227c6d3705b43536bf9ac2e2c92248615148ad07b3a86d7921e2d18093985138",
+  "proof": {
+    "original_visible_texels": 675696,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r064/E-attack-1.png",
+      "anchor": [
+        436.5,
+        568.33
+      ],
+      "scale": 0.277778,
+      "sha256": "79f935480848ca7a535b596dfe3fcf9aa44cb51a1cba60506c7c64f3622f6f32"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r064/E-attack-2.png",
+      "anchor": [
+        1007.25,
+        570.67
+      ],
+      "scale": 0.277778,
+      "sha256": "d63a9a1eacd61c39abda32020865432adaf9da326e09386ffa797229a2b13df2"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r064/E-attack-3.png",
+      "anchor": [
+        500,
+        1035
+      ],
+      "scale": 0.1774193548387097,
+      "standing_equivalent_unit": 620,
+      "sha256": "c6401e0299955155806f90894cedc2b10d458be7e0a66db6a45e5cf877795c1d"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r064/E-attack-4.png",
+      "anchor": [
+        981.0,
+        1160.67
+      ],
+      "scale": 0.277778,
+      "sha256": "1848f863a03f19074c0c1c2af0811711f76e87b4538401bd090d172a3017cfba"
+    }
+  ],
+  "source_pixels_resampled": false,
+  "normal_original_phases_preserved": [
+    1,
+    2,
+    4
+  ],
+  "production_connected": false,
+  "quality_status": "PASS_LOCAL_ATTACK_POSE_SEPARATION_AND_BOUNDARY",
+  "selection_basis": "Normal phases1/2 preserved; phase3 cape/crescent repaired. Phase4 original whole connected figure retained without resampling, detached preceding-pose shards excluded after visual inspection; generated clipped recovery candidates rejected.",
+  "repaired_phases": [
+    3
+  ],
+  "recovery_source_proof": {
+    "original_visible_texels": 675696,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "recovery_ownership_review": {
+    "foreground_alpha": 16,
+    "component": 9,
+    "foreground_pixels": 95653,
+    "bounds": [
+      721,
+      765,
+      1252,
+      1186
+    ],
+    "basis": "Complete original connected recovery figure including both visible weapon silhouettes and cape; disconnected inter-pose red shards visibly belong to preceding broad crescent and remain preserved in source."
+  },
+  "local_playback": "PASS actual Main candidate 6/6 frames, authored frame3 strike, no mirror and unchanged gameplay/registered anchors",
+  "native_import": "PASS isolated Godot 4.7.2 import",
+  "whole_actor_gate": "HOLD_DIRECTIONAL_RUN_AND_DEATH_VISUAL_APPROVAL"
+}

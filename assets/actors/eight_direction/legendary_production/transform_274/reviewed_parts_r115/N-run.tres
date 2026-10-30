@@ -1,0 +1,52 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-run-source-v01.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="pose_0"]
+atlas = ExtResource("1")
+region = Rect2(0, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_1"]
+atlas = ExtResource("1")
+region = Rect2(512, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_2"]
+atlas = ExtResource("1")
+region = Rect2(1024, 0, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_3"]
+atlas = ExtResource("1")
+region = Rect2(0, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_4"]
+atlas = ExtResource("1")
+region = Rect2(512, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="pose_5"]
+atlas = ExtResource("1")
+region = Rect2(1024, 512, 512, 512)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("pose_0")},
+{"duration": 1.0, "texture": SubResource("pose_1")},
+{"duration": 1.0, "texture": SubResource("pose_2")},
+{"duration": 1.0, "texture": SubResource("pose_3")},
+{"duration": 1.0, "texture": SubResource("pose_4")},
+{"duration": 1.0, "texture": SubResource("pose_5")}], "loop": true, "name": &"run_6", "speed": 12.500000000}
+]
+metadata/twilight_reviewed_frame_registration = {"run_6":{"semantic_review":"HOLD","frames":[{"anchor":Vector2(253,480),"scale":Vector2(0.248307,0.248307),"target":Vector2(0,0)},{"anchor":Vector2(255,480),"scale":Vector2(0.248307,0.248307),"target":Vector2(0,0)},{"anchor":Vector2(247,480),"scale":Vector2(0.248307,0.248307),"target":Vector2(0,0)},{"anchor":Vector2(241.5,468),"scale":Vector2(0.248307,0.248307),"target":Vector2(0,0)},{"anchor":Vector2(249,468),"scale":Vector2(0.248307,0.248307),"target":Vector2(0,0)},{"anchor":Vector2(256,468),"scale":Vector2(0.248307,0.248307),"target":Vector2(0,0)}]}}
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "PENDING_C_GROUND_REVIEW"

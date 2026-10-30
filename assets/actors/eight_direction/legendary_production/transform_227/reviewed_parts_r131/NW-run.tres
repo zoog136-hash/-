@@ -1,0 +1,45 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-0.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-1.png" id="t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-2.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-3.png" id="t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-4.png" id="t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_227/reviewed_parts_r131/NW-run-5.png" id="t5"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("t2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("t3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("t4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("t5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":true,"name":&"run_5","speed":12.5}]
+metadata/twilight_production_connected = true
+metadata/twilight_quality_status = "PASS_LOCAL_COMPONENT_IN_CONNECTED_ACTOR"
+metadata/twilight_reviewed_frame_registration = {"run_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(270,500),"scale":Vector2(0.27,0.27),"target":Vector2(0,0)},{"anchor":Vector2(782,500),"scale":Vector2(0.27,0.27),"target":Vector2(0,0)},{"anchor":Vector2(1294,500),"scale":Vector2(0.27,0.27),"target":Vector2(0,0)},{"anchor":Vector2(270,1005),"scale":Vector2(0.27,0.27),"target":Vector2(0,0)},{"anchor":Vector2(782,1005),"scale":Vector2(0.27,0.27),"target":Vector2(0,0)},{"anchor":Vector2(1294,1005),"scale":Vector2(0.27,0.27),"target":Vector2(0,0)}]}}
+metadata/twilight_final_quality_approved = false

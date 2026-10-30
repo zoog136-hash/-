@@ -1,0 +1,152 @@
+{
+  "actor": "transform:243",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-run-source-v01.png",
+  "source_sha256": "9f944109b6c5b416a748ff8be6f74741278dcfe4e60be644efc575d78667df58",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "source_pixels_resampled": false,
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-0.png",
+      "anchor": [
+        121.0,
+        468.0
+      ],
+      "scale": 0.301676,
+      "sha256": "fdf29381dfe403c8d4c7de1d8f1f829c938157885453cead4e961d10fabab9a2"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-1.png",
+      "anchor": [
+        789.0,
+        472.0
+      ],
+      "scale": 0.301676,
+      "sha256": "7805994b8e1439a038c1d50d225baf405febd7ecd32beb1ba3b30e9826d9a8eb"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-2.png",
+      "anchor": [
+        1313.25,
+        423.5
+      ],
+      "scale": 0.301676,
+      "sha256": "249e2aa72d03102dc331a65f43d00cecbfdf822ba8791fb72370d9a412014f08"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-3.png",
+      "anchor": [
+        104.0,
+        967.0
+      ],
+      "scale": 0.301676,
+      "sha256": "481f789046c30939a1d7d7f77bce8b7094d63eebcdbbc0007dd3e1444f727cdb"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-4.png",
+      "anchor": [
+        790.0,
+        961.0
+      ],
+      "scale": 0.301676,
+      "sha256": "39623148e172109255fd0959f2672c221a159b7ff09e8158d9e081502fc19368"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-5.png",
+      "anchor": [
+        1363.5,
+        887.0
+      ],
+      "scale": 0.301676,
+      "sha256": "28bdd727d10e84f571e26522bba6185882f3efe7810f502b917e1ad18bc7194f"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 794719,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "HOLD_DIRECTION_HAND_OR_RECIPROCAL_GAIT",
+  "production_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "reviewed_fragments": {
+    "29": {
+      "area": 295,
+      "bounds": [
+        521,
+        748,
+        544,
+        768
+      ],
+      "owner_source_index": 3
+    }
+  },
+  "fragment_review_basis": "Reviewed native source context:122 purple particles follow NW impact/recovery spell arcs;243 death ember continues middle corpse blade, S HIT ember continues final guard flame, S RUN ember continues lower-middle crown, SW ember continues lower-right recovery sword, W RUN ember continues lower-left trailing sword/cape. No fragment discarded or automatic ownership at ambiguous margins.",
+  "registration_basis": "Original source-pixel C roots, source-body scales and original exact animation clock preserved; death common scale derives from standing first phase rather than collapsed height.",
+  "remaining_actor_issue": "122 directional camera/weapon ownership remains held;243 NE idle sword tips and SE recovery outer edge require actual artwork completion, S RUN phase3 switches weapon hand and W RUN reciprocal gait is held.",
+  "native_import_validation": "PASS official Godot4.7.2 isolated6 clips/36 native CompressedTexture2D AtlasTexture decoded frames. Existing runtime registration helper rejects the3 semantic HOLD tracks without transform changes. Final death C metadata separately checked after correction.",
+  "local_main_validation": "NOT_APPROVED: explicit semantic HOLD preserved; not force-played through a registration override.",
+  "player_validation": "NOT_APPLICABLE_TO_THIS_CLIP;affected South HIT Player validation recorded with S-hit.",
+  "runtime_default_connected": false,
+  "boundary_batch_result": "2whole candidates396actual source regions before/after:122 flaggedframes7->3;243 flaggedframes32->11;25/39 flaggedframes resolved losslessly across6clips;14 source-edge/cross-cell frame flags remain elsewhere. Only3changed action clips have local visual/playback PASS;6native import passes are not6visual approvals.",
+  "clock_preservation": {
+    "loop": true,
+    "speed": 12.5,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "matches_original_selected_source": true
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/W-run-source-v01.png",
+      "sha256": "9f944109b6c5b416a748ff8be6f74741278dcfe4e60be644efc575d78667df58",
+      "bytes": 2485782
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-0.png",
+      "sha256": "fdf29381dfe403c8d4c7de1d8f1f829c938157885453cead4e961d10fabab9a2",
+      "bytes": 347246
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-1.png",
+      "sha256": "7805994b8e1439a038c1d50d225baf405febd7ecd32beb1ba3b30e9826d9a8eb",
+      "bytes": 356175
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-2.png",
+      "sha256": "249e2aa72d03102dc331a65f43d00cecbfdf822ba8791fb72370d9a412014f08",
+      "bytes": 374372
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-3.png",
+      "sha256": "481f789046c30939a1d7d7f77bce8b7094d63eebcdbbc0007dd3e1444f727cdb",
+      "bytes": 365176
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-4.png",
+      "sha256": "39623148e172109255fd0959f2672c221a159b7ff09e8158d9e081502fc19368",
+      "bytes": 360515
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-5.png",
+      "sha256": "28bdd727d10e84f571e26522bba6185882f3efe7810f502b917e1ad18bc7194f",
+      "bytes": 349055
+    }
+  ],
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

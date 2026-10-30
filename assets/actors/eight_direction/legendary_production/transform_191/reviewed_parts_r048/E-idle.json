@@ -1,0 +1,98 @@
+{
+  "source": "assets/actors/eight_direction/legendary_production/transform_191/repaired_source_r048/E-idle.png",
+  "source_sha256": "75e5d434cf7500a9ef8697ba265077130bdd00ee4fdf7a3056f2414c82d8a38e",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-0.png",
+      "anchor": [
+        335,
+        505
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 1,
+      "sha256": "20209846b30ecdfff7efb2c7aec2a92243acb04aee4f1abdf3c10f8fe0dc50cd"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-1.png",
+      "anchor": [
+        847,
+        505
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 4,
+      "sha256": "45b4845e295d47dc707ebf899423af332408d10c5503a4d256ffbf3915474895"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-2.png",
+      "anchor": [
+        1359,
+        505
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 2,
+      "sha256": "ec4cd437ad5fb495546028a9a56d57bd29a17221dc46bd490db0eb9f2f3f5c45"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-3.png",
+      "anchor": [
+        335,
+        1008
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 75,
+      "sha256": "64ef60d6fd88c8e9faddf1794ab835289497ae16fab01b5804bcfb4640a17f93"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-4.png",
+      "anchor": [
+        847,
+        1008
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 79,
+      "sha256": "709ba68c1aec1298ca1f8acb7c08809f8213348ef3b5893227a731d6883e3947"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-5.png",
+      "anchor": [
+        1359,
+        1008
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 78,
+      "sha256": "751ef981cf4044a01c488ed5838dc09f3876a09e7f1066ae694061f6bee3c09f"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 774219,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS: actual Main candidate profile injection; six poses; registered ground anchors; no mirrored fallback; gameplay/collision state preserved",
+  "production_connected": false,
+  "native_import": "PASS: isolated native Godot 4.7.2 import; six CompressedTexture2D AtlasTexture frames",
+  "whole_actor_gate": "HOLD: remaining cross-action weapon identity and locomotion quality; local clip pass does not authorize default activation",
+  "android_device_test": "NOT_RUN",
+  "fixed_defects": [
+    "Sword replaced with established N idle blue-orb staff in anatomical right hand"
+  ],
+  "reviewed_fragment_exception": {
+    "component": 23,
+    "bbox": [
+      1335,
+      537,
+      1336,
+      538
+    ],
+    "pixels": 1,
+    "owner": 5,
+    "basis": "Isolated crown antialias fragment above lower-right head"
+  }
+}

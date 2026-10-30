@@ -1,0 +1,1075 @@
+{
+  "actor": "transform:331",
+  "direction": "S",
+  "role": "run",
+  "prior_candidate": "res://assets/actors/eight_direction/legendary_production/transform_331/r003/SpriteFrames.tres",
+  "prior_candidate_sha256": "2866a26adfc6a5d876ee47cc1169aba47809c142fe9ee1186870a1392a9bc3d1",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "originals_and_r148_r149_preserved": true,
+  "poses": [
+    {
+      "phase": 0,
+      "source_pose_classification": "RIGHT_CONTACT_LEFT_RECOVERY",
+      "anatomical_equipment": "LEFT_BOW_RIGHT_ARROW",
+      "airborne": false,
+      "source_boot_ROI": [
+        227,
+        445,
+        275,
+        499
+      ],
+      "source_contact_point": [
+        247.4909090909091,
+        498.0
+      ],
+      "source_body_projection_pin": [
+        259.5,
+        249.0
+      ],
+      "prior_registered_C": [
+        248,
+        496
+      ],
+      "prior_scale": [
+        0.263473,
+        0.263473
+      ],
+      "corrected_original_crop_C": [
+        259.5,
+        498.0
+      ],
+      "root_correction_basis": "Physical body projection uses the waist/pelvis centre, not bow/effect bounds. Contact C Y is the boot-only strong-alpha sole plane. AIR2/5 keep native foot clearance relative to the pinned same-sheet reference contact plane; moving airborne feet are never snapped to ground.",
+      "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "original_source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "original_native_pose_region": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "original_native_pose_RGBA_sha256": "b1fff08f9c7ef6c2d5be2470eca6c6d4551ccce4c22304e052eab0d8cbc08bf0",
+      "original_air_floor_reference_phase": null,
+      "original_air_clearance_source_pixels": 0.0,
+      "quality_status": "PASS_SCOPED_RUN_POSE_LOCAL_MAIN_PHYSICS_AND_NATIVE",
+      "original_pose_pixels_preserved": true,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "physical_contact_point": [
+        247.4909090909091,
+        498.0
+      ],
+      "physical_body_projection_pin": [
+        259.5,
+        249.0
+      ],
+      "anchor": [
+        259.5,
+        498.0
+      ],
+      "scale": [
+        0.263473,
+        0.263473
+      ],
+      "air_clearance_world": 0.0,
+      "registered_C_delta": [
+        11.5,
+        2.0
+      ],
+      "original_crop_root_delta": [
+        11.5,
+        2.0
+      ],
+      "original_crop_root_delta_world": [
+        3.0299395000000002,
+        0.526946
+      ],
+      "registered_C_delta_coordinate_spaces_differ": false,
+      "root_delta_basis": "Original-crop deltas compare like source-pixel coordinates. For regenerated poses, final native C additionally maps through the recorded uniform body fit and exact actual contact/air plane; raw final-native minus prior-crop C is not a world-space shift."
+    },
+    {
+      "phase": 1,
+      "source_pose_classification": "LEFT_CONTACT_RIGHT_RECOVERY",
+      "anatomical_equipment": "LEFT_BOW_RIGHT_ARROW",
+      "airborne": false,
+      "source_boot_ROI": [
+        246,
+        436,
+        292,
+        480
+      ],
+      "source_contact_point": [
+        266.24074074074076,
+        479.0
+      ],
+      "source_body_projection_pin": [
+        259.0,
+        249.0
+      ],
+      "prior_registered_C": [
+        266,
+        477
+      ],
+      "prior_scale": [
+        0.263473,
+        0.263473
+      ],
+      "corrected_original_crop_C": [
+        259.0,
+        479.0
+      ],
+      "root_correction_basis": "Physical body projection uses the waist/pelvis centre, not bow/effect bounds. Contact C Y is the boot-only strong-alpha sole plane. AIR2/5 keep native foot clearance relative to the pinned same-sheet reference contact plane; moving airborne feet are never snapped to ground.",
+      "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "original_source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "original_native_pose_region": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "original_native_pose_RGBA_sha256": "9b363de546c8218dd226afd89cb859c5bc6b10b81b6cdf26e47af38d5970b672",
+      "original_air_floor_reference_phase": null,
+      "original_air_clearance_source_pixels": 0.0,
+      "quality_status": "PASS_SCOPED_RUN_POSE_LOCAL_MAIN_PHYSICS_AND_NATIVE",
+      "original_pose_pixels_preserved": true,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "physical_contact_point": [
+        266.24074074074076,
+        479.0
+      ],
+      "physical_body_projection_pin": [
+        259.0,
+        249.0
+      ],
+      "anchor": [
+        259.0,
+        479.0
+      ],
+      "scale": [
+        0.263473,
+        0.263473
+      ],
+      "air_clearance_world": 0.0,
+      "registered_C_delta": [
+        -7.0,
+        2.0
+      ],
+      "original_crop_root_delta": [
+        -7.0,
+        2.0
+      ],
+      "original_crop_root_delta_world": [
+        -1.844311,
+        0.526946
+      ],
+      "registered_C_delta_coordinate_spaces_differ": false,
+      "root_delta_basis": "Original-crop deltas compare like source-pixel coordinates. For regenerated poses, final native C additionally maps through the recorded uniform body fit and exact actual contact/air plane; raw final-native minus prior-crop C is not a world-space shift."
+    },
+    {
+      "phase": 2,
+      "source_pose_classification": "LEFT_REACH_RIGHT_RECOVERY_AIR",
+      "anatomical_equipment": "LEFT_BOW_RIGHT_ARROW",
+      "airborne": true,
+      "source_boot_ROI": [
+        246,
+        421,
+        278,
+        479
+      ],
+      "source_contact_point": [
+        259.27272727272725,
+        476.0
+      ],
+      "source_body_projection_pin": [
+        264.0,
+        245.0
+      ],
+      "prior_registered_C": [
+        259,
+        474
+      ],
+      "prior_scale": [
+        0.263473,
+        0.263473
+      ],
+      "corrected_original_crop_C": [
+        264.0,
+        498.0
+      ],
+      "root_correction_basis": "Physical body projection uses the waist/pelvis centre, not bow/effect bounds. Contact C Y is the boot-only strong-alpha sole plane. AIR2/5 keep native foot clearance relative to the pinned same-sheet reference contact plane; moving airborne feet are never snapped to ground.",
+      "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "original_source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "original_native_pose_region": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "original_native_pose_RGBA_sha256": "0961a32ddd346d70ed3f284f4e0c85233c86f52e17f9870a60ed7a0b11eab57b",
+      "original_air_floor_reference_phase": 0,
+      "original_air_clearance_source_pixels": 22.0,
+      "quality_status": "PASS_SCOPED_RUN_POSE_LOCAL_MAIN_PHYSICS_AND_NATIVE",
+      "original_pose_pixels_preserved": true,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "physical_contact_point": [
+        259.27272727272725,
+        476.0
+      ],
+      "physical_body_projection_pin": [
+        264.0,
+        245.0
+      ],
+      "anchor": [
+        264.0,
+        498.0
+      ],
+      "scale": [
+        0.263473,
+        0.263473
+      ],
+      "air_clearance_world": 5.796406,
+      "registered_C_delta": [
+        5.0,
+        24.0
+      ],
+      "original_crop_root_delta": [
+        5.0,
+        24.0
+      ],
+      "original_crop_root_delta_world": [
+        1.3173650000000001,
+        6.323352
+      ],
+      "registered_C_delta_coordinate_spaces_differ": false,
+      "root_delta_basis": "Original-crop deltas compare like source-pixel coordinates. For regenerated poses, final native C additionally maps through the recorded uniform body fit and exact actual contact/air plane; raw final-native minus prior-crop C is not a world-space shift."
+    },
+    {
+      "phase": 3,
+      "source_pose_classification": "RIGHT_CONTACT_LEFT_RECOVERY",
+      "anatomical_equipment": "LEFT_BOW_RIGHT_ARROW",
+      "airborne": false,
+      "source_boot_ROI": [
+        229,
+        428,
+        278,
+        480
+      ],
+      "source_contact_point": [
+        252.5,
+        476.0
+      ],
+      "source_body_projection_pin": [
+        254.0,
+        242.0
+      ],
+      "prior_registered_C": [
+        252,
+        475
+      ],
+      "prior_scale": [
+        0.263473,
+        0.263473
+      ],
+      "corrected_original_crop_C": [
+        254.0,
+        476.0
+      ],
+      "root_correction_basis": "Physical body projection uses the waist/pelvis centre, not bow/effect bounds. Contact C Y is the boot-only strong-alpha sole plane. AIR2/5 keep native foot clearance relative to the pinned same-sheet reference contact plane; moving airborne feet are never snapped to ground.",
+      "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "original_source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "original_native_pose_region": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "original_native_pose_RGBA_sha256": "57b2b7cc5b2598a8ba730ff114ffc6bc7853528c0d99c5f85fb2a159370c1a11",
+      "original_air_floor_reference_phase": null,
+      "original_air_clearance_source_pixels": 0.0,
+      "quality_status": "PASS_SCOPED_RUN_POSE_LOCAL_MAIN_PHYSICS_AND_NATIVE",
+      "original_pose_pixels_preserved": false,
+      "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-3.png",
+      "source_sha256": "d3c2f5e361f0cae6bb2ffed552a9ff25569828086b9b6fae162f2d0e6769f9eb",
+      "source_bytes": 1244165,
+      "generated_original_path": "/workspace/generated_images/exec-df486432-2efe-42a8-af59-c9fbae6804a3.png",
+      "generated_original_preserved": true,
+      "source_RGBA_resampled": false,
+      "native_dimensions": [
+        1254,
+        1254
+      ],
+      "source_edge_max_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "body_fit": {
+        "old_landmark_ROIs": [
+          [
+            230,
+            82,
+            269,
+            118
+          ],
+          [
+            240,
+            448,
+            272,
+            475
+          ],
+          [
+            275,
+            327,
+            296,
+            357
+          ]
+        ],
+        "new_landmark_ROIs": [
+          [
+            558,
+            201,
+            661,
+            289
+          ],
+          [
+            583,
+            1098,
+            665,
+            1168
+          ],
+          [
+            662,
+            791,
+            713,
+            855
+          ]
+        ],
+        "old_landmarks": [
+          [
+            247.97256165633735,
+            100.19286288740469
+          ],
+          [
+            252.49369336976844,
+            461.2197181072919
+          ],
+          [
+            284.4468706943343,
+            340.591916830195
+          ]
+        ],
+        "new_landmarks": [
+          [
+            606.8705324172504,
+            246.68846310451903
+          ],
+          [
+            618.7761991219941,
+            1132.2983715347652
+          ],
+          [
+            682.0310238651751,
+            826.4563449281113
+          ]
+        ],
+        "new_pixels_per_old_pixel": 2.442340589286578,
+        "translation": [
+          -3.115810202136572,
+          0.8136609368685868
+        ],
+        "uniform_scale": true,
+        "rotation": false,
+        "mirrored": false,
+        "basis": "One uniform body-only least-squares fit from corresponding white haircap, boot/heel or knee/sole landmarks. Contact-plane Y then uses the actual regenerated boot edge; airborne clearance is transformed by that same uniform scale. No glow, cape or weapon extent drives scale.",
+        "landmark_residual_world": [
+          0.4862365101732647,
+          0.7816638812417201,
+          1.2299730839335545
+        ]
+      },
+      "physical_contact_point": [
+        617.6918918918919,
+        1170.0
+      ],
+      "physical_body_projection_pin": [
+        617.2386994766542,
+        591.8600835442204
+      ],
+      "anchor": [
+        617.2386994766542,
+        1170.0
+      ],
+      "scale": [
+        0.10787725559479075,
+        0.10787725559479075
+      ],
+      "air_clearance_world": 0.0,
+      "registered_C_delta": [
+        365.23869947665423,
+        695.0
+      ],
+      "original_crop_root_delta": [
+        2.0,
+        1.0
+      ],
+      "original_crop_root_delta_world": [
+        0.526946,
+        0.263473
+      ],
+      "registered_C_delta_coordinate_spaces_differ": true,
+      "root_delta_basis": "Original-crop deltas compare like source-pixel coordinates. For regenerated poses, final native C additionally maps through the recorded uniform body fit and exact actual contact/air plane; raw final-native minus prior-crop C is not a world-space shift."
+    },
+    {
+      "phase": 4,
+      "source_pose_classification": "RIGHT_COMPRESSION_LEFT_RECOVERY",
+      "anatomical_equipment": "LEFT_BOW_RIGHT_ARROW",
+      "airborne": false,
+      "source_boot_ROI": [
+        239,
+        430,
+        281,
+        474
+      ],
+      "source_contact_point": [
+        259.3921568627451,
+        473.0
+      ],
+      "source_body_projection_pin": [
+        264.0,
+        240.0
+      ],
+      "prior_registered_C": [
+        260,
+        471
+      ],
+      "prior_scale": [
+        0.263473,
+        0.263473
+      ],
+      "corrected_original_crop_C": [
+        264.0,
+        473.0
+      ],
+      "root_correction_basis": "Physical body projection uses the waist/pelvis centre, not bow/effect bounds. Contact C Y is the boot-only strong-alpha sole plane. AIR2/5 keep native foot clearance relative to the pinned same-sheet reference contact plane; moving airborne feet are never snapped to ground.",
+      "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "original_source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "original_native_pose_region": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "original_native_pose_RGBA_sha256": "02f312aef05687f2b608404e62c07dce9c1b2d130ec753492b27480007426818",
+      "original_air_floor_reference_phase": null,
+      "original_air_clearance_source_pixels": 0.0,
+      "quality_status": "PASS_SCOPED_RUN_POSE_LOCAL_MAIN_PHYSICS_AND_NATIVE",
+      "original_pose_pixels_preserved": false,
+      "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-4.png",
+      "source_sha256": "0c569951b940aaf8e3fe7eb1058fd9bd63c08fe68bc7bace3294bdd86ee69150",
+      "source_bytes": 1220374,
+      "generated_original_path": "/workspace/generated_images/exec-8abfed6a-0940-4794-81aa-04d180745886.png",
+      "generated_original_preserved": true,
+      "source_RGBA_resampled": false,
+      "native_dimensions": [
+        1254,
+        1254
+      ],
+      "source_edge_max_alpha": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "body_fit": {
+        "old_landmark_ROIs": [
+          [
+            245,
+            80,
+            283,
+            112
+          ],
+          [
+            247,
+            438,
+            274,
+            469
+          ],
+          [
+            277,
+            308,
+            306,
+            342
+          ]
+        ],
+        "new_landmark_ROIs": [
+          [
+            600,
+            187,
+            699,
+            275
+          ],
+          [
+            600,
+            1085,
+            674,
+            1155
+          ],
+          [
+            690,
+            774,
+            740,
+            827
+          ]
+        ],
+        "old_landmarks": [
+          [
+            262.53774694303553,
+            95.67171722587402
+          ],
+          [
+            260.2835215443107,
+            456.57472617000093
+          ],
+          [
+            297.6754765337178,
+            323.2180041646644
+          ]
+        ],
+        "new_landmarks": [
+          [
+            644.9274274780907,
+            233.0637484931596
+          ],
+          [
+            636.1378690060172,
+            1117.13815052952
+          ],
+          [
+            711.7796900638101,
+            791.1581403828621
+          ]
+        ],
+        "new_pixels_per_old_pixel": 2.4436936401793257,
+        "translation": [
+          -4.065897015964765,
+          0.6643788995816067
+        ],
+        "uniform_scale": true,
+        "rotation": false,
+        "mirrored": false,
+        "basis": "One uniform body-only least-squares fit from corresponding white haircap, boot/heel or knee/sole landmarks. Contact-plane Y then uses the actual regenerated boot edge; airborne clearance is transformed by that same uniform scale. No glow, cape or weapon extent drives scale.",
+        "landmark_residual_world": [
+          0.8152007647597767,
+          0.4546572200802086,
+          1.2507041855497585
+        ]
+      },
+      "physical_contact_point": [
+        635.7258064516129,
+        1161.0
+      ],
+      "physical_body_projection_pin": [
+        641.0692239913772,
+        587.1508525426198
+      ],
+      "anchor": [
+        641.0692239913772,
+        1161.0
+      ],
+      "scale": [
+        0.1078175249417376,
+        0.1078175249417376
+      ],
+      "air_clearance_world": 0.0,
+      "registered_C_delta": [
+        381.06922399137716,
+        690.0
+      ],
+      "original_crop_root_delta": [
+        4.0,
+        2.0
+      ],
+      "original_crop_root_delta_world": [
+        1.053892,
+        0.526946
+      ],
+      "registered_C_delta_coordinate_spaces_differ": true,
+      "root_delta_basis": "Original-crop deltas compare like source-pixel coordinates. For regenerated poses, final native C additionally maps through the recorded uniform body fit and exact actual contact/air plane; raw final-native minus prior-crop C is not a world-space shift."
+    },
+    {
+      "phase": 5,
+      "source_pose_classification": "LEFT_REACH_RIGHT_RECOVERY_AIR",
+      "anatomical_equipment": "LEFT_BOW_RIGHT_ARROW",
+      "airborne": true,
+      "source_boot_ROI": [
+        245,
+        421,
+        278,
+        465
+      ],
+      "source_contact_point": [
+        264.3095238095238,
+        462.0
+      ],
+      "source_body_projection_pin": [
+        265.0,
+        239.0
+      ],
+      "prior_registered_C": [
+        264,
+        460
+      ],
+      "prior_scale": [
+        0.263473,
+        0.263473
+      ],
+      "corrected_original_crop_C": [
+        265.0,
+        476.0
+      ],
+      "root_correction_basis": "Physical body projection uses the waist/pelvis centre, not bow/effect bounds. Contact C Y is the boot-only strong-alpha sole plane. AIR2/5 keep native foot clearance relative to the pinned same-sheet reference contact plane; moving airborne feet are never snapped to ground.",
+      "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+      "original_source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+      "original_native_pose_region": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "original_native_pose_RGBA_sha256": "300209cc815f9a1894cceb7edfa7b50a51da4a9071a4fd7ed9658cc97215db0a",
+      "original_air_floor_reference_phase": 3,
+      "original_air_clearance_source_pixels": 14.0,
+      "quality_status": "PASS_SCOPED_RUN_POSE_LOCAL_MAIN_PHYSICS_AND_NATIVE",
+      "original_pose_pixels_preserved": false,
+      "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-5.png",
+      "source_sha256": "583b85915a3971fa707269c760b583201bd55d61d211b63aeef171f8a9c22f70",
+      "source_bytes": 1300420,
+      "generated_original_path": "/workspace/generated_images/exec-e9d493b9-37cd-48ab-80da-670ab0b6d40f.png",
+      "generated_original_preserved": true,
+      "source_RGBA_resampled": false,
+      "native_dimensions": [
+        1254,
+        1254
+      ],
+      "source_edge_max_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "body_fit": {
+        "old_landmark_ROIs": [
+          [
+            252,
+            76,
+            292,
+            114
+          ],
+          [
+            249,
+            430,
+            275,
+            459
+          ],
+          [
+            228,
+            327,
+            250,
+            353
+          ]
+        ],
+        "new_landmark_ROIs": [
+          [
+            641,
+            193,
+            738,
+            275
+          ],
+          [
+            620,
+            1053,
+            692,
+            1128
+          ],
+          [
+            563,
+            824,
+            621,
+            874
+          ]
+        ],
+        "old_landmarks": [
+          [
+            272.94569653329995,
+            93.90367726280675
+          ],
+          [
+            264.6772503372761,
+            445.8177611144228
+          ],
+          [
+            238.76097381040202,
+            342.4856602729619
+          ]
+        ],
+        "new_landmarks": [
+          [
+            683.6191745314076,
+            238.00376944710644
+          ],
+          [
+            650.7241380625914,
+            1089.6972603419135
+          ],
+          [
+            591.817195636928,
+            837.8378918781801
+          ]
+        ],
+        "new_pixels_per_old_pixel": 2.4204745499670524,
+        "translation": [
+          15.647662406326958,
+          10.059697194712953
+        ],
+        "uniform_scale": true,
+        "rotation": false,
+        "mirrored": false,
+        "basis": "One uniform body-only least-squares fit from corresponding white haircap, boot/heel or knee/sole landmarks. Contact-plane Y then uses the actual regenerated boot edge; airborne clearance is transformed by that same uniform scale. No glow, cape or weapon extent drives scale.",
+        "landmark_residual_world": [
+          0.7992399840439123,
+          0.6090125471825487,
+          0.2305315335089238
+        ]
+      },
+      "physical_contact_point": [
+        650.1176470588235,
+        1132.0
+      ],
+      "physical_body_projection_pin": [
+        657.0734181475958,
+        588.5531146368385
+      ],
+      "anchor": [
+        657.0734181475958,
+        1165.8866436995388
+      ],
+      "scale": [
+        0.108851795200072,
+        0.108851795200072
+      ],
+      "air_clearance_world": 3.688622,
+      "registered_C_delta": [
+        393.0734181475958,
+        705.8866436995388
+      ],
+      "original_crop_root_delta": [
+        1.0,
+        16.0
+      ],
+      "original_crop_root_delta_world": [
+        0.263473,
+        4.215568
+      ],
+      "registered_C_delta_coordinate_spaces_differ": true,
+      "root_delta_basis": "Original-crop deltas compare like source-pixel coordinates. For regenerated poses, final native C additionally maps through the recorded uniform body fit and exact actual contact/air plane; raw final-native minus prior-crop C is not a world-space shift."
+    }
+  ],
+  "all_33_clock_duration_loop_order_blocks_preserved": true,
+  "normal_pose_RGBA_Atlas_margin_scale_preserved": true,
+  "normal_C_changes_explicitly_authorized_for_physical_body_foot_registration": true,
+  "quality_status": "PASS_SCOPED_RUN_LOCAL_MAIN_PHYSICS_AND_NATIVE",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "gait_review": "Both anatomical legs visibly lead/support during the source-authored sequence and AIR poses retain clearance. Repeated 0/3 support labels alone do not establish failure; do not force an invented opposite-half phase contract.",
+  "remaining_holds": [
+    "N_IDLE_WRONG_CANONICAL_HAND",
+    "N_HIT_WRONG_CANONICAL_HAND",
+    "N_ATTACK_WRONG_CANONICAL_HAND_AND_RELEASE_SECTOR",
+    "W_ATTACK_ARCHER_MECHANISM_REVIEW",
+    "SW_ATTACK_ARCHER_MECHANISM_REVIEW"
+  ],
+  "N_IDLE_RUN_transition_approved": false,
+  "candidate": "res://assets/actors/eight_direction/legendary_production/transform_331/r004/SpriteFrames.tres",
+  "candidate_sha256": "91f007d92259f2f22da2832ccfb4fd61d9b8d5e6bf0cfba81023863b2c1632b5",
+  "validation": {
+    "engine": "4.7.2.stable.official.ed1daf0bf",
+    "source_head": "2a5f1e3cf3d5e270a54d8e13961dce2b1ad9dd91",
+    "candidate": "res://assets/actors/eight_direction/legendary_production/transform_331/r004/SpriteFrames.tres",
+    "candidate_sha256": "91f007d92259f2f22da2832ccfb4fd61d9b8d5e6bf0cfba81023863b2c1632b5",
+    "scoped_RUN_only": true,
+    "whole_actor_approved": false,
+    "production_connected": false,
+    "runtime_default_connected": false,
+    "final_quality_approved": false,
+    "static": {
+      "all_33_animation_clock_duration_loop_order_blocks_identical": true,
+      "selected_new_native_RGBA_files": 6,
+      "unselected_preserved_native_RGBA_files": 1,
+      "all_12_RUN_physical_C_corrections_pinned": true,
+      "normal_6_RUN_RGBA_Atlas_margin_scale_preserved": true,
+      "other_186_frame_geometry_registration_preserved": true
+    },
+    "actual_Main": {
+      "status": "PASS_SCOPED_S_TRANSITION_AND_S_N_DEDICATED_RUN_PHYSICS",
+      "actual_Main": true,
+      "candidate_profile_injection": true,
+      "S_same_Player_IDLE_RUN_IDLE": true,
+      "N_dedicated_RUN_only": true,
+      "N_IDLE_RUN_transition_approved": false,
+      "unique_clips": 3,
+      "unique_poses": 18,
+      "rendered_phase_encounters": 24,
+      "actual_Player_physics_cases": [
+        {
+          "clip": "run_2",
+          "distance": 76.9921875,
+          "seen": 6
+        },
+        {
+          "clip": "run_6",
+          "distance": 84.69140625,
+          "seen": 6
+        }
+      ],
+      "contact_ground_plane_and_AIR_clearance_checks": true,
+      "body_projection_X_checks": true,
+      "registered_C": true,
+      "mirrored_fallback": false,
+      "attack_release_events": 0,
+      "HP_inventory_equipment_movement_stats_collision_preserved": true,
+      "isolated_user_data": true,
+      "errors": 0,
+      "elapsed_seconds": 23.98,
+      "local_report": "/workspace/scratch/pr158-331-r150-main/report.json",
+      "local_report_sha256": "53931f70f8ea23d366ab2a81f963998ef09d3061b7884f8f0bdb9b7265e83f52",
+      "local_phase_review": "/workspace/scratch/pr158-331-r150-main/selected-main-phases.png",
+      "local_phase_review_sha256": "92081e57eba50e21b9607464ed5a6a638343c224f96b5a199c617e374f5adddd",
+      "independent_S_transition_body_measurement": {
+        "basis": "Independent whitebelt/hip-pixel centroids inside body-only source ROIs, transformed through actual compiled registration C/scale. This checks visible body placement separately from the deliberately zero-centred projection helper. No weapon/glow extent or forced pose substitution.",
+        "idle_measurements": [
+          {
+            "clip": "idle_2",
+            "phase": 0,
+            "body_ROI": [
+              224,
+              257,
+              294,
+              303
+            ],
+            "whitebelt_centroid_x": 260.1424341414896,
+            "registered_C_x": 259.5,
+            "scale": 0.269608,
+            "body_hip_world_X": 0.17320538401873245
+          },
+          {
+            "clip": "idle_2",
+            "phase": 1,
+            "body_ROI": [
+              238,
+              257,
+              308,
+              303
+            ],
+            "whitebelt_centroid_x": 269.9588886835352,
+            "registered_C_x": 273.0,
+            "scale": 0.269608,
+            "body_hip_world_X": -0.8199079398094477
+          },
+          {
+            "clip": "idle_2",
+            "phase": 2,
+            "body_ROI": [
+              254,
+              257,
+              324,
+              303
+            ],
+            "whitebelt_centroid_x": 283.1143214364078,
+            "registered_C_x": 289.25,
+            "scale": 0.269608,
+            "body_hip_world_X": -1.6542280261729643
+          },
+          {
+            "clip": "idle_2",
+            "phase": 3,
+            "body_ROI": [
+              241,
+              257,
+              311,
+              303
+            ],
+            "whitebelt_centroid_x": 274.52793693520476,
+            "registered_C_x": 275.75,
+            "scale": 0.269608,
+            "body_hip_world_X": -0.32947797877331403
+          },
+          {
+            "clip": "idle_2",
+            "phase": 4,
+            "body_ROI": [
+              238,
+              257,
+              308,
+              303
+            ],
+            "whitebelt_centroid_x": 269.49645836473087,
+            "registered_C_x": 273.0,
+            "scale": 0.269608,
+            "body_hip_world_X": -0.9445828532016396
+          },
+          {
+            "clip": "idle_2",
+            "phase": 5,
+            "body_ROI": [
+              257,
+              257,
+              327,
+              303
+            ],
+            "whitebelt_centroid_x": 293.7566313601808,
+            "registered_C_x": 292.0,
+            "scale": 0.269608,
+            "body_hip_world_X": 0.47360186775562263
+          }
+        ],
+        "RUN_whitebelt_world_X_offsets": [
+          -1.2195,
+          -2.4086,
+          -1.5678,
+          1.3654,
+          2.2382,
+          2.5836
+        ],
+        "worst_any_idle_RUN_hip_delta_world": 4.237828026172965,
+        "entry_idle0_RUN0_delta_world": 1.3927053840187325,
+        "exit_RUN5_idle5_delta_world": 2.1099981322443773,
+        "conclusion": "No severe new lateral body offset; small lean/counter-swing remains. Existing S idle C and every idle RGBA/Atlas/scale remain unchanged."
+      }
+    },
+    "final_actor_native": {
+      "status": "PASS_DECODE_REGISTRATION_GATES_AND_RUN_GROUNDING",
+      "same_native_cache_reused": true,
+      "all_50_runtime_PNGs_native_imported": true,
+      "clips": 33,
+      "AtlasTexture_CompressedTexture2D_frames": 198,
+      "registration_metadata_accepted_frames": 168,
+      "HOLD_registration_rejections": 30,
+      "RUN_contact_AIR_planes": 12,
+      "RUN_loop_preserved": true,
+      "source_byte_loader_used": false,
+      "whole_actor_playback_approval": false,
+      "local_log": "/workspace/scratch/pr158-331-native-r148/r150-full-check.log",
+      "local_log_sha256": "395f0d86ddd07dc341b7aee9807ec54ffda31276775543d46c8fd42ddff4c984",
+      "local_import_log": "/workspace/scratch/pr158-331-native-r148/r150-import.log",
+      "local_import_log_sha256": "4b4454bcbf7440e2def3d227b3a3fc2322c6eefd7959cb88345b98d434578b28"
+    },
+    "dependency_manifest_ref": {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/E-idle.json",
+      "sha256": "f13272b6ce9415133e2f1a58d25c07c6201273247220b216ffc1679f47126787",
+      "runtime_source_dependencies_pointer": "/validation/runtime_source_dependencies",
+      "historical_manifest_preserved": true,
+      "inherited_current_runtime_dependencies": 40,
+      "historical_runtime_exclusions": [
+        "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/E-idle-5.png",
+        "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/SW-attack-3.png",
+        "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/W-attack-2.png",
+        "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/W-attack-3.png"
+      ]
+    },
+    "repaired_r149_source_manifest_refs": [
+      {
+        "path": "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r149/E-idle.json",
+        "sha256": "537bee1318cadb9f2e82999bba9d8bb25a25d361f19f8552bd2e769c66aabde8",
+        "poses_pointer": "/poses",
+        "historical_candidate": "r003",
+        "preserved": true
+      },
+      {
+        "path": "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r149/SW-attack.json",
+        "sha256": "60ecbb3f6a8f3fa02cf163589a7ad7249647e08aa4020c27c19cc5766ca1c649",
+        "poses_pointer": "/poses",
+        "historical_candidate": "r003",
+        "preserved": true
+      },
+      {
+        "path": "res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r149/W-attack.json",
+        "sha256": "f1cc750a17dd461e6f79f56c92563e9dd0f58300243f67f5f84c9c835646e0c5",
+        "poses_pointer": "/poses",
+        "historical_candidate": "r003",
+        "preserved": true
+      }
+    ],
+    "new_selected_source_pins": [
+      {
+        "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/N-run-0.png",
+        "source_sha256": "389610243d58a461a714a91676836a70cf079e2ace18e675542d3266241d26a6",
+        "source_bytes": 1208483,
+        "source_git_blob_oid": "f05d5d2a4413fb254317e0a0a8966416530b609f",
+        "selected": true
+      },
+      {
+        "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/N-run-1.png",
+        "source_sha256": "1baad234169923f5b649cc24a90e5ddce90c44a4207129d9845307a48a561624",
+        "source_bytes": 1346327,
+        "source_git_blob_oid": "1c7bedabd36ff7f564c9d743b9040c9d38865c4f",
+        "selected": true
+      },
+      {
+        "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/N-run-2.png",
+        "source_sha256": "a57eda8e342f3769845d540f406b771dbf234bc1d421f237fcd87b9eee1f6843",
+        "source_bytes": 1184747,
+        "source_git_blob_oid": "1c565abf56e3a3d89dcd434e6c86c8d60aae5853",
+        "selected": true
+      },
+      {
+        "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-3.png",
+        "source_sha256": "d3c2f5e361f0cae6bb2ffed552a9ff25569828086b9b6fae162f2d0e6769f9eb",
+        "source_bytes": 1244165,
+        "source_git_blob_oid": "11ac596680b258c9af3eb34c54c601c5383727b6",
+        "selected": true
+      },
+      {
+        "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-4.png",
+        "source_sha256": "0c569951b940aaf8e3fe7eb1058fd9bd63c08fe68bc7bace3294bdd86ee69150",
+        "source_bytes": 1220374,
+        "source_git_blob_oid": "1dba4976a93beeebc6ed7b2ee80c27d7e72e38bc",
+        "selected": true
+      },
+      {
+        "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r150/S-run-5.png",
+        "source_sha256": "583b85915a3971fa707269c760b583201bd55d61d211b63aeef171f8a9c22f70",
+        "source_bytes": 1300420,
+        "source_git_blob_oid": "cb0ef3e71091776d79cd386791b1a039c3f5fb07",
+        "selected": true
+      }
+    ],
+    "current_runtime_dependencies": 50,
+    "current_runtime_dependency_bytes": 69843528,
+    "current_runtime_dependencies_all_present_and_pinned": true,
+    "current_runtime_dependency_digest_sha256": "68b6440a55c54a1fe8bc04eac3e54758c805b3aa72bc721e7dd98e1fe0228010",
+    "remaining_HOLD_clips": [
+      "idle_6",
+      "hit_6",
+      "attack_6",
+      "attack_3",
+      "attack_4"
+    ],
+    "remaining_HOLD_basis": "N idle/hit/attack retain wrong canonical equipment ownership; N attack also wrong release sector. W/SW attack authentic bow draw/release mechanism remains ambiguous. N IDLE/RUN transition is explicitly unapproved. No default binding or whole actor promotion.",
+    "receipt_scope": "Local Godot evidence, not CI/export/public delivery confirmation. Native decoding and registration acceptance do not provide new art approval for unchanged clips; local scratch receipt paths are execution-environment evidence only."
+  },
+  "repaired_RUN_hand_targets": {
+    "S": [
+      3,
+      4,
+      5
+    ],
+    "N": [
+      0,
+      1,
+      2
+    ]
+  }
+}

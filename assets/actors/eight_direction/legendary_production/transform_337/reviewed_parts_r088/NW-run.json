@@ -1,0 +1,153 @@
+{
+  "actor": "transform:337",
+  "direction": "NW",
+  "role": "run",
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "repaired_phases": [
+    3,
+    4,
+    5
+  ],
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_337/repaired_source_r088/NW-run-half.png",
+      "region": [
+        0,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        350,
+        700
+      ],
+      "scale": 0.21,
+      "sha256": "d7cc526155b668425d590f676e33f7c2c24ba7c0a82376e7860cf309a34419a5"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_337/repaired_source_r088/NW-run-half.png",
+      "region": [
+        724,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        400,
+        710
+      ],
+      "scale": 0.21,
+      "sha256": "d7cc526155b668425d590f676e33f7c2c24ba7c0a82376e7860cf309a34419a5"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_337/repaired_source_r088/NW-run-half.png",
+      "region": [
+        1448,
+        0,
+        724,
+        724
+      ],
+      "anchor": [
+        390,
+        710
+      ],
+      "scale": 0.21,
+      "sha256": "d7cc526155b668425d590f676e33f7c2c24ba7c0a82376e7860cf309a34419a5"
+    }
+  ],
+  "original_frames": [
+    {
+      "index": 0,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "043e2e79eac8f2de3ce2f22f3a1ae2a4f756ab22c651b5be7caf3eca19526d98",
+      "region": [
+        0.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "proposal_anchor_in_region": [
+        279.0,
+        461.5
+      ],
+      "proposal_body_height": 344.5,
+      "semantic_review": "PENDING",
+      "role": "run",
+      "direction": "NW",
+      "proposal_scale": 0.318149
+    },
+    {
+      "index": 1,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "043e2e79eac8f2de3ce2f22f3a1ae2a4f756ab22c651b5be7caf3eca19526d98",
+      "region": [
+        512.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "proposal_anchor_in_region": [
+        370.0,
+        477.0
+      ],
+      "proposal_body_height": 356.0,
+      "semantic_review": "PENDING",
+      "role": "run",
+      "direction": "NW",
+      "proposal_scale": 0.318149
+    },
+    {
+      "index": 2,
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_337/quality-v02/NW-run-source-v02.png",
+      "source_sha256": "043e2e79eac8f2de3ce2f22f3a1ae2a4f756ab22c651b5be7caf3eca19526d98",
+      "region": [
+        1024.0,
+        0.0,
+        512.0,
+        512.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "proposal_anchor_in_region": [
+        416.0,
+        478.0
+      ],
+      "proposal_body_height": 407.66,
+      "semantic_review": "PENDING",
+      "role": "run",
+      "direction": "NW",
+      "proposal_scale": 0.318149
+    }
+  ],
+  "quality_status": "PARTIAL_CAMERA_HAND_PASS_GAIT_SCALE_HOLD",
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIPS",
+  "production_connected": false,
+  "selection_basis": "Separate image-tool correction of confirmed late-half hand/view failures; original first-half pixels and registration preserved. Constant scale per new source; no source resampling, mirroring or frame timing changes.",
+  "local_main": "PASS candidate-selected resources; actual Main Player, 6 poses, direction/registered-root/marker/gameplay checks; no default activation",
+  "local_visual_review": "PASS late-half rear-left camera/staff; HOLD full gait/scale review of original phase2",
+  "native_import": "PASS isolated Godot4.7.2 import, 6 changed clips /36 frames, CompressedTexture2D AtlasTextures"
+}

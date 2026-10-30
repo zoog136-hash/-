@@ -1,0 +1,52 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/transform_274-NE-attack.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="track_0_0"]
+atlas = ExtResource("1")
+region = Rect2(37, 55, 425, 461)
+margin = Rect2(293, 183, 599, 563)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_1"]
+atlas = ExtResource("1")
+region = Rect2(531, 26, 385, 484)
+margin = Rect2(275, 160, 639, 540)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_2"]
+atlas = ExtResource("1")
+region = Rect2(43, 532, 424, 472)
+margin = Rect2(299, 172, 600, 552)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_3"]
+atlas = ExtResource("1")
+region = Rect2(512, 544, 502, 445)
+margin = Rect2(256, 199, 522, 579)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_4"]
+atlas = ExtResource("1")
+region = Rect2(21, 1045, 546, 424)
+margin = Rect2(277, 220, 478, 600)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="track_0_5"]
+atlas = ExtResource("1")
+region = Rect2(572, 1049, 423, 453)
+margin = Rect2(316, 191, 601, 571)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("track_0_0")},
+{"duration": 1.0, "texture": SubResource("track_0_1")},
+{"duration": 1.0, "texture": SubResource("track_0_2")},
+{"duration": 1.0, "texture": SubResource("track_0_3")},
+{"duration": 1.0, "texture": SubResource("track_0_4")},
+{"duration": 1.0, "texture": SubResource("track_0_5")}], "loop": false, "name": &"attack_7", "speed": 14.285714286}
+]
+metadata/twilight_canvas_size = Vector2(1024, 1024)
+metadata/twilight_native_locomotion_staging = true
+metadata/twilight_detailed_completed = false

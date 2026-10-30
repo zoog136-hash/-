@@ -1,0 +1,201 @@
+{
+  "actor": "transform:192",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r141/S-run-late-source.png",
+  "source_sha256": "761f2e1886b6f0207a0362a26f668c76504da40038aaf45e38c8425e06417294",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_192/corrections/isolation-v08/S-run-source-v01-isolated.png",
+  "original_source_sha256": "731bfd1714211e1ed328a67dc991609f518c6a13b1fb488e72190eb569aaffe1",
+  "source_pixels_resampled": false,
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_192/corrections/isolation-v08/S-run-source-v01-isolated.png",
+      "region": [
+        0.0,
+        0.0,
+        691.0,
+        569.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "anchor": [
+        364.0,
+        520.0
+      ],
+      "scale": 0.258824,
+      "sha256": "731bfd1714211e1ed328a67dc991609f518c6a13b1fb488e72190eb569aaffe1"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_192/corrections/isolation-v08/S-run-source-v01-isolated.png",
+      "region": [
+        691.0,
+        0.0,
+        691.0,
+        569.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "anchor": [
+        350.0,
+        475.0
+      ],
+      "scale": 0.258824,
+      "sha256": "731bfd1714211e1ed328a67dc991609f518c6a13b1fb488e72190eb569aaffe1"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_parallel/transform_192/corrections/isolation-v08/S-run-source-v01-isolated.png",
+      "region": [
+        1382.0,
+        0.0,
+        691.0,
+        569.0
+      ],
+      "margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "anchor": [
+        349.0,
+        516.0
+      ],
+      "scale": 0.258824,
+      "sha256": "731bfd1714211e1ed328a67dc991609f518c6a13b1fb488e72190eb569aaffe1"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-run-3.png",
+      "region": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "margin": null,
+      "anchor": [
+        420,
+        688
+      ],
+      "scale": 0.177,
+      "sha256": "9291ade2f77ff7c2a8bd1fc131e48268b241ff02e7a5ce85f99429fecda4b039"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-run-4.png",
+      "region": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "margin": null,
+      "anchor": [
+        1120,
+        684
+      ],
+      "scale": 0.177,
+      "sha256": "df3f6695e2220ca66ae7f80845f37a70bcc7310f1daf782b3590bcca17d13441"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-run-5.png",
+      "region": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "margin": null,
+      "anchor": [
+        1805,
+        684
+      ],
+      "scale": 0.177,
+      "sha256": "c11e1dda23d929473e686f69645a2e36d37b54a376a60c198f2d492fc81e6bef"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 496264,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_NW_CAMERA_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
+  "replacement_basis": "Failed late half switched sword to LEFT; first upper-only edit corrected hand but retained repeated first-half leg. New lower-body edit now shows RIGHT leg viewer LEFT contact/support/push, opposite original first-half LEFT, while preserving RIGHT sword viewer LEFT and empty LEFT fist. All original0/1/2 RGBA, Atlas crop/margin, scales and phase clock retained.",
+  "registration_basis": "Normal0/2 exact roots retained. Original support1 X228 was following sword/raised limb rather than actor projection; corrected to X350 beneath body and Y475 actual contact sole. Three native new sources use projected body-axis C with .177 constant scale; root plane688/684/684, not blade/effect bounds.",
+  "prior_proposal_anchors": [
+    [
+      364.0,
+      520.0
+    ],
+    [
+      228.0,
+      455.5
+    ],
+    [
+      349.0,
+      516.0
+    ],
+    [
+      345.0,
+      510.0
+    ],
+    [
+      330.0,
+      475.0
+    ],
+    [
+      347.0,
+      486.0
+    ]
+  ],
+  "native_import_validation": "PASS official Godot4.7.2 isolated native import of four clips24 AtlasTexture frames, each actual CompressedTexture2D/nonempty decoded image. Source-byte Main loading is separate.",
+  "local_main_validation": "PASS real Main Player injected candidate IDLE/RUN/IDLE/DEATH/IDLE30captured poses18unique; same actor no rebind,6 dedicated RUN phases, exact source roots, no flip/fallback, stable death terminal position; process normal exit0/errors0,23.38s.",
+  "player_physics_validation": "PASS actual Player SOUTH joystick physics120ticks, all6 dedicated RUN phases/root alignment/no mirrored fallback; inventory/equipment/HP/collision unchanged, no attack emitted, normal exit0/errors0,21.13s.",
+  "remaining_actor_issue": "N/S RUN, N HIT/ATTACK and W ATTACK local repairs passed; actor still requires NW camera and remaining directional/weapon/gait review. No default binding or whole actor approval.",
+  "boundary_result": "At r141 delivery compiled candidate198source frame regions:22->9 flaggedframes.13 flags resolved across S/SW attack and S death using lossless ownership, zero missing/duplicate source texels. Remaining9 source-frame flags belong N2/NW3/W4; whole source art and originals preserved.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_192/corrections/isolation-v08/S-run-source-v01-isolated.png",
+      "sha256": "731bfd1714211e1ed328a67dc991609f518c6a13b1fb488e72190eb569aaffe1",
+      "bytes": 1249798
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r141/S-run-late-source.png",
+      "sha256": "761f2e1886b6f0207a0362a26f668c76504da40038aaf45e38c8425e06417294",
+      "bytes": 1195213
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-run-3.png",
+      "sha256": "9291ade2f77ff7c2a8bd1fc131e48268b241ff02e7a5ce85f99429fecda4b039",
+      "bytes": 410207
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-run-4.png",
+      "sha256": "df3f6695e2220ca66ae7f80845f37a70bcc7310f1daf782b3590bcca17d13441",
+      "bytes": 403652
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r141/S-run-5.png",
+      "sha256": "c11e1dda23d929473e686f69645a2e36d37b54a376a60c198f2d492fc81e6bef",
+      "bytes": 406250
+    }
+  ]
+}

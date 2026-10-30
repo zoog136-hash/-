@@ -15,7 +15,9 @@ func run():
  var field=RUN.load_field("aden_world")
  check(field!=null,"replacement loads without legacy Aden resources")
  if field!=null:
-  check(field.data.monster_spawn.size()==17 and field.data.portal.size()==38,"exact approved encounters and portals preserved")
+  var frozen:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_source84_gameplay.json")).gameplay
+  var original:Array=field.data.monster_spawn.filter(func(row):return not row.has("source_key") and not row.get("local_habitat",false))
+  check(original.size()==17 and original==frozen.monster_spawn and field.data.portal.size()==38 and field.data.portal==frozen.portal,"all original encounter rows and portals preserved exactly alongside approved added habitats")
   check(field.data.npc_spawn.size()==5,"five reviewed Aden NPCs remain")
   check(field.point_clear(Vector2(field.data.spawn_position[0],field.data.spawn_position[1]),4),"entry remains clear")
   for p:Dictionary in field.data.portal:

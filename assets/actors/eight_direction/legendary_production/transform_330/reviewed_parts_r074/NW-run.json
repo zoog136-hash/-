@@ -1,0 +1,89 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_330/corrections/isolation-v16/NW-run-source-v01-isolated.png",
+  "source_sha256": "05009941300a1c3f20075b0b8c207ea2040d0e416ae09b4c3f1403d1339eace0",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r074/NW-run-0.png",
+      "anchor": [
+        376.5,
+        511.0
+      ],
+      "scale": 0.317003,
+      "source_body_label": 3,
+      "sha256": "21a89b75ce9a0759cc51f26460ead98cd042a7d9f2e1682aaa4499afe28ec5b7"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r074/NW-run-1.png",
+      "anchor": [
+        928.0,
+        495.0
+      ],
+      "scale": 0.317003,
+      "source_body_label": 1,
+      "sha256": "bfd29270b70a505360505f5859615f78a7d5c405422902074946758a15a793cb"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/reviewed_parts_r074/NW-run-2.png",
+      "anchor": [
+        1566.75,
+        497.5
+      ],
+      "scale": 0.317003,
+      "source_body_label": 2,
+      "sha256": "a79a7919cbdf640dfad7bb7fc7906ecd95186ce345c052134ecaffab6b844ce9"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r074/NW-run-3.png",
+      "anchor": [
+        650,
+        1130
+      ],
+      "scale": 0.12222222222222222,
+      "standing_equivalent_unit": 900,
+      "sha256": "30a5756cda8333ba35b0aa55e724c9d2b893eead0b297f68011311a496838deb"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r074/NW-run-4.png",
+      "anchor": [
+        650,
+        1140
+      ],
+      "scale": 0.12222222222222222,
+      "standing_equivalent_unit": 900,
+      "sha256": "8f0d2534574eb0de1f0e21f62f7d6b369b12e676ed64000d66f672d3a56cb5ec"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_330/repaired_source_r074/NW-run-5.png",
+      "anchor": [
+        650,
+        1140
+      ],
+      "scale": 0.11578947368421053,
+      "standing_equivalent_unit": 950,
+      "sha256": "6e51801e38efc26a0545ae7f9fb896aa95ce808c119b1b420d5fa06b5eceacb5"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 571799,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS actual Main same-player NW idle/run/idle transition, 2 unique clips / 12 unique poses; no rebind, mirror, attack strike or gameplay/collision change",
+  "production_connected": false,
+  "selection_basis": "Original first-half pose pixels/anchors/scale retained. Opposite half is articulated without mirror. Prior NW arm/camera HOLD resolved by comparison with original NW IDLE and live same-Player IDLE->RUN->IDLE transition without reapplying record/profile; visible grip stays consistent with NW IDLE.",
+  "normal_original_phases_preserved": [
+    0,
+    1,
+    2
+  ],
+  "quality_status": "PASS_LOCAL_GAIT_AND_IDLE_RUN_CONTINUITY",
+  "whole_actor_gate": "HOLD_E_W_OPPOSITE_LEG_GAIT",
+  "native_import": "PASS isolated Godot 4.7.2 import"
+}

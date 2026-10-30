@@ -1,0 +1,120 @@
+> Latest follow-up: see `legendary-registration-progress/README.md` and `batch-review-state.json`. All 40 actors have pinned registration **proposals**, not accepted registrations. 33 correction drafts plus 4 targeted revisions are preserved separately; production connections and final approvals added by this checkpoint remain **0**. CI is explicitly excluded. The remaining 39-actor integration task is still unfinished.
+
+# PR122 별도 최종 승인 검증 — HOLD 유지
+
+**최신 비-CI 후속:** [신화 HOLD 8클립 수정·전설 40종 캡처 검증](hold-repair-batch/README.md). 신화 8/8클립·48/48포즈 실제 Main 통과, 전설 NW 피격 40/40클립·240/240포즈 국소 재생/캡처 통과. 누적 확정 실패 수정 18클립. 기본 게임 신규 연결·최종 품질 승인 0이며 전체 PR158 완료가 아니다. CI는 사용자 요청으로 실행·조회·감시하지 않았다.
+
+**이전 후속 수정:** [확정 실패 10클립 수정 및 전설 누락 초안](source-repair-batch/README.md). 신화 7/7·보스 3/3 실제 Main 재생 통과. 기본 연결·전체 품질 승인 0. PR122는 main `f24c0a8372adc33dda4dcf76735b90ec7e537aba`에 외부 병합됐고 PR158은 미병합이다. 아래 초기 조사 상태와 실패 보고서는 당시의 역사 기록이다.
+
+**추가 CI 조사:** [partial locomotion CI 실패 추적](locomotion-ci-followup/README.md).
+초기 Main 캡처는 격리 runner의 PNG 맵 번들 누락으로 기존 맵을 사용했다.
+이 누락을 수정하고 실제 번들 PNG 맵에서 보스 6종 검사를 다시 통과했다.
+이전 CI의 clearing 실패 원인은 아직 미확정이며 후보 연결 이전 NOT_EVALUATED다.
+
+기준 저장소는 `zoog136-hash/-`. 조사 시 PR122는 OPEN, 미병합이며 HEAD는
+`d76a098b96f33efcccf2721ca3b8102bac8dcc75`, main은
+`cba19558de2764839feb4887a8af8f69b905257a`이다. 이 결과는 PR122 기준 별도
+`feature/pr122-final-approval-20261025`의 차이이며 main 반영 완료가 아니다.
+후속 draft PR의 base는 `feature/twilight-remaining106-20261016`이다.
+PR122 병합/종료/푸시/CI 취소, 다른 작업 브랜치 변경은 하지 않았다.
+
+**현재 후보 의존성 재검증:** [386개 분해 및 추가 Main 검증](dependency-recheck/README.md).
+옛 선택 58개와 활성 의존성 328개를 구분하며, 신규 품질 승인은 여전히 0건이다.
+
+## 실제 수정
+
+공통 원인은 이미 기본 런타임에 게시된 보스의 후보 원장 연결 필드 누락이다.
+알비노 유니콘·테베 아누비스·커츠의 `production_connected`와 `connected_frames`
+6개 필드를 실제 카탈로그 및 SHA가 고정된 게시 리소스에 맞췄다.
+대표 사례에서 검증 후 동일한 원인의 3종을 일괄 수정했다.
+기존 선택 후보, 원본 이미지, 공유/색상 별칭, 캐릭터 수치, 프로필, 공격 제어,
+승인 값 및 과거 카운터는 변경하지 않았다. 새 런타임 연결 0건, 새 제작 0클립,
+새 최종 품질 승인 0건이다. 연결 원장은 6종/198클립의 기존 연결을 재확인한다.
+`boss-binding-applied.json`은 변경 전후, `boss-bindings-final.json`은 멱등 검증이다.
+
+## 분모와 현재 검증 결과
+
+아래 요청 수는 actor × (idle/run/attack/hit 각 8방향 + death S 1방향)이다.
+동일 이미지/별칭이 공유될 수 있어 고유 제작 클립 수와 다르다.
+
+| 등급/유형 | 기본 런타임 대상 | 요청 재생 | 기존 WALK→RUN 재사용 요청 | 신규 품질 승인 |
+|---|---:|---:|---:|---:|
+| 신화 | 17종 | 561/561 | 136 | 0/17종 |
+| 전설 | 40종 | 1320/1320 | 320 | 0/40종 |
+| 영웅 | 109종 | 3597/3597 | 872 | 0/109종 |
+| 일반 몬스터 | 258종 | 8514/8514 | 2064 | 0/258종 |
+| 보스 | 60종 | 1980/1980 | 432 | 0/60종 |
+| 합계 | 484종 | 15972/15972 | 3824 | 0/484종 |
+
+별도 선택 후보는 신화 16종 300/528 요청 재생(228 미충족), 일반 12종 333/396
+(63 미충족), 보스 19종의 **21개 선택 기록** 598/693(95 미충족)이다.
+보스 2종의 family adapter 중복 기록 때문에 21을 고유 보스 수로 세지 않는다.
+총 49개 후보 기록 1231/1617 요청이 재생됐고 **386개 미충족**을
+`unvalidated-requests.json`에 보존했다. 이는 신규 원화 미생성 수와 다르다.
+신화 transform:399는 1개 idle 원본 클립은 있으나 선택 native_profile이 없으므로
+33개 요청 전부 연결/재생 미검증으로 유지한다. 프로필을 추정해 승인하지 않았다.
+
+179개 고유 SpriteFrames, 6868개 고유 클립, 26236프레임, 실제 Texture 파일
+1641개를 검사했다. 로드/빈 클립/빈 투명 프레임/잘못된 영역/속도/지속시간 오류
+0건, 선택 후보 SHA 불일치 0건, 재생 프레임 범위 오류 0건이다.
+624클립의 알파 영역 경계 접촉은 **시각 검토 신호**이며 잘림 확정 624건이 아니다.
+원본 컨텍스트 확인 없이 제거·축소하지 않았다. 모든 상세 기록은 gzip JSON에 있다.
+
+## 초안 및 별도 브랜치 잔여 — 현재 파일과 대조
+
+- 신화 신규 16종 525/528 초안. 현재 원장에 구조 HOLD 257클립 및 미생성 3클립.
+  승인 대상 활성 큐는 19종(완료 유일 2 + 신화 17); 제외된 성별 ID 12개는 재제작하지 않는다.
+  HOLD와 현재 선택 후보의 228 미충족은 서로 다른 축이며 합산하지 않는다.
+- 보스 신규 15종 495/495 초안, 기존 상세 목록의 usable 458/495 및 HOLD 37.
+  초안 완성과 시각 승인은 다르며 6종/198클립 기본 연결도 전체 신규 15종 승인과 다르다.
+- 전설 `c23aff8b8fa34b822e6d6012cf272f4a804f4b71`은 PR122/main에 미병합.
+  그 브랜치 기록은 1319/1320 초안, replay 1318 PASS/1 FAIL/1 EXPECTED_BLOCKED.
+  분류 972행은 ERROR 380/HOLD 591/BLOCKED 1이며 모두 확정 불량이 아니다.
+  당시 CI 12실패는 과거 결과이지 이 PR의 CI가 아니다. 차단된 274 NE attack 재시도 안 함.
+- 영웅 `e731f229d2978c920b3565b39368f246f6f74058`도 PR122/main에 미병합.
+  해당 브랜치 기록 RUN 보완 88/88, 선택 검토 25/25 및 기본 게임 연결 0은
+  본 PR 신규 검증/기본 적용 수로 승격하지 않는다.
+
+`exception-inventory.json`은 신화/보스 원화 예외 전체와 분리된 브랜치 의존성을
+보존한다. 전설 상세 972행도 gzip TSV로 보존했다. 원화 분리/겹침/카메라 오류는
+이미지 도구 제한 해제 근거가 없으므로 재생성하지 않았다. 유일 완료 자산은 제외·보존했다.
+
+## 실제 실행과 시각 검토 범위
+
+Godot 공식 4.7.2, Compatibility/OpenGL/llvmpipe에서 실제 Main, 실제 monster DB,
+Monster.setup 및 기본 카탈로그로 게시 보스 6종을 실행했다. 후보 주입 0건.
+288/288 상태·방향 요청(각 48, WALK alias 및 death S 공유 포함), 모든 해당 원본
+포즈 샘플링, 공격당 1회 마커 48/48, 플레이어 HP/장비/골드/인벤토리 보존 통과.
+추가 발 기준 회귀에서 41760 tick의 몸체/충돌 위치, 프로필 anchor, 원본 캔버스
+비율과 scale 보존 단언이 통과했다. 이것은 해부학적 발 접촉 승인과 다르다.
+
+54장의 E/W/N idle/run/attack 실제 캡처를 내부 진단 접촉표로 확인했다.
+방향 전환과 분리된 몸체는 관찰되지만 이 표는 전 방향/전 프레임 승인 근거가 아니다.
+일부 보스 발 주변은 실제 지붕에 가려지고 테베 아누비스의 크기/접지에는 추가
+원본·전체 동작 시각 검토가 필요하다. 승인 승격 없음. 대표 원본 캡처 6장과
+진단표만 커밋하며 나머지 48장은 로컬 참고이고 납품으로 세지 않는다.
+
+8개 Python guard/classification fixture 통과. 사전 723개 WebP/41442프레임
+실파일 SHA·추적 검증 통과. 소스 텍스처는 raw 로드했고 테스트 class cache는
+실제 소스에서 유도했다. 이는 native import/export 검증을 대체하지 않는다.
+별도 브랜치의 최종 CI/전체 native import 결과는 GitHub run을 확인해야 한다.
+
+전체 자원 검사는 한 번 수행했다. 처음 실행의 res:// 빈 프로필 오류 2줄은
+transform:399에서 발생했고, 그 항목만 도구를 수정해 재검사했다. 그 1개 리소스
+결과만 합친 보고서가 `resource-report-consolidated.json.gz`이다. 원래 실패 로그도
+보존했다. 첫 Main 검사 후 발 기준 단언을 추가해 해당 6종 Main만 추가 확인했으며
+전체 CI/전체 자원 검사를 클립마다 반복하지 않았다.
+
+## 재현/재개
+
+1. 원격 PR122/main/별도 영웅·전설 HEAD와 조상 관계를 다시 확인한다.
+2. `python3 tools/reconcile_pr122_boss_connections.py`는 불일치 때 실패한다.
+3. `tools/build_approval_plan.py --root . --output <plan>`으로 현재 대상 고정.
+4. `tools/run_pr122_approval_validation.py --output <새 폴더> --godot <4.7.2> --mode resources --plan <plan>`.
+5. `tools/analyze_pr122_approval_audit.py --root . --plan <plan> --report <resource-report> --output <summary>`.
+6. 실제 Main은 같은 runner의 `--mode main --xvfb <Xvfb>` 사용. 사용자 저장과 분리한다.
+7. 원화 예외는 원본/승인 자산을 보존하고 허용된 제작 수단이 확인된 뒤 처리한다.
+   전설/영웅은 명시적 통합과 해당 브랜치 검증 후에만 기본 런타임 적용으로 집계한다.
+
+재현용 파일 SHA는 `tested-file-pins.json`, 전달된 증거 SHA는 `evidence-sha256.json`.
+이 PR의 최종 Git SHA 및 CI 링크는 PR 본문에 기록한다. 모든 HOLD/BLOCKED는 유지된다.

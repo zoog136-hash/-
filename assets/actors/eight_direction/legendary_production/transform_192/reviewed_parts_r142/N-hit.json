@@ -1,0 +1,173 @@
+{
+  "actor": "transform:192",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r142/N-hit-source.png",
+  "source_sha256": "9d1f7c986ed308b77acdc91b0940e62ebf300e44db1bfe16220f2465692b6ba0",
+  "source_pixels_resampled": false,
+  "original_source_preserved": true,
+  "original_selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/corrections/isolation-v08/N-hit-SpriteFrames.tres",
+  "original_source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r019/N-idle.png",
+      "region": [
+        80.0,
+        80.0,
+        594.0,
+        608.0
+      ],
+      "margin": null,
+      "anchor": [
+        334.0,
+        487.0
+      ],
+      "scale": 0.23404255319148937,
+      "sha256": "5eab7bb26e036061177523b41f2883920e07c50857b7074429fec25263c3179d",
+      "existing_guard_alias": "N-idle:0"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-1.png",
+      "region": [
+        0,
+        0,
+        1124,
+        1399
+      ],
+      "margin": null,
+      "anchor": [
+        215,
+        612
+      ],
+      "scale": 0.19,
+      "sha256": "6e6ea523be8a55c4c99058451a6e0fcf2457ddf0debd3cd4024acc6a5d57e0f2",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-2.png",
+      "region": [
+        0,
+        0,
+        1124,
+        1399
+      ],
+      "margin": null,
+      "anchor": [
+        755,
+        612
+      ],
+      "scale": 0.19,
+      "sha256": "1f2ba3685342d913bc011f2d7e99d927948b495511953b8f4ba67a8b2fe0c7cb",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-3.png",
+      "region": [
+        0,
+        0,
+        1124,
+        1399
+      ],
+      "margin": null,
+      "anchor": [
+        215,
+        1321
+      ],
+      "scale": 0.19,
+      "sha256": "a133ee05ac25f3a2a01d2f208ae87f0746c482216884503f46827a2e8703eee1",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-4.png",
+      "region": [
+        0,
+        0,
+        1124,
+        1399
+      ],
+      "margin": null,
+      "anchor": [
+        755,
+        1320
+      ],
+      "scale": 0.19,
+      "sha256": "4e182f4c7b01b7c2f6e4942b9275f20f4b2034b3013d432bcfd15a16d691f27c",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r019/N-idle.png",
+      "region": [
+        1600.0,
+        3120.0,
+        1081.0,
+        1346.0
+      ],
+      "margin": null,
+      "anchor": [
+        614.0,
+        1165.0
+      ],
+      "scale": 0.10784313725490197,
+      "sha256": "5eab7bb26e036061177523b41f2883920e07c50857b7074429fec25263c3179d",
+      "existing_guard_alias": "N-idle:5"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 703415,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "reviewed_fragments": {},
+  "fragment_review_basis": "All detached N impact arc fragments15/16/17 continue lower-left phase3 raised blade/arc, not upper-left windup cape; exact areas/bounds pinned. HIT parts unambiguous. All raw RGBA retained once.",
+  "replacement_basis": "Original N action incorrectly displayed front visor/chest. New1..4 stay true rear NORTH, WHITE ponytail and RIGHT sword viewer RIGHT throughout; existing reviewed N IDLE0/5 are explicitly shared guard aliases retaining exact source pixels/region/root/scale. Attack impact remains phase3 pointing NORTH; four newly drawn action poses, not six new drafts.",
+  "registration_basis": "New HIT roots use planted boot plane612/1321/1320 and common .19 scale; maximum authored recoil compresses body about7worldpixels. New ATTACK uses .27 constant body scale and planted boot planes553/555/1058/1059; sword arc and cape extents do not determine C. Native guard roots/scales are unchanged.",
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_NW_CAMERA_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
+  "local_main_validation": "PASS real Main same Player no rebind N IDLE/HIT/IDLE/ATTACK/IDLE30captures18unique poses, all6 per action, NORTH rear WHITE ponytail and RIGHT sword continuous, original phase3 attack marker; normal process exit0/errors0,20.24s; candidate injection, not default binding.",
+  "native_import_validation": "PASS official Godot4.7.2 native2clips12 AtlasTextures with actual CompressedTexture2D and nonempty decoded images;8 newly generated action poses and4 existing guard aliases. Separate from source-byte Main loader.",
+  "player_physics_validation": "PASS NORTH HIT30/60fps stationary/moving4cases plus1actual Player North movement-during-hit case; all6HIT poses, correct registered C/no flip, no attack emitted and inventory/equipment/HP/collision unchanged. Stops after6 HIT poses before held N RUN; normal process exit0/errors0,19.68s.",
+  "boundary_result": "At r142 delivery full198frame candidate has7remaining flags (NW3/W4), versus prior9; replaced N attack removes2 crossed frame regions. Other unresolved original sources and candidates preserved; no whole actor approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r142/N-hit-source.png",
+      "sha256": "9d1f7c986ed308b77acdc91b0940e62ebf300e44db1bfe16220f2465692b6ba0",
+      "bytes": 1615259
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r019/N-idle.png",
+      "sha256": "5eab7bb26e036061177523b41f2883920e07c50857b7074429fec25263c3179d",
+      "bytes": 3736934
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-1.png",
+      "sha256": "6e6ea523be8a55c4c99058451a6e0fcf2457ddf0debd3cd4024acc6a5d57e0f2",
+      "bytes": 404237
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-2.png",
+      "sha256": "1f2ba3685342d913bc011f2d7e99d927948b495511953b8f4ba67a8b2fe0c7cb",
+      "bytes": 387215
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-3.png",
+      "sha256": "a133ee05ac25f3a2a01d2f208ae87f0746c482216884503f46827a2e8703eee1",
+      "bytes": 433254
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-hit-4.png",
+      "sha256": "4e182f4c7b01b7c2f6e4942b9275f20f4b2034b3013d432bcfd15a16d691f27c",
+      "bytes": 424130
+    }
+  ],
+  "remaining_actor_issue": "N/S RUN, N HIT/ATTACK and W ATTACK local repairs passed; actor still requires NW camera and remaining directional/weapon/gait review. No default binding or whole actor approval."
+}

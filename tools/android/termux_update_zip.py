@@ -288,10 +288,27 @@ def load_old_state(root):
         raise RuntimeError('Invalid updater state; refusing to delete previous files') from ex
 
 
-def update(root, assume_yes=False, ref='main'):
-    root = root.expanduser().resolve()
-    if not (root / 'project.godot').is_file() or not (root / 'Main.tscn').is_file():
-        raise RuntimeError('TWILIGHT Godot project not found. Provide TWILIGHT_Play directory.')
+def update(root, assume_yes=False, ref='main', install_fresh=False):
+    # Fresh installs may create ONLY an absent or empty destination. Never
+    # overwrite a partly installed game, user files, or an existing Git checkout.
+    candidate = root.expanduser()
+    if install_fresh:
+        if candidate.is_symlink():
+            raise RuntimeError('Fresh install destination cannot be a symlink.')
+        if candidate.exists():
+            if not candidate.is_dir() or any(candidate.iterdir()):
+                raise RuntimeError('Fresh install requires an EMPTY TWILIGHT_Play folder. '
+                                   'Existing files were not modified.')
+        else:
+            if not candidate.parent.is_dir():
+                raise RuntimeError('Downloads folder not accessible; run termux-setup-storage.')
+            candidate.mkdir()
+    root = candidate.resolve()
+    if not install_fresh and (
+            not (root / 'project.godot').is_file() or
+            not (root / 'Main.tscn').is_file()):
+        raise RuntimeError('TWILIGHT Godot project not found. '
+                           'For a deleted folder, use --install-fresh.')
     if (root / '.git').exists():
         raise RuntimeError('This folder has Git metadata. ZIP updater refuses Git checkouts.')
     commit_sha, inventory = get_inventory() if ref == 'main' else get_inventory(ref)
@@ -318,6 +335,15 @@ def update(root, assume_yes=False, ref='main'):
     for name in removed:
         ensure_not_symlink(root, safe_path(name))
     print('Changes to download:', len(changed), 'Retired managed files:', len(removed), flush=True)
+    if install_fresh:
+        needed = sum(inventory[name]['size'] for name in changed)
+        free_bytes = __import__('shutil').disk_usage(root).free
+        print('FRESH INSTALL:', len(changed), 'game files;',
+              '%.2f GiB' % (needed / 1024**3), 'to download', flush=True)
+        if needed > free_bytes:
+            raise RuntimeError('Not enough free space for fresh game install '
+                               '(%.2f GiB needed, %.2f GiB free).' %
+                               (needed / 1024**3, free_bytes / 1024**3))
     if not changed and not removed:
         print('Already up to date.')
         return
@@ -334,7 +360,8 @@ def update(root, assume_yes=False, ref='main'):
         backup = root / ('.twilight_update_backup_' + stamp)
         if backup.exists():
             raise RuntimeError('Backup folder already exists')
-        backup.mkdir()
+        if not install_fresh:
+            backup.mkdir()
         applied = []
         try:
             for name in changed + removed:
@@ -363,8 +390,9 @@ def update(root, assume_yes=False, ref='main'):
                     target.parent.mkdir(parents=True, exist_ok=True)
                     os.replace(prior, target)
             raise
-        print('UPDATE OK:', commit_sha[:12])
-        print('Original changed files saved in:', backup)
+        print('INSTALL OK:' if install_fresh else 'UPDATE OK:', commit_sha[:12])
+        if not install_fresh:
+            print('Original changed files saved in:', backup)
         print('Close Godot and re-import TWILIGHT_Play/project.godot.')
 
 
@@ -526,6 +554,8 @@ def main():
                          help='List unused report/authoring files and possible space saved; no deletion')
     cleanup.add_argument('--cleanup-unused', action='store_true',
                          help='Preview and delete offline-only files only after typing DELETE UNUSED')
+    cleanup.add_argument('--install-fresh', action='store_true',
+                         help='Restore game files into a deleted or empty TWILIGHT_Play folder')
     args = parser.parse_args()
     if bool(args.source84_inputs) != bool(args.source84_linkage):
         parser.error('--source84-inputs and --source84-linkage must be supplied together')
@@ -533,7 +563,7 @@ def main():
         if args.cleanup_preview or args.cleanup_unused:
             cleanup_unused(args.project, delete=args.cleanup_unused)
         else:
-            update(args.project, args.yes, args.ref)
+            update(args.project, args.yes, args.ref, install_fresh=args.install_fresh)
             if args.source84_inputs:
                 subprocess.run([sys.executable, str(args.project / 'tools/source84_inputs.py'),
                                 'rebuild', '--inputs', str(args.source84_inputs.resolve()),

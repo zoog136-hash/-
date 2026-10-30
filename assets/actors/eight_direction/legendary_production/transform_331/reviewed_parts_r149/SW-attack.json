@@ -1,0 +1,285 @@
+{
+  "actor": "transform:331",
+  "prior_candidate": "res://assets/actors/eight_direction/legendary_production/transform_331/r002/SpriteFrames.tres",
+  "prior_candidate_sha256": "cea1c49eb2f6a364d88c497e8ffe6a64321beae006e8148592d699e308ea4965",
+  "prior_source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "new_candidate": "res://assets/actors/eight_direction/legendary_production/transform_331/r003/SpriteFrames.tres",
+  "new_candidate_sha256": "2866a26adfc6a5d876ee47cc1169aba47809c142fe9ee1186870a1392a9bc3d1",
+  "originals_and_r148_preserved": true,
+  "poses": [
+    {
+      "phase": 3,
+      "source": "res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r149/SW-attack-3.png",
+      "source_sha256": "0176bcbb88eb6b8269c924ef1ff857fa69e5c444ebb8c7bc5c1e146bf8536191",
+      "source_bytes": 1045630,
+      "source_git_blob_oid": "f11d2ef8e51e7194e699f181fe684e3b88ca9665",
+      "generated_original_path": "/workspace/generated_images/exec-ae941958-5a99-40f5-9b2e-66f5e826ec72.png",
+      "generated_original_preserved": true,
+      "source_RGBA_resampled": false,
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "source_edge_alpha_max": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 1
+      },
+      "source_alpha16_edge_crossings": 0,
+      "body_landmark_registration": {
+        "prior_input_crop": "/workspace/scratch/pr158-331-input-r149/SW-attack-3-edge.png",
+        "prior_input_crop_sha256": "2f9200fa800b3794bc2b02d16e3fd8c945a68fc9b48eba5d50e7a81ea1344580",
+        "prior_crop_C": [
+          401.5,
+          560.5
+        ],
+        "prior_scale": 0.243363,
+        "landmark_order": [
+          "haircap",
+          "first_polished_boot",
+          "second_polished_boot"
+        ],
+        "old_landmarks": [
+          [
+            396.88486311262534,
+            191.32649567822438
+          ],
+          [
+            189.40174400799472,
+            501.2685385470898
+          ],
+          [
+            623.8772602703218,
+            581.9082122599817
+          ]
+        ],
+        "new_landmarks": [
+          [
+            742.8352091357455,
+            355.695178803706
+          ],
+          [
+            520.6593176104464,
+            843.0874092072947
+          ],
+          [
+            1181.346200239969,
+            912.8421147973156
+          ]
+        ],
+        "old_ROIs": [
+          [
+            369,
+            172,
+            427,
+            211
+          ],
+          [
+            170,
+            482,
+            223,
+            520
+          ],
+          [
+            602,
+            566,
+            650,
+            606
+          ]
+        ],
+        "new_ROIs": [
+          [
+            691,
+            324,
+            786,
+            386
+          ],
+          [
+            489,
+            819,
+            568,
+            867
+          ],
+          [
+            1157,
+            890,
+            1220,
+            945
+          ]
+        ],
+        "new_pixels_per_prior_pixel": 1.4910831393018922,
+        "translation": [
+          244.66945351139316,
+          70.41146699618935
+        ],
+        "anchor": [
+          843.3393339411028,
+          906.1635665749
+        ],
+        "runtime_scale": 0.16321222712902497,
+        "uniform_scale": true,
+        "rotation_applied": false,
+        "mirrored": false,
+        "basis": "One uniform body scale from haircap-to-footline vertical projection, then preserve original C offset from the mean of both polished boot landmarks. Corrected SW lean/trajectory differs intentionally; do not fit C or scale to discharge, hair plume, cape, glow or weapon extents.",
+        "landmark_residual_world": [
+          15.280348486813715,
+          4.2512604941766305,
+          4.251260494176599
+        ]
+      },
+      "canonical_review": "HOLD_ARCHER_MECHANISM_REVIEW",
+      "review_basis": "Complete strong-alpha silhouette and requested release sector restored. Canonical bow/arrow grip and authentic draw/release mechanism remain ambiguous; boundary/direction correction is not clip approval.",
+      "selected": true,
+      "production_connected": false,
+      "runtime_default_connected": false,
+      "final_quality_approved": false
+    }
+  ],
+  "changed_reference_count": 1,
+  "unchanged_other_pose_geometry": true,
+  "all_33_animation_clocks_durations_loops_preserved": true,
+  "attack_marker": 3,
+  "quality_status": "HOLD_ARCHER_MECHANISM_REVIEW",
+  "current_remaining": {
+    "canonical_equipment": "ANATOMICAL_LEFT_BOW_RIGHT_ARROW",
+    "canonical_basis": {
+      "catalog": "res://assets/catalog/43a87b53160270d29e59cb0e.png",
+      "catalog_sha256": "e6501c14aca50486d56432a5a27a2ea65f2a7e27b706539f6ca324d6cb447364",
+      "S_front_correct_carry_phases": [
+        0,
+        1,
+        2
+      ],
+      "N_rear_correct_carry_phases": [
+        3,
+        4,
+        5
+      ],
+      "projection": "S front: anatomical LEFT=viewer RIGHT. N rear: anatomical LEFT=viewer LEFT. Do not mirror or use the wrong N-idle guard as hand authority.",
+      "normal_hand_references": [
+        {
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/S-run-source-v01.png",
+          "source_sha256": "7c88e53442997e6a826df220c7387962d7122f32d58a83cf46d723c99f454c3b",
+          "source_git_blob_oid": "f651fa66728bd919bcdae8dd78cf5cd9080751f8",
+          "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+          "phase": 0,
+          "region": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "native_region_RGBA_sha256": "b1fff08f9c7ef6c2d5be2470eca6c6d4551ccce4c22304e052eab0d8cbc08bf0",
+          "canonical_anatomy": "LEFT_BOW_RIGHT_ARROW",
+          "screen_projection": "BOW_VIEWER_RIGHT_ARROW_VIEWER_LEFT",
+          "scope": "Canonical hand ownership reference only; independent gait/whole clip approval is not implied."
+        },
+        {
+          "source": "res://assets/actors/eight_direction/legendary_parallel/transform_331/draft001/N-run-source-v01.png",
+          "source_sha256": "b13901e02616174f0e27494a681554aa9d61ab7f396950be7e8c89ccd944b30f",
+          "source_git_blob_oid": "74418dad0abf683c75110f3e022b0e9247de776b",
+          "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+          "phase": 3,
+          "region": [
+            0,
+            512,
+            512,
+            512
+          ],
+          "native_region_RGBA_sha256": "303216bc82c5389b85095516da9316384e748d5f4e26ab1ef5053f48740816ae",
+          "canonical_anatomy": "LEFT_BOW_RIGHT_ARROW",
+          "screen_projection": "BOW_VIEWER_LEFT_ARROW_VIEWER_RIGHT",
+          "scope": "Canonical hand ownership reference only; independent gait/whole clip approval is not implied."
+        }
+      ]
+    },
+    "RUN_repairs": {
+      "S_phases": [
+        3,
+        4,
+        5
+      ],
+      "N_phases": [
+        0,
+        1,
+        2
+      ],
+      "status": "HOLD_PENDING_SEPARATE_REVIEWED_REPAIR"
+    },
+    "N_idle_hit_attack": "HOLD_WRONG_CANONICAL_HAND; N attack3 also wrong screen-right release sector",
+    "W_SW_attack": "HOLD_ARCHER_MECHANISM_REVIEW",
+    "historical_snapshot": "r148 receipts remain historical and unchanged. Their generic late-half N wording is not the current canonical repair target; current targets are S3-5 and N0-2."
+  },
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "validation": {
+    "engine": "4.7.2.stable.official.ed1daf0bf",
+    "source_head": "62dd78a42079b816c05db80518bf3a6fd960b11d",
+    "static": {
+      "all_33_animation_clock_blocks_identical": true,
+      "unchanged_other_192_Atlas_margin_C_scale": true,
+      "new_source_files": 4,
+      "changed_references": 6,
+      "new_alpha16_edge_crossings": 0,
+      "exact_guard5_reuse_for_E_idle_attack_hit": true
+    },
+    "native_import": {
+      "status": "PASS",
+      "existing_cache_reused": true,
+      "native_AtlasTexture_CompressedTexture2D_frames": 30,
+      "qualified_E_registration_frames": 18,
+      "W_SW_HOLD_rejections": 12,
+      "whole_198_decode_repeated": false,
+      "local_log": "/workspace/scratch/pr158-331-native-r148/r149-check.log",
+      "local_log_sha256": "6bf1628b3a77549c65ca10a6252df8b36bb848db631e5e70754fe4619ed50ef1"
+    },
+    "actual_Main": {
+      "status": "PASS_THREE_E_CLIPS_ONLY",
+      "same_Player_ID_and_frame_source_no_rebind": true,
+      "transitions": [
+        "idle_0",
+        "attack_0",
+        "idle_0",
+        "hit_0",
+        "idle_0"
+      ],
+      "rendered_phase_encounters": 30,
+      "unique_clips": 3,
+      "unique_poses": 18,
+      "registered_C_checks": true,
+      "mirrored_fallback": false,
+      "attack_release_frame": 3,
+      "HP_inventory_equipment_position_movement_collision_preserved": true,
+      "errors": 0,
+      "isolated_user_data": true,
+      "candidate_profile_injection": true,
+      "native_import_substitute": false,
+      "elapsed_seconds": 20.23,
+      "local_report": "/workspace/scratch/pr158-331-r149-main/report.json",
+      "local_report_sha256": "f150063aaa410b25070d4dacb124f6cd640c3c317aac23145911272388b53ad1",
+      "local_phase_review": "/workspace/scratch/pr158-331-r149-main/selected-main-phases.png",
+      "local_phase_review_sha256": "3d90131b4bc326e355ba595cf60fdfe2f38ac9ebe482d4acfcaa732c1f0f4feb"
+    },
+    "semantic_gates": {
+      "E_idle_attack_hit": "PASS_SCOPED_CLIPS_ONLY",
+      "W_SW_attack": "HOLD_ARCHER_MECHANISM_REVIEW",
+      "N_idle_hit_attack": "HOLD_CANONICAL_EQUIPMENT_AND_N_ATTACK_SECTOR",
+      "S_RUN_phases": [
+        3,
+        4,
+        5
+      ],
+      "N_RUN_phases": [
+        0,
+        1,
+        2
+      ]
+    },
+    "whole_actor_approved": false,
+    "production_connected": false,
+    "runtime_default_connected": false,
+    "final_quality_approved": false
+  }
+}

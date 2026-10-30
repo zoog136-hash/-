@@ -1,0 +1,45 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-0.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-1.png" id="t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-2.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-3.png" id="t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-4.png" id="t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/W-run-5.png" id="t5"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("t2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("t3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("t4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("t5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":true,"name":&"run_4","speed":12.500000000}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_DIRECTION_HAND_OR_RECIPROCAL_GAIT"
+metadata/twilight_reviewed_frame_registration = {"run_4":{"semantic_review":"HOLD","frames":[{"anchor":Vector2(121.0,468.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(789.0,472.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(1313.25,423.5),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(104.0,967.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(790.0,961.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)},{"anchor":Vector2(1363.5,887.0),"scale":Vector2(0.301676,0.301676),"target":Vector2(0,0)}]}}
+metadata/twilight_final_quality_approved = false

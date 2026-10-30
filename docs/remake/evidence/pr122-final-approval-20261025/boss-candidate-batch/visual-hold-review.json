@@ -1,0 +1,26 @@
+{
+  "source_comparison": "boss-three-existing-five-pose-holds.png",
+  "reviewed": 3,
+  "findings": [
+    {
+      "actor": "grim_reaper",
+      "clip": "attack_6",
+      "omitted_phase": 3,
+      "observation": "Scythe changes from screen-right hand to screen-left in the omitted source pose."
+    },
+    {
+      "actor": "prince_deus",
+      "clip": "attack_6",
+      "omitted_phase": 3,
+      "observation": "Staff switches to the opposite hand during the omitted source pose."
+    },
+    {
+      "actor": "prince_deus",
+      "clip": "attack_5",
+      "omitted_phase": 2,
+      "observation": "Two staffs are visible simultaneously in the omitted source pose."
+    }
+  ],
+  "action": "Preserve prior five-pose selection and all original pixels. Do not restore the visibly invalid sixth pose or duplicate an existing pose. Six-pose quality requirement remains failed; authored correction requires the restricted image-authoring step.",
+  "final_approvals_added": 0
+}

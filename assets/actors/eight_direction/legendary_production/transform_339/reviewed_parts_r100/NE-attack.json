@@ -1,0 +1,75 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_339/draft001/NE-attack-source-v01.png",
+  "source_sha256": "8464d5d77a77d7a2fb7e71ef74086975e9eb5221b3753e3bdb16ff8b8474fac9",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r100/NE-attack-1.png",
+      "anchor": [
+        325.0,
+        586.5
+      ],
+      "scale": 0.253602,
+      "source_body_label": 1,
+      "sha256": "f532fecf8be5114d31d9c8b88ad6a2c83e458ae13f48dc9006185ca26edb6a63"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r100/NE-attack-2.png",
+      "anchor": [
+        927.0,
+        584.5
+      ],
+      "scale": 0.253602,
+      "source_body_label": 2,
+      "sha256": "f37a02a127a217c89887a83b054531a13d2a7f04e3da497922ec9eaf218df90f"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r100/NE-attack-3.png",
+      "anchor": [
+        269.0,
+        1200.0
+      ],
+      "scale": 0.253602,
+      "source_body_label": 65,
+      "sha256": "7f08e218fe0122902335535a3e5c3ad9e49ae7a65f7a417f61c2079028f13788"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_339/reviewed_parts_r100/NE-attack-4.png",
+      "anchor": [
+        1020.0,
+        1206.0
+      ],
+      "scale": 0.253602,
+      "source_body_label": 68,
+      "sha256": "5c7d2578688ac9b9669f739a187f7ea5f84bd9c85cf762b9f3e6e1a94d70f8a2"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 740851,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "reviewed_fragment_exceptions": {
+    "19": {
+      "area": 161,
+      "bounds": [
+        1057,
+        683,
+        1079,
+        699
+      ],
+      "owner": 3
+    }
+  },
+  "fragment_review_basis": "The detached blue shard above the lower-right recovering staff belongs to that staff burst; it is separated from the lower-left impact plume.",
+  "quality_status": "PASS_LOSSLESS_OWNERSHIP_AND_LOCAL_MAIN",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_CONNECTED_POSES_W_SOURCE_BOUNDARY_AND_REMAINING_ACTOR_REVIEW",
+  "selection_basis": "Complete original connected figures/effects retained without resampling or manual pixel deletion; same frame anchors, scales, order and timing.",
+  "local_main": "PASS: candidate Player path, six phases, direction selection, registered root and one authoritative attack marker3; inventory/collision/timing unchanged",
+  "native_import": "PASS: isolated Godot4.7.2 native import, 6 CompressedTexture2D AtlasTexture frames; default actor not activated"
+}

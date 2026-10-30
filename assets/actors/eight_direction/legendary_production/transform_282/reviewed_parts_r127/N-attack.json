@@ -1,0 +1,49 @@
+{
+  "actor": "transform:282",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_282/repaired_source_r127/N-idle-5-source.png",
+  "source_sha256": "7c6465393aa76e89de64e0247ef06146641de32d4673c15237e37316a179f24e",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/N-attack-source-v01-isolated.png",
+  "original_source_sha256": "0239d6a98d7280371244a34579da70640a83f7646d50208cd0f80ba3b404ddd5",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_282/repaired_source_r127/N-idle-5-source.png",
+      "anchor": [
+        805,
+        936
+      ],
+      "scale": 0.13,
+      "sha256": "7c6465393aa76e89de64e0247ef06146641de32d4673c15237e37316a179f24e"
+    }
+  ],
+  "proof": null,
+  "quality_status": "HOLD_IMPACT_DIRECTION_GUARD_REPAIR_VERIFIED",
+  "production_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_E_ATTACK_SOURCE_OVERLAP_AND_REQUIRED_RUN_DIRECTION_FOOT_CONTINUITY",
+  "replacement_basis": "Replace only the confirmed clipped phase5 shared N IDLE recovery guard with repaired N IDLE5. Original phase0 and attack1-4 remain unchanged source Atlas regions and registration; marker3 and original clock retained.",
+  "local_main": "Candidate diagnostic before HOLD gate: original impact phase3 points east while N selected; authoritative marker3 still correct. Only clipped recovery guard repaired. Impact direction is NOT approved.",
+  "native_import": "PASS3clips18 actual CompressedTexture2D AtlasTexture frames. After direction review, unchanged production registration helper explicitly rejects N ATTACK HOLD without changing Sprite scale/offset.",
+  "source_boundary_repair": "N selected resource regions now0 opaque source-edge/cross-pose flags. Combined actor198regions flags17->6; remaining six E ATTACK source regions genuinely join neighbors.",
+  "remaining_actor_issue": "N ATTACK original impact phase3 points east and is semantic HOLD; E ATTACK source figures/effects join; RUN hand/direction/foot alternation review still required. No whole actor/default approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_282/corrections/isolation-v15/N-attack-source-v01-isolated.png",
+      "sha256": "0239d6a98d7280371244a34579da70640a83f7646d50208cd0f80ba3b404ddd5",
+      "bytes": 1363892
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/N-idle-source-v01.png",
+      "sha256": "9033fc5f50d48f2e1b98dec7f61d5d1094b52cb74784dc1c536ad761cf5c2d3e",
+      "bytes": 2321061
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_282/repaired_source_r127/N-idle-5-source.png",
+      "sha256": "7c6465393aa76e89de64e0247ef06146641de32d4673c15237e37316a179f24e",
+      "bytes": 1684465
+    }
+  ]
+}
