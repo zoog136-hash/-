@@ -3,6 +3,8 @@ class_name TwilightOriginalSkillCatalog
 
 ## Stable identities, grants, learned books, and verified enhancement relations.
 ## The old game DB remains untouched, but its synthesized skills are not active.
+const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
+var current_official = CURRENT.new()
 const ROOT_PATH := "res://data/skills/"
 var records: Array = []
 var by_id: Dictionary = {}
@@ -41,6 +43,13 @@ func configure(owner: Node) -> void:
 		records.append(record)
 		by_id[id] = record
 		by_name[str(record.name)] = id
+	for record: Dictionary in current_official.records:
+		record["effect"] = effect_for(record)
+		records.append(record)
+		by_id[str(record.id)] = record
+		by_name[str(record.name)] = str(record.id)
+		for alias: String in record.historical_aliases: by_name[alias] = str(record.id)
+	relations.merge(current_official.local_design.get("relations",{}))
 	seed_starters()
 
 
@@ -68,8 +77,8 @@ static func effect_for(record: Dictionary) -> String:
 		"attack": return "damage"
 		"turn_undead": return "turnUndead"
 		"status": return str(record.get("status", "stun"))
-		"heal", "convert", "cleanse": return "heal"
-		"buff", "counter": return "defBuff"
+		"heal", "convert", "cleanse", "local_heal": return "heal"
+		"buff", "counter", "local_buff": return "defBuff"
 		"teleport": return "teleport"
 		"stealth": return "invisibility"
 		"taunt", "toggle_proc", "summon": return "utility"
@@ -81,16 +90,19 @@ func seed_starters() -> void:
 			learned[str(record.id)] = maxi(1, int(learned.get(str(record.id), 0)))
 
 func record_for(key: String) -> Dictionary:
-	return by_id.get(key, by_id.get(by_name.get(key, ""), {}))
+	return by_id.get(key, by_id.get(by_name.get(key, ""), current_official.record_for(key)))
 
 func permitted(record: Dictionary) -> bool:
 	return record.get("classes", [record.get("class")]).has(world.job_class)
 
 func owned(record: Dictionary) -> bool:
+	if bool(record.get("runtime_blocked", false)): return false
 	return permitted(record) and int(learned.get(str(record.get("id", "")), 0)) > 0
 
 func enabled(record: Dictionary) -> bool:
+	if bool(record.get("runtime_blocked", false)): return false
 	if not owned(record): return false
+	if bool(record.get("local_design",false)) and int(world.level)<int(record.minimum_level):return false
 	if str(record.get("class", "")) == "요정" and str(record.get("school", "")) in ["water","earth","wind","fire"]:
 		if str(record.school) != str(schools.get("요정", "water")): return false
 	var required: Array = record.get("weapons", [])
@@ -99,6 +111,9 @@ func enabled(record: Dictionary) -> bool:
 func reason(record: Dictionary, buying: bool = false) -> String:
 	if record.is_empty(): return "스킬 정보 없음"
 	if not permitted(record): return "현재 직업에서 습득 불가"
+	if bool(record.get("runtime_blocked", false)):
+		if int(world.level) < int(record.minimum_level): return "Lv.%d 필요" % int(record.minimum_level)
+		return CURRENT.blocked_reason(record)
 	if int(learned.get(str(record.id), 0)) > 0: return "이미 습득함"
 	if int(world.level) < int(record.minimum_level): return "Lv.%d 필요" % int(record.minimum_level)
 	var rel: Dictionary = relations.get(str(record.id), {})
@@ -136,6 +151,8 @@ func learn(key: String) -> bool:
 	learned[str(record.id)] = 1
 	revision += 1
 	world.original_skills.refresh_buffs_after_learning(str(record.id))
+	if str(record.activation) == "passive":
+		world.original_skills.vfx.emit_skill(str(record.id), "learn", world.player.global_position)
 	world._refresh_speed_modifiers()
 	world._update_hud()
 	world._save_game(true)
@@ -194,7 +211,10 @@ func _ensure_stat_index() -> void:
 	static_speed=1.0
 	stat_rebuild_count+=1
 	for record: Dictionary in records:
-		if str(record.mode)!="stats" or not enabled(record):continue
+		if not enabled(record):continue
+		if bool(record.get("local_design",false)):
+			static_speed=maxf(static_speed,float(record.get("passive_speed",1)))
+		if str(record.mode)!="stats":continue
 		var resolved: Dictionary=_resolved_reference(record)
 		static_speed=maxf(static_speed,float(resolved.get("stats",{}).get("speed",1)))
 		var stats: Dictionary=resolved.get("stats",{})

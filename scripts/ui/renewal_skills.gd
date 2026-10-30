@@ -2,6 +2,7 @@ extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
 var hud: Node
 var records: Array = []
@@ -13,6 +14,8 @@ var class_filter: OptionButton
 var grade_filter: OptionButton
 var learn_button: Button
 var book_button: Button
+var reagent_button: Button
+var official_toggle_preview: CheckButton
 var preview_button: Button
 var preview_vfx: TwilightOriginalSkillVFX
 var preview_container: SubViewportContainer
@@ -35,7 +38,7 @@ var unlearned_icons: Dictionary = {}
 func configure(controller: Node) -> void:
 	hud=controller
 	visibility_changed.connect(_sync_visibility)
-	records=hud.job_skills
+	records=hud.job_skills.duplicate(true)
 	var toolbar := HFlowContainer.new()
 	add_child(toolbar)
 	search=LineEdit.new()
@@ -46,7 +49,7 @@ func configure(controller: Node) -> void:
 	search.text_changed.connect(func(_value: String) -> void: refresh())
 	toolbar.add_child(search)
 	type_filter=OptionButton.new()
-	for text: String in ["현재 직업 · 공용","액티브","패시브","전체 DB · 조회"]: type_filter.add_item(text)
+	for text: String in ["현재 직업 · 공용","액티브","패시브","등록 스킬 전체 · 조회"]: type_filter.add_item(text)
 	type_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(type_filter)
 	class_filter = OptionButton.new()
@@ -56,7 +59,7 @@ func configure(controller: Node) -> void:
 	class_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(class_filter)
 	grade_filter = OptionButton.new()
-	for grade: String in ["모든 등급","일반","고급","희귀","영웅","전설","신화","유일"]: grade_filter.add_item(grade)
+	for grade: String in ["모든 등급","일반","고급","희귀","영웅","전설","신화","유일","미확인"]: grade_filter.add_item(grade)
 	grade_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(grade_filter)
 	school_filter = OptionButton.new()
@@ -72,7 +75,7 @@ func configure(controller: Node) -> void:
 		refresh())
 	toolbar.add_child(school_filter)
 	var state: Dictionary = hud.character_state
-	add_child(UI.section("Lv.%d  %s  /  마법과 기술" % [state.get("level",1),state.get("job_class","기사")],14))
+	add_child(UI.section("Lv.%d %s / 등록 %d · 신규 %d" % [state.get("level",1),state.get("job_class","기사"),records.size(),hud.get_parent().original_skills.catalog.current_official.records.size()],14))
 	var body := Browser.new()
 	body.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	add_child(body)
@@ -127,6 +130,12 @@ func configure(controller: Node) -> void:
 		hud.get_parent().original_skills.catalog.buy_book(str(selected.id))
 		select(cards.get_selected_items()[0]))
 	book_button.name = "BuyOriginalSkillBook"
+	reagent_button = UI.button("스킬 재료 구입",func() -> void:
+		if not selected.is_empty():
+			hud.get_parent().original_skills.local_runtime.buy_reagents(selected)
+			select(cards.get_selected_items()[0]))
+	reagent_button.visible = false
+	actions.add_child(reagent_button)
 	book_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.add_child(book_button)
 	preview_container = SubViewportContainer.new()
@@ -145,8 +154,20 @@ func configure(controller: Node) -> void:
 		preview_container.visible = true
 		preview_vfx.clear()
 		preview_vfx.emit_skill(str(selected.id), "cast", Vector2(90,45))
-		preview_vfx.emit_skill(str(selected.id), "impact", Vector2(180,45)))
+		preview_vfx.emit_skill(str(selected.id), "impact", Vector2(180,45))
+		_fit_effect_preview(viewport))
 	side.add_child(preview_button)
+	official_toggle_preview = CheckButton.new()
+	official_toggle_preview.name = "OfficialTogglePreview"
+	official_toggle_preview.text = "ON/OFF 미리보기 · 전투 미적용"
+	official_toggle_preview.visible = false
+	official_toggle_preview.toggled.connect(func(on: bool) -> void:
+		if not bool(selected.get("runtime_blocked", false)): return
+		if on: preview_button.pressed.emit()
+		else:
+			preview_vfx.clear()
+			preview_container.visible = false)
+	side.add_child(official_toggle_preview)
 	use_button=UI.button("스킬 사용",func() -> void:
 		if not selected.is_empty(): hud.job_skill_pressed.emit(str(selected.get("name",""))))
 	use_button.name="UseSkill"
@@ -187,11 +208,16 @@ func refresh() -> void:
 		if not value is Dictionary: continue
 		var record: Dictionary=value
 		var activation := str(record.get("activation","active"))
-		if type_filter.selected!=3 and str(record.get("class","공용")) not in [job,"공용"]: continue
+		if bool(record.get("toggle_classified", false)) and str(record.name) == "슈팅 스타": activation = "passive"
+		if type_filter.selected != 3:
+			var allowed: Array = record.get("classes", [record.get("class", "공용")])
+			if job == "공용":
+				if str(record.get("class", "")) != "공용": continue
+			elif not allowed.has(job): continue
 		if grade_filter.selected > 0 and str(record.get("grade", "")) != grade_filter.get_item_text(grade_filter.selected): continue
 		if type_filter.selected==1 and activation=="passive": continue
 		if type_filter.selected==2 and activation!="passive": continue
-		if query!="" and not (str(record.get("name",""))+str(record.get("desc",""))).to_lower().contains(query): continue
+		if query!="" and not (str(record.get("name",""))+str(record.get("desc",""))+str(record.get("historical_aliases",[]))).to_lower().contains(query): continue
 		filtered.append(record)
 	filtered.sort_custom(func(a: Dictionary,b: Dictionary) -> bool:
 		var ga: int=UI.GRADES.keys().find(str(a.get("grade","일반")))
@@ -202,14 +228,19 @@ func refresh() -> void:
 		var passive := RULES.is_passive(record)
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
 		var icon: Texture2D = _icon_for_skill(record,learned)
-		cards.add_item(("" if learned else "미습득 ") + str(record.get("name",""))+"\n"+("패시브" if passive else "MP %d" % int(record.get("mp",0))),icon)
+		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(record.get("mp",0))
+		cards.add_item(("확인중 " if bool(record.get("runtime_blocked", false)) else "" if learned else "미습득 ") + str(record.get("name",""))+"\n"+subtitle,icon)
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
 		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)
 		cards.set_item_custom_bg_color(index,Color(color,.07))
 	if filtered.is_empty():
 		selected={}
+		official_toggle_preview.visible = false
 		detail.text="검색 조건에 맞는 스킬이 없습니다."
+		learn_button.disabled = true
+		book_button.disabled = true
+		preview_button.disabled = true
 		use_button.disabled=true
 		quick_button.disabled=true
 	else:
@@ -249,7 +280,24 @@ func _unlearned_icon(source: Texture2D) -> Texture2D:
 func select(index: int) -> void:
 	if index<0 or index>=filtered.size(): return
 	selected=filtered[index]
-	if selected.get("origin", "") == "LINEAGEM_20250617":
+	official_toggle_preview.set_pressed_no_signal(false)
+	official_toggle_preview.visible = bool(selected.get("toggle_classified", false)) and bool(selected.get("runtime_blocked",false))
+	reagent_button.visible = false
+	preview_button.disabled = false
+	if bool(selected.get("runtime_blocked", false)):
+		detail.text = CURRENT.detail_text(selected)
+		learn_button.disabled = true
+		book_button.disabled = true
+		use_button.disabled = true
+		quick_button.disabled = true
+		use_button.text = "실행 보류"
+		learn_button.tooltip_text = CURRENT.blocked_reason(selected)
+		book_button.tooltip_text = "습득 스킬북·입수/가격 미확인"
+		summon_controls.visible = false
+		cooldown.text = "확인된 수치만 표시 · 프리뷰 가능"
+		return
+	use_button.text = "스킬 사용"
+	if selected.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:
 		select_original()
 		return
 	var passive := RULES.is_passive(selected)
@@ -274,6 +322,9 @@ func original_field_text(value: String, field: Dictionary) -> String:
 	return "원작 미확인" if value.is_empty() else "원작 미확인 (게임 표시: %s)" % display
 
 func select_original() -> void:
+	if bool(selected.get("local_design",false)):
+		select_local()
+		return
 	var world: Node = hud.get_parent()
 	var service: TwilightOriginalSkillService = world.original_skills
 	var catalog: TwilightOriginalSkillCatalog = service.catalog
@@ -290,6 +341,8 @@ func select_original() -> void:
 	var acquisition: Dictionary = learning.get("book_acquisition",{})
 	var acquisition_text: String = "" if acquisition.get("value") == null else str(acquisition.value)
 	detail.text += "\n\n%s · %s\n습득 %s\n스킬북 가격 %s\n원작 입수처: %s\n사용 수치: TWILIGHT 설정" % [original_field_text(str(selected.grade),basic.get("grade",{})),original_field_text("패시브" if passive else "액티브",basic.get("activation",{})),original_field_text("Lv.%d" % int(selected.minimum_level),learning.get("minimum_level",{})),original_field_text("%d 아데나" % int(selected.book_cost),learning.get("adena_cost",{})),original_field_text(acquisition_text,acquisition)]
+	if catalog.current_official.mode_audit.has(str(selected.id)):
+		detail.text += "\n\n현재 공식 분류: 패시브 / 기존 게임 동작: 액티브\n기존 비용·행동·저장 호환을 위한 전환 검토 중"
 	if passive: detail.text = detail.text.replace("기본 재사용 %.1f초\n보정 후 재사용 %.1f초" % [base_cooldown,final_cooldown],"패시브 · 조건 충족 시 적용")
 	if passive: detail.text = detail.text.replace("지속시간 %.1f초" % float(skill.get("duration",0)),"상시 / 조건부 적용")
 	summon_controls.visible = str(selected.mode) == "summon" and learned
@@ -304,12 +357,15 @@ func select_original() -> void:
 	clock = 0
 
 func _process(delta: float) -> void:
+	if bool(selected.get("runtime_blocked", false)): return
 	clock-=delta
 	if clock>0 or hud==null or selected.is_empty(): return
 	clock=.15
 	var world: Node=hud.get_parent()
-	if selected.get("origin", "") == "LINEAGEM_20250617":
+	if selected.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:
 		use_button.disabled = not world.original_skills.ready(selected)
+		if bool(selected.get("local_design",false)) and selected.mode=="local_toggle":
+			use_button.text = "OFF · 범위 해제" if world.original_skills.local_runtime.is_on(selected) else "ON · 활성화"
 		var registration_error: String = world._quickslot_registration_error("skill",str(selected.id))
 		quick_button.disabled = not registration_error.is_empty()
 		quick_button.tooltip_text = registration_error
@@ -345,3 +401,45 @@ func _touch(event: InputEvent) -> void:
 		if dragging:
 			cards.get_v_scroll_bar().value-=event.relative.y
 			cards.accept_event()
+
+func _fit_effect_preview(viewport: SubViewport) -> void:
+	# Imported SPR origins can lie above the small preview. Fit the whole union
+	# here only; combat/world anchors and the underlying source frames stay intact.
+	var bounds := Rect2()
+	var found := false
+	for item: Dictionary in preview_vfx.live:
+		var sprite: AnimatedSprite2D = item.get("spx_sprite") as AnimatedSprite2D
+		if not is_instance_valid(sprite): continue
+		var texture: Texture2D = sprite.sprite_frames.get_frame_texture(sprite.animation, 0)
+		var origin: Vector2 = sprite.offset - texture.get_size() * .5 if sprite.centered else sprite.offset
+		var box := Rect2(sprite.position + origin * sprite.scale, texture.get_size() * sprite.scale)
+		bounds = bounds.merge(box) if found else box
+		found = true
+	viewport.canvas_transform = Transform2D.IDENTITY
+	if not found: return
+	var extent := Vector2(viewport.size)
+	var ratio := minf(1.0, minf((extent.x - 12) / maxf(1, bounds.size.x), (extent.y - 12) / maxf(1, bounds.size.y)))
+	var transform := Transform2D.IDENTITY.scaled(Vector2.ONE * ratio)
+	transform.origin = extent * .5 - bounds.get_center() * ratio
+	viewport.canvas_transform = transform
+
+func select_local() -> void:
+	var service: TwilightOriginalSkillService = hud.get_parent().original_skills
+	var catalog: TwilightOriginalSkillCatalog = service.catalog
+	var owned: bool = catalog.owned(selected)
+	var passive: bool = RULES.is_passive(selected)
+	detail.text = CURRENT.runtime_text(selected)
+	detail.text += "\n\n" + ("습득 완료" if owned else catalog.reason(selected))
+	learn_button.disabled = not catalog.reason(selected).is_empty()
+	learn_button.tooltip_text = catalog.reason(selected)
+	book_button.disabled = not catalog.reason(selected,true).is_empty() or int(hud.get_parent().gold)<int(selected.book_cost)
+	book_button.tooltip_text = "TWILIGHT 스킬북 %d 아데나" % int(selected.book_cost)
+	reagent_button.visible = not selected.get("items",{}).is_empty() or not selected.get("proc_items",{}).is_empty()
+	reagent_button.disabled = not catalog.permitted(selected)
+	reagent_button.tooltip_text = "TWILIGHT 재료 가격 · 명예 코인 100 / 정령옥 200 / 흑요석 500 아데나 (필요 수량 구입)"
+	use_button.disabled = not service.ready(selected)
+	use_button.text = "패시브 · 자동 발동" if passive else ("OFF · 범위 해제" if service.local_runtime.is_on(selected) else "ON · 활성화") if selected.mode=="local_toggle" else "스킬 사용"
+	quick_button.disabled = passive or not owned
+	summon_controls.visible = selected.mode=="summon" and owned
+	cooldown.text = "패시브 적용" if passive and owned else "미습득" if not owned else "ON" if service.local_runtime.is_on(selected) else "준비 / 재사용 확인"
+	clock = 0

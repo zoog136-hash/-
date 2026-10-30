@@ -6,6 +6,7 @@ const ELECTRIC = preload("res://scripts/skills/lightning_vfx_art.gd")
 const PATH := "res://data/skills/authored_vfx.json"
 const MAX_ATLASES := 8
 const MAX_RGBA_BYTES := 48 * 1024 * 1024
+var visual_inherits: Dictionary = {}
 var profiles: Dictionary = {}
 var preview_profiles: Dictionary = {}
 var entries: Dictionary = {}
@@ -17,11 +18,20 @@ func _init() -> void:
 	if parsed is Dictionary:
 		profiles = parsed.get("profiles", {})
 		preview_profiles = parsed.get("preview_profiles", {})
+	var local_path := "res://data/skills/local_design_missing12.json"
+	if FileAccess.file_exists(local_path):
+		var local_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(local_path))
+		if local_data is Dictionary:
+			for id: String in local_data.get("records",{}):
+				visual_inherits[id] = str(local_data.records[id].comparison.id)
 
 func profile_for(id: String) -> Dictionary:
 	var visited: Dictionary = {}
-	while (profiles.has(id) or preview_profiles.has(id)) and not visited.has(id):
+	while (profiles.has(id) or preview_profiles.has(id) or visual_inherits.has(id)) and not visited.has(id):
 		visited[id] = true
+		if not profiles.has(id) and not preview_profiles.has(id):
+			id = str(visual_inherits[id])
+			continue
 		var profile: Dictionary = profiles.get(id, preview_profiles.get(id, {}))
 		if not profile.has("inherits_visual"): return profile
 		id = str(profile.inherits_visual)
