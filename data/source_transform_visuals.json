@@ -13938,9 +13938,77 @@
         -42.4918060302734
       ],
       "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions."
+    },
+    "transform:108": {
+      "binding_id": "M45677",
+      "body_model_prefix": 3744.0,
+      "canvas_original_grid": [
+        -72.0,
+        -120.0,
+        120.0,
+        60.0
+      ],
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "f4a68aca182a3e8e02aaecddcd77cc63eb46b277d3319c461306963d57559ba4"
+      },
+      "foot_in_canvas": [
+        96.0,
+        142.0
+      ],
+      "foot_original_grid": [
+        24.0,
+        22.0
+      ],
+      "foot_review": "Local cosmetic boot/robe ground projection visually reviewed. Fixed local robe-bottom ground projection at native grid (24,22), reviewed against south idle sequence; not a recovered anatomical/client anchor. All gameplay offsets remain unchanged.",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45677/SpriteFrames.tres",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "grade": "희귀",
+      "identity_basis": "Reviewed Laya title alias: source NPC 법령군왕 라이아 / original 蕾雅 and game 마령군왕 라이아. Both show the same silver-haired dark-robed ornate headdress and ringed staff silhouette. Named identity plus visual comparison, not numeric ID or modern pixel equality.",
+      "name": "마령군왕 라이아",
+      "pixel_scale": 0.847058823529412,
+      "required_layout": "still",
+      "reuse_without_png_copy": true,
+      "same_model_aliases": {
+        "activate": "idle",
+        "cast": "attack",
+        "corpse": "death",
+        "despawn": "death",
+        "energy": "idle",
+        "equip": "idle",
+        "float": "idle",
+        "ranged_attack": "attack",
+        "recovery": "attack",
+        "special": "attack",
+        "summon": "idle",
+        "turn": "idle",
+        "unequip": "idle"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45677/atlas.png": "9be396fb28d922b8dda7b0037a5c6399b784f0b651bfdb04228d17c96409c0e4",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45677/portrait.png": "6e5a9c3265a25d764cb601152df9ee1c7140aa0d56af1b9936180471289e2f63"
+      },
+      "source": "source1",
+      "source_direction_limit": "All six source roles retain eight reviewed source headings; turn/cast and other unsupported game roles are documented same-body substitutions.",
+      "source_model": "reviewed-monster:45677",
+      "source_npc_id": "45677",
+      "sprite_offset": [
+        0.0,
+        -44.0470581054688
+      ],
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions."
     }
   },
-  "remaining_candidates": 324,
+  "remaining_candidates": 323,
   "definition_only": [
     "드래곤 슬레이어"
   ],
@@ -13967,7 +14035,7 @@
   "remaining_scope": "Unlinked current normal-through-legend game cards. This does not assert corresponding source art exists.",
   "comparison_scope": {
     "current_game_eligible_cards": 382,
-    "linked_cards": 58,
+    "linked_cards": 59,
     "source_sql_polymorph_definitions": 297,
     "source_name_and_selected_model_links": 19,
     "source_structural_candidates_not_confirmed": 74,
