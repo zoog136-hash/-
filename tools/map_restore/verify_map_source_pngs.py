@@ -13,6 +13,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = Path('external_map_packs/source_pngs')
 PLANS = ('data/maps/native_png_plan.json', 'data/maps/aden_faith_png_plan.json')
+RETIRED = 'RETIRED_FROM_PLAYABLE_PLANS'
 
 
 def flat_name(value):
@@ -31,7 +32,15 @@ def verify(root, restore_to=None, decode=False, require_tracked=False):
     for plan in PLANS:
         expected.update(json.loads((root / plan).read_text())['sources'])
     rows = manifest['sources']
-    if {r['file'] for r in rows} != set(expected) or len(rows) != len(expected):
+    # A source retired from every playable plan (e.g. Aden.png after the
+    # source84 Aden replaced it) keeps its original bytes and is still fully
+    # verified against its own pinned SHA-256/size, but no plan may use it.
+    retired = {r['file']: r for r in rows if r.get('plan_status') == RETIRED}
+    active = [r for r in rows if r['file'] not in retired]
+    if set(retired) & set(expected):
+        raise ValueError('Retired original source is still referenced by a map plan')
+    if ({r['file'] for r in active} != set(expected) or len(active) != len(expected)
+            or len(retired) + len(active) != len(rows)):
         raise ValueError('Missing or duplicate original source')
     tracked = set()
     if require_tracked:
@@ -52,7 +61,7 @@ def verify(root, restore_to=None, decode=False, require_tracked=False):
         stage.mkdir()
         for row in rows:
             name = flat_name(row['file'])
-            spec = expected[name]
+            spec = retired.get(name) or expected[name]
             for key in ('bytes', 'sha256', 'size', 'mode', 'alpha'):
                 if row.get(key) != spec[key]:
                     raise ValueError(f'{name}: source differs from the authenticated map plan')

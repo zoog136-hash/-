@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from PIL import Image
-from verify_map_source_pngs import PLANS, SOURCE, verify
+from verify_map_source_pngs import PLANS, RETIRED, SOURCE, verify
 
 
 class SourceBytesTest(unittest.TestCase):
@@ -62,6 +62,35 @@ class SourceBytesTest(unittest.TestCase):
 
     def test_manifest_cannot_replace_authenticated_original(self):
         self.manifest['sources'][0]['sha256'] = '0' * 64
+        self.save_manifest()
+        with self.assertRaises(ValueError):
+            verify(self.root)
+
+
+    def _retire_from_plans(self):
+        for plan in PLANS:
+            (self.root / plan).write_text(json.dumps({'sources': {}}))
+        self.manifest['sources'][0]['plan_status'] = RETIRED
+        self.save_manifest()
+
+    def test_retired_source_is_still_byte_verified(self):
+        self._retire_from_plans()
+        output = Path(self.temporary.name) / 'restored'
+        report = verify(self.root, output, decode=True)
+        self.assertEqual(report['original_pngs'], 1)
+        self.assertEqual((output / 'Aden.png').read_bytes(), self.original)
+        (self.root / SOURCE / 'Aden.png.part002').write_bytes(b'corrupt bytes')
+        with self.assertRaises(ValueError):
+            verify(self.root)
+
+    def test_unmarked_orphan_source_still_rejected(self):
+        for plan in PLANS:
+            (self.root / plan).write_text(json.dumps({'sources': {}}))
+        with self.assertRaises(ValueError):
+            verify(self.root)
+
+    def test_retired_source_cannot_stay_in_a_plan(self):
+        self.manifest['sources'][0]['plan_status'] = RETIRED
         self.save_manifest()
         with self.assertRaises(ValueError):
             verify(self.root)
