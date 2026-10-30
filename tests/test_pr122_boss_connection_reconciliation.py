@@ -1,4 +1,4 @@
-import copy, hashlib, json, sys, tempfile, unittest
+import copy, hashlib, json, re, sys, tempfile, unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from reconcile_pr122_boss_connections import reconcile, STAGING, CONNECTIONS, CATALOG
@@ -22,6 +22,28 @@ class ReconciliationTest(unittest.TestCase):
         self.assertEqual(after,expected);self.assertEqual(report['new_art_approvals'],0)
         self.assertEqual(json.loads((self.root/STAGING).read_text()),before)
         self.put(STAGING,after);self.assertEqual(reconcile(self.root)[2]['changes'],[])
+    def rewrite_track_spacing(self, whitespace):
+        p=self.root/self.resource
+        p.write_text(re.sub(r'"name":\s*&"',lambda _: '"name":'+whitespace+'&"',p.read_text()))
+        j=json.loads((self.root/CONNECTIONS).read_text())
+        j['connections'][0]['frames_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+        self.put(CONNECTIONS,j)
+    def test_track_names_accept_godot_serialization_whitespace(self):
+        for whitespace in ('', ' ', '   ', '\t'):
+            with self.subTest(whitespace=repr(whitespace)):
+                self.rewrite_track_spacing(whitespace)
+                self.assertEqual((self.root/self.resource).read_text().count('"name":'+whitespace+'&"'),33)
+                self.assertEqual(reconcile(self.root)[2]['verified_connections'],1)
+                self.rewrite_track_spacing(' ')
+    def test_compact_names_do_not_hide_an_actually_missing_track(self):
+        self.rewrite_track_spacing('')
+        p=self.root/self.resource
+        p.write_text(p.read_text().replace('"name":&"attack_6"',''))
+        j=json.loads((self.root/CONNECTIONS).read_text())
+        j['connections'][0]['frames_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+        self.put(CONNECTIONS,j)
+        with self.assertRaisesRegex(AssertionError,"Missing published tracks.*attack_6"):
+            reconcile(self.root)
     def test_stale_catalog_rejected(self):
         self.put(CATALOG,dict(profiles={self.key:dict(frames_path='res://other.tres')}))
         with self.assertRaisesRegex(AssertionError,'Catalog binding mismatch'):reconcile(self.root)
