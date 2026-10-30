@@ -35,7 +35,9 @@ def resolve(raw,t):
   result[lang]={'display':surface if not missing else None,'missing_token_ids':missing,'entries':entries,'table_sha256':TABLE_SHA[lang]}
  return result
 
-def main(a):
+def main(a, selected=None, review_selection_key='additional_identity_selection'):
+ global SELECTED
+ if selected is not None:SELECTED=selected
  root=a.root.resolve();src=a.source_input.resolve();inp=a.monster_input.resolve();desc=a.desc_input.resolve();work=a.work.resolve();work.mkdir(parents=True,exist_ok=True)
  for name,(_,expected)in INPUTS.items():assert sha(inp/name)==expected
  definitions={r['record_key']:r for r in map(json.loads,(inp/'metadata/source1_action_definitions.jsonl').read_text().splitlines())}
@@ -86,6 +88,7 @@ def main(a):
  subprocess.run([str(a.godot),'--headless','--path',str(root),'--script','res://tools/monsters/verify_monster70_reuse.gd','--',str(plan_path)],check=True)
  verified=integer(read(Path(str(plan_path)+'.verified.json')))
  verified['__native45165']=native;proof_locators['__native45165']={r['sha256']:[{'record_key':r['record_key'],'model_keys':r['model_keys'],'variant_contexts':r['variant_contexts'],'sha256':r['sha256']}] for r in native_records}
+ prior_order={r['source_npc_id']:i for i,r in enumerate(extra['records'])}
  extra['records']=[r for r in extra['records']if r['source_npc_id']not in SELECTED]
  for ident,(base_id,mid,named)in SELECTED.items():
   e=entities[ident];raw=sql[ident]['fields'];assert raw['impl']=='L1Monster'and raw['hascastle']=='0';assert(raw['gfxid'],raw['nameid'])==(str(e['gfx_id']),e['nameid']);assert sql[ident]['provenance']==e['source_sql']
@@ -106,12 +109,13 @@ def main(a):
   extra['records'].append(rec);extra['assets'].update(proof['assets'])
   e.update(status='active_source_identity',game_source_id=rec['sourceId'],game_name=name,desc_resolution=d,activation_review='monster70_review.json')
   print('IDENTITY_LINKED',ident,name,'shared_visual',base_id,'level',rec['lv'],'hp',rec['hp'])
+ extra['records'].sort(key=lambda r:prior_order[r['source_npc_id']] if r['source_npc_id'] in prior_order else len(prior_order)+list(SELECTED).index(r['source_npc_id']))
  write(root/'data/monsters/reviewed_source_additions.json',extra)
  catalog['game_records']=[g for g in catalog['game_records']if g.get('game_source_id')not in ['l1j_tw380_npc_'+i for i in SELECTED]]
  for r in extra['records']:
   if r['source_npc_id']in SELECTED:catalog['game_records'].append(dict(game_key='twilight:monster:'+hashlib.sha256(r['name'].encode()).hexdigest()[:16],name=r['name'],game_source_id=r['sourceId'],status='exact_source_identity',source_candidates=['source3:tw380:Taiwan:npc:'+r['source_npc_id']]))
  catalog['game_records'].sort(key=lambda g:g['name']);catalog['counts']=dict(collections.Counter(e['status']for e in catalog['entities']));catalog['reverse_counts']=dict(collections.Counter(g['status']for g in catalog['game_records']));catalog['active_game_species']=len(catalog['game_records']);write(root/'data/monsters/source_identity_catalog.json',catalog,True)
- resolve_all(root,request,sql,t,catalog,definitions,provenance)
+ resolve_all(root,request,sql,t,catalog,definitions,provenance,review_selection_key)
  selection=work/'habitat-selection.json';write(selection,{i:{'map_id':v[1],'named':v[2]}for i,v in SELECTED.items()})
  habitat_output=work/'habitats.json'
  subprocess.run([str(a.godot),'--headless','--path',str(root),'--script','res://tools/maps/build_monster70_identity_habitats.gd','--',str(selection),str(habitat_output)],check=True)
@@ -119,7 +123,7 @@ def main(a):
  habitats['rows']=[r for r in habitats['rows'] if str(r.get('source_npc_id','')) not in SELECTED]+integer(read(habitat_output))
  write(habitat_path,habitats)
 
-def resolve_all(root,request,sql,t,catalog,definitions=None,raw_records=None):
+def resolve_all(root,request,sql,t,catalog,definitions=None,raw_records=None,review_selection_key='additional_identity_selection'):
  definitions=definitions or {}
  review=read(root/'data/monsters/monster70_review.json');active={g['game_source_id'].removeprefix('l1j_tw380_npc_'):g['name']for g in catalog['game_records']if g['status']=='exact_source_identity'};known={}
  for g in catalog['game_records']:
@@ -170,7 +174,7 @@ def resolve_all(root,request,sql,t,catalog,definitions=None,raw_records=None):
    declarations.append({'model_key':m['model_key'],'definition_record_key':m['definition_record_key'],'definition_sha256':m['definition_sha256'],'declared_body_prefix':definition.get('base_sprite_id'),'declared_relations':definition.get('relation_metadata',[])})
   rows.append(dict(npc_id=id,source_transform_target=transform_target,source_name=raw['name'],nameid=raw['nameid'],gfx_id=int(raw['gfxid']),source_note=note,model_candidates=[m['model_key']for m in e['model_candidates']],model_declarations=declarations,status=status,reason=reason,existing_game_name_candidate=match,desc=d,source_sql=e['source_sql'],prototype_fields={k:raw[k]for k in ['impl','family','lvl','hp','ranged','transform_id','transform_gfxid','hascastle']},exact_same_display_model_name_npc_ids=sorted(tuple_groups[(raw['gfxid'],raw['nameid'],norm(raw['name']))]),provided_source_spawn_rows=provided_spawns,source_spawn_coverage='supplied_selective_spawns_cover_identity'if provided_spawns else 'not_covered_by_supplied_selective_spawns_not_proof_of_absence_in_original',missing_fields=missing))
  review.update(policy='Exact 198 SQL/DESC identities reviewed. Korean table range is not an identity gate. Shared graphics alone never prove duplicate identity. Explicit quest/siege remain excluded. Unresolved fields identify missing source context or composition, not missing translation.',rows=rows,counts=dict(collections.Counter(r['status']for r in rows)),desc_table_sha256=TABLE_SHA)
- review['additional_identity_selection']={k:{'visual_from_npc':v[0],'map_id':v[1],'local_named':v[2]}for k,v in SELECTED.items()};write(root/'data/monsters/monster70_review.json',review)
+ review[review_selection_key]={k:{'visual_from_npc':v[0],'map_id':v[1],'local_named':v[2]}for k,v in SELECTED.items()};write(root/'data/monsters/monster70_review.json',review)
  # Refresh the selected input custody and classification without activating any
  # other prototype. Legacy action/variant diagnostics remain snapshot evidence.
  by_id={e['npc_id']:e for e in catalog['entities']}

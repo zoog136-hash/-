@@ -393,6 +393,48 @@
         }
       ]
     },
+    "45487": {
+      "identity": {
+        "name": "지저 일렉카둠",
+        "sourceId": "l1j_tw380_npc_45487",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45487",
+        "source_npc_id": "45487",
+        "source_name_original": "地底伊萊克頓",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1616",
+        "raw_npc_nameid": "$3274",
+        "npc_sql_sha256": "0b2e65088d89bbc703c0a311066aa4eb5849de9fa6906ed49f3b36650829785b"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:weapon:8",
+          "item_name": "미스릴 단검",
+          "game_source_id": "422",
+          "grade": "고급",
+          "type": "단검",
+          "slot": "weapon",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45487",
+            "itemId": "8",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "7d236204f67129bc31eeab774b0442a617bd5ff92016a071ab5c85d5b9f4ac42",
+            "line": 4102,
+            "byte_offset": 307130,
+            "byte_length": 37
+          }
+        }
+      ]
+    },
     "45574": {
       "identity": {
         "name": "친위대장 카이트",

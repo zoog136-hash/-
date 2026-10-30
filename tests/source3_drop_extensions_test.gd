@@ -9,7 +9,7 @@ func check(ok:bool,label:String):
  if not ok:errors+=1;printerr("DROP_EXTENSION_FAIL ",label)
 func _initialize():
  var world=load("res://scripts/world.gd").new();world._load_data()
- var registry:Dictionary=EXTRA.registry();check(registry.size()==23,"exact reviewed new source identities")
+ var registry:Dictionary=EXTRA.registry();check(registry.size()==24,"exact reviewed new source identities")
  var seen:int=0;var by_id:Dictionary={}
  for row:Dictionary in world.monster_db:
   if row.has("source_npc_id"):by_id[str(row.source_npc_id)]=row
@@ -38,7 +38,7 @@ func _initialize():
    var original:String=str(candidates[0].item_name)
    old_catalog.l1j_monster_drops[str(row.name)]=[{"item_name":original}]
    for repeat:int in range(3):check(DROP._pick_equipment_entry(grade,[],old_catalog,rng,str(row.name),identity).item_name==original,"existing nonempty pool retains precedence")
- check(seen==40,"exact new SQL rows; one existing Barode row remains separate")
+ check(seen==41,"exact new SQL rows; one existing Barode row remains separate")
  check(EXTRA.candidates("전설",world.loot_catalog.by_name,registry["45651"].identity).is_empty(),"unreachable ordinary-monster legendary grade stays held")
  check(DROP.NORMAL_EQUIPMENT_RATES=={"일반":0.001,"고급":0.001,"희귀":0.001,"영웅":0.00015},"normal grade probabilities unchanged")
- world.free();print("SOURCE3_DROP_EXTENSIONS_RESULT identities=23 rows=",seen," checks=",checks," errors=",errors);quit(0 if errors==0 else 1)
+ world.free();print("SOURCE3_DROP_EXTENSIONS_RESULT identities=24 rows=",seen," checks=",checks," errors=",errors);quit(0 if errors==0 else 1)

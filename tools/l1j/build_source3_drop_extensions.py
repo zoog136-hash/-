@@ -55,7 +55,7 @@ def build(root, source, runtime):
         assert all(old['item_name']!=target['item_name'] for old in group['drops'])
         group['drops'].append(target)
     output=dict(schema=1,policy='EXISTING_SUCCESSFUL_GRADE_EMPTY_POOL_ONLY',source_chance_policy='Positive source chance proves membership only; never evaluate or convert it. Existing TWILIGHT grade roll and equal within-grade weights remain.',item_links_sha256=sha((root/'data/l1j/source3_item_links.json').read_bytes()),source_drop_input_sha256=sha((source/'source_drops.jsonl').read_bytes()),entries=grouped,holds=holds)
-    assert len(grouped)==23 and sum(len(r['drops']) for r in grouped.values())==40 and len(holds)==1, 'Reviewed drop inventory changed; refusing to overwrite registry'
+    assert len(grouped)==24 and sum(len(r['drops']) for r in grouped.values())==41 and len(holds)==1, 'Reviewed drop inventory changed; refusing to overwrite registry'
     path=root/'data/monsters/source3_drop_extensions.json';path.write_text(json.dumps(output,ensure_ascii=False,indent=2)+'\n')
     print('DROP_EXTENSIONS',len(grouped),'identities',sum(len(r['drops']) for r in grouped.values()),'rows',len(holds),'holds','sha256',sha(path.read_bytes()))
 if __name__=='__main__':
