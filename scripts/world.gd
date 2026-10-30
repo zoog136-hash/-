@@ -3393,16 +3393,22 @@ func _is_instance_equipped(id: String) -> bool:
 	return false
 
 func _sync_item_instances() -> void:
+	# Group physical IDs by name once, in item_instances order. Rescanning every
+	# instance for every bag entry cost ~22-29 ms per call for 120 enhanceable
+	# names / 400 instances (measured); this runs on every HUD refresh and save.
+	# Edits below only touch the current name's IDs, so the groups stay valid.
+	var ids_by_name: Dictionary = {}
+	for key: Variant in item_instances.keys():
+		var owner_name: String = str((item_instances[key] as Dictionary).get("name", ""))
+		if not ids_by_name.has(owner_name): ids_by_name[owner_name] = [] as Array[String]
+		(ids_by_name[owner_name] as Array[String]).append(str(key))
 	for raw_name: Variant in inventory.keys():
 		var name_value: String = str(raw_name)
 		var record: Dictionary = _find_catalog_item_record(name_value)
 		if _enhancement_kind_for_record(record) == "":
 			continue
 		var desired: int = maxi(0, int(inventory.get(name_value, 0)))
-		var ids: Array[String] = []
-		for key: Variant in item_instances.keys():
-			if str((item_instances[key] as Dictionary).get("name", "")) == name_value:
-				ids.append(str(key))
+		var ids: Array[String] = (ids_by_name.get(name_value, [] as Array[String]) as Array[String]).duplicate()
 		var legacy_import: bool = ids.is_empty() and enhancement_levels.has(name_value)
 		while ids.size() < desired:
 			var unique_id: String = str(next_item_instance_id)
@@ -5150,8 +5156,13 @@ func _run_auto_item_quickslots(delta: float) -> void:
 			continue
 		seen[item] = true
 		active_entries.append(entry)
-	var records: Dictionary = ITEM_CATALOG_LOOKUP.find_many(
-		[catalog_db.get("아이템", []), item_db], item_instances, seen.keys())
+	# Runs every 0.2 s: use the indexed single-name lookup (same results as
+	# find_many, verified by catalog_item_lookup_index_test) instead of a scan.
+	var records: Dictionary = {}
+	var sources: Array = [catalog_db.get("아이템", []), item_db]
+	for raw_item: Variant in seen.keys():
+		var found: Dictionary = ITEM_CATALOG_LOOKUP.find_one(sources, item_instances, str(raw_item))
+		if not found.is_empty(): records[str(raw_item)] = found
 	for entry: Dictionary in active_entries:
 		var item: String = str(entry.get("id", ""))
 		var record: Dictionary = records.get(item, {})
