@@ -519,7 +519,9 @@ func apply_frames(sprite: Node2D) -> void:
 		var hit_progress: float = 1.0 - _native_hit_clock / _native_hit_duration if _native_hit_presenting() else 1.0 - hit_clock / hit_duration
 		frame_value = _weighted_frame(track, hit_progress)
 	elif move_ratio > 0.01 and not presenting_attack and _resolved_role in ["walk", "run", "legacy"]:
-		if source_timed:
+		# Explicit variable-pose locomotion keeps its authored duration sum.
+		# This opt-in does not change attack, reaction or gameplay clocks.
+		if source_timed or bool(frames.get_meta("twilight_weighted_locomotion_durations", false)):
 			var ends: PackedFloat64Array = track.ends
 			frame_value = _weighted_frame(track, fposmod(gait, ends[-1]) / ends[-1])
 		else:

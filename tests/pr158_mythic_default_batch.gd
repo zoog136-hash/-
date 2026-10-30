@@ -73,6 +73,47 @@ func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dic
 		check(int(south.selected_picture_row)==2 and int(south.production_death_directions)==1 and int(south.selected_pose_slots)==6,"Only actual South death row selected; no eight-death completion claim")
 	report.cases.append({"id":key,"default_frames":frames.resource_path,"restored_idle_clips":existing.size(),"new_camera_idle_clips":new_sources.size(),"selected_native_idle_source_poses":restored_poses,"remaining_guard_alias_clips":guards.size(),"authored_source_poses":authored_poses,"runtime_timeline_references":runtime_refs})
 
+func refined_run_layout_contract(frames: SpriteFrames, key: String, played_tracks: Dictionary, played_poses: Dictionary) -> void:
+	var metadata: Dictionary=frames.get_meta("twilight_run_source_layout_refinement")
+	var proof: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(str(metadata.provenance)))
+	check(key=="134" and FileAccess.get_sha256(frames.resource_path)==str(proof.candidate_sha256),"Exact reviewed five-column RUN resource SHA")
+	var original: SpriteFrames=load(str(proof.original_resource))
+	check(FileAccess.get_sha256(str(proof.original_resource))==str(proof.original_resource_sha256) and FileAccess.get_sha256(str(proof.source))==str(proof.source_sha256),"Preserved resource and original RGBA source SHA")
+	check(not bool(proof.source_pixels_edited) and bool(frames.get_meta("twilight_weighted_locomotion_durations",false)),"Metadata-only extraction and explicit locomotion-only weighted clock")
+	var registration: Dictionary=frames.get_meta("twilight_reviewed_frame_registration")
+	var original_registration: Dictionary=original.get_meta("twilight_reviewed_frame_registration")
+	var restored_poses:=0
+	for clip: String in frames.get_animation_names():
+		if not clip.begins_with("run_") or int(clip.trim_prefix("run_")) in [3,7]:
+			check(frames.get_frame_count(clip)==original.get_frame_count(clip) and registration[clip]==original_registration[clip] and frames.get_animation_speed(clip)==original.get_animation_speed(clip) and frames.get_animation_loop(clip)==original.get_animation_loop(clip),"All non-RUN and explicitly unrepaired SW/NE clocks/registration unchanged")
+			for phase in range(frames.get_frame_count(clip)):
+				var texture: AtlasTexture=frames.get_frame_texture(clip,phase) as AtlasTexture
+				var prior: AtlasTexture=original.get_frame_texture(clip,phase) as AtlasTexture
+				check(texture.atlas.resource_path==prior.atlas.resource_path and texture.region==prior.region and texture.margin==prior.margin and frames.get_frame_duration(clip,phase)==original.get_frame_duration(clip,phase),"Untouched source pixels/Atlas geometry/phase duration retained")
+			continue
+		var source: Dictionary=proof.clips[clip]
+		var count:=frames.get_frame_count(clip)
+		check(count==int(source.selected_new_source_poses) and count==source.source_poses.size() and count==int(metadata.runtime_RUN_frame_counts[clip]),"Only four/five genuine source poses; no duplicate padding")
+		var unique: Dictionary={}
+		var units:=0.
+		for phase in range(count):
+			var pose: Dictionary=source.source_poses[phase]
+			unique[int(pose.component_id)]=true
+			var texture: AtlasTexture=frames.get_frame_texture(clip,phase) as AtlasTexture
+			var rect: Array=pose.source_region
+			check(texture.atlas.resource_path==str(proof.source) and texture.region==Rect2(rect[0],rect[1],rect[2],rect[3]),"Exact full connected-part rectangle from existing source")
+			check(int(pose.other_figure_core_pixels_inside_region)==0 and int(pose.own_component_pixels_missing)==0 and int(pose.component_alpha_threshold_exclusive)==32,"Unchanged strict ownership threshold, no foreign or omitted own core")
+			check(registration[clip].frames[phase].anchor==Vector2(pose.anchor[0],pose.anchor[1]) and registration[clip].frames[phase].scale==Vector2(.75,.75) and registration[clip].frames[phase].target==Vector2.ZERO,"Pinned source C/world scale and actor root preserved")
+			var actual_C: Vector2=texture.region.position+registration[clip].frames[phase].anchor-texture.margin.position
+			check(actual_C.is_equal_approx(Vector2(pose.source_C[0],pose.source_C[1])) and is_equal_approx(actual_C.y,float(source.preserved_vertical_C)),"Five source columns replace six; original vertical contact plane retained")
+			units+=frames.get_frame_duration(clip,phase)
+		check(unique.size()==count and is_equal_approx(units,6.) and is_equal_approx(units/frames.get_animation_speed(clip),.48),"Distinct source poses and original .48-second RUN loop")
+		restored_poses+=count
+	check(restored_poses==28 and int(metadata.retained_unrepaired_RUN_timeline_references)==12,"Six corrected views28 poses; two unrepaired views12 old timeline refs explicitly separate")
+	check(int(frames.get_meta("twilight_authored_track_count"))==31 and int(frames.get_meta("twilight_authored_pose_count"))==178,"Source counts exclude retained unresolved RUN fragments")
+	check(played_tracks.size()==33 and played_poses.size()==190 and int(frames.get_meta("twilight_runtime_timeline_reference_count"))==190,"All190 actual timeline refs played; not190 new or quality-approved drawings")
+	check(frames.get_meta("twilight_new_S_death_source")==original.get_meta("twilight_new_S_death_source"),"Original South-only death source policy unchanged")
+
 func run() -> void:
 	root.size=Vector2i(1280,720)
 	var before_mode:=OS.get_environment("PR158_REVIEW_MODE")=="before"
@@ -132,7 +173,10 @@ func run() -> void:
 					var name:=role+"_"+suffix
 					check(frames.has_animation(name),"Dedicated actual track "+key+" "+name)
 					var expected:=frames.get_frame_count(name)
-					if role=="run":check(expected==6,"Six genuine RUN poses")
+					if role=="run":
+						if frames.has_meta("twilight_run_source_layout_refinement"):
+							check(expected==int(frames.get_meta("twilight_run_source_layout_refinement").runtime_RUN_frame_counts[name]),"Exact declared genuine source count for five-column RUN repair")
+						else:check(expected==6,"Six genuine RUN poses")
 					var velocity: Vector2=aim*actor.move_speed if role=="run" else Vector2.ZERO
 					var strike_start:=strikes.size()
 					var sequence: int=-1
@@ -192,6 +236,8 @@ func run() -> void:
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All legendary required tracks and poses actually played")
 				if report.errors.is_empty():
 					print("PR158_LEGENDARY_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
+			elif frames.has_meta("twilight_run_source_layout_refinement"):
+				refined_run_layout_contract(frames,key,exercised_tracks,exercised_poses)
 			elif frames.has_meta("twilight_refinement_existing_idle_sources"):
 				refined_idle_contract(frames,key,exercised_tracks,exercised_poses)
 			elif retained4:
