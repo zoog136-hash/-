@@ -5861,7 +5861,8 @@
         "proc_items": {},
         "passive_stats": {},
         "book_name": "마법서 (그레이터 힐)",
-        "auto_hp_threshold": 0.65
+        "auto_hp_threshold": 0.65,
+        "desc": "TWILIGHT 설계: 자신을 95 치유한다. 원작의 타인 대상 치유·언데드 피해는 구현하지 않았다."
       },
       "fields": {
         "power": {
@@ -5875,11 +5876,11 @@
         },
         "mp": {
           "value": 20,
-          "status": "official_guide",
+          "status": "local_design",
           "basis": {
             "skill": "힐",
             "id": "lm_f4de23ba3ed83d50",
-            "note": "TWILIGHT adaptation; not an official LineageM formula"
+            "note": "TWILIGHT self-heal uses MP20. Official table has target-dependent costs and does not establish this self-heal charge."
           }
         },
         "hp": {
