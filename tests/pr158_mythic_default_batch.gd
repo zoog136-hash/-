@@ -128,6 +128,13 @@ func run() -> void:
 				check(int(frames.get_meta("twilight_new_authored_directions"))==0,"Retained four-view routing creates no new eight-direction artwork")
 				if report.errors.is_empty():
 					print("PR158_RETAINED_DEFAULT_PASS id=",key," source_directions=4 policy_tracks=20 policy_poses=120 retained_tracks=",count," candidate_injection=0")
+			elif frames.has_meta("twilight_retained_death_source"):
+				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"Eight-view living tracks plus declared existing same-form S death all play")
+				check(int(frames.get_meta("twilight_authored_track_count"))==32 and int(frames.get_meta("twilight_authored_pose_count"))==192,"Authored counts exclude existing retained death references")
+				var retained_death: Dictionary=frames.get_meta("twilight_retained_death_source")
+				check(retained_death.same_actor=="transform:"+key and retained_death.source_track=="death_down" and int(retained_death.new_authored_poses)==0,"Same actor retained South death only; no new death art claim")
+				for phase in range(6):
+					check(frames.get_frame_texture("death_2",phase).atlas.resource_path==str(retained_death.source),"Existing own death atlas preserved")
 			elif frames.has_meta("twilight_declared_presentation_aliases"):
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"Every declared reaction-fallback presentation reference played")
 				check(int(frames.get_meta("twilight_authored_track_count"))==32 and int(frames.get_meta("twilight_authored_pose_count"))==192,"Authored count excludes six reaction alias references")

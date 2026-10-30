@@ -1,0 +1,349 @@
+{
+  "actor": "transform:399",
+  "candidate": "res://assets/actors/eight_direction/native_production/mythic_399/r162/SpriteFrames.tres",
+  "candidate_sha256": "399ba97cd902b130629886730d5fba15c3b153bfc078acf1979dff28d43ff37a",
+  "prior_32_clip_candidate": "res://assets/actors/eight_direction/native_production/mythic_399/r154/SpriteFrames.tres",
+  "prior_32_clip_candidate_sha256": "51e5fcc4119dfa87d64f9a8d42ef83a304d98c4acdc6de151e2d90996c68330e",
+  "prior_default_profile": {
+    "frames_path": "res://assets/actors/eight_direction/native_production/mythic_399/retained_r158/SpriteFrames.tres",
+    "layout": "directional8",
+    "animation_names": {},
+    "pixel_scale": 1.05,
+    "sprite_offset": [
+      0.0,
+      -53.550000000000004
+    ],
+    "embedded_shadow": false,
+    "authored_motion_weight": 0.0,
+    "hit_recoil": 0.0,
+    "color_tint": "ffffff",
+    "reference_speed": 210.0,
+    "movement_fps": 10.0,
+    "movement_cadence_width_ratio": 1.0,
+    "native_width_ratio": 1.0,
+    "attack_hit_frame": 3,
+    "action_hit_frames": {
+      "attack": 3
+    },
+    "floating": true
+  },
+  "authored_clips": 32,
+  "authored_pose_references": 192,
+  "retained_same_actor_S_death_clips": 1,
+  "retained_same_actor_S_death_pose_references": 6,
+  "runtime_total_clips": 33,
+  "runtime_total_pose_references": 198,
+  "new_authored_images_or_poses": 0,
+  "retained_death": {
+    "source": "res://assets/catalog_motion/transform/399.webp",
+    "source_sha256": "0c20aeb428735511807a0673f7b25c613fd5a4ff70b66c5494acaa07309fb8e2",
+    "source_track": {
+      "name": "death_down",
+      "row": 5,
+      "count": 6,
+      "fps": 13,
+      "loop": false
+    },
+    "source_cell": [
+      144,
+      160
+    ],
+    "source_contact": [
+      72.0,
+      131.0
+    ],
+    "prior_world_pixel_scale": 1.05,
+    "new_virtual_canvas": 246,
+    "new_margin": [
+      51.0,
+      22.75,
+      102,
+      86
+    ],
+    "effective_retained_pixel_scale": 1.0501976579398822,
+    "basis": "Preserve existing same399 retained death source contact and previous world size through per-Atlas virtual canvas; no pixel resampling or image edit. Actual Main must verify no big identity/scale swap."
+  },
+  "redirected_existing_sources": [
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-attack-draft-v01.png",
+      "sha256": "52074f8a8c6ffae6fc8044f7623cb6b763425ab77bd7309a61d7a99aa34d4c86",
+      "bytes": 2586371,
+      "git_blob_oid": "c60c1391a15c6057e2e6452beb4c13d8e73ac17b",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-hit-draft-v01.png",
+      "sha256": "dcfdfe75896304d876bbc35b5ce98306b5da9d07b7bc30f74c02b48037b46227",
+      "bytes": 2542932,
+      "git_blob_oid": "ee223940dcc4813ab667cb92a2483c2d54600eb7",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-idle-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-idle-draft-v01.png",
+      "sha256": "7a23a90531f0966df91c869010389008a0f384608dbb872af440e317a4348e60",
+      "bytes": 2524172,
+      "git_blob_oid": "884f978539f316076c67f241404ea95a0d5feb7f",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-run-draft-v01.png",
+      "sha256": "1957bf52c2ec5b2bc39533f378ca6afaaa2d71ad8367ed27d3e71211814fe73e",
+      "bytes": 2552214,
+      "git_blob_oid": "883c7e30c612054c531c7068e66310454bb16283",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-attack-draft-v01.png",
+      "sha256": "d25958fb016b11d9ab3d9dac41ba638ef23065f72b0bb86ec2a2aa7658b1e33a",
+      "bytes": 2696038,
+      "git_blob_oid": "63248db6616bbbe50a76ca6e605437b4e3547cdc",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-hit-draft-v01.png",
+      "sha256": "792064b77948951be18ff9c13b6be497d6c6a6166389e7971222b1005647de76",
+      "bytes": 2704755,
+      "git_blob_oid": "2f8724d1568bbdcd92c0653da75e3f0b6b00ce5b",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-idle-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-idle-draft-v01.png",
+      "sha256": "709a2d3598b36084a2df52b8b3932d72cb808c8671b9ffb4691199321f3687be",
+      "bytes": 2692249,
+      "git_blob_oid": "1655facb4278dda57c206dbbac03d9ff3e60382f",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-N-run-draft-v01.png",
+      "sha256": "00be40d385ea91a24c91a7ef1f7e1e283137739c572682ddfcd48e959e550de8",
+      "bytes": 2539406,
+      "git_blob_oid": "9390a5d9b32e1710e9bb9c5ce4c5d869bc65c89d",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-attack-draft-v01.png",
+      "sha256": "b84f3311b22f2a073d0efda1b41d42945be5ca21ebc78f157282bbf450bfc89f",
+      "bytes": 2505242,
+      "git_blob_oid": "7d5d8323ee2b26dbabf62fd9cacf412d9f33b3a2",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-hit-draft-v01.png",
+      "sha256": "ee764e4c85236b43e56efe140721d9c5f3572ce82d2fcaeab057dd2bf25ed732",
+      "bytes": 2754618,
+      "git_blob_oid": "ee874fea1495ae14e6294659786fbcd3930577a1",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-idle-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-idle-draft-v01.png",
+      "sha256": "380abca73cd86a090ef2c39074009b0ffa6b3548858247510fcffc2d2a9259a6",
+      "bytes": 2711202,
+      "git_blob_oid": "43491f6ab3314f6dd0d20bde2bb306b177d04f5d",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NE-run-draft-v01.png",
+      "sha256": "83f1611d89ba6061ea5ee73c547832eddd6246857ed206630c4e1f00a29b9517",
+      "bytes": 2512421,
+      "git_blob_oid": "970ee17f13a66f545b4b776832afb78887b38416",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-attack-draft-v01.png",
+      "sha256": "675dccb3fb7babd7fff854ad759ea4f764f24f552f1fcebfc201ab3145037ad6",
+      "bytes": 2692418,
+      "git_blob_oid": "a14e3477e92aad64cbff50ab005b5dfa519b652c",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-hit-draft-v01.png",
+      "sha256": "c24bf2a4cd936f3da569745dff8166a82920cb87ecbdfdced273d85122687cd5",
+      "bytes": 2646355,
+      "git_blob_oid": "bb21e55f2f29a8841ba2c35990a8aef65282ae50",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-idle-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-idle-draft-v01.png",
+      "sha256": "1b327e90e53401b37ccf18cf45da5033be425de9fe70ec87aef00283f0ee1f12",
+      "bytes": 2505942,
+      "git_blob_oid": "7fc06f27fdaebf95f6d7d2e4a0f6713a965f314a",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-NW-run-draft-v01.png",
+      "sha256": "5b61c24ab8c3e96dfefe24cf67e2343649e1757575de1dddd7b731f04e779ae8",
+      "bytes": 2590238,
+      "git_blob_oid": "599002e78d9eee3bc75fc059a41aebb01205c838",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png",
+      "sha256": "4a1fdb45dbd24205342a241e2e7e6e19308653c3a5ee301c261cb936de400125",
+      "bytes": 2462927,
+      "git_blob_oid": "06bbd69c18bb3d8812411f3049fc08d5e671416c",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-hit-draft-v01.png",
+      "sha256": "e56d7e1f1e481490feb75987abc0ab5d4c9af3e5db2de0a65e10f09ea134b5e6",
+      "bytes": 2646877,
+      "git_blob_oid": "683d9240859d6f85d5252c9c133b096147ad3e3a",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-run-draft-v01.png",
+      "sha256": "a546abe272ef8b48f3daeda91b2d2df7b252dff9acfc9b3b8d6391cce4772ee4",
+      "bytes": 2487069,
+      "git_blob_oid": "413bcda4ecf23110a87046c54494d515fb536c27",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-attack-draft-v01.png",
+      "sha256": "49219f1d854aaa3b3a49db1372f83fe7d0c351842edf6a064666190652f5653a",
+      "bytes": 2766404,
+      "git_blob_oid": "04f18cbb94ea3775669923329c32479911b5853b",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-hit-draft-v01.png",
+      "sha256": "7e856471b7dddcf94a6259b318739d155a9e117050fb1799b4c899bdfaf4c226",
+      "bytes": 2696077,
+      "git_blob_oid": "dfdfaafe9259a54f9966907ee643dc61b380bc8c",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-idle-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-idle-draft-v01.png",
+      "sha256": "51963f7e220fa47a6b18387754478ca7d04337f7e3110da5e5e6e55679c6ef53",
+      "bytes": 2723426,
+      "git_blob_oid": "d2d2c4c8a79819dcf437ae573e0b1cd532eeabb1",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SE-run-draft-v01.png",
+      "sha256": "04c6bf8eface26db29eb3bf37cc84f1a352f6e73b96729095ff4501f928caf02",
+      "bytes": 2613827,
+      "git_blob_oid": "74716d279f36527ab47115fbaa2fd2b8ea3c703c",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-attack-draft-v01.png",
+      "sha256": "8d15395e44befc2d5473c8445c622d7a14227c7192f6a5946dff7bde62013cf1",
+      "bytes": 2804515,
+      "git_blob_oid": "e95796e8c5ff71cf2875e0991b8b7ec8cbff6db4",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-hit-draft-v01.png",
+      "sha256": "dd2a9f70f2dea8fcd0eb2ecfaaa21983792e0e0ee620ae8ca1dd9f3109fcbcee",
+      "bytes": 2730258,
+      "git_blob_oid": "409911bec6d0f0582a880062a1a2f735f75b5938",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-idle-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-idle-draft-v01.png",
+      "sha256": "de9b3d775739387c8d5e6ad2243379256709a4470cc2d094e8fce1e7cf57a1ce",
+      "bytes": 2681709,
+      "git_blob_oid": "9983117d6b9999db7d6bd60ad74e6966aed65344",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-SW-run-draft-v01.png",
+      "sha256": "2baf17517176803e65137414f68808db50be534214925953fa9f7a2a6852195a",
+      "bytes": 2785069,
+      "git_blob_oid": "18cde3c005b815305e0cca70fba009fffa12d21c",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-attack-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-attack-draft-v01.png",
+      "sha256": "d446113f8a63fa7396eef84fbff9fe430cf71f6b77c779a550a7c0715460fa28",
+      "bytes": 2591158,
+      "git_blob_oid": "5faecedb1e2bcc5889b0564f696024431fea0f96",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-hit-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-hit-draft-v01.png",
+      "sha256": "85d26f9a6a1e6b4fb0d0cf7423590af3c0f19105c2d4c05eb6a6f5c8e28a8052",
+      "bytes": 2586612,
+      "git_blob_oid": "d274f355b89a5c34e1f95aac081e4085df9ef22c",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-idle-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-idle-draft-v01.png",
+      "sha256": "69eb7f8919cd4baa5afda470d639db7297c8a50e63a97ce92b083e092027d9b8",
+      "bytes": 2578705,
+      "git_blob_oid": "7b41fa190040f3202c24ac70b24eff67042deb64",
+      "existing_blob_local": true
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-run-draft-v01.png",
+      "path": "res://assets/actors/eight_direction/runtime_sources_r162/remake/evidence/pr122-mythic-detailed/batch03/transform_399-W-run-draft-v01.png",
+      "sha256": "70de18b15eeb0e86ab69d6b3b682f12c81ea37430b64863c546137d80a5eb190",
+      "bytes": 2630876,
+      "git_blob_oid": "03ce1edcc4106be243d087c0387785bd9c6e3b36",
+      "existing_blob_local": true
+    }
+  ],
+  "export_exclusion_source_paths_remaining": 0,
+  "runtime_verified": true,
+  "formal_new_art_approval": false,
+  "same_identity_readonly_review": "Original399catalog, nativeS idle and retaineddeath show same purple-armored helmeted red-winged swordsman. Rough lower-resolution death is explicitly reused, not a new native collapse.",
+  "actual_Main_validation": {
+    "returncode": 0,
+    "elapsed_seconds": 23.05,
+    "engine_errors": 0,
+    "tracks": 33,
+    "clip_phase_pairs": 198,
+    "candidate_injections": 0,
+    "actual_normal_Player_movement_stop_turn_attack": true,
+    "single_marker3_HP_inventory_equipment_collision_preserved": true,
+    "same_Player_S_idle_to_existing_death_all6_and_terminal_hold": true,
+    "visual_review": "Parent reviewed eight-view compact and same-Player idle-to-retained-death sequence: purple armor/red wings/sword identity continues, no severe size/foot jump. Lower-resolution simple old death poses are explicitly reused, not newly drawn or native death completion.",
+    "receipts": [
+      {
+        "path": "/workspace/scratch/pr158-mythic-399-r162-main/process.json",
+        "sha256": "331dd3e8f8c1e6e1c7eec185c4d9613106b6a58fcf2c45acda620862c092a1ef"
+      },
+      {
+        "path": "/workspace/scratch/pr158-mythic-399-r162-main/report.json",
+        "sha256": "a65cc829bd56470c2c39be578092991c515c453c700433f412363a962b0298c3"
+      }
+    ],
+    "native_full_resource_import_PCK_APK_run": false
+  },
+  "all32_original_regions_margins_and_clock_blocks_preserved": true,
+  "new_native_pixel_scale_basis": {
+    "target_world_height": 110,
+    "staged_native_neutral_height": 436,
+    "pixel_scale": 0.25229357798165136
+  }
+}
