@@ -312,7 +312,7 @@ const EQUIPMENT_SLOT_LABELS: Dictionary = {
 
 var level: int = 35
 var experience: int = 100
-var exp_need: int = 1400
+var exp_need: int = maxi(1, EXP_PROGRESSION.table_requirement(35))
 var hp: int = 1832
 var max_hp: int = 1832
 var mp: int = 315
@@ -3856,7 +3856,7 @@ func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 		hud.show_message("아인하사드 축복이 최대치입니다")
 		return false
 	if base_name == "드래곤의 성수":
-		experience += 31920000
+		experience += EXP_PROGRESSION.HOLY_WATER_EXP
 		_check_level_up()
 	hud.show_message("%s 사용 · 축복 +%d" % [item_name, charged])
 	_update_ain_hud()

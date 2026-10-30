@@ -2,9 +2,14 @@ extends RefCounted
 class_name TwilightExperienceProgression
 
 const DATA_PATH: String = "res://data/experience_progression_v1.json"
-const CURVE_VERSION: int = 1
+const CURVE_VERSION: int = 2
+# Lineage M Dragon's Holy Water gives 31.92M EXP. The v2 curve is the Lineage M
+# curve scaled for TWILIGHT at 3x speed, so the item keeps 3x its relative value.
+# Regenerate with tools/generate_experience_curve.py (prints the equivalent).
+const HOLY_WATER_EXP: int = 3864874
 
 # This is a TWILIGHT balance table, NOT a claimed official Lineage M XP table.
+# v2: about 3x faster than Lineage M in kills per level (blessing 4x).
 # Existing saved progress is migrated by fractional progress, not reset.
 static func table_requirement(level: int) -> int:
 	if level < 1 or not FileAccess.file_exists(DATA_PATH):
