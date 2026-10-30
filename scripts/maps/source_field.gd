@@ -142,6 +142,10 @@ func line_clear(from: Vector2, to: Vector2) -> bool:
 	var dy: float=INF if sy==0 else absf(1/(by-ay))
 	for step: int in range(mini(65536,absi(target.x-cell.x)+absi(target.y-cell.y)+2)):
 		if cell==target: return true
+		# A corner endpoint may already belong to this axis's final floor cell.
+		# Never step beyond it; the remaining entering edge still uses can_step.
+		if cell.x==target.x: tx=INF
+		if cell.y==target.y: ty=INF
 		var offset:=Vector2i.ZERO
 		if absf(tx-ty)<0.0000001: offset=Vector2i(sx,sy);tx+=dx;ty+=dy
 		elif tx<ty: offset=Vector2i(sx,0);tx+=dx
