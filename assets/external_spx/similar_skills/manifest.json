@@ -6,9 +6,12 @@
     "reported_full_effect_groups": 2774,
     "provided_effect_groups": 45,
     "provided_unique_spr": 91,
-    "full_source_inventory_included": false,
+    "full_source_inventory_included": true,
     "source_library_id": "libfile_ade7b761ab9081918ce1541397671373",
-    "policy": "All supplied raw sprites load lazily; unassigned variants are not inferred new effects or forced skill bindings."
+    "policy": "Existing 45 reviewed groups retain 91 lazy atlas resources; all 2719 additional permitted groups load through SourceEffectCatalog. Unassigned variants never imply new skills or automatic cast bindings.",
+    "source_inventory_catalog": "res://data/skills/source_effects/catalog.json",
+    "permitted_full_effect_groups": 2764,
+    "explicitly_excluded_groups": 10
   },
   "effects": {
     "SPR-RAW-010bb4bcdc15cedc5465c64f2576c2dfad37a45cbc9898f18ae8b00bbd47fd66": {

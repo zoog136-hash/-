@@ -90,3 +90,7 @@ func frames_for_resource(key: String) -> SpriteFrames:
 	# Pin live resources; admission failure falls back without affecting combat.
 	cache[key] = {"frames":frames, "bytes":cost, "users":1}
 	return frames
+
+func complete_source_catalog() -> RefCounted:
+	# Unassigned effects stay available without changing reviewed cast bindings.
+	return preload("res://scripts/skills/source_effect_catalog.gd").new()
