@@ -13,12 +13,31 @@ const POLICY_PATH="res://data/maps/source_map_runtime.json"
 static var seen: Dictionary={}
 static var door_states: Dictionary={}
 static var gameplay_cache: Dictionary={}
+# Full verification re-hashes every full-resolution chunk of the map (about
+# 3 s for aden_world on a desktop CPU); every save of the current map and
+# every re-entry ran it. A result is reused only while the same pack root,
+# the same pinned rule and every verified file's existence/modification time
+# are unchanged; any difference re-runs the complete verification. Chunk
+# bytes are still hash-checked when the texture store loads them.
+static var verified_rules: Dictionary={}
+static var verification_runs: int=0
+static var position_checks: Dictionary={}
+static var policy_cache: Dictionary={}
+static var policy_stamp: int=-1
 
 static func root_path() -> String:
 	return preload("res://scripts/maps/source_map_pack_location.gd").root_path()
 
+## Parsed once and reused until the file's modification time changes: the
+## 144 KB policy took ~4 ms to parse and supports()/identity()/catalog loops
+## re-read it per map (hundreds of parses per save, load or map list).
+## Callers treat the result as read-only.
 static func policy() -> Dictionary:
-	return ART.read_object(POLICY_PATH).get("maps",{})
+	var stamp: int=FileAccess.get_modified_time(POLICY_PATH)
+	if policy_cache.is_empty() or stamp!=policy_stamp or not _settled(PackedInt64Array([stamp])):
+		policy_cache=ART.read_object(POLICY_PATH).get("maps",{})
+		policy_stamp=stamp
+	return policy_cache
 
 static func supports(mid: String) -> bool:
 	return policy().has(mid) and (mid=="aden_world" or not LEGACY_LAYOUT.active("--legacy-map-layouts"))
@@ -31,8 +50,52 @@ static func catalog_entries() -> Array:
 		result.append({"id":mid,"name":str(policy()[mid].name),"width":1,"height":1,"tile_size_world":32,"source_map84":true})
 	return result
 
-static func verified_context(mid:String) -> Dictionary:
+static func verified_context(mid: String) -> Dictionary:
 	if not supports(mid):return {}
+	var root: String=root_path()
+	var rule: Dictionary=policy()[mid]
+	var cached: Dictionary=verified_rules.get(mid,{})
+	if not cached.is_empty() and cached.root==root and cached.rule==rule and _file_stamps(cached.files)==cached.stamps:
+		# Callers may adjust their record; never hand out the cached one.
+		return {"art":cached.art,"record":cached.record.duplicate(true),"rule":rule}
+	verified_rules.erase(mid)
+	var context: Dictionary=_verify_context(mid)
+	if context.is_empty():return {}
+	var files: Array[String]=_verified_files(root,mid,context)
+	var stamps: PackedInt64Array=_file_stamps(files)
+	# Modification times have one-second resolution: a file written within the
+	# last two seconds could change again unnoticed, so it is never cached.
+	if _settled(stamps):
+		verified_rules[mid]={"root":root,"rule":rule.duplicate(true),"files":files,"stamps":stamps,
+			"art":context.art,"record":context.record.duplicate(true)}
+	return context
+
+static func _settled(stamps: PackedInt64Array) -> bool:
+	var recent: int=int(Time.get_unix_time_from_system())-2
+	for stamp: int in stamps:
+		if stamp>=recent:return false
+	return true
+
+## Every file whose bytes _verify_context() checks for this map.
+static func _verified_files(root: String, mid: String, context: Dictionary) -> Array[String]:
+	var files: Array[String]=[root+"/index.json",root+"/runtime_safety.json",root+"/local-interpretation-v1/index.json",root+"/equal-collision-v1/index.json"]
+	var manifest: String=root+"/"+str(context.art.index.maps[mid].file)
+	files.append(manifest)
+	for chunk: Variant in ART.read_object(manifest).get("chunks",[]):
+		if chunk is Dictionary:files.append(root+"/"+str(chunk.get("file","")))
+	for chunk: Dictionary in context.record.chunks:files.append(root+"/"+str(chunk.file))
+	for spec: Variant in [context.record.collision,context.record.get("clip_grid",{})]:
+		if spec is Dictionary and spec.has("file"):files.append(root+"/"+str(spec.file))
+	return files
+
+static func _file_stamps(files: Array[String]) -> PackedInt64Array:
+	var stamps:=PackedInt64Array()
+	for path: String in files:stamps.append(FileAccess.get_modified_time(path) if FileAccess.file_exists(path) else -1)
+	return stamps
+
+static func _verify_context(mid:String) -> Dictionary:
+	if not supports(mid):return {}
+	verification_runs+=1
 	var art=ART.new()
 	if not art.open_pack(root_path()):return {}
 	var record: Dictionary=art.load_map(mid)
@@ -192,7 +255,8 @@ static func validate_save(data: Dictionary, current_field:PlayableField=null) ->
 		var borrowed:bool=current_field!=null and current_field is FIELD and str(current_field.data.map_id)==id
 		var field:RemakePlayableField
 		if borrowed:
-			# Recheck the same pack files and pinned policy on every transaction.
+			# Recheck the pack files and pinned policy on every transaction (full
+			# hashes whenever any verified file changed since the last check).
 			# Only geometry decoding is reused; never close the live world's field.
 			var context:Dictionary=verified_context(id)
 			if context.is_empty() or current_field.png_game_pack.root_path!=root_path() or current_field.definition.source_sha256!=context.rule.grid_sha256 or int(current_field.data.layout_revision)!=int(context.rule.layout_revision):return "원본 지도 팩 누락·손상: 기존 저장을 보존합니다"
@@ -237,7 +301,19 @@ static func valid_position(field: PlayableField, value: Variant) -> bool:
 	for n: Variant in value:
 		if not (n is int or n is float) or not is_finite(float(n)):return false
 	var p:=Vector2(value[0],value[1])
-	return field.point_clear(p,4.0) and not field.path(Vector2(field.data.spawn_position[0],field.data.spawn_position[1]),p).is_empty()
+	# A spawn->point path search costs up to ~200 ms on aden_world and every
+	# save repeats it for the player, floor items and each boss position/home,
+	# most of which have not moved. The answer depends only on this field's
+	# immutable grid, its current door states and the exact point.
+	var doors: Variant=field.get("local_door_states")
+	var source_doors: Variant=field.get("source_doors")
+	var opened: Variant=source_doors.get("opened") if source_doors is Object else null
+	var key: Array=[field.get_instance_id(),hash(doors) if doors is Dictionary else 0,hash(opened) if opened is Dictionary else 0,p.x,p.y]
+	if position_checks.has(key):return position_checks[key]
+	var ok: bool=field.point_clear(p,4.0) and not field.path(Vector2(field.data.spawn_position[0],field.data.spawn_position[1]),p).is_empty()
+	if position_checks.size()>=4096:position_checks.clear()
+	position_checks[key]=ok
+	return ok
 
 static func _close_validation_field(field:RemakePlayableField,borrowed:bool) -> void:
 	if not borrowed:field.close()
