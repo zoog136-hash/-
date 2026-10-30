@@ -1741,8 +1741,9 @@ func _spawn_monsters(count: int) -> void:
 			continue
 		var record: Dictionary = record_value as Dictionary
 		var monster: TwilightMonster = MONSTER_SCENE.instantiate()
+		# Position before entering the physics space (see field_population._spawn_slot).
+		monster.position = monsters_root.to_local(_random_walkable_position(player.global_position, 360.0, 1200.0))
 		monsters_root.add_child(monster)
-		monster.global_position = _random_walkable_position(player.global_position, 360.0, 1200.0)
 		var texture: Texture2D = _monster_texture(record)
 		monster.setup(record, player, self, texture)
 		monster.set_meta("size_class", _monster_size_class(record))

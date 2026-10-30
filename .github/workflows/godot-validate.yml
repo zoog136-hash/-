@@ -368,6 +368,14 @@ jobs:
       - name: Verify regional test shard coverage and failure handling
         run: python3 tools/test_world_region_shards.py
 
+      - name: Crowded-field arrival keeps physics local
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-spawn-sync"
+          timeout 600 ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/monster_spawn_physics_sync_test.gd -- --legacy-map-layouts 2>&1 | tee godot-spawn-sync.log
+          grep -q 'MONSTER_SPAWN_SYNC_RESULT {"actors":[0-9]*,"failures":\[\]' godot-spawn-sync.log
+
       - name: Existing layout regional contracts
         shell: bash
         run: |

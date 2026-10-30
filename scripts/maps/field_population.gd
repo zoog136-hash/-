@@ -182,6 +182,12 @@ func _spawn_slot(slot: Dictionary) -> void:
 		monster = candidate as TwilightMonster
 		break
 	if monster == null: monster = world.MONSTER_SCENE.instantiate()
+	# Place the actor before it (re)enters the physics space. Monsters are
+	# kinematic bodies: moving one after it is registered is simulated as motion
+	# from its old transform, so its broadphase box sweeps from the origin (new
+	# instance) or the previous map (pooled) to its spawn. With ~360 Aden actors
+	# that one step produced ~350,000 collision pairs and stalled for minutes.
+	monster.position = world.monsters_root.to_local(p)
 	if monster.get_parent() != null: monster.reparent(world.monsters_root,false)
 	else: world.monsters_root.add_child(monster)
 	monster.global_position = p
@@ -336,6 +342,7 @@ func summon_for(owner: TwilightMonster) -> void:
 		var record: Dictionary = (records[str(region.monster_types[i%region.monster_types.size()])] as Dictionary).duplicate(true)
 		record["drop"] = []
 		var monster: TwilightMonster = world.MONSTER_SCENE.instantiate()
+		monster.position = world.monsters_root.to_local(p)
 		world.monsters_root.add_child(monster)
 		monster.global_position = p
 		monster.setup(record,world.player,world,world._monster_texture(record))
