@@ -1,9 +1,12 @@
 extends ScrollContainer
 
 signal item_selected(index: int)
+signal material_selected(index: int, slot_id: String)
+signal favorite_requested(index: int)
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
-const ROW_HEIGHT: int=114
+const TouchButton=preload("res://scripts/growth/growth_touch_button.gd")
+const ROW_HEIGHT: int=90
 var item_count: int:
 	get:return entries.size()
 var entries: Array[Dictionary]=[]
@@ -12,9 +15,11 @@ var canvas: Control
 var hud: Node
 var selected: int=-1
 var first: int=-1
+var presenter: Node
 
-func configure(owner_hud: Node) -> void:
+func configure(owner_hud: Node, owner_presenter: Node=null) -> void:
 	hud=owner_hud
+	presenter=owner_presenter
 	horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	canvas=Control.new()
 	canvas.size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -44,7 +49,8 @@ func _show_rows() -> void:
 	var start: int=maxi(0,floori(get_v_scroll_bar().value/ROW_HEIGHT))
 	var count: int=ceili(size.y/ROW_HEIGHT)+2
 	while views.size()<count:
-		var button: Button=UI.button("",Callable(),Vector2(0,ROW_HEIGHT-4))
+		var button: Button=_button()
+		button.custom_minimum_size=Vector2(0,ROW_HEIGHT-4)
 		button.pressed.connect(func() -> void:
 			if not hud.workspace.was_scroll_dragged(self):item_selected.emit(int(button.get_meta("row_index",-1))))
 		canvas.add_child(button)
@@ -62,54 +68,78 @@ func _show_rows() -> void:
 		if changed or button.get_meta("row_index",-1)!=index or not is_equal_approx(float(button.get_meta("row_width",-1)),button.size.x):_fill(button,index)
 
 func _fill(button: Button, index: int) -> void:
+	button._cancel_touch()
 	button.set_meta("row_index",index)
 	button.set_meta("row_width",button.size.x)
 	for child: Node in button.get_children():button.remove_child(child);child.queue_free()
 	var data: Dictionary=entries[index]
 	var record: Dictionary=data.record
 	var active: bool=index==selected
-	button.add_theme_stylebox_override("normal",UI.MATERIAL.from_flat(UI.box(Color("173243") if active else Color("111b24"),Color("4c8292") if active else Color("34404a"),4),true))
+	button.add_theme_stylebox_override("normal",UI.MATERIAL.from_flat(UI.box(Color("193b3b") if active else Color("13191d"),Color("6b8980") if active else Color("303738"),4),true))
 	button.tooltip_text=str(record.name)+"\n"+str(record.get("raw_effects",""))
-	var column:=VBoxContainer.new()
-	column.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	column.offset_left=6;column.offset_right=-6;column.offset_top=5;column.offset_bottom=-5
-	column.add_theme_constant_override("separation",5)
-	button.add_child(column)
-	var heading:=HBoxContainer.new()
-	heading.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	column.add_child(heading)
-	var title: Label=UI.label(("★ " if data.favorite else "")+str(record.name),13,UI.grade(str(record.grade)))
-	title.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	var line:=HBoxContainer.new()
+	line.mouse_filter=Control.MOUSE_FILTER_PASS
+	line.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	line.offset_left=5;line.offset_right=-5;line.offset_top=6;line.offset_bottom=-6
+	line.add_theme_constant_override("separation",6)
+	button.add_child(line)
+	var favorite: Button=_button()
+	favorite.name="FavoriteCollection"
+	favorite.text="★" if data.favorite else "☆"
+	favorite.custom_minimum_size=Vector2(44,44)
+	favorite.add_theme_font_size_override("font_size",21)
+	favorite.add_theme_color_override("font_color",UI.GOLD if data.favorite else UI.MUTED)
+	for state: String in ["normal","hover","pressed"]:favorite.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+	favorite.pressed.connect(func() -> void:favorite_requested.emit(index))
+	line.add_child(favorite)
+	var available_width: float=maxf(1,button.size.x-72)
+	var title_column:=VBoxContainer.new()
+	title_column.custom_minimum_size.x=floorf(available_width*.30)
+	title_column.size_flags_vertical=Control.SIZE_SHRINK_CENTER
+	title_column.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	line.add_child(title_column)
+	var title: Label=UI.label(str(record.name),12,UI.TEXT)
+	title.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	title.max_lines_visible=2
 	title.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
-	heading.add_child(title)
-	heading.add_child(UI.label(str(data.mark),11,UI.MUTED))
+	title_column.add_child(title)
+	var mark: Label=UI.label(str(data.mark),11,Color("84b38a") if data.mark=="완성" else UI.MUTED)
+	title_column.add_child(mark)
+	var effect: Label=UI.label(str(record.get("raw_effects","")),12,UI.GOLD)
+	effect.custom_minimum_size.x=floorf(available_width*.23)
+	effect.size_flags_vertical=Control.SIZE_SHRINK_CENTER
+	effect.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	effect.max_lines_visible=3
+	effect.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	line.add_child(effect)
 	var icons:=HBoxContainer.new()
-	icons.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	icons.size_flags_vertical=Control.SIZE_SHRINK_CENTER
+	icons.mouse_filter=Control.MOUSE_FILTER_PASS
 	icons.add_theme_constant_override("separation",3)
-	column.add_child(icons)
+	line.add_child(icons)
 	var requirements: Array=record.requirements
-	var edge: float=minf(44,maxf(20,(button.size.x-16-3*(requirements.size()-1))/maxi(1,requirements.size())))
-	for raw: Variant in record.requirements:
-		var requirement: Dictionary=raw
-		var frame:=PanelContainer.new()
-		frame.custom_minimum_size=Vector2(edge,edge)
-		frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		frame.add_theme_stylebox_override("panel",UI.slot_frame())
+	var capacity: int=maxi(1,floori((available_width*.47)/47.0))
+	var shown: int=requirements.size() if requirements.size()<=capacity else maxi(0,capacity-1)
+	for number: int in range(shown):
+		var requirement: Dictionary=requirements[number]
+		var frame: Button=_button()
+		frame.name="CollectionMaterial_"+str(number)
+		frame.custom_minimum_size=Vector2(44,44)
+		frame.set_meta("collection_id",str(record.id));frame.set_meta("slot_id",str(requirement.slot_id))
+		frame.add_theme_stylebox_override("normal",UI.slot_frame())
+		frame.pressed.connect(func() -> void:material_selected.emit(index,str(requirement.slot_id)))
 		icons.add_child(frame)
-		var art:=TextureRect.new()
-		art.custom_minimum_size=Vector2(edge-6,edge-6)
-		art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		art.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		var source: Dictionary=hud.get_parent().equipment_collections.icon_record(str(requirement.name))
-		UI.apply_item_visual(art,source,str(source.get("name",requirement.name)),hud.item_image_index.get("아이템",{}),"slot")
-		frame.add_child(art)
-		if requirement.enchant!=null:
-			var level: Label=UI.label("+%d" % int(requirement.enchant),11,Color("68b9e0"))
-			level.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
-			level.vertical_alignment=VERTICAL_ALIGNMENT_BOTTOM
-			frame.add_child(level)
-	var effect: Label=UI.label(str(record.get("raw_effects","")),11,UI.GOLD)
-	effect.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
-	column.add_child(effect)
+		if is_instance_valid(presenter):presenter.decorate_material(frame,record,requirement,38)
+	if shown<requirements.size():
+		var more: Button=_button()
+		more.name="MoreCollectionMaterials";more.text="+%d" % (requirements.size()-shown)
+		more.custom_minimum_size=Vector2(44,44)
+		more.tooltip_text="선택 상세에서 모든 재료 %d종 보기" % requirements.size()
+		more.pressed.connect(func() -> void:material_selected.emit(index,str(requirements[shown].slot_id)))
+		icons.add_child(more)
+
+func _button() -> Button:
+	var button: Button=UI.button("",Callable(),Vector2.ZERO)
+	button.set_script(TouchButton)
+	button.scroll_host=hud.workspace;button.scroll_area=self
+	return button

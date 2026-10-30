@@ -1515,6 +1515,8 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 	var same_target: bool = category == str(option_awakening_snapshot.get("category", "")) and target_id == str(option_awakening_snapshot.get("target_id", ""))
 	option_awakening_snapshot = snapshot.duplicate(true)
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and not option_awakening_view.is_queued_for_deletion() and same_target:
+		option_awakening_view.collection_catalog=catalog_data
+		option_awakening_view.collection_ownership=card_collection_state
 		option_awakening_view.set_snapshot(snapshot)
 		option_awakening_view.apply_settings(_option_awakening_settings())
 		return
@@ -1522,6 +1524,7 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 		option_awakening_source_detail = catalog_details_active
 	_open_window("option_awakening", category + " 옵션 각성", "")
 	var view: Control = OptionAwakeningView.new()
+	view.collection_catalog=catalog_data;view.collection_ownership=card_collection_state;view.collection_scroll_host=workspace
 	option_awakening_view = view
 	workspace.mount(view)
 	view.configure(snapshot, _option_awakening_settings())

@@ -9,6 +9,10 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const TouchButton = preload("res://scripts/ui/native_touch_button.gd")
 const TouchList = preload("res://scripts/ui/native_touch_list.gd")
 const AwakeningBorder = preload("res://scripts/ui/option_awakening_border.gd")
+const CollectionPanel=preload("res://scripts/ui/awakening_collection_panel.gd")
+var collection_catalog: Dictionary={}
+var collection_ownership: Dictionary={}
+var collection_scroll_host: Node
 
 var snapshot: Dictionary = {}
 var selected_materials: Dictionary = {}
@@ -39,7 +43,7 @@ var _target_art: TextureRect
 var _border: Control
 var _options: RichTextLabel
 var _policy: Label
-var _collections: RichTextLabel
+var _collections: VBoxContainer
 var _materials_pane: VBoxContainer
 var _material_title: Label
 var _material_hint: Label
@@ -96,6 +100,7 @@ func apply_settings(settings: Dictionary) -> void:
 	_settings = settings.duplicate(true)
 	if is_instance_valid(_border):
 		_border.apply_settings(_settings)
+	if is_instance_valid(_collections):_render_collections()
 
 func is_review_open() -> bool:
 	return not _review_action.is_empty()
@@ -189,9 +194,8 @@ func _build() -> void:
 	_policy = _wrapped_label("", 12, UI.MUTED)
 	_policy.name = "AwakeningPolicy"
 	_info_content.add_child(_policy)
-	_collections = UI.rich("")
-	_collections.name = "AwakeningCollectionProgress"
-	_collections.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_collections = CollectionPanel.new()
+	_collections.configure(collection_scroll_host,_info_scroll)
 	_info_content.add_child(_collections)
 	_materials_pane = VBoxContainer.new()
 	_materials_pane.name = "AwakeningMaterialsPane"
@@ -377,34 +381,7 @@ func _render() -> void:
 	_reflow()
 
 func _render_collections() -> void:
-	var rows: Array = snapshot.get("collections", []) as Array
-	_collections.visible = not rows.is_empty()
-	if rows.is_empty():
-		_collections.text = ""
-		return
-	var lines := PackedStringArray()
-	lines.append("\n[b]지원 각성 컬렉션 · %d개[/b]" % rows.size())
-	lines.append("조건 충족 시 자동 적용 · 카드 소모 없음\n")
-	for raw: Variant in rows:
-		if not raw is Dictionary:
-			continue
-		var row: Dictionary = raw as Dictionary
-		var requirements: Array = row.get("requirements", []) as Array
-		var met_count: int = 0
-		var requirements_text := PackedStringArray()
-		for requirement: Dictionary in requirements:
-			var met: bool = bool(requirement.get("met", false))
-			if met:
-				met_count += 1
-			requirements_text.append("%s %s%s" % ["✓" if met else "·", str(requirement.get("name", "")), " [각성]" if bool(requirement.get("awakened", false)) else " 보유"])
-		var completed: bool = bool(row.get("completed", false))
-		lines.append("[b]%s[/b] · %s" % [UI.safe(str(row.get("name", ""))), "[color=#79bf83]완료[/color]" if completed else "%d / %d" % [met_count, requirements.size()]])
-		lines.append(UI.safe(" / ".join(requirements_text)))
-		var bonuses := PackedStringArray()
-		for option: Variant in row.get("bonus_options", []):
-			bonuses.append(str(option))
-		lines.append("[color=#dcc391]%s[/color]\n" % UI.safe(" · ".join(bonuses)))
-	_collections.text = "\n".join(lines)
+	_collections.set_rows(snapshot.get("collections",[]),collection_catalog,collection_ownership,_settings)
 
 func _render_controls() -> void:
 	var locked: bool = pending_request or is_review_open()

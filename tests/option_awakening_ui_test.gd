@@ -153,7 +153,8 @@ func _run() -> void:
 	_check(not hud.option_awakening_view.snapshot.is_empty(), "world supplies authoritative snapshot")
 	_check(_control("AwakeningFeed").disabled and _control("AwakeningAttempt").disabled, "empty selection and incomplete XP cannot be consumed")
 	_check(_control("AwakeningPolicy").text.contains("TWILIGHT"), "local XP/cost/refund policy is disclosed")
-	_check(_control("AwakeningCollectionProgress").text.contains("지원 각성 컬렉션 · 4개"), "supported collection progress is visible without implying a complete original collection catalog")
+	var collection_panel: Node=_control("AwakeningCollectionProgress")
+	_check(collection_panel.rows==world.option_awakening.collections_view() and collection_panel.rows.size()==4 and collection_panel.find_child("SupportedCollectionScope",true,false).text.contains("확인된 4개만 표시"), "actual supported collection progress and limited scope remain visible in the card presentation")
 	var list: ItemList = _control("AwakeningMaterials") as ItemList
 	_check(list.item_count >= 10, "material list contains real duplicate IDs")
 	_check(list.get_v_scroll_bar().max_value > list.get_v_scroll_bar().page, "real material list overflows before scroll test")
